@@ -473,3 +473,16 @@ fostr_named_capture_single <- function(string, pattern, only_matches = FALSE) {
   if (ncol(out) > 1) stop("Found multiple capture groups when expected only one")
   out[[1]]
 }
+
+
+# Throw an error if user tries to use `where()` select helper
+stop_if_expr_includes_where <- function(quoted_expr) {
+  expr_as_text <- rlang::as_label(quoted_expr)
+  if (fostr_detect(expr_as_text, "where\\(")) {
+    stop(
+      "ipumsr functions do not support the `where()` select helper from ",
+      "dplyr; for more information, see `?ipumsr::dplyr_select_style`.",
+      call. = FALSE
+    )
+  }
+}

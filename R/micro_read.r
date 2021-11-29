@@ -103,9 +103,11 @@ read_ipums_micro <- function(
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
+  vars <- enquo(vars)
+  stop_if_expr_includes_where(vars)
+
   if (verbose) custom_cat(short_conditions_text(ddi))
 
-  vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
 
   ddi <- ddi_filter_vars(ddi, vars, "long", verbose)
