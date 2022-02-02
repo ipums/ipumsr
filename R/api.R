@@ -91,6 +91,43 @@ define_extract_micro <- function(collection,
   extract
 }
 
+define_extract_nhgis <- function(description = NULL,
+                                 datasets = NULL,
+                                 data_tables = NULL,
+                                 ds_geog_levels = NULL,
+                                 years = NULL,
+                                 breakdown_values = NULL,
+                                 time_series_tables = NULL,
+                                 ts_geog_levels = NULL,
+                                 shapefiles = NULL,
+                                 data_format = NULL,
+                                 breakdown_and_data_type_layout = NULL,
+                                 time_series_table_layout = NULL,
+                                 geographic_extents = NULL) {
+
+  extract <- new_ipums_extract(
+    collection = "nhgis",
+    description = description,
+    datasets = datasets,
+    data_tables = data_tables,
+    ds_geog_levels = ds_geog_levels,
+    years = years,
+    breakdown_values = breakdown_values,
+    time_series_tables = time_series_tables,
+    ts_geog_levels = ts_geog_levels,
+    shapefiles = shapefiles,
+    data_format = data_format,
+    breakdown_and_data_type_layout = breakdown_and_data_type_layout,
+    time_series_table_layout = time_series_table_layout,
+    geographic_extents = geographic_extents
+  )
+
+  validate_ipums_extract(extract)
+
+  # extract
+
+}
+
 
 # > Define extract from json ----
 
@@ -1086,6 +1123,14 @@ validate_ipums_extract <- function(x) {
 
     types <- nhgis_extract_types(x)
 
+    if(length(types) == 0) {
+      stop(
+        "At least one of `datasets`, `time_series_tables` or `shapefiles` ",
+        "must be specified.",
+        call. = FALSE
+      )
+    }
+
     if("datasets" %in% types) {
       validate_datasets(x)
     }
@@ -1150,7 +1195,7 @@ validate_time_series_tables <- function(extract) {
   must_be_non_missing <- c("ts_geog_levels", "data_format",
                            "time_series_table_layout")
 
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.na(extract[[.]])))
+  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(extract[[.]])))
 
   if (any(is_missing)) {
     stop(
@@ -1161,13 +1206,27 @@ validate_time_series_tables <- function(extract) {
     )
   }
 
-  stopifnot(
-    extract$data_format %in% c("csv_no_header", "csv_header", "fixed_width")
-  )
+  if(!extract$data_format %in% c("csv_no_header",
+                                 "csv_header",
+                                 "fixed_width")) {
 
-  stopifnot(extract$time_series_table_layout %in% c("time_by_column_layout",
-                                                    "time_by_row_layout",
-                                                    "time_by_file_layout"))
+    stop(
+      "`data_format` must be one of `csv_no_header`, `csv_header`, ",
+      "or `fixed_width`",
+      call. = FALSE
+    )
+
+  }
+
+  if(!extract$time_series_table_layout %in% c("time_by_column_layout",
+                                              "time_by_row_layout",
+                                              "time_by_file_layout")) {
+    stop(
+      "`time_series_table_layout` must be one of `time_by_column_layout`, ",
+      "`time_by_row_layout`, or `time_by_file_layout`",
+      call. = FALSE
+    )
+  }
 
   extract
 
@@ -1185,7 +1244,7 @@ validate_datasets <- function(extract) {
   must_be_non_missing <- c("data_tables", "ds_geog_levels",
                            "data_format")
 
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.na(extract[[.]])))
+  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(extract[[.]])))
 
   if (any(is_missing)) {
     stop(
@@ -1196,9 +1255,17 @@ validate_datasets <- function(extract) {
     )
   }
 
-  stopifnot(
-    extract$data_format %in% c("csv_no_header", "csv_header", "fixed_width")
-  )
+  if(!extract$data_format %in% c("csv_no_header",
+                                 "csv_header",
+                                 "fixed_width")) {
+
+    stop(
+      "`data_format` must be one of `csv_no_header`, `csv_header`, ",
+      "or `fixed_width`",
+      call. = FALSE
+    )
+
+  }
 
   # Add additional logic to catch other requirements here?
   #   1. years required when dataset has multiple years
@@ -1225,18 +1292,23 @@ nhgis_extract_types <- function(extract) {
 
   possible_types <- c("datasets", "time_series_tables", "shapefiles")
 
-  is_missing <- purrr::map_lgl(possible_types, ~any(is.na(extract[[.]])))
+  is_missing <- purrr::map_lgl(possible_types, ~any(is.null(extract[[.]])))
 
-  if(sum(is_missing) == 3) {
-    stop(
-      "An NHGIS extract must specify at least one of `datasets`, ",
-      "`time_series_tables`, or `shapefiles`",
-      call. = FALSE
-    )
-  }
+  # if(sum(is_missing) == 3) {
+  #   stop(
+  #     "An NHGIS extract must specify at least one of `datasets`, ",
+  #     "`time_series_tables`, or `shapefiles`",
+  #     call. = FALSE
+  #   )
+  # }
 
   types <- possible_types[!is_missing]
-  types
+
+  if(length(types) == 0) {
+    NULL
+  } else {
+    types
+  }
 
 }
 
@@ -1254,9 +1326,9 @@ print.ipums_extract <- function(extract) {
         "\n  ", print_truncated_vector(extract$data_tables, "Tables: "),
         "\n  ", print_truncated_vector(extract$ds_geog_levels, "Geog Levels: "),
         "\n  ", print_truncated_vector(extract$years, "Years: ",
-                                       !is.na(extract$years)),
+                                       !is.null(extract$years)),
         "\n  ", print_truncated_vector(extract$breakdown_values, "Breakdowns: ",
-                                       !is.na(extract$breakdown_values))
+                                       !is.null(extract$breakdown_values))
       )
     } else {
       ds_to_cat <- NULL
