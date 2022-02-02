@@ -1073,6 +1073,11 @@ standardize_extract_identifier <- function(extract) {
   list(collection = collection, number = number)
 }
 
+#' Validate structure of an IPUMS extract
+#'
+#' @param x An extract object created with
+#'   \code{\link{define_extract_nhgis}}, \code{\link{define_extract_micro}} or
+#'   returned from another ipumsr API function.
 validate_ipums_extract <- function(x) {
 
   stopifnot(!is.na(x$collection))
@@ -1133,6 +1138,11 @@ validate_ipums_extract <- function(x) {
 
 }
 
+#' Validate NHGIS time_series_tables specifications
+#'
+#' @param extract An extract object created with
+#'   \code{\link{define_extract_nhgis}} or
+#'   returned from another ipumsr API function.
 validate_time_series_tables <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
@@ -1163,6 +1173,11 @@ validate_time_series_tables <- function(extract) {
 
 }
 
+#' Validate NHGIS dataset specifications
+#'
+#' @param extract An extract object created with
+#'   \code{\link{define_extract_nhgis}} or
+#'   returned from another ipumsr API function.
 validate_datasets <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
@@ -1196,6 +1211,14 @@ validate_datasets <- function(extract) {
 
 }
 
+#' Identify data types specified in an NHGIS extract
+#'
+#' An NHGIS extract will request at least one of datasets, time series tables or
+#' shapefiles.
+#'
+#' @param extract An extract object created with
+#'   \code{\link{define_extract_nhgis}} or
+#'   returned from another ipumsr API function.
 nhgis_extract_types <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
