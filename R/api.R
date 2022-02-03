@@ -91,13 +91,72 @@ define_extract_micro <- function(collection,
   extract
 }
 
+
+#' Define an NHGIS extract request
+#'
+#' Define an extract request object to be submitted via the IPUMS NHGIS
+#' extract API.
+#'
+#' @param description Description of the extract.
+#' @param dataset Character name of dataset to include in the extract, if any.
+#' @param data_tables Character vector of data tables to include in the extract
+#'   for the specified dataset. Required if a dataset is specified.
+#' @param ds_geog_levels Character vector of geographic levels to include in the
+#'   extract for the specified dataset. Required if a dataset is specified.
+#' @param years Character or integer vector of years to include in the extract
+#'   for the specified dataset. Use "*" to select all available years for the
+#'   specified dataset.
+#' @param breakdown_values Character vector of selected breakdown values to
+#'   to include in the extract for the specified dataset. If more than one
+#'   breakdown value is requested, `breakdown_and_data_type_layout` must also
+#'   be specified.
+#' @param time_series_table Character name of time series table to include in
+#'   the extract, if any.
+#' @param ts_geog_levels Character vector of geographic levels to include in the
+#'   extract for the specified time series table. Required if a time series
+#'   table is specified.
+#' @param shapefiles Character vector of shapefiles to include in the extract,
+#'   if any.
+#' @param data_format The desired format of the extract data file (one of
+#'   "csv_no_header", "csv_header", or "fixed_width").
+#'   "csv_no_header" provides a minimal header in the first row, while
+#'   "csv_header" adds a second, more descriptive header row.
+#'   Required when any datasets or time_series_tables are selected.
+#' @param breakdown_and_data_type_layout Character indicating the layout of the
+#'   dataset when multiple data types or breakdown values are specified.
+#'   "separate_files" splits up each data type or breakdown combo into its own file.
+#'   "single_file" keeps all datatypes and breakdown combos in one file.
+#'   Required when a dataset has multiple breakdowns or data types.
+#' @param time_series_table_layout Character indicating the layout of the
+#'   specified time series table. One of "time_by_column_layout",
+#'   "time_by_row_layout", or "time_by_file_layout". Required when a
+#'   time series table is specified.
+#' @param geographic_extents A list of geographic_instances to use as extents
+#'   for the dataset specified in the request. To select all extents, use "*".
+#'   Required when a geographic level on a dataset is specified where
+#'   `has_geog_extent_selection` is true.
+#'
+#' @family ipums_api
+#' @return An object of class \code{ipums_extract} containing the extract
+#'   definition.
+#'
+#' @export
+#'
+#' @examples
+#' my_extract <- define_extract_nhgis(
+#'   description = "test nhgis extract 1",
+#'   dataset = "1990_STF3",
+#'   data_tables = "NP57",
+#'   ds_geog_levels = "tract",
+#'   data_format = "csv_no_header"
+#' )
 define_extract_nhgis <- function(description = NULL,
-                                 datasets = NULL,
+                                 dataset = NULL,
                                  data_tables = NULL,
                                  ds_geog_levels = NULL,
                                  years = NULL,
                                  breakdown_values = NULL,
-                                 time_series_tables = NULL,
+                                 time_series_table = NULL,
                                  ts_geog_levels = NULL,
                                  shapefiles = NULL,
                                  data_format = NULL,
@@ -108,12 +167,12 @@ define_extract_nhgis <- function(description = NULL,
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
-    datasets = datasets,
+    dataset = dataset,
     data_tables = data_tables,
     ds_geog_levels = ds_geog_levels,
     years = years,
     breakdown_values = breakdown_values,
-    time_series_tables = time_series_tables,
+    time_series_table = time_series_table,
     ts_geog_levels = ts_geog_levels,
     shapefiles = shapefiles,
     data_format = data_format,
@@ -122,9 +181,9 @@ define_extract_nhgis <- function(description = NULL,
     geographic_extents = geographic_extents
   )
 
-  validate_ipums_extract(extract)
+  extract <- validate_ipums_extract(extract)
 
-  # extract
+  extract
 
 }
 
@@ -911,8 +970,19 @@ get_last_extract_info <- function(collection,
 #'
 #' @export
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
-  expected_names <- names(new_ipums_extract())
+
+  collection <- unique(extract_tbl$collection)
+
+  if(length(collection) != 1) {
+    stop(
+      "All extracts in `extract_tbl` must be of same collection",
+      call. = FALSE
+    )
+  }
+
+  expected_names <- names(new_ipums_extract(collection))
   unexpected_names <- setdiff(names(extract_tbl), expected_names)
+
   if (length(unexpected_names) > 0) {
     stop(
       "Unexpected names in `extract_tbl`: ",
@@ -1020,12 +1090,12 @@ new_ipums_extract <- function(collection = NA_character_,
                               data_format = NA_character_,
                               samples = NA_character_,
                               variables = NA_character_,
-                              datasets = NA_character_,
+                              dataset = NA_character_,
                               data_tables = NA_character_,
                               ds_geog_levels = NA_character_,
                               years = NA_character_,
                               breakdown_values = NA_character_,
-                              time_series_tables = NA_character_,
+                              time_series_table = NA_character_,
                               ts_geog_levels = NA_character_,
                               shapefiles = NA_character_,
                               breakdown_and_data_type_layout = NA_character_,
@@ -1036,17 +1106,25 @@ new_ipums_extract <- function(collection = NA_character_,
                               number = NA_integer_,
                               status = "unsubmitted") {
 
-  if(collection == "nhgis") {
+  if(is.na(collection)) {
+
+    stop(
+      "The following elements of an ipums_extract must not contain missing ",
+      "values: collection",
+      call. = FALSE
+    )
+
+  } else if(collection == "nhgis") {
 
     out <- list(
       collection = collection,
       description = description,
-      datasets = datasets,
+      dataset = dataset,
       data_tables = data_tables,
       ds_geog_levels = ds_geog_levels,
       years = years,
       breakdown_values = breakdown_values,
-      time_series_tables = time_series_tables,
+      time_series_table = time_series_table,
       ts_geog_levels = ts_geog_levels,
       shapefiles = shapefiles,
       data_format = data_format,
@@ -1125,25 +1203,25 @@ validate_ipums_extract <- function(x) {
 
     if(length(types) == 0) {
       stop(
-        "At least one of `datasets`, `time_series_tables` or `shapefiles` ",
+        "At least one of `dataset`, `time_series_table` or `shapefiles` ",
         "must be specified.",
         call. = FALSE
       )
     }
 
-    if("datasets" %in% types) {
-      validate_datasets(x)
+    if("dataset" %in% types) {
+      validate_dataset(x)
     }
 
-    if("time_series_tables" %in% types) {
-      validate_time_series_tables(x)
+    if("time_series_table" %in% types) {
+      validate_time_series_table(x)
     }
 
     # Add additional logic to catch other requirements here?
     #   1. geographic_extents required when geog_level's
     #      has_geog_extent_selection == TRUE
     #   2. Extract can technically be submitted when data_tables, etc.
-    #      are requested even without any datasets. But maybe these
+    #      are requested even without any dataset. But maybe these
     #      should be caught too to make things clearer for users?
     #
     # Would need to put together metadata functionality first for 1.
@@ -1183,12 +1261,12 @@ validate_ipums_extract <- function(x) {
 
 }
 
-#' Validate NHGIS time_series_tables specifications
+#' Validate NHGIS time_series_table specifications
 #'
 #' @param extract An extract object created with
 #'   \code{\link{define_extract_nhgis}} or
 #'   returned from another ipumsr API function.
-validate_time_series_tables <- function(extract) {
+validate_time_series_table <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
 
@@ -1237,7 +1315,7 @@ validate_time_series_tables <- function(extract) {
 #' @param extract An extract object created with
 #'   \code{\link{define_extract_nhgis}} or
 #'   returned from another ipumsr API function.
-validate_datasets <- function(extract) {
+validate_dataset <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
 
@@ -1248,7 +1326,7 @@ validate_datasets <- function(extract) {
 
   if (any(is_missing)) {
     stop(
-      "When datasets are specified, the following must not contain ",
+      "When dataset are specified, the following must not contain ",
       "missing values: ",
       paste0(must_be_non_missing[is_missing], collapse = ", "),
       call. = FALSE
@@ -1280,7 +1358,7 @@ validate_datasets <- function(extract) {
 
 #' Identify data types specified in an NHGIS extract
 #'
-#' An NHGIS extract will request at least one of datasets, time series tables or
+#' An NHGIS extract will request at least one of dataset, time series tables or
 #' shapefiles.
 #'
 #' @param extract An extract object created with
@@ -1290,14 +1368,14 @@ nhgis_extract_types <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
 
-  possible_types <- c("datasets", "time_series_tables", "shapefiles")
+  possible_types <- c("dataset", "time_series_table", "shapefiles")
 
   is_missing <- purrr::map_lgl(possible_types, ~any(is.null(extract[[.]])))
 
   # if(sum(is_missing) == 3) {
   #   stop(
-  #     "An NHGIS extract must specify at least one of `datasets`, ",
-  #     "`time_series_tables`, or `shapefiles`",
+  #     "An NHGIS extract must specify at least one of `dataset`, ",
+  #     "`time_series_table`, or `shapefiles`",
   #     call. = FALSE
   #   )
   # }
@@ -1320,7 +1398,7 @@ print.ipums_extract <- function(extract) {
 
     types <- nhgis_extract_types(extract)
 
-    if("datasets" %in% types) {
+    if("dataset" %in% types) {
       ds_to_cat <- paste0(
         "\n", print_truncated_vector(extract$dataset, "Dataset: "),
         "\n  ", print_truncated_vector(extract$data_tables, "Tables: "),
@@ -1334,9 +1412,9 @@ print.ipums_extract <- function(extract) {
       ds_to_cat <- NULL
     }
 
-    if("time_series_tables" %in% types) {
+    if("time_series_table" %in% types) {
       ts_to_cat <- paste0(
-        "\n", print_truncated_vector(extract$time_series_tables,
+        "\n", print_truncated_vector(extract$time_series_table,
                                      "Time Series Tables: "),
         "\n  ", print_truncated_vector(extract$ts_geog_levels, "Geog Levels: ")
       )
