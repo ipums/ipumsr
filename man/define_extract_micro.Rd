@@ -51,6 +51,7 @@ my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
 \seealso{
 Other ipums_api: 
 \code{\link{define_extract_from_json}()},
+\code{\link{define_extract_nhgis}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},

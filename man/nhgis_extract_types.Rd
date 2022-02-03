@@ -12,6 +12,6 @@ nhgis_extract_types(extract)
 returned from another ipumsr API function.}
 }
 \description{
-An NHGIS extract will request at least one of datasets, time series tables or
+An NHGIS extract will request at least one of dataset, time series tables or
 shapefiles.
 }

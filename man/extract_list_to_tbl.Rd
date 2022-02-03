@@ -39,6 +39,7 @@ extract_list_to_tbl(list_of_last_10_extracts)
 Other ipums_api: 
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
 \code{\link{download_extract}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},

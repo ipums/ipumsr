@@ -50,6 +50,7 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 Other ipums_api: 
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
