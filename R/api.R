@@ -91,7 +91,6 @@ define_extract_micro <- function(collection,
   extract
 }
 
-
 #' Define an NHGIS extract request
 #'
 #' Define an extract request object to be submitted via the IPUMS NHGIS
@@ -121,7 +120,7 @@ define_extract_micro <- function(collection,
 #'   "csv_no_header", "csv_header", or "fixed_width").
 #'   "csv_no_header" provides a minimal header in the first row, while
 #'   "csv_header" adds a second, more descriptive header row.
-#'   Required when any datasets or time_series_tables are selected.
+#'   Required when any dataset or time_series_table is selected.
 #' @param breakdown_and_data_type_layout Character indicating the layout of the
 #'   dataset when multiple data types or breakdown values are specified.
 #'   "separate_files" splits up each data type or breakdown combo into its own file.
@@ -970,19 +969,8 @@ get_last_extract_info <- function(collection,
 #'
 #' @export
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
-
-  collection <- unique(extract_tbl$collection)
-
-  if(length(collection) != 1) {
-    stop(
-      "All extracts in `extract_tbl` must be of same collection",
-      call. = FALSE
-    )
-  }
-
-  expected_names <- names(new_ipums_extract(collection))
+  expected_names <- names(new_ipums_extract())
   unexpected_names <- setdiff(names(extract_tbl), expected_names)
-
   if (length(unexpected_names) > 0) {
     stop(
       "Unexpected names in `extract_tbl`: ",
@@ -1083,82 +1071,62 @@ ipums_data_collections <- function() {
 
 
 # Non-exported functions --------------------------------------------------
+# new_ipums_extract <- function(collection = NA_character_,
+#                               description = NA_character_,
+#                               data_structure = NA_character_,
+#                               rectangular_on = NA_character_,
+#                               data_format = NA_character_,
+#                               samples = NA_character_,
+#                               variables = NA_character_,
+#                               submitted = FALSE,
+#                               download_links = EMPTY_NAMED_LIST,
+#                               number = NA_integer_,
+#                               status = "unsubmitted") {
+#
+#   out <- list(
+#     collection = collection,
+#     description = description,
+#     data_structure = data_structure,
+#     rectangular_on = rectangular_on,
+#     data_format = data_format,
+#     samples = samples,
+#     variables = variables,
+#     submitted = submitted,
+#     download_links = download_links,
+#     number = number,
+#     status = status
+#   )
+#
+#   structure(
+#     out,
+#     class = c("ipums_extract", class(out))
+#   )
+#
+# }
+
 new_ipums_extract <- function(collection = NA_character_,
                               description = NA_character_,
-                              data_structure = NA_character_,
-                              rectangular_on = NA_character_,
-                              data_format = NA_character_,
-                              samples = NA_character_,
-                              variables = NA_character_,
-                              dataset = NA_character_,
-                              data_tables = NA_character_,
-                              ds_geog_levels = NA_character_,
-                              years = NA_character_,
-                              breakdown_values = NA_character_,
-                              time_series_table = NA_character_,
-                              ts_geog_levels = NA_character_,
-                              shapefiles = NA_character_,
-                              breakdown_and_data_type_layout = NA_character_,
-                              time_series_table_layout = NA_character_,
-                              geographic_extents = NA_character_,
                               submitted = FALSE,
                               download_links = EMPTY_NAMED_LIST,
                               number = NA_integer_,
-                              status = "unsubmitted") {
+                              status = "unsubmitted",
+                              ...) {
 
-  if(is.na(collection)) {
-
-    stop(
-      "The following elements of an ipums_extract must not contain missing ",
-      "values: collection",
-      call. = FALSE
-    )
-
-  } else if(collection == "nhgis") {
-
-    out <- list(
-      collection = collection,
-      description = description,
-      dataset = dataset,
-      data_tables = data_tables,
-      ds_geog_levels = ds_geog_levels,
-      years = years,
-      breakdown_values = breakdown_values,
-      time_series_table = time_series_table,
-      ts_geog_levels = ts_geog_levels,
-      shapefiles = shapefiles,
-      data_format = data_format,
-      breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-      time_series_table_layout = time_series_table_layout,
-      geographic_extents = geographic_extents,
-      submitted = submitted,
-      download_links = download_links,
-      number = number,
-      status = status
-    )
-
-  } else {
-
-    out <- list(
-      collection = collection,
-      description = description,
-      data_structure = data_structure,
-      rectangular_on = rectangular_on,
-      data_format = data_format,
-      samples = samples,
-      variables = variables,
-      submitted = submitted,
-      download_links = download_links,
-      number = number,
-      status = status
-    )
-
-  }
+  out <- list(
+    collection = collection,
+    description = description,
+    ...,
+    submitted = submitted,
+    download_links = download_links,
+    number = number,
+    status = status
+  )
 
   structure(
     out,
-    class = c("ipums_extract", class(out))
+    class = c(paste0(collection, "_extract"), "ipums_extract", class(out))
   )
+
 }
 
 
@@ -1188,171 +1156,146 @@ standardize_extract_identifier <- function(extract) {
   list(collection = collection, number = number)
 }
 
-#' Validate structure of an IPUMS extract
-#'
-#' @param x An extract object created with
-#'   \code{\link{define_extract_nhgis}}, \code{\link{define_extract_micro}} or
-#'   returned from another ipumsr API function.
+#' @export
 validate_ipums_extract <- function(x) {
+  UseMethod("validate_ipums_extract")
+}
 
-  stopifnot(!is.na(x$collection))
+#' @export
+validate_ipums_extract.nhgis_extract <- function(x) {
 
-  if(x$collection == "nhgis") {
+  types <- nhgis_extract_types(x)
 
-    types <- nhgis_extract_types(x)
+  if(length(types) == 0) {
+    stop(
+      "At least one of `dataset`, `time_series_table` or `shapefiles` ",
+      "must be specified.",
+      call. = FALSE
+    )
+  }
 
-    if(length(types) == 0) {
-      stop(
-        "At least one of `dataset`, `time_series_table` or `shapefiles` ",
-        "must be specified.",
-        call. = FALSE
-      )
-    }
+  if("dataset" %in% types) {
 
-    if("dataset" %in% types) {
-      validate_dataset(x)
-    }
+    must_be_non_missing <- c("collection", "description",
+                             "data_tables", "ds_geog_levels", "data_format")
 
-    if("time_series_table" %in% types) {
-      validate_time_series_table(x)
-    }
-
-    # Add additional logic to catch other requirements here?
-    #   1. geographic_extents required when geog_level's
-    #      has_geog_extent_selection == TRUE
-    #   2. Extract can technically be submitted when data_tables, etc.
-    #      are requested even without any dataset. But maybe these
-    #      should be caught too to make things clearer for users?
-    #
-    # Would need to put together metadata functionality first for 1.
-
-  } else {
-
-    must_be_non_missing <- c("description", "data_structure",
-                             "data_format", "samples", "variables")
-
-    is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.na(x[[.]])))
+    is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
 
     if (any(is_missing)) {
       stop(
-        "The following elements of an ipums_extract must not contain missing ",
-        "values: ",
+        "When a dataset is specified, the following must not contain ",
+        "missing values: ",
         paste0(must_be_non_missing[is_missing], collapse = ", "),
         call. = FALSE
       )
     }
 
-    stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
-    stopifnot(x$data_structure == "rectangular")
-    stopifnot(x$rectangular_on == "P")
+    if(!x$data_format %in% c("csv_no_header",
+                             "csv_header",
+                             "fixed_width")) {
 
-    if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
-      stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
-           "of 'H' or 'P'")
+      stop(
+        "`data_format` must be one of `csv_no_header`, `csv_header`, ",
+        "or `fixed_width`",
+        call. = FALSE
+      )
+
     }
 
-    if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
-      stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
-           "missing")
-    }
+    # Add additional logic to catch other requirements here?
+    #   1. years required when dataset has multiple years
+    #   2. breakdown_and_data_type_layout required when dataset has multiple
+    #      breakdowns or data types
+    #
+    # Would need to put together metadata functionality first.
+
   }
+
+  if("time_series_table" %in% types) {
+
+    must_be_non_missing <- c("collection", "description", "ts_geog_levels",
+                             "data_format", "time_series_table_layout")
+
+    is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
+
+    if (any(is_missing)) {
+      stop(
+        "When a time series table is specified, the following must not contain ",
+        "missing values: ",
+        paste0(must_be_non_missing[is_missing], collapse = ", "),
+        call. = FALSE
+      )
+    }
+
+    if(!x$data_format %in% c("csv_no_header",
+                             "csv_header",
+                             "fixed_width")) {
+
+      stop(
+        "`data_format` must be one of `csv_no_header`, `csv_header`, ",
+        "or `fixed_width`",
+        call. = FALSE
+      )
+
+    }
+
+    if(!x$time_series_table_layout %in% c("time_by_column_layout",
+                                          "time_by_row_layout",
+                                          "time_by_file_layout")) {
+      stop(
+        "`time_series_table_layout` must be one of `time_by_column_layout`, ",
+        "`time_by_row_layout`, or `time_by_file_layout`",
+        call. = FALSE
+      )
+    }
+
+  }
+
+  # Add additional logic to catch other requirements here?
+  #   1. geographic_extents required when geog_level's
+  #      has_geog_extent_selection == TRUE
+  #   2. Extract can technically be submitted when data_tables, etc.
+  #      are requested even without any dataset. But maybe these
+  #      should be caught too to make things clearer for users?
+  #
+  # Would need to put together metadata functionality first for 1.
 
   x
 
 }
 
-#' Validate NHGIS time_series_table specifications
-#'
-#' @param extract An extract object created with
-#'   \code{\link{define_extract_nhgis}} or
-#'   returned from another ipumsr API function.
-validate_time_series_table <- function(extract) {
+#' @export
+validate_ipums_extract.ipums_extract <- function(x) {
 
-  stopifnot(extract$collection == "nhgis")
+  must_be_non_missing <- c("collection", "description", "data_structure",
+                           "data_format", "samples", "variables")
 
-  must_be_non_missing <- c("ts_geog_levels", "data_format",
-                           "time_series_table_layout")
-
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(extract[[.]])))
+  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.na(x[[.]])))
 
   if (any(is_missing)) {
     stop(
-      "When time series tables are specified, the following must not contain ",
-      "missing values: ",
+      "The following elements of an ipums_extract must not contain missing ",
+      "values: ",
       paste0(must_be_non_missing[is_missing], collapse = ", "),
       call. = FALSE
     )
   }
 
-  if(!extract$data_format %in% c("csv_no_header",
-                                 "csv_header",
-                                 "fixed_width")) {
+  stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
+  stopifnot(x$data_structure == "rectangular")
+  stopifnot(x$rectangular_on == "P")
 
-    stop(
-      "`data_format` must be one of `csv_no_header`, `csv_header`, ",
-      "or `fixed_width`",
-      call. = FALSE
-    )
-
+  if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
+    stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
+         "of 'H' or 'P'")
   }
 
-  if(!extract$time_series_table_layout %in% c("time_by_column_layout",
-                                              "time_by_row_layout",
-                                              "time_by_file_layout")) {
-    stop(
-      "`time_series_table_layout` must be one of `time_by_column_layout`, ",
-      "`time_by_row_layout`, or `time_by_file_layout`",
-      call. = FALSE
-    )
+  if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
+    stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
+         "missing")
   }
 
-  extract
-
-}
-
-#' Validate NHGIS dataset specifications
-#'
-#' @param extract An extract object created with
-#'   \code{\link{define_extract_nhgis}} or
-#'   returned from another ipumsr API function.
-validate_dataset <- function(extract) {
-
-  stopifnot(extract$collection == "nhgis")
-
-  must_be_non_missing <- c("data_tables", "ds_geog_levels",
-                           "data_format")
-
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(extract[[.]])))
-
-  if (any(is_missing)) {
-    stop(
-      "When dataset are specified, the following must not contain ",
-      "missing values: ",
-      paste0(must_be_non_missing[is_missing], collapse = ", "),
-      call. = FALSE
-    )
-  }
-
-  if(!extract$data_format %in% c("csv_no_header",
-                                 "csv_header",
-                                 "fixed_width")) {
-
-    stop(
-      "`data_format` must be one of `csv_no_header`, `csv_header`, ",
-      "or `fixed_width`",
-      call. = FALSE
-    )
-
-  }
-
-  # Add additional logic to catch other requirements here?
-  #   1. years required when dataset has multiple years
-  #   2. breakdown_and_data_type_layout required when dataset has multiple
-  #      breakdowns or data types
-  #
-  # Would need to put together metadata functionality first.
-
-  extract
+  x
 
 }
 
@@ -1361,9 +1304,7 @@ validate_dataset <- function(extract) {
 #' An NHGIS extract will request at least one of dataset, time series tables or
 #' shapefiles.
 #'
-#' @param extract An extract object created with
-#'   \code{\link{define_extract_nhgis}} or
-#'   returned from another ipumsr API function.
+#' @param extract An nhgis_extract object
 nhgis_extract_types <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
@@ -1390,72 +1331,116 @@ nhgis_extract_types <- function(extract) {
 
 }
 
-
 #' @export
-print.ipums_extract <- function(extract) {
+print.ipums_extract <- function(x) {
 
-  if(extract$collection == "nhgis") {
-
-    types <- nhgis_extract_types(extract)
-
-    if("dataset" %in% types) {
-      ds_to_cat <- paste0(
-        "\n", print_truncated_vector(extract$dataset, "Dataset: "),
-        "\n  ", print_truncated_vector(extract$data_tables, "Tables: "),
-        "\n  ", print_truncated_vector(extract$ds_geog_levels, "Geog Levels: "),
-        "\n  ", print_truncated_vector(extract$years, "Years: ",
-                                       !is.null(extract$years)),
-        "\n  ", print_truncated_vector(extract$breakdown_values, "Breakdowns: ",
-                                       !is.null(extract$breakdown_values))
-      )
-    } else {
-      ds_to_cat <- NULL
-    }
-
-    if("time_series_table" %in% types) {
-      ts_to_cat <- paste0(
-        "\n", print_truncated_vector(extract$time_series_table,
-                                     "Time Series Tables: "),
-        "\n  ", print_truncated_vector(extract$ts_geog_levels, "Geog Levels: ")
-      )
-    } else {
-      ts_to_cat <- NULL
-    }
-
-    if("shapefiles" %in% types) {
-      shp_to_cat <- paste0(
-        "\n", print_truncated_vector(extract$shapefiles, "Shapefiles: ")
-      )
-    } else {
-      shp_to_cat <- NULL
-    }
-
-    to_cat <- paste0(
-      ifelse(extract$submitted, "Submitted ", "Unsubmitted "),
-      format_collection_for_printing(extract$collection),
-      " extract ", ifelse(extract$submitted, paste0("number ", extract$number), ""),
-      "\n", print_truncated_vector(extract$description, "Description: ", FALSE),
-      ds_to_cat,
-      ts_to_cat,
-      shp_to_cat
-    )
-
-  } else {
-
-    to_cat <- paste0(
-      ifelse(extract$submitted, "Submitted ", "Unsubmitted "),
-      format_collection_for_printing(extract$collection),
-      " extract ", ifelse(extract$submitted, paste0("number ", extract$number), ""),
-      "\n", print_truncated_vector(extract$description, "Description: ", FALSE),
-      "\n", print_truncated_vector(extract$samples, "Samples: "),
-      "\n", print_truncated_vector(extract$variables, "Variables: ")
-    )
-
-  }
+  to_cat <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
+    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    "\n", print_truncated_vector(x$samples, "Samples: "),
+    "\n", print_truncated_vector(x$variables, "Variables: ")
+  )
 
   cat(to_cat)
 
-  invisible(extract)
+  invisible(x)
+
+}
+
+#' @export
+print.nhgis_extract <- function(x) {
+
+  types <- nhgis_extract_types(x)
+
+  if("dataset" %in% types) {
+
+    ds_to_cat <- paste0(
+      "\n",
+      print_truncated_vector(
+        x$dataset,
+        "Dataset: ",
+        !is.null(x$dataset)
+      ),
+      "\n  ",
+      print_truncated_vector(
+        x$data_tables,
+        "Tables: ",
+        !is.null(x$data_tables)
+      ),
+      "\n  ",
+      print_truncated_vector(
+        x$ds_geog_levels,
+        "Geog Levels: ",
+        !is.null(x$ds_geog_levels)
+      ),
+      "\n  ",
+      print_truncated_vector(
+        x$years,
+        "Years: ",
+        !is.null(x$years)
+      ),
+      "\n  ",
+      print_truncated_vector(
+        x$breakdown_values,
+        "Breakdowns: ",
+        !is.null(x$breakdown_values)
+      )
+    )
+
+  } else {
+    ds_to_cat <- NULL
+  }
+
+  if("time_series_table" %in% types) {
+
+    ts_to_cat <- paste0(
+      "\n",
+      print_truncated_vector(
+        x$time_series_table,
+        "Time Series Tables: ",
+        !is.null(x$time_series_table)
+      ),
+      "\n  ",
+      print_truncated_vector(
+        x$ts_geog_levels,
+        "Geog Levels: ",
+        !is.null(x$ts_geog_levels)
+      )
+    )
+
+  } else {
+    ts_to_cat <- NULL
+  }
+
+  if("shapefiles" %in% types) {
+
+    shp_to_cat <- paste0(
+      "\n",
+      print_truncated_vector(
+        x$shapefiles,
+        "Shapefiles: "
+      )
+    )
+
+  } else {
+    shp_to_cat <- NULL
+  }
+
+  to_cat <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
+    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    ds_to_cat,
+    ts_to_cat,
+    shp_to_cat
+  )
+
+  cat(to_cat)
+
+  invisible(x)
 }
 
 
