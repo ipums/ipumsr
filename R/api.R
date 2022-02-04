@@ -98,48 +98,48 @@ define_extract_micro <- function(collection,
 #'
 #' @param description Description of the extract.
 #' @param dataset Character name of dataset to include in the extract, if any.
-#' @param data_tables Character vector of data tables to include in the extract
-#'   for the specified dataset. Required if a dataset is specified.
-#' @param ds_geog_levels Character vector of geographic levels to include in the
-#'   extract for the specified dataset. Required if a dataset is specified.
-#' @param years Character or integer vector of years to include in the extract
-#'   for the specified dataset. Use "*" to select all available years for the
-#'   specified dataset.
+#' @param data_tables Character vector of data tables associated with the
+#'   specified dataset to include in the extract. Required if a dataset is
+#'   specified.
+#' @param ds_geog_levels Character vector of geographic levels associated with
+#'   the specified dataset to include in the extract. Required if a dataset is
+#'   specified.
+#' @param years Character or integer vector of years associated with the
+#'   specified dataset to include in the extract. Use "*" to select all
+#'   available years for the specified dataset.
 #' @param breakdown_values Character vector of selected breakdown values to
-#'   to include in the extract for the specified dataset. If more than one
-#'   breakdown value is requested, `breakdown_and_data_type_layout` must also
-#'   be specified.
+#'   associated with the specified dataset to include in the extract. If more
+#'   than one breakdown value is requested, `breakdown_and_data_type_layout`
+#'   must also be specified.
 #' @param time_series_table Character name of time series table to include in
 #'   the extract, if any.
-#' @param ts_geog_levels Character vector of geographic levels to include in the
-#'   extract for the specified time series table. Required if a time series
-#'   table is specified.
+#' @param ts_geog_levels Character vector of geographic levels associated with
+#'   the specified time series table to include in the extract. Required if a
+#'   time series table is specified.
 #' @param shapefiles Character vector of shapefiles to include in the extract,
 #'   if any.
 #' @param data_format The desired format of the extract data file (one of
-#'   "csv_no_header", "csv_header", or "fixed_width").
-#'   "csv_no_header" provides a minimal header in the first row, while
-#'   "csv_header" adds a second, more descriptive header row.
+#'   \code{"csv_no_header"}, \code{"csv_header"}, or \code{"fixed_width"}).
+#'   \code{"csv_no_header"} provides a minimal header in the first row, while
+#'   \code{"csv_header"} adds a second, more descriptive header row.
 #'   Required when any dataset or time_series_table is selected.
 #' @param breakdown_and_data_type_layout Character indicating the layout of the
 #'   dataset when multiple data types or breakdown values are specified.
-#'   "separate_files" splits up each data type or breakdown combo into its own file.
-#'   "single_file" keeps all datatypes and breakdown combos in one file.
-#'   Required when a dataset has multiple breakdowns or data types.
+#'   \code{"separate_files"} splits up each data type or breakdown combo into
+#'   its own file. \code{"single_file"} keeps all datatypes and breakdown combos
+#'   in one file. Required when a dataset has multiple breakdowns or data types.
 #' @param time_series_table_layout Character indicating the layout of the
-#'   specified time series table. One of "time_by_column_layout",
-#'   "time_by_row_layout", or "time_by_file_layout". Required when a
-#'   time series table is specified.
-#' @param geographic_extents A list of geographic_instances to use as extents
-#'   for the dataset specified in the request. To select all extents, use "*".
-#'   Required when a geographic level on a dataset is specified where
-#'   `has_geog_extent_selection` is true.
+#'   specified time series table. One of \code{"time_by_column_layout"},
+#'   \code{"time_by_row_layout"}, or \code{"time_by_file_layout"}. Required when
+#'   a time series table is specified.
+#' @param geographic_extents A list of geographic instances to use as extents
+#'   for the dataset specified in the request. To select all extents, use
+#'   \code{"*"}. Required when a geographic level on a dataset is specified
+#'   where \code{has_geog_extent_selection} is true.
 #'
 #' @family ipums_api
 #' @return An object of class \code{ipums_extract} containing the extract
 #'   definition.
-#'
-#' @export
 #'
 #' @examples
 #' my_extract <- define_extract_nhgis(
@@ -149,6 +149,8 @@ define_extract_micro <- function(collection,
 #'   ds_geog_levels = "tract",
 #'   data_format = "csv_no_header"
 #' )
+#'
+#' @export
 define_extract_nhgis <- function(description = NULL,
                                  dataset = NULL,
                                  data_tables = NULL,
@@ -1071,38 +1073,6 @@ ipums_data_collections <- function() {
 
 
 # Non-exported functions --------------------------------------------------
-# new_ipums_extract <- function(collection = NA_character_,
-#                               description = NA_character_,
-#                               data_structure = NA_character_,
-#                               rectangular_on = NA_character_,
-#                               data_format = NA_character_,
-#                               samples = NA_character_,
-#                               variables = NA_character_,
-#                               submitted = FALSE,
-#                               download_links = EMPTY_NAMED_LIST,
-#                               number = NA_integer_,
-#                               status = "unsubmitted") {
-#
-#   out <- list(
-#     collection = collection,
-#     description = description,
-#     data_structure = data_structure,
-#     rectangular_on = rectangular_on,
-#     data_format = data_format,
-#     samples = samples,
-#     variables = variables,
-#     submitted = submitted,
-#     download_links = download_links,
-#     number = number,
-#     status = status
-#   )
-#
-#   structure(
-#     out,
-#     class = c("ipums_extract", class(out))
-#   )
-#
-# }
 
 new_ipums_extract <- function(collection = NA_character_,
                               description = NA_character_,
@@ -1156,12 +1126,10 @@ standardize_extract_identifier <- function(extract) {
   list(collection = collection, number = number)
 }
 
-#' @export
 validate_ipums_extract <- function(x) {
   UseMethod("validate_ipums_extract")
 }
 
-#' @export
 validate_ipums_extract.nhgis_extract <- function(x) {
 
   types <- nhgis_extract_types(x)
@@ -1186,6 +1154,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
         "When a dataset is specified, the following must not contain ",
         "missing values: ",
         paste0(must_be_non_missing[is_missing], collapse = ", "),
+        call. = FALSE
+      )
+    }
+
+    # API can handle this, but may be difficult to make an easy R interface for
+    # users
+    if(length(x$dataset) > 1) {
+      stop(
+        "Currently, only one dataset per extract request is supported",
         call. = FALSE
       )
     }
@@ -1227,6 +1204,14 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
+    if(length(x$time_series_table) > 1) {
+      stop(
+        "Currently, only one time series table per extract request is ",
+        "supported",
+        call. = FALSE
+      )
+    }
+
     if(!x$data_format %in% c("csv_no_header",
                              "csv_header",
                              "fixed_width")) {
@@ -1264,7 +1249,6 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
 }
 
-#' @export
 validate_ipums_extract.ipums_extract <- function(x) {
 
   must_be_non_missing <- c("collection", "description", "data_structure",

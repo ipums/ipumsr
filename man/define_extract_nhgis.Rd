@@ -25,52 +25,54 @@ define_extract_nhgis(
 
 \item{dataset}{Character name of dataset to include in the extract, if any.}
 
-\item{data_tables}{Character vector of data tables to include in the extract
-for the specified dataset. Required if a dataset is specified.}
+\item{data_tables}{Character vector of data tables associated with the
+specified dataset to include in the extract. Required if a dataset is
+specified.}
 
-\item{ds_geog_levels}{Character vector of geographic levels to include in the
-extract for the specified dataset. Required if a dataset is specified.}
+\item{ds_geog_levels}{Character vector of geographic levels associated with
+the specified dataset to include in the extract. Required if a dataset is
+specified.}
 
-\item{years}{Character or integer vector of years to include in the extract
-for the specified dataset. Use "*" to select all available years for the
-specified dataset.}
+\item{years}{Character or integer vector of years associated with the
+specified dataset to include in the extract. Use "*" to select all
+available years for the specified dataset.}
 
 \item{breakdown_values}{Character vector of selected breakdown values to
-to include in the extract for the specified dataset. If more than one
-breakdown value is requested, `breakdown_and_data_type_layout` must also
-be specified.}
+associated with the specified dataset to include in the extract. If more
+than one breakdown value is requested, `breakdown_and_data_type_layout`
+must also be specified.}
 
 \item{time_series_table}{Character name of time series table to include in
 the extract, if any.}
 
-\item{ts_geog_levels}{Character vector of geographic levels to include in the
-extract for the specified time series table. Required if a time series
-table is specified.}
+\item{ts_geog_levels}{Character vector of geographic levels associated with
+the specified time series table to include in the extract. Required if a
+time series table is specified.}
 
 \item{shapefiles}{Character vector of shapefiles to include in the extract,
 if any.}
 
 \item{data_format}{The desired format of the extract data file (one of
-"csv_no_header", "csv_header", or "fixed_width").
-"csv_no_header" provides a minimal header in the first row, while
-"csv_header" adds a second, more descriptive header row.
-Required when any datasets or time_series_tables are selected.}
+\code{"csv_no_header"}, \code{"csv_header"}, or \code{"fixed_width"}).
+\code{"csv_no_header"} provides a minimal header in the first row, while
+\code{"csv_header"} adds a second, more descriptive header row.
+Required when any dataset or time_series_table is selected.}
 
 \item{breakdown_and_data_type_layout}{Character indicating the layout of the
 dataset when multiple data types or breakdown values are specified.
-"separate_files" splits up each data type or breakdown combo into its own file.
-"single_file" keeps all datatypes and breakdown combos in one file.
-Required when a dataset has multiple breakdowns or data types.}
+\code{"separate_files"} splits up each data type or breakdown combo into
+its own file. \code{"single_file"} keeps all datatypes and breakdown combos
+in one file. Required when a dataset has multiple breakdowns or data types.}
 
 \item{time_series_table_layout}{Character indicating the layout of the
-specified time series table. One of "time_by_column_layout",
-"time_by_row_layout", or "time_by_file_layout". Required when a
-time series table is specified.}
+specified time series table. One of \code{"time_by_column_layout"},
+\code{"time_by_row_layout"}, or \code{"time_by_file_layout"}. Required when
+a time series table is specified.}
 
-\item{geographic_extents}{A list of geographic_instances to use as extents
-for the dataset specified in the request. To select all extents, use "*".
-Required when a geographic level on a dataset is specified where
-`has_geog_extent_selection` is true.}
+\item{geographic_extents}{A list of geographic instances to use as extents
+for the dataset specified in the request. To select all extents, use
+\code{"*"}. Required when a geographic level on a dataset is specified
+where \code{has_geog_extent_selection} is true.}
 }
 \value{
 An object of class \code{ipums_extract} containing the extract
@@ -88,6 +90,7 @@ my_extract <- define_extract_nhgis(
   ds_geog_levels = "tract",
   data_format = "csv_no_header"
 )
+
 }
 \seealso{
 Other ipums_api: 

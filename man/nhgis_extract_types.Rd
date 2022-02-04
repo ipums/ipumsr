@@ -7,9 +7,7 @@
 nhgis_extract_types(extract)
 }
 \arguments{
-\item{extract}{An extract object created with
-\code{\link{define_extract_nhgis}} or
-returned from another ipumsr API function.}
+\item{extract}{An nhgis_extract object}
 }
 \description{
 An NHGIS extract will request at least one of dataset, time series tables or
