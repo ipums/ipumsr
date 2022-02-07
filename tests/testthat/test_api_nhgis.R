@@ -134,6 +134,22 @@ test_that("nhgis_extract validate method works", {
   )
 })
 
+
+test_that("We can get correct API version info for each collection", {
+  expect_equal(ipums_api_version("usa"), "beta")
+  expect_equal(ipums_api_version("nhgis"), "v1")
+  expect_equal(
+    ipums_api_version("usa"),
+    dplyr::filter(ipums_collection_versions(), collection == "usa")$version
+  )
+  expect_equal(
+    ipums_api_version("nhgis"),
+    dplyr::filter(ipums_collection_versions(), collection == "nhgis")$version
+  )
+  expect_error(ipums_api_version("fake collection"), "No API version found")
+})
+
+
 # test_that("Can check the status of a USA extract by supplying extract object", {
 #   skip_if_no_api_access(have_api_access)
 #   vcr::use_cassette("get-usa-extract-info", {
