@@ -1254,7 +1254,7 @@ validate_ipums_extract.ipums_extract <- function(x) {
   must_be_non_missing <- c("collection", "description", "data_structure",
                            "data_format", "samples", "variables")
 
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.na(x[[.]])))
+  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
 
   if (any(is_missing)) {
     stop(
