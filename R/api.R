@@ -413,7 +413,7 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   response <- ipums_api_json_request(
     "GET",
     collection = collection,
-    path = paste0(microdata_api_extracts_path(), "/", extract$number),
+    path = paste0(api_extracts_path(), "/", extract$number),
     api_key = api_key
   )
   extract_list_from_json(response, collection)[[1]]
@@ -1626,10 +1626,10 @@ ipums_api_json_request <- function(verb,
   }
 
   api_url <- httr::modify_url(
-    microdata_api_base_url(),
+    api_base_url(),
     path = path,
     query = c(
-      list(collection = collection, version = microdata_api_version()),
+      list(collection = collection, version = ipums_api_version(collection)),
       queries
     )
   )
@@ -1849,24 +1849,50 @@ remove_from_extract <- function(extract,
 }
 
 
-microdata_api_base_url <- function() {
+api_base_url <- function() {
   api_url <- Sys.getenv("IPUMS_API_URL")
   if (api_url == "") return("https://api.ipums.org/extracts/")
   api_url
 }
 
 
-microdata_api_extracts_path <- function() {
-  basename(microdata_api_base_url())
+api_extracts_path <- function() {
+  basename(api_base_url())
 }
 
 
-microdata_api_version <- function() {
+ipums_api_version <- function(collection) {
+
+  versions <- ipums_collection_versions()
+
+  if(!collection %in% versions$collection) {
+    stop(
+      paste0(
+        "No API version found for collection `", collection, "`\n",
+        "IPUMS API is currently available for the following collections: ",
+        paste0(versions$collection, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
   api_version <- Sys.getenv("IPUMS_API_VERSION")
-  if (api_version == "") return("beta")
-  api_version
+
+  if (api_version == "") {
+    versions[[which(versions$collection == collection), "version"]]
+  } else {
+    api_version
+  }
+
 }
 
+ipums_collection_versions <- function() {
+  tibble::tribble(
+    ~collection, ~version,
+    "usa", "beta",
+    "nhgis", "v1"
+  )
+}
 
 EMPTY_NAMED_LIST <- setNames(list(), character(0))
 
