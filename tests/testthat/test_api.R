@@ -48,7 +48,7 @@ if (have_api_access) {
 
 # Tests ----
 test_that("Can define an extract", {
-  expect_s3_class(usa_extract, "ipums_extract")
+  expect_s3_class(usa_extract, c("usa_extract", "ipums_extract"))
   expect_equal(usa_extract$variables[[1]], "YEAR")
   expect_equal(usa_extract$data_structure, "rectangular")
   expect_equal(usa_extract$rectangular_on, "P")
@@ -92,6 +92,23 @@ test_that("Can submit a USA extract", {
 
 test_that("ipums_extract print method works", {
   expect_output(print(usa_extract), regexp = "Unsubmitted IPUMS USA extract")
+})
+
+
+test_that("ipums_extract validate method works", {
+  expect_identical(validate_ipums_extract(usa_extract), usa_extract)
+  expect_error(
+    validate_ipums_extract(define_extract_micro()),
+    "argument \"collection\" is missing"
+  )
+  expect_error(
+    validate_ipums_extract(define_extract_micro(collection = "usa",
+                                                description = "Test",
+                                                samples = "Test",
+                                                variables = "Test",
+                                                data_format = "Test")),
+    "\'arg\' should be one of"
+  )
 })
 
 

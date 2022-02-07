@@ -3,7 +3,7 @@ library(purrr)
 
 # Setup ----
 nhgis_extract <- define_extract_nhgis(
-  description = "dataset_test",
+  description = "Full extract",
   dataset = "2015_2019_ACS5a",
   data_tables = "B15003",
   ds_geog_levels = c("tract", "county"),
@@ -84,8 +84,54 @@ test_that("Can define an NHGIS extract", {
 # })
 
 test_that("nhgis_extract print method works", {
-  expect_output(print(nhgis_extract),
-                regexp = "Unsubmitted IPUMS NHGIS extract")
+  expect_output(
+    print(nhgis_extract),
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: Full extract",
+      "\nDataset: \\(1 total\\) 2015_2019_ACS5a",
+      "\n  Tables: \\(1 total\\) B15003",
+      "\n  Geog Levels: \\(2 total\\) tract, county",
+      "\n  Years: ",
+      "\n  Breakdowns: ",
+      "\nTime Series Tables: \\(1 total\\) CW3",
+      "\n  Geog Levels: \\(1 total\\) county",
+      "\nShapefiles: \\(1 total\\) us_nation_2012_tl2012"
+    )
+  )
+  expect_output(
+    print(nhgis_extract_shp),
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: ",
+      "\nShapefiles: \\(1 total\\) us_nation_2012_tl2012"
+    )
+  )
+})
+
+
+test_that("nhgis_extract validate method works", {
+  expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
+  expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
+  expect_error(
+    validate_ipums_extract(define_extract_nhgis()),
+    "At least one of `dataset`"
+  )
+  expect_error(
+    validate_ipums_extract(define_extract_nhgis(dataset = "Test")),
+    "When a dataset is specified,"
+  )
+  expect_error(
+    validate_ipums_extract(define_extract_nhgis(time_series_table = "Test")),
+    "When a time series table is specified,"
+  )
+  expect_error(
+    validate_ipums_extract(define_extract_nhgis(dataset = "Test",
+                                                data_tables = "Test",
+                                                ds_geog_levels = "Test",
+                                                data_format = "Test")),
+    "`data_format` must be one of"
+  )
 })
 
 # test_that("Can check the status of a USA extract by supplying extract object", {

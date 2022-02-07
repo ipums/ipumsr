@@ -1182,8 +1182,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if("dataset" %in% types) {
 
-    must_be_non_missing <- c("collection", "description",
-                             "data_tables", "ds_geog_levels", "data_format")
+    must_be_non_missing <- c("collection", "data_tables",
+                             "ds_geog_levels", "data_format")
 
     is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
 
@@ -1228,7 +1228,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if("time_series_table" %in% types) {
 
-    must_be_non_missing <- c("collection", "description", "ts_geog_levels",
+    must_be_non_missing <- c("collection", "ts_geog_levels",
                              "data_format", "time_series_table_layout")
 
     is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
