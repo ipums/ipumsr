@@ -1506,12 +1506,50 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   # out
 }
 
-
 extract_to_request_json <- function(extract) {
-  if (is.na(extract$description)) {
+  UseMethod("extract_to_request_json")
+}
+
+#' @export
+extract_to_request_json.nhgis_extract <- function(extract) {
+
+  if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
-  if (is.na(extract$data_format)) {
+
+  request_list <- list(
+    datasets = format_dataset_for_json(
+      extract$dataset,
+      extract$data_tables,
+      extract$ds_geog_levels,
+      extract$years,
+      extract$breakdown_values
+    ),
+    time_series_tables = format_tst_for_json(
+      extract$time_series_table,
+      extract$ts_geog_levels
+    ),
+    shapefiles = extract$shapefiles,
+    data_format = jsonlite::unbox(extract$data_format),
+    description = jsonlite::unbox(extract$description),
+    breakdown_and_data_type_layout = jsonlite::unbox(extract$breakdown_and_data_type_layout),
+    time_series_table_layout = jsonlite::unbox(extract$time_series_table_layout),
+    geographic_extents = extract$geographic_extents
+  )
+
+  request_list <- purrr::compact(request_list)
+
+  jsonlite::toJSON(request_list, pretty = TRUE)
+
+
+}
+
+#' @export
+extract_to_request_json.ipums_extract <- function(extract) {
+  if (is.null(extract$description) || is.na(extract$description)) {
+    extract$description <- ""
+  }
+  if (is.null(extract$data_format) || is.na(extract$data_format)) {
     extract$data_format <- ""
   }
   request_list <- list(
@@ -1527,6 +1565,50 @@ extract_to_request_json <- function(extract) {
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
+format_dataset_for_json <- function(dataset,
+                                    data_tables,
+                                    geog_levels,
+                                    years = NULL,
+                                    breakdown_values = NULL) {
+
+  if (is.null(dataset)) {
+    return(NULL)
+  }
+
+  dataset_list <- list(
+    dataset = list(
+      data_tables = data_tables,
+      geog_levels = geog_levels,
+      years = years,
+      breakdown_values = breakdown_values
+    )
+  )
+
+  dataset_list <- purrr::map(dataset_list, purrr::compact)
+  dataset_list <- setNames(dataset_list, dataset)
+
+  dataset_list
+
+}
+
+format_tst_for_json <- function(time_series_table, geog_levels) {
+
+  if (is.null(time_series_table)) {
+    return(NULL)
+  }
+
+  tst_list <- list(
+    time_series_table = list(
+      geog_levels = geog_levels
+    )
+  )
+
+  tst_list <- purrr::map(tst_list, purrr::compact)
+  tst_list <- setNames(tst_list, time_series_table)
+
+  tst_list
+
+}
 
 format_samples_for_json <- function(samples) {
   if (length(samples) == 1 && is.na(samples)) {
@@ -1547,7 +1629,7 @@ format_variables_for_json <- function(variables) {
 
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
-  if (is.na(data_structure)) {
+  if (is.null(data_structure) || is.na(data_structure)) {
     return(EMPTY_NAMED_LIST)
   } else if (data_structure == "rectangular") {
     return(list(rectangular = list(on = rectangular_on)))
