@@ -971,8 +971,22 @@ get_last_extract_info <- function(collection,
 #'
 #' @export
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
-  expected_names <- names(new_ipums_extract())
+
+  collection <- unique(extract_tbl$collection)
+
+  if(length(collection) > 1) {
+    stop(
+      "All extracts in `extract_tbl` must belong to same collection.",
+      call. = FALSE
+    )
+  }
+
+  expected_names <- get_extract_names(
+    new_ipums_extract(collection = collection)
+  )
+
   unexpected_names <- setdiff(names(extract_tbl), expected_names)
+
   if (length(unexpected_names) > 0) {
     stop(
       "Unexpected names in `extract_tbl`: ",
@@ -980,13 +994,36 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
       call. = FALSE
     )
   }
+
   extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
+
   if (validate) {
     extract_list <- purrr::walk(extract_list, validate_ipums_extract)
   }
+
   extract_list
+
 }
 
+get_extract_names <- function(x) {
+  UseMethod("get_extract_names")
+}
+
+#' @export
+get_extract_names.nhgis_extract <- function(x) {
+  c(
+    formalArgs(define_extract_nhgis),
+    "collection", "submitted", "download_links", "number", "status"
+  )
+}
+
+#' @export
+get_extract_names.ipums_extract <- function(x) {
+  c(
+    formalArgs(define_extract_micro),
+    "submitted", "download_links", "number", "status"
+  )
+}
 
 # > Convert extract list to tbl ----
 
@@ -1130,6 +1167,7 @@ validate_ipums_extract <- function(x) {
   UseMethod("validate_ipums_extract")
 }
 
+#' @export
 validate_ipums_extract.nhgis_extract <- function(x) {
 
   types <- nhgis_extract_types(x)
@@ -1249,6 +1287,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
 }
 
+#' @export
 validate_ipums_extract.ipums_extract <- function(x) {
 
   must_be_non_missing <- c("collection", "description", "data_structure",
