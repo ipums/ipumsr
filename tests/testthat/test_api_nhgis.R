@@ -18,6 +18,24 @@ nhgis_extract_shp <- define_extract_nhgis(
   shapefiles = "us_nation_2012_tl2012"
 )
 
+usa_extract <- define_extract_micro(
+  collection = "usa",
+  samples = "us2017b",
+  variables = "YEAR",
+  description = "Test extract",
+  data_format = "fixed_width"
+)
+
+nhgis_json <- new_ipums_json(
+  extract_to_request_json(nhgis_extract), "nhgis"
+)
+
+usa_json <- new_ipums_json(
+  extract_to_request_json(usa_extract),
+  "usa"
+)
+
+
 # if (have_api_access) {
 #   vcr::use_cassette("submitted-usa-extract", {
 #     submitted_usa_extract <- submit_extract(usa_extract)
@@ -82,6 +100,23 @@ test_that("Can define an NHGIS extract", {
 #     ipumsr:::EMPTY_NAMED_LIST
 #   )
 # })
+
+
+test_that("extract_list_from_json reproduces extract specs", {
+  expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
+  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
+  expect_identical(
+    names(extract_list_from_json(nhgis_json)[[1]]),
+    names(nhgis_extract)
+  )
+  expect_identical(extract_list_from_json(nhgis_json)[[1]], nhgis_extract)
+  expect_identical(
+    names(extract_list_from_json(usa_json)[[1]]),
+    names(usa_extract)
+  )
+  expect_identical(extract_list_from_json(usa_json)[[1]], usa_extract)
+})
+
 
 test_that("nhgis_extract print method works", {
   expect_output(
