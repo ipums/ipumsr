@@ -215,9 +215,11 @@ define_extract_nhgis <- function(description = NULL,
 #'
 #' @export
 define_extract_from_json <- function(extract_json, collection) {
+
   if (missing(collection)) {
     stop("`collection` is a required argument", call. = FALSE)
   }
+
   if (!collection %in% ipums_data_collections()$code_for_api) {
     stop(
       paste0(
@@ -228,11 +230,14 @@ define_extract_from_json <- function(extract_json, collection) {
       call. = FALSE
     )
   }
+
+  extract_json <- new_ipums_json(extract_json, collection)
+
   list_of_extracts <- extract_list_from_json(
     extract_json,
-    collection,
     validate = TRUE
   )
+
   if (length(list_of_extracts) != 1) {
     stop(
       paste0(
@@ -242,7 +247,9 @@ define_extract_from_json <- function(extract_json, collection) {
       call. = FALSE
     )
   }
+
   list_of_extracts[[1]]
+
 }
 
 
@@ -333,10 +340,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     body = extract_to_request_json(extract),
   )
 
-  extract <- extract_list_from_json(
-    response,
-    collection = extract$collection
-  )
+  extract <- extract_list_from_json(response)
 
   # extract_list_from_json() always returns a list of extracts, but in
   # this case there is always only one, so pluck it out
@@ -416,7 +420,7 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     path = paste0(api_extracts_path(), "/", extract$number),
     api_key = api_key
   )
-  extract_list_from_json(response, collection)[[1]]
+  extract_list_from_json(response)[[1]]
 }
 
 
@@ -866,7 +870,7 @@ get_recent_extracts_info_list <- function(collection,
     queries = list(limit = how_many),
     api_key = api_key
   )
-  extract_list_from_json(response, collection)
+  extract_list_from_json(response)
 }
 
 
@@ -1132,6 +1136,15 @@ new_ipums_extract <- function(collection = NA_character_,
   structure(
     out,
     class = c(paste0(collection, "_extract"), "ipums_extract", class(out))
+  )
+
+}
+
+new_ipums_json <- function(json, collection) {
+
+  structure(
+    json,
+    class = c(paste0(collection, "_json"))
   )
 
 }
@@ -1532,14 +1545,18 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     shapefiles = extract$shapefiles,
     data_format = jsonlite::unbox(extract$data_format),
     description = jsonlite::unbox(extract$description),
-    breakdown_and_data_type_layout = jsonlite::unbox(extract$breakdown_and_data_type_layout),
-    time_series_table_layout = jsonlite::unbox(extract$time_series_table_layout),
+    breakdown_and_data_type_layout = jsonlite::unbox(
+      extract$breakdown_and_data_type_layout
+    ),
+    time_series_table_layout = jsonlite::unbox(
+      extract$time_series_table_layout
+    ),
     geographic_extents = extract$geographic_extents
   )
 
   request_list <- purrr::compact(request_list)
 
-  jsonlite::toJSON(request_list, pretty = TRUE)
+  jsonlite::toJSON(request_list)
 
 
 }
@@ -1785,15 +1802,22 @@ ipums_api_json_request <- function(verb,
     stop("Extract API did not return json", call. = FALSE)
   }
 
-  httr::content(res, "text")
+  new_ipums_json(
+    httr::content(res, "text"),
+    collection = collection
+  )
 
 }
 
-extract_list_from_json <- function(extracts_as_json,
-                                   collection,
-                                   validate = FALSE) {
+extract_list_from_json <- function(extract_json, ...) {
+  UseMethod("extract_list_from_json")
+}
+
+#' @export
+extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
+
   list_of_extract_info <- jsonlite::fromJSON(
-    extracts_as_json,
+    extract_json,
     simplifyVector = FALSE
   )
 
@@ -1810,7 +1834,55 @@ extract_list_from_json <- function(extracts_as_json,
     list_of_extract_info,
     function(x) {
       out <- new_ipums_extract(
-        collection = collection,
+        collection = "nhgis",
+        description = x$description,
+        dataset = names(x$datasets),
+        data_tables = unlist(x$datasets[[1]]$data_tables),
+        ds_geog_levels = unlist(x$datasets[[1]]$geog_levels),
+        years = unlist(x$datasets[[1]]$years),
+        breakdown_values = unlist(x$datasets[[1]]$breakdown_values),
+        time_series_table = names(x$time_series_tables),
+        ts_geog_levels = unlist(x$time_series_tables[[1]]$geog_levels),
+        shapefiles = unlist(x$shapefiles),
+        data_format = x$data_format,
+        time_series_table_layout = x$time_series_table_layout,
+        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
+        geographic_extents = unlist(x$geographic_extents),
+        status = x$status,
+        download_links = x$download_links,
+        number = x$number,
+        submitted = ifelse(!is.null(x$number), TRUE, FALSE)
+      )
+
+      if (validate) validate_ipums_extract(out)
+
+      out
+    }
+  )
+}
+
+#' @export
+extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
+
+  list_of_extract_info <- jsonlite::fromJSON(
+    extract_json,
+    simplifyVector = FALSE
+  )
+
+  # The response only has names when it contains info on a single extract. In
+  #   that case, we want to make sure this function returns an unnamed list of
+  #   length one, to ensure consistency in the structure of the return value.
+  list_contains_info_on_single_extract <- !is.null(names(list_of_extract_info))
+
+  if (list_contains_info_on_single_extract) {
+    list_of_extract_info <- list(list_of_extract_info)
+  }
+
+  purrr::map(
+    list_of_extract_info,
+    function(x) {
+      out <- new_ipums_extract(
+        collection = "usa",
         description = x$description,
         data_structure = names(x$data_structure),
         rectangular_on = ifelse(
