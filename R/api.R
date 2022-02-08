@@ -1849,12 +1849,11 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         time_series_table_layout = x$time_series_table_layout,
         geographic_extents = unlist(x$geographic_extents),
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
-        download_links = if ("download_links" %in% names(x)) {
+        download_links = if (!is.null(x$download_links)) {
           x$download_links
         } else EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status = ifelse("status" %in% names(x), x$status, "unsubmitted")
-
+        status = x$status
       )
 
       if (validate) validate_ipums_extract(out)
