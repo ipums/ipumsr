@@ -1144,7 +1144,7 @@ new_ipums_json <- function(json, collection) {
 
   structure(
     json,
-    class = c(paste0(collection, "_json"))
+    class = c(paste0(collection, "_json"), "ipums_json")
   )
 
 }
@@ -1845,13 +1845,16 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         ts_geog_levels = unlist(x$time_series_tables[[1]]$geog_levels),
         shapefiles = unlist(x$shapefiles),
         data_format = x$data_format,
-        time_series_table_layout = x$time_series_table_layout,
         breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
+        time_series_table_layout = x$time_series_table_layout,
         geographic_extents = unlist(x$geographic_extents),
-        status = x$status,
-        download_links = x$download_links,
-        number = x$number,
-        submitted = ifelse(!is.null(x$number), TRUE, FALSE)
+        submitted = ifelse("number" %in% names(x), TRUE, FALSE),
+        download_links = if ("download_links" %in% names(x)) {
+          x$download_links
+        } else EMPTY_NAMED_LIST,
+        number = ifelse("number" %in% names(x), x$number, NA_integer_),
+        status = ifelse("status" %in% names(x), x$status, "unsubmitted")
+
       )
 
       if (validate) validate_ipums_extract(out)
@@ -1862,7 +1865,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 }
 
 #' @export
-extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
+extract_list_from_json.ipums_json <- function(extract_json, validate = FALSE) {
 
   list_of_extract_info <- jsonlite::fromJSON(
     extract_json,
