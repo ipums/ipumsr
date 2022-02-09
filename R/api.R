@@ -340,11 +340,13 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     body = extract_to_request_json(extract),
   )
 
-  extract <- extract_list_from_json(response)
-
   # extract_list_from_json() always returns a list of extracts, but in
   # this case there is always only one, so pluck it out
-  extract <- extract[[1]]
+  response_extract <- extract_list_from_json(response)[[1]]
+
+  # If necessary, reattach specifications that are missing from API response
+  # (stems from issue with NHGIS API v1)
+  extract <- reconstruct_api_response(extract, response_extract)
 
   message(
     sprintf(
@@ -1853,7 +1855,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
           x$download_links
         } else EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status = x$status
+        status = ifelse(!is.null(x$status), x$status, "unsubmitted")
       )
 
       if (validate) validate_ipums_extract(out)
@@ -1907,6 +1909,80 @@ extract_list_from_json.ipums_json <- function(extract_json, validate = FALSE) {
     }
   )
 }
+
+
+#' Reattach specifications not returned in API response to NHGIS extracts
+#'
+#' @details
+#' In current version of NHGIS API (v1), not all specifications are returned in
+#' the API response after extract submission.
+#'
+#' The following are not provided in the API response:
+#'
+#'  * shapefiles
+#'  * breakdown_and_data_type_layout
+#'  * time_series_table_layout
+#'  * geographic_extents
+#'  * status
+#'
+#' Upon completion, the API still provides the requested data. However, without
+#' these specifications it is not possible to reconstruct an extract based
+#' solely on the API response.
+#'
+#' Future versions of the API may address this issue at which point
+#' extract_list_from_json() can likely handle extract reconstruction alone.
+#'
+#' @md
+reconstruct_api_response <- function(extract, response_extract) {
+
+  if(extract$collection != "nhgis") {
+    return(response_extract)
+  } else {
+    extract <- new_ipums_extract(
+      collection = response_extract$collection,
+      description = response_extract$description,
+      dataset = response_extract$dataset,
+      data_tables = response_extract$data_tables,
+      ds_geog_levels = response_extract$ds_geog_levels,
+      years = response_extract$years,
+      breakdown_values = response_extract$breakdown_values,
+      time_series_table = response_extract$time_series_table,
+      ts_geog_levels = response_extract$ts_geog_levels,
+      shapefiles = extract$shapefiles,
+      data_format = response_extract$data_format,
+      breakdown_and_data_type_layout = extract$breakdown_and_data_type_layout,
+      time_series_table_layout = extract$time_series_table_layout,
+      geographic_extents = extract$geographic_extents,
+      submitted = response_extract$submitted,
+      download_links = response_extract$download_links,
+      number = response_extract$number,
+      # extract_list_from_json() recodes NULL status to "unsubmitted",
+      # which is desired for user-provided JSON extracts. However,
+      # since NHGIS API POST request (in v1) returns NULL status, and
+      # reconstruct_api_response() is only used in submit_extract(), we want
+      # to recode "unsubmitted" extract to "submitted"
+      status = if (response_extract$status == "unsubmitted") {
+        "submitted"
+      } else response_extract$status
+    )
+  }
+
+  extract
+
+  # purrr::modify2(
+  #   response,
+  #   extract,
+  #   ~if (is.null(.x) && !is.null(.y)) {
+  #     .y
+  #   } else if (is.null(.x) && is.null(.y)) {
+  #     NA_character_
+  #   } else {
+  #     .x
+  #   }
+  # )
+
+}
+
 
 
 parse_400_error <- function(res) {
