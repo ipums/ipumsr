@@ -1024,10 +1024,18 @@ get_extract_names.nhgis_extract <- function(x) {
 }
 
 #' @export
-get_extract_names.ipums_extract <- function(x) {
+get_extract_names.usa_extract <- function(x) {
   c(
     formalArgs(define_extract_micro),
     "submitted", "download_links", "number", "status"
+  )
+}
+
+#' @export
+get_extract_names.ipums_extract <- function(x) {
+  c(
+    "collection", "description", "submitted",
+    "download_links", "number", "status"
   )
 }
 
@@ -1303,12 +1311,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 }
 
 #' @export
-validate_ipums_extract.ipums_extract <- function(x) {
+validate_ipums_extract.usa_extract <- function(x) {
 
-  must_be_non_missing <- c("collection", "description", "data_structure",
+  must_be_non_missing <- c("description", "data_structure",
                            "data_format", "samples", "variables")
 
-  is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
+  is_missing <- purrr::map_lgl(
+    must_be_non_missing,
+    ~any(is.na(x[[.]])) || is.null(x[[.]])
+  )
 
   if (any(is_missing)) {
     stop(
@@ -1331,6 +1342,24 @@ validate_ipums_extract.ipums_extract <- function(x) {
   if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
     stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
          "missing")
+  }
+
+  x
+
+}
+
+#' @export
+validate_ipums_extract.ipums_extract <- function(x) {
+
+  if(!x$collection %in% ipums_collection_versions()$collection) {
+    stop(
+      paste0(
+        "No API version found for collection `", x$collection, "`\n",
+        "IPUMS API is currently available for the following collections: ",
+        paste0(ipums_collection_versions()$collection, collapse = ", ")
+      ),
+      call. = FALSE
+    )
   }
 
   x
@@ -1370,7 +1399,7 @@ nhgis_extract_types <- function(extract) {
 }
 
 #' @export
-print.ipums_extract <- function(x) {
+print.usa_extract <- function(x) {
 
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
@@ -1379,6 +1408,22 @@ print.ipums_extract <- function(x) {
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
     "\n", print_truncated_vector(x$samples, "Samples: "),
     "\n", print_truncated_vector(x$variables, "Variables: ")
+  )
+
+  cat(to_cat)
+
+  invisible(x)
+
+}
+
+#' @export
+print.ipums_extract <- function(x) {
+
+  to_cat <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
+    "\n", print_truncated_vector(x$description, "Description: ", FALSE)
   )
 
   cat(to_cat)
@@ -1564,13 +1609,16 @@ extract_to_request_json.nhgis_extract <- function(extract) {
 }
 
 #' @export
-extract_to_request_json.ipums_extract <- function(extract) {
+extract_to_request_json.usa_extract <- function(extract) {
+
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
+
   if (is.null(extract$data_format) || is.na(extract$data_format)) {
     extract$data_format <- ""
   }
+
   request_list <- list(
     description = extract$description,
     data_structure = format_data_structure_for_json(
@@ -1581,7 +1629,24 @@ extract_to_request_json.ipums_extract <- function(extract) {
     samples = format_samples_for_json(extract$samples),
     variables = format_variables_for_json(extract$variables)
   )
+
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
+
+}
+
+#' @export
+extract_to_request_json.ipums_extract <- function(extract) {
+
+  if (is.na(extract$description)) {
+    extract$description <- ""
+  }
+
+  request_list <- list(
+    description = extract$description
+  )
+
+  jsonlite::toJSON(request_list, auto_unbox = TRUE)
+
 }
 
 format_dataset_for_json <- function(dataset,
@@ -1866,7 +1931,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 }
 
 #' @export
-extract_list_from_json.ipums_json <- function(extract_json, validate = FALSE) {
+extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
 
   list_of_extract_info <- jsonlite::fromJSON(
     extract_json,
