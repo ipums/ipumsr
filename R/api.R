@@ -1478,7 +1478,14 @@ nhgis_extract_types <- function(extract) {
 
   possible_types <- c("dataset", "time_series_table", "shapefiles")
 
-  is_missing <- purrr::map_lgl(possible_types, ~any(is.null(extract[[.]])))
+  is_missing <- purrr::map_lgl(
+    possible_types,
+    ~any(
+      is.null(extract[[.]]),
+      is.na(extract[[.]]),
+      is_list(extract[[.]]) && is_empty(extract[[.]]) && is_named(extract[[.]])
+    )
+  )
 
   # if(sum(is_missing) == 3) {
   #   stop(
@@ -1701,7 +1708,12 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     geographic_extents = extract$geographic_extents
   )
 
-  request_list <- purrr::compact(request_list)
+  request_list <- purrr::keep(
+    purrr::compact(
+      request_list
+    ),
+    function(y) !any(is.na(y))
+  )
 
   jsonlite::toJSON(request_list)
 
@@ -1755,7 +1767,7 @@ format_dataset_for_json <- function(dataset,
                                     years = NULL,
                                     breakdown_values = NULL) {
 
-  if (is.null(dataset)) {
+  if (is.null(dataset) || is.na(dataset)) {
     return(NULL)
   }
 
@@ -1777,7 +1789,7 @@ format_dataset_for_json <- function(dataset,
 
 format_tst_for_json <- function(time_series_table, geog_levels) {
 
-  if (is.null(time_series_table)) {
+  if (is.null(time_series_table) || is.na(time_series_table)) {
     return(NULL)
   }
 
