@@ -1101,21 +1101,36 @@ get_extract_names.ipums_extract <- function(x) {
 #'
 #' @export
 extract_list_to_tbl <- function(extract_list) {
+
+  # TODO: Restrict to single collection in extract list?
+  # Function can work with multiple collections, so maybe unnecessary to create
+  # arbitrary restriction, but usefulness of multiple seems limited.
+  # extract_types <- unique(
+  #   purrr::map(
+  #     extract_list,
+  #     function(x) x$collection
+  #   )
+  # )
+  #
+  # if(length(extract_types) != 1) {
+  #   stop(
+  #     "All extracts in `extract_list` must belong to same collection.",
+  #     call. = FALSE
+  #   )
+  # }
+
   unclassed_extract_list <- purrr::map(
     extract_list,
-    function(x) {
-      if (is.character(x$samples)) x$samples <- list(x$samples)
-      if (is.character(x$variables)) x$variables <- list(x$variables)
-      x$download_links <- list(x$download_links)
-      unclass(x)
-    }
+    prepare_extract_for_tbl
   )
+
   if (length(unclassed_extract_list) == 1) {
     return(do.call(tibble::tibble, unclassed_extract_list[[1]]))
   }
-  do.call(dplyr::bind_rows, unclassed_extract_list)
-}
 
+  do.call(dplyr::bind_rows, unclassed_extract_list)
+
+}
 
 # > List data collections ----
 
@@ -1396,6 +1411,42 @@ validate_ipums_extract.ipums_extract <- function(x) {
 
 }
 
+
+prepare_extract_for_tbl <- function(x) {
+  UseMethod("prepare_extract_for_tbl")
+}
+
+#' @export
+prepare_extract_for_tbl.usa_extract <- function(x) {
+
+  if (is.character(x$samples)) x$samples <- list(x$samples)
+  if (is.character(x$variables)) x$variables <- list(x$variables)
+  x$download_links <- list(x$download_links)
+  unclass(x)
+
+}
+
+#' @export
+prepare_extract_for_tbl.nhgis_extract <- function(x) {
+
+  if (is.null(x$dataset)) x$dataset <- NA_character_
+  if (is.null(x$description))  x$description <- NA_character_
+  x$data_tables <- reformat_null_to_list(x$data_tables)
+  x$ds_geog_levels <- reformat_null_to_list(x$ds_geog_levels)
+  x$years <- reformat_null_to_list(x$years)
+  x$breakdown_values <- reformat_null_to_list(x$breakdown_values)
+  if (is.null(x$time_series_table)) x$time_series_table <- NA_character_
+  x$ts_geog_levels <- reformat_null_to_list(x$ts_geog_levels)
+  x$shapefiles <- reformat_null_to_list(x$shapefiles)
+  if (is.null(x$data_format)) x$data_format <- NA_character_
+  if (is.null(x$breakdown_and_data_type_layout)) x$breakdown_and_data_type_layout <- NA_character_
+  if (is.null(x$time_series_table_layout)) x$time_series_table_layout <- NA_character_
+  x$geographic_extents <- reformat_null_to_list(x$geographic_extents)
+  x$download_links <- list(x$download_links)
+  unclass(x)
+
+}
+
 #' Identify data types specified in an NHGIS extract
 #'
 #' An NHGIS extract will request at least one of dataset, time series tables or
@@ -1603,9 +1654,9 @@ extract_to_request_json <- function(extract) {
 #' @export
 extract_to_request_json.nhgis_extract <- function(extract) {
 
-  if (is.null(extract$description) || is.na(extract$description)) {
-    extract$description <- ""
-  }
+  # if (is.null(extract$description) || is.na(extract$description)) {
+  #   extract$description <- ""
+  # }
 
   request_list <- list(
     datasets = format_dataset_for_json(
@@ -2294,5 +2345,13 @@ convert_paths_in_cassette_file_to_relative <- function(cassette_path) {
 skip_if_no_api_access <- function(have_api_access) {
   if (!have_api_access) {
     return(testthat::skip("no API access and no saved API responses"))
+  }
+}
+
+reformat_null_to_list <- function(x) {
+  if (!is.null(x)) {
+    list(x)
+  } else {
+    list(EMPTY_NAMED_LIST)
   }
 }
