@@ -404,9 +404,12 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' @export
 get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
+
   extract <- standardize_extract_identifier(extract)
+
   stopifnot(length(extract$collection) == 1)
   stopifnot(length(extract$number) == 1)
+
   if (is.na(extract$number)) {
     stop(
       "Extract number cannot be a missing value; please supply an ",
@@ -415,14 +418,29 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
       call. = FALSE
     )
   }
+
   collection <- tolower(extract$collection)
+
   response <- ipums_api_json_request(
     "GET",
     collection = collection,
     path = paste0(api_extracts_path(), "/", extract$number),
     api_key = api_key
   )
+
+  if(collection == "nhgis") {
+    warning(
+      "The current version of the NHGIS API (v1) does not provide information ",
+      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+      "`time_series_table_layout` or `geographic_extents` for previously ",
+      "submitted extracts. Consult your initial extract request for ",
+      "information on the values of these parameters.",
+      call. = FALSE
+    )
+  }
+
   extract_list_from_json(response)[[1]]
+
 }
 
 
@@ -872,6 +890,18 @@ get_recent_extracts_info_list <- function(collection,
     queries = list(limit = how_many),
     api_key = api_key
   )
+
+  if(collection == "nhgis") {
+    warning(
+      "The current version of the NHGIS API (v1) does not provide information ",
+      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+      "`time_series_table_layout` or `geographic_extents` for previously ",
+      "submitted extracts. Consult your initial extract request for ",
+      "information on the values of these parameters.",
+      call. = FALSE
+    )
+  }
+
   extract_list_from_json(response)
 }
 
