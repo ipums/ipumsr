@@ -151,7 +151,7 @@ define_extract_micro <- function(collection,
 #' )
 #'
 #' @export
-define_extract_nhgis <- function(description = NULL,
+define_extract_nhgis <- function(description = "",
                                  dataset = NULL,
                                  data_tables = NULL,
                                  ds_geog_levels = NULL,
@@ -1248,12 +1248,27 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
+  is_missing <- purrr::map_lgl(
+    c("collection", "description"),
+    ~any(is.null(x[[.]]) || is.na(x[[.]]))
+  )
+
+  if (any(is_missing)) {
+    stop(
+      "The following extract specifications must not contain missing values: ",
+      paste0(c("collection", "description")[is_missing], collapse = ", "),
+      call. = FALSE
+    )
+  }
+
   if("dataset" %in% types) {
 
-    must_be_non_missing <- c("collection", "data_tables",
-                             "ds_geog_levels", "data_format")
+    must_be_non_missing <- c("data_tables", "ds_geog_levels", "data_format")
 
-    is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
+    is_missing <- purrr::map_lgl(
+      must_be_non_missing,
+      ~any(is.null(x[[.]]) || is.na(x[[.]]))
+    )
 
     if (any(is_missing)) {
       stop(
@@ -1264,6 +1279,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
+    # TODO: Allow multiple datasets?
     # API can handle this, but may be difficult to make an easy R interface for
     # users
     if(length(x$dataset) > 1) {
@@ -1285,7 +1301,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     }
 
-    # Add additional logic to catch other requirements here?
+    # TODO: Add additional logic to catch other requirements here?
     #   1. years required when dataset has multiple years
     #   2. breakdown_and_data_type_layout required when dataset has multiple
     #      breakdowns or data types
@@ -1296,10 +1312,13 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if("time_series_table" %in% types) {
 
-    must_be_non_missing <- c("collection", "ts_geog_levels",
-                             "data_format", "time_series_table_layout")
+    must_be_non_missing <- c("ts_geog_levels", "data_format",
+                             "time_series_table_layout")
 
-    is_missing <- purrr::map_lgl(must_be_non_missing, ~any(is.null(x[[.]])))
+    is_missing <- purrr::map_lgl(
+      must_be_non_missing,
+      ~any(is.null(x[[.]]) || is.na(x[[.]]))
+    )
 
     if (any(is_missing)) {
       stop(
@@ -1342,7 +1361,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   }
 
-  # Add additional logic to catch other requirements here?
+  # TODO: Add additional logic to catch other requirements here?
   #   1. geographic_extents required when geog_level's
   #      has_geog_extent_selection == TRUE
   #   2. Extract can technically be submitted when data_tables, etc.

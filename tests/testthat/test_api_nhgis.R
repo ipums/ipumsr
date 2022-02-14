@@ -167,6 +167,11 @@ test_that("nhgis_extract validate method works", {
                                                 data_format = "Test")),
     "`data_format` must be one of"
   )
+  expect_error(
+    validate_ipums_extract(define_extract_nhgis(description = NULL,
+                                                shapefiles = "Test")),
+    "The following extract specifications must not contain missing values: desc"
+  )
 })
 
 

@@ -5,7 +5,7 @@
 \title{Define an NHGIS extract request}
 \usage{
 define_extract_nhgis(
-  description = NULL,
+  description = "",
   dataset = NULL,
   data_tables = NULL,
   ds_geog_levels = NULL,
