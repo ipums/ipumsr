@@ -1010,9 +1010,25 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
   collection <- unique(extract_tbl$collection)
 
-  if(length(collection) > 1) {
+  if (length(collection) > 1) {
     stop(
       "All extracts in `extract_tbl` must belong to same collection.",
+      call. = FALSE
+    )
+  }
+
+  # Remove when NHGIS API is updated
+  if (collection == "nhgis" && ipums_api_version("nhgis") == "v1" && validate) {
+
+    validate <- FALSE
+
+    warning(
+      "The current version of the NHGIS API (v1) does not provide information ",
+      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+      "`time_series_table_layout` or `geographic_extents` for previously ",
+      "submitted extracts. Extracts including these parameters may not be ",
+      "reconstructed accurately and cannot be validated.\n\n",
+      "Setting `validate = FALSE`",
       call. = FALSE
     )
   }
@@ -1102,22 +1118,19 @@ get_extract_names.ipums_extract <- function(x) {
 #' @export
 extract_list_to_tbl <- function(extract_list) {
 
-  # TODO: Restrict to single collection in extract list?
-  # Function can work with multiple collections, so maybe unnecessary to create
-  # arbitrary restriction, but usefulness of multiple seems limited.
-  # extract_types <- unique(
-  #   purrr::map(
-  #     extract_list,
-  #     function(x) x$collection
-  #   )
-  # )
-  #
-  # if(length(extract_types) != 1) {
-  #   stop(
-  #     "All extracts in `extract_list` must belong to same collection.",
-  #     call. = FALSE
-  #   )
-  # }
+  extract_types <- unique(
+    purrr::map(
+      extract_list,
+      function(x) x$collection
+    )
+  )
+
+  if(length(extract_types) != 1) {
+    stop(
+      "All extracts in `extract_list` must belong to same collection.",
+      call. = FALSE
+    )
+  }
 
   unclassed_extract_list <- purrr::map(
     extract_list,
