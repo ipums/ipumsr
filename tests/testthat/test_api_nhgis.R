@@ -2,14 +2,17 @@ library(dplyr)
 library(purrr)
 
 # Setup ----
+
 nhgis_extract <- define_extract_nhgis(
-  description = "Full extract",
+  description = "Extract for R client testing",
   dataset = "2015_2019_ACS5a",
-  data_tables = "B15003",
-  ds_geog_levels = c("tract", "county"),
+  data_tables = c("B01001", "B01002", "B15003"),
+  ds_geog_levels = "blck_grp",
   time_series_table = "CW3",
   ts_geog_levels = "county",
   time_series_table_layout = "time_by_column_layout",
+  breakdown_and_data_type_layout = "single_file",
+  geographic_extents = c("010", "420"),
   shapefiles = "us_nation_2012_tl2012",
   data_format = "csv_no_header"
 )
@@ -26,57 +29,51 @@ usa_extract <- define_extract_micro(
   data_format = "fixed_width"
 )
 
-nhgis_json <- new_ipums_json(
-  extract_to_request_json(nhgis_extract), "nhgis"
-)
+nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
 
-usa_json <- new_ipums_json(
-  extract_to_request_json(usa_extract),
-  "usa"
-)
+usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
 
+if (have_api_access) {
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(nhgis_extract)
+  })
 
-# if (have_api_access) {
-#   vcr::use_cassette("submitted-usa-extract", {
-#     submitted_usa_extract <- submit_extract(usa_extract)
-#   })
-#
-#   vcr::use_cassette("ready-usa-extract", {
-#     ready_usa_extract <- wait_for_extract(submitted_usa_extract)
-#   })
-#
-#   # Modify ready-usa-extract.yml to only includes the final http request, so that
-#   # it returns the ready-to-download extract immediately on subsequent runs
-#   ready_usa_extract_cassette_file <- file.path(
-#     vcr::vcr_test_path("fixtures"), "ready-usa-extract.yml"
-#   )
-#
-#   ready_usa_lines <- readLines(ready_usa_extract_cassette_file)
-#   last_request_start_line <- max(which(grepl("^- request:", ready_usa_lines)))
-#   writeLines(
-#     c(
-#       ready_usa_lines[[1]],
-#       ready_usa_lines[last_request_start_line:length(ready_usa_lines)]
-#     ),
-#     con = ready_usa_extract_cassette_file
-#   )
-#
-#
-#   vcr::use_cassette("recent-usa-extracts-list", {
-#     recent_usa_extracts_list <- get_recent_extracts_info_list("usa")
-#   })
-#
-#   vcr::use_cassette("recent-usa-extracts-tbl", {
-#     recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
-#   })
-# }
+  vcr::use_cassette("ready-nhgis-extract", {
+    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+  })
+
+  # Modify ready-nhgis-extract.yml to only includes the final http request, so that
+  # it returns the ready-to-download extract immediately on subsequent runs
+  ready_nhgis_extract_cassette_file <- file.path(
+    vcr::vcr_test_path("fixtures"), "ready-nhgis-extract.yml"
+  )
+
+  ready_nhgis_lines <- readLines(ready_nhgis_extract_cassette_file)
+  last_request_start_line <- max(which(grepl("^- request:", ready_nhgis_lines)))
+
+  writeLines(
+    c(
+      ready_nhgis_lines[[1]],
+      ready_nhgis_lines[last_request_start_line:length(ready_nhgis_lines)]
+    ),
+    con = ready_nhgis_extract_cassette_file
+  )
+
+  vcr::use_cassette("recent-nhgis-extracts-list", {
+    recent_nhgis_extracts_list <- get_recent_extracts_info_list("nhgis")
+  })
+
+  vcr::use_cassette("recent-nhgis-extracts-tbl", {
+    recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+  })
+}
 
 # Tests ----
 test_that("Can define an NHGIS extract", {
   expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(nhgis_extract$dataset, "2015_2019_ACS5a")
-  expect_equal(nhgis_extract$data_tables, "B15003")
-  expect_equal(nhgis_extract$ds_geog_levels, c("tract", "county"))
+  expect_equal(nhgis_extract$data_tables, c("B01001", "B01002", "B15003"))
+  expect_equal(nhgis_extract$ds_geog_levels, "blck_grp")
   expect_equal(nhgis_extract$time_series_table, "CW3")
   expect_equal(nhgis_extract$ts_geog_levels, "county")
   expect_equal(nhgis_extract$time_series_table_layout, "time_by_column_layout")
@@ -89,44 +86,69 @@ test_that("Can define an NHGIS extract", {
   expect_null(nhgis_extract_shp$dataset)
 })
 
-# test_that("Can submit a USA extract", {
-#   skip_if_no_api_access(have_api_access)
-#   expect_s3_class(submitted_usa_extract, "ipums_extract")
-#   expect_equal(submitted_usa_extract$collection, "usa")
-#   expect_true(submitted_usa_extract$submitted)
-#   expect_equal(submitted_usa_extract$status, "queued")
-#   expect_identical(
-#     submitted_usa_extract$download_links,
-#     ipumsr:::EMPTY_NAMED_LIST
-#   )
-# })
+test_that("Can submit an NHGIS extract", {
+  skip_if_no_api_access(have_api_access)
+  expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(submitted_nhgis_extract$collection, "nhgis")
+  expect_true(submitted_nhgis_extract$submitted)
+  expect_equal(submitted_nhgis_extract$status, "submitted")
+  expect_identical(
+    submitted_nhgis_extract$download_links,
+    ipumsr:::EMPTY_NAMED_LIST
+  )
+})
 
+# Included as reminder to update handling of these fields when API is updated
+test_that("NHGIS API v1 has missing fields but are recovered when submitting", {
+  skip_if_no_api_access(have_api_access)
+  vcr::use_cassette("get-nhgis-extract-info", {
+    checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
+  })
+
+  expect_warning(
+    get_extract_info(submitted_nhgis_extract),
+    "The current version"
+  )
+
+  expect_null(checked_nhgis_extract$shapefiles)
+  expect_false(is.null(submitted_nhgis_extract$shapefiles))
+
+  expect_null(checked_nhgis_extract$breakdown_and_data_type_layout)
+  expect_false(is.null(submitted_nhgis_extract$breakdown_and_data_type_layout))
+
+  expect_null(checked_nhgis_extract$time_series_table_layout)
+  expect_false(is.null(submitted_nhgis_extract$time_series_table_layout))
+
+  expect_null(checked_nhgis_extract$geographic_extents)
+  expect_false(is.null(submitted_nhgis_extract$geographic_extents))
+})
 
 test_that("extract_list_from_json reproduces extract specs", {
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
   expect_s3_class(usa_json, c("usa_json", "ipums_json"))
   expect_identical(
-    names(extract_list_from_json(nhgis_json)[[1]]),
-    names(nhgis_extract)
+    extract_list_from_json(nhgis_json)[[1]],
+    nhgis_extract
   )
-  expect_identical(extract_list_from_json(nhgis_json)[[1]], nhgis_extract)
   expect_identical(
-    names(extract_list_from_json(usa_json)[[1]]),
-    names(usa_extract)
+    extract_list_from_json(usa_json)[[1]],
+    usa_extract
   )
-  expect_identical(extract_list_from_json(usa_json)[[1]], usa_extract)
 })
 
+# test_that("can convert from user-supplied JSON to extract", {
+#
+# })
 
 test_that("nhgis_extract print method works", {
   expect_output(
     print(nhgis_extract),
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: Full extract",
+      "\nDescription: Extract for R client testing",
       "\nDataset: \\(1 total\\) 2015_2019_ACS5a",
-      "\n  Tables: \\(1 total\\) B15003",
-      "\n  Geog Levels: \\(2 total\\) tract, county",
+      "\n  Tables: \\(3 total\\) B01001, B01002, B15003",
+      "\n  Geog Levels: \\(1 total\\) blck_grp",
       "\n  Years: ",
       "\n  Breakdowns: ",
       "\nTime Series Tables: \\(1 total\\) CW3",
@@ -144,32 +166,54 @@ test_that("nhgis_extract print method works", {
   )
 })
 
-
+# Should test this on extracts returned from extract tbl output as well
 test_that("nhgis_extract validate method works", {
   expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
   expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
   expect_error(
-    validate_ipums_extract(define_extract_nhgis()),
+    validate_ipums_extract(new_ipums_extract("nhgis")),
     "At least one of `dataset`"
   )
   expect_error(
-    validate_ipums_extract(define_extract_nhgis(dataset = "Test")),
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        dataset = "Test")
+    ),
     "When a dataset is specified,"
   )
   expect_error(
-    validate_ipums_extract(define_extract_nhgis(time_series_table = "Test")),
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        time_series_table = "Test"
+      )
+    ),
     "When a time series table is specified,"
   )
   expect_error(
-    validate_ipums_extract(define_extract_nhgis(dataset = "Test",
-                                                data_tables = "Test",
-                                                ds_geog_levels = "Test",
-                                                data_format = "Test")),
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        dataset = "Test",
+        data_tables = "Test",
+        ds_geog_levels = "Test",
+        data_format = "Test"
+      )
+    ),
     "`data_format` must be one of"
   )
   expect_error(
-    validate_ipums_extract(define_extract_nhgis(description = NULL,
-                                                shapefiles = "Test")),
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = NULL,
+        shapefiles = "Test"
+      )
+    ),
     "The following extract specifications must not contain missing values: desc"
   )
 })
@@ -190,60 +234,77 @@ test_that("We can get correct API version info for each collection", {
 })
 
 
-# test_that("Can check the status of a USA extract by supplying extract object", {
-#   skip_if_no_api_access(have_api_access)
-#   vcr::use_cassette("get-usa-extract-info", {
-#     extract <- get_extract_info(submitted_usa_extract)
-#   })
-#   expect_s3_class(extract, "ipums_extract")
-#   expect_true(extract$status == "completed")
-#   vcr::use_cassette("is-usa-extract-ready", {
-#     is_ready <- is_extract_ready(submitted_usa_extract)
-#   })
-#   expect_true(is_ready)
-# })
+test_that("Can check status of an NHGIS extract by supplying extract object", {
+  skip_if_no_api_access(have_api_access)
+  vcr::use_cassette("get-nhgis-extract-info", {
+    checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
+  })
+  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(submitted_nhgis_extract$status, "submitted")
+  vcr::use_cassette("is-nhgis-extract-ready", {
+    is_ready <- is_extract_ready(submitted_nhgis_extract)
+  })
+  expect_true(is_ready)
+})
 
 
-# test_that("Can check the status of a USA extract by supplying collection and number", {
-#   skip_if_no_api_access(have_api_access)
-#   vcr::use_cassette("get-usa-extract-info", {
-#     extract <- get_extract_info(c("usa", submitted_usa_extract$number))
-#   })
-#   expect_s3_class(extract, "ipums_extract")
-#   expect_true(extract$status == "completed")
-#   vcr::use_cassette("is-usa-extract-ready", {
-#     is_ready <- is_extract_ready(c("usa", submitted_usa_extract$number))
-#   })
-#   expect_true(is_ready)
-#   vcr::use_cassette("get-usa-extract-info", {
-#     extract <- get_extract_info(paste0("usa:", submitted_usa_extract$number))
-#   })
-#   expect_s3_class(extract, "ipums_extract")
-#   expect_true(extract$status == "completed")
-#   vcr::use_cassette("is-usa-extract-ready", {
-#     is_ready <- is_extract_ready(paste0("usa:", submitted_usa_extract$number))
-#   })
-#   expect_true(is_ready)
-# })
+test_that("Can check the status of an NHGIS extract by supplying collection and number", {
+  skip_if_no_api_access(have_api_access)
+  vcr::use_cassette("get-nhgis-extract-info", {
+    checked_nhgis_extract <- get_extract_info(
+      c("nhgis", submitted_nhgis_extract$number)
+    )
+  })
+  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(checked_nhgis_extract$status, "completed")
+  vcr::use_cassette("is-nhgis-extract-ready", {
+    is_ready <- is_extract_ready(submitted_nhgis_extract)
+  })
+  expect_true(is_ready)
+  vcr::use_cassette("get-nhgis-extract-info", {
+    checked_nhgis_extract <- get_extract_info(paste0("nhgis:", submitted_nhgis_extract$number))
+  })
+  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(checked_nhgis_extract$status, "completed")
+  vcr::use_cassette("is-nhgis-extract-ready", {
+    is_ready <- is_extract_ready(submitted_nhgis_extract)
+  })
+  expect_true(is_ready)
+})
 
 
-# test_that("Tibble of recent USA extracts contains expected columns", {
-#   skip_if_no_api_access(have_api_access)
-#   expected_columns <- c("collection", "description", "data_structure",
-#                         "rectangular_on", "data_format", "samples", "variables",
-#                         "submitted", "download_links", "number", "status")
-#   expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
-# })
+test_that("Tibble of recent NHGIS extracts has expected structure", {
+  skip_if_no_api_access(have_api_access)
+  expected_columns <- c("collection", "description", "dataset",
+                        "data_tables", "ds_geog_levels", "years",
+                        "breakdown_values", "time_series_table",
+                        "ts_geog_levels", "shapefiles", "data_format",
+                        "breakdown_and_data_type_layout",
+                        "time_series_table_layout", "geographic_extents",
+                        "submitted", "download_links", "number", "status")
+  expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
+  expect_equal(nrow(recent_nhgis_extracts_tbl), 10)
+  expect_equal(
+    recent_nhgis_extracts_tbl[1,]$dataset,
+    submitted_nhgis_extract$dataset
+  )
+  expect_equal(
+    unlist(recent_nhgis_extracts_tbl[1,]$data_tables),
+    submitted_nhgis_extract$data_tables
+  )
+  expect_equal(
+    recent_nhgis_extracts_tbl[1,]$time_series_table,
+    submitted_nhgis_extract$time_series_table
+  )
+})
 
-
-# test_that("Can limit number of recent extracts to get info on", {
-#   skip_if_no_api_access(have_api_access)
-#   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-#     two_recent_usa_extracts <- get_recent_extracts_info_tbl("usa", 2)
-#   })
-#   expect_equal(nrow(two_recent_usa_extracts), 2)
-# })
-
+test_that("Can limit number of recent extracts to get info on", {
+  skip_if_no_api_access(have_api_access)
+  vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
+    two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
+  })
+  expect_equal(nrow(two_recent_nhgis_extracts), 2)
+})
 
 # if (have_api_access) {
 #   download_extract_cassette_file <- file.path(
@@ -431,16 +492,16 @@ test_that("We can get correct API version info for each collection", {
 #   )
 # })
 
-# test_that("tbl to list and list to tbl conversion works", {
-#   skip_if_no_api_access(have_api_access)
-#   converted_to_list <- extract_tbl_to_list(
-#     recent_usa_extracts_tbl,
-#     validate = FALSE
-#   )
-#   converted_to_tbl <- extract_list_to_tbl(recent_usa_extracts_list)
-#   expect_identical(recent_usa_extracts_list, converted_to_list)
-#   expect_identical(recent_usa_extracts_tbl, converted_to_tbl)
-# })
+test_that("NHGIS tbl to list and list to tbl conversion works", {
+  skip_if_no_api_access(have_api_access)
+  converted_to_list <- extract_tbl_to_list(
+    recent_nhgis_extracts_tbl,
+    validate = FALSE
+  )
+  converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  expect_identical(recent_nhgis_extracts_list, converted_to_list)
+  expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
+})
 
 # test_that("We can export to and import from JSON", {
 #   json_tmpfile <- file.path(tempdir(), "usa_extract.json")

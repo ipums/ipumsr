@@ -1,0 +1,51 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1&limit=10
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Tue, 15 Feb 2022 21:21:14 GMT
+      etag: W/"3fe4a20f4df8d11e69fe4a3323bfbf1a"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: e726115a-dfa0-490f-922b-ae151239033e
+      x-runtime: '1.310340'
+      x-xss-protection: 1; mode=block
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"number":347,"data_format":"csv_header","description":"Extract for
+        R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}},{"number":346,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752166/nhgis0346_shape.zip"},"datasets":null,"time_series_tables":null},{"number":345,"data_format":"csv_header","description":"Testing
+        multiple geog extents","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752158/nhgis0345_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752158/nhgis0345_csv.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":null},{"number":344,"data_format":"csv_header","description":"Testing
+        multiple geog extents","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752149/nhgis0344_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752149/nhgis0344_csv.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":null},{"number":343,"data_format":"fixed_width","description":"","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752144/nhgis0343_fixed_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752144/nhgis0343_fixed.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752144/nhgis0343_shape.zip"},"datasets":{"1988_1997_CBPa":{"data_tables":["NT001","NT002"],"geog_levels":["county"],"years":["1988","1989"],"breakdown_values":["bs30.si0762","bs30.si2026"]}},"time_series_tables":null},{"number":342,"data_format":"fixed_width","description":"Test
+        extract with dataset only","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752141/nhgis0342_fixed_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752141/nhgis0342_fixed.zip"},"datasets":{"1988_1997_CBPa":{"data_tables":["NT001","NT002"],"geog_levels":["county"],"years":["1988","1989"],"breakdown_values":["bs30.si----"]}},"time_series_tables":null},{"number":341,"data_format":"csv_header","description":"Test
+        extract with TST only","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752133/nhgis0341_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752133/nhgis0341_csv.zip"},"datasets":null,"time_series_tables":{"CW7":{"geog_levels":["blck_grp","tract"]}}},{"number":340,"data_format":null,"description":"Test
+        extract with shapefiles only","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752130/nhgis0340_shape.zip"},"datasets":null,"time_series_tables":null},{"number":339,"data_format":"csv_header","description":"Submission
+        test","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752127/nhgis0339_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752127/nhgis0339_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752127/nhgis0339_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["state","blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}},{"number":338,"data_format":"csv_header","description":"manual
+        submission of 337","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1751859/nhgis0338_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1751859/nhgis0338_csv.zip"},"datasets":null,"time_series_tables":{"CW3":{"geog_levels":["tract"]}}}]'
+  recorded_at: 2022-02-15 21:21:15 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

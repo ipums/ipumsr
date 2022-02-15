@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/347?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Tue, 15 Feb 2022 21:21:17 GMT
+      etag: W/"75f7216322d9b2b42d35ed168c4195ad"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 2f372295-2180-4bc2-992c-b261f858e24c
+      x-runtime: '1.216028'
+      x-xss-protection: 1; mode=block
+      content-length: '617'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"number":347,"data_format":"csv_header","description":"Extract for
+        R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}}'
+  recorded_at: 2022-02-15 21:21:18 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
