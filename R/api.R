@@ -1638,7 +1638,8 @@ print.nhgis_extract <- function(x) {
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
     ds_to_cat,
     ts_to_cat,
-    shp_to_cat
+    shp_to_cat,
+    "\n"
   )
 
   cat(to_cat)
@@ -1788,7 +1789,7 @@ format_dataset_for_json <- function(dataset,
     dataset = list(
       data_tables = data_tables,
       geog_levels = geog_levels,
-      years = years,
+      years = as.character(years),
       breakdown_values = breakdown_values
     )
   )
