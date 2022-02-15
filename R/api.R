@@ -2195,6 +2195,11 @@ json_to_extract <- function(json, collection) {
 
 
 extract_is_completed_and_has_links <- function(extract) {
+  UseMethod("extract_is_completed_and_has_links")
+}
+
+#' @export
+extract_is_completed_and_has_links.usa_extract <- function(extract) {
   status <- extract$status
   download_links <- extract$download_links
 
@@ -2204,6 +2209,17 @@ extract_is_completed_and_has_links <- function(extract) {
 
   status == "completed" && has_url(download_links, "ddi_codebook") &&
     has_url(download_links, "data")
+}
+
+#' @export
+extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
+
+  status <- extract$status
+  download_links <- extract$download_links
+
+  # TODO: Check if there needs to be more logic here for NHGIS.
+  status == "completed" && length(download_links) > 0
+
 }
 
 
