@@ -161,10 +161,6 @@ test_that("extract_list_from_json reproduces extract specs", {
   )
 })
 
-# test_that("can convert from user-supplied JSON to extract", {
-#
-# })
-
 test_that("nhgis_extract print method works", {
   expect_output(
     print(nhgis_extract),
@@ -239,7 +235,10 @@ test_that("nhgis_extract validate method works", {
         shapefiles = "Test"
       )
     ),
-    "The following extract specifications must not contain missing values: desc"
+    paste0(
+      "The following elements of an nhgis_extract must not contain ",
+      "missing values: desc"
+    )
   )
 })
 
@@ -453,16 +452,6 @@ test_that("Can limit number of recent extracts to get info on", {
 # )
 #
 
-# test_that("An extract request with missing collection returns correct error", {
-#   expect_error(
-#     submit_extract(ipumsr:::new_ipums_extract()),
-#     regexp = paste0(
-#       "The following elements of an ipums_extract must not contain missing ",
-#       "values:"
-#     )
-#   )
-# })
-
 # test_that("Can revise an extract", {
 #   revised_extract <- revise_extract_micro(
 #     usa_extract,
@@ -526,24 +515,43 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
   converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
   expect_identical(recent_nhgis_extracts_list, converted_to_list)
   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
+  # expect_error(
+  #   extract_list_to_tbl(
+  #     list(submitted_nhgis_extract,
+  #          submitted_usa_extract)
+  #   ),
+  #   "All extracts in `extract_list` must belong to same collection"
+  # )
 })
 
-# test_that("We can export to and import from JSON", {
-#   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-#   on.exit(unlink(json_tmpfile))
-#   save_extract_as_json(usa_extract, json_tmpfile)
-#   copy_of_usa_extract <- define_extract_from_json(json_tmpfile, "usa")
-#   expect_identical(usa_extract, copy_of_usa_extract)
-# })
+test_that("We can export to and import from JSON for NHGIS", {
+  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
+  on.exit(unlink(json_tmpfile))
+  save_extract_as_json(nhgis_extract, json_tmpfile)
+  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile, "nhgis")
+  expect_identical(nhgis_extract, copy_of_nhgis_extract)
+  expect_error(
+    define_extract_from_json(json_tmpfile, "usa"),
+    ".+Did you specify the correct collection for this extract?"
+  )
+})
 
-# test_that("We can export to and import from JSON, submitted extract", {
-#   skip_if_no_api_access(have_api_access)
-#   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-#   on.exit(unlink(json_tmpfile))
-#   save_extract_as_json(submitted_usa_extract, json_tmpfile)
-#   copy_of_submitted_usa_extract <- define_extract_from_json(json_tmpfile, "usa")
-#   expect_identical(
-#     ipumsr:::copy_ipums_extract(submitted_usa_extract),
-#     copy_of_submitted_usa_extract
-#   )
-# })
+test_that("We can export to and import from JSON, submitted NHGIS extract", {
+  skip_if_no_api_access(have_api_access)
+  json_tmpfile <- file.path(tempdir(), "usa_extract.json")
+  on.exit(unlink(json_tmpfile))
+  save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
+  copy_of_submitted_nhgis_extract <- define_extract_from_json(
+    json_tmpfile,
+    "nhgis"
+  )
+  expect_identical(
+    ipumsr:::copy_ipums_extract(submitted_nhgis_extract),
+    copy_of_submitted_nhgis_extract
+  )
+  expect_error(
+    define_extract_from_json(json_tmpfile, "usa"),
+    ".+Did you specify the correct collection for this extract?"
+  )
+})
+

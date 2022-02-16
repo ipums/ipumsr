@@ -237,10 +237,22 @@ define_extract_from_json <- function(extract_json, collection) {
 
   extract_json <- new_ipums_json(extract_json, collection)
 
-  list_of_extracts <- extract_list_from_json(
-    extract_json,
-    validate = TRUE
+  tryCatch(
+    error = function(cnd) {
+      stop(
+        conditionMessage(cnd),
+        "\n\nDid you specify the correct collection for this extract?",
+        call. = FALSE
+      )
+    },
+
+    list_of_extracts <- extract_list_from_json(
+      extract_json,
+      validate = TRUE
+    )
+
   )
+
 
   if (length(list_of_extracts) != 1) {
     stop(
@@ -1272,7 +1284,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if (any(is_missing)) {
     stop(
-      "The following extract specifications must not contain missing values: ",
+      "The following elements of an nhgis_extract must not contain missing ",
+      "values: ",
       paste0(c("collection", "description")[is_missing], collapse = ", "),
       call. = FALSE
     )
@@ -1404,7 +1417,7 @@ validate_ipums_extract.usa_extract <- function(x) {
 
   if (any(is_missing)) {
     stop(
-      "The following elements of an ipums_extract must not contain missing ",
+      "The following elements of a usa_extract must not contain missing ",
       "values: ",
       paste0(must_be_non_missing[is_missing], collapse = ", "),
       call. = FALSE
@@ -1440,6 +1453,10 @@ validate_ipums_extract.ipums_extract <- function(x) {
         paste0(ipums_collection_versions()$collection, collapse = ", ")
       ),
       call. = FALSE
+    )
+  } else {
+    warning(
+      paste0("Unable to validate extract for collection `", x$collection, "`.")
     )
   }
 
