@@ -19,8 +19,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 15 Feb 2022 21:19:54 GMT
-      etag: W/"526cc641834cc82922e18b654b9ea5c1"
+      date: Wed, 16 Feb 2022 19:09:57 GMT
+      etag: W/"675e6bc728c9e3e818b1fb619f455d62"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
       status: 200 OK
@@ -33,14 +33,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 069c2532-68ed-4a96-a95d-23d21d00287d
-      x-runtime: '0.434023'
+      x-request-id: 69d98928-1b5f-4f93-9d33-989f7d26ad6d
+      x-runtime: '0.367839'
       x-xss-protection: 1; mode=block
       content-length: '284'
     body:
       encoding: UTF-8
       file: no
-      string: '{"number":347,"data_format":"csv_no_header","description":"Extract
+      string: '{"number":357,"data_format":"csv_no_header","description":"Extract
         for R client testing","status":null,"download_links":null,"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}}'
-  recorded_at: 2022-02-15 21:19:54 GMT
+  recorded_at: 2022-02-16 19:09:57 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

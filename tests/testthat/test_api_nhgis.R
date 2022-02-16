@@ -38,6 +38,10 @@ if (have_api_access) {
     submitted_nhgis_extract <- submit_extract(nhgis_extract)
   })
 
+  vcr::use_cassette("submitted-nhgis-extract-shp", {
+    submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
+  })
+
   vcr::use_cassette("ready-nhgis-extract", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
@@ -83,17 +87,38 @@ test_that("Can define an NHGIS extract", {
   expect_false(nhgis_extract$submitted)
   expect_equal(nhgis_extract$number, NA_integer_)
   expect_equal(nhgis_extract$status, "unsubmitted")
-  expect_null(nhgis_extract_shp$dataset)
+  expect_true(is.na(nhgis_extract_shp$dataset))
 })
 
-test_that("Can submit an NHGIS extract", {
+test_that("Can submit an NHGIS extract of multiple types", {
   skip_if_no_api_access(have_api_access)
   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(submitted_nhgis_extract$collection, "nhgis")
+  expect_equal(submitted_nhgis_extract$dataset, "2015_2019_ACS5a")
+  expect_equal(submitted_nhgis_extract$time_series_table, "CW3")
+  expect_equal(submitted_nhgis_extract$shapefiles, "us_nation_2012_tl2012")
   expect_true(submitted_nhgis_extract$submitted)
   expect_equal(submitted_nhgis_extract$status, "submitted")
   expect_identical(
     submitted_nhgis_extract$download_links,
+    ipumsr:::EMPTY_NAMED_LIST
+  )
+})
+
+test_that("Can submit an NHGIS extract of a single type", {
+  skip_if_no_api_access(have_api_access)
+  expect_s3_class(
+    submitted_nhgis_extract_shp,
+    c("nhgis_extract", "ipums_extract")
+  )
+  expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
+  expect_true(is.na(submitted_nhgis_extract_shp$dataset))
+  expect_true(is.na(submitted_nhgis_extract_shp$time_series_table))
+  expect_equal(submitted_nhgis_extract_shp$shapefiles, "us_nation_2012_tl2012")
+  expect_true(submitted_nhgis_extract_shp$submitted)
+  expect_equal(submitted_nhgis_extract_shp$status, "submitted")
+  expect_identical(
+    submitted_nhgis_extract_shp$download_links,
     ipumsr:::EMPTY_NAMED_LIST
   )
 })
@@ -110,17 +135,17 @@ test_that("NHGIS API v1 has missing fields but are recovered when submitting", {
     "The current version"
   )
 
-  expect_null(checked_nhgis_extract$shapefiles)
-  expect_false(is.null(submitted_nhgis_extract$shapefiles))
+  expect_true(is_empty(checked_nhgis_extract$shapefiles))
+  expect_false(is_empty(submitted_nhgis_extract$shapefiles))
 
-  expect_null(checked_nhgis_extract$breakdown_and_data_type_layout)
-  expect_false(is.null(submitted_nhgis_extract$breakdown_and_data_type_layout))
+  expect_true(is.na(checked_nhgis_extract$breakdown_and_data_type_layout))
+  expect_false(is.na(submitted_nhgis_extract$breakdown_and_data_type_layout))
 
-  expect_null(checked_nhgis_extract$time_series_table_layout)
-  expect_false(is.null(submitted_nhgis_extract$time_series_table_layout))
+  expect_true(is.na(checked_nhgis_extract$time_series_table_layout))
+  expect_false(is.na(submitted_nhgis_extract$time_series_table_layout))
 
-  expect_null(checked_nhgis_extract$geographic_extents)
-  expect_false(is.null(submitted_nhgis_extract$geographic_extents))
+  expect_true(is_empty(checked_nhgis_extract$geographic_extents))
+  expect_false(is_empty(submitted_nhgis_extract$geographic_extents))
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
@@ -146,12 +171,12 @@ test_that("nhgis_extract print method works", {
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
-      "\nDataset: \\(1 total\\) 2015_2019_ACS5a",
+      "\nDataset: 2015_2019_ACS5a",
       "\n  Tables: \\(3 total\\) B01001, B01002, B15003",
       "\n  Geog Levels: \\(1 total\\) blck_grp",
       "\n  Years: ",
       "\n  Breakdowns: ",
-      "\nTime Series Tables: \\(1 total\\) CW3",
+      "\nTime Series Tables: CW3",
       "\n  Geog Levels: \\(1 total\\) county",
       "\nShapefiles: \\(1 total\\) us_nation_2012_tl2012"
     )
@@ -285,15 +310,15 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
   expect_equal(nrow(recent_nhgis_extracts_tbl), 10)
   expect_equal(
-    recent_nhgis_extracts_tbl[1,]$dataset,
+    recent_nhgis_extracts_tbl[2,]$dataset,
     submitted_nhgis_extract$dataset
   )
   expect_equal(
-    unlist(recent_nhgis_extracts_tbl[1,]$data_tables),
+    unlist(recent_nhgis_extracts_tbl[2,]$data_tables),
     submitted_nhgis_extract$data_tables
   )
   expect_equal(
-    recent_nhgis_extracts_tbl[1,]$time_series_table,
+    recent_nhgis_extracts_tbl[2,]$time_series_table,
     submitted_nhgis_extract$time_series_table
   )
 })

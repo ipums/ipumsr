@@ -1,0 +1,44 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: '{"shapefiles":["us_nation_2012_tl2012"],"description":""}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 16 Feb 2022 19:10:00 GMT
+      etag: W/"24cf8c2b9bb6ccdd05d27ff1c2a3030c"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: db605afc-2ae5-4167-8c4a-8b0f8b986a8c
+      x-runtime: '2.535759'
+      x-xss-protection: 1; mode=block
+      content-length: '128'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"number":358,"data_format":null,"description":"","status":null,"download_links":null,"datasets":null,"time_series_tables":null}'
+  recorded_at: 2022-02-16 19:10:00 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 15 Feb 2022 21:21:21 GMT
-      etag: W/"23fe197924a6d9e9dd1f6a691a50b4c1"
+      date: Wed, 16 Feb 2022 19:11:26 GMT
+      etag: W/"df1ef1c2df56d28c0d28e19d04d2d4d1"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
       status: 200 OK
@@ -32,14 +32,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: bb09ecb2-3a0b-4158-bb18-28c63f6be34e
-      x-runtime: '1.103425'
+      x-request-id: 69fcc775-6fe1-40ff-8098-3e06fd64dd5a
+      x-runtime: '1.031718'
       x-xss-protection: 1; mode=block
       content-length: '847'
     body:
       encoding: UTF-8
       file: no
-      string: '[{"number":347,"data_format":"csv_header","description":"Extract for
-        R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752221/nhgis0347_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}},{"number":346,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1752166/nhgis0346_shape.zip"},"datasets":null,"time_series_tables":null}]'
-  recorded_at: 2022-02-15 21:21:21 GMT
+      string: '[{"number":358,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1753020/nhgis0358_shape.zip"},"datasets":null,"time_series_tables":null},{"number":357,"data_format":"csv_header","description":"Extract
+        for R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1753019/nhgis0357_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1753019/nhgis0357_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1753019/nhgis0357_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}}]'
+  recorded_at: 2022-02-16 19:11:26 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

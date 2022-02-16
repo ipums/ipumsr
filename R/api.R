@@ -165,21 +165,25 @@ define_extract_nhgis <- function(description = "",
                                  time_series_table_layout = NULL,
                                  geographic_extents = NULL) {
 
+  # TODO: Should these defaults be handled in arguments directly?
+  # Unsure about best practices for exposing a non-exported object
+  # (EMPTY_NAMED_LIST) by including in argument defaults.
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
-    dataset = dataset,
-    data_tables = data_tables,
-    ds_geog_levels = ds_geog_levels,
-    years = years,
-    breakdown_values = breakdown_values,
-    time_series_table = time_series_table,
-    ts_geog_levels = ts_geog_levels,
-    shapefiles = shapefiles,
-    data_format = data_format,
-    breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout,
-    geographic_extents = geographic_extents
+    dataset = dataset %||% NA_character_,
+    data_tables = data_tables %||% EMPTY_NAMED_LIST,
+    ds_geog_levels = ds_geog_levels %||% EMPTY_NAMED_LIST,
+    years = years %||% EMPTY_NAMED_LIST,
+    breakdown_values = breakdown_values %||% EMPTY_NAMED_LIST,
+    time_series_table = time_series_table %||% NA_character_,
+    ts_geog_levels = ts_geog_levels %||% EMPTY_NAMED_LIST,
+    shapefiles = shapefiles %||% EMPTY_NAMED_LIST,
+    data_format = data_format %||% NA_character_,
+    breakdown_and_data_type_layout = breakdown_and_data_type_layout %||%
+      NA_character_,
+    time_series_table_layout = time_series_table_layout %||% NA_character_,
+    geographic_extents = geographic_extents %||% EMPTY_NAMED_LIST
   )
 
   extract <- validate_ipums_extract(extract)
@@ -1461,19 +1465,13 @@ prepare_extract_for_tbl.usa_extract <- function(x) {
 #' @export
 prepare_extract_for_tbl.nhgis_extract <- function(x) {
 
-  if (is.null(x$dataset)) x$dataset <- NA_character_
-  if (is.null(x$description))  x$description <- NA_character_
-  x$data_tables <- reformat_null_to_list(x$data_tables)
-  x$ds_geog_levels <- reformat_null_to_list(x$ds_geog_levels)
-  x$years <- reformat_null_to_list(x$years)
-  x$breakdown_values <- reformat_null_to_list(x$breakdown_values)
-  if (is.null(x$time_series_table)) x$time_series_table <- NA_character_
-  x$ts_geog_levels <- reformat_null_to_list(x$ts_geog_levels)
-  x$shapefiles <- reformat_null_to_list(x$shapefiles)
-  if (is.null(x$data_format)) x$data_format <- NA_character_
-  if (is.null(x$breakdown_and_data_type_layout)) x$breakdown_and_data_type_layout <- NA_character_
-  if (is.null(x$time_series_table_layout)) x$time_series_table_layout <- NA_character_
-  x$geographic_extents <- reformat_null_to_list(x$geographic_extents)
+  x$data_tables <- list(x$data_tables)
+  x$ds_geog_levels <- list(x$ds_geog_levels)
+  x$years <- list(x$years)
+  x$breakdown_values <- list(x$breakdown_values)
+  x$ts_geog_levels <- list(x$ts_geog_levels)
+  x$shapefiles <- list(x$shapefiles)
+  x$geographic_extents <- list(x$geographic_extents)
   x$download_links <- list(x$download_links)
   unclass(x)
 
@@ -1564,31 +1562,31 @@ print.nhgis_extract <- function(x) {
       print_truncated_vector(
         x$dataset,
         "Dataset: ",
-        !is.null(x$dataset)
+        FALSE
       ),
       "\n  ",
       print_truncated_vector(
         x$data_tables,
         "Tables: ",
-        !is.null(x$data_tables)
+        !is_empty(x$data_tables)
       ),
       "\n  ",
       print_truncated_vector(
         x$ds_geog_levels,
         "Geog Levels: ",
-        !is.null(x$ds_geog_levels)
+        !is_empty(x$ds_geog_levels)
       ),
       "\n  ",
       print_truncated_vector(
         x$years,
         "Years: ",
-        !is.null(x$years)
+        !is_empty(x$years)
       ),
       "\n  ",
       print_truncated_vector(
         x$breakdown_values,
         "Breakdowns: ",
-        !is.null(x$breakdown_values)
+        !is_empty(x$breakdown_values)
       )
     )
 
@@ -1603,13 +1601,13 @@ print.nhgis_extract <- function(x) {
       print_truncated_vector(
         x$time_series_table,
         "Time Series Tables: ",
-        !is.null(x$time_series_table)
+        FALSE
       ),
       "\n  ",
       print_truncated_vector(
         x$ts_geog_levels,
         "Geog Levels: ",
-        !is.null(x$ts_geog_levels)
+        !is_empty(x$ts_geog_levels)
       )
     )
 
@@ -2029,24 +2027,29 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
       out <- new_ipums_extract(
         collection = "nhgis",
         description = x$description,
-        dataset = names(x$datasets),
-        data_tables = unlist(x$datasets[[1]]$data_tables),
-        ds_geog_levels = unlist(x$datasets[[1]]$geog_levels),
-        years = unlist(x$datasets[[1]]$years),
-        breakdown_values = unlist(x$datasets[[1]]$breakdown_values),
-        time_series_table = names(x$time_series_tables),
-        ts_geog_levels = unlist(x$time_series_tables[[1]]$geog_levels),
-        shapefiles = unlist(x$shapefiles),
-        data_format = x$data_format,
-        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
-        time_series_table_layout = x$time_series_table_layout,
-        geographic_extents = unlist(x$geographic_extents),
+        dataset = names(x$datasets) %||% NA_character_,
+        data_tables = unlist(x$datasets[[1]]$data_tables) %||%
+          EMPTY_NAMED_LIST,
+        ds_geog_levels = unlist(x$datasets[[1]]$geog_levels) %||%
+          EMPTY_NAMED_LIST,
+        years = unlist(x$datasets[[1]]$years) %||% EMPTY_NAMED_LIST,
+        breakdown_values = unlist(x$datasets[[1]]$breakdown_values) %||%
+          EMPTY_NAMED_LIST,
+        time_series_table = names(x$time_series_tables) %||% NA_character_,
+        ts_geog_levels = unlist(x$time_series_tables[[1]]$geog_levels) %||%
+          EMPTY_NAMED_LIST,
+        shapefiles = unlist(x$shapefiles) %||% EMPTY_NAMED_LIST,
+        data_format = x$data_format %||% NA_character_,
+        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout %||%
+          NA_character_,
+        time_series_table_layout = x$time_series_table_layout %||%
+          NA_character_,
+        geographic_extents = unlist(x$geographic_extents) %||%
+          EMPTY_NAMED_LIST,
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
-        download_links = if (!is.null(x$download_links)) {
-          x$download_links
-        } else EMPTY_NAMED_LIST,
+        download_links = x$download_links %||% EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status = ifelse(!is.null(x$status), x$status, "unsubmitted")
+        status =  x$status %||% "unsubmitted"
       )
 
       if (validate) validate_ipums_extract(out)
@@ -2055,6 +2058,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
     }
   )
 }
+
 
 #' @export
 extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
@@ -2335,6 +2339,13 @@ ipums_collection_versions <- function() {
 
 EMPTY_NAMED_LIST <- setNames(list(), character(0))
 
+`%||%` <- function(a, b) {
+  if (is.null(a)) {
+    b
+  } else {
+    a
+  }
+}
 
 #' Convert an absolute path to be relative to the working directory
 #'
@@ -2409,10 +2420,3 @@ skip_if_no_api_access <- function(have_api_access) {
   }
 }
 
-reformat_null_to_list <- function(x) {
-  if (!is.null(x)) {
-    list(x)
-  } else {
-    list(EMPTY_NAMED_LIST)
-  }
-}
