@@ -1277,7 +1277,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   is_missing <- purrr::map_lgl(
     c("collection", "description"),
-    ~any(is.null(x[[.]]) || is.na(x[[.]]))
+    ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
   )
 
   if (any(is_missing)) {
@@ -1295,7 +1295,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~any(is.null(x[[.]]) || is.na(x[[.]]))
+      ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
     )
 
     if (any(is_missing)) {
@@ -1345,7 +1345,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~any(is.null(x[[.]]) || is.na(x[[.]]))
+      ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
     )
 
     if (any(is_missing)) {
@@ -1410,7 +1410,7 @@ validate_ipums_extract.usa_extract <- function(x) {
 
   is_missing <- purrr::map_lgl(
     must_be_non_missing,
-    ~any(is.na(x[[.]])) || is.null(x[[.]])
+    ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
   )
 
   if (any(is_missing)) {
