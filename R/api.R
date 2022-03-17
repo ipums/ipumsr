@@ -1498,6 +1498,7 @@ prepare_extract_for_tbl.nhgis_extract <- function(x) {
 #' shapefiles.
 #'
 #' @param extract An nhgis_extract object
+#' @noRd
 nhgis_extract_types <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
@@ -2123,7 +2124,6 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
 
 #' Reattach specifications not returned in API response to NHGIS extracts
 #'
-#' @details
 #' In current version of NHGIS API (v1), not all specifications are returned in
 #' the API response after extract submission.
 #'
@@ -2142,7 +2142,7 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
 #' Future versions of the API may address this issue at which point
 #' extract_list_from_json() can likely handle extract reconstruction alone.
 #'
-#' @md
+#' @noRd
 reconstruct_api_response <- function(extract, response_extract) {
 
   if(extract$collection != "nhgis") {
