@@ -251,7 +251,6 @@ define_extract_from_json <- function(extract_json, collection) {
     }
   )
 
-
   if (length(list_of_extracts) != 1) {
     stop(
       paste0(
