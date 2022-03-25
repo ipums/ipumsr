@@ -7,7 +7,7 @@ nhgis_extract <- define_extract_nhgis(
   description = "Extract for R client testing",
   dataset = "2015_2019_ACS5a",
   data_tables = c("B01001", "B01002", "B15003"),
-  ds_geog_levels = "blck_grp",
+  ds_geog_levels = c("nation", "blck_grp"),
   time_series_table = "CW3",
   ts_geog_levels = "county",
   time_series_table_layout = "time_by_column_layout",
@@ -77,7 +77,7 @@ test_that("Can define an NHGIS extract", {
   expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(nhgis_extract$dataset, "2015_2019_ACS5a")
   expect_equal(nhgis_extract$data_tables, c("B01001", "B01002", "B15003"))
-  expect_equal(nhgis_extract$ds_geog_levels, "blck_grp")
+  expect_equal(nhgis_extract$ds_geog_levels, c("nation", "blck_grp"))
   expect_equal(nhgis_extract$time_series_table, "CW3")
   expect_equal(nhgis_extract$ts_geog_levels, "county")
   expect_equal(nhgis_extract$time_series_table_layout, "time_by_column_layout")
@@ -169,7 +169,7 @@ test_that("nhgis_extract print method works", {
       "\nDescription: Extract for R client testing",
       "\nDataset: 2015_2019_ACS5a",
       "\n  Tables: \\(3 total\\) B01001, B01002, B15003",
-      "\n  Geog Levels: \\(1 total\\) blck_grp",
+      "\n  Geog Levels: \\(2 total\\) nation, blck_grp",
       "\n  Years: ",
       "\n  Breakdowns: ",
       "\nTime Series Tables: CW3",
@@ -272,7 +272,7 @@ test_that("Can check status of an NHGIS extract by supplying extract object", {
 })
 
 
-test_that("Can check the status of an NHGIS extract by supplying collection and number", {
+test_that("Can check status of an NHGIS extract with collection and number", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("get-nhgis-extract-info", {
     checked_nhgis_extract <- get_extract_info(
@@ -286,7 +286,9 @@ test_that("Can check the status of an NHGIS extract by supplying collection and 
   })
   expect_true(is_ready)
   vcr::use_cassette("get-nhgis-extract-info", {
-    checked_nhgis_extract <- get_extract_info(paste0("nhgis:", submitted_nhgis_extract$number))
+    checked_nhgis_extract <- get_extract_info(
+      paste0("nhgis:", submitted_nhgis_extract$number)
+    )
   })
   expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(checked_nhgis_extract$status, "completed")
@@ -330,47 +332,80 @@ test_that("Can limit number of recent extracts to get info on", {
   expect_equal(nrow(two_recent_nhgis_extracts), 2)
 })
 
-# if (have_api_access) {
-#   download_extract_cassette_file <- file.path(
-#     vcr::vcr_test_path("fixtures"), "download-usa-extract-ipums-extract.yml"
-#   )
-#
-#   already_existed <- file.exists(download_extract_cassette_file)
-# }
-#
-#
-# download_dir <- file.path(tempdir(), "ipums-api-downloads")
-# if (!dir.exists(download_dir)) dir.create(download_dir)
-#
-# tryCatch(
-#   vcr::use_cassette("download-usa-extract-ipums-extract", {
-#     test_that("Can download a USA extract by supplying extract object", {
-#       skip_if_no_api_access(have_api_access)
-#       expect_message(
-#         ddi_file_path <- download_extract(
-#           ready_usa_extract,
-#           download_dir = download_dir,
-#           overwrite = TRUE
-#         ),
-#         regexp = "DDI codebook file saved to"
-#       )
-#       ddi_file_path <- file.path(
-#         vcr::vcr_test_path("fixtures"),
-#         basename(ddi_file_path)
-#       )
-#       ddi_file_path <- convert_to_relative_path(ddi_file_path)
-#       expect_match(ddi_file_path, "\\.xml$")
-#       expect_true(file.exists(ddi_file_path))
-#       data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-#       expect_equal(nrow(data), 20972)
-#     })
-#   }),
-#   warning = function(w) {
-#     if (!grepl("Empty cassette", w$message)) {
-#       return(warning(w$message, call. = FALSE))
-#     }
-#   }
-# )
+if (have_api_access) {
+  download_nhgis_extract_cassette_file <- file.path(
+    vcr::vcr_test_path("fixtures"), "download-nhgis-extract-ipums-extract.yml"
+  )
+
+  already_existed <- file.exists(download_nhgis_extract_cassette_file)
+}
+
+
+download_dir <- file.path(tempdir(), "ipums-api-downloads")
+if (!dir.exists(download_dir)) dir.create(download_dir)
+
+tryCatch(
+  vcr::use_cassette("download-nhgis-extract-ipums-extract", {
+    test_that("Can download an NHGIS extract by supplying extract object", {
+      skip_if_no_api_access(have_api_access)
+
+      # A little confused about why this seems to download to fixtures even
+      # though the download dir is a tempdir?
+      expect_message(
+        file_paths <- download_extract(
+          ready_nhgis_extract,
+          download_dir = download_dir,
+          overwrite = TRUE
+        ),
+        regexp = "Data file saved to"
+      )
+
+      table_data_file_path <- file.path(
+        vcr::vcr_test_path("fixtures"),
+        basename(file_paths[1])
+      )
+      table_data_file_path <- convert_to_relative_path(table_data_file_path)
+
+      gis_data_file_path <- file.path(
+        vcr::vcr_test_path("fixtures"),
+        basename(file_paths[2])
+      )
+      gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
+
+      expect_match(table_data_file_path, "_csv\\.zip$")
+      expect_match(gis_data_file_path, "_shape\\.zip$")
+
+      expect_true(file.exists(table_data_file_path))
+      expect_true(file.exists(gis_data_file_path))
+
+      data <- read_nhgis(table_data_file_path,
+                         data_layer = contains("county"),
+                         verbose = FALSE)
+      expect_equal(nrow(data), 3143)
+
+      # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
+      # there is only 1 shapefile in extract? confusing functionality currently.
+      data_shp_sf <- read_nhgis_sf(table_data_file_path,
+                                   gis_data_file_path,
+                                   data_layer = contains("nation"),
+                                   shape_layer = contains("nation"),
+                                   verbose = FALSE)
+      expect_s3_class(data_shp_sf, "sf")
+
+      data_shp_sp <- read_nhgis_sp(table_data_file_path,
+                                   gis_data_file_path,
+                                   data_layer = contains("nation"),
+                                   shape_layer = contains("nation"),
+                                   verbose = FALSE)
+      expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
+    })
+  }),
+  warning = function(w) {
+    if (!grepl("Empty cassette", w$message)) {
+      return(warning(w$message, call. = FALSE))
+    }
+  }
+)
 #
 #
 # if (have_api_access) {
@@ -538,7 +573,7 @@ test_that("We can export to and import from JSON for NHGIS", {
 
 test_that("We can export to and import from JSON, submitted NHGIS extract", {
   skip_if_no_api_access(have_api_access)
-  json_tmpfile <- file.path(tempdir(), "usa_extract.json")
+  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
   on.exit(unlink(json_tmpfile))
   save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
   copy_of_submitted_nhgis_extract <- define_extract_from_json(
