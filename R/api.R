@@ -692,6 +692,7 @@ download_extract <- function(extract,
   # Make sure we get latest extract status, but also make sure we don't check
   # the status twice
   is_ipums_extract_object <- inherits(extract, "ipums_extract")
+
   if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
     is_downloadable <- TRUE
   } else {
@@ -716,13 +717,32 @@ download_extract <- function(extract,
     stop("The directory ", download_dir, " does not exist.", call. = FALSE)
   }
 
+  ipums_extract_specific_download(extract, download_dir, overwrite, api_key)
+
+}
+
+ipums_extract_specific_download <- function(extract,
+                                            download_dir,
+                                            overwrite,
+                                            api_key) {
+  UseMethod("ipums_extract_specific_download")
+}
+
+#' @export
+ipums_extract_specific_download.usa_extract <- function(extract,
+                                                        download_dir,
+                                                        overwrite,
+                                                        api_key) {
+
   ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
+
   ddi_file_path <- normalizePath(
     file.path(download_dir, basename(ddi_url)),
     winslash = "/",
     mustWork = FALSE
   )
+
   data_file_path <- normalizePath(
     file.path(download_dir, basename(data_url)),
     winslash = "/",
@@ -738,6 +758,114 @@ download_extract <- function(extract,
   )
 
   invisible(ddi_file_path)
+
+}
+
+#' @export
+ipums_extract_specific_download.nhgis_extract <- function(extract,
+                                                          download_dir,
+                                                          overwrite,
+                                                          api_key) {
+
+  link_types <- names(extract$download_links)
+
+  # Don't worry about checking just for codebook because codebook is
+  # included with table data.
+  if ("table_data" %in% link_types) {
+    table_url <- extract$download_links$table_data
+
+    table_file_path <- normalizePath(
+      file.path(download_dir, basename(table_url)),
+      winslash = "/",
+      mustWork = FALSE
+    )
+
+    table_dwnld_path <- tryCatch(
+      ipums_api_download_request(table_url, table_file_path, overwrite, api_key),
+      error = function(cnd) NA
+    )
+  }
+
+  if ("gis_data" %in% link_types) {
+    gis_url <- extract$download_links$gis_data
+
+    gis_file_path <- normalizePath(
+      file.path(download_dir, basename(gis_url)),
+      winslash = "/",
+      mustWork = FALSE
+    )
+
+    gis_dwnld_path <- tryCatch(
+      ipums_api_download_request(gis_url, gis_file_path, overwrite, api_key),
+      error = function(cnd) NA
+    )
+  }
+
+  # If all downloads failed, throw informative error.
+  #
+  # TODO: This is pretty clunky. If other collections might also require
+  # similar logic (i.e. have multiple file types that may or may not be
+  # present in an extract) it may be worth streamlining this a bit.
+  if ("table_data" %in% link_types && "gis_data" %in% link_types) {
+
+    if (is.na(table_dwnld_path) && is.na(gis_dwnld_path)) {
+      stop(
+        "All files to be downloaded (",
+        basename(table_url), ", ", basename(gis_url), ") ",
+        "already exist in ", download_dir, ". ",
+        "If you want to overwrite, set `overwrite` to TRUE.",
+        call. = FALSE
+      )
+    } else {
+      message(
+        paste0("Data file saved to ", table_file_path,
+               "\nGIS file saved to ", gis_file_path)
+      )
+    }
+
+  } else if ("table_data" %in% link_types) {
+
+    if (is.na(table_dwnld_path)) {
+      stop(
+        "All files to be downloaded (", basename(table_url), ") ",
+        "already exist in ", download_dir, ". ",
+        "If you want to overwrite, set `overwrite` to TRUE.",
+        call. = FALSE
+      )
+    } else {
+      message(
+        paste0("Data file saved to ", table_file_path)
+      )
+    }
+
+  } else if ("gis_data" %in% link_types) {
+
+    if (is.na(gis_dwnld_path)) {
+      stop(
+        "All files to be downloaded (", basename(gis_url), ") ",
+        "already exist in ", download_dir, ". ",
+        "If you want to overwrite, set `overwrite` to TRUE.",
+        call. = FALSE
+      )
+    } else {
+      message(
+        paste0("GIS file saved to ", gis_file_path)
+      )
+    }
+
+  }
+
+  # TODO: determine appropriate return value? Not fully clear on use for return
+  # value as this is primarily used for side effects. This is the closest
+  # analogy to the USA method that I could come up with for now.
+  downloaded_files <- list.files(
+    download_dir,
+    pattern = as.character(extract$number),
+    full.names = TRUE
+  )
+
+  invisible(downloaded_files)
+
 }
 
 
@@ -1876,7 +2004,7 @@ ipums_api_download_request <- function(url,
   file_already_exists <- file.exists(file_path)
 
   if (file.exists(file_path) && !overwrite) {
-    stop("File", file_path, " already exists. If you want to overwrite, set ",
+    stop("File ", file_path, " already exists. If you want to overwrite, set ",
          "`overwrite` to TRUE.", call. = FALSE)
   }
 
