@@ -767,104 +767,63 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           overwrite,
                                                           api_key) {
 
-  link_types <- names(extract$download_links)
 
-  # Don't worry about checking just for codebook because codebook is
-  # included with table data.
-  if ("table_data" %in% link_types) {
-    table_url <- extract$download_links$table_data
+  table_url <- extract$download_links$table_data
+  gis_url <- extract$download_links$gis_data
 
-    table_file_path <- normalizePath(
-      file.path(download_dir, basename(table_url)),
-      winslash = "/",
-      mustWork = FALSE
+  urls <- purrr::compact(
+    list(
+      table_url,
+      gis_url
     )
-
-    table_dwnld_path <- tryCatch(
-      ipums_api_download_request(table_url, table_file_path, overwrite, api_key),
-      error = function(cnd) NA
-    )
-  }
-
-  if ("gis_data" %in% link_types) {
-    gis_url <- extract$download_links$gis_data
-
-    gis_file_path <- normalizePath(
-      file.path(download_dir, basename(gis_url)),
-      winslash = "/",
-      mustWork = FALSE
-    )
-
-    gis_dwnld_path <- tryCatch(
-      ipums_api_download_request(gis_url, gis_file_path, overwrite, api_key),
-      error = function(cnd) NA
-    )
-  }
-
-  # If all downloads failed, throw informative error.
-  #
-  # TODO: This is pretty clunky. If other collections might also require
-  # similar logic (i.e. have multiple file types that may or may not be
-  # present in an extract) it may be worth streamlining this a bit.
-  if ("table_data" %in% link_types && "gis_data" %in% link_types) {
-
-    if (is.na(table_dwnld_path) && is.na(gis_dwnld_path)) {
-      stop(
-        "All files to be downloaded (",
-        basename(table_url), ", ", basename(gis_url), ") ",
-        "already exist in ", download_dir, ". ",
-        "If you want to overwrite, set `overwrite` to TRUE.",
-        call. = FALSE
-      )
-    } else {
-      message(
-        paste0("Data file saved to ", table_file_path,
-               "\nGIS file saved to ", gis_file_path)
-      )
-    }
-
-  } else if ("table_data" %in% link_types) {
-
-    if (is.na(table_dwnld_path)) {
-      stop(
-        "All files to be downloaded (", basename(table_url), ") ",
-        "already exist in ", download_dir, ". ",
-        "If you want to overwrite, set `overwrite` to TRUE.",
-        call. = FALSE
-      )
-    } else {
-      message(
-        paste0("Data file saved to ", table_file_path)
-      )
-    }
-
-  } else if ("gis_data" %in% link_types) {
-
-    if (is.na(gis_dwnld_path)) {
-      stop(
-        "All files to be downloaded (", basename(gis_url), ") ",
-        "already exist in ", download_dir, ". ",
-        "If you want to overwrite, set `overwrite` to TRUE.",
-        call. = FALSE
-      )
-    } else {
-      message(
-        paste0("GIS file saved to ", gis_file_path)
-      )
-    }
-
-  }
-
-  # TODO: determine appropriate return value? Not fully clear on use for return
-  # value as this is primarily used for side effects. This is the closest
-  # analogy to the USA method that I could come up with for now.
-  downloaded_files <- list.files(
-    download_dir,
-    pattern = as.character(extract$number),
-    full.names = TRUE
   )
 
-  invisible(downloaded_files)
+  file_paths <- purrr::map_chr(
+    urls,
+    ~normalizePath(
+      file.path(download_dir, basename(.x)),
+      winslash = "/",
+      mustWork = FALSE
+    )
+  )
+
+  file_names <- basename(file_paths)
+
+  existing_files <- file_names[purrr::map_lgl(file_paths, file.exists)]
+
+  # Currently, if any of the files to be downloaded (table or gis) exist,
+  # no files are downloaded.
+  if (length(existing_files) > 0 && !overwrite) {
+    stop(
+      "The following files already exist: ",
+      paste0(existing_files, collapse = ", "),
+      "\nIf you want to overwrite, set `overwrite` to TRUE.",
+      call. = FALSE
+    )
+  }
+
+  file_paths <- purrr::map2_chr(
+    urls,
+    file_paths,
+    ~ipums_api_download_request(.x, .y, overwrite, api_key)
+  )
+
+  if (!is.null(table_url) && !is.null(gis_url)) {
+    message(
+      paste0("Data file saved to ", file_paths[1],
+             "\nGIS file saved to ", file_paths[2])
+    )
+  } else if (!is.null(table_url)) {
+    message(
+      paste0("Data file saved to ", file_paths)
+    )
+  } else if (!is.null(gis_url)) {
+    message(
+      paste0("GIS file saved to ", file_paths)
+    )
+  }
+
+  invisible(file_paths)
 
 }
 
