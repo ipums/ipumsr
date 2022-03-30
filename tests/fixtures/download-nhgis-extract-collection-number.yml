@@ -1,0 +1,117 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/407?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 30 Mar 2022 16:15:47 GMT
+      etag: W/"ee7b0c4d701e9bf2ba6d483d336f7dc0"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: a0298a20-89c4-4024-aecb-4ac096190c4b
+      x-runtime: '0.863743'
+      x-xss-protection: 1; mode=block
+      content-length: '626'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"number":407,"data_format":"csv_header","description":"Extract for
+        R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_shape.zip"},"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["nation","blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}}'
+  recorded_at: 2022-03-30 16:15:54 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_csv.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis0407_csv.zip"; filename*=UTF-8''nhgis0407_csv.zip
+      content-type: application/zip
+      date: Wed, 30 Mar 2022 16:15:47 GMT
+      etag: '"62446fcf-2bb978"'
+      last-modified: Wed, 30 Mar 2022 14:57:19 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=a5oj9cXmuj18U822inHe4q4GhS9bsTxy9OMhblmnBD%2B7GiLv7awwQcHUng1txwQvWp8IWkZNFI7lswbwzOSpGxQPrefJfTimP1%2BHGlL3KToX104fdT1Q4Xq0%2Bk4jTa5hTvuovTGDUbLtdsy1zNQebvadUHaRMXwYbuL8UIQovi%2BXIYheU87YVat7skfYn51epr%2B7I1oB0NfZTVG9vHyMWTaGhVYvKjVsu%2BLYGKgD6PStcCdJ1Phf6yWAhljQsHI%3D--zIXe0sNLpkeG4u0W--1AmOz0d5jMwit8OM6BDkeQ%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '2865528'
+    body:
+      encoding: UTF-8
+      file: yes
+      string: ../fixtures/nhgis0407_csv.zip
+  recorded_at: 2022-03-30 16:15:54 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_shape.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis0407_shape.zip"; filename*=UTF-8''nhgis0407_shape.zip
+      content-type: application/zip
+      date: Wed, 30 Mar 2022 16:15:47 GMT
+      etag: '"62446f7f-7ca95"'
+      last-modified: Wed, 30 Mar 2022 14:55:59 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=wY%2Bi38%2F1HgSyRwhKvbJ%2BPT8jXE7DieKXoIA9Lwy51Ag9gRjvC7yaZW0jj%2FIONa4VzLUgg7IGs8XTvO1kddAybq0UugY%2Bo2D20PWtLSWLB6WinMUVADO7DjbIjypRMsx%2BjOp7mBviAOgyXKjjduSGW59urX7JnZHiqhSiyI%2BiwrHhAiv09MMD4vdpAKIadyR%2FD2ImbBTP7Xb1NB5Yc4iqHvljzK9hliPlI2ECWaPbg7sdZpjHAmfOKSAfTIs4yVQ%3D--V5WaPsokrVnvIHuC--4Ml9CrY3%2F6QFXjMQ3QqRKA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '510613'
+    body:
+      encoding: UTF-8
+      file: yes
+      string: ../fixtures/nhgis0407_shape.zip
+  recorded_at: 2022-03-30 16:15:54 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

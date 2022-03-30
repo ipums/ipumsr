@@ -1,0 +1,37 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780213/nhgis0408_shape.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis0408_shape.zip"; filename*=UTF-8''nhgis0408_shape.zip
+      content-type: application/zip
+      date: Wed, 30 Mar 2022 16:05:35 GMT
+      etag: '"62447024-7ca95"'
+      last-modified: Wed, 30 Mar 2022 14:58:44 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=E5x3pCK9DFtLBxGJIYYG8kDxeuQLvFbIryUVxAiBIUa7xlz8NuliziHro5%2BQbHzUrARqeMXxVlTuXB1XBLzIasPsrQE%2Br9nVidQvzy%2B4qf1L1HjQm2kK4c5gaUmZdkrOmBECtKQwYZsi%2BSvbzGh5GEs0Bcnf%2BrNQk7lZlFSL%2F4AUJBd0d3qVdiEhb9nLmzTX2O3V4DEikGY2zf%2BijwMBO%2F8PX9M2cHl9T0bd7C9jDd5gg%2BkTJmXAC%2B0jdEb0O%2Bg%3D--4mTUWoNU91r6HWcU--FXpSx6kfDUOgBrtR7sEoMA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '510613'
+    body:
+      encoding: UTF-8
+      file: yes
+      string: ../fixtures/nhgis0408_shape.zip
+  recorded_at: 2022-03-30 16:05:37 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

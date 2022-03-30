@@ -4,8 +4,8 @@ http_interactions:
     uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1
     body:
       encoding: ''
-      string: '{"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["nation","blck_grp"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}},"shapefiles":["us_nation_2012_tl2012"],"data_format":"csv_no_header","description":"Extract
-        for R client testing","breakdown_and_data_type_layout":"single_file","time_series_table_layout":"time_by_column_layout","geographic_extents":["010","420"]}'
+      string: '{"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["nation","blck_grp"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}},"shapefiles":["110_blck_grp_2019_tl2019"],"data_format":"csv_no_header","description":"Extract
+        for R client testing","breakdown_and_data_type_layout":"single_file","time_series_table_layout":"time_by_column_layout","geographic_extents":["110","420"]}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -19,8 +19,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 25 Mar 2022 20:41:53 GMT
-      etag: W/"6a4f909b2bfa96d67f8cb8947e28ddd2"
+      date: Wed, 30 Mar 2022 14:55:53 GMT
+      etag: W/"6e37c9790684ed8c02056e6afad51a6a"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
       status: 200 OK
@@ -33,14 +33,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 98e7aaa4-05f0-41eb-a2e6-ac559516a657
-      x-runtime: '0.411522'
+      x-request-id: 4043bcd2-88ad-4f9f-b503-44b5453e7772
+      x-runtime: '0.410359'
       x-xss-protection: 1; mode=block
       content-length: '293'
     body:
       encoding: UTF-8
       file: no
-      string: '{"number":377,"data_format":"csv_no_header","description":"Extract
+      string: '{"number":407,"data_format":"csv_no_header","description":"Extract
         for R client testing","status":null,"download_links":null,"datasets":{"2015_2019_ACS5a":{"data_tables":["B01001","B01002","B15003"],"geog_levels":["nation","blck_grp"]}},"time_series_tables":{"CW3":{"geog_levels":["county"]}}}'
-  recorded_at: 2022-03-25 20:41:53 GMT
+  recorded_at: 2022-03-30 14:55:53 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
