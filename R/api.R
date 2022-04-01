@@ -97,9 +97,9 @@ define_extract_micro <- function(collection,
 #' extract API.
 #'
 #' @param description Description of the extract.
-#' @param dataset Character name of dataset to include in the extract, if any.
+#' @param datasets Character name of datasets to include in the extract, if any.
 #' @param data_tables Character vector of data tables associated with the
-#'   specified dataset to include in the extract. Required if a dataset is
+#'   specified datasets to include in the extract. Required if a dataset is
 #'   specified.
 #' @param ds_geog_levels Character vector of geographic levels associated with
 #'   the specified dataset to include in the extract. Required if a dataset is
@@ -111,7 +111,7 @@ define_extract_micro <- function(collection,
 #'   associated with the specified dataset to include in the extract. If more
 #'   than one breakdown value is requested, `breakdown_and_data_type_layout`
 #'   must also be specified.
-#' @param time_series_table Character name of time series table to include in
+#' @param time_series_tables Character name of time series table to include in
 #'   the extract, if any.
 #' @param ts_geog_levels Character vector of geographic levels associated with
 #'   the specified time series table to include in the extract. Required if a
@@ -144,7 +144,7 @@ define_extract_micro <- function(collection,
 #' @examples
 #' my_extract <- define_extract_nhgis(
 #'   description = "test nhgis extract 1",
-#'   dataset = "1990_STF3",
+#'   datasets = "1990_STF3",
 #'   data_tables = "NP57",
 #'   ds_geog_levels = "tract",
 #'   data_format = "csv_no_header"
@@ -152,12 +152,12 @@ define_extract_micro <- function(collection,
 #'
 #' @export
 define_extract_nhgis <- function(description = "",
-                                 dataset = NULL,
+                                 datasets = NULL,
                                  data_tables = NULL,
                                  ds_geog_levels = NULL,
                                  years = NULL,
                                  breakdown_values = NULL,
-                                 time_series_table = NULL,
+                                 time_series_tables = NULL,
                                  ts_geog_levels = NULL,
                                  shapefiles = NULL,
                                  data_format = NULL,
@@ -165,19 +165,52 @@ define_extract_nhgis <- function(description = "",
                                  time_series_table_layout = NULL,
                                  geographic_extents = NULL) {
 
-  # TODO: Should these defaults be handled in arguments directly?
-  # Unsure about best practices for exposing a non-exported object
-  # (EMPTY_NAMED_LIST) by including in argument defaults.
+  n_datasets <- length(datasets)
+  n_tsts <- length(time_series_tables)
+
+  if (n_datasets > 0) {
+    datasets <- purrr::map(datasets, c)
+  }
+
+  if (n_tsts > 0) {
+    time_series_tables <- purrr::map(time_series_tables, c)
+  }
+
+  data_tables <- recycle_arg_to_list(
+    data_tables %||% EMPTY_NAMED_LIST,
+    n_datasets
+  )
+
+  ds_geog_levels <- recycle_arg_to_list(
+    ds_geog_levels %||% EMPTY_NAMED_LIST,
+    n_datasets
+  )
+
+  years <- recycle_arg_to_list(
+    years %||% EMPTY_NAMED_LIST,
+    n_datasets
+  )
+
+  breakdown_values <- recycle_arg_to_list(
+    breakdown_values %||% EMPTY_NAMED_LIST,
+    n_datasets
+  )
+
+  ts_geog_levels <- recycle_arg_to_list(
+    ts_geog_levels %||% EMPTY_NAMED_LIST,
+    n_tsts
+  )
+
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
-    dataset = dataset %||% NA_character_,
-    data_tables = data_tables %||% EMPTY_NAMED_LIST,
-    ds_geog_levels = ds_geog_levels %||% EMPTY_NAMED_LIST,
-    years = years %||% EMPTY_NAMED_LIST,
-    breakdown_values = breakdown_values %||% EMPTY_NAMED_LIST,
-    time_series_table = time_series_table %||% NA_character_,
-    ts_geog_levels = ts_geog_levels %||% EMPTY_NAMED_LIST,
+    datasets = datasets %||% EMPTY_NAMED_LIST,
+    data_tables = data_tables,
+    ds_geog_levels = ds_geog_levels,
+    years = years,
+    breakdown_values = breakdown_values,
+    time_series_tables = time_series_tables %||% EMPTY_NAMED_LIST,
+    ts_geog_levels = ts_geog_levels,
     shapefiles = shapefiles %||% EMPTY_NAMED_LIST,
     data_format = data_format %||% NA_character_,
     breakdown_and_data_type_layout = breakdown_and_data_type_layout %||%
@@ -441,16 +474,16 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     api_key = api_key
   )
 
-  if(collection == "nhgis") {
-    warning(
-      "The current version of the NHGIS API (v1) does not provide information ",
-      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-      "`time_series_table_layout` or `geographic_extents` for previously ",
-      "submitted extracts. Consult your initial extract request for ",
-      "information on the values of these parameters.",
-      call. = FALSE
-    )
-  }
+  # if(collection == "nhgis") {
+  #   warning(
+  #     "The current version of the NHGIS API (v1) does not provide information ",
+  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+  #     "`time_series_table_layout` or `geographic_extents` for previously ",
+  #     "submitted extracts. Consult your initial extract request for ",
+  #     "information on the values of these parameters.",
+  #     call. = FALSE
+  #   )
+  # }
 
   extract_list_from_json(response)[[1]]
 
@@ -991,16 +1024,16 @@ get_recent_extracts_info_list <- function(collection,
     api_key = api_key
   )
 
-  if(collection == "nhgis") {
-    warning(
-      "The current version of the NHGIS API (v1) does not provide information ",
-      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-      "`time_series_table_layout` or `geographic_extents` for previously ",
-      "submitted extracts. Consult your initial extract request for ",
-      "information on the values of these parameters.",
-      call. = FALSE
-    )
-  }
+  # if(collection == "nhgis") {
+  #   warning(
+  #     "The current version of the NHGIS API (v1) does not provide information ",
+  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+  #     "`time_series_table_layout` or `geographic_extents` for previously ",
+  #     "submitted extracts. Consult your initial extract request for ",
+  #     "information on the values of these parameters.",
+  #     call. = FALSE
+  #   )
+  # }
 
   extract_list_from_json(response)
 }
@@ -1118,20 +1151,20 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   }
 
   # Remove when NHGIS API is updated
-  if (collection == "nhgis" && ipums_api_version("nhgis") == "v1" && validate) {
-
-    validate <- FALSE
-
-    warning(
-      "The current version of the NHGIS API (v1) does not provide information ",
-      "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-      "`time_series_table_layout` or `geographic_extents` for previously ",
-      "submitted extracts. Extracts including these parameters may not be ",
-      "reconstructed accurately and cannot be validated.\n\n",
-      "Setting `validate = FALSE`",
-      call. = FALSE
-    )
-  }
+  # if (collection == "nhgis" && ipums_api_version("nhgis") == "v1" && validate) {
+  #
+  #   validate <- FALSE
+  #
+  #   warning(
+  #     "The current version of the NHGIS API (v1) does not provide information ",
+  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
+  #     "`time_series_table_layout` or `geographic_extents` for previously ",
+  #     "submitted extracts. Extracts including these parameters may not be ",
+  #     "reconstructed accurately and cannot be validated.\n\n",
+  #     "Setting `validate = FALSE`",
+  #     call. = FALSE
+  #   )
+  # }
 
   expected_names <- get_extract_names(
     new_ipums_extract(collection = collection)
@@ -1219,7 +1252,7 @@ get_extract_names.ipums_extract <- function(x) {
 extract_list_to_tbl <- function(extract_list) {
 
   extract_types <- unique(
-    purrr::map(
+    purrr::map_chr(
       extract_list,
       function(x) x$collection
     )
@@ -1355,7 +1388,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if(length(types) == 0) {
     stop(
-      "At least one of `dataset`, `time_series_table` or `shapefiles` ",
+      "At least one of `datasets`, `time_series_tables` or `shapefiles` ",
       "must be specified.",
       call. = FALSE
     )
@@ -1363,8 +1396,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   is_missing <- purrr::map_lgl(
     c("collection", "description"),
-    ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
+    ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
   )
+
+  is_present <- purrr::map_lgl(
+    names(x),
+    ~!is.null(x[[.]]) && !is.na(x[[.]]) && !is_empty(x[[.]])
+  )
+
+  vars_present <- names(x)[is_present]
 
   if (any(is_missing)) {
     stop(
@@ -1375,13 +1415,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
-  if("dataset" %in% types) {
+  if("datasets" %in% types) {
 
     must_be_non_missing <- c("data_tables", "ds_geog_levels", "data_format")
+    must_have_same_length <- c("data_tables", "ds_geog_levels",
+                               "years", "breakdown_values")
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
+      ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
     )
 
     if (any(is_missing)) {
@@ -1393,15 +1435,31 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    # TODO: Allow multiple datasets?
-    # API can handle this, but may be difficult to make an easy R interface for
-    # users
-    if(length(x$dataset) > 1) {
+    bad_length <- purrr::map_lgl(
+      must_have_same_length,
+      ~length(x[[.]]) != length(x$datasets) && length(x[[.]]) != 0
+    )
+
+    if (any(bad_length)) {
       stop(
-        "Currently, only one dataset per extract request is supported",
+        "The number of selections provided in `",
+        paste0(must_have_same_length[bad_length], collapse = "`, `"),
+        "` does not match the number of datasets (", length(x$datasets),
+        "). \nTo recycle selections across datasets, ensure values are stored ",
+        "in a vector, not a list.",
         call. = FALSE
       )
     }
+
+    # TODO: Allow multiple datasets?
+    # API can handle this, but may be difficult to make an easy R interface for
+    # users
+    # if(length(x$datasets) > 1) {
+    #   stop(
+    #     "Currently, only one dataset per extract request is supported",
+    #     call. = FALSE
+    #   )
+    # }
 
     if(!x$data_format %in% c("csv_no_header",
                              "csv_header",
@@ -1422,16 +1480,32 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     #
     # Would need to put together metadata functionality first.
 
+  } else {
+
+    ds_sub_vars <- c("data_tables", "ds_geog_levels",
+                     "years", "breakdown_values")
+
+    extra_vars <- ds_sub_vars[ds_sub_vars %in% vars_present]
+
+    if (length(extra_vars) > 0) {
+      warning(
+        "No dataset provided for the following arguments: `",
+        paste0(extra_vars, collapse = "`, `"),
+        "`. These parameters will be ignored.",
+        call. = FALSE
+      )
+    }
+
   }
 
-  if("time_series_table" %in% types) {
+  if("time_series_tables" %in% types) {
 
     must_be_non_missing <- c("ts_geog_levels", "data_format",
                              "time_series_table_layout")
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
+      ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
     )
 
     if (any(is_missing)) {
@@ -1443,13 +1517,25 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if(length(x$time_series_table) > 1) {
+    if (length(x$ts_geog_levels) != length(x$time_series_tables) &&
+        length(x$ts_geog_levels) != 0) {
       stop(
-        "Currently, only one time series table per extract request is ",
-        "supported",
+        "The number of selections provided in `ts_geog_levels` ",
+        "does not match the number of time series tables (",
+        length(x$time_series_tables),
+        "). \nTo recycle selections across time series tables, ensure values ",
+        "are stored in a vector, not a list.",
         call. = FALSE
       )
     }
+
+    # if(length(x$time_series_tables) > 1) {
+    #   stop(
+    #     "Currently, only one time series table per extract request is ",
+    #     "supported",
+    #     call. = FALSE
+    #   )
+    # }
 
     if(!x$data_format %in% c("csv_no_header",
                              "csv_header",
@@ -1469,6 +1555,20 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       stop(
         "`time_series_table_layout` must be one of `time_by_column_layout`, ",
         "`time_by_row_layout`, or `time_by_file_layout`",
+        call. = FALSE
+      )
+    }
+
+  } else {
+
+    ts_sub_vars <- "ts_geog_levels"
+    extra_vars <- ts_sub_vars[ts_sub_vars %in% vars_present]
+
+    if (length(extra_vars) > 0) {
+      warning(
+        "No time series table provided for the following arguments: `",
+        paste0(extra_vars, collapse = "`, `"),
+        "`. These parameters will be ignored.",
         call. = FALSE
       )
     }
@@ -1566,11 +1666,11 @@ prepare_extract_for_tbl.usa_extract <- function(x) {
 #' @export
 prepare_extract_for_tbl.nhgis_extract <- function(x) {
 
-  x$data_tables <- list(x$data_tables)
-  x$ds_geog_levels <- list(x$ds_geog_levels)
-  x$years <- list(x$years)
-  x$breakdown_values <- list(x$breakdown_values)
-  x$ts_geog_levels <- list(x$ts_geog_levels)
+  x$data_tables <- x$data_tables
+  x$ds_geog_levels <- x$ds_geog_levels
+  x$years <- x$years
+  x$breakdown_values <- x$breakdown_values
+  x$ts_geog_levels <- x$ts_geog_levels
   x$shapefiles <- list(x$shapefiles)
   x$geographic_extents <- list(x$geographic_extents)
   x$download_links <- list(x$download_links)
@@ -1589,7 +1689,7 @@ nhgis_extract_types <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
 
-  possible_types <- c("dataset", "time_series_table", "shapefiles")
+  possible_types <- c("datasets", "time_series_tables", "shapefiles")
 
   is_missing <- purrr::map_lgl(
     possible_types,
@@ -1599,14 +1699,6 @@ nhgis_extract_types <- function(extract) {
       is_list(extract[[.]]) && is_empty(extract[[.]]) && is_named(extract[[.]])
     )
   )
-
-  # if(sum(is_missing) == 3) {
-  #   stop(
-  #     "An NHGIS extract must specify at least one of `dataset`, ",
-  #     "`time_series_table`, or `shapefiles`",
-  #     call. = FALSE
-  #   )
-  # }
 
   types <- possible_types[!is_missing]
 
@@ -1657,61 +1749,38 @@ print.nhgis_extract <- function(x) {
 
   types <- nhgis_extract_types(x)
 
-  if("dataset" %in% types) {
+  if("datasets" %in% types) {
 
-    ds_to_cat <- paste0(
-      "\n",
-      print_truncated_vector(
-        x$dataset,
-        "Dataset: ",
-        FALSE
-      ),
-      "\n  ",
-      print_truncated_vector(
-        x$data_tables,
-        "Tables: ",
-        !is_empty(x$data_tables)
-      ),
-      "\n  ",
-      print_truncated_vector(
-        x$ds_geog_levels,
-        "Geog Levels: ",
-        !is_empty(x$ds_geog_levels)
-      ),
-      "\n  ",
-      print_truncated_vector(
-        x$years,
-        "Years: ",
-        !is_empty(x$years)
-      ),
-      "\n  ",
-      print_truncated_vector(
-        x$breakdown_values,
-        "Breakdowns: ",
-        !is_empty(x$breakdown_values)
+    n_datasets <- length(x$datasets)
+
+    ds_to_cat <- purrr::map(
+      1:n_datasets,
+      ~format_dataset_for_printing(
+        x$datasets[[.x]],
+        x$data_tables[[.x]],
+        x$ds_geog_levels[[.x]],
+        x$years[[.x]],
+        x$breakdown_values[[.x]]
       )
     )
+
+    ds_to_cat <- purrr::reduce(ds_to_cat, paste0)
 
   } else {
     ds_to_cat <- NULL
   }
 
-  if("time_series_table" %in% types) {
+  if("time_series_tables" %in% types) {
 
-    ts_to_cat <- paste0(
-      "\n",
-      print_truncated_vector(
-        x$time_series_table,
-        "Time Series Tables: ",
-        FALSE
-      ),
-      "\n  ",
-      print_truncated_vector(
-        x$ts_geog_levels,
-        "Geog Levels: ",
-        !is_empty(x$ts_geog_levels)
+    ts_to_cat <- purrr::map(
+      1:length(x$time_series_tables),
+      ~format_tst_for_printing(
+        x$time_series_tables[[.x]],
+        x$ts_geog_levels[[.x]]
       )
     )
+
+    ts_to_cat <- purrr::reduce(ts_to_cat, paste0)
 
   } else {
     ts_to_cat <- NULL
@@ -1721,10 +1790,7 @@ print.nhgis_extract <- function(x) {
 
     shp_to_cat <- paste0(
       "\n",
-      print_truncated_vector(
-        x$shapefiles,
-        "Shapefiles: "
-      )
+      print_truncated_vector(x$shapefiles, "Shapefiles: ")
     )
 
   } else {
@@ -1759,6 +1825,63 @@ format_collection_for_printing <- function(collection) {
   }
 
   collection_info$collection_name
+}
+
+format_dataset_for_printing <- function(dataset,
+                                        data_tables,
+                                        geog_levels,
+                                        years,
+                                        breakdown_values) {
+  paste0(
+    "\n",
+    print_truncated_vector(
+      dataset,
+      "Datasets: ",
+      FALSE
+    ),
+    "\n  ",
+    print_truncated_vector(
+      data_tables,
+      "Tables: ",
+      !is_empty(data_tables)
+    ),
+    "\n  ",
+    print_truncated_vector(
+      geog_levels,
+      "Geog Levels: ",
+      !is_empty(geog_levels)
+    ),
+    "\n  ",
+    print_truncated_vector(
+      years,
+      "Years: ",
+      !is_empty(years)
+    ),
+    "\n  ",
+    print_truncated_vector(
+      breakdown_values,
+      "Breakdowns: ",
+      !is_empty(breakdown_values)
+    )
+  )
+}
+
+format_tst_for_printing <- function(time_series_table,
+                                    ts_geog_levels) {
+  paste0(
+    "\n",
+    print_truncated_vector(
+      time_series_table,
+      "Time Series Tables: ",
+      FALSE
+    ),
+    "\n  ",
+    print_truncated_vector(
+      ts_geog_levels,
+      "Geog Levels: ",
+      !is_empty(ts_geog_levels)
+    )
+  )
 }
 
 
@@ -1799,15 +1922,15 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   # }
 
   request_list <- list(
-    datasets = format_dataset_for_json(
-      extract$dataset,
+    datasets = format_datasets_for_json(
+      extract$datasets,
       extract$data_tables,
       extract$ds_geog_levels,
       extract$years,
       extract$breakdown_values
     ),
-    time_series_tables = format_tst_for_json(
-      extract$time_series_table,
+    time_series_tables = format_tsts_for_json(
+      extract$time_series_tables,
       extract$ts_geog_levels
     ),
     shapefiles = extract$shapefiles,
@@ -1823,14 +1946,11 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   )
 
   request_list <- purrr::keep(
-    purrr::compact(
-      request_list
-    ),
+    purrr::compact(request_list),
     function(y) !any(is.na(y))
   )
 
   jsonlite::toJSON(request_list)
-
 
 }
 
@@ -1875,50 +1995,170 @@ extract_to_request_json.ipums_extract <- function(extract) {
 
 }
 
-format_dataset_for_json <- function(dataset,
-                                    data_tables,
-                                    geog_levels,
-                                    years = NULL,
-                                    breakdown_values = NULL) {
+# format_dataset_for_json <- function(dataset,
+#                                     data_tables,
+#                                     geog_levels,
+#                                     years = NULL,
+#                                     breakdown_values = NULL) {
+#
+#   if (is.null(dataset) || is.na(dataset)) {
+#     return(NULL)
+#   }
+#
+#   dataset_list <- list(
+#     dataset = list(
+#       data_tables = data_tables,
+#       geog_levels = geog_levels,
+#       years = as.character(years),
+#       breakdown_values = breakdown_values
+#     )
+#   )
+#
+#   dataset_list <- purrr::map(dataset_list, purrr::compact)
+#   dataset_list <- setNames(dataset_list, dataset)
+#
+#   dataset_list
+#
+# }
 
-  if (is.null(dataset) || is.na(dataset)) {
+format_datasets_for_json <- function(datasets,
+                                     data_tables,
+                                     ds_geog_levels,
+                                     years,
+                                     breakdown_values) {
+
+  if (is.na(datasets) || is_empty(datasets)) {
     return(NULL)
   }
 
-  dataset_list <- list(
-    dataset = list(
-      data_tables = data_tables,
-      geog_levels = geog_levels,
-      years = as.character(years),
-      breakdown_values = breakdown_values
+  n_datasets <- length(datasets)
+
+  if (n_datasets == 1) {
+
+    ds_formatted <- list(
+      purrr::compact(
+        list(
+          data_tables = unlist(data_tables),
+          geog_levels = unlist(ds_geog_levels),
+          years = unlist(years),
+          breakdown_values = unlist(breakdown_values)
+        )
+      )
+    ) %>% setNames(datasets)
+
+  } else {
+
+    args <- purrr::compact(
+      list(
+        data_tables = data_tables,
+        ds_geog_levels = ds_geog_levels,
+        years = years,
+        breakdown_values = breakdown_values
+      )
     )
-  )
 
-  dataset_list <- purrr::map(dataset_list, purrr::compact)
-  dataset_list <- setNames(dataset_list, dataset)
+    ds_list <- list(
+      datasets,
+      args$data_tables,
+      args$ds_geog_levels,
+      args$years,
+      args$breakdown_values
+    )
 
-  dataset_list
+    ds_list <- purrr::map(1:n_datasets, ~purrr::map(ds_list, .x))
+
+    ds_formatted <- purrr::map(
+      ds_list,
+      ~list(
+        data_tables = .x[[2]],
+        geog_levels = .x[[3]],
+        years = .x[[4]],
+        breakdown_values = .x[[5]]
+      ) %>%
+        purrr::compact()
+    ) %>% setNames(datasets)
+
+  }
+
+  ds_formatted
 
 }
 
-format_tst_for_json <- function(time_series_table, geog_levels) {
+recycle_arg_to_list <- function(x, n) {
 
-  if (is.null(time_series_table) || is.na(time_series_table)) {
+  if (n < 1) {
+    return(x)
+  }
+
+  # EMPTY_NAMED_LIST is special case:
+  if (is_list(x) && is_empty(x) && is_named(x)) {
+    rep(list(x), n)
+  } else if (!is_list(x)) { # But otherwise we don't want to recycle lists
+    rep(list(x), n)
+  } else {
+    x
+  }
+
+}
+
+# format_tst_for_json <- function(time_series_table, geog_levels) {
+#
+#   if (is.null(time_series_table) || is.na(time_series_table)) {
+#     return(NULL)
+#   }
+#
+#   tst_list <- list(
+#     time_series_table = list(
+#       geog_levels = geog_levels
+#     )
+#   )
+#
+#   tst_list <- purrr::map(tst_list, purrr::compact)
+#   tst_list <- setNames(tst_list, time_series_table)
+#
+#   tst_list
+#
+# }
+
+format_tsts_for_json <- function(time_series_tables, ts_geog_levels) {
+
+  if (is.na(time_series_tables) || is_empty(time_series_tables)) {
     return(NULL)
   }
 
-  tst_list <- list(
-    time_series_table = list(
-      geog_levels = geog_levels
+  n_tsts <- length(time_series_tables)
+
+  if (n_tsts == 1) {
+
+    ts_formatted <- list(
+      purrr::compact(
+        list(geog_levels = unlist(ts_geog_levels))
+      )
+    ) %>% setNames(time_series_tables)
+
+  } else {
+
+    ts_list <- list(
+      time_series_tables,
+      ts_geog_levels
     )
-  )
 
-  tst_list <- purrr::map(tst_list, purrr::compact)
-  tst_list <- setNames(tst_list, time_series_table)
+    ts_list <- purrr::map(1:n_tsts, ~purrr::map(ts_list, .x))
 
-  tst_list
+    ts_formatted <- purrr::map(
+      ts_list,
+      ~list(
+        geog_levels = .x[[2]] # Output should be named geog_levels for consistency with API repsonse
+      ) %>%
+        purrr::compact()
+    ) %>% setNames(time_series_tables)
+
+  }
+
+  ts_formatted
 
 }
+
 
 format_samples_for_json <- function(samples) {
   if (length(samples) == 1 && is.na(samples)) {
@@ -2129,17 +2369,37 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
       out <- new_ipums_extract(
         collection = "nhgis",
         description = x$description,
-        dataset = names(x$datasets) %||% NA_character_,
-        data_tables = unlist(x$datasets[[1]]$data_tables) %||%
-          EMPTY_NAMED_LIST,
-        ds_geog_levels = unlist(x$datasets[[1]]$geog_levels) %||%
-          EMPTY_NAMED_LIST,
-        years = unlist(x$datasets[[1]]$years) %||% EMPTY_NAMED_LIST,
-        breakdown_values = unlist(x$datasets[[1]]$breakdown_values) %||%
-          EMPTY_NAMED_LIST,
-        time_series_table = names(x$time_series_tables) %||% NA_character_,
-        ts_geog_levels = unlist(x$time_series_tables[[1]]$geog_levels) %||%
-          EMPTY_NAMED_LIST,
+        datasets = if(is.null(names(x$datasets))) {
+          EMPTY_NAMED_LIST
+        } else {
+          purrr::map(names(x$datasets), c)
+
+        },
+        data_tables = unname(purrr::map(
+          x$datasets,
+          ~unlist(.x$data_tables) %||% EMPTY_NAMED_LIST
+        )),
+        ds_geog_levels = unname(purrr::map(
+          x$datasets,
+          ~unlist(.x$geog_levels) %||% EMPTY_NAMED_LIST
+        )),
+        years = unname(purrr::map(
+          x$datasets,
+          ~unlist(.x$years) %||% EMPTY_NAMED_LIST
+        )),
+        breakdown_values = unname(purrr::map(
+          x$datasets,
+          ~unlist(.x$breakdown_values) %||% EMPTY_NAMED_LIST
+        )),
+        time_series_tables = if(is.null(names(x$time_series_tables))) {
+          EMPTY_NAMED_LIST
+        } else {
+          purrr::map(names(x$time_series_tables), c)
+        },
+        ts_geog_levels = unname(purrr::map(
+          x$time_series_tables,
+          ~unlist(.x$geog_levels) %||% EMPTY_NAMED_LIST
+        )),
         shapefiles = unlist(x$shapefiles) %||% EMPTY_NAMED_LIST,
         data_format = x$data_format %||% NA_character_,
         breakdown_and_data_type_layout = x$breakdown_and_data_type_layout %||%
@@ -2237,12 +2497,12 @@ reconstruct_api_response <- function(extract, response_extract) {
     extract <- new_ipums_extract(
       collection = response_extract$collection,
       description = response_extract$description,
-      dataset = response_extract$dataset,
+      datasets = response_extract$datasets,
       data_tables = response_extract$data_tables,
       ds_geog_levels = response_extract$ds_geog_levels,
       years = response_extract$years,
       breakdown_values = response_extract$breakdown_values,
-      time_series_table = response_extract$time_series_table,
+      time_series_tables = response_extract$time_series_tables,
       ts_geog_levels = response_extract$ts_geog_levels,
       shapefiles = extract$shapefiles,
       data_format = response_extract$data_format,

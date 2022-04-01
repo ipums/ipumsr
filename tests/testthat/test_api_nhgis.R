@@ -30,7 +30,6 @@ usa_extract <- define_extract_micro(
 )
 
 nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
-
 usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
 
 if (have_api_access) {
@@ -133,57 +132,57 @@ if (have_api_access) {
 
 # Basic Functionality ----------------------------------------------------------
 
-test_that("Can define an NHGIS extract", {
-  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(nhgis_extract$dataset, "2015_2019_ACS5a")
-  expect_equal(nhgis_extract$data_tables, c("B01001", "B01002", "B15003"))
-  expect_equal(nhgis_extract$ds_geog_levels, c("nation", "blck_grp"))
-  expect_equal(nhgis_extract$time_series_table, "CW3")
-  expect_equal(nhgis_extract$ts_geog_levels, "county")
-  expect_equal(nhgis_extract$time_series_table_layout, "time_by_column_layout")
-  expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_equal(nhgis_extract$data_format, "csv_no_header")
-  expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
-  expect_false(nhgis_extract$submitted)
-  expect_equal(nhgis_extract$number, NA_integer_)
-  expect_equal(nhgis_extract$status, "unsubmitted")
-  expect_true(is.na(nhgis_extract_shp$dataset))
-})
-
-
-test_that("Can submit an NHGIS extract of multiple types", {
-  skip_if_no_api_access(have_api_access)
-  expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(submitted_nhgis_extract$collection, "nhgis")
-  expect_equal(submitted_nhgis_extract$dataset, "2015_2019_ACS5a")
-  expect_equal(submitted_nhgis_extract$time_series_table, "CW3")
-  expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_true(submitted_nhgis_extract$submitted)
-  expect_equal(submitted_nhgis_extract$status, "submitted")
-  expect_identical(
-    submitted_nhgis_extract$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
-  )
-})
-
-
-test_that("Can submit an NHGIS extract of a single type", {
-  skip_if_no_api_access(have_api_access)
-  expect_s3_class(
-    submitted_nhgis_extract_shp,
-    c("nhgis_extract", "ipums_extract")
-  )
-  expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
-  expect_true(is.na(submitted_nhgis_extract_shp$dataset))
-  expect_true(is.na(submitted_nhgis_extract_shp$time_series_table))
-  expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_true(submitted_nhgis_extract_shp$submitted)
-  expect_equal(submitted_nhgis_extract_shp$status, "submitted")
-  expect_identical(
-    submitted_nhgis_extract_shp$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
-  )
-})
+# test_that("Can define an NHGIS extract", {
+#   expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
+#   expect_equal(nhgis_extract$datasets, "2015_2019_ACS5a")
+#   expect_equal(nhgis_extract$data_tables, c("B01001", "B01002", "B15003"))
+#   expect_equal(nhgis_extract$ds_geog_levels, c("nation", "blck_grp"))
+#   expect_equal(nhgis_extract$time_series_tables, "CW3")
+#   expect_equal(nhgis_extract$ts_geog_levels, "county")
+#   expect_equal(nhgis_extract$time_series_table_layout, "time_by_column_layout")
+#   expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+#   expect_equal(nhgis_extract$data_format, "csv_no_header")
+#   expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
+#   expect_false(nhgis_extract$submitted)
+#   expect_equal(nhgis_extract$number, NA_integer_)
+#   expect_equal(nhgis_extract$status, "unsubmitted")
+#   expect_true(is.na(nhgis_extract_shp$dataset))
+# })
+#
+#
+# test_that("Can submit an NHGIS extract of multiple types", {
+#   skip_if_no_api_access(have_api_access)
+#   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+#   expect_equal(submitted_nhgis_extract$collection, "nhgis")
+#   expect_equal(submitted_nhgis_extract$datasets, "2015_2019_ACS5a")
+#   expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
+#   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+#   expect_true(submitted_nhgis_extract$submitted)
+#   expect_equal(submitted_nhgis_extract$status, "submitted")
+#   expect_identical(
+#     submitted_nhgis_extract$download_links,
+#     ipumsr:::EMPTY_NAMED_LIST
+#   )
+# })
+#
+#
+# test_that("Can submit an NHGIS extract of a single type", {
+#   skip_if_no_api_access(have_api_access)
+#   expect_s3_class(
+#     submitted_nhgis_extract_shp,
+#     c("nhgis_extract", "ipums_extract")
+#   )
+#   expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
+#   expect_true(is.na(submitted_nhgis_extract_shp$dataset))
+#   expect_true(is.na(submitted_nhgis_extract_shp$time_series_table))
+#   expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
+#   expect_true(submitted_nhgis_extract_shp$submitted)
+#   expect_equal(submitted_nhgis_extract_shp$status, "submitted")
+#   expect_identical(
+#     submitted_nhgis_extract_shp$download_links,
+#     ipumsr:::EMPTY_NAMED_LIST
+#   )
+# })
 
 
 test_that("nhgis_extract print method works", {
@@ -192,7 +191,7 @@ test_that("nhgis_extract print method works", {
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
-      "\nDataset: 2015_2019_ACS5a",
+      "\nDatasets: 2015_2019_ACS5a",
       "\n  Tables: \\(3 total\\) B01001, B01002, B15003",
       "\n  Geog Levels: \\(2 total\\) nation, blck_grp",
       "\n  Years: ",
@@ -212,20 +211,21 @@ test_that("nhgis_extract print method works", {
   )
 })
 
-# Should test this on extracts returned from extract tbl output as well
+# Will need a lot more testing here after list conversion
 test_that("nhgis_extract validate method works", {
   expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
   expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
   expect_error(
     validate_ipums_extract(new_ipums_extract("nhgis")),
-    "At least one of `dataset`"
+    "At least one of `datasets`"
   )
   expect_error(
     validate_ipums_extract(
       new_ipums_extract(
         "nhgis",
         description = "",
-        dataset = "Test")
+        datasets = "Test"
+      )
     ),
     "When a dataset is specified,"
   )
@@ -234,7 +234,7 @@ test_that("nhgis_extract validate method works", {
       new_ipums_extract(
         "nhgis",
         description = "",
-        time_series_table = "Test"
+        time_series_tables = "Test"
       )
     ),
     "When a time series table is specified,"
@@ -244,7 +244,7 @@ test_that("nhgis_extract validate method works", {
       new_ipums_extract(
         "nhgis",
         description = "",
-        dataset = "Test",
+        datasets = "Test",
         data_tables = "Test",
         ds_geog_levels = "Test",
         data_format = "Test"
@@ -262,7 +262,7 @@ test_that("nhgis_extract validate method works", {
     ),
     paste0(
       "The following elements of an nhgis_extract must not contain ",
-      "missing values: desc"
+      "missing values: description"
     )
   )
 })
@@ -310,39 +310,39 @@ test_that("Can check status of an NHGIS extract with collection and number", {
 })
 
 
-test_that("Tibble of recent NHGIS extracts has expected structure", {
-  skip_if_no_api_access(have_api_access)
-  expected_columns <- c("collection", "description", "dataset",
-                        "data_tables", "ds_geog_levels", "years",
-                        "breakdown_values", "time_series_table",
-                        "ts_geog_levels", "shapefiles", "data_format",
-                        "breakdown_and_data_type_layout",
-                        "time_series_table_layout", "geographic_extents",
-                        "submitted", "download_links", "number", "status")
-  expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
-  expect_equal(nrow(recent_nhgis_extracts_tbl), 10)
-  expect_equal(
-    recent_nhgis_extracts_tbl[2,]$dataset,
-    submitted_nhgis_extract$dataset
-  )
-  expect_equal(
-    unlist(recent_nhgis_extracts_tbl[2,]$data_tables),
-    submitted_nhgis_extract$data_tables
-  )
-  expect_equal(
-    recent_nhgis_extracts_tbl[2,]$time_series_table,
-    submitted_nhgis_extract$time_series_table
-  )
-})
-
-
-test_that("Can limit number of recent extracts to get info on", {
-  skip_if_no_api_access(have_api_access)
-  vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
-  })
-  expect_equal(nrow(two_recent_nhgis_extracts), 2)
-})
+# test_that("Tibble of recent NHGIS extracts has expected structure", {
+#   skip_if_no_api_access(have_api_access)
+#   expected_columns <- c("collection", "description", "dataset",
+#                         "data_tables", "ds_geog_levels", "years",
+#                         "breakdown_values", "time_series_table",
+#                         "ts_geog_levels", "shapefiles", "data_format",
+#                         "breakdown_and_data_type_layout",
+#                         "time_series_table_layout", "geographic_extents",
+#                         "submitted", "download_links", "number", "status")
+#   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
+#   expect_equal(nrow(recent_nhgis_extracts_tbl), 10)
+#   expect_equal(
+#     recent_nhgis_extracts_tbl[2,]$dataset,
+#     submitted_nhgis_extract$dataset
+#   )
+#   expect_equal(
+#     unlist(recent_nhgis_extracts_tbl[2,]$data_tables),
+#     submitted_nhgis_extract$data_tables
+#   )
+#   expect_equal(
+#     recent_nhgis_extracts_tbl[2,]$time_series_table,
+#     submitted_nhgis_extract$time_series_table
+#   )
+# })
+#
+#
+# test_that("Can limit number of recent extracts to get info on", {
+#   skip_if_no_api_access(have_api_access)
+#   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
+#     two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
+#   })
+#   expect_equal(nrow(two_recent_nhgis_extracts), 2)
+# })
 
 test_that("extract_list_from_json reproduces extract specs", {
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
@@ -723,7 +723,7 @@ tryCatch(
 # #     regexp = "are not included"
 # #   )
 # # })
-#
+
 # test_that("NHGIS tbl to list and list to tbl conversion works", {
 #   skip_if_no_api_access(have_api_access)
 #   converted_to_list <- extract_tbl_to_list(
@@ -741,35 +741,35 @@ tryCatch(
 #   #   "All extracts in `extract_list` must belong to same collection"
 #   # )
 # })
-#
-# test_that("We can export to and import from JSON for NHGIS", {
-#   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-#   on.exit(unlink(json_tmpfile))
-#   save_extract_as_json(nhgis_extract, json_tmpfile)
-#   copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile, "nhgis")
-#   expect_identical(nhgis_extract, copy_of_nhgis_extract)
-#   expect_error(
-#     define_extract_from_json(json_tmpfile, "usa"),
-#     ".+Did you specify the correct collection for this extract?"
-#   )
-# })
-#
-# test_that("We can export to and import from JSON, submitted NHGIS extract", {
-#   skip_if_no_api_access(have_api_access)
-#   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-#   on.exit(unlink(json_tmpfile))
-#   save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
-#   copy_of_submitted_nhgis_extract <- define_extract_from_json(
-#     json_tmpfile,
-#     "nhgis"
-#   )
-#   expect_identical(
-#     ipumsr:::copy_ipums_extract(submitted_nhgis_extract),
-#     copy_of_submitted_nhgis_extract
-#   )
-#   expect_error(
-#     define_extract_from_json(json_tmpfile, "usa"),
-#     ".+Did you specify the correct collection for this extract?"
-#   )
-# })
-#
+
+test_that("We can export to and import from JSON for NHGIS", {
+  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
+  on.exit(unlink(json_tmpfile))
+  save_extract_as_json(nhgis_extract, json_tmpfile)
+  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile, "nhgis")
+  expect_identical(nhgis_extract, copy_of_nhgis_extract)
+  expect_error(
+    define_extract_from_json(json_tmpfile, "usa"),
+    ".+Did you specify the correct collection for this extract?"
+  )
+})
+
+test_that("We can export to and import from JSON, submitted NHGIS extract", {
+  skip_if_no_api_access(have_api_access)
+  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
+  on.exit(unlink(json_tmpfile))
+  save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
+  copy_of_submitted_nhgis_extract <- define_extract_from_json(
+    json_tmpfile,
+    "nhgis"
+  )
+  expect_identical(
+    ipumsr:::copy_ipums_extract(submitted_nhgis_extract),
+    copy_of_submitted_nhgis_extract
+  )
+  expect_error(
+    define_extract_from_json(json_tmpfile, "usa"),
+    ".+Did you specify the correct collection for this extract?"
+  )
+})
+
