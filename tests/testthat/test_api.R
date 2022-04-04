@@ -300,7 +300,7 @@ test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
     regexp = paste0(
-      "The following elements of an ipums_extract must not contain missing ",
+      "The following elements of a usa_extract must not contain missing ",
       "values:"
     )
   )
@@ -312,7 +312,7 @@ test_that("An extract request with missing samples returns correct error", {
       ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
     ),
     regexp = paste0(
-      "The following elements of an ipums_extract must not contain missing ",
+      "The following elements of a usa_extract must not contain missing ",
       "values:"
     )
   )
