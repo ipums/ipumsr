@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1783997/nhgis0420_csv.zip
     body:
       encoding: ''
       string: ''
@@ -17,27 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0407_csv.zip"; filename*=UTF-8''nhgis0407_csv.zip
+      content-disposition: attachment; filename="nhgis0420_csv.zip"; filename*=UTF-8''nhgis0420_csv.zip
       content-type: application/zip
-      date: Wed, 30 Mar 2022 16:05:29 GMT
-      etag: '"62446fcf-2bb978"'
-      last-modified: Wed, 30 Mar 2022 14:57:19 GMT
+      date: Mon, 04 Apr 2022 20:53:25 GMT
+      etag: '"624b5a64-162b0d"'
+      last-modified: Mon, 04 Apr 2022 20:51:48 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=COlOIAQJkp198IbqdW%2BUI5C47gQfH3LECt4UCoemAnlcONXfj8rg4ONjKWyuh3Eg158VK85jeP4bBoom3NfeElbCgXcqqgCe7mdM69mFDJxyPMwYw4mo0TXDB9xmkdeZTiC6TUZ5NLpflvba%2BHLZ74vs0JDCix6BHVjdm3iClfL45moy2z26xek%2Fiqx7q3YFhx9ViPYk9%2BaegBlJa5c2PSt3QSThD9MqeuniJykNug2Lf1HrB65UXdqk2WCzoxo%3D--e1T%2F%2BYGog8xVLz6f--NdGLkVF4VgBzhQph%2BEoWfQ%3D%3D;
+      set-cookie: _session_id=R1MskCDfnsc2B7V3%2Fq4eO6eTV6YaoSjIFpRLCd7reVcsdEnlAZC2Y2i2%2FibYdP%2Fr6olSaZbEujtyR7Hj2ziJ95X8VW9AhA3xL97xPZHWnRGTvKvrERlarJzj5owO0DpVJ%2BXq%2FwkZdxwiR%2F4m5qSCPML3682wY8ljSE96uJhnAYi%2BKSJIbhNUMGhIXUTHgCLb8A15Hwid%2BCJiAMfoEMPqh9z%2FnHkcwQCPUt56H7kmaP5790LEsPr274X6piPq0JY%3D--cj2XH%2FmJpA1XccpQ--yEjfqJaoxiZEzMSwNpox2g%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '2865528'
+      content-length: '1452813'
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0407_csv.zip
-  recorded_at: 2022-03-30 16:05:35 GMT
+      string: ../fixtures/nhgis0420_csv.zip
+  recorded_at: 2022-04-04 20:53:26 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1780208/nhgis0407_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1783997/nhgis0420_shape.zip
     body:
       encoding: ''
       string: ''
@@ -53,13 +53,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0407_shape.zip"; filename*=UTF-8''nhgis0407_shape.zip
+      content-disposition: attachment; filename="nhgis0420_shape.zip"; filename*=UTF-8''nhgis0420_shape.zip
       content-type: application/zip
-      date: Wed, 30 Mar 2022 16:05:29 GMT
-      etag: '"62446f7f-7ca95"'
-      last-modified: Wed, 30 Mar 2022 14:55:59 GMT
+      date: Mon, 04 Apr 2022 20:53:26 GMT
+      etag: '"624b5a10-7ca95"'
+      last-modified: Mon, 04 Apr 2022 20:50:24 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=uIXzB%2BmE4TltHI6nm%2Fefr4C8IFRaNK9%2BY7Xvk6h4%2FWxbU5H9FC9eYc16baRKhO2hU5A1JCFE%2B8T7eBQH%2F53%2FRyiDRD2mOIqnTIe%2B51aU%2FVhp%2Bt1Ba3cgeHR%2BwnjOJULndRiLPXbmIuL%2B8IOXBa2XO7rQCW3HIC5DYaF9%2BPqXCrYS9lEJcH5qZEKLlXFqSfmGyp3NpEDnfb%2F2XUN2kEux1UXSMv6bpvDGGftQmlo7CVviTjea8ND3xbSiNif%2Fuzo%3D--IkmPdfjnwUu5udVv--tVTf9NhbD0sU8fOUEBQwTw%3D%3D;
+      set-cookie: _session_id=wJcC7%2FAZhjue5NmBLguqdUUw%2FuQwgZLFZUqE4OwyNlte%2BPEuwGpRNbvc1ojG2CwGS7HajabPxwn%2BioxGvMerTo02%2BKSrnxY6nc3J8CO9WW%2F03XaYmK3NjQqXxspwHXybDRCQA2ptc9F9dTu%2BxzZqF1xnmwMvSrm0tnnlp4rMVw75MwjQTBFfhII%2FW4lGoH4nsxHTFFJIwQb%2FdCvhD0vFf87a%2B5%2Fi6Iu%2F65HSmALzelkAF5pg5EETeDlXGtodb1k%3D--b3L97kd4QscTuwE2--f5VMo%2Box2%2FT3K9pyegBsUQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -68,6 +68,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0407_shape.zip
-  recorded_at: 2022-03-30 16:05:35 GMT
+      string: ../fixtures/nhgis0420_shape.zip
+  recorded_at: 2022-04-04 20:53:26 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

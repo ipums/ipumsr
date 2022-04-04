@@ -170,53 +170,63 @@ define_extract_nhgis <- function(description = "",
 
   if (n_datasets > 0) {
     datasets <- purrr::map(datasets, c)
+    data_format <- data_format %||% "csv_header"
+    breakdown_and_data_type_layout <- breakdown_and_data_type_layout %||%
+      "separate_files"
   }
 
   if (n_tsts > 0) {
     time_series_tables <- purrr::map(time_series_tables, c)
+    data_format <- data_format %||% "csv_header"
+    time_series_table_layout <- time_series_table_layout %||%
+      "time_by_column_layout"
   }
 
   data_tables <- recycle_arg_to_list(
-    data_tables %||% EMPTY_NAMED_LIST,
-    n_datasets
+    data_tables,
+    n_datasets,
+    labels = datasets
   )
 
   ds_geog_levels <- recycle_arg_to_list(
-    ds_geog_levels %||% EMPTY_NAMED_LIST,
-    n_datasets
+    ds_geog_levels,
+    n_datasets,
+    labels = datasets
   )
 
   years <- recycle_arg_to_list(
-    years %||% EMPTY_NAMED_LIST,
-    n_datasets
+    years,
+    n_datasets,
+    labels = datasets
   )
 
   breakdown_values <- recycle_arg_to_list(
-    breakdown_values %||% EMPTY_NAMED_LIST,
-    n_datasets
+    breakdown_values,
+    n_datasets,
+    labels = datasets
   )
 
   ts_geog_levels <- recycle_arg_to_list(
-    ts_geog_levels %||% EMPTY_NAMED_LIST,
-    n_tsts
+    ts_geog_levels,
+    n_tsts,
+    labels = time_series_tables
   )
 
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
-    datasets = datasets %||% EMPTY_NAMED_LIST,
+    datasets = datasets,
     data_tables = data_tables,
     ds_geog_levels = ds_geog_levels,
     years = years,
     breakdown_values = breakdown_values,
-    time_series_tables = time_series_tables %||% EMPTY_NAMED_LIST,
+    time_series_tables = time_series_tables,
     ts_geog_levels = ts_geog_levels,
-    shapefiles = shapefiles %||% EMPTY_NAMED_LIST,
-    data_format = data_format %||% NA_character_,
-    breakdown_and_data_type_layout = breakdown_and_data_type_layout %||%
-      NA_character_,
-    time_series_table_layout = time_series_table_layout %||% NA_character_,
-    geographic_extents = geographic_extents %||% EMPTY_NAMED_LIST
+    shapefiles = shapefiles,
+    data_format = data_format,
+    breakdown_and_data_type_layout = breakdown_and_data_type_layout,
+    time_series_table_layout = time_series_table_layout,
+    geographic_extents = geographic_extents
   )
 
   extract <- validate_ipums_extract(extract)
@@ -843,8 +853,10 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
 
   if (!is.null(table_url) && !is.null(gis_url)) {
     message(
-      paste0("Data file saved to ", file_paths[1],
-             "\nGIS file saved to ", file_paths[2])
+      paste0(
+        "Data file saved to ", file_paths[1],
+        "\nGIS file saved to ", file_paths[2]
+      )
     )
   } else if (!is.null(table_url)) {
     message(
@@ -1396,12 +1408,12 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   is_missing <- purrr::map_lgl(
     c("collection", "description"),
-    ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
+    ~is.na(x[[.]]) || is_empty(x[[.]])
   )
 
   is_present <- purrr::map_lgl(
     names(x),
-    ~!is.null(x[[.]]) && !is.na(x[[.]]) && !is_empty(x[[.]])
+    ~!is.na(x[[.]]) && !is_empty(x[[.]])
   )
 
   vars_present <- names(x)[is_present]
@@ -1423,54 +1435,45 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
+      function(y) any(purrr::map_lgl(x[[y]], ~is_empty(.x) || is.na(.x)))
     )
 
     if (any(is_missing)) {
       stop(
         "When a dataset is specified, the following must not contain ",
-        "missing values: ",
-        paste0(must_be_non_missing[is_missing], collapse = ", "),
+        "missing values: `",
+        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`",
         call. = FALSE
       )
     }
 
-    bad_length <- purrr::map_lgl(
+    var_length <- purrr::map_dbl(must_have_same_length, ~length(x[[.]]))
+    right_length <- var_length == length(x$datasets) & var_length != 0
+
+    length_msg <- purrr::imap_chr(
       must_have_same_length,
-      ~length(x[[.]]) != length(x$datasets) && length(x[[.]]) != 0
+      ~paste0("`", .x, "` (", var_length[.y], ")")
     )
 
-    if (any(bad_length)) {
+    if (any(!right_length)) {
       stop(
-        "The number of selections provided in `",
-        paste0(must_have_same_length[bad_length], collapse = "`, `"),
-        "` does not match the number of datasets (", length(x$datasets),
+        "The number of selections provided in ",
+        paste0(length_msg[!right_length], collapse = ", "),
+        " does not match the number of datasets (", length(x$datasets),
         "). \nTo recycle selections across datasets, ensure values are stored ",
         "in a vector, not a list.",
         call. = FALSE
       )
     }
 
-    # TODO: Allow multiple datasets?
-    # API can handle this, but may be difficult to make an easy R interface for
-    # users
-    # if(length(x$datasets) > 1) {
-    #   stop(
-    #     "Currently, only one dataset per extract request is supported",
-    #     call. = FALSE
-    #   )
-    # }
-
     if(!x$data_format %in% c("csv_no_header",
                              "csv_header",
                              "fixed_width")) {
-
       stop(
         "`data_format` must be one of `csv_no_header`, `csv_header`, ",
         "or `fixed_width`",
         call. = FALSE
       )
-
     }
 
     # TODO: Add additional logic to catch other requirements here?
@@ -1490,8 +1493,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     if (length(extra_vars) > 0) {
       warning(
         "No dataset provided for the following arguments: `",
-        paste0(extra_vars, collapse = "`, `"),
-        "`. These parameters will be ignored.",
+        paste0(extra_vars, collapse = "`, `"), "`.",
+        # "`. These parameters will be ignored.",
         call. = FALSE
       )
     }
@@ -1505,23 +1508,23 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing,
-      ~is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]])
+      function(y) any(purrr::map_lgl(x[[y]], ~is.na(.x) || is_empty(.x)))
     )
 
     if (any(is_missing)) {
       stop(
-        "When a time series table is specified, the following must not contain ",
-        "missing values: ",
-        paste0(must_be_non_missing[is_missing], collapse = ", "),
+        "When a time series table is specified, the following must not contain",
+        " missing values: `",
+        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`",
         call. = FALSE
       )
     }
 
-    if (length(x$ts_geog_levels) != length(x$time_series_tables) &&
-        length(x$ts_geog_levels) != 0) {
+    if (length(x$ts_geog_levels) != length(x$time_series_tables)) {
       stop(
-        "The number of selections provided in `ts_geog_levels` ",
-        "does not match the number of time series tables (",
+        "The number of selections provided in `ts_geog_levels` (",
+        length(x$ts_geog_levels),
+        ") does not match the number of time series tables (",
         length(x$time_series_tables),
         "). \nTo recycle selections across time series tables, ensure values ",
         "are stored in a vector, not a list.",
@@ -1529,24 +1532,14 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    # if(length(x$time_series_tables) > 1) {
-    #   stop(
-    #     "Currently, only one time series table per extract request is ",
-    #     "supported",
-    #     call. = FALSE
-    #   )
-    # }
-
     if(!x$data_format %in% c("csv_no_header",
                              "csv_header",
                              "fixed_width")) {
-
       stop(
         "`data_format` must be one of `csv_no_header`, `csv_header`, ",
         "or `fixed_width`",
         call. = FALSE
       )
-
     }
 
     if(!x$time_series_table_layout %in% c("time_by_column_layout",
@@ -1567,8 +1560,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     if (length(extra_vars) > 0) {
       warning(
         "No time series table provided for the following arguments: `",
-        paste0(extra_vars, collapse = "`, `"),
-        "`. These parameters will be ignored.",
+        paste0(extra_vars, collapse = "`, `"), "`.",
+        # "`. These parameters will be ignored.",
         call. = FALSE
       )
     }
@@ -1836,7 +1829,7 @@ format_dataset_for_printing <- function(dataset,
     "\n",
     print_truncated_vector(
       dataset,
-      "Datasets: ",
+      "Dataset: ",
       FALSE
     ),
     "\n  ",
@@ -1872,7 +1865,7 @@ format_tst_for_printing <- function(time_series_table,
     "\n",
     print_truncated_vector(
       time_series_table,
-      "Time Series Tables: ",
+      "Time Series Table: ",
       FALSE
     ),
     "\n  ",
@@ -2084,7 +2077,7 @@ format_datasets_for_json <- function(datasets,
 
 }
 
-recycle_arg_to_list <- function(x, n) {
+recycle_arg_to_list <- function(x, n, labels = NULL) {
 
   if (n < 1) {
     return(x)
@@ -2092,12 +2085,18 @@ recycle_arg_to_list <- function(x, n) {
 
   # EMPTY_NAMED_LIST is special case:
   if (is_list(x) && is_empty(x) && is_named(x)) {
-    rep(list(x), n)
+    l <- rep(list(x), n)
   } else if (!is_list(x)) { # But otherwise we don't want to recycle lists
-    rep(list(x), n)
+    l <- rep(list(x), n)
   } else {
-    x
+    l <- x
   }
+
+  if (length(labels) == length(l)) {
+    l <- setNames(l, labels)
+  }
+
+  l
 
 }
 
@@ -2366,52 +2365,57 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
   purrr::map(
     list_of_extract_info,
     function(x) {
+
+      no_datasets <- is.null(x$datasets)
+      no_tsts <- is.null(x$time_series_tables)
+
       out <- new_ipums_extract(
         collection = "nhgis",
         description = x$description,
-        datasets = if(is.null(names(x$datasets))) {
-          EMPTY_NAMED_LIST
+        datasets = if (no_datasets) {
+          NULL
         } else {
           purrr::map(names(x$datasets), c)
-
         },
-        data_tables = unname(purrr::map(
-          x$datasets,
-          ~unlist(.x$data_tables) %||% EMPTY_NAMED_LIST
-        )),
-        ds_geog_levels = unname(purrr::map(
-          x$datasets,
-          ~unlist(.x$geog_levels) %||% EMPTY_NAMED_LIST
-        )),
-        years = unname(purrr::map(
-          x$datasets,
-          ~unlist(.x$years) %||% EMPTY_NAMED_LIST
-        )),
-        breakdown_values = unname(purrr::map(
-          x$datasets,
-          ~unlist(.x$breakdown_values) %||% EMPTY_NAMED_LIST
-        )),
-        time_series_tables = if(is.null(names(x$time_series_tables))) {
-          EMPTY_NAMED_LIST
+        data_tables = if (no_datasets) {
+          NULL
+        } else {
+          purrr::map(x$datasets, ~unlist(.x$data_tables))
+        },
+        ds_geog_levels = if (no_datasets) {
+          NULL
+        } else {
+          purrr::map(x$datasets, ~unlist(.x$geog_levels))
+        },
+        years = if (no_datasets) {
+          NULL
+        } else {
+          purrr::map(x$datasets, ~unlist(.x$years))
+        },
+        breakdown_values = if (no_datasets) {
+          NULL
+        } else {
+          purrr::map(x$datasets, ~unlist(.x$breakdown_values))
+        },
+        time_series_tables = if (no_tsts) {
+          NULL
         } else {
           purrr::map(names(x$time_series_tables), c)
         },
-        ts_geog_levels = unname(purrr::map(
-          x$time_series_tables,
-          ~unlist(.x$geog_levels) %||% EMPTY_NAMED_LIST
-        )),
-        shapefiles = unlist(x$shapefiles) %||% EMPTY_NAMED_LIST,
-        data_format = x$data_format %||% NA_character_,
-        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout %||%
-          NA_character_,
-        time_series_table_layout = x$time_series_table_layout %||%
-          NA_character_,
-        geographic_extents = unlist(x$geographic_extents) %||%
-          EMPTY_NAMED_LIST,
+        ts_geog_levels = if (no_tsts) {
+          NULL
+        } else {
+          purrr::map(x$time_series_tables, ~unlist(.x$geog_levels))
+        },
+        shapefiles = unlist(x$shapefiles),
+        data_format = x$data_format,
+        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
+        time_series_table_layout = x$time_series_table_layout,
+        geographic_extents = unlist(x$geographic_extents),
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
         download_links = x$download_links %||% EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status =  x$status %||% "unsubmitted"
+        status = x$status %||% "unsubmitted"
       )
 
       if (validate) validate_ipums_extract(out)
@@ -2555,9 +2559,9 @@ parse_400_error <- function(res) {
   return(error_message)
 }
 
-json_to_extract <- function(json, collection) {
-  json_as_data_frame <- jsonlite::fromJSON(json)
-}
+# json_to_extract <- function(json, collection) {
+#   json_as_data_frame <- jsonlite::fromJSON(json)
+# }
 
 
 extract_is_completed_and_has_links <- function(extract) {

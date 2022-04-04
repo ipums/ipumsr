@@ -5,13 +5,13 @@ library(purrr)
 
 nhgis_extract <- define_extract_nhgis(
   description = "Extract for R client testing",
-  dataset = "2015_2019_ACS5a",
-  data_tables = c("B01001", "B01002", "B15003"),
-  ds_geog_levels = c("nation", "blck_grp"),
+  dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
+  data_tables = c("B01001", "B01002"),
+  ds_geog_levels = list("nation", "blck_grp"),
   time_series_table = "CW3",
-  ts_geog_levels = "county",
-  time_series_table_layout = "time_by_column_layout",
-  breakdown_and_data_type_layout = "single_file",
+  ts_geog_levels = "state",
+  time_series_table_layout = "time_by_row_layout",
+  # breakdown_and_data_type_layout = "single_file",
   geographic_extents = c("110", "420"),
   shapefiles = "110_blck_grp_2019_tl2019",
   data_format = "csv_no_header"
@@ -132,58 +132,110 @@ if (have_api_access) {
 
 # Basic Functionality ----------------------------------------------------------
 
-# test_that("Can define an NHGIS extract", {
-#   expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
-#   expect_equal(nhgis_extract$datasets, "2015_2019_ACS5a")
-#   expect_equal(nhgis_extract$data_tables, c("B01001", "B01002", "B15003"))
-#   expect_equal(nhgis_extract$ds_geog_levels, c("nation", "blck_grp"))
-#   expect_equal(nhgis_extract$time_series_tables, "CW3")
-#   expect_equal(nhgis_extract$ts_geog_levels, "county")
-#   expect_equal(nhgis_extract$time_series_table_layout, "time_by_column_layout")
-#   expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-#   expect_equal(nhgis_extract$data_format, "csv_no_header")
-#   expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
-#   expect_false(nhgis_extract$submitted)
-#   expect_equal(nhgis_extract$number, NA_integer_)
-#   expect_equal(nhgis_extract$status, "unsubmitted")
-#   expect_true(is.na(nhgis_extract_shp$dataset))
-# })
-#
-#
-# test_that("Can submit an NHGIS extract of multiple types", {
-#   skip_if_no_api_access(have_api_access)
-#   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-#   expect_equal(submitted_nhgis_extract$collection, "nhgis")
-#   expect_equal(submitted_nhgis_extract$datasets, "2015_2019_ACS5a")
-#   expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
-#   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-#   expect_true(submitted_nhgis_extract$submitted)
-#   expect_equal(submitted_nhgis_extract$status, "submitted")
-#   expect_identical(
-#     submitted_nhgis_extract$download_links,
-#     ipumsr:::EMPTY_NAMED_LIST
-#   )
-# })
-#
-#
-# test_that("Can submit an NHGIS extract of a single type", {
-#   skip_if_no_api_access(have_api_access)
-#   expect_s3_class(
-#     submitted_nhgis_extract_shp,
-#     c("nhgis_extract", "ipums_extract")
-#   )
-#   expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
-#   expect_true(is.na(submitted_nhgis_extract_shp$dataset))
-#   expect_true(is.na(submitted_nhgis_extract_shp$time_series_table))
-#   expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
-#   expect_true(submitted_nhgis_extract_shp$submitted)
-#   expect_equal(submitted_nhgis_extract_shp$status, "submitted")
-#   expect_identical(
-#     submitted_nhgis_extract_shp$download_links,
-#     ipumsr:::EMPTY_NAMED_LIST
-#   )
-# })
+test_that("Can define an NHGIS extract", {
+  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(
+    nhgis_extract$datasets,
+    list("2014_2018_ACS5a", "2015_2019_ACS5a")
+  )
+  expect_equal(
+    nhgis_extract$data_tables,
+    list("2014_2018_ACS5a" = c("B01001", "B01002"),
+         "2015_2019_ACS5a" = c("B01001", "B01002"))
+  )
+  expect_equal(
+    nhgis_extract$ds_geog_levels,
+    list("2014_2018_ACS5a" = "nation",
+         "2015_2019_ACS5a" = "blck_grp")
+  )
+  expect_equal(
+    nhgis_extract$years,
+    list("2014_2018_ACS5a" = NULL,
+         "2015_2019_ACS5a" = NULL)
+  )
+  expect_equal(
+    nhgis_extract$breakdown_values,
+    list("2014_2018_ACS5a" = NULL,
+         "2015_2019_ACS5a" = NULL)
+  )
+  expect_equal(nhgis_extract$time_series_tables, list("CW3"))
+  expect_equal(nhgis_extract$ts_geog_levels, list("CW3" = "state"))
+  expect_equal(nhgis_extract$time_series_table_layout, "time_by_row_layout")
+  expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_equal(nhgis_extract$data_format, "csv_no_header")
+  expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
+  expect_false(nhgis_extract$submitted)
+  expect_equal(nhgis_extract$number, NA_integer_)
+  expect_equal(nhgis_extract$status, "unsubmitted")
+  expect_true(is.null(nhgis_extract_shp$datasets))
+})
 
+
+test_that("NHGIS extracts get correct default values", {
+  expect_equal(
+    nhgis_extract$breakdown_and_data_type_layout,
+    "single_file"
+  )
+  expect_equal(
+    define_extract_nhgis(
+      time_series_tables = "A00",
+      ts_geog_levels = "A1"
+    )$time_series_table_layout,
+    "time_by_column_layout"
+  )
+  expect_equal(
+    nhgis_extract_shp$breakdown_and_data_type_layout,
+    NULL
+  )
+  expect_equal(
+    nhgis_extract_shp$data_format,
+    NULL
+  )
+})
+
+
+test_that("Can submit an NHGIS extract of multiple types", {
+  skip_if_no_api_access(have_api_access)
+  expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(submitted_nhgis_extract$collection, "nhgis")
+  expect_equal(
+    nhgis_extract$datasets,
+    list("2014_2018_ACS5a", "2015_2019_ACS5a")
+  )
+  expect_equal(
+    nhgis_extract$data_tables,
+    list("2014_2018_ACS5a" = c("B01001", "B01002"),
+         "2015_2019_ACS5a" = c("B01001", "B01002"))
+  )
+  expect_equal(submitted_nhgis_extract$time_series_tables, list("CW3"))
+  expect_equal(nhgis_extract$ts_geog_levels, list("CW3" = "state"))
+  expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_true(submitted_nhgis_extract$submitted)
+  expect_equal(submitted_nhgis_extract$status, "submitted")
+  expect_identical(
+    submitted_nhgis_extract$download_links,
+    ipumsr:::EMPTY_NAMED_LIST
+  )
+})
+
+
+test_that("Can submit an NHGIS extract of a single type", {
+  skip_if_no_api_access(have_api_access)
+  expect_s3_class(
+    submitted_nhgis_extract_shp,
+    c("nhgis_extract", "ipums_extract")
+  )
+  expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
+  expect_true(is.null(submitted_nhgis_extract_shp$datasets))
+  expect_true(is.null(submitted_nhgis_extract_shp$time_series_table))
+  expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_true(submitted_nhgis_extract_shp$submitted)
+  expect_equal(submitted_nhgis_extract_shp$status, "submitted")
+  expect_identical(
+    submitted_nhgis_extract_shp$download_links,
+    ipumsr:::EMPTY_NAMED_LIST
+  )
+})
 
 test_that("nhgis_extract print method works", {
   expect_output(
@@ -191,13 +243,18 @@ test_that("nhgis_extract print method works", {
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
-      "\nDatasets: 2015_2019_ACS5a",
-      "\n  Tables: \\(3 total\\) B01001, B01002, B15003",
-      "\n  Geog Levels: \\(2 total\\) nation, blck_grp",
+      "\nDataset: 2014_2018_ACS5a",
+      "\n  Tables: \\(2 total\\) B01001, B01002",
+      "\n  Geog Levels: \\(1 total\\) nation",
       "\n  Years: ",
       "\n  Breakdowns: ",
-      "\nTime Series Tables: CW3",
-      "\n  Geog Levels: \\(1 total\\) county",
+      "\nDataset: 2015_2019_ACS5a",
+      "\n  Tables: \\(2 total\\) B01001, B01002",
+      "\n  Geog Levels: \\(1 total\\) blck_grp",
+      "\n  Years: ",
+      "\n  Breakdowns: ",
+      "\nTime Series Table: CW3",
+      "\n  Geog Levels: \\(1 total\\) state",
       "\nShapefiles: \\(1 total\\) 110_blck_grp_2019_tl2019"
     )
   )
@@ -220,35 +277,29 @@ test_that("nhgis_extract validate method works", {
     "At least one of `datasets`"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
+    define_extract_nhgis(
         "nhgis",
         description = "",
         datasets = "Test"
-      )
     ),
     "When a dataset is specified,"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
+    define_extract_nhgis(
         description = "",
-        time_series_tables = "Test"
-      )
+        time_series_tables = "Test",
+        ts_geog_levels = NA
     ),
     "When a time series table is specified,"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
+    define_extract_nhgis(
         "nhgis",
         description = "",
         datasets = "Test",
         data_tables = "Test",
         ds_geog_levels = "Test",
         data_format = "Test"
-      )
     ),
     "`data_format` must be one of"
   )
@@ -263,6 +314,43 @@ test_that("nhgis_extract validate method works", {
     paste0(
       "The following elements of an nhgis_extract must not contain ",
       "missing values: description"
+    )
+  )
+  expect_warning(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        shapefiles = "Test",
+        ds_geog_levels = "Test"
+      )
+    ),
+    "No dataset provided for the following arguments: `ds_geog_levels`."
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        time_series_tables = c("A00", "A01"),
+        ts_geog_levels = list("a", "b", "c")
+      )
+    ),
+    regexp = "The number of selections provided in `ts_geog_levels` \\(3\\)"
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        datasets = c("A00", "A01"),
+        data_tables = NA,
+        ds_geog_levels = list(NULL, "b"),
+      )
+    ),
+    paste0(
+      "When a dataset is specified, the following must not contain missing ",
+      "values: `data_tables`, `ds_geog_levels`"
     )
   )
 })
@@ -372,17 +460,17 @@ test_that("NHGIS API v1 has missing fields but are recovered when submitting", {
     "The current version"
   )
 
-  expect_true(is_empty(checked_nhgis_extract$shapefiles))
-  expect_false(is_empty(submitted_nhgis_extract$shapefiles))
+  expect_true(is.null(checked_nhgis_extract$shapefiles))
+  expect_false(is.null(submitted_nhgis_extract$shapefiles))
 
-  expect_true(is.na(checked_nhgis_extract$breakdown_and_data_type_layout))
-  expect_false(is.na(submitted_nhgis_extract$breakdown_and_data_type_layout))
+  expect_true(is.null(checked_nhgis_extract$breakdown_and_data_type_layout))
+  expect_false(is.null(submitted_nhgis_extract$breakdown_and_data_type_layout))
 
-  expect_true(is.na(checked_nhgis_extract$time_series_table_layout))
-  expect_false(is.na(submitted_nhgis_extract$time_series_table_layout))
+  expect_true(is.null(checked_nhgis_extract$time_series_table_layout))
+  expect_false(is.null(submitted_nhgis_extract$time_series_table_layout))
 
-  expect_true(is_empty(checked_nhgis_extract$geographic_extents))
-  expect_false(is_empty(submitted_nhgis_extract$geographic_extents))
+  expect_true(is.null(checked_nhgis_extract$geographic_extents))
+  expect_false(is.null(submitted_nhgis_extract$geographic_extents))
 })
 
 test_that("We can get correct API version info for each collection", {
@@ -462,9 +550,9 @@ tryCatch(
       expect_true(file.exists(gis_data_file_path))
 
       data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("county"),
+                         data_layer = contains("blck_grp"),
                          verbose = FALSE)
-      expect_equal(nrow(data), 3143)
+      expect_equal(nrow(data), 10190)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
@@ -600,9 +688,9 @@ tryCatch(
       expect_true(file.exists(gis_data_file_path))
 
       data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("county"),
+                         data_layer = contains("state"),
                          verbose = FALSE)
-      expect_equal(nrow(data), 3143)
+      expect_equal(nrow(data), 153)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
