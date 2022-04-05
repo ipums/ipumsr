@@ -1178,7 +1178,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   #   )
   # }
 
-  expected_names <- get_extract_names(
+  expected_names <- get_extract_fields(
     new_ipums_extract(collection = collection)
   )
 
@@ -1202,12 +1202,12 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
 }
 
-get_extract_names <- function(x) {
-  UseMethod("get_extract_names")
+get_extract_fields <- function(x) {
+  UseMethod("get_extract_fields")
 }
 
 #' @export
-get_extract_names.nhgis_extract <- function(x) {
+get_extract_fields.nhgis_extract <- function(x) {
   c(
     formalArgs(define_extract_nhgis),
     "collection", "submitted", "download_links", "number", "status"
@@ -1215,7 +1215,7 @@ get_extract_names.nhgis_extract <- function(x) {
 }
 
 #' @export
-get_extract_names.usa_extract <- function(x) {
+get_extract_fields.usa_extract <- function(x) {
   c(
     formalArgs(define_extract_micro),
     "submitted", "download_links", "number", "status"
@@ -1223,7 +1223,7 @@ get_extract_names.usa_extract <- function(x) {
 }
 
 #' @export
-get_extract_names.ipums_extract <- function(x) {
+get_extract_fields.ipums_extract <- function(x) {
   c(
     "collection", "description", "submitted",
     "download_links", "number", "status"
