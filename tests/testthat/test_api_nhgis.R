@@ -174,7 +174,7 @@ test_that("Can define an NHGIS extract", {
 test_that("NHGIS extracts get correct default values", {
   expect_equal(
     nhgis_extract$breakdown_and_data_type_layout,
-    "single_file"
+    "separate_files"
   )
   expect_equal(
     define_extract_nhgis(
@@ -278,28 +278,28 @@ test_that("nhgis_extract validate method works", {
   )
   expect_error(
     define_extract_nhgis(
-        "nhgis",
-        description = "",
-        datasets = "Test"
+      "nhgis",
+      description = "",
+      datasets = "Test"
     ),
     "When a dataset is specified,"
   )
   expect_error(
     define_extract_nhgis(
-        description = "",
-        time_series_tables = "Test",
-        ts_geog_levels = NA
+      description = "",
+      time_series_tables = "Test",
+      ts_geog_levels = NA
     ),
     "When a time series table is specified,"
   )
   expect_error(
     define_extract_nhgis(
-        "nhgis",
-        description = "",
-        datasets = "Test",
-        data_tables = "Test",
-        ds_geog_levels = "Test",
-        data_format = "Test"
+      "nhgis",
+      description = "",
+      datasets = "Test",
+      data_tables = "Test",
+      ds_geog_levels = "Test",
+      data_format = "Test"
     ),
     "`data_format` must be one of"
   )
@@ -351,6 +351,20 @@ test_that("nhgis_extract validate method works", {
     paste0(
       "When a dataset is specified, the following must not contain missing ",
       "values: `data_tables`, `ds_geog_levels`"
+    )
+  )
+  expect_warning(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        shapefiles = "Test",
+        data_format = "Test"
+      )
+    ),
+    paste0(
+      "The following parameters are not relevant for extracts that consist ",
+      "only of shapefiles: `data_format`."
     )
   )
 })

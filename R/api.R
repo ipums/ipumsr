@@ -1554,7 +1554,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   } else {
 
-    ts_sub_vars <- "ts_geog_levels"
+    ts_sub_vars <- c("ts_geog_levels", "time_series_table_layout")
     extra_vars <- ts_sub_vars[ts_sub_vars %in% vars_present]
 
     if (length(extra_vars) > 0) {
@@ -1568,14 +1568,22 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   }
 
-  # TODO: Add additional logic to catch other requirements here?
-  #   1. geographic_extents required when geog_level's
-  #      has_geog_extent_selection == TRUE
-  #   2. Extract can technically be submitted when data_tables, etc.
-  #      are requested even without any dataset. But maybe these
-  #      should be caught too to make things clearer for users?
-  #
-  # Would need to put together metadata functionality first for 1.
+  if ("shapefiles" %in% types && length(types) == 1) {
+
+    not_relevant <- c("data_format", "breakdown_and_data_type_layout",
+                      "time_series_table_layout", "geographic_extents")
+    extra_vars <- intersect(not_relevant, vars_present)
+
+    if (length(extra_vars) > 0) {
+      warning(
+        "The following parameters are not relevant for extracts that consist ",
+        "only of shapefiles: `",
+        paste0(extra_vars, collapse = "`, `"), "`.",
+        # "`. These parameters will be ignored.",
+        call. = FALSE
+      )
+    }
+  }
 
   x
 
