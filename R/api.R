@@ -182,36 +182,6 @@ define_extract_nhgis <- function(description = "",
       "time_by_column_layout"
   }
 
-  data_tables <- recycle_arg_to_list(
-    data_tables,
-    n_datasets,
-    labels = datasets
-  )
-
-  ds_geog_levels <- recycle_arg_to_list(
-    ds_geog_levels,
-    n_datasets,
-    labels = datasets
-  )
-
-  years <- recycle_arg_to_list(
-    years,
-    n_datasets,
-    labels = datasets
-  )
-
-  breakdown_values <- recycle_arg_to_list(
-    breakdown_values,
-    n_datasets,
-    labels = datasets
-  )
-
-  ts_geog_levels <- recycle_arg_to_list(
-    ts_geog_levels,
-    n_tsts,
-    labels = time_series_tables
-  )
-
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
@@ -229,12 +199,52 @@ define_extract_nhgis <- function(description = "",
     geographic_extents = geographic_extents
   )
 
+  extract <- recycle_nhgis_extract_args(extract)
   extract <- validate_ipums_extract(extract)
 
   extract
 
 }
 
+recycle_nhgis_extract_args <- function(extract) {
+
+  stopifnot(extract$collection == "nhgis")
+
+  n_datasets <- length(extract$datasets)
+  n_tsts <- length(extract$time_series_tables)
+
+  ds_to_recycle <- c("data_tables", "ds_geog_levels",
+                     "years", "breakdown_values")
+
+  ts_to_recycle <- "ts_geog_levels"
+
+  if (n_datasets > 0) {
+    purrr::walk(
+      ds_to_recycle,
+      function(var)
+        extract[[var]] <<- recycle_to_list(
+          extract[[var]],
+          n_datasets,
+          labels = extract$datasets
+        )
+    )
+  }
+
+  if (n_tsts > 0) {
+    purrr::walk(
+      ts_to_recycle,
+      function(var)
+        extract[[var]] <<- recycle_to_list(
+          extract[[var]],
+          n_tsts,
+          labels = extract$time_series_tables
+        )
+    )
+  }
+
+  extract
+
+}
 
 # > Define extract from json ----
 
@@ -1929,16 +1939,16 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   # }
 
   request_list <- list(
-    datasets = format_datasets_for_json(
-      extract$datasets,
-      extract$data_tables,
-      extract$ds_geog_levels,
-      extract$years,
-      extract$breakdown_values
+    datasets = format_nhgis_field_for_json(
+      datasets = extract$datasets,
+      data_tables = extract$data_tables,
+      geog_levels = extract$ds_geog_levels,
+      years = extract$years,
+      breakdown_values = extract$breakdown_values
     ),
-    time_series_tables = format_tsts_for_json(
-      extract$time_series_tables,
-      extract$ts_geog_levels
+    time_series_tables = format_nhgis_field_for_json(
+      time_series_tables = extract$time_series_tables,
+      geog_levels = extract$ts_geog_levels
     ),
     shapefiles = extract$shapefiles,
     data_format = jsonlite::unbox(extract$data_format),
@@ -1953,8 +1963,8 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   )
 
   request_list <- purrr::keep(
-    purrr::compact(request_list),
-    function(y) !any(is.na(y))
+    request_list,
+    ~!any(is.na(.x) || is_empty(.x))
   )
 
   jsonlite::toJSON(request_list)
@@ -2002,96 +2012,48 @@ extract_to_request_json.ipums_extract <- function(extract) {
 
 }
 
-# format_dataset_for_json <- function(dataset,
-#                                     data_tables,
-#                                     geog_levels,
-#                                     years = NULL,
-#                                     breakdown_values = NULL) {
-#
-#   if (is.null(dataset) || is.na(dataset)) {
-#     return(NULL)
-#   }
-#
-#   dataset_list <- list(
-#     dataset = list(
-#       data_tables = data_tables,
-#       geog_levels = geog_levels,
-#       years = as.character(years),
-#       breakdown_values = breakdown_values
-#     )
-#   )
-#
-#   dataset_list <- purrr::map(dataset_list, purrr::compact)
-#   dataset_list <- setNames(dataset_list, dataset)
-#
-#   dataset_list
-#
-# }
+format_nhgis_field_for_json <- function(...) {
 
-format_datasets_for_json <- function(datasets,
-                                     data_tables,
-                                     ds_geog_levels,
-                                     years,
-                                     breakdown_values) {
+  args <- rlang::list2(...)
 
-  if (is.na(datasets) || is_empty(datasets)) {
+  if (all(is.na(args[[1]])) || is_empty(args[[1]])) {
     return(NULL)
   }
 
-  n_datasets <- length(datasets)
+  supfields <- purrr::map(purrr::compact(args[[1]]), c)
+  n_supfields <- length(supfields)
 
-  if (n_datasets == 1) {
+  subfields <- args[2:length(args)]
 
-    ds_formatted <- list(
-      purrr::compact(
-        list(
-          data_tables = unlist(data_tables),
-          geog_levels = unlist(ds_geog_levels),
-          years = unlist(years),
-          breakdown_values = unlist(breakdown_values)
-        )
-      )
-    ) %>% setNames(datasets)
+  # if (recycle) {
+  #   subfields <- purrr::map(
+  #     subfields,
+  #     function(x) purrr::map(
+  #       recycle_to_list(
+  #         x,
+  #         n_supfields,
+  #         labels = supfields
+  #       ),
+  #       function(y) if (!is.null(y)) as.character(y)
+  #     )
+  #   )
+  # }
 
-  } else {
+  subfields_grp <- purrr::map(
+    1:n_supfields,
+    ~purrr::map(subfields, .x)
+  )
 
-    args <- purrr::compact(
-      list(
-        data_tables = data_tables,
-        ds_geog_levels = ds_geog_levels,
-        years = years,
-        breakdown_values = breakdown_values
-      )
-    )
+  subfields_formatted <- setNames(
+    purrr::map(subfields_grp, purrr::compact),
+    supfields
+  )
 
-    ds_list <- list(
-      datasets,
-      args$data_tables,
-      args$ds_geog_levels,
-      args$years,
-      args$breakdown_values
-    )
-
-    ds_list <- purrr::map(1:n_datasets, ~purrr::map(ds_list, .x))
-
-    ds_formatted <- purrr::map(
-      ds_list,
-      ~list(
-        data_tables = .x[[2]],
-        geog_levels = .x[[3]],
-        years = .x[[4]],
-        breakdown_values = .x[[5]]
-      ) %>%
-        purrr::compact()
-    ) %>% setNames(datasets)
-
-  }
-
-  ds_formatted
+  subfields_formatted
 
 }
 
-recycle_arg_to_list <- function(x, n, labels = NULL) {
+recycle_to_list <- function(x, n, labels = NULL) {
 
   if (n < 1) {
     return(x)
@@ -2106,72 +2068,13 @@ recycle_arg_to_list <- function(x, n, labels = NULL) {
     l <- x
   }
 
-  if (length(labels) == length(l)) {
-    l <- setNames(l, labels)
-  }
+  # if (length(labels) == length(l)) {
+  l <- setNames(l, labels)
+  # }
 
   l
 
 }
-
-# format_tst_for_json <- function(time_series_table, geog_levels) {
-#
-#   if (is.null(time_series_table) || is.na(time_series_table)) {
-#     return(NULL)
-#   }
-#
-#   tst_list <- list(
-#     time_series_table = list(
-#       geog_levels = geog_levels
-#     )
-#   )
-#
-#   tst_list <- purrr::map(tst_list, purrr::compact)
-#   tst_list <- setNames(tst_list, time_series_table)
-#
-#   tst_list
-#
-# }
-
-format_tsts_for_json <- function(time_series_tables, ts_geog_levels) {
-
-  if (is.na(time_series_tables) || is_empty(time_series_tables)) {
-    return(NULL)
-  }
-
-  n_tsts <- length(time_series_tables)
-
-  if (n_tsts == 1) {
-
-    ts_formatted <- list(
-      purrr::compact(
-        list(geog_levels = unlist(ts_geog_levels))
-      )
-    ) %>% setNames(time_series_tables)
-
-  } else {
-
-    ts_list <- list(
-      time_series_tables,
-      ts_geog_levels
-    )
-
-    ts_list <- purrr::map(1:n_tsts, ~purrr::map(ts_list, .x))
-
-    ts_formatted <- purrr::map(
-      ts_list,
-      ~list(
-        geog_levels = .x[[2]] # Output should be named geog_levels for consistency with API repsonse
-      ) %>%
-        purrr::compact()
-    ) %>% setNames(time_series_tables)
-
-  }
-
-  ts_formatted
-
-}
-
 
 format_samples_for_json <- function(samples) {
   if (length(samples) == 1 && is.na(samples)) {
