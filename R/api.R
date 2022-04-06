@@ -1447,15 +1447,20 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
+    # Non-list elements will be recycled, so only need to worry about
+    # var lengths if lists are provided in args.
     var_length <- purrr::map_dbl(must_have_same_length, ~length(x[[.]]))
-    right_length <- var_length == length(x$datasets) & var_length != 0
+    wrong_length <- purrr::map_lgl(
+      must_have_same_length,
+      ~is.list(x[[.]]) && length(x[[.]]) != length(x$datasets)
+    )
 
     length_msg <- purrr::imap_chr(
       must_have_same_length,
       ~paste0("`", .x, "` (", var_length[.y], ")")
     )
 
-    if (any(!right_length)) {
+    if (any(wrong_length)) {
       stop(
         "The number of selections provided in ",
         paste0(length_msg[!right_length], collapse = ", "),
@@ -1520,7 +1525,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if (length(x$ts_geog_levels) != length(x$time_series_tables)) {
+    if (is.list(x$ts_geog_levels) &&
+        length(x$ts_geog_levels) != length(x$time_series_tables)) {
       stop(
         "The number of selections provided in `ts_geog_levels` (",
         length(x$ts_geog_levels),
