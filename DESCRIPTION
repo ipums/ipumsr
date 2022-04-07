@@ -47,6 +47,7 @@ Suggests:
     sp,
     shiny,
     testthat,
+    tidyr,
     covr,
     biglm,
     DBI,

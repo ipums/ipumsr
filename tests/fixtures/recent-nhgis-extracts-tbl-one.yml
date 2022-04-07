@@ -1,0 +1,44 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1&limit=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 07 Apr 2022 15:51:59 GMT
+      etag: W/"7e5d4cf1e30d46556b37965992a5fe16"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.13
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.13
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 8ee94971-df56-471d-bcc3-212c346b17f5
+      x-runtime: '1.016304'
+      x-xss-protection: 1; mode=block
+      content-length: '367'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"number":459,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1786715/nhgis0459_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}]'
+  recorded_at: 2022-04-07 15:51:59 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

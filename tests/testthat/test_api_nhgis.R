@@ -40,6 +40,8 @@ if (have_api_access) {
     submitted_nhgis_extract <- submit_extract(nhgis_extract)
   })
 
+  submitted_extract_number <- submitted_nhgis_extract$number
+
   vcr::use_cassette("ready-nhgis-extract", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
@@ -91,9 +93,9 @@ if (have_api_access) {
   # USA extract ----------------------------------------------------------------
 
   # Can add back in when including both togehter in same test script
-  # vcr::use_cassette("submitted-usa-extract", {
-  #   submitted_usa_extract <- submit_extract(usa_extract)
-  # })
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(usa_extract)
+  })
   #
   # vcr::use_cassette("ready-usa-extract", {
   #   ready_usa_extract <- wait_for_extract(submitted_usa_extract)
@@ -136,7 +138,7 @@ test_that("Can define an NHGIS extract", {
   expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(
     nhgis_extract$datasets,
-    list("2014_2018_ACS5a", "2015_2019_ACS5a")
+    c("2014_2018_ACS5a", "2015_2019_ACS5a")
   )
   expect_equal(
     nhgis_extract$data_tables,
@@ -158,7 +160,7 @@ test_that("Can define an NHGIS extract", {
     list("2014_2018_ACS5a" = NULL,
          "2015_2019_ACS5a" = NULL)
   )
-  expect_equal(nhgis_extract$time_series_tables, list("CW3"))
+  expect_equal(nhgis_extract$time_series_tables, "CW3")
   expect_equal(nhgis_extract$ts_geog_levels, list("CW3" = "state"))
   expect_equal(nhgis_extract$time_series_table_layout, "time_by_row_layout")
   expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
@@ -199,19 +201,25 @@ test_that("Can submit an NHGIS extract of multiple types", {
   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(submitted_nhgis_extract$collection, "nhgis")
   expect_equal(
-    nhgis_extract$datasets,
-    list("2014_2018_ACS5a", "2015_2019_ACS5a")
+    submitted_nhgis_extract$datasets,
+    c("2014_2018_ACS5a", "2015_2019_ACS5a")
   )
   expect_equal(
-    nhgis_extract$data_tables,
+    submitted_nhgis_extract$data_tables,
     list("2014_2018_ACS5a" = c("B01001", "B01002"),
          "2015_2019_ACS5a" = c("B01001", "B01002"))
   )
-  expect_equal(submitted_nhgis_extract$time_series_tables, list("CW3"))
-  expect_equal(nhgis_extract$ts_geog_levels, list("CW3" = "state"))
+  expect_equal(
+    submitted_nhgis_extract$breakdown_values,
+    list("2014_2018_ACS5a" = NULL,
+         "2015_2019_ACS5a" = NULL)
+  )
+  expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
+  expect_equal(submitted_nhgis_extract$ts_geog_levels, list("CW3" = "state"))
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_equal(submitted_nhgis_extract$geographic_extents, c("110", "420"))
   expect_true(submitted_nhgis_extract$submitted)
-  expect_equal(submitted_nhgis_extract$status, "submitted")
+  expect_equal(submitted_nhgis_extract$status, "submitted") # Currently fails because API does not return status upon submission
   expect_identical(
     submitted_nhgis_extract$download_links,
     ipumsr:::EMPTY_NAMED_LIST
@@ -411,41 +419,6 @@ test_that("Can check status of an NHGIS extract with collection and number", {
   expect_true(is_ready)
 })
 
-
-# test_that("Tibble of recent NHGIS extracts has expected structure", {
-#   skip_if_no_api_access(have_api_access)
-#   expected_columns <- c("collection", "description", "dataset",
-#                         "data_tables", "ds_geog_levels", "years",
-#                         "breakdown_values", "time_series_table",
-#                         "ts_geog_levels", "shapefiles", "data_format",
-#                         "breakdown_and_data_type_layout",
-#                         "time_series_table_layout", "geographic_extents",
-#                         "submitted", "download_links", "number", "status")
-#   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
-#   expect_equal(nrow(recent_nhgis_extracts_tbl), 10)
-#   expect_equal(
-#     recent_nhgis_extracts_tbl[2,]$dataset,
-#     submitted_nhgis_extract$dataset
-#   )
-#   expect_equal(
-#     unlist(recent_nhgis_extracts_tbl[2,]$data_tables),
-#     submitted_nhgis_extract$data_tables
-#   )
-#   expect_equal(
-#     recent_nhgis_extracts_tbl[2,]$time_series_table,
-#     submitted_nhgis_extract$time_series_table
-#   )
-# })
-#
-#
-# test_that("Can limit number of recent extracts to get info on", {
-#   skip_if_no_api_access(have_api_access)
-#   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-#     two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
-#   })
-#   expect_equal(nrow(two_recent_nhgis_extracts), 2)
-# })
-
 test_that("extract_list_from_json reproduces extract specs", {
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
   expect_s3_class(usa_json, c("usa_json", "ipums_json"))
@@ -564,7 +537,7 @@ tryCatch(
       expect_true(file.exists(gis_data_file_path))
 
       data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("blck_grp"),
+                         data_layer = contains("blck_grp_E"),
                          verbose = FALSE)
       expect_equal(nrow(data), 10190)
 
@@ -572,14 +545,14 @@ tryCatch(
       # there is only 1 shapefile in extract? confusing functionality currently.
       data_shp_sf <- read_nhgis_sf(table_data_file_path,
                                    gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
+                                   data_layer = contains("blck_grp_E"),
                                    shape_layer = contains("blck_grp"),
                                    verbose = FALSE)
       expect_s3_class(data_shp_sf, "sf")
 
       data_shp_sp <- read_nhgis_sp(table_data_file_path,
                                    gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
+                                   data_layer = contains("blck_grp_E"),
                                    shape_layer = contains("blck_grp"),
                                    verbose = FALSE)
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
@@ -710,14 +683,14 @@ tryCatch(
       # there is only 1 shapefile in extract? confusing functionality currently.
       data_shp_sf <- read_nhgis_sf(table_data_file_path,
                                    gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
+                                   data_layer = contains("blck_grp_E"),
                                    shape_layer = contains("blck_grp"),
                                    verbose = FALSE)
       expect_s3_class(data_shp_sf, "sf")
 
       data_shp_sp <- read_nhgis_sp(table_data_file_path,
                                    gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
+                                   data_layer = contains("blck_grp_E"),
                                    shape_layer = contains("blck_grp"),
                                    verbose = FALSE)
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
@@ -826,23 +799,115 @@ tryCatch(
 # #   )
 # # })
 
-# test_that("NHGIS tbl to list and list to tbl conversion works", {
-#   skip_if_no_api_access(have_api_access)
-#   converted_to_list <- extract_tbl_to_list(
-#     recent_nhgis_extracts_tbl,
-#     validate = FALSE
-#   )
-#   converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
-#   expect_identical(recent_nhgis_extracts_list, converted_to_list)
-#   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
-#   # expect_error(
-#   #   extract_list_to_tbl(
-#   #     list(submitted_nhgis_extract,
-#   #          submitted_usa_extract)
-#   #   ),
-#   #   "All extracts in `extract_list` must belong to same collection"
-#   # )
-# })
+
+test_that("Tibble of recent NHGIS extracts has expected structure", {
+  skip_if_no_api_access(have_api_access)
+
+  expected_columns <- c("collection", "number", "description", "data_type",
+                        "nhgis_id", "data_tables",
+                        "ds_geog_levels",  "ts_geog_levels", "years",
+                        "breakdown_values", "geographic_extents",
+                        "time_series_table_layout",
+                        "breakdown_and_data_type_layout", "data_format",
+                        "submitted", "download_links", "status")
+
+  recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
+    which(recent_nhgis_extracts_tbl$number == submitted_extract_number &
+            recent_nhgis_extracts_tbl$data_type == "datasets"),
+  ]
+
+  row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)
+
+  row_level_nhgis_tbl_submitted <- row_level_nhgis_tbl[
+    which(row_level_nhgis_tbl$number == submitted_extract_number),
+  ]
+
+  expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
+  expect_equal(length(unique(recent_nhgis_extracts_tbl$number)), 10)
+  expect_equal(nrow(row_level_nhgis_tbl), 10)
+
+  expect_equal(
+    recent_nhgis_extract_submitted$nhgis_id,
+    ready_nhgis_extract$datasets
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$datasets[[1]],
+    ready_nhgis_extract$datasets
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$data_tables[[1]],
+    unname(ready_nhgis_extract$data_tables)
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$ds_geog_levels[[1]],
+    unname(ready_nhgis_extract$ds_geog_levels)
+  )
+  # When NULL, values are not recycled in the tbl format:
+  expect_equal(
+    row_level_nhgis_tbl_submitted$years[[1]],
+    unlist(unname(ready_nhgis_extract$years))
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$breakdown_values[[1]],
+    unname(ready_nhgis_extract$breakdown_values)
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$time_series_tables[[1]],
+    ready_nhgis_extract$time_series_tables
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$ts_geog_levels[[1]],
+    unname(ready_nhgis_extract$ts_geog_levels)
+  )
+  expect_equal(
+    row_level_nhgis_tbl_submitted$shapefiles[[1]],
+    ready_nhgis_extract$shapefiles
+  )
+})
+
+
+test_that("Can limit number of recent extracts to get info on", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
+    two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
+  })
+
+  expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
+  expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
+})
+
+test_that("Shapefile-only can be converted from tbl to list", {
+  vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
+    nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl("nhgis", 1)
+  })
+
+  expect_identical(
+    extract_tbl_to_list(nhgis_extract_tbl_shp)[[1]],
+    ready_nhgis_extract_shp
+  )
+})
+
+test_that("NHGIS tbl to list and list to tbl conversion works", {
+  skip_if_no_api_access(have_api_access)
+  converted_to_list <- extract_tbl_to_list(
+    recent_nhgis_extracts_tbl,
+    validate = FALSE
+  )
+  converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  expect_identical(
+    recent_nhgis_extracts_list[[1]],
+    converted_to_list[[1]]
+  )
+  expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
+  expect_error(
+    extract_list_to_tbl(
+      list(submitted_nhgis_extract,
+           submitted_usa_extract)
+    ),
+    "All extracts in `extract_list` must belong to same collection"
+  )
+})
 
 test_that("We can export to and import from JSON for NHGIS", {
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")

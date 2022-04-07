@@ -169,14 +169,12 @@ define_extract_nhgis <- function(description = "",
   n_tsts <- length(time_series_tables)
 
   if (n_datasets > 0) {
-    datasets <- purrr::map(datasets, c)
     data_format <- data_format %||% "csv_header"
     breakdown_and_data_type_layout <- breakdown_and_data_type_layout %||%
       "separate_files"
   }
 
   if (n_tsts > 0) {
-    time_series_tables <- purrr::map(time_series_tables, c)
     data_format <- data_format %||% "csv_header"
     time_series_table_layout <- time_series_table_layout %||%
       "time_by_column_layout"
@@ -1188,7 +1186,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   #   )
   # }
 
-  expected_names <- get_extract_fields(
+  expected_names <- get_extract_tbl_fields(
     new_ipums_extract(collection = collection)
   )
 
@@ -1202,7 +1200,25 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     )
   }
 
+  # Internal logic in lieu of new S3 class needed to handle dispatch...
+  if (collection == "nhgis") {
+
+    if (!requireNamespace("tidyr", quietly = TRUE)) {
+      stop(
+        "Package \"tidyr\" must be installed to convert NHGIS extracts from ",
+        "tbl to list format.",
+        call. = FALSE
+      )
+    }
+
+    extract_tbl <- collapse_nhgis_extract_tbl(extract_tbl)
+  }
+
   extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
+
+  if (collection == "nhgis") {
+    extract_list <- purrr::map(extract_list, recycle_nhgis_extract_args)
+  }
 
   if (validate) {
     extract_list <- purrr::walk(extract_list, validate_ipums_extract)
@@ -1212,20 +1228,91 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
 }
 
-get_extract_fields <- function(x) {
-  UseMethod("get_extract_fields")
+collapse_nhgis_extract_tbl <- function(extract_tbl) {
+
+  if (!requireNamespace("tidyr", quietly = TRUE)) {
+    stop(
+      "Package \"tidyr\" must be installed to convert NHGIS extracts from tbl ",
+      "to list format.",
+      call. = FALSE
+    )
+  }
+
+  stopifnot(unique(extract_tbl$collection) == "nhgis")
+
+  # Convert pseudo-long extract_tbl format to extract-row format
+  extract_tbl <- dplyr::group_by(extract_tbl, number, data_type)
+
+  extract_tbl <- dplyr::mutate(
+    extract_tbl,
+    dplyr::across(
+      c(data_tables, ds_geog_levels, years, breakdown_values, ts_geog_levels),
+      ~if (is.null(unlist(.x))) { .x } else { list(.x) }
+    )
+  )
+
+  extract_tbl <- tidyr::pivot_wider(
+    extract_tbl,
+    names_from = data_type,
+    values_from = nhgis_id,
+    values_fn = list
+  )
+
+  tbl_cols <- colnames(extract_tbl)
+
+  extract_tbl <- dplyr::distinct(
+    tidyr::fill(extract_tbl, dplyr::all_of(tbl_cols), .direction = "updown")
+  )
+
+  join_df <- tibble::tibble(
+    shapefiles = list(NULL),
+    time_series_tables = list(NULL),
+    datasets = list(NULL)
+  )
+
+  join_cols <- intersect(tbl_cols, colnames(join_df))
+
+  # Join to ensure all extract parameters are present
+  extract_tbl <- dplyr::left_join(
+    extract_tbl,
+    join_df,
+    by = join_cols
+  )
+
+  # For consistency of output after conversion to list
+  # define_extract_nhgis() and tbl to list conversion should align on all fields
+  extract_tbl <- dplyr::mutate(
+    extract_tbl,
+    dplyr::across(
+      c(data_format, breakdown_and_data_type_layout, time_series_table_layout),
+      ~tidyr::replace_na(.x, list(NULL))
+    )
+  )
+
+  # Reorder
+  var_sort <- c("collection", "number", formalArgs(define_extract_nhgis),
+                "submitted", "download_links", "status")
+  extract_tbl <- extract_tbl[, var_sort]
+
+  extract_tbl
+
+}
+
+get_extract_tbl_fields <- function(x) {
+  UseMethod("get_extract_tbl_fields")
 }
 
 #' @export
-get_extract_fields.nhgis_extract <- function(x) {
+get_extract_tbl_fields.nhgis_extract <- function(x) {
   c(
     formalArgs(define_extract_nhgis),
-    "collection", "submitted", "download_links", "number", "status"
+    "collection", "submitted", "download_links", "number", "status",
+    "nhgis_id", "data_type" # Used in long-format NHGIS tbl structure
   )
 }
 
 #' @export
-get_extract_fields.usa_extract <- function(x) {
+get_extract_tbl_fields.usa_extract <- function(x) {
   c(
     formalArgs(define_extract_micro),
     "submitted", "download_links", "number", "status"
@@ -1233,7 +1320,7 @@ get_extract_fields.usa_extract <- function(x) {
 }
 
 #' @export
-get_extract_fields.ipums_extract <- function(x) {
+get_extract_tbl_fields.ipums_extract <- function(x) {
   c(
     "collection", "description", "submitted",
     "download_links", "number", "status"
@@ -1287,16 +1374,7 @@ extract_list_to_tbl <- function(extract_list) {
     )
   }
 
-  unclassed_extract_list <- purrr::map(
-    extract_list,
-    prepare_extract_for_tbl
-  )
-
-  if (length(unclassed_extract_list) == 1) {
-    return(do.call(tibble::tibble, unclassed_extract_list[[1]]))
-  }
-
-  do.call(dplyr::bind_rows, unclassed_extract_list)
+  purrr::map_dfr(extract_list, extract_to_tbl)
 
 }
 
@@ -1666,32 +1744,104 @@ validate_ipums_extract.ipums_extract <- function(x) {
 }
 
 
-prepare_extract_for_tbl <- function(x) {
-  UseMethod("prepare_extract_for_tbl")
+extract_to_tbl <- function(x) {
+  UseMethod("extract_to_tbl")
 }
 
 #' @export
-prepare_extract_for_tbl.usa_extract <- function(x) {
+extract_to_tbl.usa_extract <- function(x) {
 
   if (is.character(x$samples)) x$samples <- list(x$samples)
   if (is.character(x$variables)) x$variables <- list(x$variables)
   x$download_links <- list(x$download_links)
-  unclass(x)
+
+  unclassed_extract <- unclass(x)
+
+  do.call(tibble::tibble, unclassed_extract)
 
 }
 
 #' @export
-prepare_extract_for_tbl.nhgis_extract <- function(x) {
+extract_to_tbl.nhgis_extract <- function(x) {
 
-  x$data_tables <- x$data_tables
-  x$ds_geog_levels <- x$ds_geog_levels
-  x$years <- x$years
-  x$breakdown_values <- x$breakdown_values
-  x$ts_geog_levels <- x$ts_geog_levels
-  x$shapefiles <- list(x$shapefiles)
-  x$geographic_extents <- list(x$geographic_extents)
-  x$download_links <- list(x$download_links)
-  unclass(x)
+  base_vars <- list(
+    collection = x$collection,
+    description = x$description %||% NA_character_,
+    data_format = x$data_format %||% NA_character_,
+    breakdown_and_data_type_layout = x$breakdown_and_data_type_layout %||%
+      NA_character_,
+    geographic_extents = list(x$geographic_extents) %||% list(NULL),
+    submitted = x$submitted,
+    download_links = list(x$download_links),
+    number = x$number,
+    status = x$status
+  )
+
+  ds <- c(
+    list(
+      nhgis_id = unlist(x$datasets) %||% NA_character_,
+      data_tables = unname(x$data_tables),
+      ds_geog_levels = unname(x$ds_geog_levels),
+      years = if (is_empty(x$years)) {
+        list(NULL)
+      } else {
+        unname(purrr::map(x$years, ~.x))
+      },
+      breakdown_values = if (is_empty(x$breakdown_values)) {
+        list(NULL)
+      } else {
+        unname(purrr::map(x$breakdown_values, ~.x))
+      },
+      time_series_table_layout = NA_character_
+    ),
+    base_vars
+  )
+
+  ts <- c(
+    list(
+      nhgis_id = unlist(x$time_series_tables) %||% NA_character_,
+      ts_geog_levels = unname(x$ts_geog_levels),
+      time_series_table_layout = x$time_series_table_layout,
+      data_tables = list(NULL),
+      years = list(NULL),
+      breakdown_values = list(NULL)
+    ),
+    base_vars
+  )
+
+  shp <- c(
+    list(
+      nhgis_id = unlist(x$shapefiles) %||% NA_character_,
+      data_tables = list(NULL),
+      years = list(NULL),
+      breakdown_values = list(NULL),
+      ts_geog_levels = list(NULL),
+      ds_geog_levels = list(NULL),
+      time_series_table_layout = NA_character_
+    ),
+    base_vars
+  )
+
+  tbl1 <- do.call(tibble::tibble, ds)
+  tbl1$data_type <- "datasets"
+
+  tbl2 <- do.call(tibble::tibble, ts)
+  tbl2$data_type <- "time_series_tables"
+
+  tbl3 <- do.call(tibble::tibble, shp)
+  tbl3$data_type <- "shapefiles"
+
+  tbl <- dplyr::bind_rows(tbl1, tbl2, tbl3)
+  tbl <- tbl[!is.na(tbl$nhgis_id), ]
+
+  var_order <- c("collection", "number", "description", "data_type",
+                 "nhgis_id", "data_tables", "ds_geog_levels", "ts_geog_levels",
+                 "years",
+                 "breakdown_values",  "geographic_extents",
+                 "time_series_table_layout", "breakdown_and_data_type_layout",
+                 "data_format", "submitted", "download_links", "status")
+
+  tbl[, var_order]
 
 }
 
@@ -2289,11 +2439,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
       out <- new_ipums_extract(
         collection = "nhgis",
         description = x$description,
-        datasets = if (no_datasets) {
-          NULL
-        } else {
-          purrr::map(names(x$datasets), c)
-        },
+        datasets = names(x$datasets),
         data_tables = if (no_datasets) {
           NULL
         } else {
@@ -2314,11 +2460,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         } else {
           purrr::map(x$datasets, ~unlist(.x$breakdown_values))
         },
-        time_series_tables = if (no_tsts) {
-          NULL
-        } else {
-          purrr::map(names(x$time_series_tables), c)
-        },
+        time_series_tables = names(x$time_series_tables),
         ts_geog_levels = if (no_tsts) {
           NULL
         } else {
