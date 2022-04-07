@@ -435,31 +435,6 @@ test_that("extract_list_from_json reproduces extract specs", {
 
 # Misc -------------------------------------------------------------------------
 
-# Included as reminder to update handling of these fields when API is updated
-test_that("NHGIS API v1 has missing fields but are recovered when submitting", {
-  skip_if_no_api_access(have_api_access)
-  vcr::use_cassette("get-nhgis-extract-info", {
-    checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
-  })
-
-  expect_warning(
-    get_extract_info(submitted_nhgis_extract),
-    "The current version"
-  )
-
-  expect_true(is.null(checked_nhgis_extract$shapefiles))
-  expect_false(is.null(submitted_nhgis_extract$shapefiles))
-
-  expect_true(is.null(checked_nhgis_extract$breakdown_and_data_type_layout))
-  expect_false(is.null(submitted_nhgis_extract$breakdown_and_data_type_layout))
-
-  expect_true(is.null(checked_nhgis_extract$time_series_table_layout))
-  expect_false(is.null(submitted_nhgis_extract$time_series_table_layout))
-
-  expect_true(is.null(checked_nhgis_extract$geographic_extents))
-  expect_false(is.null(submitted_nhgis_extract$geographic_extents))
-})
-
 test_that("We can get correct API version info for each collection", {
   expect_equal(ipums_api_version("usa"), "beta")
   expect_equal(ipums_api_version("nhgis"), "v1")
