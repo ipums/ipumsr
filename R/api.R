@@ -1552,7 +1552,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     if (any(wrong_length)) {
       stop(
         "The number of selections provided in ",
-        paste0(length_msg[!right_length], collapse = ", "),
+        paste0(length_msg[wrong_length], collapse = ", "),
         " does not match the number of datasets (", length(x$datasets),
         "). \nTo recycle selections across datasets, ensure values are stored ",
         "in a vector, not a list.",
