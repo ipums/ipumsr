@@ -2089,6 +2089,15 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   #   extract$description <- ""
   # }
 
+  extract$years <- purrr::map(
+    extract$years,
+    ~if(!is.null(.x)) as.character(.x)
+  )
+
+  if(!is.null(extract$geographic_extents)) {
+    extract$geographic_extents <- as.character(extract$geographic_extents)
+  }
+
   request_list <- list(
     datasets = format_nhgis_field_for_json(
       datasets = extract$datasets,
@@ -2165,16 +2174,16 @@ extract_to_request_json.ipums_extract <- function(extract) {
 
 format_nhgis_field_for_json <- function(...) {
 
-  args <- rlang::list2(...)
+  dots <- rlang::list2(...)
 
-  if (all(is.na(args[[1]])) || is_empty(args[[1]])) {
+  if (all(is.na(dots[[1]])) || is_empty(dots[[1]])) {
     return(NULL)
   }
 
-  supfields <- purrr::map(purrr::compact(args[[1]]), c)
+  supfields <- purrr::map(purrr::compact(dots[[1]]), c)
   n_supfields <- length(supfields)
 
-  subfields <- args[2:length(args)]
+  subfields <- dots[2:length(dots)]
 
   # if (recycle) {
   #   subfields <- purrr::map(
