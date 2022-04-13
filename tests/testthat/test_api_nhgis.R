@@ -720,60 +720,273 @@ tryCatch(
 )
 
 # # # Revising ---------------------------------------------------------------------
-# # test_that("Can revise an extract", {
-# #   revised_extract <- revise_extract_micro(
-# #     usa_extract,
-# #     samples_to_add = "us2014a",
-# #     vars_to_add = "RELATE"
-# #   )
-# #   expect_true(revised_extract$status == "unsubmitted")
-# #   expect_equal(
-# #     revised_extract$description,
-# #     paste0("Revision of (", usa_extract$description, ")")
-# #   )
-# #   expect_equal(
-# #     revised_extract$samples,
-# #     c(usa_extract$samples, "us2014a")
-# #   )
-# #   expect_equal(
-# #     revised_extract$variables,
-# #     c(usa_extract$variables, "RELATE")
-# #   )
-# # })
-#
-# # test_that("Can revise a submitted extract", {
-# #   skip_if_no_api_access(have_api_access)
-# #   revised_extract <- revise_extract_micro(
-# #     submitted_usa_extract,
-# #     samples_to_add = "us2014a",
-# #     vars_to_add = "RELATE"
-# #   )
-# #   expect_true(revised_extract$status == "unsubmitted")
-# #   expect_equal(
-# #     revised_extract$description,
-# #     paste0("Revision of (", submitted_usa_extract$description, ")")
-# #   )
-# #   expect_equal(
-# #     revised_extract$samples,
-# #     c(submitted_usa_extract$samples, "us2014a")
-# #   )
-# #   expect_equal(
-# #     revised_extract$variables,
-# #     c(submitted_usa_extract$variables, "RELATE")
-# #   )
-# # })
-#
-# # test_that("We warn user when their revisions don't make sense", {
-# #   expect_warning(
-# #     revise_extract_micro(usa_extract, samples_to_add = "us2017b"),
-# #     regexp = "already included"
-# #   )
-# #   expect_warning(
-# #     revise_extract_micro(usa_extract, vars_to_remove = "RELATE"),
-# #     regexp = "are not included"
-# #   )
-# # })
 
+test_that("Can add full datasets/time series tables to an NHGIS extract", {
+  revised_extract <- add_to_nhgis_extract(
+    nhgis_extract,
+    datasets = "ds1",
+    data_tables = "dt1",
+    ds_geog_levels = c("g1", "g2"),
+    time_series_tables = c("tst1", "tst2"),
+    ts_geog_levels = list("g1", "g2")
+  )
+
+  expect_equal(
+    revised_extract$datasets,
+    c("2014_2018_ACS5a", "2015_2019_ACS5a", "ds1")
+  )
+  expect_equal(revised_extract$data_tables$ds1, "dt1")
+  expect_equal(revised_extract$ds_geog_levels$ds1, c("g1", "g2"))
+  expect_null(revised_extract$years$ds1)
+  expect_null(revised_extract$breakdown_values$ds1)
+  expect_equal(
+    revised_extract$data_tables[["2014_2018_ACS5a"]],
+    c("B01001", "B01002")
+  )
+  expect_equal(revised_extract$time_series_tables, c("CW3", "tst1", "tst2"))
+  expect_equal(revised_extract$ts_geog_levels$tst1, "g1")
+  expect_equal(revised_extract$ts_geog_levels$tst2, "g2")
+
+  expect_equal(revised_extract$data_format, nhgis_extract$data_format)
+  expect_equal(revised_extract$shapefiles, nhgis_extract$shapefiles)
+})
+
+test_that("Can add subfields to all values in an NHGIS extract", {
+  revised_extract <- add_to_nhgis_extract(
+    nhgis_extract,
+    data_tables = c("B01001", "B01003"),
+    years = 1990:1995,
+    ts_geog_levels = "county",
+    shapefiles = "shp1",
+    data_format = "csv_header"
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    rep(list(c("B01001", "B01002", "B01003")), 2)
+  )
+  expect_equal(
+    unname(revised_extract$years),
+    rep(list(1990:1995), 2)
+  )
+  expect_equal(revised_extract$time_series_tables, nhgis_extract$time_series_tables)
+  expect_equal(
+    revised_extract$ts_geog_levels$CW3,
+    c("state", "county")
+  )
+  expect_equal(
+    revised_extract$shapefiles,
+    c("110_blck_grp_2019_tl2019", "shp1")
+  )
+  expect_equal(
+    revised_extract$data_format,
+    "csv_header"
+  )
+})
+
+test_that("Can add subfields to particular values in an NHGIS extract", {
+  revised_extract <- add_to_nhgis_extract(
+    nhgis_extract,
+    modify_ds = "2015_2019_ACS5a",
+    data_tables = c("B01001", "B01003"),
+    years = 1990:1995,
+    modify_ts = "CW3",
+    ts_geog_levels = "county",
+    shapefiles = "shp1"
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    list(c("B01001", "B01002"), c("B01001", "B01002", "B01003"))
+  )
+  expect_equal(
+    unname(revised_extract$years),
+    list(NULL, 1990:1995)
+  )
+  expect_equal(revised_extract$time_series_tables, nhgis_extract$time_series_tables)
+  expect_equal(
+    revised_extract$ts_geog_levels$CW3,
+    c("state", "county")
+  )
+  expect_equal(
+    revised_extract$shapefiles,
+    c("110_blck_grp_2019_tl2019", "shp1")
+  )
+})
+
+test_that("Can remove full datasets/time series tables from an NHGIS extract", {
+  revised_extract <- remove_from_nhgis_extract(
+    nhgis_extract,
+    datasets = "2014_2018_ACS5a",
+    time_series_tables = "CW3"
+  )
+
+  expect_null(revised_extract$data_tables[["2014_2018_ACS5a"]])
+  expect_null(revised_extract$ds_geog_levels[["2014_2018_ACS5a"]])
+  expect_null(revised_extract$years[["2014_2018_ACS5a"]])
+  expect_null(revised_extract$breakdown_values[["2014_2018_ACS5a"]])
+
+  expect_equal(revised_extract$datasets, "2015_2019_ACS5a")
+  expect_equal(
+    revised_extract$data_tables[["2015_2019_ACS5a"]],
+    nhgis_extract$data_tables[["2015_2019_ACS5a"]]
+  )
+  expect_equal(
+    revised_extract$ds_geog_levels[["2015_2019_ACS5a"]],
+    nhgis_extract$ds_geog_levels[["2015_2019_ACS5a"]]
+  )
+
+  expect_null(revised_extract$time_series_tables)
+  expect_null(revised_extract$ts_geog_levels)
+  expect_null(revised_extract$time_series_table_layout)
+})
+
+test_that("Can remove subfields from all values in an NHGIS extract", {
+  revised_extract <- remove_from_nhgis_extract(
+    nhgis_extract,
+    data_tables = "B01001",
+    years = "Fake year",
+    ts_geog_levels = "state",
+    validate = FALSE
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    list("B01002", "B01002")
+  )
+  expect_equal(
+    revised_extract$years,
+    nhgis_extract$years
+  )
+  expect_equal(revised_extract$time_series_tables, nhgis_extract$time_series_tables)
+  expect_null(revised_extract$ts_geog_levels$CW3)
+})
+
+test_that("Can remove subfields from single ds/tst in NHGIS extract", {
+  revised_extract <- remove_from_nhgis_extract(
+    nhgis_extract,
+    modify_ds = "2014_2018_ACS5a",
+    data_tables = "B01001",
+    modify_ts = "CW3",
+    ts_geog_levels = "state",
+    validate = FALSE
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    list("B01002", c("B01001", "B01002"))
+  )
+  expect_equal(revised_extract$time_series_tables, nhgis_extract$time_series_tables)
+  expect_null(revised_extract$ts_geog_levels$CW3)
+})
+
+test_that("Can add dataset/tst and modify unrelated fields simultaneously", {
+  revised_extract <- add_to_nhgis_extract(
+    nhgis_extract,
+    modify_ds = "2015_2019_ACS5a",
+    data_tables = "DT1",
+    ds_geog_levels = "G1",
+    time_series_tables = "CW5",
+    ts_geog_levels = "nation",
+    time_series_table_layout = "time_by_column_layout",
+    geographic_extents = "550"
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    list(c("B01001", "B01002"), c("B01001", "B01002", "DT1"))
+  )
+  expect_equal(
+    unname(revised_extract$ds_geog_levels),
+    list("nation", c("blck_grp", "G1"))
+  )
+
+  expect_equal(revised_extract$time_series_tables, c("CW3", "CW5"))
+  expect_equal(
+    revised_extract$ts_geog_levels,
+    list(CW3 = "state", CW5 = "nation")
+  )
+
+  expect_equal(
+    revised_extract$time_series_table_layout,
+    "time_by_column_layout"
+  )
+
+  expect_equal(
+    revised_extract$geographic_extents,
+    c(nhgis_extract$geographic_extents, "550")
+  )
+})
+
+test_that("Can remove dataset/tst and modify unrelated fields simultaneously", {
+  revised_extract <- remove_from_nhgis_extract(
+    nhgis_extract,
+    modify_ds = "2015_2019_ACS5a",
+    data_tables = "B01002",
+    time_series_tables = "CW3",
+    geographic_extents = "110"
+  )
+
+  expect_equal(revised_extract$datasets, nhgis_extract$datasets)
+  expect_equal(
+    unname(revised_extract$data_tables),
+    list(c("B01001", "B01002"), "B01001")
+  )
+  expect_null(revised_extract$time_series_tables)
+  expect_equal(revised_extract$geographic_extents, "420")
+})
+
+test_that("We warn on ambiguous extract revision specifications", {
+  expect_warning(
+    remove_from_nhgis_extract(
+      nhgis_extract,
+      modify_ds = "TST"
+    ),
+    "Some datasets \\(\"TST\"\\) could not be modified because"
+  )
+  expect_warning(
+    remove_from_nhgis_extract(
+      nhgis_extract,
+      time_series_tables = "TST"
+    ),
+    "Some time series tables \\(\"TST\"\\) could not be removed because"
+  )
+  expect_warning(
+    add_to_nhgis_extract(
+      nhgis_extract,
+      time_series_tables = "CW3"
+    ),
+    "Some time series tables \\(\"CW3\"\\) could not be added because"
+  )
+  expect_warning(
+    add_to_nhgis_extract(
+      nhgis_extract,
+      modify_ds = "CW3"
+    ),
+    "Some datasets \\(\"CW3\"\\) could not be modified because"
+  )
+  expect_error(
+    add_to_nhgis_extract(
+      nhgis_extract,
+      datasets = "DS",
+      modify_ds = "2015_2019_ACS5a"
+    ),
+    "Both `modify_ds` and `datasets` were provided."
+  )
+  expect_error(
+    remove_from_nhgis_extract(
+      nhgis_extract,
+      time_series_tables = "DS",
+      modify_ts = "2015_2019_ACS5a"
+    ),
+    "Both `modify_ts` and `time_series_tables` were provided."
+  )
+})
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
