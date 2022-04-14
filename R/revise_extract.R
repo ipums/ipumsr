@@ -1,7 +1,107 @@
+# This file is part of the ipumsr R package created by IPUMS.
+# For copyright and licensing information, see the NOTICE and LICENSE files
+# in this project's top-level directory, and also on-line at:
+#   https://github.com/ipums/ipumsr
+
+# Exported functions ------------------------------------------------------
+
+
+# > Revise extract definition ----
+
+#' Revise a microdata extract definition
+#'
+#' Revise a microdata extract definition. If the supplied extract definition comes from
+#' a previously submitted extract, this function will reset the definition to an
+#' unsubmitted state. For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
+#'
+#' @param extract An object of class \code{ipums_extract}.
+#' @param description The modified extract description. If NULL (the default),
+#'   leave the description unchanged.
+#' @param samples_to_add Samples to add to the extract definition, as a
+#'   character vector. If NULL (the default), no samples will be added.
+#' @param samples_to_remove Samples to remove from the extract definition, as a
+#'   character vector. If NULL (the default), no samples will be removed.
+#' @param vars_to_add Names of variables to add to the extract definition, as
+#'   a character vector. If NULL (the default), no variables will be added.
+#' @param vars_to_remove Names of variables to remove from the extract
+#'   definition, as a character vector. If NULL (the default), no variables will
+#'   be removed.
+#' @param data_format The desired data file format for the modified extract
+#'   definition. If NULL (the default), leave the data format unchanged.
+#' @param data_structure The desired data structure. Currently, this can only be
+#'   "rectangular", but "hierarchical" extracts will be supported in the future.
+#'   If NULL (the default), leave the data structure unchanged.
+#' @param rectangular_on Currently, this can only be "P", but in the future,
+#'   household-only extracts (\code{rectangular_on = "H"}) will also be
+#'   supported. If NULL, (the default), leave the \code{rectangular_on} field
+#'   unchanged.
+#'
+#' @family ipums_api
+#' @return An object of class \code{ipums_extract} containing the modified
+#'   extract definition.
+#'
+#' @examples
+#' \dontrun{
+#' old_extract <- get_extract_info("usa:33")
+#'
+#' revised_extract <- revise_extract_micro(
+#'   old_extract,
+#'   samples_to_add = "us2018a",
+#'   vars_to_add = "INCTOT"
+#' )
+#'
+#' submitted_revised_extract <- submit_extract(revised_extract)
+#' }
+#'
+#' @export
+revise_extract_micro <- function(extract,
+                                 description = NULL,
+                                 samples_to_add = NULL,
+                                 samples_to_remove = NULL,
+                                 vars_to_add = NULL,
+                                 vars_to_remove = NULL,
+                                 data_format = NULL,
+                                 data_structure = NULL,
+                                 rectangular_on = NULL) {
+
+  extract <- copy_ipums_extract(extract)
+  extract$description <- paste0("Revision of (", extract$description, ")")
+
+  extract <- add_to_extract(extract, "samples", samples_to_add)
+  extract <- remove_from_extract(extract, "samples", samples_to_remove)
+
+  extract <- add_to_extract(extract, "variables", vars_to_add)
+  extract <- remove_from_extract(extract, "variables", vars_to_remove)
+
+  if (!is.null(description)) extract$description <- description
+  if (!is.null(data_format)) extract$data_format <- data_format
+  if (!is.null(data_structure)) {
+    if (data_structure != "rectangular") {
+      stop(
+        "Currently, the `data_structure` argument must be equal to ",
+        "\"rectangular\"; in the future, the API will also support ",
+        "\"hierarchical\" extracts.",
+        call. = FALSE
+      )
+    }
+  }
+  if (!is.null(rectangular_on)) {
+    if (rectangular_on != "P") {
+      stop(
+        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+        "the future, the API will also support `rectangular_on = \"H\".",
+        call. = FALSE
+      )
+    }
+  }
+
+  extract <- validate_ipums_extract(extract)
+
+  extract
+}
 
 add_to_nhgis_extract <- function(extract,
-                                 modify_ds = NULL,
-                                 modify_ts = NULL,
                                  datasets = NULL,
                                  data_tables = NULL,
                                  ds_geog_levels = NULL,
@@ -19,123 +119,116 @@ add_to_nhgis_extract <- function(extract,
 
   extract <- copy_ipums_extract(extract)
 
-  if (!is.null(modify_ds) && !is.null(datasets)) {
-    stop(
-      "Both `modify_ds` and `datasets` were provided. ",
-      "Please either add sub-values to existing ",
-      "datasets or add new datasets, not both.",
-      call. = FALSE
-    )
-  }
+  datasets <- datasets %||% extract$datasets
+  time_series_tables <- time_series_tables %||% extract$time_series_tables
 
-  if (!is.null(modify_ts) && !is.null(time_series_tables)) {
-    stop(
-      "Both `modify_ts` and `time_series_tables` were provided. ",
-      "Please either add sub-values to existing ",
-      "time series tables or add new time series tables, not both.",
-      call. = FALSE
-    )
-  }
+  n_ds <- length(datasets)
+  ds_in_extract <- datasets %in% extract$datasets
 
-  old_ds <- intersect(datasets, extract$datasets)
-  old_ts <- intersect(time_series_tables, extract$time_series_tables)
+  old_ds_i <- which(ds_in_extract)
+  new_ds_i <- which(!ds_in_extract)
 
-  missing_ds <- setdiff(modify_ds, extract$datasets)
-  missing_ts <- setdiff(modify_ts, extract$time_series_tables)
+  old_ds <- datasets[old_ds_i]
+  new_ds <- datasets[new_ds_i]
 
-  if (length(old_ds) > 0) {
-    warning(
-      "Some datasets (\"",
-      paste0(old_ds, collapse = "\", \""),
-      "\") could not be added because they already exist in this extract. ",
-      "To modify existing datasets, use the `modify_ds` ",
-      "argument.",
-      call. = FALSE
-    )
-  }
+  n_ts <- length(time_series_tables)
+  ts_in_extract <- time_series_tables %in% extract$time_series_tables
 
-  if (length(old_ts) > 0) {
-    warning(
-      "Some time series tables (\"",
-      paste0(old_ts, collapse = "\", \""),
-      "\") could not be added because they already exist in this extract. ",
-      "To modify existing time series tables, use the ",
-      "`modify_ts` argument.",
-      call. = FALSE
-    )
-  }
+  old_ts_i <- which(ts_in_extract)
+  new_ts_i <- which(!ts_in_extract)
 
-  if (length(missing_ds) > 0) {
-    warning(
-      paste0(
-        "Some datasets (\"",
-        paste0(missing_ds, collapse =  "\", \""),
-        "\") could not be modified because they were not found in this ",
-        "extract's datasets (\"",
-        paste0(extract$datasets, collapse = "\", \""), "\"). ",
-        "To add new datasets, use the `datasets` argument."
-      ),
-      call. = FALSE
-    )
+  old_ts <- time_series_tables[old_ts_i]
+  new_ts <- time_series_tables[new_ts_i]
 
-    modify_ds <- intersect(modify_ds, extract$datasets)
-    if(length(modify_ds) == 0) modify_ds <- NULL
-  }
-
-  if (length(missing_ts) > 0) {
-    warning(
-      paste0(
-        "Some time series tables (\"",
-        paste0(missing_ts, collapse =  "\", \""),
-        "\") could not be modified because they were not found in this ",
-        "extract's time series tables (\"",
-        paste0(extract$time_series_tables, collapse = "\", \""), "\"). ",
-        "To add new time series tables, use the `time_series_tables` argument."
-      ),
-      call. = FALSE
-    )
-
-    modify_ts <- intersect(modify_ts, extract$time_series_tables)
-    if(length(modify_ts) == 0) modify_ts <- NULL
-  }
-
-  if (!is.null(datasets)) {
-    extract <- add_datasets(
-      extract,
-      datasets = datasets,
+  ds_args <- purrr::map(
+    list(
       data_tables = data_tables,
       ds_geog_levels = ds_geog_levels,
-      years = years, # Needs to be coerced to character
+      years = years,
       breakdown_values = breakdown_values
-    )
-  } else {
-    extract <- modify_datasets(
-      extract,
-      datasets = modify_ds,
-      data_tables = data_tables,
-      ds_geog_levels = ds_geog_levels,
-      years = years, # Needs to be coerced to character
-      breakdown_values = breakdown_values,
-      add = TRUE
-    )
-  }
+    ),
+    ~recycle_to_list(.x, n_ds, datasets)
+  )
 
-  if (!is.null(time_series_tables)) {
-    extract <- add_time_series_tables(
-      extract,
-      time_series_tables = time_series_tables,
+  ts_args <- purrr::map(
+    list(
       ts_geog_levels = ts_geog_levels
+    ),
+    ~recycle_to_list(.x, n_ts, time_series_tables)
+  )
+
+  ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
+  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != (n_ds))
+
+  ts_arg_length <- purrr::map_dbl(ts_args, ~length(.x))
+  ts_wrong_length <- purrr::map_lgl(ts_arg_length, ~.x != (n_ts))
+
+  if (any(ds_wrong_length)) {
+
+    length_msg <- purrr::imap_chr(
+      names(ds_wrong_length),
+      ~paste0("`", .x, "` (", ds_arg_length[.y], ")")
     )
-  } else {
-    extract <- modify_time_series_tables(
-      extract,
-      time_series_tables = modify_ts,
-      ts_geog_levels = ts_geog_levels,
-      add = TRUE
+
+    stop(
+      "The number of selections provided in ",
+      paste0(length_msg[ds_wrong_length], collapse = ", "),
+      " does not match the number of datasets to be modified (", n_ds,
+      "). To recycle selections across datasets, ensure values are stored ",
+      "in a vector, not a list.",
+      call. = FALSE
     )
   }
 
-  # Additionally, modify any ancillary variables specified, replacing if needed
+  if (any(ts_wrong_length)) {
+
+    length_msg <- purrr::imap_chr(
+      names(ts_wrong_length),
+      ~paste0("`", .x, "` (", ts_arg_length[.y], ")")
+    )
+
+    stop(
+      "The number of selections provided in ",
+      paste0(length_msg[ts_wrong_length], collapse = ", "),
+      " does not match the number of time series tables to be modified (", n_ts,
+      "). To recycle selections across time series tables, ensure values ",
+      "are stored in a vector, not a list.",
+      call. = FALSE
+    )
+  }
+
+  extract <- add_datasets(
+    extract,
+    datasets = new_ds,
+    data_tables = ds_args$data_tables[new_ds_i],
+    ds_geog_levels = ds_args$ds_geog_levels[new_ds_i],
+    years = ds_args$years[new_ds_i],
+    breakdown_values = ds_args$breakdown_values[new_ds_i]
+  )
+
+  extract <- modify_datasets(
+    extract,
+    datasets = old_ds,
+    data_tables = ds_args$data_tables[old_ds_i],
+    ds_geog_levels = ds_args$ds_geog_levels[old_ds_i],
+    years = ds_args$years[old_ds_i],
+    breakdown_values = ds_args$breakdown_values[old_ds_i],
+    add = TRUE
+  )
+
+  extract <- add_time_series_tables(
+    extract,
+    time_series_tables = new_ts,
+    ts_geog_levels = ts_args$ts_geog_levels[new_ts_i]
+  )
+
+  extract <- modify_time_series_tables(
+    extract,
+    time_series_tables = old_ts,
+    ts_geog_levels = ts_args$ts_geog_levels[old_ts_i],
+    add = TRUE
+  )
+
   extract <- add_to_ancillary_fields(
     extract,
     description = description,
@@ -155,8 +248,6 @@ add_to_nhgis_extract <- function(extract,
 }
 
 remove_from_nhgis_extract <- function(extract,
-                                      modify_ds = NULL,
-                                      modify_ts = NULL,
                                       datasets = NULL,
                                       data_tables = NULL,
                                       ds_geog_levels = NULL,
@@ -174,37 +265,23 @@ remove_from_nhgis_extract <- function(extract,
 
   extract <- copy_ipums_extract(extract)
 
-  # These cases are actually handled properly, but throwing errors to provide
-  # parallel behavior to add_to_nhgis_extract()
-  if (!is.null(modify_ds) && !is.null(datasets)) {
-    stop(
-      "Both `modify_ds` and `datasets` were provided. ",
-      "Please either remove sub-values from ",
-      "existing datasets or remove full datasets, not both.",
-      call. = FALSE
-    )
-  }
+  ds_provided <- !is.null(datasets)
+  ts_provided <- !is.null(time_series_tables)
 
-  if (!is.null(modify_ts) && !is.null(time_series_tables)) {
-    stop(
-      "Both `modify_ts` and `time_series_tables` were provided. ",
-      "Please either remove sub-values from existing time series tables ",
-      "or remove full time series tables, not both.",
-      call. = FALSE
-    )
-  }
+  datasets <- datasets %||% extract$datasets
+  time_series_tables <- time_series_tables %||% extract$time_series_tables
+
+  n_ds <- length(datasets)
+  n_ts <- length(time_series_tables)
 
   new_ds <- setdiff(datasets, extract$datasets)
   new_ts <- setdiff(time_series_tables, extract$time_series_tables)
-
-  missing_ds <- setdiff(modify_ds, extract$datasets)
-  missing_ts <- setdiff(modify_ts, extract$time_series_tables)
 
   if (length(new_ds) > 0) {
     warning(
       "Some datasets (\"",
       paste0(new_ds, collapse = "\", \""),
-      "\") could not be removed because they were not found in this extract's ",
+      "\") could not be modified because they were not found in this extract's ",
       "datasets.",
       call. = FALSE
     )
@@ -214,45 +291,75 @@ remove_from_nhgis_extract <- function(extract,
     warning(
       "Some time series tables (\"",
       paste0(new_ts, collapse = "\", \""),
-      "\") could not be removed because they were not found in this extract's ",
+      "\") could not be modified because they were not found in this extract's ",
       "datasets.",
       call. = FALSE
     )
   }
 
-  if (length(missing_ds) > 0) {
-    warning(
-      paste0(
-        "Some datasets (\"",
-        paste0(missing_ds, collapse =  "\", \""),
-        "\") could not be modified because they were not found in this ",
-        "extract's datasets (\"",
-        paste0(extract$datasets, collapse = "\", \""), "\")."
-      ),
-      call. = FALSE
+  ds_args <- purrr::map(
+    list(
+      data_tables = data_tables,
+      ds_geog_levels = ds_geog_levels,
+      years = years,
+      breakdown_values = breakdown_values
+    ),
+    ~recycle_to_list(.x, n_ds, datasets)
+  )
+
+  ts_args <- purrr::map(
+    list(
+      ts_geog_levels = ts_geog_levels
+    ),
+    ~recycle_to_list(.x, n_ts, time_series_tables)
+  )
+
+  ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
+  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != n_ds)
+
+  ts_arg_length <- purrr::map_dbl(ts_args, ~length(.x))
+  ts_wrong_length <- purrr::map_lgl(ts_arg_length, ~.x != (n_ts))
+
+  if (any(ds_wrong_length)) {
+
+    length_msg <- purrr::imap_chr(
+      names(ds_wrong_length),
+      ~paste0("`", .x, "` (", ds_arg_length[.y], ")")
     )
 
-    modify_ds <- intersect(modify_ds, extract$datasets)
-    if(length(modify_ds) == 0) modify_ds <- NULL
-  }
-
-  if (length(missing_ts) > 0) {
-    warning(
-      paste0(
-        "Some time series tables (\"",
-        paste0(missing_ts, collapse =  "\", \""),
-        "\") could not be modified because they were not found in this ",
-        "extract's time series tables (\"",
-        paste0(extract$time_series_tables, collapse = "\", \""), "\")."
-      ),
+    stop(
+      "The number of selections provided in ",
+      paste0(length_msg[ds_wrong_length], collapse = ", "),
+      " does not match the number of datasets to be modified (", n_ds,
+      "). To recycle selections across datasets, ensure values are stored ",
+      "in a vector, not a list.",
       call. = FALSE
     )
-
-    modify_ts <- intersect(modify_ts, extract$time_series_tables)
-    if(length(modify_ts) == 0) modify_ts <- NULL
   }
 
-  if (!is.null(datasets)) {
+  if (any(ts_wrong_length)) {
+
+    length_msg <- purrr::imap_chr(
+      names(ts_wrong_length),
+      ~paste0("`", .x, "` (", ts_arg_length[.y], ")")
+    )
+
+    stop(
+      "The number of selections provided in ",
+      paste0(length_msg[ts_wrong_length], collapse = ", "),
+      " does not match the number of time series tables to be modified (", n_ts,
+      "). To recycle selections across time series tables, ensure values ",
+      "are stored in a vector, not a list.",
+      call. = FALSE
+    )
+  }
+
+  # If subarguments are null, we interpret that user wants to remove full
+  # datasets/tsts, if provided.
+  remove_full_ds <- all(purrr::map_lgl(ds_args, ~is.null(unlist(.x))))
+  remove_full_ts <- all(purrr::map_lgl(ts_args, ~is.null(unlist(.x))))
+
+  if (remove_full_ds && ds_provided) {
     extract <- remove_datasets(
       extract,
       datasets = datasets
@@ -260,16 +367,16 @@ remove_from_nhgis_extract <- function(extract,
   } else {
     extract <- modify_datasets(
       extract,
-      datasets = modify_ds,
+      datasets = datasets,
       data_tables = data_tables,
       ds_geog_levels = ds_geog_levels,
-      years = years, # Needs to be coerced to character
+      years = years,
       breakdown_values = breakdown_values,
       add = FALSE
     )
   }
 
-  if (!is.null(time_series_tables)) {
+  if (remove_full_ts && ts_provided) {
     extract <- remove_time_series_tables(
       extract,
       time_series_tables = time_series_tables
@@ -277,7 +384,7 @@ remove_from_nhgis_extract <- function(extract,
   } else {
     extract <- modify_time_series_tables(
       extract,
-      time_series_tables = modify_ts,
+      time_series_tables = time_series_tables,
       ts_geog_levels = ts_geog_levels,
       add = FALSE
     )
@@ -294,6 +401,8 @@ remove_from_nhgis_extract <- function(extract,
     geographic_extents = geographic_extents
   )
 
+  # If removal results in extract with no ds/tst, remove irrelevant values
+  # for data format
   if (is.null(extract$datasets) && is.null(extract$time_series_tables)) {
     extract["data_format"] <- list(NULL)
   }
@@ -305,6 +414,8 @@ remove_from_nhgis_extract <- function(extract,
   extract
 
 }
+
+# Internal -----------------------------------------------------------
 
 add_datasets <- function(extract,
                          datasets = NULL,
@@ -567,14 +678,15 @@ modify_list <- function(l, to_modify = NULL, values = NULL, add = TRUE) {
     to_modify <- names(l)
   }
 
-  values <- unlist(values)
+  # values <- unlist(values)
+  values <- recycle_to_list(values, length(to_modify), to_modify)
 
   if (add) {
     modified <- purrr::map(
       names(l),
       function(x) {
         if (x %in% to_modify) {
-          union(l[[x]], values)
+          union(l[[x]], unlist(values[which(x == to_modify)]))
         } else {
           l[[x]]
         }
@@ -585,7 +697,7 @@ modify_list <- function(l, to_modify = NULL, values = NULL, add = TRUE) {
       names(l),
       function(x) {
         if (x %in% to_modify) {
-          d <- setdiff(l[[x]], values)
+          d <- setdiff(l[[x]], unlist(values[which(x == to_modify)]))
           if (length(d) == 0) {
             NULL
           } else {
@@ -601,3 +713,60 @@ modify_list <- function(l, to_modify = NULL, values = NULL, add = TRUE) {
   setNames(modified, names(l))
 
 }
+
+copy_ipums_extract <- function(extract) {
+  extract$submitted <- FALSE
+  extract$download_links <- EMPTY_NAMED_LIST
+  extract$number <- NA_integer_
+  extract$status <- "unsubmitted"
+
+  extract
+}
+
+add_to_extract <- function(extract, samples_or_variables, names_to_add) {
+  if (is.null(names_to_add)) {
+    return(extract)
+  }
+  if (any(names_to_add %in% extract[[samples_or_variables]])) {
+    warning(
+      "The following ", samples_or_variables, " are already included in the ",
+      "supplied extract definition, and thus will not be added: ",
+      paste0(
+        intersect(names_to_add, extract[[samples_or_variables]]),
+        collapse = ", "
+      ),
+      call. = FALSE
+    )
+    names_to_add <- setdiff(names_to_add, extract[[samples_or_variables]])
+  }
+  extract[[samples_or_variables]] <- c(
+    extract[[samples_or_variables]],
+    names_to_add
+  )
+  extract
+}
+
+remove_from_extract <- function(extract,
+                                samples_or_variables,
+                                names_to_remove) {
+  if (is.null(names_to_remove)) {
+    return(extract)
+  }
+  if (!all(names_to_remove %in% extract[[samples_or_variables]])) {
+    warning(
+      "The following ", samples_or_variables, " are not included in the ",
+      "supplied extract definition, and thus will not be removed: ",
+      paste0(
+        setdiff(names_to_remove, extract[[samples_or_variables]]),
+        collapse = ", "
+      ),
+      call. = FALSE
+    )
+  }
+  extract[[samples_or_variables]] <- setdiff(
+    extract[[samples_or_variables]],
+    names_to_remove
+  )
+  extract
+}
+
