@@ -251,19 +251,23 @@ test_that("nhgis_extract print method works", {
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
+      "\n",
       "\nDataset: 2014_2018_ACS5a",
-      "\n  Tables: \\(2 total\\) B01001, B01002",
-      "\n  Geog Levels: \\(1 total\\) nation",
+      "\n  Tables: B01001, B01002",
+      "\n  Geog Levels: nation",
       "\n  Years: ",
       "\n  Breakdowns: ",
+      "\n",
       "\nDataset: 2015_2019_ACS5a",
-      "\n  Tables: \\(2 total\\) B01001, B01002",
-      "\n  Geog Levels: \\(1 total\\) blck_grp",
+      "\n  Tables: B01001, B01002",
+      "\n  Geog Levels: blck_grp",
       "\n  Years: ",
       "\n  Breakdowns: ",
+      "\n",
       "\nTime Series Table: CW3",
-      "\n  Geog Levels: \\(1 total\\) state",
-      "\nShapefiles: \\(1 total\\) 110_blck_grp_2019_tl2019"
+      "\n  Geog Levels: state",
+      "\n",
+      "\nShapefiles: 110_blck_grp_2019_tl2019"
     )
   )
   expect_output(
@@ -271,7 +275,8 @@ test_that("nhgis_extract print method works", {
     regexp = paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: ",
-      "\nShapefiles: \\(1 total\\) 110_blck_grp_2019_tl2019"
+      "\n",
+      "\nShapefiles: 110_blck_grp_2019_tl2019"
     )
   )
 })
@@ -341,7 +346,9 @@ test_that("nhgis_extract validate method works", {
         "nhgis",
         description = "",
         time_series_tables = c("A00", "A01"),
-        ts_geog_levels = list("a", "b", "c")
+        ts_geog_levels = list("a", "b", "c"),
+        data_format = "csv_no_header",
+        time_series_table_layout = "time_by_row_layout"
       )
     ),
     regexp = "The number of selections provided in `ts_geog_levels` \\(3\\)"
@@ -1002,8 +1009,8 @@ test_that("Bad extract revisions throw correct warnings and errors", {
       data_tables = list("A", "B")
     ),
     paste0(
-      "The number of selections provided in `data_tables` (2) does not match",
-      " the number of datasets to be modified (1). To recycle"
+      "The number of selections provided in `data_tables` \\(2\\) does not ",
+      "match the number of datasets to be modified \\(1\\). To recycle"
     )
   )
   expect_error(
@@ -1012,8 +1019,8 @@ test_that("Bad extract revisions throw correct warnings and errors", {
       data_tables = list("A", "B", "C")
     ),
     paste0(
-      "The number of selections provided in `data_tables` (3) does not match",
-      " the number of datasets to be modified (2). To recycle"
+      "The number of selections provided in `data_tables` \\(3\\) does not ",
+      "match the number of datasets to be modified \\(2\\). To recycle"
     )
   )
   expect_error(
@@ -1022,8 +1029,8 @@ test_that("Bad extract revisions throw correct warnings and errors", {
       ts_geog_levels = list("A", "B")
     ),
     paste0(
-      "The number of selections provided in `ts_geog_levels` (2) does not ",
-      "match the number of datasets to be modified (1). To recycle"
+      "The number of selections provided in `ts_geog_levels` \\(2\\) does not ",
+      "match the number of time series tables to be modified \\(1\\). To recyc"
     )
   )
 })
