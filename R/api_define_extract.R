@@ -349,6 +349,10 @@ print.ipums_extract <- function(x) {
 #' @export
 print.nhgis_extract <- function(x) {
 
+  # Ensure proper printing for extracts created via new_ipums_extract()
+  # (which have not been recycled yet)
+  x <- recycle_nhgis_extract_args(x)
+
   types <- nhgis_extract_types(x)
 
   if("datasets" %in% types) {
