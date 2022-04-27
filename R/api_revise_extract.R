@@ -239,6 +239,18 @@ add_to_nhgis_extract <- function(extract,
     geographic_extents = geographic_extents
   )
 
+  if (n_ds > 0) {
+    extract$data_format <- extract$data_format %||% "csv_header"
+    extract$breakdown_and_data_type_layout <- extract$breakdown_and_data_type_layout %||%
+      "separate_files"
+  }
+
+  if (n_ts > 0) {
+    extract$data_format <- extract$data_format %||% "csv_header"
+    extract$time_series_table_layout <- extract$time_series_table_layout %||%
+      "time_by_column_layout"
+  }
+
   if (validate) {
     extract <- validate_ipums_extract(extract)
   }
@@ -256,11 +268,7 @@ remove_from_nhgis_extract <- function(extract,
                                       time_series_tables = NULL,
                                       ts_geog_levels = NULL,
                                       shapefiles = NULL,
-                                      data_format = NULL,
-                                      breakdown_and_data_type_layout = NULL,
-                                      time_series_table_layout = NULL,
                                       geographic_extents = NULL,
-                                      description = NULL,
                                       validate = TRUE) {
 
   extract <- copy_ipums_extract(extract)
@@ -393,11 +401,7 @@ remove_from_nhgis_extract <- function(extract,
   # Handle updates to non-nested fields
   extract <- remove_from_ancillary_fields(
     extract,
-    description = description,
     shapefiles = shapefiles,
-    data_format = data_format,
-    breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout,
     geographic_extents = geographic_extents
   )
 
@@ -584,19 +588,11 @@ remove_time_series_tables <- function(extract, time_series_tables = NULL) {
 }
 
 remove_from_ancillary_fields <- function(extract,
-                                         description = NULL,
                                          shapefiles = NULL,
-                                         data_format = NULL,
-                                         breakdown_and_data_type_layout = NULL,
-                                         time_series_table_layout = NULL,
                                          geographic_extents = NULL) {
 
   modify_vars <- list(
-    description = description,
     shapefiles = shapefiles,
-    data_format = data_format,
-    breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout,
     geographic_extents = geographic_extents
   )
 
