@@ -631,12 +631,14 @@ modify_datasets <- function(extract,
   purrr::walk(
     names(mod_vals),
     ~{
-      extract[[.x]] <<- modify_list(
-        extract[[.x]],
-        to_modify = datasets,
-        values = mod_vals[[.x]],
-        add = add
-      )
+      if (!is.null(extract[[.x]])) {
+        extract[[.x]] <<- modify_list(
+          extract[[.x]],
+          to_modify = datasets,
+          values = mod_vals[[.x]],
+          add = add
+        )
+      }
     }
   )
 
@@ -655,12 +657,14 @@ modify_time_series_tables <- function(extract,
   purrr::walk(
     names(mod_vals),
     ~{
-      extract[[.x]] <<- modify_list(
-        extract[[.x]],
-        to_modify = time_series_tables,
-        values = mod_vals[[.x]],
-        add = add
-      )
+      if (!is.null(extract[[.x]])) {
+        extract[[.x]] <<- modify_list(
+          extract[[.x]],
+          to_modify = time_series_tables,
+          values = mod_vals[[.x]],
+          add = add
+        )
+      }
     }
   )
 
