@@ -554,7 +554,7 @@ new_ipums_json <- function(json, collection) {
   )
 }
 
-# > validate_ipums_extract() ---------------
+# > Validation methods -----------
 
 validate_ipums_extract <- function(x) {
   UseMethod("validate_ipums_extract")
@@ -565,10 +565,23 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   types <- nhgis_extract_types(x)
 
-  if(length(types) == 0) {
+  if (length(types) == 0) {
     stop(
-      "At least one of `datasets`, `time_series_tables` or `shapefiles` ",
-      "must be specified.",
+      "An nhgis_extract must contain at least one of `datasets`, ",
+      "`time_series_tables`, or `shapefiles`.",
+      call. = FALSE
+    )
+  }
+
+  has_na <- purrr::map_lgl(
+    types,
+    ~any(is.na(x[[.]]))
+  )
+
+  if (any(has_na)) {
+    stop(
+      "An nhgis_extract cannot include missing values in `",
+      paste0(types[has_na], collapse = "`, `"), "`.",
       call. = FALSE
     )
   }
@@ -587,14 +600,47 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if (any(is_missing)) {
     stop(
-      "The following elements of an nhgis_extract must not contain missing ",
-      "values: ",
-      paste0(c("collection", "description")[is_missing], collapse = ", "),
+      "An nhgis_extract must contain values for: `",
+      paste0(c("collection", "description")[is_missing], collapse = "`, `"),
+      "`.",
       call. = FALSE
     )
   }
 
-  if("datasets" %in% types) {
+  if (!is.null(x$data_format)) {
+    if (!x$data_format %in% c("csv_header", "csv_no_header", "fixed_width")) {
+      stop(
+        "`data_format` must be one of `csv_header`, `csv_no_header`",
+        " or `fixed_width`.",
+        call. = FALSE
+      )
+    }
+  }
+
+  if (!is.null(x$breakdown_and_data_type_layout)) {
+    if (!x$breakdown_and_data_type_layout %in% c("single_file",
+                                                 "separate_files")) {
+      stop(
+        "`breakdown_and_data_type_layout` must be one of `single_file`",
+        " or `separate_files`.",
+        call. = FALSE
+      )
+    }
+  }
+
+  if (!is.null(x$time_series_table_layout)) {
+    if (!x$time_series_table_layout %in% c("time_by_row_layout",
+                                           "time_by_column_layout",
+                                           "time_by_file_layout")) {
+      stop(
+        "`time_series_table_layout` must be one of `time_by_row_layout`, ",
+        "`time_by_column_layout` or `time_by_file_layout`.",
+        call. = FALSE
+      )
+    }
+  }
+
+  if ("datasets" %in% types) {
 
     must_be_non_missing <- c("data_tables", "ds_geog_levels", "data_format")
     must_have_same_length <- c("data_tables", "ds_geog_levels",
@@ -611,9 +657,9 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     if (any(is_missing)) {
       stop(
-        "When a dataset is specified, the following must not contain ",
-        "missing values: `",
-        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`",
+        "An nhgis_extract that contains datasets must also contain ",
+        "values for: `",
+        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`.",
         call. = FALSE
       )
     }
@@ -642,16 +688,6 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if(!x$data_format %in% c("csv_no_header",
-                             "csv_header",
-                             "fixed_width")) {
-      stop(
-        "`data_format` must be one of `csv_no_header`, `csv_header`, ",
-        "or `fixed_width`",
-        call. = FALSE
-      )
-    }
-
     # TODO: Add additional logic to catch other requirements here?
     #   1. years required when dataset has multiple years
     #   2. breakdown_and_data_type_layout required when dataset has multiple
@@ -662,13 +698,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
   } else {
 
     ds_sub_vars <- c("data_tables", "ds_geog_levels",
-                     "years", "breakdown_values")
+                     "years", "breakdown_values",
+                     "breakdown_and_data_type_layout")
 
     extra_vars <- ds_sub_vars[ds_sub_vars %in% vars_present]
 
     if (length(extra_vars) > 0) {
       warning(
-        "No dataset provided for the following arguments: `",
+        "The following parameters are not relevant for an nhgis_extract that ",
+        "does not include any datasets: `",
         paste0(extra_vars, collapse = "`, `"), "`.",
         # "`. These parameters will be ignored.",
         call. = FALSE
@@ -677,7 +715,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   }
 
-  if("time_series_tables" %in% types) {
+  if ("time_series_tables" %in% types) {
 
     must_be_non_missing <- c("ts_geog_levels",
                              "data_format",
@@ -697,9 +735,9 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     if (any(is_missing)) {
       stop(
-        "When a time series table is specified, the following must not contain",
-        " missing values: `",
-        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`",
+        "An nhgis_extract that contains time series tables must also contain ",
+        "values for: `",
+        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`.",
         call. = FALSE
       )
     }
@@ -717,26 +755,6 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if(!x$data_format %in% c("csv_no_header",
-                             "csv_header",
-                             "fixed_width")) {
-      stop(
-        "`data_format` must be one of `csv_no_header`, `csv_header`, ",
-        "or `fixed_width`",
-        call. = FALSE
-      )
-    }
-
-    if(!x$time_series_table_layout %in% c("time_by_column_layout",
-                                          "time_by_row_layout",
-                                          "time_by_file_layout")) {
-      stop(
-        "`time_series_table_layout` must be one of `time_by_column_layout`, ",
-        "`time_by_row_layout`, or `time_by_file_layout`",
-        call. = FALSE
-      )
-    }
-
   } else {
 
     ts_sub_vars <- c("ts_geog_levels", "time_series_table_layout")
@@ -744,7 +762,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     if (length(extra_vars) > 0) {
       warning(
-        "No time series table provided for the following arguments: `",
+        "The following parameters are not relevant for an nhgis_extract that ",
+        "does not include any time series tables: `",
         paste0(extra_vars, collapse = "`, `"), "`.",
         # "`. These parameters will be ignored.",
         call. = FALSE
@@ -755,14 +774,13 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if ("shapefiles" %in% types && length(types) == 1) {
 
-    not_relevant <- c("data_format", "breakdown_and_data_type_layout",
-                      "time_series_table_layout", "geographic_extents")
+    not_relevant <- c("data_format")
     extra_vars <- intersect(not_relevant, vars_present)
 
     if (length(extra_vars) > 0) {
       warning(
-        "The following parameters are not relevant for extracts that consist ",
-        "only of shapefiles: `",
+        "The following parameters are not relevant for an nhgis_extract that ",
+        "does not include any time series tables or datasets: `",
         paste0(extra_vars, collapse = "`, `"), "`.",
         # "`. These parameters will be ignored.",
         call. = FALSE
@@ -849,11 +867,7 @@ nhgis_extract_types <- function(extract) {
 
   is_missing <- purrr::map_lgl(
     possible_types,
-    ~any(
-      is.null(extract[[.]]),
-      is.na(extract[[.]]),
-      is_list(extract[[.]]) && is_empty(extract[[.]]) && is_named(extract[[.]])
-    )
+    ~all(is_empty(extract[[.]]))
   )
 
   types <- possible_types[!is_missing]

@@ -281,21 +281,23 @@ test_that("nhgis_extract print method works", {
   )
 })
 
-# Will need a lot more testing here after list conversion
+# Will need a lot more testing here after list conversion?
 test_that("nhgis_extract validate method works", {
   expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
   expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
   expect_error(
     validate_ipums_extract(new_ipums_extract("nhgis")),
-    "At least one of `datasets`"
+    "An nhgis_extract must contain at least one of `datasets`"
   )
   expect_error(
     define_extract_nhgis(
-      "nhgis",
       description = "",
       datasets = "Test"
     ),
-    "When a dataset is specified,"
+    paste0(
+      "An nhgis_extract that contains datasets must also contain values for: ",
+      "`data_tables`, `ds_geog_levels`."
+    )
   )
   expect_error(
     define_extract_nhgis(
@@ -303,11 +305,13 @@ test_that("nhgis_extract validate method works", {
       time_series_tables = "Test",
       ts_geog_levels = NA
     ),
-    "When a time series table is specified,"
+    paste0(
+      "An nhgis_extract that contains time series tables must also contain ",
+      "values for: `ts_geog_levels`"
+    )
   )
   expect_error(
     define_extract_nhgis(
-      "nhgis",
       description = "",
       datasets = "Test",
       data_tables = "Test",
@@ -325,8 +329,7 @@ test_that("nhgis_extract validate method works", {
       )
     ),
     paste0(
-      "The following elements of an nhgis_extract must not contain ",
-      "missing values: description"
+      "An nhgis_extract must contain values for: `description`."
     )
   )
   expect_warning(
@@ -338,7 +341,10 @@ test_that("nhgis_extract validate method works", {
         ds_geog_levels = "Test"
       )
     ),
-    "No dataset provided for the following arguments: `ds_geog_levels`."
+    paste0(
+      "The following parameters are not relevant for an nhgis_extract that ",
+      "does not include any datasets: `ds_geog_levels`."
+    )
   )
   expect_error(
     validate_ipums_extract(
@@ -364,11 +370,11 @@ test_that("nhgis_extract validate method works", {
       )
     ),
     paste0(
-      "When a dataset is specified, the following must not contain missing ",
-      "values: `data_tables`, `ds_geog_levels`"
+      "An nhgis_extract that contains datasets must also contain values for: ",
+      "`data_tables`, `ds_geog_levels`, `data_format`."
     )
   )
-  expect_warning(
+  expect_error(
     validate_ipums_extract(
       new_ipums_extract(
         "nhgis",
@@ -377,9 +383,19 @@ test_that("nhgis_extract validate method works", {
         data_format = "Test"
       )
     ),
+    "`data_format` must be one of ",
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        datasets = NA,
+        time_series_tables = c("CW3", NA)
+      )
+    ),
     paste0(
-      "The following parameters are not relevant for extracts that consist ",
-      "only of shapefiles: `data_format`."
+      "An nhgis_extract cannot include missing values in `datasets`, ",
+      "`time_series_tables`."
     )
   )
 })
@@ -984,22 +1000,11 @@ test_that("Bad extract revisions throw correct warnings and errors", {
   expect_error(
     remove_from_nhgis_extract(
       nhgis_extract,
-      ts_geog_levels = "state",
-      time_series_table_layout = "time_by_row_layout"
-    ),
-    paste0(
-      "When a time series table is specified, the following must not contain",
-      " missing values: `ts_geog_levels`, `time_series_table_layout`"
-    )
-  )
-  expect_error(
-    remove_from_nhgis_extract(
-      nhgis_extract,
       ds_geog_levels = "nation"
     ),
     paste0(
-      "When a dataset is specified, the following must not contain",
-      " missing values: `ds_geog_levels`"
+      "An nhgis_extract that contains datasets must also contain values for: ",
+      "`ds_geog_levels`"
     )
   )
   expect_error(
