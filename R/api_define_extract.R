@@ -310,7 +310,23 @@ save_extract_as_json <- function(extract, file) {
   invisible(file)
 }
 
-# Print methods ---------------------------------------------
+# > Print methods -----------
+
+#' @export
+print.ipums_extract <- function(x) {
+
+  to_cat <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
+    "\n", print_truncated_vector(x$description, "Description: ", FALSE)
+  )
+
+  cat(to_cat)
+
+  invisible(x)
+
+}
 
 #' @export
 print.usa_extract <- function(x) {
@@ -322,22 +338,6 @@ print.usa_extract <- function(x) {
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
     "\n", print_truncated_vector(x$samples, "Samples: "),
     "\n", print_truncated_vector(x$variables, "Variables: ")
-  )
-
-  cat(to_cat)
-
-  invisible(x)
-
-}
-
-#' @export
-print.ipums_extract <- function(x) {
-
-  to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE)
   )
 
   cat(to_cat)
@@ -420,107 +420,9 @@ print.nhgis_extract <- function(x) {
   invisible(x)
 }
 
-format_collection_for_printing <- function(collection) {
-  collection_info <- dplyr::filter(
-    ipums_data_collections(),
-    code_for_api == collection
-  )
-
-  if (nrow(collection_info) == 0) {
-    return(UNKNOWN_DATA_COLLECTION_LABEL)
-  }
-
-  collection_info$collection_name
-}
-
-format_dataset_for_printing <- function(dataset,
-                                        data_tables,
-                                        geog_levels,
-                                        years,
-                                        breakdown_values) {
-  paste0(
-    "\n",
-    print_truncated_vector(
-      dataset,
-      "Dataset: ",
-      FALSE
-    ),
-    "\n  ",
-    print_truncated_vector(
-      data_tables,
-      "Tables: ",
-      FALSE
-      #!is_empty(data_tables)
-    ),
-    "\n  ",
-    print_truncated_vector(
-      geog_levels,
-      "Geog Levels: ",
-      FALSE
-      #!is_empty(geog_levels)
-    ),
-    "\n  ",
-    print_truncated_vector(
-      years,
-      "Years: ",
-      FALSE
-      #!is_empty(years)
-    ),
-    "\n  ",
-    print_truncated_vector(
-      breakdown_values,
-      "Breakdowns: ",
-      FALSE
-      #!is_empty(breakdown_values)
-    ),
-    "\n"
-  )
-}
-
-format_tst_for_printing <- function(time_series_table, ts_geog_levels) {
-  paste0(
-    "\n",
-    print_truncated_vector(
-      time_series_table,
-      "Time Series Table: ",
-      FALSE
-    ),
-    "\n  ",
-    print_truncated_vector(
-      ts_geog_levels,
-      "Geog Levels: ",
-      FALSE
-      #!is_empty(ts_geog_levels)
-    ),
-    "\n"
-  )
-}
-
-print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
-  max_width <- min(getOption("width"), 80)
-  max_width <- max(max_width, 20) # don't allow width less than 20
-  full_list <- paste0(x, collapse = ", ")
-  untruncated <- ifelse(
-    include_length,
-    paste0(label, "(", length(x), " total) ", full_list),
-    paste0(label, full_list)
-  )
-  if (nchar(untruncated) > max_width) {
-    return(paste0(substr(untruncated, 1, max_width - 3), "..."))
-  }
-  untruncated
-  # will_be_truncated <- length(x) > truncate_at
-  # x <- head(x, truncate_at)
-  # out <- paste0(x, collapse = ", ")
-  # if (will_be_truncated) {
-  #   return(paste0(out, "..."))
-  # }
-  # out
-}
-
-UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
-
 # Internal ---------------------------------------------------------------------
+
+# > Constructors ---------------
 
 new_ipums_extract <- function(collection = NA_character_,
                               description = NA_character_,
@@ -851,6 +753,125 @@ validate_ipums_extract.ipums_extract <- function(x) {
   x
 
 }
+
+# > Helpers -----------------
+
+format_collection_for_printing <- function(collection) {
+  collection_info <- dplyr::filter(
+    ipums_data_collections(),
+    code_for_api == collection
+  )
+
+  if (nrow(collection_info) == 0) {
+    return(UNKNOWN_DATA_COLLECTION_LABEL)
+  }
+
+  collection_info$collection_name
+}
+
+format_dataset_for_printing <- function(dataset,
+                                        data_tables,
+                                        geog_levels,
+                                        years = NULL,
+                                        breakdown_values = NULL) {
+  output <- paste0(
+    "\n",
+    print_truncated_vector(
+      dataset,
+      "Dataset: ",
+      FALSE
+    ),
+    "\n  ",
+    print_truncated_vector(
+      data_tables,
+      "Tables: ",
+      FALSE
+      #!is_empty(data_tables)
+    ),
+    "\n  ",
+    print_truncated_vector(
+      geog_levels,
+      "Geog Levels: ",
+      FALSE
+      #!is_empty(geog_levels)
+    ),
+    "\n"
+  )
+
+  if (!is.null(years)) {
+    output <- paste0(
+      output,
+      "  ",
+      print_truncated_vector(
+        years,
+        "Years: ",
+        FALSE
+        #!is_empty(years)
+      ),
+      "\n"
+    )
+  }
+
+  if (!is.null(breakdown_values)) {
+    output <- paste0(
+      output,
+      "  ",
+      print_truncated_vector(
+        breakdown_values,
+        "Breakdowns: ",
+        FALSE
+        #!is_empty(breakdown_values)
+      ),
+      "\n"
+    )
+  }
+
+  output
+
+}
+
+format_tst_for_printing <- function(time_series_table, ts_geog_levels) {
+  paste0(
+    "\n",
+    print_truncated_vector(
+      time_series_table,
+      "Time Series Table: ",
+      FALSE
+    ),
+    "\n  ",
+    print_truncated_vector(
+      ts_geog_levels,
+      "Geog Levels: ",
+      FALSE
+      #!is_empty(ts_geog_levels)
+    ),
+    "\n"
+  )
+}
+
+print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
+  max_width <- min(getOption("width"), 80)
+  max_width <- max(max_width, 20) # don't allow width less than 20
+  full_list <- paste0(x, collapse = ", ")
+  untruncated <- ifelse(
+    include_length,
+    paste0(label, "(", length(x), " total) ", full_list),
+    paste0(label, full_list)
+  )
+  if (nchar(untruncated) > max_width) {
+    return(paste0(substr(untruncated, 1, max_width - 3), "..."))
+  }
+  untruncated
+  # will_be_truncated <- length(x) > truncate_at
+  # x <- head(x, truncate_at)
+  # out <- paste0(x, collapse = ", ")
+  # if (will_be_truncated) {
+  #   return(paste0(out, "..."))
+  # }
+  # out
+}
+
+UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 
 #' Identify data types specified in an NHGIS extract
 #'

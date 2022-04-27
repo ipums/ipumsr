@@ -255,14 +255,10 @@ test_that("nhgis_extract print method works", {
       "\nDataset: 2014_2018_ACS5a",
       "\n  Tables: B01001, B01002",
       "\n  Geog Levels: nation",
-      "\n  Years: ",
-      "\n  Breakdowns: ",
       "\n",
       "\nDataset: 2015_2019_ACS5a",
       "\n  Tables: B01001, B01002",
       "\n  Geog Levels: blck_grp",
-      "\n  Years: ",
-      "\n  Breakdowns: ",
       "\n",
       "\nTime Series Table: CW3",
       "\n  Geog Levels: state",
@@ -277,6 +273,28 @@ test_that("nhgis_extract print method works", {
       "\nDescription: ",
       "\n",
       "\nShapefiles: 110_blck_grp_2019_tl2019"
+    )
+  )
+  expect_output(
+    print(
+      define_extract_nhgis(
+        datasets = "DS",
+        data_tables = "DT",
+        ds_geog_levels = "DG",
+        years = "Y1",
+        breakdown_values = "B1"
+      )
+    ),
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: ",
+      "\n",
+      "\nDataset: DS",
+      "\n  Tables: DT",
+      "\n  Geog Levels: DG",
+      "\n  Years: Y1",
+      "\n  Breakdowns: B1",
+      "\n"
     )
   )
 })
