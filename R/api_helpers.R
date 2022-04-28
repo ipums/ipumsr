@@ -1,4 +1,39 @@
 
+# > List data collections ----
+
+#' List IPUMS data collections
+#'
+#' List IPUMS data collections with corresponding codes used by the IPUMS API.
+#' Note that some data collections do not yet have API support. For an overview
+#' of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#'
+#' @family ipums_api
+#' @return A \code{\link[tibble]{tbl_df}} with two columns containing the
+#'   full collection name and the corresponding code used by the IPUMS API.
+#'
+#' @examples
+#' # Print a tibble of all IPUMS data collections:
+#' ipums_data_collections()
+#'
+#' @export
+ipums_data_collections <- function() {
+  tibble::tribble(
+    ~collection_name, ~code_for_api,
+    "IPUMS USA", "usa",
+    "IPUMS CPS", "cps",
+    "IPUMS International", "ipumsi",
+    "IPUMS NHGIS", "nhgis",
+    "IPUMS AHTUS", "ahtus",
+    "IPUMS MTUS", "mtus",
+    "IPUMS ATUS", "atus",
+    "IPUMS DHS", "dhs",
+    "IPUMS Higher Ed", "highered",
+    "IPUMS MEPS", "meps",
+    "IPUMS NHIS", "nhis",
+    "IPUMS PMA", "pma"
+  )
+}
+
 #' Convert all download file paths in a cassette file to be relative to the
 #' working directory
 #'
@@ -285,39 +320,3 @@ parse_400_error <- function(res) {
   )
   return(error_message)
 }
-
-# > List data collections ----
-
-#' List IPUMS data collections
-#'
-#' List IPUMS data collections with corresponding codes used by the IPUMS API.
-#' Note that some data collections do not yet have API support. For an overview
-#' of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
-#'
-#' @family ipums_api
-#' @return A \code{\link[tibble]{tbl_df}} with two columns containing the
-#'   full collection name and the corresponding code used by the IPUMS API.
-#'
-#' @examples
-#' # Print a tibble of all IPUMS data collections:
-#' ipums_data_collections()
-#'
-#' @export
-ipums_data_collections <- function() {
-  tibble::tribble(
-    ~collection_name, ~code_for_api,
-    "IPUMS USA", "usa",
-    "IPUMS CPS", "cps",
-    "IPUMS International", "ipumsi",
-    "IPUMS NHGIS", "nhgis",
-    "IPUMS AHTUS", "ahtus",
-    "IPUMS MTUS", "mtus",
-    "IPUMS ATUS", "atus",
-    "IPUMS DHS", "dhs",
-    "IPUMS Higher Ed", "highered",
-    "IPUMS MEPS", "meps",
-    "IPUMS NHIS", "nhis",
-    "IPUMS PMA", "pma"
-  )
-}
-

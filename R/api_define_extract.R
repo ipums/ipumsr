@@ -1,9 +1,10 @@
+
 # This file is part of the ipumsr R package created by IPUMS.
 # For copyright and licensing information, see the NOTICE and LICENSE files
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-# Exported functions ------------------------------------------------------
+# Exported functions -----------------------------------------------------------
 
 # > Define extract ----
 
@@ -29,7 +30,7 @@
 #'   will also support household-only extracts (\code{rectangular_on = "H"}).
 #'
 #' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing the extract
+#' @return An object of class \code{usa_extract} containing the extract
 #'   definition.
 #'
 #' @examples
@@ -94,87 +95,149 @@ define_extract_micro <- function(collection,
 #' Define an extract request object to be submitted via the IPUMS NHGIS
 #' extract API.
 #'
+#' An extract can contain multiple datasets, each of which may or may not
+#' contain the same values for the associated dataset subfields
+#' (\code{ds_tables}, \code{ds_geog_levels}, \code{ds_years}, and
+#' \code{ds_breakdown_values}). When specifying an extract that contains multiple
+#' datasets, you can either choose to recycle these subfield specifications to
+#' all datasets in the extract, or to specify specific values for the subfields
+#' for each dataset.
+#'
+#' To recycle subfield specifications to all datasets, pass
+#' a vector to the subfield argument. To provide unique subfield values for each
+#' dataset in the extract, instead pass a list of values to the subfield
+#' argument. In this case, the values for that subfield will be linked to the
+#' datasets in index order (for instance, if 2 datasets are specified, the
+#' first element in the list of \code{ds_tables} would be linked to the first
+#' dataset, and the second element in the list of \code{ds_tables} would be
+#' linked to the second dataset). The same holds true for time series tables.
+#'
+#' If a subfield argument is passed as a list, the list must be the same length
+#' as the number of datasets (for all arguments with prefix \code{ds_}) or
+#' time series tables (for all arguments with prefix \code{tst_}) specified in
+#' the extract definition. Note that individual \emph{elements} of these lists
+#' can be of arbitrary length.
+#'
 #' @param description Description of the extract.
-#' @param datasets Character name of datasets to include in the extract, if any.
-#' @param data_tables Character vector of data tables associated with the
-#'   specified datasets to include in the extract. Required if a dataset is
-#'   specified.
-#' @param ds_geog_levels Character vector of geographic levels associated with
-#'   the specified dataset to include in the extract. Required if a dataset is
-#'   specified.
-#' @param years Character or integer vector of years associated with the
-#'   specified dataset to include in the extract. Use "*" to select all
-#'   available years for the specified dataset.
-#' @param breakdown_values Character vector of selected breakdown values to
-#'   associated with the specified dataset to include in the extract. If more
-#'   than one breakdown value is requested, `breakdown_and_data_type_layout`
-#'   must also be specified.
-#' @param time_series_tables Character name of time series table to include in
-#'   the extract, if any.
-#' @param ts_geog_levels Character vector of geographic levels associated with
-#'   the specified time series table to include in the extract. Required if a
-#'   time series table is specified.
-#' @param shapefiles Character vector of shapefiles to include in the extract,
-#'   if any.
-#' @param data_format The desired format of the extract data file (one of
-#'   \code{"csv_no_header"}, \code{"csv_header"}, or \code{"fixed_width"}).
-#'   \code{"csv_no_header"} provides a minimal header in the first row, while
-#'   \code{"csv_header"} adds a second, more descriptive header row.
-#'   Required when any dataset or time_series_table is selected.
-#' @param breakdown_and_data_type_layout Character indicating the layout of the
-#'   dataset when multiple data types or breakdown values are specified.
-#'   \code{"separate_files"} splits up each data type or breakdown combo into
-#'   its own file. \code{"single_file"} keeps all datatypes and breakdown combos
-#'   in one file. Required when a dataset has multiple breakdowns or data types.
-#' @param time_series_table_layout Character indicating the layout of the
-#'   specified time series table. One of \code{"time_by_column_layout"},
-#'   \code{"time_by_row_layout"}, or \code{"time_by_file_layout"}. Required when
-#'   a time series table is specified.
+#' @param datasets Character vector of datasets to include in the extract,
+#'   if any. For more information on NHGIS datasets, click
+#'   \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.
+#' @param ds_tables Character vector or list of summary tables to include in the
+#'   extract. If passed as a list, elements will be matched to the extract's
+#'   datasets by index (see details). Required if any datasets are included in
+#'   the extract.
+#' @param ds_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") for which to obtain the data contained in the
+#'   requested summary tables. If passed as a list, elements will be matched to
+#'   the extract's datasets by index (see details). Required if any datasets are
+#'   included in the extract.
+#' @param ds_years Character or integer vector or list of years for which to
+#'   obtain the data contained in the requested summary tables. Use \code{"*"}
+#'   to select all available years for the specified dataset. If passed as a
+#'   list, elements will be matched to the extract's datasets by index (see
+#'   details). Not all datasets allow year selection; see
+#'   \code{\link{get_nhgis_metadata}} to determine if a dataset allows year
+#'   selection.
+#' @param ds_breakdown_values Character vector or list of selected breakdown
+#'   values to apply to the requested summary tables. If more than one breakdown
+#'   value is requested, \code{breakdown_and_data_type_layout} must also be
+#'   specified. If passed as a list, elements will be matched to the extract's
+#'   datasets by index (see details).
 #' @param geographic_extents A list of geographic instances to use as extents
-#'   for the dataset specified in the request. To select all extents, use
-#'   \code{"*"}. Required when a geographic level on a dataset is specified
-#'   where \code{has_geog_extent_selection} is true.
+#'   for all datasets included in the extract. Use \code{"*"}
+#'   to select all available extents. Required when any dataset in the extract
+#'   includes a \code{ds_geog_levels} value that requires extent selection.
+#'   See \code{\link{get_nhgis_metadata}} to determine whether a requested
+#'   \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
+#'   extent selection only for blocks and block groups.
+#' @param breakdown_and_data_type_layout Character indicating the desired layout
+#'   of any datasets that have multiple data types or breakdown values.
+#'   The default \code{"single_file"} keeps all data types and breakdown values
+#'   in one file. \code{"separate_files"} splits each
+#'   data type or breakdown value into its own file. Required if any datasets
+#'   included in the extract consist of multiple data types (for instance,
+#'   estimates and margins of error) or have multiple breakdown values
+#'   specified. See \code{\link{get_nhgis_metadata}} to determine whether a
+#'   requested dataset has multiple data types.
+#' @param time_series_tables Character vector of time series tables to include
+#'   in the extract, if any. For more information on NHGIS time series tables,
+#'   click \href{https://www.nhgis.org/time-series-tables}{here}.
+#' @param tst_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") for which to obtain the data contained in the
+#'   provided times series tables. If passed as a list, elements will be matched to
+#'   the extract's time series tables by index (see details). Required if any
+#'   time series tables are included in the extract.
+#' @param tst_layout Character indicating the layout of all
+#'   time series tables included in the extract. One of
+#'   \code{"time_by_column_layout"} (the default), \code{"time_by_row_layout"},
+#'   or \code{"time_by_file_layout"}. Required when any time series tables are
+#'   specified.
+#' @param shapefiles Character vector of shapefiles to include in the extract,
+#'   if any. For more information on NHGIS shapefiles, click
+#'   \href{https://www.nhgis.org/gis-files}{here}.
+#' @param data_format The desired format of the extract data file. One of
+#'   \code{"csv_no_header"}, \code{"csv_header"}, or \code{"fixed_width"}.
+#'   The default \code{"csv_no_header"} provides only a minimal header in the
+#'   first row, while \code{"csv_header"} adds a second, more descriptive header
+#'   row. Required when any datasets or time series tables are included in the
+#'   extract.
 #'
 #' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing the extract
+#' @return An object of class \code{nhgis_extract} containing the extract
 #'   definition.
 #'
 #' @examples
-#' my_extract <- define_extract_nhgis(
-#'   description = "test nhgis extract 1",
+#' define_extract_nhgis(
+#'   description = "Test NHGIS extract",
 #'   datasets = "1990_STF3",
-#'   data_tables = "NP57",
-#'   ds_geog_levels = "tract",
-#'   data_format = "csv_no_header"
+#'   ds_tables = "NP57",
+#'   ds_geog_levels = c("county", "tract"),
+#' )
+#'
+#' # For extracts with multiple datasets or time series tables, subfield
+#' # arguments are recycled to all datasets:
+#' define_extract_nhgis(
+#'   description = "Extract with multiple datasets",
+#'   datasets = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
+#'   ds_tables = "B01001",
+#'   ds_geog_levels = c("state", "county")
+#' )
+#'
+#' # To attach specific subfield values to each dataset or time series table,
+#' # pass a list to the subfield argument:
+#' define_extract_nhgis(
+#'   description = "Extract with multiple time series tables",
+#'   time_series_tables = c("CW3", "CW5"),
+#'   tst_geog_levels = list("state", "county")
 #' )
 #'
 #' @export
 define_extract_nhgis <- function(description = "",
                                  datasets = NULL,
-                                 data_tables = NULL,
+                                 ds_tables = NULL,
                                  ds_geog_levels = NULL,
-                                 years = NULL,
-                                 breakdown_values = NULL,
-                                 time_series_tables = NULL,
-                                 ts_geog_levels = NULL,
-                                 shapefiles = NULL,
-                                 data_format = NULL,
+                                 ds_years = NULL,
+                                 ds_breakdown_values = NULL,
+                                 geographic_extents = NULL,
                                  breakdown_and_data_type_layout = NULL,
-                                 time_series_table_layout = NULL,
-                                 geographic_extents = NULL) {
+                                 time_series_tables = NULL,
+                                 tst_geog_levels = NULL,
+                                 tst_layout = NULL,
+                                 shapefiles = NULL,
+                                 data_format = NULL) {
 
   n_datasets <- length(datasets)
   n_tsts <- length(time_series_tables)
 
   if (n_datasets > 0) {
-    data_format <- data_format %||% "csv_header"
+    data_format <- data_format %||% "csv_no_header"
     breakdown_and_data_type_layout <- breakdown_and_data_type_layout %||%
-      "separate_files"
+      "single_file"
   }
 
   if (n_tsts > 0) {
-    data_format <- data_format %||% "csv_header"
-    time_series_table_layout <- time_series_table_layout %||%
+    data_format <- data_format %||% "csv_no_header"
+    tst_layout <- tst_layout %||%
       "time_by_column_layout"
   }
 
@@ -182,27 +245,25 @@ define_extract_nhgis <- function(description = "",
     collection = "nhgis",
     description = description,
     datasets = unlist(datasets),
-    data_tables = data_tables,
+    ds_tables = ds_tables,
     ds_geog_levels = ds_geog_levels,
-    years = years,
-    breakdown_values = breakdown_values,
-    time_series_tables = unlist(time_series_tables),
-    ts_geog_levels = ts_geog_levels,
-    shapefiles = shapefiles,
-    data_format = data_format,
+    ds_years = ds_years,
+    ds_breakdown_values = ds_breakdown_values,
+    geographic_extents = geographic_extents,
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout,
-    geographic_extents = geographic_extents
+    time_series_tables = unlist(time_series_tables),
+    tst_geog_levels = tst_geog_levels,
+    tst_layout = tst_layout,
+    shapefiles = shapefiles,
+    data_format = data_format
   )
 
   extract <- recycle_nhgis_extract_args(extract)
-
   extract <- validate_ipums_extract(extract)
 
   extract
 
 }
-
 
 # > Define extract from json ----
 
@@ -363,10 +424,10 @@ print.nhgis_extract <- function(x) {
       1:n_datasets,
       ~format_dataset_for_printing(
         x$datasets[[.x]],
-        x$data_tables[[.x]],
+        x$ds_tables[[.x]],
         x$ds_geog_levels[[.x]],
-        x$years[[.x]],
-        x$breakdown_values[[.x]]
+        x$ds_years[[.x]],
+        x$ds_breakdown_values[[.x]]
       )
     )
 
@@ -378,18 +439,18 @@ print.nhgis_extract <- function(x) {
 
   if("time_series_tables" %in% types) {
 
-    ts_to_cat <- purrr::map(
+    tst_to_cat <- purrr::map(
       1:length(x$time_series_tables),
       ~format_tst_for_printing(
         x$time_series_tables[[.x]],
-        x$ts_geog_levels[[.x]]
+        x$tst_geog_levels[[.x]]
       )
     )
 
-    ts_to_cat <- purrr::reduce(ts_to_cat, paste0)
+    tst_to_cat <- purrr::reduce(tst_to_cat, paste0)
 
   } else {
-    ts_to_cat <- NULL
+    tst_to_cat <- NULL
   }
 
   if("shapefiles" %in% types) {
@@ -410,7 +471,7 @@ print.nhgis_extract <- function(x) {
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
     "\n",
     ds_to_cat,
-    ts_to_cat,
+    tst_to_cat,
     shp_to_cat,
     "\n"
   )
@@ -530,12 +591,12 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     }
   }
 
-  if (!is.null(x$time_series_table_layout)) {
-    if (!x$time_series_table_layout %in% c("time_by_row_layout",
+  if (!is.null(x$tst_layout)) {
+    if (!x$tst_layout %in% c("time_by_row_layout",
                                            "time_by_column_layout",
                                            "time_by_file_layout")) {
       stop(
-        "`time_series_table_layout` must be one of `time_by_row_layout`, ",
+        "`tst_layout` must be one of `time_by_row_layout`, ",
         "`time_by_column_layout` or `time_by_file_layout`.",
         call. = FALSE
       )
@@ -544,9 +605,9 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if ("datasets" %in% types) {
 
-    must_be_non_missing <- c("data_tables", "ds_geog_levels", "data_format")
-    must_have_same_length <- c("data_tables", "ds_geog_levels",
-                               "years", "breakdown_values")
+    must_be_non_missing <- c("ds_tables", "ds_geog_levels", "data_format")
+    must_have_same_length <- c("ds_tables", "ds_geog_levels",
+                               "ds_years", "ds_breakdown_values")
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing[1:2],
@@ -569,6 +630,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     # Non-list elements will be recycled, so only need to worry about
     # var lengths if lists are provided in args.
     var_length <- purrr::map_dbl(must_have_same_length, ~length(x[[.]]))
+
     wrong_length <- purrr::map_lgl(
       must_have_same_length,
       ~is.list(x[[.]]) && length(x[[.]]) != length(x$datasets)
@@ -599,8 +661,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   } else {
 
-    ds_sub_vars <- c("data_tables", "ds_geog_levels",
-                     "years", "breakdown_values",
+    ds_sub_vars <- c("ds_tables", "ds_geog_levels",
+                     "ds_years", "ds_breakdown_values",
                      "breakdown_and_data_type_layout")
 
     extra_vars <- ds_sub_vars[ds_sub_vars %in% vars_present]
@@ -619,21 +681,21 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if ("time_series_tables" %in% types) {
 
-    must_be_non_missing <- c("ts_geog_levels",
+    must_be_non_missing <- c("tst_geog_levels",
                              "data_format",
-                             "time_series_table_layout")
+                             "tst_layout")
 
-    missing_ts_geog <- any(
+    missing_tst_geog <- any(
       purrr::map_lgl(
-        x$ts_geog_levels,
+        x$tst_geog_levels,
         ~is.na(.x) || is_empty(.x)
       )
     )
     missing_df <- is.null(x$data_format) || is.na(x$data_format)
-    missing_tstl <- is.null(x$time_series_table_layout) ||
-      is.na(x$time_series_table_layout)
+    missing_tstl <- is.null(x$tst_layout) ||
+      is.na(x$tst_layout)
 
-    is_missing <- c(missing_ts_geog, missing_df, missing_tstl)
+    is_missing <- c(missing_tst_geog, missing_df, missing_tstl)
 
     if (any(is_missing)) {
       stop(
@@ -644,11 +706,11 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if (is.list(x$ts_geog_levels) &&
-        length(x$ts_geog_levels) != length(x$time_series_tables)) {
+    if (is.list(x$tst_geog_levels) &&
+        length(x$tst_geog_levels) != length(x$time_series_tables)) {
       stop(
-        "The number of selections provided in `ts_geog_levels` (",
-        length(x$ts_geog_levels),
+        "The number of selections provided in `tst_geog_levels` (",
+        length(x$tst_geog_levels),
         ") does not match the number of time series tables (",
         length(x$time_series_tables),
         "). \nTo recycle selections across time series tables, ensure values ",
@@ -659,8 +721,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   } else {
 
-    ts_sub_vars <- c("ts_geog_levels", "time_series_table_layout")
-    extra_vars <- ts_sub_vars[ts_sub_vars %in% vars_present]
+    tst_sub_vars <- c("tst_geog_levels", "tst_layout")
+    extra_vars <- tst_sub_vars[tst_sub_vars %in% vars_present]
 
     if (length(extra_vars) > 0) {
       warning(
@@ -770,10 +832,10 @@ format_collection_for_printing <- function(collection) {
 }
 
 format_dataset_for_printing <- function(dataset,
-                                        data_tables,
+                                        ds_tables,
                                         geog_levels,
-                                        years = NULL,
-                                        breakdown_values = NULL) {
+                                        ds_years = NULL,
+                                        ds_breakdown_values = NULL) {
   output <- paste0(
     "\n",
     print_truncated_vector(
@@ -783,10 +845,10 @@ format_dataset_for_printing <- function(dataset,
     ),
     "\n  ",
     print_truncated_vector(
-      data_tables,
+      ds_tables,
       "Tables: ",
       FALSE
-      #!is_empty(data_tables)
+      #!is_empty(ds_tables)
     ),
     "\n  ",
     print_truncated_vector(
@@ -798,29 +860,29 @@ format_dataset_for_printing <- function(dataset,
     "\n"
   )
 
-  if (!is.null(years)) {
+  if (!is.null(ds_years)) {
     output <- paste0(
       output,
       "  ",
       print_truncated_vector(
-        years,
+        ds_years,
         "Years: ",
         FALSE
-        #!is_empty(years)
+        #!is_empty(ds_years)
       ),
       "\n"
     )
   }
 
-  if (!is.null(breakdown_values)) {
+  if (!is.null(ds_breakdown_values)) {
     output <- paste0(
       output,
       "  ",
       print_truncated_vector(
-        breakdown_values,
+        ds_breakdown_values,
         "Breakdowns: ",
         FALSE
-        #!is_empty(breakdown_values)
+        #!is_empty(ds_breakdown_values)
       ),
       "\n"
     )
@@ -830,7 +892,7 @@ format_dataset_for_printing <- function(dataset,
 
 }
 
-format_tst_for_printing <- function(time_series_table, ts_geog_levels) {
+format_tst_for_printing <- function(time_series_table, tst_geog_levels) {
   paste0(
     "\n",
     print_truncated_vector(
@@ -840,10 +902,10 @@ format_tst_for_printing <- function(time_series_table, ts_geog_levels) {
     ),
     "\n  ",
     print_truncated_vector(
-      ts_geog_levels,
+      tst_geog_levels,
       "Geog Levels: ",
       FALSE
-      #!is_empty(ts_geog_levels)
+      #!is_empty(tst_geog_levels)
     ),
     "\n"
   )
@@ -901,6 +963,16 @@ nhgis_extract_types <- function(extract) {
 
 }
 
+#' Recycle all subfield arguments in an NHGIS extract.
+#'
+#' Convenience function to implement list-recycling provided in
+#' \code{recycle_to_list()} for all subfield arguments in an NHGIS extract.
+#'
+#' @param extract An extract of class \code{nhgis_extract}
+#'
+#' @return
+#'
+#' @noRd
 recycle_nhgis_extract_args <- function(extract) {
 
   stopifnot(extract$collection == "nhgis")
@@ -908,10 +980,10 @@ recycle_nhgis_extract_args <- function(extract) {
   n_datasets <- length(extract$datasets)
   n_tsts <- length(extract$time_series_tables)
 
-  ds_to_recycle <- c("data_tables", "ds_geog_levels",
-                     "years", "breakdown_values")
+  ds_to_recycle <- c("ds_tables", "ds_geog_levels",
+                     "ds_years", "ds_breakdown_values")
 
-  ts_to_recycle <- "ts_geog_levels"
+  tst_to_recycle <- "tst_geog_levels"
 
   if (n_datasets > 0) {
     purrr::walk(
@@ -927,7 +999,7 @@ recycle_nhgis_extract_args <- function(extract) {
 
   if (n_tsts > 0) {
     purrr::walk(
-      ts_to_recycle,
+      tst_to_recycle,
       function(var)
         extract[[var]] <<- recycle_to_list(
           extract[[var]],
@@ -941,6 +1013,20 @@ recycle_nhgis_extract_args <- function(extract) {
 
 }
 
+#' Recycle vector to list of given length
+#'
+#' Helper function to support the list recycling syntax used when defining or
+#' revising NHGIS extracts.
+#'
+#' @param x Vector or list to recycle
+#' @param n Length of output list
+#' @param labels Character vector of names to apply to the elements of the
+#'   output list. If \code{NULL}, returns an unnamed list.
+#'
+#' @return If \code{x} is a list, returns \code{x}. If \code{x} is a vector,
+#'   returns a list of length n, where each element consists of \code{x}.
+#'
+#' @noRd
 recycle_to_list <- function(x, n, labels = NULL) {
 
   if (n < 1) {

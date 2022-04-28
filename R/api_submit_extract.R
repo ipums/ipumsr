@@ -196,6 +196,76 @@ wait_for_extract <- function(extract,
   extract
 }
 
+# > Check if downloadable ----
+
+#' Is the extract ready to download?
+#'
+#' This function uses the IPUMS API to check whether the given extract is ready
+#' to download, returning TRUE for extracts that are ready and FALSE for those
+#' that are not. For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
+#'
+#' @details
+#' This function checks the "download_links" element of the supplied extract to
+#' determine whether the extract files are available to download.
+#' The "status" of a submitted extract is one of "queued", "started", "produced",
+#' "canceled", "failed", or "completed". Only "completed" extracts can be ready
+#' to download, but not all "completed" extracts are ready to download, because
+#' extract files are subject to removal from the IPUMS servers 72 hours after
+#' they first become available. Completed extracts older than 72 hours will
+#' still have a "completed" status, but will return \code{FALSE} from
+#' \code{is_extract_ready()}, because the extract files are no longer available.
+#'
+#' @inheritParams get_extract_info
+#'
+#' @family ipums_api
+#' @return A logical vector of length one.
+#'
+#' @examples
+#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#'
+#' \dontrun{
+#' submitted_extract <- submit_extract(my_extract)
+#'
+#' # Check if extract is ready by supplying extract object:
+#' is_extract_ready(submitted_extract)
+#'
+#' # By supplying the data collection and extract number, as a string:
+#' is_extract_ready("usa:1")
+#' # Note that there is no space before or after the colon, and no zero-padding
+#' # of the extract number.
+#'
+#' # By supplying the data collection and extract number, as a vector:
+#' is_extract_ready(c("usa", "1"))
+#' }
+#'
+#' @export
+is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  extract <- standardize_extract_identifier(extract)
+
+  if (is.na(extract$number)) {
+    stop(
+      "ipums_extract object has a missing value in the 'number' field. If ",
+      "an extract object is supplied, it must be a submitted extract with a ",
+      "non-missing extract number.", call. = FALSE
+    )
+  }
+
+  # First check if extract object already contains download info...
+  if (inherits(extract, "ipums_extract") &&
+      extract_is_completed_and_has_links(extract)) {
+    return(TRUE)
+  }
+
+  # ... if it doesn't contain download info, make sure we have the latest
+  # status by fetching it via the API and checking again
+  extract <- get_extract_info(extract, api_key)
+
+  extract_is_completed_and_has_links(extract)
+}
+
+
 # Non-exported functions --------------------------------------------------
 
 extract_to_request_json <- function(extract) {
@@ -221,14 +291,14 @@ extract_to_request_json.nhgis_extract <- function(extract) {
   request_list <- list(
     datasets = format_nhgis_field_for_json(
       datasets = extract$datasets,
-      data_tables = extract$data_tables,
+      data_tables = extract$ds_tables,
       geog_levels = extract$ds_geog_levels,
-      years = extract$years,
-      breakdown_values = extract$breakdown_values
+      years = extract$ds_years,
+      breakdown_values = extract$ds_breakdown_values
     ),
     time_series_tables = format_nhgis_field_for_json(
       time_series_tables = extract$time_series_tables,
-      geog_levels = extract$ts_geog_levels
+      geog_levels = extract$tst_geog_levels
     ),
     shapefiles = extract$shapefiles,
     data_format = jsonlite::unbox(extract$data_format),
@@ -237,7 +307,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
       extract$breakdown_and_data_type_layout
     ),
     time_series_table_layout = jsonlite::unbox(
-      extract$time_series_table_layout
+      extract$tst_layout
     ),
     geographic_extents = extract$geographic_extents
   )
@@ -304,20 +374,6 @@ format_nhgis_field_for_json <- function(...) {
   n_supfields <- length(supfields)
 
   subfields <- dots[2:length(dots)]
-
-  # if (recycle) {
-  #   subfields <- purrr::map(
-  #     subfields,
-  #     function(x) purrr::map(
-  #       recycle_to_list(
-  #         x,
-  #         n_supfields,
-  #         labels = supfields
-  #       ),
-  #       function(y) if (!is.null(y)) as.character(y)
-  #     )
-  #   )
-  # }
 
   subfields_grp <- purrr::map(
     1:n_supfields,

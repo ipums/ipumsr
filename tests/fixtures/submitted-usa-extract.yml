@@ -18,28 +18,28 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 07 Apr 2022 16:08:39 GMT
-      etag: W/"e56454dccfdd4f10097249f176a6f9fb"
+      date: Thu, 28 Apr 2022 21:19:59 GMT
+      etag: W/"b51abc9ec85bccab4732391873c6b234"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.13
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.13
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: b48e16af-2803-4839-86a4-ab066270d84d
-      x-runtime: '1.904688'
+      x-request-id: 1cd5ded3-b77e-4096-9768-128a3eabf985
+      x-runtime: '1.741739'
       x-xss-protection: 1; mode=block
       content-length: '424'
     body:
       encoding: UTF-8
       file: no
       string: '{"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Test
-        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{},"number":26,"status":"queued"}'
-  recorded_at: 2022-04-07 16:08:39 GMT
+        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{},"number":28,"status":"queued"}'
+  recorded_at: 2022-04-28 21:19:59 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

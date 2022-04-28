@@ -102,19 +102,19 @@ revise_extract_micro <- function(extract,
 }
 
 add_to_nhgis_extract <- function(extract,
+                                 description = NULL,
                                  datasets = NULL,
-                                 data_tables = NULL,
+                                 ds_tables = NULL,
                                  ds_geog_levels = NULL,
-                                 years = NULL,
-                                 breakdown_values = NULL,
+                                 ds_years = NULL,
+                                 ds_breakdown_values = NULL,
+                                 geographic_extents = NULL,
+                                 breakdown_and_data_type_layout = NULL,
                                  time_series_tables = NULL,
-                                 ts_geog_levels = NULL,
+                                 tst_geog_levels = NULL,
+                                 tst_layout = NULL,
                                  shapefiles = NULL,
                                  data_format = NULL,
-                                 breakdown_and_data_type_layout = NULL,
-                                 time_series_table_layout = NULL,
-                                 geographic_extents = NULL,
-                                 description = NULL,
                                  validate = TRUE) {
 
   extract <- copy_ipums_extract(extract)
@@ -132,36 +132,36 @@ add_to_nhgis_extract <- function(extract,
   new_ds <- datasets[new_ds_i]
 
   n_ts <- length(time_series_tables)
-  ts_in_extract <- time_series_tables %in% extract$time_series_tables
+  tst_in_extract <- time_series_tables %in% extract$time_series_tables
 
-  old_ts_i <- which(ts_in_extract)
-  new_ts_i <- which(!ts_in_extract)
+  old_tst_i <- which(tst_in_extract)
+  new_tst_i <- which(!tst_in_extract)
 
-  old_ts <- time_series_tables[old_ts_i]
-  new_ts <- time_series_tables[new_ts_i]
+  old_ts <- time_series_tables[old_tst_i]
+  new_ts <- time_series_tables[new_tst_i]
 
   ds_args <- purrr::map(
     list(
-      data_tables = data_tables,
+      ds_tables = ds_tables,
       ds_geog_levels = ds_geog_levels,
-      years = years,
-      breakdown_values = breakdown_values
+      ds_years = ds_years,
+      ds_breakdown_values = ds_breakdown_values
     ),
     ~recycle_to_list(.x, n_ds, datasets)
   )
 
-  ts_args <- purrr::map(
+  tst_args <- purrr::map(
     list(
-      ts_geog_levels = ts_geog_levels
+      tst_geog_levels = tst_geog_levels
     ),
     ~recycle_to_list(.x, n_ts, time_series_tables)
   )
 
   ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
-  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != (n_ds))
+  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != n_ds)
 
-  ts_arg_length <- purrr::map_dbl(ts_args, ~length(.x))
-  ts_wrong_length <- purrr::map_lgl(ts_arg_length, ~.x != (n_ts))
+  tst_arg_length <- purrr::map_dbl(tst_args, ~length(.x))
+  tst_wrong_length <- purrr::map_lgl(tst_arg_length, ~.x != n_ts)
 
   if (any(ds_wrong_length)) {
 
@@ -180,16 +180,16 @@ add_to_nhgis_extract <- function(extract,
     )
   }
 
-  if (any(ts_wrong_length)) {
+  if (any(tst_wrong_length)) {
 
     length_msg <- purrr::imap_chr(
-      names(ts_wrong_length),
-      ~paste0("`", .x, "` (", ts_arg_length[.y], ")")
+      names(tst_wrong_length),
+      ~paste0("`", .x, "` (", tst_arg_length[.y], ")")
     )
 
     stop(
       "The number of selections provided in ",
-      paste0(length_msg[ts_wrong_length], collapse = ", "),
+      paste0(length_msg[tst_wrong_length], collapse = ", "),
       " does not match the number of time series tables to be modified (", n_ts,
       "). To recycle selections across time series tables, ensure values ",
       "are stored in a vector, not a list.",
@@ -200,32 +200,32 @@ add_to_nhgis_extract <- function(extract,
   extract <- add_datasets(
     extract,
     datasets = new_ds,
-    data_tables = ds_args$data_tables[new_ds_i],
+    ds_tables = ds_args$ds_tables[new_ds_i],
     ds_geog_levels = ds_args$ds_geog_levels[new_ds_i],
-    years = ds_args$years[new_ds_i],
-    breakdown_values = ds_args$breakdown_values[new_ds_i]
+    ds_years = ds_args$ds_years[new_ds_i],
+    ds_breakdown_values = ds_args$ds_breakdown_values[new_ds_i]
   )
 
   extract <- modify_datasets(
     extract,
     datasets = old_ds,
-    data_tables = ds_args$data_tables[old_ds_i],
+    ds_tables = ds_args$ds_tables[old_ds_i],
     ds_geog_levels = ds_args$ds_geog_levels[old_ds_i],
-    years = ds_args$years[old_ds_i],
-    breakdown_values = ds_args$breakdown_values[old_ds_i],
+    ds_years = ds_args$ds_years[old_ds_i],
+    ds_breakdown_values = ds_args$ds_breakdown_values[old_ds_i],
     add = TRUE
   )
 
   extract <- add_time_series_tables(
     extract,
     time_series_tables = new_ts,
-    ts_geog_levels = ts_args$ts_geog_levels[new_ts_i]
+    tst_geog_levels = tst_args$tst_geog_levels[new_tst_i]
   )
 
   extract <- modify_time_series_tables(
     extract,
     time_series_tables = old_ts,
-    ts_geog_levels = ts_args$ts_geog_levels[old_ts_i],
+    tst_geog_levels = tst_args$tst_geog_levels[old_tst_i],
     add = TRUE
   )
 
@@ -235,7 +235,7 @@ add_to_nhgis_extract <- function(extract,
     shapefiles = shapefiles,
     data_format = data_format,
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout,
+    tst_layout = tst_layout,
     geographic_extents = geographic_extents
   )
 
@@ -247,7 +247,7 @@ add_to_nhgis_extract <- function(extract,
 
   if (n_ts > 0) {
     extract$data_format <- extract$data_format %||% "csv_header"
-    extract$time_series_table_layout <- extract$time_series_table_layout %||%
+    extract$tst_layout <- extract$tst_layout %||%
       "time_by_column_layout"
   }
 
@@ -261,12 +261,12 @@ add_to_nhgis_extract <- function(extract,
 
 remove_from_nhgis_extract <- function(extract,
                                       datasets = NULL,
-                                      data_tables = NULL,
+                                      ds_tables = NULL,
                                       ds_geog_levels = NULL,
-                                      years = NULL,
-                                      breakdown_values = NULL,
+                                      ds_years = NULL,
+                                      ds_breakdown_values = NULL,
                                       time_series_tables = NULL,
-                                      ts_geog_levels = NULL,
+                                      tst_geog_levels = NULL,
                                       shapefiles = NULL,
                                       geographic_extents = NULL,
                                       validate = TRUE) {
@@ -274,7 +274,7 @@ remove_from_nhgis_extract <- function(extract,
   extract <- copy_ipums_extract(extract)
 
   ds_provided <- !is.null(datasets)
-  ts_provided <- !is.null(time_series_tables)
+  tst_provided <- !is.null(time_series_tables)
 
   datasets <- datasets %||% extract$datasets
   time_series_tables <- time_series_tables %||% extract$time_series_tables
@@ -289,8 +289,8 @@ remove_from_nhgis_extract <- function(extract,
     warning(
       "Some datasets (\"",
       paste0(new_ds, collapse = "\", \""),
-      "\") could not be modified because they were not found in this extract's ",
-      "datasets.",
+      "\") could not be modified because they were not found in this extract's",
+      " datasets.",
       call. = FALSE
     )
   }
@@ -299,25 +299,25 @@ remove_from_nhgis_extract <- function(extract,
     warning(
       "Some time series tables (\"",
       paste0(new_ts, collapse = "\", \""),
-      "\") could not be modified because they were not found in this extract's ",
-      "datasets.",
+      "\") could not be modified because they were not found in this extract's",
+      " datasets.",
       call. = FALSE
     )
   }
 
   ds_args <- purrr::map(
     list(
-      data_tables = data_tables,
+      ds_tables = ds_tables,
       ds_geog_levels = ds_geog_levels,
-      years = years,
-      breakdown_values = breakdown_values
+      ds_years = ds_years,
+      ds_breakdown_values = ds_breakdown_values
     ),
     ~recycle_to_list(.x, n_ds, datasets)
   )
 
-  ts_args <- purrr::map(
+  tst_args <- purrr::map(
     list(
-      ts_geog_levels = ts_geog_levels
+      tst_geog_levels = tst_geog_levels
     ),
     ~recycle_to_list(.x, n_ts, time_series_tables)
   )
@@ -325,8 +325,8 @@ remove_from_nhgis_extract <- function(extract,
   ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
   ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != n_ds)
 
-  ts_arg_length <- purrr::map_dbl(ts_args, ~length(.x))
-  ts_wrong_length <- purrr::map_lgl(ts_arg_length, ~.x != (n_ts))
+  tst_arg_length <- purrr::map_dbl(tst_args, ~length(.x))
+  tst_wrong_length <- purrr::map_lgl(tst_arg_length, ~.x != (n_ts))
 
   if (any(ds_wrong_length)) {
 
@@ -345,16 +345,16 @@ remove_from_nhgis_extract <- function(extract,
     )
   }
 
-  if (any(ts_wrong_length)) {
+  if (any(tst_wrong_length)) {
 
     length_msg <- purrr::imap_chr(
-      names(ts_wrong_length),
-      ~paste0("`", .x, "` (", ts_arg_length[.y], ")")
+      names(tst_wrong_length),
+      ~paste0("`", .x, "` (", tst_arg_length[.y], ")")
     )
 
     stop(
       "The number of selections provided in ",
-      paste0(length_msg[ts_wrong_length], collapse = ", "),
+      paste0(length_msg[tst_wrong_length], collapse = ", "),
       " does not match the number of time series tables to be modified (", n_ts,
       "). To recycle selections across time series tables, ensure values ",
       "are stored in a vector, not a list.",
@@ -365,7 +365,7 @@ remove_from_nhgis_extract <- function(extract,
   # If subarguments are null, we interpret that user wants to remove full
   # datasets/tsts, if provided.
   remove_full_ds <- all(purrr::map_lgl(ds_args, ~is.null(unlist(.x))))
-  remove_full_ts <- all(purrr::map_lgl(ts_args, ~is.null(unlist(.x))))
+  remove_full_ts <- all(purrr::map_lgl(tst_args, ~is.null(unlist(.x))))
 
   if (remove_full_ds && ds_provided) {
     extract <- remove_datasets(
@@ -376,15 +376,15 @@ remove_from_nhgis_extract <- function(extract,
     extract <- modify_datasets(
       extract,
       datasets = datasets,
-      data_tables = data_tables,
+      ds_tables = ds_tables,
       ds_geog_levels = ds_geog_levels,
-      years = years,
-      breakdown_values = breakdown_values,
+      ds_years = ds_years,
+      ds_breakdown_values = ds_breakdown_values,
       add = FALSE
     )
   }
 
-  if (remove_full_ts && ts_provided) {
+  if (remove_full_ts && tst_provided) {
     extract <- remove_time_series_tables(
       extract,
       time_series_tables = time_series_tables
@@ -393,7 +393,7 @@ remove_from_nhgis_extract <- function(extract,
     extract <- modify_time_series_tables(
       extract,
       time_series_tables = time_series_tables,
-      ts_geog_levels = ts_geog_levels,
+      tst_geog_levels = tst_geog_levels,
       add = FALSE
     )
   }
@@ -421,12 +421,60 @@ remove_from_nhgis_extract <- function(extract,
 
 # Internal -----------------------------------------------------------
 
+
+add_to_extract <- function(extract, samples_or_variables, names_to_add) {
+  if (is.null(names_to_add)) {
+    return(extract)
+  }
+  if (any(names_to_add %in% extract[[samples_or_variables]])) {
+    warning(
+      "The following ", samples_or_variables, " are already included in the ",
+      "supplied extract definition, and thus will not be added: ",
+      paste0(
+        intersect(names_to_add, extract[[samples_or_variables]]),
+        collapse = ", "
+      ),
+      call. = FALSE
+    )
+    names_to_add <- setdiff(names_to_add, extract[[samples_or_variables]])
+  }
+  extract[[samples_or_variables]] <- c(
+    extract[[samples_or_variables]],
+    names_to_add
+  )
+  extract
+}
+
+remove_from_extract <- function(extract,
+                                samples_or_variables,
+                                names_to_remove) {
+  if (is.null(names_to_remove)) {
+    return(extract)
+  }
+  if (!all(names_to_remove %in% extract[[samples_or_variables]])) {
+    warning(
+      "The following ", samples_or_variables, " are not included in the ",
+      "supplied extract definition, and thus will not be removed: ",
+      paste0(
+        setdiff(names_to_remove, extract[[samples_or_variables]]),
+        collapse = ", "
+      ),
+      call. = FALSE
+    )
+  }
+  extract[[samples_or_variables]] <- setdiff(
+    extract[[samples_or_variables]],
+    names_to_remove
+  )
+  extract
+}
+
 add_datasets <- function(extract,
                          datasets = NULL,
-                         data_tables = NULL,
+                         ds_tables = NULL,
                          ds_geog_levels = NULL,
-                         years = NULL,
-                         breakdown_values = NULL) {
+                         ds_years = NULL,
+                         ds_breakdown_values = NULL) {
 
   new_ds <- setdiff(datasets, extract$datasets)
   n_new_ds <- length(new_ds)
@@ -438,10 +486,10 @@ add_datasets <- function(extract,
   extract$datasets <- union(extract$datasets, new_ds)
 
   new_subfields <- list(
-    data_tables = data_tables,
+    ds_tables = ds_tables,
     ds_geog_levels = ds_geog_levels,
-    years = years,
-    breakdown_values = breakdown_values
+    ds_years = ds_years,
+    ds_breakdown_values = ds_breakdown_values
   )
 
   purrr::walk(
@@ -462,7 +510,7 @@ add_datasets <- function(extract,
 
 add_time_series_tables <- function(extract,
                                    time_series_tables = NULL,
-                                   ts_geog_levels = NULL) {
+                                   tst_geog_levels = NULL) {
 
   new_ts <- setdiff(time_series_tables, extract$time_series_tables)
   n_new_ts <- length(new_ts)
@@ -473,17 +521,17 @@ add_time_series_tables <- function(extract,
 
   extract$time_series_tables <- union(extract$time_series_tables, new_ts)
 
-  extract$ts_geog_levels <- c(
-    extract$ts_geog_levels,
-    recycle_to_list(ts_geog_levels, n_new_ts, new_ts)
+  extract$tst_geog_levels <- c(
+    extract$tst_geog_levels,
+    recycle_to_list(tst_geog_levels, n_new_ts, new_ts)
   )
 
   # if (!is.null(data_format)) {
   #   extract$data_format <- data_format
   # }
   #
-  # if (!is.null(time_series_table_layout)) {
-  #   extract$time_series_table_layout <- time_series_table_layout
+  # if (!is.null(tst_layout)) {
+  #   extract$tst_layout <- tst_layout
   # }
 
   extract
@@ -495,14 +543,14 @@ add_to_ancillary_fields <- function(extract,
                                     shapefiles = NULL,
                                     data_format = NULL,
                                     breakdown_and_data_type_layout = NULL,
-                                    time_series_table_layout = NULL,
+                                    tst_layout = NULL,
                                     geographic_extents = NULL) {
 
   replace_vars <- list(
     description = description,
     data_format = data_format,
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
-    time_series_table_layout = time_series_table_layout
+    tst_layout = tst_layout
   )
 
   modify_vars <- list(
@@ -548,10 +596,10 @@ remove_datasets <- function(extract, datasets = NULL) {
   }
 
   purrr::walk(
-    c("data_tables",
+    c("ds_tables",
       "ds_geog_levels",
-      "years",
-      "breakdown_values"),
+      "ds_years",
+      "ds_breakdown_values"),
     ~{
       if (no_ds) {
         extract[.x] <<- list(NULL)
@@ -573,13 +621,13 @@ remove_time_series_tables <- function(extract, time_series_tables = NULL) {
 
     time_series_tables <- NULL
     extract["time_series_tables"] <- list(NULL)
-    extract["ts_geog_levels"] <- list(NULL)
-    extract["time_series_table_layout"] <- list(NULL)
+    extract["tst_geog_levels"] <- list(NULL)
+    extract["tst_layout"] <- list(NULL)
 
   } else {
 
     extract$time_series_tables <- time_series_tables
-    extract$ts_geog_levels <- extract$ts_geog_levels[time_series_tables]
+    extract$tst_geog_levels <- extract$tst_geog_levels[time_series_tables]
 
   }
 
@@ -614,18 +662,18 @@ remove_from_ancillary_fields <- function(extract,
 
 modify_datasets <- function(extract,
                             datasets = NULL,
-                            data_tables = NULL,
+                            ds_tables = NULL,
                             ds_geog_levels = NULL,
-                            years = NULL,
-                            breakdown_values = NULL,
+                            ds_years = NULL,
+                            ds_breakdown_values = NULL,
                             add = TRUE,
                             validate = TRUE) {
 
   mod_vals <- list(
-    data_tables = data_tables,
+    ds_tables = ds_tables,
     ds_geog_levels = ds_geog_levels,
-    years = years,
-    breakdown_values = breakdown_values
+    ds_years = ds_years,
+    ds_breakdown_values = ds_breakdown_values
   )
 
   purrr::walk(
@@ -648,10 +696,10 @@ modify_datasets <- function(extract,
 
 modify_time_series_tables <- function(extract,
                                       time_series_tables = NULL,
-                                      ts_geog_levels = NULL,
+                                      tst_geog_levels = NULL,
                                       add = TRUE) {
   mod_vals <- list(
-    ts_geog_levels = ts_geog_levels
+    tst_geog_levels = tst_geog_levels
   )
 
   purrr::walk(
@@ -723,50 +771,4 @@ copy_ipums_extract <- function(extract) {
   extract
 }
 
-add_to_extract <- function(extract, samples_or_variables, names_to_add) {
-  if (is.null(names_to_add)) {
-    return(extract)
-  }
-  if (any(names_to_add %in% extract[[samples_or_variables]])) {
-    warning(
-      "The following ", samples_or_variables, " are already included in the ",
-      "supplied extract definition, and thus will not be added: ",
-      paste0(
-        intersect(names_to_add, extract[[samples_or_variables]]),
-        collapse = ", "
-      ),
-      call. = FALSE
-    )
-    names_to_add <- setdiff(names_to_add, extract[[samples_or_variables]])
-  }
-  extract[[samples_or_variables]] <- c(
-    extract[[samples_or_variables]],
-    names_to_add
-  )
-  extract
-}
-
-remove_from_extract <- function(extract,
-                                samples_or_variables,
-                                names_to_remove) {
-  if (is.null(names_to_remove)) {
-    return(extract)
-  }
-  if (!all(names_to_remove %in% extract[[samples_or_variables]])) {
-    warning(
-      "The following ", samples_or_variables, " are not included in the ",
-      "supplied extract definition, and thus will not be removed: ",
-      paste0(
-        setdiff(names_to_remove, extract[[samples_or_variables]]),
-        collapse = ", "
-      ),
-      call. = FALSE
-    )
-  }
-  extract[[samples_or_variables]] <- setdiff(
-    extract[[samples_or_variables]],
-    names_to_remove
-  )
-  extract
-}
 

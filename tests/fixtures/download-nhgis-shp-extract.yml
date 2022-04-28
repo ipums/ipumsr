@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1786715/nhgis0459_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1805392/nhgis0479_shape.zip
     body:
       encoding: ''
       string: ''
@@ -17,13 +17,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0459_shape.zip"; filename*=UTF-8''nhgis0459_shape.zip
+      content-disposition: attachment; filename="nhgis0479_shape.zip"; filename*=UTF-8''nhgis0479_shape.zip
       content-type: application/zip
-      date: Thu, 07 Apr 2022 15:51:49 GMT
-      etag: '"624f0880-7ca95"'
-      last-modified: Thu, 07 Apr 2022 15:51:28 GMT
+      date: Thu, 28 Apr 2022 21:20:12 GMT
+      etag: '"626b04fa-7ca95"'
+      last-modified: Thu, 28 Apr 2022 21:19:54 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=1JnJYWEWyEhlanGf%2FcM8uRh5dChyn%2B8Hoq2QUeFUk3m4GLYSVuU5mOMujbZztUvfF5s0diGWeU8HPRHayClwIrgFrTo0kpKdFyDaemoDgaVDSgFLK4c6ASG6wcTVpCBriMAj51JI79Wi8HfrUqZTYk6ZWeeq35DkocXnNfcQbT7GakdgrygzXi7HS6XNui%2FTdSNSjs4UAETqN3wXJ39v9ij3g5HRrqxX8C8RnIot8%2By%2B5srXBnkzQlbpR1jyIiM%3D--Y2frwlLK1Vnsh3T%2B--iStiBDSKKIR%2B6ANZRgELxA%3D%3D;
+      set-cookie: _session_id=4w%2FuR0Xp4%2Bc5e189d2gXc3UR0Fwl5CwYoGm0ahpD8RTKLoxJYO4y3byi2HDMseXKg7bNggG%2FdJEmbZUeUFqEATF%2FjM322e0b0bxxCPlMOpLQg%2Bvgzvl4vn%2B11LSs4TQU3JOSH7PkyESaP9QQwEMYM3JLjoZzeJKzgThgCzpgeopXE0JIq9rOARE1w56DWD%2BfzOQo2VSmu0nlHQvMK5x%2BNlkLCO5MJjuir8T2a%2BqBohMfrAIoWzFFVX9o0tK%2FT90%3D--sAUuBpxlOeJ%2BlCH2--lw3%2FMI1L2BFzQcQqmpQTXg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -32,6 +32,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0459_shape.zip
-  recorded_at: 2022-04-07 15:51:50 GMT
+      string: ../fixtures/nhgis0479_shape.zip
+  recorded_at: 2022-04-28 21:20:13 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

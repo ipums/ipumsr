@@ -272,22 +272,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     )
   }
 
-  # Remove when NHGIS API is updated
-  # if (collection == "nhgis" && ipums_api_version("nhgis") == "v1" && validate) {
-  #
-  #   validate <- FALSE
-  #
-  #   warning(
-  #     "The current version of the NHGIS API (v1) does not provide information ",
-  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-  #     "`time_series_table_layout` or `geographic_extents` for previously ",
-  #     "submitted extracts. Extracts including these parameters may not be ",
-  #     "reconstructed accurately and cannot be validated.\n\n",
-  #     "Setting `validate = FALSE`",
-  #     call. = FALSE
-  #   )
-  # }
-
   expected_names <- get_extract_tbl_fields(
     new_ipums_extract(collection = collection)
   )
@@ -382,76 +366,6 @@ extract_list_to_tbl <- function(extract_list) {
 
 }
 
-collapse_nhgis_extract_tbl <- function(extract_tbl) {
-
-  if (!requireNamespace("tidyr", quietly = TRUE)) {
-    stop(
-      "Package \"tidyr\" must be installed to convert NHGIS extracts from tbl ",
-      "to list format.",
-      call. = FALSE
-    )
-  }
-
-  stopifnot(unique(extract_tbl$collection) == "nhgis")
-
-  # Convert pseudo-long extract_tbl format to extract-row format
-  extract_tbl <- dplyr::group_by(extract_tbl, number, data_type)
-
-  extract_tbl <- dplyr::mutate(
-    extract_tbl,
-    dplyr::across(
-      c(data_tables, ds_geog_levels, years, breakdown_values, ts_geog_levels),
-      ~if (is.null(unlist(.x))) { .x } else { list(.x) }
-    )
-  )
-
-  extract_tbl <- tidyr::pivot_wider(
-    extract_tbl,
-    names_from = data_type,
-    values_from = nhgis_id,
-    values_fn = list
-  )
-
-  tbl_cols <- colnames(extract_tbl)
-
-  extract_tbl <- dplyr::distinct(
-    tidyr::fill(extract_tbl, dplyr::all_of(tbl_cols), .direction = "updown")
-  )
-
-  join_df <- tibble::tibble(
-    shapefiles = list(NULL),
-    time_series_tables = list(NULL),
-    datasets = list(NULL)
-  )
-
-  join_cols <- intersect(tbl_cols, colnames(join_df))
-
-  # Join to ensure all extract parameters are present
-  extract_tbl <- dplyr::left_join(
-    extract_tbl,
-    join_df,
-    by = join_cols
-  )
-
-  # For consistency of output after conversion to list
-  # define_extract_nhgis() and tbl to list conversion should align on all fields
-  extract_tbl <- dplyr::mutate(
-    extract_tbl,
-    dplyr::across(
-      c(data_format, breakdown_and_data_type_layout, time_series_table_layout),
-      ~tidyr::replace_na(.x, list(NULL))
-    )
-  )
-
-  # Reorder
-  var_sort <- c("collection", "number", formalArgs(define_extract_nhgis),
-                "submitted", "download_links", "status")
-  extract_tbl <- extract_tbl[, var_sort]
-
-  extract_tbl
-
-}
-
 
 
 
@@ -491,19 +405,19 @@ extract_to_tbl.nhgis_extract <- function(x) {
   ds <- c(
     list(
       nhgis_id = unlist(x$datasets) %||% NA_character_,
-      data_tables = unname(x$data_tables),
+      ds_tables = unname(x$ds_tables),
       ds_geog_levels = unname(x$ds_geog_levels),
-      years = if (is_empty(x$years)) {
+      ds_years = if (is_empty(x$ds_years)) {
         list(NULL)
       } else {
-        unname(purrr::map(x$years, ~.x))
+        unname(purrr::map(x$ds_years, ~.x))
       },
-      breakdown_values = if (is_empty(x$breakdown_values)) {
+      ds_breakdown_values = if (is_empty(x$ds_breakdown_values)) {
         list(NULL)
       } else {
-        unname(purrr::map(x$breakdown_values, ~.x))
+        unname(purrr::map(x$ds_breakdown_values, ~.x))
       },
-      time_series_table_layout = NA_character_
+      tst_layout = NA_character_
     ),
     base_vars
   )
@@ -511,11 +425,11 @@ extract_to_tbl.nhgis_extract <- function(x) {
   ts <- c(
     list(
       nhgis_id = unlist(x$time_series_tables) %||% NA_character_,
-      ts_geog_levels = unname(x$ts_geog_levels),
-      time_series_table_layout = x$time_series_table_layout,
-      data_tables = list(NULL),
-      years = list(NULL),
-      breakdown_values = list(NULL)
+      tst_geog_levels = unname(x$tst_geog_levels),
+      tst_layout = x$tst_layout,
+      ds_tables = list(NULL),
+      ds_years = list(NULL),
+      ds_breakdown_values = list(NULL)
     ),
     base_vars
   )
@@ -523,12 +437,12 @@ extract_to_tbl.nhgis_extract <- function(x) {
   shp <- c(
     list(
       nhgis_id = unlist(x$shapefiles) %||% NA_character_,
-      data_tables = list(NULL),
-      years = list(NULL),
-      breakdown_values = list(NULL),
-      ts_geog_levels = list(NULL),
+      ds_tables = list(NULL),
+      ds_years = list(NULL),
+      ds_breakdown_values = list(NULL),
+      tst_geog_levels = list(NULL),
       ds_geog_levels = list(NULL),
-      time_series_table_layout = NA_character_
+      tst_layout = NA_character_
     ),
     base_vars
   )
@@ -546,16 +460,89 @@ extract_to_tbl.nhgis_extract <- function(x) {
   tbl <- tbl[!is.na(tbl$nhgis_id), ]
 
   var_order <- c("collection", "number", "description", "data_type",
-                 "nhgis_id", "data_tables", "ds_geog_levels", "ts_geog_levels",
-                 "years",
-                 "breakdown_values",  "geographic_extents",
-                 "time_series_table_layout", "breakdown_and_data_type_layout",
+                 "nhgis_id", "ds_tables", "ds_geog_levels", "tst_geog_levels",
+                 "ds_years", "ds_breakdown_values",  "geographic_extents",
+                 "tst_layout", "breakdown_and_data_type_layout",
                  "data_format", "submitted", "download_links", "status")
 
   tbl[, var_order]
 
 }
 
+
+collapse_nhgis_extract_tbl <- function(extract_tbl) {
+
+  if (!requireNamespace("tidyr", quietly = TRUE)) {
+    stop(
+      "Package \"tidyr\" must be installed to convert NHGIS extracts from tbl ",
+      "to list format.",
+      call. = FALSE
+    )
+  }
+
+  stopifnot(unique(extract_tbl$collection) == "nhgis")
+
+  # Convert pseudo-long extract_tbl format to extract-row format
+  extract_tbl <- dplyr::group_by(extract_tbl, number, data_type)
+
+  extract_tbl <- dplyr::mutate(
+    extract_tbl,
+    dplyr::across(
+      c(ds_tables,
+        ds_geog_levels,
+        ds_years,
+        ds_breakdown_values,
+        tst_geog_levels),
+      ~if (is.null(unlist(.x))) { .x } else { list(.x) }
+    )
+  )
+
+  extract_tbl <- tidyr::pivot_wider(
+    extract_tbl,
+    names_from = data_type,
+    values_from = nhgis_id,
+    values_fn = list
+  )
+
+  tbl_cols <- colnames(extract_tbl)
+
+  extract_tbl <- dplyr::distinct(
+    tidyr::fill(extract_tbl, dplyr::all_of(tbl_cols), .direction = "updown")
+  )
+
+  join_df <- tibble::tibble(
+    shapefiles = list(NULL),
+    time_series_tables = list(NULL),
+    datasets = list(NULL)
+  )
+
+  join_cols <- intersect(tbl_cols, colnames(join_df))
+
+  # Join to ensure all extract parameters are present
+  extract_tbl <- dplyr::left_join(
+    extract_tbl,
+    join_df,
+    by = join_cols
+  )
+
+  # For consistency of output after conversion to list
+  # define_extract_nhgis() and tbl to list conversion should align on all fields
+  extract_tbl <- dplyr::mutate(
+    extract_tbl,
+    dplyr::across(
+      c(data_format, breakdown_and_data_type_layout, tst_layout),
+      ~tidyr::replace_na(.x, list(NULL))
+    )
+  )
+
+  # Reorder
+  var_sort <- c("collection", "number", formalArgs(define_extract_nhgis),
+                "submitted", "download_links", "status")
+  extract_tbl <- extract_tbl[, var_sort]
+
+  extract_tbl
+
+}
 
 
 
@@ -624,7 +611,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         collection = "nhgis",
         description = x$description,
         datasets = names(x$datasets),
-        data_tables = if (no_datasets) {
+        ds_tables = if (no_datasets) {
           NULL
         } else {
           purrr::map(x$datasets, ~unlist(.x$data_tables))
@@ -634,27 +621,27 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         } else {
           purrr::map(x$datasets, ~unlist(.x$geog_levels))
         },
-        years = if (no_datasets) {
+        ds_years = if (no_datasets) {
           NULL
         } else {
           purrr::map(x$datasets, ~unlist(.x$years))
         },
-        breakdown_values = if (no_datasets) {
+        ds_breakdown_values = if (no_datasets) {
           NULL
         } else {
           purrr::map(x$datasets, ~unlist(.x$breakdown_values))
         },
+        geographic_extents = unlist(x$geographic_extents),
+        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
         time_series_tables = names(x$time_series_tables),
-        ts_geog_levels = if (no_tsts) {
+        tst_geog_levels = if (no_tsts) {
           NULL
         } else {
           purrr::map(x$time_series_tables, ~unlist(.x$geog_levels))
         },
+        tst_layout = x$time_series_table_layout,
         shapefiles = unlist(x$shapefiles),
         data_format = x$data_format,
-        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
-        time_series_table_layout = x$time_series_table_layout,
-        geographic_extents = unlist(x$geographic_extents),
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
         download_links = x$download_links %||% EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
