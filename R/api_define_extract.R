@@ -241,6 +241,16 @@ define_extract_nhgis <- function(description = "",
       "time_by_column_layout"
   }
 
+
+  if (is.list(geographic_extents)) {
+    warning(
+      "`geographic_extents` was provided as a list, but this parameter ",
+      "applies to all datasets in an NHGIS extract. The provided values will ",
+      "be applied to all datasets.",
+      call. = FALSE
+    )
+  }
+
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
@@ -249,12 +259,12 @@ define_extract_nhgis <- function(description = "",
     ds_geog_levels = ds_geog_levels,
     ds_years = ds_years,
     ds_breakdown_values = ds_breakdown_values,
-    geographic_extents = geographic_extents,
+    geographic_extents = unlist(geographic_extents),
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
     time_series_tables = unlist(time_series_tables),
     tst_geog_levels = tst_geog_levels,
     tst_layout = tst_layout,
-    shapefiles = shapefiles,
+    shapefiles = unlist(shapefiles),
     data_format = data_format
   )
 
@@ -427,7 +437,8 @@ print.nhgis_extract <- function(x) {
         x$ds_tables[[.x]],
         x$ds_geog_levels[[.x]],
         x$ds_years[[.x]],
-        x$ds_breakdown_values[[.x]]
+        x$ds_breakdown_values[[.x]],
+        x$geographic_extents
       )
     )
 
@@ -835,7 +846,8 @@ format_dataset_for_printing <- function(dataset,
                                         ds_tables,
                                         geog_levels,
                                         ds_years = NULL,
-                                        ds_breakdown_values = NULL) {
+                                        ds_breakdown_values = NULL,
+                                        geographic_extents = NULL) {
   output <- paste0(
     "\n",
     print_truncated_vector(
@@ -883,6 +895,20 @@ format_dataset_for_printing <- function(dataset,
         "Breakdowns: ",
         FALSE
         #!is_empty(ds_breakdown_values)
+      ),
+      "\n"
+    )
+  }
+
+  if (!is.null(geographic_extents)) {
+    output <- paste0(
+      output,
+      "  ",
+      print_truncated_vector(
+        geographic_extents,
+        "Extents: ",
+        FALSE
+        #!is_empty(geographic_extents)
       ),
       "\n"
     )

@@ -546,6 +546,15 @@ add_to_ancillary_fields <- function(extract,
                                     tst_layout = NULL,
                                     geographic_extents = NULL) {
 
+  if (is.list(geographic_extents)) {
+    warning(
+      "`geographic_extents` was provided as a list, but this parameter ",
+      "applies to all datasets in an NHGIS extract. The provided values will ",
+      "be applied to all datasets.",
+      call. = FALSE
+    )
+  }
+
   replace_vars <- list(
     description = description,
     data_format = data_format,
@@ -571,7 +580,7 @@ add_to_ancillary_fields <- function(extract,
       if (is.null(modify_vars[[.x]]) && is.null(extract[[.x]])) {
         extract[.x] <<- list(NULL)
       } else {
-        extract[[.x]] <<- union(extract[[.x]], modify_vars[[.x]])
+        extract[[.x]] <<- unlist(union(extract[[.x]], modify_vars[[.x]]))
       }
     }
   )
@@ -638,6 +647,15 @@ remove_time_series_tables <- function(extract, time_series_tables = NULL) {
 remove_from_ancillary_fields <- function(extract,
                                          shapefiles = NULL,
                                          geographic_extents = NULL) {
+
+  if (is.list(geographic_extents)) {
+    warning(
+      "`geographic_extents` was provided as a list, but this parameter ",
+      "applies to all datasets in an NHGIS extract. The provided values will ",
+      "be removed for all datasets.",
+      call. = FALSE
+    )
+  }
 
   modify_vars <- list(
     shapefiles = shapefiles,
