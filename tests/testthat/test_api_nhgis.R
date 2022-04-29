@@ -1103,7 +1103,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   expected_columns <- c("collection", "number", "description", "data_type",
-                        "nhgis_id", "ds_tables",
+                        "name", "ds_tables",
                         "ds_geog_levels",  "tst_geog_levels", "ds_years",
                         "ds_breakdown_values", "geographic_extents",
                         "tst_layout",
@@ -1126,7 +1126,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
   expect_equal(nrow(row_level_nhgis_tbl), 10)
 
   expect_equal(
-    recent_nhgis_extract_submitted$nhgis_id,
+    recent_nhgis_extract_submitted$name,
     ready_nhgis_extract$datasets
   )
   expect_equal(

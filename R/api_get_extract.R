@@ -404,7 +404,7 @@ extract_to_tbl.nhgis_extract <- function(x) {
 
   ds <- c(
     list(
-      nhgis_id = unlist(x$datasets) %||% NA_character_,
+      name = unlist(x$datasets) %||% NA_character_,
       ds_tables = unname(x$ds_tables),
       ds_geog_levels = unname(x$ds_geog_levels),
       ds_years = if (is_empty(x$ds_years)) {
@@ -424,7 +424,7 @@ extract_to_tbl.nhgis_extract <- function(x) {
 
   ts <- c(
     list(
-      nhgis_id = unlist(x$time_series_tables) %||% NA_character_,
+      name = unlist(x$time_series_tables) %||% NA_character_,
       tst_geog_levels = unname(x$tst_geog_levels),
       tst_layout = x$tst_layout,
       ds_tables = list(NULL),
@@ -436,7 +436,7 @@ extract_to_tbl.nhgis_extract <- function(x) {
 
   shp <- c(
     list(
-      nhgis_id = unlist(x$shapefiles) %||% NA_character_,
+      name = unlist(x$shapefiles) %||% NA_character_,
       ds_tables = list(NULL),
       ds_years = list(NULL),
       ds_breakdown_values = list(NULL),
@@ -457,10 +457,10 @@ extract_to_tbl.nhgis_extract <- function(x) {
   tbl3$data_type <- "shapefiles"
 
   tbl <- dplyr::bind_rows(tbl1, tbl2, tbl3)
-  tbl <- tbl[!is.na(tbl$nhgis_id), ]
+  tbl <- tbl[!is.na(tbl$name), ]
 
   var_order <- c("collection", "number", "description", "data_type",
-                 "nhgis_id", "ds_tables", "ds_geog_levels", "tst_geog_levels",
+                 "name", "ds_tables", "ds_geog_levels", "tst_geog_levels",
                  "ds_years", "ds_breakdown_values",  "geographic_extents",
                  "tst_layout", "breakdown_and_data_type_layout",
                  "data_format", "submitted", "download_links", "status")
@@ -500,7 +500,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
   extract_tbl <- tidyr::pivot_wider(
     extract_tbl,
     names_from = data_type,
-    values_from = nhgis_id,
+    values_from = name,
     values_fn = list
   )
 
@@ -555,7 +555,7 @@ get_extract_tbl_fields.nhgis_extract <- function(x) {
   c(
     formalArgs(define_extract_nhgis),
     "collection", "submitted", "download_links", "number", "status",
-    "nhgis_id", "data_type" # Used in long-format NHGIS tbl structure
+    "name", "data_type" # Used in long-format NHGIS tbl structure
   )
 }
 
