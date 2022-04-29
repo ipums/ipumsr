@@ -319,10 +319,10 @@ test_that("An extract request with missing samples returns correct error", {
 })
 
 test_that("Can revise an extract", {
-  revised_extract <- revise_extract_micro(
+  revised_extract <- add_to_extract(
     usa_extract,
-    samples_to_add = "us2014a",
-    vars_to_add = "RELATE"
+    samples = "us2014a",
+    variables = "RELATE"
   )
   expect_true(revised_extract$status == "unsubmitted")
   expect_equal(
@@ -341,10 +341,10 @@ test_that("Can revise an extract", {
 
 test_that("Can revise a submitted extract", {
   skip_if_no_api_access(have_api_access)
-  revised_extract <- revise_extract_micro(
+  revised_extract <- add_to_extract(
     submitted_usa_extract,
-    samples_to_add = "us2014a",
-    vars_to_add = "RELATE"
+    samples = "us2014a",
+    variables = "RELATE"
   )
   expect_true(revised_extract$status == "unsubmitted")
   expect_equal(
@@ -363,11 +363,11 @@ test_that("Can revise a submitted extract", {
 
 test_that("We warn user when their revisions don't make sense", {
   expect_warning(
-    revise_extract_micro(usa_extract, samples_to_add = "us2017b"),
+    add_to_extract(usa_extract, samples = "us2017b"),
     regexp = "already included"
   )
   expect_warning(
-    revise_extract_micro(usa_extract, vars_to_remove = "RELATE"),
+    remove_from_extract(usa_extract, variables = "RELATE"),
     regexp = "are not included"
   )
 })

@@ -32,7 +32,6 @@ Other ipums_api:
 \code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{is_extract_ready}()},
-\code{\link{revise_extract_micro}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
