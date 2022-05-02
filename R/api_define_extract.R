@@ -408,7 +408,8 @@ print.usa_extract <- function(x) {
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
     "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: ")
+    "\n", print_truncated_vector(x$variables, "Variables: "),
+    "\n"
   )
 
   cat(to_cat)
