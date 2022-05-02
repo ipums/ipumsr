@@ -244,7 +244,7 @@ add_to_extract.nhgis_extract <- function(extract,
     warning(
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be removed for all datasets.",
+      "be applied to all datasets.",
       call. = FALSE
     )
   }
@@ -292,13 +292,21 @@ remove_from_extract.nhgis_extract <- function(extract,
                                               ds_geog_levels = NULL,
                                               ds_years = NULL,
                                               ds_breakdown_values = NULL,
+                                              geographic_extents = NULL,
                                               time_series_tables = NULL,
                                               tst_geog_levels = NULL,
                                               shapefiles = NULL,
-                                              geographic_extents = NULL,
-                                              validate = TRUE) {
+                                              validate = TRUE,
+                                              ...) {
 
   extract <- copy_ipums_extract(extract)
+
+  extract <- validate_remove_fields(
+    extract,
+    bad_remove_fields = c("description", "breakdown_and_data_type_layout",
+                          "tst_layout", "data_format"),
+    ...
+  )
 
   ds_provided <- !is.null(datasets)
   tst_provided <- !is.null(time_series_tables)
@@ -437,7 +445,7 @@ remove_from_extract.nhgis_extract <- function(extract,
     warning(
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be removed for all datasets.",
+      "be removed from all datasets.",
       call. = FALSE
     )
   }
@@ -476,6 +484,7 @@ add_to_extract.usa_extract <- function(extract,
 
   extract <- copy_ipums_extract(extract)
 
+  # Move this to validate_ipums_extract.usa_extract()?
   if (!is.null(data_structure) && data_structure != "rectangular") {
     stop(
       "Currently, the `data_structure` argument must be equal to ",
@@ -496,13 +505,6 @@ add_to_extract.usa_extract <- function(extract,
   add_vars <- list(
     samples = samples,
     variables = variables
-  )
-
-  replace_vars <- list(
-    description = description,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on
   )
 
   purrr::map(
@@ -549,9 +551,17 @@ add_to_extract.usa_extract <- function(extract,
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
-                                            validate = TRUE) {
+                                            validate = TRUE,
+                                            ...) {
 
   extract <- copy_ipums_extract(extract)
+
+  extract <- validate_remove_fields(
+    extract,
+    bad_remove_fields = c("description", "data_format",
+                          "data_structure", "rectangular_on"),
+    ...
+  )
 
   to_remove <- list(
     samples = samples,
@@ -633,7 +643,6 @@ add_nested_field <- function(extract, ...) {
   extract
 
 }
-
 
 #' Remove nested fields from an extract object
 #'
@@ -787,77 +796,6 @@ modify_flat_fields <- function(extract,
 
 }
 
-# add_to_flat_fields <- function(extract, ...) {
-#
-#
-#   dots <- rlang::list2(...)
-#
-#   stopifnot(is_named(dots))
-#
-#   purrr::walk(
-#     names(dots),
-#     ~{
-#       if (is.null(dots[[.x]]) && is.null(extract[[.x]])) {
-#         extract[.x] <<- list(NULL)
-#       } else {
-#         extract[[.x]] <<- unlist(union(extract[[.x]], dots[[.x]]))
-#       }
-#     }
-#   )
-#
-#
-#   extract
-#
-# }
-#
-# remove_from_flat_fields <- function(extract, ...) {
-#
-#   dots <- rlang::list2(...)
-#
-#   stopifnot(is_named(dots))
-#
-#   purrr::walk(
-#     names(dots),
-#     function(x) {
-#       values <- setdiff(extract[[x]], unlist(dots[[x]]))
-#       if (length(values) > 0) {
-#         extract[[x]] <<- values
-#       } else {
-#         extract[x] <<- list(NULL)
-#       }
-#     }
-#   )
-#
-#   extract
-#
-# }
-#
-# replace_in_flat_fields <- function(extract, ...) {
-#
-#   dots <- rlang::list2(...)
-#
-#   stopifnot(is_named(dots))
-#
-#   purrr::walk(
-#     names(dots),
-#     ~{
-#       if (!is.null(dots[[.x]])) {
-#         if (length(dots[[.x]]) > 1) {
-#           warning(
-#             "Multiple values passed to `", .x, "`, which must be length 1. ",
-#             "Only the first value will be used.",
-#             call. = FALSE
-#           )
-#         }
-#         extract[[.x]] <<- dots[[.x]][1]
-#       }
-#     }
-#   )
-#
-#   extract
-#
-# }
-
 #' Modify values that are nested within another extract field
 #'
 #' @param extract Extract to revise
@@ -955,3 +893,45 @@ copy_ipums_extract <- function(extract) {
   extract
 
 }
+
+validate_remove_fields <- function(extract, bad_remove_fields, ...) {
+
+  dots <- rlang::list2(...)
+
+  if ("collection" %in% names(dots)) {
+    stop(
+      "Cannot modify collection of an existing extract. To create an extract",
+      " from a new collection, use define_extract_micro().",
+      call. = FALSE
+    )
+  }
+
+  tried_to_remove <- bad_remove_fields[bad_remove_fields %in% names(dots)]
+  invalid_fields <- names(dots)[!names(dots) %in% bad_remove_fields]
+
+  if (length(tried_to_remove) > 0) {
+    warning(
+      "The following fields cannot be removed from an object of class `",
+      paste0(extract$collection, "_extract"), "`: `",
+      paste0(tried_to_remove, collapse = "`, `"), "`.\nTo ",
+      "replace these values, use add_to_extract().",
+      call. = FALSE
+    )
+  }
+
+  if (length(invalid_fields) > 0) {
+    warning(
+      "The following were not recognized as valid fields for an object of ",
+      "class `", paste0(extract$collection, "_extract"), "`: `",
+      paste0(invalid_fields, collapse = "`, `"),
+      "`. These values will be ignored.",
+      call. = FALSE
+    )
+  }
+
+  extract
+
+}
+
+
+

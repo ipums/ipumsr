@@ -1099,6 +1099,27 @@ test_that("Bad extract revisions throw correct warnings and errors", {
       "match the number of time series tables to be modified \\(1\\). To recyc"
     )
   )
+  expect_warning(
+    remove_from_extract(
+      nhgis_extract,
+      data_format = "csv_header",
+      description = "Test"
+    ),
+    regexp = paste0(
+      "The following fields cannot be removed from an object of class ",
+      "`nhgis_extract`: `description`, `data_format`.\nTo replace these values"
+    )
+  )
+  expect_warning(
+    remove_from_extract(
+      nhgis_extract,
+      bad_field = "not in extract"
+    ),
+    regexp = paste0(
+      "The following were not recognized as valid fields for an object of ",
+      "class `nhgis_extract`: `bad_field`"
+    )
+  )
 })
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {

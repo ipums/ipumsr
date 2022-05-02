@@ -325,10 +325,10 @@ test_that("Can revise an extract", {
     variables = "RELATE"
   )
   expect_true(revised_extract$status == "unsubmitted")
-  expect_equal(
-    revised_extract$description,
-    paste0("Revision of (", usa_extract$description, ")")
-  )
+  # expect_equal(
+  #   revised_extract$description,
+  #   paste0("Revision of (", usa_extract$description, ")")
+  # )
   expect_equal(
     revised_extract$samples,
     c(usa_extract$samples, "us2014a")
@@ -347,10 +347,10 @@ test_that("Can revise a submitted extract", {
     variables = "RELATE"
   )
   expect_true(revised_extract$status == "unsubmitted")
-  expect_equal(
-    revised_extract$description,
-    paste0("Revision of (", submitted_usa_extract$description, ")")
-  )
+  # expect_equal(
+  #   revised_extract$description,
+  #   paste0("Revision of (", submitted_usa_extract$description, ")")
+  # )
   expect_equal(
     revised_extract$samples,
     c(submitted_usa_extract$samples, "us2014a")
@@ -369,6 +369,20 @@ test_that("We warn user when their revisions don't make sense", {
   expect_warning(
     remove_from_extract(usa_extract, variables = "RELATE"),
     regexp = "are not included"
+  )
+  expect_warning(
+    remove_from_extract(usa_extract, description = "description"),
+    paste0(
+      "The following fields cannot be removed from an object of class ",
+      "`usa_extract`: `description`.\nTo replace these values"
+    )
+  )
+  expect_warning(
+    remove_from_extract(usa_extract, bad_field = "bad field"),
+    paste0(
+      "The following were not recognized as valid fields for an object of class",
+      " `usa_extract`: `bad_field`."
+    )
   )
 })
 
