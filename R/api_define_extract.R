@@ -675,6 +675,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     ds_sub_vars <- c("ds_tables", "ds_geog_levels",
                      "ds_years", "ds_breakdown_values",
+                     "geographic_extents",
                      "breakdown_and_data_type_layout")
 
     extra_vars <- ds_sub_vars[ds_sub_vars %in% vars_present]
