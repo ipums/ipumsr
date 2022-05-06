@@ -5,113 +5,214 @@
 
 # Exported functions ------------------------------------------------------
 
-
 # > Revise extract definition ----
 
-#' Revise a microdata extract definition
+#' Modify values in an existing extract definition
 #'
-#' Revise a microdata extract definition. If the supplied extract definition comes from
-#' a previously submitted extract, this function will reset the definition to an
-#' unsubmitted state. For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' Add or remove values for specific fields in an existing extract. These
+#' functions are S3 generics whose behavior will depend on the class (i.e.
+#' collection) of the extract being modified. Documentation for specific
+#' collections can be found under their associated methods. For example:
+#' \code{\link{add_to_extract.nhgis_extract}}.
 #'
-#' @param extract An object of class \code{ipums_extract}.
-#' @param description The modified extract description. If NULL (the default),
-#'   leave the description unchanged.
-#' @param samples_to_add Samples to add to the extract definition, as a
-#'   character vector. If NULL (the default), no samples will be added.
-#' @param samples_to_remove Samples to remove from the extract definition, as a
-#'   character vector. If NULL (the default), no samples will be removed.
-#' @param vars_to_add Names of variables to add to the extract definition, as
-#'   a character vector. If NULL (the default), no variables will be added.
-#' @param vars_to_remove Names of variables to remove from the extract
-#'   definition, as a character vector. If NULL (the default), no variables will
-#'   be removed.
-#' @param data_format The desired data file format for the modified extract
-#'   definition. If NULL (the default), leave the data format unchanged.
-#' @param data_structure The desired data structure. Currently, this can only be
-#'   "rectangular", but "hierarchical" extracts will be supported in the future.
-#'   If NULL (the default), leave the data structure unchanged.
-#' @param rectangular_on Currently, this can only be "P", but in the future,
-#'   household-only extracts (\code{rectangular_on = "H"}) will also be
-#'   supported. If NULL, (the default), leave the \code{rectangular_on} field
-#'   unchanged.
+#' @param extract An object inheriting from \code{ipums_extract}
+#' @param ... Additional arguments specifying the extract fields and values to
+#'   modify. The available arguments correspond to the available arguments in
+#'   the extract definition function for the class of the extract specified in
+#'   \code{extract}.
 #'
-#' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing the modified
-#'   extract definition.
+#' @return An object of the same class as \code{extract} containing the modified
+#'   extract definition
 #'
-#' @examples
-#' \dontrun{
-#' old_extract <- get_extract_info("usa:33")
+#' @seealso \code{\link{add_to_extract.nhgis_extract}},
+#'   \code{\link{add_to_extract.usa_extract}}
+#'   \code{\link{remove_from_extract.nhgis_extract}},
+#'   \code{\link{remove_from_extract.usa_extract}}
 #'
-#' revised_extract <- revise_extract_micro(
-#'   old_extract,
-#'   samples_to_add = "us2018a",
-#'   vars_to_add = "INCTOT"
-#' )
-#'
-#' submitted_revised_extract <- submit_extract(revised_extract)
-#' }
-#'
-#' @noRd
-# revise_extract_micro <- function(extract,
-#                                  description = NULL,
-#                                  samples_to_add = NULL,
-#                                  samples_to_remove = NULL,
-#                                  vars_to_add = NULL,
-#                                  vars_to_remove = NULL,
-#                                  data_format = NULL,
-#                                  data_structure = NULL,
-#                                  rectangular_on = NULL) {
-#
-#   extract <- copy_ipums_extract(extract)
-#   extract$description <- paste0("Revision of (", extract$description, ")")
-#
-#   extract <- add_to_extract(extract, "samples", samples_to_add)
-#   extract <- remove_from_extract(extract, "samples", samples_to_remove)
-#
-#   extract <- add_to_extract(extract, "variables", vars_to_add)
-#   extract <- remove_from_extract(extract, "variables", vars_to_remove)
-#
-#   if (!is.null(description)) extract$description <- description
-#   if (!is.null(data_format)) extract$data_format <- data_format
-#   if (!is.null(data_structure)) {
-#     if (data_structure != "rectangular") {
-#       stop(
-#         "Currently, the `data_structure` argument must be equal to ",
-#         "\"rectangular\"; in the future, the API will also support ",
-#         "\"hierarchical\" extracts.",
-#         call. = FALSE
-#       )
-#     }
-#   }
-#   if (!is.null(rectangular_on)) {
-#     if (rectangular_on != "P") {
-#       stop(
-#         "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-#         "the future, the API will also support `rectangular_on = \"H\".",
-#         call. = FALSE
-#       )
-#     }
-#   }
-#
-#   extract <- validate_ipums_extract(extract)
-#
-#   extract
-# }
+#' @name extract_revisions
+NULL
 
+#' @rdname extract_revisions
 #' @export
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
 
+#' @rdname extract_revisions
 #' @export
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
 }
 
+#' Modify values in an existing NHGIS extract definition
+#'
+#' Either add or remove values in the extract fields for an existing
+#' \code{nhgis_extract} object.
+#'
+#' @details
+#' NHGIS extracts may contain multiple datasets or time series tables. Each
+#' dataset or time series table is associated with several subfields that apply
+#' only to that particular dataset or time series table. Dataset subfields are
+#' prefixed with \code{ds_}, while time series table subfields are prefixed with
+#' \code{tst_}.
+#'
+#' In general, the subfield arguments abide by the same syntax options when
+#' revising an extract as they do when defining an extract (see
+#' \code{\link{define_extract_nhgis}} for details on the core extract definition
+#' syntax). However, there are some exceptions:
+#'
+#' In \code{add_to_extract}, if no values are provided to the \code{datasets}
+#' or \code{time_series_tables} arguments, the values passed to any of their
+#' associated subfield arguments will be evaluated relative to all the
+#' datasets or time series tables that \emph{already exist in the extract}. On
+#' the other hand, if any values are passed to the \code{datasets} or
+#' \code{time_series_tables} arguments, the values pass to any of their
+#' associated subfield arguments will be evaluated relative only to
+#' the \emph{specified} datasets or time series tables. For example, if new
+#' datasets are added, then the values provided in \code{ds_tables} will apply
+#' to the new datasets only. Existing datasets can therefore be modified either
+#' by supplying their name to the \code{datasets} argument or by including the
+#' desired additions to their subfields as a named list in the subfield
+#' argument.
+#'
+#' In \code{remove_from_extract}, all values passed to either \code{datasets}
+#' or \code{time_series_tables} will be removed from the extract in their
+#' entirety (i.e. along with their currently associated subfield values) before
+#' considering the values passed to any subfield arguments. Subfield arguments
+#' will then be evaluated relative to all the datasets or time series tables
+#' that still exist in the extract.
+#'
+#' Because of these intricacies, if you're working with an extract with multiple
+#' datasets or time series tables, the most explicit way to specify subfield
+#' arguments is to use the named list syntax. This ensures that subfield
+#' values are matched to the appropriate datasets or time series tables.
+#'
+#' See the examples for demonstrations of this functionality.
+#'
+#' For extract fields that take a single value, \code{add_to_extract} will
+#' replace the existing value with the new value provided for that field.
+#'
+#' Note that it is possible to produce invalid extracts using
+#' \code{remove_from_extract} (for instance, an extract that includes a
+#' time series table without associated geography levels). This can occur if
+#' you intend to replace the existing values for a required extract field.
+#' If your goal is not simply to add or remove values, but replace values in
+#' an extract, it is recommended that you first use \code{add_to_extract}, and
+#' then use \code{remove_from_extract}, as this will avoid temporarily producing
+#' an invalid extract. Alternatively, you can set \code{validate = FALSE} in
+#' \code{remove_from_extract} to prevent extract validation while you
+#' make the replacement.
+#'
+#' @inheritParams define_extract_nhgis
+#' @param validate Logical value indicating whether to check the modified
+#'   extract structure for validity. Defaults to \code{TRUE}
+#' @param ... Not used
+#'
+#' @return A modified \code{nhgis_extract} object
+#'
+#' @name nhgis_extract_revisions
+#'
+#' @examples
+#' extract <- define_extract_nhgis(
+#'   datasets = "1980_STF1",
+#'   ds_tables = c("NT1A", "NT1B"),
+#'   ds_geog_levels = "county"
+#' )
+#'
+#' # Add a new dataset to the extract.
+#' # The values provided to ds_tables and ds_geog_levels only apply to the
+#' # new dataset.
+#' add_to_extract(
+#'   extract,
+#'   datasets = "1990_STF1",
+#'   ds_tables = "NP1",
+#'   ds_geog_levels = "county"
+#' )
+#'
+#' # Add a table to the existing dataset in the extract
+#' add_to_extract(
+#'   extract,
+#'   ds_tables = "NT2"
+#' )
+#'
+#' # Combining the previous two revisions into a single call.
+#' # To apply the specified ds_tables to each dataset individually, we use
+#' # a list
+#' add_to_extract(
+#'   extract,
+#'   datasets = c("1980_STF1", "1990_STF1"),
+#'   ds_tables = list("NT2", "NP1")
+#'   ds_geog_levels = "county"
+#' )
+#'
+#' # However, index-based matching would not work correctly, as the ds_tables
+#' # specification is evaluated relative only to the new dataset provided, not
+#' # to all datasets in the extract:
+#' add_to_extract(
+#'   extract,
+#'   datasets = "1990_STF1",
+#'   ds_tables = list("NT2", "NP1")
+#'   ds_geog_levels = "county"
+#' )
+#'
+#' # Alternatively, a named list can be passed to ds_tables to explicitly
+#' # indicate which values should be mapped to which datasets:
+#' revised_extract <- add_to_extract(
+#'   extract,
+#'   datasets = "1990_STF1",
+#'   ds_tables = list(`1980_STF1` = "NT2", `1990_STF1` = c("NP1", "NP2"))
+#'   ds_geog_levels = "county"
+#' )
+#'
+#' # Removes dataset and all associated subfields
+#' remove_from_extract(
+#'   revised_extract,
+#'   datasets = "1990_STF1"
+#' )
+#'
+#' # To remove specific subfields but retain datasets:
+#' remove_from_extract(
+#'   revised_extract,
+#'   ds_tables = "NT2"
+#' )
+#'
+#' # Datasets are removed before evaluating subfield arguments:
+#' remove_from_extract(
+#'   revised_extract,
+#'   datasets = "1990_STF1",
+#'   ds_tables = "NP1"
+#' )
+#'
+#' # Specific values can be removed from subfields using a named list
+#' remove_from_extract(
+#'   revised_extract,
+#'   ds_tables = list(`1980_STF1` = "NT2", `1990_STF1` = "NP2")
+#' )
+#'
+#' \dontrun{
+#' # Replacing values in an extract can produce invalid extracts:
+#' remove_from_extract(
+#'   revised_extract,
+#'   ds_geog_levels = "county"
+#' ) %>%
+#'   add_to_extract(
+#'     ds_geog_levels = "state"
+#'   )
+#' }
+#'
+#' # So it is recommended to add new values first:
+#' add_to_extract(
+#'   revised_extract,
+#'   ds_geog_levels = "state"
+#' ) %>%
+#'   remove_from_extract(
+#'     ds_geog_levels = "county"
+#'   )
+#' }
+NULL
+
 #' @export
+#' @rdname nhgis_extract_revisions
 add_to_extract.nhgis_extract <- function(extract,
                                          description = NULL,
                                          datasets = NULL,
@@ -130,116 +231,6 @@ add_to_extract.nhgis_extract <- function(extract,
 
   extract <- copy_ipums_extract(extract)
 
-  datasets <- datasets %||% extract$datasets
-  time_series_tables <- time_series_tables %||% extract$time_series_tables
-
-  n_ds <- length(datasets)
-  ds_in_extract <- datasets %in% extract$datasets
-
-  old_ds_i <- which(ds_in_extract)
-  new_ds_i <- which(!ds_in_extract)
-
-  old_ds <- datasets[old_ds_i]
-  new_ds <- datasets[new_ds_i]
-
-  n_ts <- length(time_series_tables)
-  tst_in_extract <- time_series_tables %in% extract$time_series_tables
-
-  old_tst_i <- which(tst_in_extract)
-  new_tst_i <- which(!tst_in_extract)
-
-  old_ts <- time_series_tables[old_tst_i]
-  new_ts <- time_series_tables[new_tst_i]
-
-  ds_args <- purrr::map(
-    list(
-      ds_tables = ds_tables,
-      ds_geog_levels = ds_geog_levels,
-      ds_years = ds_years,
-      ds_breakdown_values = ds_breakdown_values
-    ),
-    ~recycle_to_list(.x, n_ds, datasets)
-  )
-
-  tst_args <- purrr::map(
-    list(
-      tst_geog_levels = tst_geog_levels
-    ),
-    ~recycle_to_list(.x, n_ts, time_series_tables)
-  )
-
-  ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
-  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != n_ds)
-
-  tst_arg_length <- purrr::map_dbl(tst_args, ~length(.x))
-  tst_wrong_length <- purrr::map_lgl(tst_arg_length, ~.x != n_ts)
-
-  if (any(ds_wrong_length)) {
-
-    length_msg <- purrr::imap_chr(
-      names(ds_wrong_length),
-      ~paste0("`", .x, "` (", ds_arg_length[.y], ")")
-    )
-
-    stop(
-      "The number of selections provided in ",
-      paste0(length_msg[ds_wrong_length], collapse = ", "),
-      " does not match the number of datasets to be modified (", n_ds,
-      "). To recycle selections across datasets, ensure values are stored ",
-      "in a vector, not a list.",
-      call. = FALSE
-    )
-  }
-
-  if (any(tst_wrong_length)) {
-
-    length_msg <- purrr::imap_chr(
-      names(tst_wrong_length),
-      ~paste0("`", .x, "` (", tst_arg_length[.y], ")")
-    )
-
-    stop(
-      "The number of selections provided in ",
-      paste0(length_msg[tst_wrong_length], collapse = ", "),
-      " does not match the number of time series tables to be modified (", n_ts,
-      "). To recycle selections across time series tables, ensure values ",
-      "are stored in a vector, not a list.",
-      call. = FALSE
-    )
-  }
-
-  extract <- add_nested_field(
-    extract,
-    datasets = new_ds,
-    ds_tables = ds_args$ds_tables[new_ds_i],
-    ds_geog_levels = ds_args$ds_geog_levels[new_ds_i],
-    ds_years = ds_args$ds_years[new_ds_i],
-    ds_breakdown_values = ds_args$ds_breakdown_values[new_ds_i]
-  )
-
-  extract <- modify_subfields(
-    extract,
-    datasets = old_ds,
-    ds_tables = ds_args$ds_tables[old_ds_i],
-    ds_geog_levels = ds_args$ds_geog_levels[old_ds_i],
-    ds_years = ds_args$ds_years[old_ds_i],
-    ds_breakdown_values = ds_args$ds_breakdown_values[old_ds_i],
-    add = TRUE
-  )
-
-  extract <- add_nested_field(
-    extract,
-    time_series_tables = new_ts,
-    tst_geog_levels = tst_args$tst_geog_levels[new_tst_i]
-  )
-
-  extract <- modify_subfields(
-    extract,
-    time_series_tables = old_ts,
-    tst_geog_levels = tst_args$tst_geog_levels[old_tst_i],
-    add = TRUE
-  )
-
   if (is.list(geographic_extents)) {
     warning(
       "`geographic_extents` was provided as a list, but this parameter ",
@@ -248,6 +239,21 @@ add_to_extract.nhgis_extract <- function(extract,
       call. = FALSE
     )
   }
+
+  extract <- add_nested_fields(
+    extract,
+    datasets = datasets,
+    ds_tables = ds_tables,
+    ds_geog_levels = ds_geog_levels,
+    ds_years = ds_years,
+    ds_breakdown_values = ds_breakdown_values
+  )
+
+  extract <- add_nested_fields(
+    extract,
+    time_series_tables = time_series_tables,
+    tst_geog_levels = tst_geog_levels
+  )
 
   extract <- modify_flat_fields(
     extract,
@@ -265,16 +271,15 @@ add_to_extract.nhgis_extract <- function(extract,
     modification = "replace"
   )
 
-  if (n_ds > 0) {
+  if (!is.null(extract$datasets)) {
     extract$data_format <- extract$data_format %||% "csv_header"
-    extract$breakdown_and_data_type_layout <- extract$breakdown_and_data_type_layout %||%
-      "separate_files"
+    extract$breakdown_and_data_type_layout <-
+      extract$breakdown_and_data_type_layout %||% "separate_files"
   }
 
-  if (n_ts > 0) {
+  if (!is.null(extract$time_series_tables)) {
     extract$data_format <- extract$data_format %||% "csv_header"
-    extract$tst_layout <- extract$tst_layout %||%
-      "time_by_column_layout"
+    extract$tst_layout <- extract$tst_layout %||% "time_by_column_layout"
   }
 
   if (validate) {
@@ -286,6 +291,7 @@ add_to_extract.nhgis_extract <- function(extract,
 }
 
 #' @export
+#' @rdname nhgis_extract_revisions
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               ds_tables = NULL,
@@ -301,145 +307,13 @@ remove_from_extract.nhgis_extract <- function(extract,
 
   extract <- copy_ipums_extract(extract)
 
+  # Throw more informative warning if user thinks they can remove these fields:
   extract <- validate_remove_fields(
     extract,
     bad_remove_fields = c("description", "breakdown_and_data_type_layout",
                           "tst_layout", "data_format"),
     ...
   )
-
-  ds_provided <- !is.null(datasets)
-  tst_provided <- !is.null(time_series_tables)
-
-  datasets <- datasets %||% extract$datasets
-  time_series_tables <- time_series_tables %||% extract$time_series_tables
-
-  n_ds <- length(datasets)
-  n_ts <- length(time_series_tables)
-
-  new_ds <- setdiff(datasets, extract$datasets)
-  new_ts <- setdiff(time_series_tables, extract$time_series_tables)
-
-  if (length(new_ds) > 0) {
-    warning(
-      "Some datasets (\"",
-      paste0(new_ds, collapse = "\", \""),
-      "\") could not be modified because they were not found in this extract's",
-      " datasets.",
-      call. = FALSE
-    )
-  }
-
-  if (length(new_ts) > 0) {
-    warning(
-      "Some time series tables (\"",
-      paste0(new_ts, collapse = "\", \""),
-      "\") could not be modified because they were not found in this extract's",
-      " datasets.",
-      call. = FALSE
-    )
-  }
-
-  ds_args <- purrr::map(
-    list(
-      ds_tables = ds_tables,
-      ds_geog_levels = ds_geog_levels,
-      ds_years = ds_years,
-      ds_breakdown_values = ds_breakdown_values
-    ),
-    ~recycle_to_list(.x, n_ds, datasets)
-  )
-
-  tst_args <- purrr::map(
-    list(
-      tst_geog_levels = tst_geog_levels
-    ),
-    ~recycle_to_list(.x, n_ts, time_series_tables)
-  )
-
-  ds_arg_length <- purrr::map_dbl(ds_args, ~length(.x))
-  ds_wrong_length <- purrr::map_lgl(ds_arg_length, ~.x != n_ds)
-
-  tst_arg_length <- purrr::map_dbl(tst_args, ~length(.x))
-  tst_wrong_length <- purrr::map_lgl(tst_arg_length, ~.x != (n_ts))
-
-  if (any(ds_wrong_length)) {
-
-    length_msg <- purrr::imap_chr(
-      names(ds_wrong_length),
-      ~paste0("`", .x, "` (", ds_arg_length[.y], ")")
-    )
-
-    stop(
-      "The number of selections provided in ",
-      paste0(length_msg[ds_wrong_length], collapse = ", "),
-      " does not match the number of datasets to be modified (", n_ds,
-      "). To recycle selections across datasets, ensure values are stored ",
-      "in a vector, not a list.",
-      call. = FALSE
-    )
-  }
-
-  if (any(tst_wrong_length)) {
-
-    length_msg <- purrr::imap_chr(
-      names(tst_wrong_length),
-      ~paste0("`", .x, "` (", tst_arg_length[.y], ")")
-    )
-
-    stop(
-      "The number of selections provided in ",
-      paste0(length_msg[tst_wrong_length], collapse = ", "),
-      " does not match the number of time series tables to be modified (", n_ts,
-      "). To recycle selections across time series tables, ensure values ",
-      "are stored in a vector, not a list.",
-      call. = FALSE
-    )
-  }
-
-  # If subarguments are null, we interpret that user wants to remove full
-  # datasets/tsts, if provided.
-  remove_full_ds <- all(purrr::map_lgl(ds_args, ~is.null(unlist(.x))))
-  remove_full_ts <- all(purrr::map_lgl(tst_args, ~is.null(unlist(.x))))
-
-  if (remove_full_ds && ds_provided) {
-    extract <- remove_nested_field(
-      extract,
-      datasets = datasets,
-      subfields = c("ds_tables",
-                    "ds_geog_levels",
-                    "ds_years",
-                    "ds_breakdown_values"),
-      ancillary_fields = c("geographic_extents",
-                           "breakdown_and_data_type_layout")
-    )
-  } else {
-    extract <- modify_subfields(
-      extract,
-      datasets = datasets,
-      ds_tables = ds_tables,
-      ds_geog_levels = ds_geog_levels,
-      ds_years = ds_years,
-      ds_breakdown_values = ds_breakdown_values,
-      add = FALSE
-    )
-  }
-
-  if (remove_full_ts && tst_provided) {
-    extract <- remove_nested_field(
-      extract,
-      time_series_tables = time_series_tables,
-      subfields = "tst_geog_levels",
-      ancillary_fields = "tst_layout"
-    )
-  } else {
-    extract <- modify_subfields(
-      extract,
-      time_series_tables = time_series_tables,
-      tst_geog_levels = tst_geog_levels,
-      add = FALSE
-    )
-  }
 
   if (is.list(geographic_extents)) {
     warning(
@@ -450,7 +324,38 @@ remove_from_extract.nhgis_extract <- function(extract,
     )
   }
 
-  # Handle updates to non-nested fields
+  # Remove full fields first
+  extract <- remove_nested_fields(
+    extract,
+    datasets = datasets,
+    subfields = c("ds_tables", "ds_geog_levels",
+                  "ds_years", "ds_breakdown_values"),
+    ancillary_fields = c("geographic_extents",
+                         "breakdown_and_data_type_layout")
+  )
+
+  extract <- remove_nested_fields(
+    extract,
+    time_series_tables = time_series_tables,
+    subfields = "tst_geog_levels",
+    ancillary_fields = "tst_layout"
+  )
+
+  extract <- remove_subfields(
+    extract,
+    field = "datasets",
+    ds_tables = ds_tables,
+    ds_geog_levels = ds_geog_levels,
+    ds_years = ds_years,
+    ds_breakdown_values = ds_breakdown_values
+  )
+
+  extract <- remove_subfields(
+    extract,
+    field = "time_series_tables",
+    tst_geog_levels = tst_geog_levels
+  )
+
   extract <- modify_flat_fields(
     extract,
     shapefiles = shapefiles,
@@ -472,7 +377,20 @@ remove_from_extract.nhgis_extract <- function(extract,
 
 }
 
+#' Modify values in an existing microdata extract definition
+#'
+#' Either add or remove values in the extract fields for an existing
+#' \code{usa_extract} object.
+#'
+#' @inheritParams define_extract_micro
+#'
+#' @return A modified \code{usa_extract} object
+#'
+#' @name usa_extract_revisions
+NULL
+
 #' @export
+#' @rdname usa_extract_revisions
 add_to_extract.usa_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -507,21 +425,22 @@ add_to_extract.usa_extract <- function(extract,
     variables = variables
   )
 
-  purrr::map(
-    names(add_vars),
-    ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
-      warning(
-        "The following ", .x, " are already included in the ",
-        "supplied extract definition, and thus will not be added: ",
-        paste0(
-          intersect(add_vars[[.x]], extract[[.x]]),
-          collapse = "\", \""
-        ),
-        "\"",
-        call. = FALSE
-      )
-    }
-  )
+  # Currently don't have analogous warning for NHGIS
+  # purrr::map(
+  #   names(add_vars),
+  #   ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
+  #     warning(
+  #       "The following ", .x, " are already included in the ",
+  #       "supplied extract definition, and thus will not be added: ",
+  #       paste0(
+  #         intersect(add_vars[[.x]], extract[[.x]]),
+  #         collapse = "\", \""
+  #       ),
+  #       "\"",
+  #       call. = FALSE
+  #     )
+  #   }
+  # )
 
   extract <- modify_flat_fields(
     extract,
@@ -548,6 +467,7 @@ add_to_extract.usa_extract <- function(extract,
 }
 
 #' @export
+#' @rdname usa_extract_revisions
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
@@ -568,21 +488,21 @@ remove_from_extract.usa_extract <- function(extract,
     variables = variables
   )
 
-  purrr::walk(
-    names(to_remove),
-    ~if (any(!to_remove[[.x]] %in% extract[[.x]])) {
-      warning(
-        "The following ", .x, " are not included in the ",
-        "supplied extract definition, and thus will not be removed: \"",
-        paste0(
-          setdiff(to_remove[[.x]], extract[[.x]]),
-          collapse = "\", \""
-        ),
-        "\"",
-        call. = FALSE
-      )
-    }
-  )
+  # purrr::walk(
+  #   names(to_remove),
+  #   ~if (any(!to_remove[[.x]] %in% extract[[.x]])) {
+  #     warning(
+  #       "The following ", .x, " are not included in the ",
+  #       "supplied extract definition, and thus will not be removed: \"",
+  #       paste0(
+  #         setdiff(to_remove[[.x]], extract[[.x]]),
+  #         collapse = "\", \""
+  #       ),
+  #       "\"",
+  #       call. = FALSE
+  #     )
+  #   }
+  # )
 
   extract <- modify_flat_fields(
     extract,
@@ -603,40 +523,132 @@ remove_from_extract.usa_extract <- function(extract,
 
 #' Add nested fields to an extract object
 #'
+#' Adds new values for parent fields and associates them with the provided
+#' subfield values.
+#'
 #' @param extract An ipums_extract object to revise
 #' @param ... Arbitrary number of named arguments, where names correspond to
 #'   extract fields and values correspond to the values that should be added in
 #'   those fields. The first entry in the list of arguments is interpreted as
-#'   the field that the remaining arguments nest within (thus, this can only be
-#'   called once for each nested field).
+#'   the parent field that the remaining subfield arguments nest within.
+#'   The syntax for attaching subfield values to parent field values mirrors
+#'   that used when defining an extract. Using this syntax, subfield arguments
+#'   are evaluated relative to the values provided in the parent field argument
+#'   (i.e. not relative to all values of the parent field in the extract).
 #'
 #' @return A modified ipums_extract object
 #'
 #' @noRd
-add_nested_field <- function(extract, ...) {
+add_nested_fields <- function(extract, ...) {
 
   dots <- rlang::list2(...)
 
-  new_fields <- dots[[1]]
-  new_subfields <- dots[2:length(dots)]
+  stopifnot(is_named(dots))
 
-  new_field_val <- setdiff(new_fields, extract[[names(dots)[1]]])
-  n_new_field_val <- length(new_field_val)
+  has_new_fields <- !is.null(dots[[1]])
 
-  if (n_new_field_val == 0) {
-    return(extract)
-  }
+  field <- names(dots[1])
+  new_field_vals <- dots[[1]] %||% extract[[field]]
 
-  extract[[names(dots)[1]]] <- union(extract[[names(dots)[[1]]]], new_field_val)
+  new_subfield_vals <- dots[2:length(dots)]
+  subfields <- names(new_subfield_vals)
+
+  all_field_vals <- union(extract[[field]], new_field_vals)
+
+  extract[[field]] <- all_field_vals
 
   purrr::walk(
-    names(new_subfields),
+    subfields,
+    function(var) {
+
+      input_vals <- new_subfield_vals[[var]]
+      input_is_list <- is_list(input_vals)
+      input_is_named <- any(have_name(input_vals))
+
+      not_in_field <- names(input_vals)[!names(input_vals) %in% all_field_vals]
+
+      # Named vector is ambiguous. Named values should be provided in list
+      if (!input_is_list && input_is_named) {
+        warning(
+          "Ignoring names in the specification for `", var,
+          "`. To apply ",
+          "values to ", field, " by name",
+          ", ensure values are stored in a list",
+          ", not a vector.",
+          call. = FALSE
+        )
+      }
+
+      # Index lists should match length of input parent fields
+      if (input_is_list &&
+          !input_is_named &&
+          length(input_vals) != length(new_field_vals)) {
+
+        if (has_new_fields) {
+          warning(
+            "The number of values in `", var, "` (",
+            length(input_vals), ") does not match",
+            " the number of ", field, " to be modified (",
+            length(new_field_vals),
+            "). Values will be matched to the specified ", field,
+            " in index order. To recycle selections across ", field,
+            ", ensure values are stored in a vector, not a list.",
+            call. = FALSE
+          )
+        } else {
+          warning(
+            "The number of values in `", var, "` (",
+            length(input_vals), ") does not match",
+            " the number of ", field, " in this extract (",
+            length(new_field_vals),
+            "). Values will be matched to this extract's ", field,
+            " in index order. To recycle selections across ", field,
+            ", ensure values are stored in a vector, not a list.",
+            call. = FALSE
+          )
+        }
+      }
+
+      # All names should exist in parent field
+      if (length(not_in_field) > 0 && !(!input_is_list && input_is_named)) {
+        warning(
+          "The specification for `", var, "` references ",
+          field, " that do not exist in this extract (\"",
+          paste0(unique(not_in_field), collapse = "\", \""),
+          "\"). These values will be ignored.",
+          call. = FALSE
+        )
+      }
+    }
+  )
+
+  if (has_new_fields) {
+    subfield_vals_recycled <- purrr::map(
+      new_subfield_vals,
+      ~{
+        if (any(have_name(.x))) {
+          # If named, match to all possible datasets in extract
+          recycle_to_named_list(.x, all_field_vals)
+        } else {
+          # If unnamed, map only to provided datasets
+          recycle_to_named_list(.x, new_field_vals)
+        }
+      }
+    )
+  } else {
+    subfield_vals_recycled <- purrr::map(
+      new_subfield_vals,
+      ~recycle_to_named_list(.x, all_field_vals)
+    )
+  }
+
+  purrr::walk(
+    subfields,
     ~{
-      new_val <- c(
-        extract[[.x]],
-        recycle_to_list(new_subfields[[.x]], n_new_field_val, new_field_val)
+      extract[[.x]] <<- reduce_list_by_name(
+        c(extract[[.x]], subfield_vals_recycled[[.x]]),
+        f = union
       )
-      extract[[.x]] <<- new_val
     }
   )
 
@@ -650,45 +662,63 @@ add_nested_field <- function(extract, ...) {
 #' values from an extract.
 #'
 #' Ancillary fields are included as an option to help prevent the creation of
-#' invalid extracts if all of a given extract field are removed. For instance,
-#' if all \code{time_series_tables} are removed from an \code{nhgis_extract}
-#' object, the extract should not contain a value for \code{tst_layout}, but
-#' \code{tst_layout} is not a nested field within \code{time_series_tables}
-#' because it applies to all time series tables in an extract.
+#' invalid extracts if all values in a given extract field are removed. For
+#' instance, if all \code{time_series_tables} are removed from an
+#' \code{nhgis_extract} object, the extract should not contain a value for
+#' \code{tst_layout}, but \code{tst_layout} is not a nested field within
+#' \code{time_series_tables} because it applies to all time series tables in an
+#' extract.
 #'
 #' @param extract An ipums_extract object to revise
-#' @param ... A single named argument, where the name should correspond to the
-#'   field in \code{extract} that contains the subfields provided in
-#'   \code{subfields}. The values provided to this argument indicate the
-#'   values within the field that should be removed from the extract, along
-#'   with their associated subfields.
+#' @param ... A single named argument, where the name corresponds to a
+#'   field in \code{extract} that contains subfields. The values provided
+#'   to this argument indicate the values of the specified field that should be
+#'   removed from the extract along with all of their associated subfield
+#'   values.
 #' @param subfields Character vector indicating the names of the extract fields
 #'   that are subfields of the field provided in \code{...}. For instance,
-#'   for NHGIS extracts, "tst_geog_levels" is a subfield of "time_series_tables"
+#'   for NHGIS extracts, "tst_geog_levels" is a subfield of
+#'   "time_series_tables". The values provided to this argument indicate the
+#'   subfields that will be removed along with any of the field values provided
+#'   in \code{...}
 #' @param ancillary_fields Character vector indicating the names of extract
-#'   fields that are not nested within the field provided in \code{...}, but are
-#'   not relevant if no values exist for that field. See details.
+#'   fields that are not subfields within the field provided in \code{...}, but
+#'   are not relevant if no values exist for that field. See details.
 #'
 #' @return A modified ipums_extract object
 #'
 #' @noRd
-remove_nested_field <- function(extract,
-                                ...,
-                                subfields,
-                                ancillary_fields = NULL) {
+remove_nested_fields <- function(extract, ..., subfields, ancillary_fields) {
 
   dots <- rlang::list2(...)
 
   stopifnot(is_named(dots))
   stopifnot(length(dots) == 1)
 
-  new_fields <- dots[[1]]
-  new_field_val <- setdiff(extract[[names(dots)[1]]], new_fields)
+  old_field_vals <- dots[[1]]
+  field <- names(dots[1])
 
-  if (length(new_field_val) == 0) {
+  not_in_extract <- old_field_vals[!old_field_vals %in% extract[[field]]]
+
+  if (length(not_in_extract) > 0) {
+    warning(
+      "Some ", field, " (\"",
+      paste0(not_in_extract, collapse = "\", \""),
+      "\") could not be removed because they were not found in this ",
+      "extract's ", field, " (\"",
+      paste0(extract[[field]], collapse = "\", \""), "\").",
+      call. = FALSE
+    )
+  }
+
+  new_field_vals <- setdiff(extract[[field]], old_field_vals)
+
+  if (length(new_field_vals) == 0) {
+
     no_new_field <- TRUE
-    new_field_val <- NULL
-    extract[names(dots)[1]] <- list(NULL)
+    new_field_vals <- NULL
+
+    extract[field] <- list(NULL)
 
     if (!is.null(ancillary_fields)) {
       purrr::walk(
@@ -701,7 +731,7 @@ remove_nested_field <- function(extract,
 
   } else {
     no_new_field <- FALSE
-    extract[[names(dots)[1]]] <- new_field_val
+    extract[[field]] <- new_field_vals
   }
 
   purrr::walk(
@@ -710,7 +740,7 @@ remove_nested_field <- function(extract,
       if (no_new_field) {
         extract[.x] <<- list(NULL)
       } else {
-        extract[.x] <<- list(extract[[.x]][new_field_val])
+        extract[.x] <<- list(extract[[.x]][new_field_vals])
       }
     }
   )
@@ -720,6 +750,9 @@ remove_nested_field <- function(extract,
 }
 
 #' Modify an extract's non-nested fields
+#'
+#' Add new values, remove existing values, or replace existing values in
+#' a selection of extract fields.
 #'
 #' @param extract ipums_extract object to revise
 #' @param ... Arbitrary number of named arguments, where names correspond to
@@ -796,43 +829,103 @@ modify_flat_fields <- function(extract,
 
 }
 
-#' Modify values that are nested within another extract field
+#' Remove values in extract subfields
 #'
-#' @param extract Extract to revise
-#' @param ... Arbitrary number of named arguments, where names correspond to
-#'   extract fields to be modified and values correspond to the values that
-#'   should be modified in those fields.
-#'   The first entry in the list of arguments is interpreted as the field that
-#'   the remaining arguments nest within (thus, this can only be called once
-#'   for each nested field). Subfields will only be modified for
-#'   those fields whose names appear in the values of the first argument to
-#'   \code{...}
-#' @param add Logical indicating whether the values in \code{...} should be
-#'   added (TRUE) or removed (FALSE) from the extract.
+#' Remove specified values from indicated subfields without altering the
+#' parent fields to which those values belong. To modify parent fields,
+#' see \code{remove_nested_fields()}
 #'
-#' @return An extract object with modified subfield values
+#' @param extract ipums_extract object to revise
+#' @param field Character indicating the name of the parent field that the
+#'   the subfields provided in \code{...} correspond to.
+#' @param ... Arbitrary number of named arguments where names correspond to the
+#'   names of the subfields to be modified and the values correspond to the
+#'   values for those subfields that should be removed from the extract, if they
+#'   exist. The names provided to this argument should correspond to subfields
+#'   of the field indicated in \code{field}.
+#'
+#' @return A modified ipums_extract object
 #'
 #' @noRd
-modify_subfields <- function(extract, ..., add = TRUE) {
+remove_subfields <- function(extract, field, ...) {
 
   dots <- rlang::list2(...)
 
   stopifnot(is_named(dots))
 
-  new_fields <- dots[[1]]
-  new_subfields <- dots[2:length(dots)]
+  old_field_vals <- extract[[field]]
+
+  if (is.null(old_field_vals)) {
+    return(extract)
+  }
+
+  subfields <- names(dots)
 
   purrr::walk(
-    names(new_subfields),
-    ~{
-      if (!is.null(extract[[.x]])) {
-        extract[[.x]] <<- modify_list(
-          extract[[.x]],
-          to_modify = new_fields,
-          values = new_subfields[[.x]],
-          add = add
+    subfields,
+    function(var) {
+
+      input_vals <- dots[[var]]
+      input_is_list <- is_list(input_vals)
+      input_is_named <- any(have_name(input_vals))
+
+      not_in_field <- names(input_vals)[!names(input_vals) %in% old_field_vals]
+
+      # Named vector is ambiguous. Named values should be provided in list
+      if (!input_is_list && input_is_named) {
+        warning(
+          "Ignoring names in the specification for `", var,
+          "`. To apply ",
+          "values to ", field, " by name",
+          ", ensure values are stored in a list",
+          ", not a vector.",
+          call. = FALSE
         )
       }
+
+      # Index lists should match length of input parent fields
+      if (input_is_list &&
+          !input_is_named &&
+          length(input_vals) != length(old_field_vals)) {
+        warning(
+          "The number of values in `", var, "` (",
+          length(input_vals), ") does not match",
+          " the number of ", field, " in this extract (",
+          length(old_field_vals),
+          "). Values will be matched to this extract's ", field,
+          " in index order. To recycle selections across ", field,
+          ", ensure values are stored in a vector, not a list.",
+          call. = FALSE
+        )
+      }
+
+      # All names should exist in parent field
+      if (length(not_in_field) > 0 && !(!input_is_list && input_is_named)) {
+        warning(
+          "The specification for `", var, "` references ",
+          field, " that do not exist in this extract (\"",
+          paste0(unique(not_in_field), collapse = "\", \""),
+          "\"). These values will be ignored.",
+          call. = FALSE
+        )
+      }
+    }
+  )
+
+  subfields <- names(dots)
+
+  subfield_vals_recycled <- purrr::map(
+    dots,
+    ~recycle_to_named_list(.x, old_field_vals)
+  )
+
+  purrr::walk(
+    subfields,
+    ~{
+      extract[[.x]] <<- reduce_list_by_name(
+        c(extract[[.x]], subfield_vals_recycled[[.x]]),
+        setdiff_null
+      )
     }
   )
 
@@ -840,60 +933,21 @@ modify_subfields <- function(extract, ..., add = TRUE) {
 
 }
 
-
-modify_list <- function(l, to_modify = NULL, values = NULL, add = TRUE) {
-
-  if (is.null(to_modify)) {
-    to_modify <- names(l)
-  }
-
-  # values <- unlist(values)
-  values <- recycle_to_list(values, length(to_modify), to_modify)
-
-  if (add) {
-    modified <- purrr::map(
-      names(l),
-      function(x) {
-        if (x %in% to_modify) {
-          union(l[[x]], unlist(values[which(x == to_modify)]))
-        } else {
-          l[[x]]
-        }
-      }
-    )
-  } else {
-    modified <- purrr::map(
-      names(l),
-      function(x) {
-        if (x %in% to_modify) {
-          d <- setdiff(l[[x]], unlist(values[which(x == to_modify)]))
-          if (length(d) == 0) {
-            NULL
-          } else {
-            d
-          }
-        } else {
-          l[[x]]
-        }
-      }
-    )
-  }
-
-  setNames(modified, names(l))
-
-}
-
-copy_ipums_extract <- function(extract) {
-
-  extract$submitted <- FALSE
-  extract$download_links <- EMPTY_NAMED_LIST
-  extract$number <- NA_integer_
-  extract$status <- "unsubmitted"
-
-  extract
-
-}
-
+#' Produce warnings for invalid extract revision requests
+#'
+#' Convenience function to throw more informative warnings on invalid extract
+#' revision specifications. Currently used to direct users to
+#' \code{add_to_extract()} when attempting to remove non-optional fields in
+#' \code{remove_from_extract()}. (Otherwise, users would face a potentially
+#' unexpected unused argument error)
+#'
+#' @param extract
+#' @param bad_remove_fields Character vector of names of fields that should
+#'   trigger warnings if user attempts to remove them from an extract
+#' @param ... Arbitrary selection of named arguments. Used to warn against use
+#'   of extract fields that do not exist in the extract.
+#'
+#' @noRd
 validate_remove_fields <- function(extract, bad_remove_fields, ...) {
 
   dots <- rlang::list2(...)
@@ -933,5 +987,64 @@ validate_remove_fields <- function(extract, bad_remove_fields, ...) {
 
 }
 
+#' Combine values in a named list by common names
+#'
+#' For named lists that have multiple entries with identical names, combine the
+#' values in these list entries into a single entry with the common name.
+#'
+#' @param l Named list
+#' @param f Function used to combine the elements of l that have common names.
+#'   The function should take two arguments and be compatible with
+#'   \code{purrr::reduce}. See \code{purrr::reduce}
+#'
+#' @return Named list with a single entry for each unique name found in \code{l}
+#'
+#' @noRd
+reduce_list_by_name <- function(l, f) {
 
+  labs <- unique(names(l))
 
+  l <- purrr::map(
+    labs,
+    ~purrr::reduce(l[.x == names(l)], f)
+  )
+
+  l <- setNames(l, labs)
+
+  l
+
+}
+
+#' Calculate set difference with the empty set represented as NULL
+#'
+#' Convenience function to allow for easier removal of values from extracts
+#' whose extract fields can contain NULL values.
+#'
+#' @param x,y Vectors to use to calculate set difference
+#'
+#' @return Same output as \code{setdiff}, except that empty set return values
+#'   are NULL rather than length-0 vectors.
+#'
+#' @noRd
+setdiff_null <- function(x, y) {
+
+  v <- setdiff(x, y)
+
+  if (length(v) == 0) {
+    v <- NULL
+  }
+
+  v
+
+}
+
+copy_ipums_extract <- function(extract) {
+
+  extract$submitted <- FALSE
+  extract$download_links <- EMPTY_NAMED_LIST
+  extract$number <- NA_integer_
+  extract$status <- "unsubmitted"
+
+  extract
+
+}

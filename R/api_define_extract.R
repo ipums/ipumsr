@@ -92,68 +92,81 @@ define_extract_micro <- function(collection,
 
 #' Define an NHGIS extract request
 #'
+#' @description
 #' Define an extract request object to be submitted via the IPUMS NHGIS
 #' extract API.
 #'
-#' An extract can contain multiple datasets, each of which may or may not
-#' contain the same values for the associated dataset subfields
-#' (\code{ds_tables}, \code{ds_geog_levels}, \code{ds_years}, and
-#' \code{ds_breakdown_values}). When specifying an extract that contains multiple
-#' datasets, you can either choose to recycle these subfield specifications to
-#' all datasets in the extract, or to specify specific values for the subfields
-#' for each dataset.
+#' For more information on NHGIS data, click
+#' \href{https://www.nhgis.org/data-availability}{here}. For the NHGIS FAQ,
+#' click \href{https://www.nhgis.org/frequently-asked-questions-faq}{here}.
 #'
-#' To recycle subfield specifications to all datasets, pass
-#' a vector to the subfield argument. To provide unique subfield values for each
-#' dataset in the extract, instead pass a list of values to the subfield
-#' argument. In this case, the values for that subfield will be linked to the
-#' datasets in index order (for instance, if 2 datasets are specified, the
-#' first element in the list of \code{ds_tables} would be linked to the first
-#' dataset, and the second element in the list of \code{ds_tables} would be
-#' linked to the second dataset). The same holds true for time series tables.
+#' @details
+#' NHGIS extracts may contain multiple datasets or time series tables. Each
+#' dataset or time series table is associated with several subfields that apply
+#' only to that particular dataset or time series table. Dataset subfields are
+#' prefixed with \code{ds_}, while time series table subfields are prefixed with
+#' \code{tst_}.
 #'
-#' If a subfield argument is passed as a list, the list must be the same length
-#' as the number of datasets (for all arguments with prefix \code{ds_}) or
-#' time series tables (for all arguments with prefix \code{tst_}) specified in
-#' the extract definition. Note that individual \emph{elements} of these lists
-#' can be of arbitrary length.
+#' There are three ways the values passed to these arguments can be provided:
+#'
+#' \itemize{
+#'   \item{If values are passed as a \strong{vector}, they will be
+#'   applied to all of the datasets or time series tables in the extract
+#'   definition.}
+#'   \item{If values are passed as an \strong{unnamed list}, they will be
+#'   matched to the datasets or time series tables by index. That
+#'   is, the first element will be associated with the first dataset in the
+#'   extract definition, the second element with the second dataset in the
+#'   extract, etc.}
+#'   \item{If values are passed as a \strong{named list}, they
+#'   will be matched to the datasets or time series tables by name. Names should
+#'   correspond to datasets or time series tables that exist in the extract
+#'   definition (unrecognized names will be ignored).}
+#' }
+#'
+#' Users can find more information on the available values to these subfield
+#' arguments for a given dataset or time series table by using
+#' \code{\link{get_nhgis_metadata}}.
+#'
+#' For general information on the IPUMS NHGIS Extract API, click
+#' \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
+#' Note that some of the terminology used in the API has been altered
+#' for use in the \code{ipumsr} package.
 #'
 #' @param description Description of the extract.
 #' @param datasets Character vector of datasets to include in the extract,
 #'   if any. For more information on NHGIS datasets, click
 #'   \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.
 #' @param ds_tables Character vector or list of summary tables to include in the
-#'   extract. If passed as a list, elements will be matched to the extract's
-#'   datasets by index (see details). Required if any datasets are included in
-#'   the extract.
+#'   extract. This is a subfield of \code{datasets}: see details for available
+#'   syntax options. Required if any datasets are included in the extract.
 #' @param ds_geog_levels Character vector or list of geographic levels (for
 #'   example, "county" or "state") for which to obtain the data contained in the
-#'   requested summary tables. If passed as a list, elements will be matched to
-#'   the extract's datasets by index (see details). Required if any datasets are
+#'   requested summary tables. This is a subfield of \code{datasets}: see
+#'   details for available syntax options. Required if any datasets are
 #'   included in the extract.
 #' @param ds_years Character or integer vector or list of years for which to
 #'   obtain the data contained in the requested summary tables. Use \code{"*"}
-#'   to select all available years for the specified dataset. If passed as a
-#'   list, elements will be matched to the extract's datasets by index (see
-#'   details). Not all datasets allow year selection; see
-#'   \code{\link{get_nhgis_metadata}} to determine if a dataset allows year
-#'   selection.
+#'   to select all available years for the specified dataset. This is a subfield
+#'   of \code{datasets}: see details for available syntax options.  Not all
+#'   datasets allow year selection; see \code{\link{get_nhgis_metadata}} to
+#'   determine if a dataset allows year selection.
 #' @param ds_breakdown_values Character vector or list of selected breakdown
 #'   values to apply to the requested summary tables. If more than one breakdown
 #'   value is requested, \code{breakdown_and_data_type_layout} must also be
-#'   specified. If passed as a list, elements will be matched to the extract's
-#'   datasets by index (see details).
-#' @param geographic_extents A list of geographic instances to use as extents
-#'   for all datasets included in the extract. Use \code{"*"}
+#'   specified. This is a subfield of \code{datasets}: see details for available
+#'   syntax options.
+#' @param geographic_extents Character vector of geographic instances to use as
+#'   extents for all datasets included in the extract. Use \code{"*"}
 #'   to select all available extents. Required when any dataset in the extract
 #'   includes a \code{ds_geog_levels} value that requires extent selection.
 #'   See \code{\link{get_nhgis_metadata}} to determine whether a requested
 #'   \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 #'   extent selection only for blocks and block groups.
 #' @param breakdown_and_data_type_layout Character indicating the desired layout
-#'   of any datasets that have multiple data types or breakdown values.
-#'   The default \code{"single_file"} keeps all data types and breakdown values
-#'   in one file. \code{"separate_files"} splits each
+#'   of any datasets that have multiple data types or breakdown values. One of
+#'   \code{"single_file"} (the default), which keeps all data types and
+#'   breakdown values in one file, or \code{"separate_files"}, which splits each
 #'   data type or breakdown value into its own file. Required if any datasets
 #'   included in the extract consist of multiple data types (for instance,
 #'   estimates and margins of error) or have multiple breakdown values
@@ -164,14 +177,13 @@ define_extract_micro <- function(collection,
 #'   click \href{https://www.nhgis.org/time-series-tables}{here}.
 #' @param tst_geog_levels Character vector or list of geographic levels (for
 #'   example, "county" or "state") for which to obtain the data contained in the
-#'   provided times series tables. If passed as a list, elements will be matched to
-#'   the extract's time series tables by index (see details). Required if any
-#'   time series tables are included in the extract.
-#' @param tst_layout Character indicating the layout of all
-#'   time series tables included in the extract. One of
-#'   \code{"time_by_column_layout"} (the default), \code{"time_by_row_layout"},
-#'   or \code{"time_by_file_layout"}. Required when any time series tables are
-#'   specified.
+#'   provided times series tables. This is a subfield of
+#'   \code{time_series_tables}: see details for available syntax options.
+#'   Required if any time series tables are included in the extract.
+#' @param tst_layout The desired layout of all time series tables included in
+#'   the extract. One of \code{"time_by_column_layout"} (the default),
+#'   \code{"time_by_row_layout"}, or \code{"time_by_file_layout"}. Required when
+#'   any time series tables are specified.
 #' @param shapefiles Character vector of shapefiles to include in the extract,
 #'   if any. For more information on NHGIS shapefiles, click
 #'   \href{https://www.nhgis.org/gis-files}{here}.
@@ -204,11 +216,20 @@ define_extract_micro <- function(collection,
 #' )
 #'
 #' # To attach specific subfield values to each dataset or time series table,
-#' # pass a list to the subfield argument:
+#' # pass a list to the subfield argument.
+#'
+#' # Items matched by index:
 #' define_extract_nhgis(
 #'   description = "Extract with multiple time series tables",
 #'   time_series_tables = c("CW3", "CW5"),
 #'   tst_geog_levels = list("state", "county")
+#' )
+#'
+#' # Items matched by name:
+#' define_extract_nhgis(
+#'   description = "Extract with multiple time series tables",
+#'   time_series_tables = c("CW3", "CW5"),
+#'   tst_geog_levels = list(CW5 = "state", CW3 = "county")
 #' )
 #'
 #' @export
@@ -268,7 +289,15 @@ define_extract_nhgis <- function(description = "",
     data_format = data_format
   )
 
-  extract <- recycle_nhgis_extract_args(extract)
+  extract <- recycle_subfields(
+    extract,
+    datasets = c("ds_tables",
+                 "ds_geog_levels",
+                 "ds_years",
+                 "ds_breakdown_values"),
+    time_series_tables = "tst_geog_levels"
+  )
+
   extract <- validate_ipums_extract(extract)
 
   extract
@@ -422,8 +451,15 @@ print.usa_extract <- function(x) {
 print.nhgis_extract <- function(x) {
 
   # Ensure proper printing for extracts created via new_ipums_extract()
-  # (which have not been recycled yet)
-  x <- recycle_nhgis_extract_args(x)
+  # (which have not been recycled yet) (is this misleading?)
+  # x <- recycle_subfields(
+  #   x,
+  #   datasets = c("ds_tables",
+  #                "ds_geog_levels",
+  #                "ds_years",
+  #                "ds_breakdown_values"),
+  #   time_series_tables = "tst_geog_levels"
+  # )
 
   types <- nhgis_extract_types(x)
 
@@ -605,8 +641,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
   if (!is.null(x$tst_layout)) {
     if (!x$tst_layout %in% c("time_by_row_layout",
-                                           "time_by_column_layout",
-                                           "time_by_file_layout")) {
+                             "time_by_column_layout",
+                             "time_by_file_layout")) {
       stop(
         "`tst_layout` must be one of `time_by_row_layout`, ",
         "`time_by_column_layout` or `time_by_file_layout`.",
@@ -663,13 +699,6 @@ validate_ipums_extract.nhgis_extract <- function(x) {
         call. = FALSE
       )
     }
-
-    # TODO: Add additional logic to catch other requirements here?
-    #   1. years required when dataset has multiple years
-    #   2. breakdown_and_data_type_layout required when dataset has multiple
-    #      breakdowns or data types
-    #
-    # Would need to put together metadata functionality first.
 
   } else {
 
@@ -862,14 +891,12 @@ format_dataset_for_printing <- function(dataset,
       ds_tables,
       "Tables: ",
       FALSE
-      #!is_empty(ds_tables)
     ),
     "\n  ",
     print_truncated_vector(
       geog_levels,
       "Geog Levels: ",
       FALSE
-      #!is_empty(geog_levels)
     ),
     "\n"
   )
@@ -882,7 +909,6 @@ format_dataset_for_printing <- function(dataset,
         ds_years,
         "Years: ",
         FALSE
-        #!is_empty(ds_years)
       ),
       "\n"
     )
@@ -896,7 +922,6 @@ format_dataset_for_printing <- function(dataset,
         ds_breakdown_values,
         "Breakdowns: ",
         FALSE
-        #!is_empty(ds_breakdown_values)
       ),
       "\n"
     )
@@ -910,7 +935,6 @@ format_dataset_for_printing <- function(dataset,
         geographic_extents,
         "Extents: ",
         FALSE
-        #!is_empty(geographic_extents)
       ),
       "\n"
     )
@@ -921,6 +945,7 @@ format_dataset_for_printing <- function(dataset,
 }
 
 format_tst_for_printing <- function(time_series_table, tst_geog_levels) {
+
   paste0(
     "\n",
     print_truncated_vector(
@@ -933,25 +958,31 @@ format_tst_for_printing <- function(time_series_table, tst_geog_levels) {
       tst_geog_levels,
       "Geog Levels: ",
       FALSE
-      #!is_empty(tst_geog_levels)
     ),
     "\n"
   )
+
 }
 
 print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
+
   max_width <- min(getOption("width"), 80)
   max_width <- max(max_width, 20) # don't allow width less than 20
+
   full_list <- paste0(x, collapse = ", ")
+
   untruncated <- ifelse(
     include_length,
     paste0(label, "(", length(x), " total) ", full_list),
     paste0(label, full_list)
   )
+
   if (nchar(untruncated) > max_width) {
     return(paste0(substr(untruncated, 1, max_width - 3), "..."))
   }
+
   untruncated
+
   # will_be_truncated <- length(x) > truncate_at
   # x <- head(x, truncate_at)
   # out <- paste0(x, collapse = ", ")
@@ -959,6 +990,7 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   #   return(paste0(out, "..."))
   # }
   # out
+
 }
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
@@ -991,68 +1023,176 @@ nhgis_extract_types <- function(extract) {
 
 }
 
-#' Recycle all subfield arguments in an NHGIS extract.
+#' Recycle subfields within nested extract fields
 #'
 #' Convenience function to implement list-recycling provided in
-#' \code{recycle_to_list()} for all subfield arguments in an NHGIS extract.
+#' \code{recycle_to_named_list()} for an arbitrary selection of nested extract
+#' fields. Provides warnings for common syntax issues for extract subfield
+#' values.
 #'
-#' @param extract An extract of class \code{nhgis_extract}
+#' @param extract An extract inheriting from class \code{ipums_extract}
+#' @param ... An arbitrary number of named arguments of the form
+#'   \code{parent_field = c("subfield1", "subfield2", ...)}.
+#'   \code{parent_field} should correspond to the name of a parent field in the
+#'   extract, and it should be passed a character vector whose values correspond
+#'   to the names of the subfields that should be recycled within that parent
+#'   field.
 #'
-#' @return
+#' @return An object of the same class as \code{extract}, with subfields
+#'   formatted as named lists based on list/vector syntax used in nested
+#'   extract fields.
 #'
 #' @noRd
-recycle_nhgis_extract_args <- function(extract) {
+recycle_subfields <- function(extract, ...) {
 
-  stopifnot(extract$collection == "nhgis")
+  dots <- rlang::list2(...)
 
-  n_datasets <- length(extract$datasets)
-  n_tsts <- length(extract$time_series_tables)
+  stopifnot(is_named(dots))
 
-  ds_to_recycle <- c("ds_tables", "ds_geog_levels",
-                     "ds_years", "ds_breakdown_values")
+  fields <- names(dots)
 
-  tst_to_recycle <- "tst_geog_levels"
+  purrr::walk(
+    fields,
+    function(field) {
 
-  if (n_datasets > 0) {
-    purrr::walk(
-      ds_to_recycle,
-      function(var)
-        extract[[var]] <<- recycle_to_list(
-          extract[[var]],
-          n_datasets,
-          labels = extract$datasets
+      subfields <- dots[[field]]
+
+      n_field_vals <- length(extract[[field]])
+
+      if (n_field_vals > 0) {
+
+        purrr::walk(
+          subfields,
+          function(var) {
+
+            input_vals <- extract[[var]]
+
+            is_named_vector <- !is_list(input_vals) &&
+              any(have_name(input_vals))
+
+            # Named vector is ambiguous. Named values should be provided in list
+            if (is_named_vector) {
+              warning(
+                "Ignoring names in the specification for `", var,
+                "`. To apply ",
+                "values to ", field, " by name",
+                ", ensure values are stored in a list",
+                ", not a vector.",
+                call. = FALSE
+              )
+            }
+
+            not_in_field <- names(input_vals)[!names(input_vals) %in%
+                                                extract[[field]]]
+
+            if (length(not_in_field) > 0 && !is_named_vector) {
+              warning(
+                "The specification for `", var, "` references ",
+                field, " that do not exist in this extract (\"",
+                paste0(unique(not_in_field), collapse = "\", \""),
+                "\"). These values will be ignored.",
+                call. = FALSE
+              )
+            }
+
+            if (is_list(input_vals) &&
+                length(input_vals) != n_field_vals &&
+                !any(have_name(input_vals)) &&
+                length(input_vals) > 0) {
+              warning(
+                "The number of values in `", var, "` (",
+                length(input_vals), ") does not match",
+                " the number of ", field, " (", n_field_vals,
+                "). Values will be matched to this extract's ", field,
+                " in index order. To recycle selections across ", field,
+                ", ensure values are stored in a vector, not a list.",
+                call. = FALSE
+              )
+            }
+
+            extract[[var]] <<- recycle_to_named_list(
+              input_vals,
+              extract[[field]]
+            )
+
+          }
         )
-    )
-  }
-
-  if (n_tsts > 0) {
-    purrr::walk(
-      tst_to_recycle,
-      function(var)
-        extract[[var]] <<- recycle_to_list(
-          extract[[var]],
-          n_tsts,
-          labels = extract$time_series_tables
-        )
-    )
-  }
+      }
+    }
+  )
 
   extract
 
 }
 
+#' Recycle values to a named list
+#'
+#' For use in recycling values for nested extract fields. Supports a syntax
+#' used in define_extract_nhgis() to allow users to provide either vectors (to
+#' recycle subfield arguments to all parent fields), unnamed lists (to attach
+#' subfield arguments to their parent fields in index order) or named
+#' lists (to attach subfield arguments to their parent fields by name).
+#'
+#' @param l List or vector to recycle
+#' @param names Labels to serve as names for the entries in the output list.
+#'
+#' @return A list of same length as \code{names} whose entries are named with
+#' \code{names}.
+#'
+#' @noRd
+recycle_to_named_list <- function(l, names) {
+
+  l <- recycle_to_list(l, length(names))
+
+  if (any(have_name(l))) {
+
+    # If list is named, consolidate any entries with duplicate names
+    if (any(duplicated(names(l)))) {
+      labs <- unique(names(l))
+
+      l <- purrr::map(
+        labs,
+        ~unlist(l[.x == names(l)], use.names = FALSE)
+      )
+
+      names(l) <- labs
+    }
+
+  } else {
+
+    # If list is unnamed, attach names in index order
+    names(l) <- names[1:length(l)]
+
+  }
+
+  # Add NULL entries for any names that are not present in l
+  null_list <- setNames(
+    recycle_to_list(NULL, length(names)),
+    names
+  )
+
+  l <- setNames(
+    purrr::map(
+      names,
+      ~union(null_list[[.x]], l[[.x]])
+    ),
+    names
+  )
+
+  l
+
+}
+
 #' Recycle vector to list of given length
 #'
-#' Helper function to support the list recycling syntax used when defining or
-#' revising NHGIS extracts.
+#' Low-level helper to recycle vectors to lists while leaving input lists
+#' unchanged.
 #'
 #' @param x Vector or list to recycle
 #' @param n Length of output list
-#' @param labels Character vector of names to apply to the elements of the
-#'   output list. If \code{NULL}, returns an unnamed list.
 #'
 #' @return If \code{x} is a list, returns \code{x}. If \code{x} is a vector,
-#'   returns a list of length n, where each element consists of \code{x}.
+#'   returns a list of length \code{n}, where each element is \code{x}.
 #'
 #' @noRd
 recycle_to_list <- function(x, n, labels = NULL) {
