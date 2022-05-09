@@ -9,11 +9,20 @@
 
 #' Modify values in an existing extract definition
 #'
+#' @description
 #' Add or remove values for specific fields in an existing extract. These
 #' functions are S3 generics whose behavior will depend on the class (i.e.
-#' collection) of the extract being modified. Documentation for specific
-#' collections can be found under their associated methods. For example:
-#' \code{\link{add_to_extract.nhgis_extract}}.
+#' collection) of the extract being modified. Collection-specific documentation
+#' can be found through the following links:
+#'
+#' \itemize{
+#'   \item{\code{\link{revise_extract_nhgis}}}
+#'   \item{\code{\link{revise_extract_micro}}}
+#' }
+#'
+#' In general, for a given collection, the arguments to these functions are
+#' identical to those used when defining an extract for that collection. For
+#' documentation on defining an extract, see \code{\link{define_extract}}
 #'
 #' @param extract An object inheriting from \code{ipums_extract}
 #' @param ... Additional arguments specifying the extract fields and values to
@@ -29,16 +38,16 @@
 #'   \code{\link{remove_from_extract.nhgis_extract}},
 #'   \code{\link{remove_from_extract.usa_extract}}
 #'
-#' @name extract_revisions
+#' @name revise_extract
 NULL
 
-#' @rdname extract_revisions
+#' @rdname revise_extract
 #' @export
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
 
-#' @rdname extract_revisions
+#' @rdname revise_extract
 #' @export
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
@@ -110,7 +119,7 @@ remove_from_extract <- function(extract, ...) {
 #'
 #' @return A modified \code{nhgis_extract} object
 #'
-#' @name nhgis_extract_revisions
+#' @name revise_extract_nhgis
 #'
 #' @examples
 #' extract <- define_extract_nhgis(
@@ -212,7 +221,7 @@ remove_from_extract <- function(extract, ...) {
 NULL
 
 #' @export
-#' @rdname nhgis_extract_revisions
+#' @rdname revise_extract_nhgis
 add_to_extract.nhgis_extract <- function(extract,
                                          description = NULL,
                                          datasets = NULL,
@@ -291,7 +300,7 @@ add_to_extract.nhgis_extract <- function(extract,
 }
 
 #' @export
-#' @rdname nhgis_extract_revisions
+#' @rdname revise_extract_nhgis
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               ds_tables = NULL,
@@ -386,11 +395,11 @@ remove_from_extract.nhgis_extract <- function(extract,
 #'
 #' @return A modified \code{usa_extract} object
 #'
-#' @name usa_extract_revisions
+#' @name revise_extract_micro
 NULL
 
 #' @export
-#' @rdname usa_extract_revisions
+#' @rdname revise_extract_micro
 add_to_extract.usa_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -467,7 +476,7 @@ add_to_extract.usa_extract <- function(extract,
 }
 
 #' @export
-#' @rdname usa_extract_revisions
+#' @rdname revise_extract_micro
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
