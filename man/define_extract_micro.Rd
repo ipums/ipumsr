@@ -37,13 +37,13 @@ extract will be rectangularized on person records. In the future, the API
 will also support household-only extracts (\code{rectangular_on = "H"}).}
 }
 \value{
-An object of class \code{usa_extract} containing the extract
-  definition.
+An object inheriting from class \code{ipums_extract} containing the
+  extract definition. Each collection produces an object of its own class.
 }
 \description{
 Define an extract request object to be submitted via the IPUMS microdata
-extract API. For an overview of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+extract API. For an overview of \code{ipumsr} microdata API functionality,
+see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")

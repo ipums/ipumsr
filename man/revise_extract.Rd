@@ -2,14 +2,7 @@
 % Please edit documentation in R/api_revise_extract.R
 \name{revise_extract}
 \alias{revise_extract}
-\alias{add_to_extract}
-\alias{remove_from_extract}
 \title{Modify values in an existing extract definition}
-\usage{
-add_to_extract(extract, ...)
-
-remove_from_extract(extract, ...)
-}
 \arguments{
 \item{extract}{An object inheriting from \code{ipums_extract}}
 
@@ -25,21 +18,20 @@ An object of the same class as \code{extract} containing the modified
 \description{
 Add or remove values for specific fields in an existing extract. These
 functions are S3 generics whose behavior will depend on the class (i.e.
-collection) of the extract being modified. Collection-specific documentation
-can be found through the following links:
+collection) of the extract being modified.
+
+In general, for a given collection, the arguments to these functions are
+identical to those used when defining an extract for that collection. For
+documentation on defining an extract, see \code{\link{define_extract}}.
+
+For collection-specific documentation, see:
 
 \itemize{
   \item{\code{\link{revise_extract_nhgis}}}
   \item{\code{\link{revise_extract_micro}}}
 }
-
-In general, for a given collection, the arguments to these functions are
-identical to those used when defining an extract for that collection. For
-documentation on defining an extract, see \code{\link{define_extract}}
 }
 \seealso{
-\code{\link{add_to_extract.nhgis_extract}},
-  \code{\link{add_to_extract.usa_extract}}
-  \code{\link{remove_from_extract.nhgis_extract}},
-  \code{\link{remove_from_extract.usa_extract}}
+\code{\link{revise_extract_nhgis}},
+  \code{\link{revise_extract_micro}}
 }

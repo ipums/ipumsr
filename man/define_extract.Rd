@@ -5,11 +5,13 @@
 \title{Define an IPUMS extract object}
 \description{
 Define an extract request object for a specific IPUMS collection to be
-to be submitted via the IPUMS extract API for that collection.
+to be submitted via the IPUMS extract API for that collection. For an
+overview of \code{ipumsr} API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 
 Currently, ipumsr supports extract definitions for NHGIS and USA collections.
 
-For collection-specific documentation, see the links below.
+For collection-specific documentation, see the links below:
 
 \itemize{
   \item{\code{\link{define_extract_nhgis}}}

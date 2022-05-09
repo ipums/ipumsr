@@ -12,17 +12,18 @@
 #' @description
 #' Add or remove values for specific fields in an existing extract. These
 #' functions are S3 generics whose behavior will depend on the class (i.e.
-#' collection) of the extract being modified. Collection-specific documentation
-#' can be found through the following links:
+#' collection) of the extract being modified.
+#'
+#' In general, for a given collection, the arguments to these functions are
+#' identical to those used when defining an extract for that collection. For
+#' documentation on defining an extract, see \code{\link{define_extract}}.
+#'
+#' For collection-specific documentation, see:
 #'
 #' \itemize{
 #'   \item{\code{\link{revise_extract_nhgis}}}
 #'   \item{\code{\link{revise_extract_micro}}}
 #' }
-#'
-#' In general, for a given collection, the arguments to these functions are
-#' identical to those used when defining an extract for that collection. For
-#' documentation on defining an extract, see \code{\link{define_extract}}
 #'
 #' @param extract An object inheriting from \code{ipums_extract}
 #' @param ... Additional arguments specifying the extract fields and values to
@@ -33,30 +34,89 @@
 #' @return An object of the same class as \code{extract} containing the modified
 #'   extract definition
 #'
-#' @seealso \code{\link{add_to_extract.nhgis_extract}},
-#'   \code{\link{add_to_extract.usa_extract}}
-#'   \code{\link{remove_from_extract.nhgis_extract}},
-#'   \code{\link{remove_from_extract.usa_extract}}
+#' @seealso \code{\link{revise_extract_nhgis}},
+#'   \code{\link{revise_extract_micro}}
 #'
 #' @name revise_extract
 NULL
 
-#' @rdname revise_extract
+#' Add values to an IPUMS extract
+#'
+#' @description
+#' Add or modify values for specific fields in an existing extract. This
+#' function is an S3 generic whose behavior will depend on the class (i.e.
+#' collection) of the extract being modified.
+#'
+#' In general, for a given collection, the available arguments to this
+#' function are identical to those used when defining an extract for that
+#' collection. For documentation on defining an extract, see
+#' \code{\link{define_extract}}.
+#'
+#' For collection-specific documentation, see:
+#'
+#' \itemize{
+#'   \item{\code{\link{add_to_extract.nhgis_extract}}}
+#'   \item{\code{\link{add_to_extract.usa_extract}}}
+#' }
+#'
+#' @param extract An object inheriting from \code{ipums_extract}
+#' @param ... Additional arguments specifying the extract fields and values to
+#'   add or modify. The available arguments correspond to the available
+#'   arguments in the extract definition function for the class of the extract
+#'   specified in \code{extract}.
+#'
+#' @return
 #' @export
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
 
-#' @rdname revise_extract
+#' Remove values from an IPUMS extract
+#'
+#' @description
+#' Remove values from specific fields in an existing extract. This
+#' function is an S3 generic whose behavior will depend on the class (i.e.
+#' collection) of the extract being modified.
+#'
+#' In general, for a given collection, the available arguments to this
+#' function are identical to those used when defining an extract for that
+#' collection. For documentation on defining an extract, see
+#' \code{\link{define_extract}}.
+#'
+#' For collection-specific documentation, see:
+#'
+#' \itemize{
+#'   \item{\code{\link{remove_from_extract.nhgis_extract}}}
+#'   \item{\code{\link{remove_from_extract.usa_extract}}}
+#' }
+#'
+#' @param extract An object inheriting from \code{ipums_extract}
+#' @param ... Additional arguments specifying the extract fields and values to
+#'   remove. The available arguments correspond to the available
+#'   arguments in the extract definition function for the class of the extract
+#'   specified in \code{extract}.
+#'
+#' @return
 #' @export
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
 }
 
-#' Modify values in an existing NHGIS extract definition
+#' Add values to an existing NHGIS extract
 #'
-#' Either add or remove values in the extract fields for an existing
-#' \code{nhgis_extract} object.
+#' @description
+#' Add new values to any extract fields of an NHGIS extract. This can include
+#' adding new datasets and/or time series tables along with associated
+#' subfields, modifying dataset and/or time series table subfields, or
+#' updating extract-wide parameters.
+#'
+#' To remove existing values from an extract, see
+#' \code{\link{remove_from_extract.nhgis_extract}}.
+#'
+#' In general, adding to an extract follows the same syntax conventions as used
+#' in \code{\link{define_extract_nhgis}}. See details for more information
+#' on how values passed to dataset and/or time series table subfields are
+#' interpreted.
 #'
 #' @details
 #' NHGIS extracts may contain multiple datasets or time series tables. Each
@@ -65,163 +125,102 @@ remove_from_extract <- function(extract, ...) {
 #' prefixed with \code{ds_}, while time series table subfields are prefixed with
 #' \code{tst_}.
 #'
-#' In general, the subfield arguments abide by the same syntax options when
-#' revising an extract as they do when defining an extract (see
-#' \code{\link{define_extract_nhgis}} for details on the core extract definition
-#' syntax). However, there are some exceptions:
+#' There are three ways the values passed to these arguments can be provided:
 #'
-#' In \code{add_to_extract}, if no values are provided to the \code{datasets}
-#' or \code{time_series_tables} arguments, the values passed to any of their
-#' associated subfield arguments will be evaluated relative to all the
-#' datasets or time series tables that \emph{already exist in the extract}. On
-#' the other hand, if any values are passed to the \code{datasets} or
-#' \code{time_series_tables} arguments, the values pass to any of their
+#' \itemize{
+#'   \item{If values are passed as a \strong{vector}, they will be
+#'   applied across all datasets or time series tables specified in either the
+#'   \code{datasets} or \code{time_series_tables} arguments}
+#'   \item{If values are passed as an \strong{unnamed list}, they will be
+#'   matched to datasets or time series tables by index. That
+#'   is, the first element will be associated with the first dataset included
+#'   in \code{datasets}, the second element with the second dataset in
+#'   \code{datasets}, etc.}
+#'   \item{If values are passed as a \strong{named list}, they
+#'   will be matched to datasets or time series tables by name. Names should
+#'   correspond to datasets or time series tables that exist in the extract
+#'   definition (unrecognized names will be ignored).}
+#' }
+#'
+#' If no values are provided to the \code{datasets}
+#' or \code{time_series_tables} arguments, all the existing datasets and/or
+#' time series tables will be considered to be eligible for modification. That
+#' is, the values passed to any dataset or time series table subfield arguments
+#' will be evaluated relative to all of the datasets or time series tables that
+#' exist in the extract.
+#'
+#' If any values are passed to the \code{datasets} or
+#' \code{time_series_tables} arguments, the values passed to any of their
 #' associated subfield arguments will be evaluated relative only to
-#' the \emph{specified} datasets or time series tables. For example, if new
-#' datasets are added, then the values provided in \code{ds_tables} will apply
-#' to the new datasets only. Existing datasets can therefore be modified either
+#' the \emph{specified} datasets or time series tables.
+#'
+#' For example, if new datasets are added, then the values provided in
+#' \code{ds_tables} will apply
+#' to the new datasets only. Existing datasets can be modified either
 #' by supplying their name to the \code{datasets} argument or by including the
 #' desired additions to their subfields as a named list in the subfield
 #' argument.
 #'
-#' In \code{remove_from_extract}, all values passed to either \code{datasets}
-#' or \code{time_series_tables} will be removed from the extract in their
-#' entirety (i.e. along with their currently associated subfield values) before
-#' considering the values passed to any subfield arguments. Subfield arguments
-#' will then be evaluated relative to all the datasets or time series tables
-#' that still exist in the extract.
-#'
-#' Because of these intricacies, if you're working with an extract with multiple
-#' datasets or time series tables, the most explicit way to specify subfield
-#' arguments is to use the named list syntax. This ensures that subfield
-#' values are matched to the appropriate datasets or time series tables.
-#'
-#' See the examples for demonstrations of this functionality.
-#'
 #' For extract fields that take a single value, \code{add_to_extract} will
 #' replace the existing value with the new value provided for that field.
-#'
-#' Note that it is possible to produce invalid extracts using
-#' \code{remove_from_extract} (for instance, an extract that includes a
-#' time series table without associated geography levels). This can occur if
-#' you intend to replace the existing values for a required extract field.
-#' If your goal is not simply to add or remove values, but replace values in
-#' an extract, it is recommended that you first use \code{add_to_extract}, and
-#' then use \code{remove_from_extract}, as this will avoid temporarily producing
-#' an invalid extract. Alternatively, you can set \code{validate = FALSE} in
-#' \code{remove_from_extract} to prevent extract validation while you
-#' make the replacement.
+#' It is not necessary to first remove this value using
+#' \code{remove_from_extract}.
 #'
 #' @inheritParams define_extract_nhgis
+#' @param datasets Character vector of datasets to add or modify in the extract.
+#'   Dataset names that do not already exist in the extract will be added along
+#'   with the values passed to any dataset subfield arguments. Dataset names
+#'   that already exist in the extract will not be added, but their subfields
+#'   will be modified based on the values provided to any dataset subfield
+#'   arguments.
+#' @param ds_tables Character vector or list of summary tables to add to the
+#'   extract. This is a subfield of \code{datasets}: values provided to this argument
+#'   will be applied to the datasets listed in \code{datasets} (see details for
+#'   available syntax options). Required if any new datasets are being added to
+#'   the extract.
+#' @param ds_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") for which to obtain the data contained in
+#'   the requested summary tables. This is a subfield of \code{datasets}: values
+#'   provided to this argument will be applied to the datasets listed in
+#'   \code{datasets} (see details for available syntax options). Required if
+#'   any new datasets are being added to the extract.
+#' @param ds_years Character or integer vector or list of years for which to
+#'   obtain the data contained in the requested summary tables. Use "*" to
+#'   select all available years for the specified dataset. This is a subfield of
+#'   \code{datasets}: values provided to this argument will be applied to the datasets
+#'   listed in \code{datasets} (see details for available syntax options).
+#'   Not all datasets allow year selection; see \code{\link{get_nhgis_metadata}}
+#'   to determine if a dataset allows year selection.
+#' @param ds_breakdown_values Character vector or list of selected breakdown
+#'   values to apply to the requested summary tables. If more than one breakdown
+#'   value is requested, breakdown_and_data_type_layout must also be specified.
+#'   This is a subfield of \code{datasets}: values provided to this argument will be
+#'   applied to the datasets listed in \code{datasets} (see details for
+#'   available syntax options).
+#' @param time_series_tables Character vector of time series tables to add or
+#'   modify in the extract. Time series table names that do not already exist in
+#'   the extract will be added along with the values passed to any time series
+#'   table subfield arguments. Time series table names that already exist in the
+#'   extract will not be added, but their subfields will be modified based on
+#'   the values provided to any time series table subfield arguments.
+#' @param tst_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") for which to obtain the data contained in the
+#'   provided times series tables. This is a subfield of
+#'   \code{time_series_tables}: values provided to this argument will be applied
+#'   to the time series tables listed in \code{time_series_tables} (see details
+#'   for available syntax options). Required if any new time series tables are
+#'   being added to the extract.
+#' @param shapefiles Character vector of shapefiles to add to the extract, if
+#'   any. For more information on NHGIS shapefiles, click here.
 #' @param validate Logical value indicating whether to check the modified
 #'   extract structure for validity. Defaults to \code{TRUE}
-#' @param ... Not used
 #'
 #' @return A modified \code{nhgis_extract} object
 #'
-#' @name revise_extract_nhgis
+#' @seealso \code{\link{remove_from_extract}},
+#'   \code{\link{remove_from_extract.nhgis_extract}}
 #'
-#' @examples
-#' extract <- define_extract_nhgis(
-#'   datasets = "1980_STF1",
-#'   ds_tables = c("NT1A", "NT1B"),
-#'   ds_geog_levels = "county"
-#' )
-#'
-#' # Add a new dataset to the extract.
-#' # The values provided to ds_tables and ds_geog_levels only apply to the
-#' # new dataset.
-#' add_to_extract(
-#'   extract,
-#'   datasets = "1990_STF1",
-#'   ds_tables = "NP1",
-#'   ds_geog_levels = "county"
-#' )
-#'
-#' # Add a table to the existing dataset in the extract
-#' add_to_extract(
-#'   extract,
-#'   ds_tables = "NT2"
-#' )
-#'
-#' # Combining the previous two revisions into a single call.
-#' # To apply the specified ds_tables to each dataset individually, we use
-#' # a list
-#' add_to_extract(
-#'   extract,
-#'   datasets = c("1980_STF1", "1990_STF1"),
-#'   ds_tables = list("NT2", "NP1")
-#'   ds_geog_levels = "county"
-#' )
-#'
-#' # However, index-based matching would not work correctly, as the ds_tables
-#' # specification is evaluated relative only to the new dataset provided, not
-#' # to all datasets in the extract:
-#' add_to_extract(
-#'   extract,
-#'   datasets = "1990_STF1",
-#'   ds_tables = list("NT2", "NP1")
-#'   ds_geog_levels = "county"
-#' )
-#'
-#' # Alternatively, a named list can be passed to ds_tables to explicitly
-#' # indicate which values should be mapped to which datasets:
-#' revised_extract <- add_to_extract(
-#'   extract,
-#'   datasets = "1990_STF1",
-#'   ds_tables = list(`1980_STF1` = "NT2", `1990_STF1` = c("NP1", "NP2"))
-#'   ds_geog_levels = "county"
-#' )
-#'
-#' # Removes dataset and all associated subfields
-#' remove_from_extract(
-#'   revised_extract,
-#'   datasets = "1990_STF1"
-#' )
-#'
-#' # To remove specific subfields but retain datasets:
-#' remove_from_extract(
-#'   revised_extract,
-#'   ds_tables = "NT2"
-#' )
-#'
-#' # Datasets are removed before evaluating subfield arguments:
-#' remove_from_extract(
-#'   revised_extract,
-#'   datasets = "1990_STF1",
-#'   ds_tables = "NP1"
-#' )
-#'
-#' # Specific values can be removed from subfields using a named list
-#' remove_from_extract(
-#'   revised_extract,
-#'   ds_tables = list(`1980_STF1` = "NT2", `1990_STF1` = "NP2")
-#' )
-#'
-#' \dontrun{
-#' # Replacing values in an extract can produce invalid extracts:
-#' remove_from_extract(
-#'   revised_extract,
-#'   ds_geog_levels = "county"
-#' ) %>%
-#'   add_to_extract(
-#'     ds_geog_levels = "state"
-#'   )
-#' }
-#'
-#' # So it is recommended to add new values first:
-#' add_to_extract(
-#'   revised_extract,
-#'   ds_geog_levels = "state"
-#' ) %>%
-#'   remove_from_extract(
-#'     ds_geog_levels = "county"
-#'   )
-#' }
-NULL
-
 #' @export
-#' @rdname revise_extract_nhgis
 add_to_extract.nhgis_extract <- function(extract,
                                          description = NULL,
                                          datasets = NULL,
@@ -299,8 +298,120 @@ add_to_extract.nhgis_extract <- function(extract,
 
 }
 
+
+
+
+#' Remove values from an existing NHGIS extract
+#'
+#' @description
+#' Remove existing values present in any extract fields of an NHGIS extract.
+#' This can include removing entire datasets and/or time series tables (along
+#' with their associated subfields) or removing subfield values for existing
+#' datasets and/or time series tables.
+#'
+#' To add new values to an extract or to replace values in fields that apply to
+#' the entire extract, use \code{\link{add_to_extract.nhgis_extract}}. When
+#' replacing values,
+#' it is recommended to first add new values using \code{add_to_extract} before
+#' removing unwanted values with \code{remove_from_extract} to avoid the
+#' possibility of producing invalid extract specifications.
+#'
+#' In general, removing from an extract follows the same syntax conventions
+#' as used in \code{\link{define_extract_nhgis}}. See details for more
+#' information on how values passed to dataset and/or time series table
+#' subfields are interpreted.
+#'
+#' @details
+#' NHGIS extracts may contain multiple datasets or time series tables. Each
+#' dataset or time series table is associated with several subfields that apply
+#' only to that particular dataset or time series table. Dataset subfields are
+#' prefixed with \code{ds_}, while time series table subfields are prefixed with
+#' \code{tst_}.
+#'
+#' There are three ways the values passed to these arguments can be provided:
+#'
+#' \itemize{
+#'   \item{If values are passed as a \strong{vector}, they will be
+#'   applied across all datasets or time series tables present in the extract}
+#'   \item{If values are passed as an \strong{unnamed list}, they will be
+#'   matched to datasets or time series tables by index. That
+#'   is, the first element will be associated with the first dataset in the
+#'   extract, the second element with the second dataset in
+#'   the extract, etc.}
+#'   \item{If values are passed as a \strong{named list}, they
+#'   will be matched to datasets or time series tables by name. Names should
+#'   correspond to datasets or time series tables that exist in the extract
+#'   definition (unrecognized names will be ignored).}
+#' }
+#'
+#' Importantly, subfields are modified after the removal of any datasets
+#' and time series tables specified in either the \code{datasets} or
+#' \code{time_series_tables} arguments. This can cause confusion if providing
+#' unnamed lists to subfield arguments (i.e. removing values from datasets
+#' or time series tables by index). It is safest to use the named list syntax
+#' for subfields to avoid this ambiguity.
+#'
+#' Any extract fields that are rendered irrelevant after modifying the extract
+#' will be automatically removed. (For instance, if all time
+#' series tables are removed from an extract, \code{tst_layout} will also be
+#' removed.) Thus, it is not necessary to explicitly remove these values. To
+#' replace the existing values for these fields, use \code{add_to_extract}.
+#'
+#' Note that it is possible to produce invalid extracts using
+#' \code{remove_from_extract} (for instance, an extract that includes a
+#' time series table without associated geographic levels). This can occur if
+#' you intend to replace the existing values for a required extract field.
+#' If your goal is not simply to add or remove values, but to replace values in
+#' an extract, it is recommended that you first use \code{add_to_extract}, and
+#' then use \code{remove_from_extract}, as this will avoid the possibility
+#' of temporarily producing an invalid extract. Alternatively, you can set
+#' \code{validate = FALSE} in \code{remove_from_extract} to prevent extract
+#' validation while you make the replacement.
+#'
+#' @inheritParams define_extract_nhgis
+#' @param datasets Character vector of datasets to remove from the extract.
+#'   All dataset subfields associated with these datasets will also be removed.
+#' @param ds_tables Character vector or list of summary tables to remove from
+#'   datasets in the extract. This is a subfield of \code{datasets}: values
+#'   provided to this argument will be applied to all the datasets that exist
+#'   in the extract after removing the datasets specificed in \code{datasets}.
+#'   See details for available syntax options.
+#' @param ds_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") to remove from datasets in the extract.
+#'   This is a subfield of \code{datasets}: values provided to this argument
+#'   will be applied to all the datasets that exist in the extract after
+#'   removing the datasets specified in \code{datasets}. See details for
+#'   available syntax options.
+#' @param ds_years Character or integer vector or list of years to remove from
+#'   datasets in the extract. This is a subfield of \code{datasets}: values
+#'   provided to this argument will be applied to all the datasets that exist in
+#'   the extract after removing the datasets specified in \code{datasets}. See
+#'   details for available syntax options.
+#' @param ds_breakdown_values Character vector or list of selected breakdown
+#'   values to remove from datasets in the extract. This is a subfield of
+#'   \code{datasets}: values provided to this argument will be applied to all
+#'   the datasets that exist in the extract after removing the datasets
+#'   specified in \code{datasets}. See details for available syntax options.
+#' @param time_series_tables Character vector of time series tables to remove
+#'   from the extract. All time series table subfields associated with these
+#'   time series tables will also be removed.
+#' @param tst_geog_levels Character vector or list of geographic levels (for
+#'   example, "county" or "state") to remove from time series tables in the
+#'   extract. This is a subfield of \code{time_series_tables}: values
+#'   provided to this argument will be applied to all the time series tables
+#'   that exist in the extract after removing the time series tables specified
+#'   in \code{time_series_tables}. See details for available syntax options.
+#' @param shapefiles Character vector of shapefiles to remove from the extract,
+#'   if any. For more information on NHGIS shapefiles, click here.
+#' @param validate Logical value indicating whether to check the modified
+#'   extract structure for validity. Defaults to \code{TRUE}
+#'
+#' @return A modified \code{nhgis_extract} object
+#'
+#' @seealso \code{\link{add_to_extract}},
+#'   \code{\link{add_to_extract.nhgis_extract}}
+#'
 #' @export
-#' @rdname revise_extract_nhgis
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               ds_tables = NULL,
@@ -386,20 +497,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 
 }
 
-#' Modify values in an existing microdata extract definition
-#'
-#' Either add or remove values in the extract fields for an existing
-#' \code{usa_extract} object.
-#'
-#' @inheritParams define_extract_micro
-#'
-#' @return A modified \code{usa_extract} object
-#'
-#' @name revise_extract_micro
-NULL
-
 #' @export
-#' @rdname revise_extract_micro
 add_to_extract.usa_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -476,7 +574,6 @@ add_to_extract.usa_extract <- function(extract,
 }
 
 #' @export
-#' @rdname revise_extract_micro
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
@@ -950,7 +1047,7 @@ remove_subfields <- function(extract, field, ...) {
 #' \code{remove_from_extract()}. (Otherwise, users would face a potentially
 #' unexpected unused argument error)
 #'
-#' @param extract
+#' @param extract An object inheriting from class \code{ipums_extract}
 #' @param bad_remove_fields Character vector of names of fields that should
 #'   trigger warnings if user attempts to remove them from an extract
 #' @param ... Arbitrary selection of named arguments. Used to warn against use
@@ -1057,3 +1154,4 @@ copy_ipums_extract <- function(extract) {
   extract
 
 }
+

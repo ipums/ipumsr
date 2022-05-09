@@ -28,27 +28,27 @@ if any. For more information on NHGIS datasets, click
 \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.}
 
 \item{ds_tables}{Character vector or list of summary tables to include in the
-extract. This is a subfield of \code{datasets}: see details for available
-syntax options. Required if any datasets are included in the extract.}
+extract. This is a subfield of \code{datasets} (see details for available
+syntax options). Required if any datasets are included in the extract.}
 
 \item{ds_geog_levels}{Character vector or list of geographic levels (for
 example, "county" or "state") for which to obtain the data contained in the
-requested summary tables. This is a subfield of \code{datasets}: see
-details for available syntax options. Required if any datasets are
+requested summary tables. This is a subfield of \code{datasets} (see
+details for available syntax options). Required if any datasets are
 included in the extract.}
 
 \item{ds_years}{Character or integer vector or list of years for which to
 obtain the data contained in the requested summary tables. Use \code{"*"}
 to select all available years for the specified dataset. This is a subfield
-of \code{datasets}: see details for available syntax options.  Not all
+of \code{datasets} (see details for available syntax options). Not all
 datasets allow year selection; see \code{\link{get_nhgis_metadata}} to
 determine if a dataset allows year selection.}
 
 \item{ds_breakdown_values}{Character vector or list of selected breakdown
 values to apply to the requested summary tables. If more than one breakdown
 value is requested, \code{breakdown_and_data_type_layout} must also be
-specified. This is a subfield of \code{datasets}: see details for available
-syntax options.}
+specified. This is a subfield of \code{datasets} (see details for available
+syntax options).}
 
 \item{geographic_extents}{Character vector of geographic instances to use as
 extents for all datasets included in the extract. Use \code{"*"}
@@ -75,7 +75,7 @@ click \href{https://www.nhgis.org/time-series-tables}{here}.}
 \item{tst_geog_levels}{Character vector or list of geographic levels (for
 example, "county" or "state") for which to obtain the data contained in the
 provided times series tables. This is a subfield of
-\code{time_series_tables}: see details for available syntax options.
+\code{time_series_tables} (see details for available syntax options).
 Required if any time series tables are included in the extract.}
 
 \item{tst_layout}{The desired layout of all time series tables included in
@@ -130,8 +130,8 @@ There are three ways the values passed to these arguments can be provided:
   definition (unrecognized names will be ignored).}
 }
 
-Users can find more information on the available values to these subfield
-arguments for a given dataset or time series table by using
+Users can find more information on the values that can be passed to these
+subfield arguments for a given dataset or time series table by using
 \code{\link{get_nhgis_metadata}}.
 
 For general information on the IPUMS NHGIS Extract API, click
@@ -170,7 +170,7 @@ define_extract_nhgis(
 define_extract_nhgis(
   description = "Extract with multiple time series tables",
   time_series_tables = c("CW3", "CW5"),
-  tst_geog_levels = list(CW5 = "state", CW3 = "county")
+  tst_geog_levels = list(CW5 = "county", CW3 = "state")
 )
 
 }

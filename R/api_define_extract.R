@@ -12,16 +12,20 @@
 #'
 #' @description
 #' Define an extract request object for a specific IPUMS collection to be
-#' to be submitted via the IPUMS extract API for that collection.
+#' to be submitted via the IPUMS extract API for that collection. For an
+#' overview of \code{ipumsr} API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' Currently, ipumsr supports extract definitions for NHGIS and USA collections.
 #'
-#' For collection-specific documentation, see the links below.
+#' For collection-specific documentation, see the links below:
 #'
 #' \itemize{
 #'   \item{\code{\link{define_extract_nhgis}}}
 #'   \item{\code{\link{define_extract_micro}}}
 #' }
+#'
+#'
 #'
 #' @family ipums_api
 #'
@@ -31,8 +35,8 @@ NULL
 #' Define a microdata extract request
 #'
 #' Define an extract request object to be submitted via the IPUMS microdata
-#' extract API. For an overview of ipumsr microdata API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' extract API. For an overview of \code{ipumsr} microdata API functionality,
+#' see \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @param collection The IPUMS data collection for the extract.
 #' @param description Description of the extract.
@@ -50,8 +54,8 @@ NULL
 #'   will also support household-only extracts (\code{rectangular_on = "H"}).
 #'
 #' @family ipums_api
-#' @return An object of class \code{usa_extract} containing the extract
-#'   definition.
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition. Each collection produces an object of its own class.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -144,8 +148,8 @@ define_extract_micro <- function(collection,
 #'   definition (unrecognized names will be ignored).}
 #' }
 #'
-#' Users can find more information on the available values to these subfield
-#' arguments for a given dataset or time series table by using
+#' Users can find more information on the values that can be passed to these
+#' subfield arguments for a given dataset or time series table by using
 #' \code{\link{get_nhgis_metadata}}.
 #'
 #' For general information on the IPUMS NHGIS Extract API, click
@@ -158,24 +162,24 @@ define_extract_micro <- function(collection,
 #'   if any. For more information on NHGIS datasets, click
 #'   \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.
 #' @param ds_tables Character vector or list of summary tables to include in the
-#'   extract. This is a subfield of \code{datasets}: see details for available
-#'   syntax options. Required if any datasets are included in the extract.
+#'   extract. This is a subfield of \code{datasets} (see details for available
+#'   syntax options). Required if any datasets are included in the extract.
 #' @param ds_geog_levels Character vector or list of geographic levels (for
 #'   example, "county" or "state") for which to obtain the data contained in the
-#'   requested summary tables. This is a subfield of \code{datasets}: see
-#'   details for available syntax options. Required if any datasets are
+#'   requested summary tables. This is a subfield of \code{datasets} (see
+#'   details for available syntax options). Required if any datasets are
 #'   included in the extract.
 #' @param ds_years Character or integer vector or list of years for which to
 #'   obtain the data contained in the requested summary tables. Use \code{"*"}
 #'   to select all available years for the specified dataset. This is a subfield
-#'   of \code{datasets}: see details for available syntax options.  Not all
+#'   of \code{datasets} (see details for available syntax options). Not all
 #'   datasets allow year selection; see \code{\link{get_nhgis_metadata}} to
 #'   determine if a dataset allows year selection.
 #' @param ds_breakdown_values Character vector or list of selected breakdown
 #'   values to apply to the requested summary tables. If more than one breakdown
 #'   value is requested, \code{breakdown_and_data_type_layout} must also be
-#'   specified. This is a subfield of \code{datasets}: see details for available
-#'   syntax options.
+#'   specified. This is a subfield of \code{datasets} (see details for available
+#'   syntax options).
 #' @param geographic_extents Character vector of geographic instances to use as
 #'   extents for all datasets included in the extract. Use \code{"*"}
 #'   to select all available extents. Required when any dataset in the extract
@@ -198,7 +202,7 @@ define_extract_micro <- function(collection,
 #' @param tst_geog_levels Character vector or list of geographic levels (for
 #'   example, "county" or "state") for which to obtain the data contained in the
 #'   provided times series tables. This is a subfield of
-#'   \code{time_series_tables}: see details for available syntax options.
+#'   \code{time_series_tables} (see details for available syntax options).
 #'   Required if any time series tables are included in the extract.
 #' @param tst_layout The desired layout of all time series tables included in
 #'   the extract. One of \code{"time_by_column_layout"} (the default),
@@ -249,7 +253,7 @@ define_extract_micro <- function(collection,
 #' define_extract_nhgis(
 #'   description = "Extract with multiple time series tables",
 #'   time_series_tables = c("CW3", "CW5"),
-#'   tst_geog_levels = list(CW5 = "state", CW3 = "county")
+#'   tst_geog_levels = list(CW5 = "county", CW3 = "state")
 #' )
 #'
 #' @export
