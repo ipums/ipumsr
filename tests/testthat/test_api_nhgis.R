@@ -362,6 +362,23 @@ test_that("nhgis_extract validate method works", {
       "`time_series_tables`."
     )
   )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = c("a", "b"),
+        data_format = c("a", "b"),
+        breakdown_and_data_type_layout = c("a", "b"),
+        tst_layout = c("a", "b"),
+        shapefiles = "shp"
+      )
+    ),
+    paste0(
+      "The following fields of an `nhgis_extract` must be of length 1: ",
+      "`description`, `breakdown_and_data_type_layout`, ",
+      "`tst_layout`, `data_format`."
+    )
+  )
 })
 
 # > Submitting Extracts --------------------------

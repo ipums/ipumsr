@@ -617,14 +617,32 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
-  is_missing <- purrr::map_lgl(
-    c("collection", "description"),
-    ~is.na(x[[.]]) || is_empty(x[[.]])
+  must_be_single <- c("description",
+                      "breakdown_and_data_type_layout",
+                      "tst_layout",
+                      "data_format")
+
+  is_too_long <- purrr::map_lgl(
+    must_be_single,
+    ~length(x[[.]]) > 1
   )
 
-  is_present <- purrr::map_lgl(
+  if (any(is_too_long)) {
+    stop(
+      "The following fields of an `nhgis_extract` must be of length 1: `",
+      paste0(must_be_single[is_too_long], collapse = "`, `"), "`.",
+      call. = FALSE
+    )
+  }
+
+  is_missing <- purrr::map_lgl(
+    c("collection", "description"),
+    ~is_na(x[[.]]) | is_empty(x[[.]])
+  )
+
+  is_present <- !purrr::map_lgl(
     names(x),
-    ~!is.na(x[[.]]) && !is_empty(x[[.]])
+    ~is_empty(x[[.]]) || any(is.na(x[[.]]))
   )
 
   vars_present <- names(x)[is_present]
@@ -638,7 +656,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
-  if (!is.null(x$data_format)) {
+  if (!is_null(x$data_format)) {
     if (!x$data_format %in% c("csv_header", "csv_no_header", "fixed_width")) {
       stop(
         "`data_format` must be one of `csv_header`, `csv_no_header`",
@@ -648,7 +666,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     }
   }
 
-  if (!is.null(x$breakdown_and_data_type_layout)) {
+  if (!is_null(x$breakdown_and_data_type_layout)) {
     if (!x$breakdown_and_data_type_layout %in% c("single_file",
                                                  "separate_files")) {
       stop(
@@ -659,7 +677,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     }
   }
 
-  if (!is.null(x$tst_layout)) {
+  if (!is_null(x$tst_layout)) {
     if (!x$tst_layout %in% c("time_by_row_layout",
                              "time_by_column_layout",
                              "time_by_file_layout")) {
@@ -679,10 +697,15 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     is_missing <- purrr::map_lgl(
       must_be_non_missing[1:2],
-      function(y) any(purrr::map_lgl(x[[y]], ~is_empty(.x) || is.na(.x)))
+      function(y) any(
+        purrr::map_lgl(
+          x[[y]],
+          ~any(is.na(.x)) || is_empty(.x)
+        )
+      )
     )
 
-    missing_df <- is.null(x$data_format) || is.na(x$data_format)
+    missing_df <- is_null(x$data_format) || is_na(x$data_format)
 
     is_missing <- c(is_missing, missing_df)
 
@@ -701,7 +724,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
     wrong_length <- purrr::map_lgl(
       must_have_same_length,
-      ~is.list(x[[.]]) && length(x[[.]]) != length(x$datasets)
+      ~is_list(x[[.]]) && length(x[[.]]) != length(x$datasets)
     )
 
     length_msg <- purrr::imap_chr(
@@ -747,17 +770,21 @@ validate_ipums_extract.nhgis_extract <- function(x) {
                              "data_format",
                              "tst_layout")
 
-    missing_tst_geog <- any(
-      purrr::map_lgl(
-        x$tst_geog_levels,
-        ~is.na(.x) || is_empty(.x)
+    is_missing <- purrr::map_lgl(
+      must_be_non_missing[1],
+      function(y) any(
+        purrr::map_lgl(
+          x[[y]],
+          ~any(is.na(.x)) || is_empty(.x)
+        )
       )
     )
-    missing_df <- is.null(x$data_format) || is.na(x$data_format)
-    missing_tstl <- is.null(x$tst_layout) ||
-      is.na(x$tst_layout)
 
-    is_missing <- c(missing_tst_geog, missing_df, missing_tstl)
+    missing_df <- is_null(x$data_format) || is_na(x$data_format)
+    missing_tstl <- is_null(x$tst_layout) ||
+      is_na(x$tst_layout)
+
+    is_missing <- c(is_missing, missing_df, missing_tstl)
 
     if (any(is_missing)) {
       stop(
@@ -768,7 +795,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       )
     }
 
-    if (is.list(x$tst_geog_levels) &&
+    if (is_list(x$tst_geog_levels) &&
         length(x$tst_geog_levels) != length(x$time_series_tables)) {
       stop(
         "The number of selections provided in `tst_geog_levels` (",
@@ -826,7 +853,7 @@ validate_ipums_extract.usa_extract <- function(x) {
 
   is_missing <- purrr::map_lgl(
     must_be_non_missing,
-    ~any(is.null(x[[.]]) || is.na(x[[.]]) || is_empty(x[[.]]))
+    ~any(is.null(x[[.]])) || any(is.na(x[[.]])) || any(is_empty(x[[.]]))
   )
 
   if (any(is_missing)) {

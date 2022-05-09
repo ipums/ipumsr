@@ -314,7 +314,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
 
   request_list <- purrr::keep(
     request_list,
-    ~!any(is.na(.x) || is_empty(.x))
+    ~!(any(is.na(.x)) || is_empty(.x))
   )
 
   jsonlite::toJSON(request_list)
@@ -350,7 +350,7 @@ extract_to_request_json.usa_extract <- function(extract) {
 #' @export
 extract_to_request_json.ipums_extract <- function(extract) {
 
-  if (is.na(extract$description)) {
+  if (is_na(extract$description)) {
     extract$description <- ""
   }
 
