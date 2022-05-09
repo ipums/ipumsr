@@ -8,6 +8,26 @@
 
 # > Define extract ----
 
+#' Define an IPUMS extract object
+#'
+#' @description
+#' Define an extract request object for a specific IPUMS collection to be
+#' to be submitted via the IPUMS extract API for that collection.
+#'
+#' Currently, ipumsr supports extract definitions for NHGIS and USA collections.
+#'
+#' For collection-specific documentation, see the links below.
+#'
+#' \itemize{
+#'   \item{\code{\link{define_extract_nhgis}}}
+#'   \item{\code{\link{define_extract_micro}}}
+#' }
+#'
+#' @family ipums_api
+#'
+#' @name define_extract
+NULL
+
 #' Define a microdata extract request
 #'
 #' Define an extract request object to be submitted via the IPUMS microdata
