@@ -18,12 +18,13 @@ The file path where the extract definition was written, invisibly.
 }
 \description{
 Save an extract definition to a JSON-formatted file. For an overview of
-ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 Note that this function only saves out the properties of an extract
-  that are required to submit a new extract request, namely, the description,
-  data structure, data format, samples, and variables.
+that are required to submit a new extract request, namely, the description,
+data structure, data format, samples, and variables.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -38,10 +39,6 @@ identical(my_extract, copy_of_my_extract)
 }
 \seealso{
 Other ipums_api: 
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},

@@ -4,35 +4,37 @@
 \alias{define_extract}
 \title{Define an IPUMS extract object}
 \description{
-Define an extract request object for a specific IPUMS collection to be
-to be submitted via the IPUMS extract API for that collection. For an
-overview of \code{ipumsr} API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Specify the parameters for a new IPUMS extract request object to be
+submitted via the IPUMS API.
 
-Currently, ipumsr supports extract definitions for NHGIS and USA collections.
+Currently, \code{ipumsr} supports extract definitions for the following
+collections:
 
-For collection-specific documentation, see the links below:
+\itemize{
+  \item{IPUMS NHGIS}
+  \item{IPUMS USA}
+}
+
+For information on how to define an extract for a specific collection, use
+the links below:
 
 \itemize{
   \item{\code{\link{define_extract_nhgis}}}
   \item{\code{\link{define_extract_micro}}}
 }
+
+For an overview of \code{ipumsr} API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \seealso{
-Other ipums_api: 
+Other ipums_api_micro: 
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
+\code{\link{define_extract_micro}()}
+
+Other ipums_api_nhgis: 
+\code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link{get_nhgis_metadata}()}
 }
-\concept{ipums_api}
+\concept{ipums_api_micro}
+\concept{ipums_api_nhgis}

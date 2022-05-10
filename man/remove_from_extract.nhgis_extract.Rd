@@ -72,6 +72,8 @@ if any. For more information on NHGIS shapefiles, click here.}
 
 \item{validate}{Logical value indicating whether to check the modified
 extract structure for validity. Defaults to \code{TRUE}}
+
+\item{...}{Ignored}
 }
 \value{
 A modified \code{nhgis_extract} object
@@ -87,7 +89,7 @@ the entire extract, use \code{\link{add_to_extract.nhgis_extract}}. When
 replacing values,
 it is recommended to first add new values using \code{add_to_extract} before
 removing unwanted values with \code{remove_from_extract} to avoid the
-possibility of producing invalid extract specifications.
+possibility of producing an invalid extract specification.
 
 In general, removing from an extract follows the same syntax conventions
 as used in \code{\link{define_extract_nhgis}}. See details for more
@@ -135,13 +137,53 @@ Note that it is possible to produce invalid extracts using
 time series table without associated geographic levels). This can occur if
 you intend to replace the existing values for a required extract field.
 If your goal is not simply to add or remove values, but to replace values in
-an extract, it is recommended that you first use \code{add_to_extract}, and
+an extract, it is recommended that you first use \code{add_to_extract} and
 then use \code{remove_from_extract}, as this will avoid the possibility
 of temporarily producing an invalid extract. Alternatively, you can set
 \code{validate = FALSE} in \code{remove_from_extract} to prevent extract
 validation while you make the replacement.
 }
+\examples{
+extract <- define_extract_nhgis(
+  datasets = "1990_STF1",
+  ds_tables = c("NP1", "NP2", "NP3"),
+  ds_geog_levels = "county",
+  time_series_tables = c("CW3", "CW5"),
+  tst_geog_levels = c("state", "county")
+)
+
+# Modify existing datasets in extract:
+remove_from_extract(
+  extract,
+  ds_tables = "NP3"
+)
+
+# Remove an entire dataset
+remove_from_extract(
+  extract,
+  datasets = "1990_STF1"
+)
+
+# Use a list to remove subfield values from specific datasets or time
+# series tables. Named lists map by name, unnamed lists map by index.
+remove_from_extract(
+  extract,
+  tst_geog_levels = list(CW5 = "state", CW3 = "county")
+)
+
+# It is possible to get invalid extracts:
+\dontrun{
+remove_from_extract(
+  extract,
+  ds_geog_levels = "county",
+  validate = TRUE
+)}
+
+# So you should typically add to an extract before removing:
+add_to_extract(extract, ds_geog_levels = "state") \%>\%
+  remove_from_extract(ds_geog_levels = "county")
+}
 \seealso{
-\code{\link{add_to_extract}},
-  \code{\link{add_to_extract.nhgis_extract}}
+\code{\link{add_to_extract.nhgis_extract}},
+  \code{\link{revise_extract}}
 }

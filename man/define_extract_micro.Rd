@@ -49,20 +49,8 @@ see \code{vignette("ipums-api", package = "ipumsr")}.
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
 }
 \seealso{
-Other ipums_api: 
+Other ipums_api_micro: 
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link{define_extract}}
 }
-\concept{ipums_api}
+\concept{ipums_api_micro}

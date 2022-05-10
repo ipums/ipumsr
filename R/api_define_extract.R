@@ -11,23 +11,30 @@
 #' Define an IPUMS extract object
 #'
 #' @description
-#' Define an extract request object for a specific IPUMS collection to be
-#' to be submitted via the IPUMS extract API for that collection. For an
-#' overview of \code{ipumsr} API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' Specify the parameters for a new IPUMS extract request object to be
+#' submitted via the IPUMS API.
 #'
-#' Currently, ipumsr supports extract definitions for NHGIS and USA collections.
+#' Currently, \code{ipumsr} supports extract definitions for the following
+#' collections:
 #'
-#' For collection-specific documentation, see the links below:
+#' \itemize{
+#'   \item{IPUMS NHGIS}
+#'   \item{IPUMS USA}
+#' }
+#'
+#' For information on how to define an extract for a specific collection, use
+#' the links below:
 #'
 #' \itemize{
 #'   \item{\code{\link{define_extract_nhgis}}}
 #'   \item{\code{\link{define_extract_micro}}}
 #' }
 #'
+#' For an overview of \code{ipumsr} API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#'
-#' @family ipums_api
+#' @family ipums_api_micro
+#' @family ipums_api_nhgis
 #'
 #' @name define_extract
 NULL
@@ -53,7 +60,8 @@ NULL
 #'   extract will be rectangularized on person records. In the future, the API
 #'   will also support household-only extracts (\code{rectangular_on = "H"}).
 #'
-#' @family ipums_api
+#' @family ipums_api_micro
+#'
 #' @return An object inheriting from class \code{ipums_extract} containing the
 #'   extract definition. Each collection produces an object of its own class.
 #'
@@ -161,8 +169,9 @@ define_extract_micro <- function(collection,
 #' @param datasets Character vector of datasets to include in the extract,
 #'   if any. For more information on NHGIS datasets, click
 #'   \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.
-#' @param ds_tables Character vector or list of summary tables to include in the
-#'   extract. This is a subfield of \code{datasets} (see details for available
+#' @param ds_tables Character vector or list of summary tables to include for
+#'   the provided datasets. This is a subfield of \code{datasets} (see details
+#'   for available
 #'   syntax options). Required if any datasets are included in the extract.
 #' @param ds_geog_levels Character vector or list of geographic levels (for
 #'   example, "county" or "state") for which to obtain the data contained in the
@@ -187,7 +196,7 @@ define_extract_micro <- function(collection,
 #'   See \code{\link{get_nhgis_metadata}} to determine whether a requested
 #'   \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 #'   extent selection only for blocks and block groups.
-#' @param breakdown_and_data_type_layout Character indicating the desired layout
+#' @param breakdown_and_data_type_layout The desired layout
 #'   of any datasets that have multiple data types or breakdown values. One of
 #'   \code{"single_file"} (the default), which keeps all data types and
 #'   breakdown values in one file, or \code{"separate_files"}, which splits each
@@ -218,7 +227,8 @@ define_extract_micro <- function(collection,
 #'   row. Required when any datasets or time series tables are included in the
 #'   extract.
 #'
-#' @family ipums_api
+#' @family ipums_api_nhgis
+#'
 #' @return An object of class \code{nhgis_extract} containing the extract
 #'   definition.
 #'
@@ -332,14 +342,16 @@ define_extract_nhgis <- function(description = "",
 
 #' Create an extract object from a JSON-formatted definition
 #'
-#' Create an object of class "ipums_extract" based on an extract definition
-#' formatted as JSON. For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' Create an object inheriting from class "ipums_extract" based on an extract
+#' definition formatted as JSON. For an overview of ipumsr API functionality,
+#' see \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @param extract_json A JSON string, or the path to file containing JSON.
 #' @inheritParams define_extract_micro
 #'
-#' @family ipums_api
+#' @family ipums_api_micro
+#' @family ipums_api_nhgis
+#'
 #' @return An object of class "ipums_extract".
 #'
 #' @examples
@@ -405,16 +417,20 @@ define_extract_from_json <- function(extract_json, collection) {
 #' Save an extract definition to disk as JSON
 #'
 #' Save an extract definition to a JSON-formatted file. For an overview of
-#' ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#' ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams submit_extract
 #' @param file File path at which to write the JSON-formatted extract
 #'   definition.
 #'
-#' @details Note that this function only saves out the properties of an extract
-#'   that are required to submit a new extract request, namely, the description,
-#'   data structure, data format, samples, and variables.
+#' @details
+#' Note that this function only saves out the properties of an extract
+#' that are required to submit a new extract request, namely, the description,
+#' data structure, data format, samples, and variables.
+#'
 #' @family ipums_api
+#'
 #' @return The file path where the extract definition was written, invisibly.
 #'
 #' @examples

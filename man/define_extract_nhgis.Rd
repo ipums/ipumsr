@@ -27,8 +27,9 @@ define_extract_nhgis(
 if any. For more information on NHGIS datasets, click
 \href{https://www.nhgis.org/overview-nhgis-datasets}{here}.}
 
-\item{ds_tables}{Character vector or list of summary tables to include in the
-extract. This is a subfield of \code{datasets} (see details for available
+\item{ds_tables}{Character vector or list of summary tables to include for
+the provided datasets. This is a subfield of \code{datasets} (see details
+for available
 syntax options). Required if any datasets are included in the extract.}
 
 \item{ds_geog_levels}{Character vector or list of geographic levels (for
@@ -58,7 +59,7 @@ See \code{\link{get_nhgis_metadata}} to determine whether a requested
 \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 extent selection only for blocks and block groups.}
 
-\item{breakdown_and_data_type_layout}{Character indicating the desired layout
+\item{breakdown_and_data_type_layout}{The desired layout
 of any datasets that have multiple data types or breakdown values. One of
 \code{"single_file"} (the default), which keeps all data types and
 breakdown values in one file, or \code{"separate_files"}, which splits each
@@ -175,20 +176,9 @@ define_extract_nhgis(
 
 }
 \seealso{
-Other ipums_api: 
+Other ipums_api_nhgis: 
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
 \code{\link{define_extract}},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link{get_nhgis_metadata}()}
 }
-\concept{ipums_api}
+\concept{ipums_api_nhgis}
