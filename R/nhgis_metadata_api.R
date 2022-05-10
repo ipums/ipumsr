@@ -58,11 +58,6 @@ get_nhgis_metadata <- function(type = NULL,
                                time_series_table = NULL,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  stopifnot(length(type) <= 1)
-  stopifnot(length(dataset) <= 1)
-  stopifnot(length(ds_table) <= 1)
-  stopifnot(length(time_series_table) <= 1)
-
   if (sum(!is.null(type), !is.null(dataset), !is.null(time_series_table)) > 1) {
     stop(
       "Only one of `type`, `dataset`, or `time_series_table` may be specified ",
@@ -71,10 +66,26 @@ get_nhgis_metadata <- function(type = NULL,
     )
   }
 
+  is_too_long <- purrr::map_lgl(
+    list(type, dataset, ds_table, time_series_table),
+    ~length(.x) > 1
+  )
+
+  if (any(is_too_long)) {
+    stop(
+      "Can only retrieve metadata for a single value of `",
+      paste0(
+        c("type", "dataset", "ds_table", "time_series_table")[is_too_long],
+        collapse = "`, `"
+      ),
+      "` at a time.",
+      call. = FALSE
+    )
+  }
+
   if (all(is.null(type),
           is.null(dataset),
           is.null(time_series_table))) {
-
     if (!is.null(ds_table)) {
       stop(
         "If a `ds_table` is specified, a `dataset` must also be specified.",
@@ -87,7 +98,6 @@ get_nhgis_metadata <- function(type = NULL,
         call. = FALSE
       )
     }
-
   }
 
   shapefile <- NULL
@@ -102,34 +112,11 @@ get_nhgis_metadata <- function(type = NULL,
       )
     }
 
-    if (any(!is.null(dataset),
-            !is.null(ds_table),
-            !is.null(time_series_table))) {
-      warning(
-        paste0(
-          "Providing summary metadata for all ", type, ". To obtain metadata ",
-          "for a specific dataset, summary table, or time series table, ",
-          "set `type = NULL`"
-        ),
-        call. = FALSE
-      )
-    }
-
-    # Highly unelegant, but will improve later.
     if (type == "datasets") {
       dataset <- ""
-      ds_table <- NULL
-      time_series_table <- NULL
-      shapefile <- NULL
     } else if (type == "time_series_tables") {
-      dataset <- NULL
-      ds_table <- NULL
       time_series_table <- ""
-      shapefile <- NULL
     } else if (type == "shapefiles") {
-      dataset <- NULL
-      ds_table <- NULL
-      time_series_table <- NULL
       shapefile <- ""
     }
 
@@ -156,20 +143,11 @@ metadata_request_url <- function(base_url, ...) {
   dots <- purrr::compact(dots)
   fields <- names(dots)
 
-  if (length(dots) == 1) {
-    sep <- ifelse(dots[[1]] == "", "", "/")
-  } else {
-    sep <- "/"
-  }
+  sep <- ifelse(dots[[1]] == "", "", "/")
 
   url <- paste(
     base_url,
-    paste(
-      fields,
-      dots[fields],
-      sep = sep,
-      collapse = "/"
-    ),
+    paste(fields, dots[fields], sep = sep, collapse = "/"),
     sep = "/"
   )
 
