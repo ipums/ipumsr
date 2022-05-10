@@ -4,273 +4,189 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-# All metadata in one function
+#' View NHGIS metadata
+#'
+#' @description
+#' NHGIS metadata is provided for individual datasets, summary tables, and
+#' time series tables as well as in summary form for all available datasets,
+#' time series tables, and shapefiles.
+#'
+#' Use the \code{type} argument to obtain summary metadata for all datasets,
+#' time series tables, or shapefiles.
+#'
+#' Use the \code{dataset}, \code{ds_table}, or \code{time_series_table}
+#' arguments to get detailed metadata for a specific dataset, summary table,
+#' or time series table, respectively. Only one of \code{type}, \code{dataset},
+#' or \code{time_series_table} may be provided at a time.
+#'
+#' For more information on the NHGIS metadata API, click
+#' \href{https://developer.ipums.org/docs/workflows/explore_metadata/nhgis/}{here}
+#'
+#' @inheritParams submit_extract
+#' @param type If provided, one of \code{"datasets"},
+#'   \code{"time_series_tables"}, or \code{"shapefiles"} indicating the desired
+#'   summary metadata.
+#' @param dataset Character indicating the name of the dataset for
+#'   which to obtain metadata. Required if \code{ds_table} is specified.
+#' @param ds_table Character indicating the name of the summary
+#'   table for which to obtain metadata. The summary table must be present in
+#'   the provided \code{dataset}.
+#' @param time_series_table Character indicating the name of the
+#'   time series table for which to obtain metadata.
+#'
+#' @return If obtaining summary metadata, a \code{tibble} containing metadata
+#'   for the specified data type. If obtaining metadata for a single dataset,
+#'   summary table, or time series table, a named list containing metadata for
+#'   that data source.
+#' @export
+#'
+#' @family ipums_api_nhgis
+#'
+#' @examples
+#' # Metadata for all datasets, time series tables, or shapefiles
+#' get_nhgis_metadata("datasets")
+#' get_nhgis_metadata("time_series_tables")
+#' get_nhgis_metadata("shapefiles")
+#'
+#' # Metadata for a particular data source
+#' get_nhgis_metadata(dataset = "1980_STF1")
+#' get_nhgis_metadata(dataset = "1980_STF1", ds_table = "NT1A")
+#' get_nhgis_metadata(time_series_table = "CW3")
 get_nhgis_metadata <- function(type = NULL,
                                dataset = NULL,
-                               data_table = NULL,
+                               ds_table = NULL,
                                time_series_table = NULL,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  stopifnot(length(type) <= 1)
+  stopifnot(length(dataset) <= 1)
+  stopifnot(length(ds_table) <= 1)
+  stopifnot(length(time_series_table) <= 1)
+
+  if (sum(!is.null(type), !is.null(dataset), !is.null(time_series_table)) > 1) {
+    stop(
+      "Only one of `type`, `dataset`, or `time_series_table` may be specified ",
+      "at a time.",
+      call. = FALSE
+    )
+  }
 
   if (all(is.null(type),
           is.null(dataset),
           is.null(time_series_table))) {
-    stop(
-      "At least one of `type`, `dataset`, or `time_series_table`",
-      " must be specified",
-      call. = FALSE
-    )
+
+    if (!is.null(ds_table)) {
+      stop(
+        "If a `ds_table` is specified, a `dataset` must also be specified.",
+        call. = FALSE
+      )
+    } else {
+      stop(
+        "At least one of `type`, `dataset`, or `time_series_table`",
+        " must be specified.",
+        call. = FALSE
+      )
+    }
+
   }
+
+  shapefile <- NULL
 
   if (!is.null(type)) {
-    metadata <- get_nhgis_metadata_summary(type, api_key)
-  }
 
-  if (!is.null(dataset) && is.null(data_table)) {
-    metadata <- get_dataset_metadata(dataset, api_key)
-  }
-
-  if (!is.null(dataset) && !is.null(data_table)) {
-    metadata <- get_table_metadata(dataset, data_table, api_key)
-  }
-
-  if (!is.null(time_series_table)) {
-    metadata <- get_tst_metadata(time_series_table, api_key)
-  }
-
-  metadata
-
-}
-
-## Metadata for a single dataset
-get_dataset_metadata <- function(dataset = NULL,
-                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  stopifnot(length(dataset) <= 1)
-
-  if (is.null(dataset)) {
-
-    metadata <- get_nhgis_metadata_summary("datasets", api_key)
-
-  } else {
-
-    url <- httr::modify_url(
-      url = paste(
-        nhgis_api_metadata_url(),
-        "datasets",
-        dataset,
-        sep = "/"
-      ),
-      query = paste0(
-        "version=",
-        ipums_api_version("nhgis")
-      )
-    )
-
-    res <- httr::GET(
-      url = url,
-      httr::user_agent(
-        paste0(
-          "https://github.com/ipums/ipumsr ",
-          as.character(packageVersion("ipumsr"))
-        )
-      ),
-      httr::content_type_json(),
-      add_user_auth_header(api_key)
-    )
-
-    metadata <- jsonlite::fromJSON(
-      httr::content(res, "text"),
-      simplifyVector = TRUE
-    )
-
-    if (httr::http_error(res)) {
+    if (!type %in% c("datasets", "time_series_tables", "shapefiles")) {
       stop(
-        "Extract submission failed for ", url, ".\n",
-        "Status: ", metadata$status$code, "\n",
-        "Details: ", metadata$detail,
+        "`type` must be one of \"datasets\", \"time_series_tables\", or ",
+        "\"shapefiles\"",
         call. = FALSE
       )
     }
 
-    metadata$data_tables <- tibble::as_tibble(metadata$data_tables)
-    metadata$geog_levels <- tibble::as_tibble(metadata$geog_levels)
-    metadata$geographic_instances <- tibble::as_tibble(metadata$geographic_instances)
-    metadata$breakdowns <- tibble::as_tibble(metadata$breakdowns)
-
-  }
-
-  metadata
-
-}
-
-# Metadata for particular data_table
-get_table_metadata <- function(dataset,
-                               data_table = NULL,
-                               api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  stopifnot(length(dataset) <= 1 && length(data_table) <= 1)
-
-  if (is.null(data_table)) {
-
-    metadata <- get_dataset_metadata(dataset, api_key)$data_tables
-
-  } else {
-
-    url <- httr::modify_url(
-      url = paste(
-        nhgis_api_metadata_url(),
-        "datasets",
-        dataset,
-        "data_tables",
-        data_table,
-        sep = "/"
-      ),
-      query = paste0(
-        "version=",
-        ipums_api_version("nhgis")
-      )
-    )
-
-    res <- httr::GET(
-      url = url,
-      httr::user_agent(
+    if (any(!is.null(dataset),
+            !is.null(ds_table),
+            !is.null(time_series_table))) {
+      warning(
         paste0(
-          "https://github.com/ipums/ipumsr ",
-          as.character(packageVersion("ipumsr"))
-        )
-      ),
-      httr::content_type_json(),
-      add_user_auth_header(api_key)
-    )
-
-    metadata <- jsonlite::fromJSON(
-      httr::content(res, "text"),
-      simplifyVector = TRUE
-    )
-
-    if (httr::http_error(res)) {
-      stop(
-        "Extract submission failed for ", url, ".\n",
-        "Status: ", metadata$status$code, "\n",
-        "Details: ", metadata$detail,
+          "Providing summary metadata for all ", type, ". To obtain metadata ",
+          "for a specific dataset, summary table, or time series table, ",
+          "set `type = NULL`"
+        ),
         call. = FALSE
       )
     }
 
-    metadata$variables <- tibble::as_tibble(metadata$variables)
-
-  }
-
-  metadata
-
-}
-
-
-## Metadata for a single time series table
-## More natural to make this give you all TSTs if time_series_table is NULL?
-get_tst_metadata <- function(time_series_table = NULL,
-                             api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-
-  stopifnot(length(time_series_table) <= 1)
-
-  if (is.null(time_series_table)) {
-
-    metadata <- get_nhgis_metadata_summary("time_series_tables", api_key)
-
-  } else {
-
-    url <- httr::modify_url(
-      url = paste(
-        nhgis_api_metadata_url(),
-        "time_series_tables",
-        time_series_table,
-        sep = "/"
-      ),
-      query = paste0(
-        "version=",
-        ipums_api_version("nhgis")
-      )
-    )
-
-    res <- httr::GET(
-      url = url,
-      httr::user_agent(
-        paste0(
-          "https://github.com/ipums/ipumsr ",
-          as.character(packageVersion("ipumsr"))
-        )
-      ),
-      httr::content_type_json(),
-      add_user_auth_header(api_key)
-    )
-
-    metadata <- jsonlite::fromJSON(
-      httr::content(res, "text"),
-      simplifyVector = TRUE
-    )
-
-    if (httr::http_error(res)) {
-      stop(
-        "Extract submission failed for ", url, ".\n",
-        "Status: ", metadata$status$code, "\n",
-        "Details: ", metadata$detail,
-        call. = FALSE
-      )
+    # Highly unelegant, but will improve later.
+    if (type == "datasets") {
+      dataset <- ""
+      ds_table <- NULL
+      time_series_table <- NULL
+      shapefile <- NULL
+    } else if (type == "time_series_tables") {
+      dataset <- NULL
+      ds_table <- NULL
+      time_series_table <- ""
+      shapefile <- NULL
+    } else if (type == "shapefiles") {
+      dataset <- NULL
+      ds_table <- NULL
+      time_series_table <- NULL
+      shapefile <- ""
     }
 
-    metadata$time_series <- tibble::as_tibble(metadata$time_series)
-    metadata$years <- tibble::as_tibble(metadata$years)
-    metadata$geog_levels <- tibble::as_tibble(metadata$geog_levels)
-
   }
 
-  metadata
-
-}
-
-## Metadata for shapefiles
-# Currently allow for shapefile argument for format consistency with other
-# functions, even though it just does a simple filter...
-get_shp_metadata <- function(shapefile = NULL,
-                             api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  metadata <- get_nhgis_metadata_summary("shapefiles", api_key)
-
-  if (!is.null(shapefile)) {
-    metadata <- metadata[which(metadata$name == shapefile),]
-  }
-
-  tibble::as_tibble(metadata)
-
-}
-
-## Metadata for all datasets, time series tables, or shapefiles
-get_nhgis_metadata_summary <- function(type,
-                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  if (!type %in% c("datasets", "time_series_tables", "shapefiles")) {
-    stop(
-      "`type` must be one of `datasets`, `time_series_tables`, or ",
-      "`shapefiles`.",
-      call. = FALSE
-    )
-  }
-
-  url <- httr::modify_url(
-    url = paste(
-      nhgis_api_metadata_url(),
-      type,
-      sep = "/"
-    ),
-    query = paste0(
-      "version=",
-      ipums_api_version("nhgis")
-    )
+  metadata_url <- metadata_request_url(
+    base_url = nhgis_api_metadata_url(),
+    datasets = dataset,
+    data_tables = ds_table,
+    time_series_tables = time_series_table,
+    shapefiles = shapefile
   )
 
-  res <- httr::GET(
+  metadata <- metadata_request(metadata_url, api_key)
+
+  metadata
+
+}
+
+metadata_request_url <- function(base_url, ...) {
+
+  dots <- rlang::list2(...)
+
+  dots <- purrr::compact(dots)
+  fields <- names(dots)
+
+  if (length(dots) == 1) {
+    sep <- ifelse(dots[[1]] == "", "", "/")
+  } else {
+    sep <- "/"
+  }
+
+  url <- paste(
+    base_url,
+    paste(
+      fields,
+      dots[fields],
+      sep = sep,
+      collapse = "/"
+    ),
+    sep = "/"
+  )
+
+  api_url <- httr::modify_url(
     url = url,
+    query = paste0("version=", ipums_api_version("nhgis"))
+  )
+
+  api_url
+
+}
+
+metadata_request <- function(request_url,
+                             api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  res <- httr::GET(
+    url = request_url,
     httr::user_agent(
       paste0(
         "https://github.com/ipums/ipumsr ",
@@ -281,21 +197,36 @@ get_nhgis_metadata_summary <- function(type,
     add_user_auth_header(api_key)
   )
 
-  # Needs improved error handling. Not sure which errors metadata API throws.
-  if(httr::http_error(res)) {
-    stop(
-      "Extract submission failed for ", url, ".\n",
-      "Status: ", httr::status_code(res), "\n",
-      call. = FALSE
-    )
-  }
-
   metadata <- jsonlite::fromJSON(
     httr::content(res, "text"),
     simplifyVector = TRUE
   )
 
-  tibble::tibble(metadata)
+  if (httr::http_error(res)) {
+    stop(
+      "Extract submission failed for ", request_url, ".\n",
+      "Status: ", metadata$status$code, "\n",
+      "Details: ", metadata$detail,
+      call. = FALSE
+    )
+  }
+
+  metadata_type <- class(metadata)
+
+  if (metadata_type == "list") {
+    metadata <- purrr::map(
+      metadata,
+      ~if (is.data.frame(.x)) {
+        tibble::as_tibble(.x)
+      } else {
+        .x
+      }
+    )
+  } else if (metadata_type == "data.frame") {
+    metadata <- tibble::as_tibble(metadata)
+  }
+
+  metadata
 
 }
 
