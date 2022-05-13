@@ -1188,3 +1188,137 @@ test_that("We can get correct API version info for each collection", {
   expect_error(ipums_api_version("fake collection"), "No API version found")
 })
 
+# > Metadata --------------------------------------
+
+test_that("We can get summary metadata for all data types", {
+
+  ds_meta <- get_nhgis_metadata("datasets")
+  tst_meta <- get_nhgis_metadata("time_series_tables")
+  shp_meta <- get_nhgis_metadata("shapefiles")
+
+  expect_true(tibble::is_tibble(ds_meta))
+  expect_equal(ncol(ds_meta), 4)
+  expect_equal(
+    colnames(ds_meta),
+    c("name", "group", "description", "sequence")
+  )
+  expect_equal(ds_meta[1,]$name, "1790_cPop")
+
+  expect_true(tibble::is_tibble(tst_meta))
+  expect_equal(ncol(tst_meta), 6)
+  expect_equal(
+    colnames(tst_meta),
+    c("name", "description", "geographic_integration",
+      "sequence", "years", "geog_levels")
+  )
+  expect_equal(tst_meta[1,]$name, "A00")
+  expect_type(tst_meta$years, "list")
+  expect_type(tst_meta$geog_levels, "list")
+
+  expect_true(tibble::is_tibble(shp_meta))
+  expect_equal(ncol(shp_meta), 6)
+  expect_equal(
+    colnames(shp_meta),
+    c("name", "year", "geographic_level",
+      "extent", "basis", "sequence")
+  )
+  expect_equal(shp_meta[1,]$name, "us_state_1790_tl2000")
+
+})
+
+test_that("We can get metadata for specific data sources", {
+
+  dataset <- "2010_SF1a"
+  table <- "P8"
+  ds_meta <- get_nhgis_metadata(dataset = dataset)
+  dt_meta <- get_nhgis_metadata(dataset = dataset, ds_table = table)
+
+  tst <- "CM0"
+  tst_meta <- get_nhgis_metadata(time_series_table = tst)
+
+  expect_equal(length(ds_meta), 10)
+  expect_equal(
+    names(ds_meta),
+    c("name", "nhgis_id", "group", "description", "sequence",
+      "has_multiple_data_types", "data_tables", "geog_levels",
+      "geographic_instances", "breakdowns")
+  )
+  expect_equal(ds_meta$name, dataset)
+  expect_true(
+    all(
+      tibble::is_tibble(ds_meta$data_tables),
+      tibble::is_tibble(ds_meta$geog_levels),
+      tibble::is_tibble(ds_meta$geographic_instances),
+      tibble::is_tibble(ds_meta$breakdowns)
+    )
+  )
+
+  expect_equal(length(tst_meta), 7)
+  expect_equal(
+    names(tst_meta),
+    c("name", "description", "geographic_integration", "sequence",
+      "time_series", "years", "geog_levels")
+  )
+  expect_equal(tst_meta$name, tst)
+  expect_true(
+    all(
+      tibble::is_tibble(tst_meta$time_series),
+      tibble::is_tibble(tst_meta$years),
+      tibble::is_tibble(tst_meta$geog_levels)
+    )
+  )
+
+  expect_equal(length(dt_meta), 6)
+  expect_equal(
+    names(dt_meta),
+    c("name", "description", "universe", "nhgis_code",
+      "sequence", "variables")
+  )
+  expect_equal(dt_meta$name, table)
+  expect_true(tibble::is_tibble(dt_meta$variables))
+
+})
+
+test_that("We throw errors on bad metadata requests", {
+
+  expect_error(
+    get_nhgis_metadata(),
+    "At least one of `type`, `dataset`, or `time_series_table`"
+  )
+  expect_error(
+    get_nhgis_metadata(
+      type = c("shapefiles", "time_series_tables")
+    ),
+    "Can only retrieve metadata for a single value of `type` at a time"
+  )
+  expect_error(
+    get_nhgis_metadata(type = "Bad type"),
+    "`type` must be one of"
+  )
+  expect_error(
+    get_nhgis_metadata(dataset = "Bad dataset"),
+    "Couldn't find Dataset"
+  )
+  expect_error(
+    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "Bad table"),
+    "Couldn't find DataTable"
+  )
+  expect_error(
+    get_nhgis_metadata(time_series_table = "Bad tst"),
+    "Couldn't find TimeSeriesTable"
+  )
+  expect_error(
+    get_nhgis_metadata(dataset = "1980_STF1", time_series_table = "CW3"),
+    "Only one of `type`, `dataset`, or `time_series_table` may be specified"
+  )
+  expect_error(
+    get_nhgis_metadata(ds_table = "P8"),
+    "If a `ds_table` is specified, a `dataset` must also be specified"
+  )
+
+})
+
+
+
+
+
