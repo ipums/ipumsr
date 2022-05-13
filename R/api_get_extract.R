@@ -273,7 +273,8 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     )
   }
 
-  # Internal logic in lieu of new S3 class needed to handle dispatch...
+  # Internal logic in lieu of new S3 extract_tbl class needed to handle
+  # dispatch...This could potentially be improved.
   if (collection == "nhgis") {
 
     if (!requireNamespace("tidyr", quietly = TRUE)) {
@@ -284,13 +285,27 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
       )
     }
 
-    extract_tbl <- collapse_nhgis_extract_tbl(extract_tbl)
-  }
+    extract_list <- purrr::pmap(
+      collapse_nhgis_extract_tbl(extract_tbl),
+      new_ipums_extract
+    )
 
-  extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
+    extract_list <- purrr::map(
+      extract_list,
+      ~recycle_subfields(
+        .x,
+        datasets = c("ds_tables",
+                     "ds_geog_levels",
+                     "ds_years",
+                     "ds_breakdown_values"),
+        time_series_tables = "tst_geog_levels"
+      )
+    )
 
-  if (collection == "nhgis") {
-    extract_list <- purrr::map(extract_list, recycle_nhgis_extract_args)
+  } else {
+
+    extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
+
   }
 
   if (validate) {
@@ -545,7 +560,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     extract_tbl,
     dplyr::across(
       c(data_format, breakdown_and_data_type_layout, tst_layout),
-      ~tidyr::replace_na(.x, list(NULL))
+      ~ifelse(is.na(.x), list(NULL), list(.x))
     )
   )
 
