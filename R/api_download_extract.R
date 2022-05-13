@@ -1,15 +1,25 @@
+
 # This file is part of the ipumsr R package created by IPUMS.
 # For copyright and licensing information, see the NOTICE and LICENSE files
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-# Exported functions ------------------------------------------------------
-
-# > Download extract ----
+# Exported functions -----------------------------------------------------------
 
 #' Download an IPUMS data extract
 #'
-#' Download an IPUMS data extract via the IPUMS API. For an overview of ipumsr
+#' Download a completed IPUMS data extract via the IPUMS extract API.
+#'
+#' @details
+#' For NHGIS extracts, data files and GIS files will be saved in separate zip
+#' archives. \code{download_extract()} will return a character vector including
+#' the file paths to all downloaded files.
+#'
+#' For microdata extracts, only the file path to the downloaded .xml DDI file
+#' will be returned, as it is sufficient for loading the data provided in the
+#' associated .gz data file.
+#'
+#' For an overview of ipumsr
 #' API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams get_extract_info
@@ -21,7 +31,8 @@
 #'   exist. Defaults to \code{FALSE}.
 #'
 #' @family ipums_api
-#' @return Invisibly, the path to the downloaded .xml DDI file.
+#' @return Invisibly returns the path(s) to the files required to read the data
+#'   requested in the extract.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -79,6 +90,16 @@ download_extract <- function(extract,
 
 }
 
+# Internal functions -----------------------------------------------------------
+
+#' Collection-specific extract download
+#'
+#' S3 generic implementation to allow for collection-specific method dispatch
+#' for extract downloading. This need arises because of differences
+#' in the types of files and file formats provided upon download for different
+#' collections.
+#'
+#' @noRd
 ipums_extract_specific_download <- function(extract,
                                             download_dir,
                                             overwrite,
@@ -188,6 +209,13 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
 }
 
 
+#' Check if an extract is ready for download
+#'
+#' @param extract An \code{ipums_extract} object
+#'
+#' @return Logical indicating whether extract is ready for download
+#'
+#' @noRd
 extract_is_completed_and_has_links <- function(extract) {
   UseMethod("extract_is_completed_and_has_links")
 }
@@ -215,7 +243,6 @@ extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
   status == "completed" && length(download_links) > 0
 
 }
-
 
 #' Writes the given url to file_path. Returns the file path of the
 #' downloaded data. Raises an error if the request is not successful.

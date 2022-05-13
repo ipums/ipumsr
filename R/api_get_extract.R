@@ -1,9 +1,18 @@
-# > Get info on extract ----
+
+# This file is part of the ipumsr R package created by IPUMS.
+# For copyright and licensing information, see the NOTICE and LICENSE files
+# in this project's top-level directory, and also on-line at:
+#   https://github.com/ipums/ipumsr
+
+# Exported functions -----------------------------------------------------------
 
 #' Get information about a submitted extract
 #'
-#' Get information about a submitted extract via the IPUMS API. For an overview
-#' of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#' Get information about a submitted extract via the IPUMS API.
+#'
+#' @details
+#' For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @param extract One of:
 #'   \itemize{
@@ -20,7 +29,8 @@
 #' @inheritParams download_extract
 #'
 #' @family ipums_api
-#' @return An \code{ipums_extract} object.
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition. Each collection produces an object of its own class.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -66,32 +76,29 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     api_key = api_key
   )
 
-  # if(collection == "nhgis") {
-  #   warning(
-  #     "The current version of the NHGIS API (v1) does not provide information ",
-  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-  #     "`time_series_table_layout` or `geographic_extents` for previously ",
-  #     "submitted extracts. Consult your initial extract request for ",
-  #     "information on the values of these parameters.",
-  #     call. = FALSE
-  #   )
-  # }
-
   extract_list_from_json(response)[[1]]
 
 }
 
-# > Get info on recent extracts ----
-
 #' Get information on recent extracts
 #'
+#' @description
 #' Get information on recent extracts for a given IPUMS collection
-#' via the IPUMS API, returned either as a list or tibble. For an overview of
-#' ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#' via the IPUMS API, returned either as a list or tibble.
+#'
+#' @details
+#' \code{get_last_extract_info(collection)} is a convenience function that is
+#' similar to \code{get_recent_extracts_info_list(collection, how_many = 1)},
+#' but returns an object inheriting from class \code{ipums_extract} rather than
+#' a list of the object.
+#'
+#' @details
+#' For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams define_extract_micro
-#' @param how_many Number of recent extracts for which you'd like information.
-#'   Defaults to 10 extracts.
+#' @param how_many Number of extracts for which you'd like information, starting
+#'   with the most recent extract. Defaults to the 10 most recent extracts.
 #' @inheritParams submit_extract
 #'
 #' @family ipums_api
@@ -131,6 +138,25 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' submitted_revised_income_extract <- submit_extract(revised_income_extract)
 #' }
 #'
+#' # get_last_extract_info() can be used for convenience in the extract
+#' # submission workflow as shown below:
+#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#'
+#' \dontrun{
+#' submit_extract(my_extract)
+#'
+#' # Oops, forgot to capture the return object from submit_extract. Grab it with:
+#' submitted_extract <- get_last_extract_info("usa")
+#'
+#' # View the extract number
+#' submitted_extract$number
+#'
+#' # Check if submitted extract is ready
+#' is_extract_ready(submitted_extract) # returns TRUE or FALSE
+#'
+#' # Or have R check periodically until the extract is ready
+#' downloadable_extract <- wait_for_extract(submitted_extract)
+#' }
 #' @name get_recent_extracts_info
 NULL
 
@@ -149,18 +175,8 @@ get_recent_extracts_info_list <- function(collection,
     api_key = api_key
   )
 
-  # if(collection == "nhgis") {
-  #   warning(
-  #     "The current version of the NHGIS API (v1) does not provide information ",
-  #     "on `shapefiles`, `breakdown_and_data_type_layout`, ",
-  #     "`time_series_table_layout` or `geographic_extents` for previously ",
-  #     "submitted extracts. Consult your initial extract request for ",
-  #     "information on the values of these parameters.",
-  #     call. = FALSE
-  #   )
-  # }
-
   extract_list_from_json(response)
+
 }
 
 #' @rdname get_recent_extracts_info
@@ -178,63 +194,34 @@ get_recent_extracts_info_tbl <- function(collection,
   extract_list_to_tbl(extract_list)
 }
 
-# > Get info on most recent extract ----
-
-#' Get information on last extract
-#'
-#' Get information on your most recent extract for a given IPUMS data
-#' collection, returned as an \code{ipums_extract} object. For an overview of
-#' ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
-#'
-#' @inheritParams get_recent_extracts_info_list
-#'
-#' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing information on
-#'   your most recent extract.
-#'
-#' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
-#'
-#' \dontrun{
-#' submit_extract(my_extract)
-#'
-#' # Oops, forgot to capture the return object from submit_extract. Grab it with:
-#' submitted_extract <- get_last_extract_info("usa")
-#'
-#' # View the extract number
-#' submitted_extract$number
-#'
-#' # Check if submitted extract is ready
-#' is_extract_ready(submitted_extract) # returns TRUE or FALSE
-#'
-#' # Or have R check periodically until the extract is ready
-#' downloadable_extract <- wait_for_extract(submitted_extract)
-#' }
-#'
+#' @rdname get_recent_extracts_info
 #' @export
 get_last_extract_info <- function(collection,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
   get_recent_extracts_info_list(collection, 1, api_key)[[1]]
 }
 
-# > Convert extract tbl to list ----
-
 #' Convert a tibble of extract definitions to a list
 #'
 #' Convert a \code{\link[tibble]{tbl_df}} (or \code{data.frame}) of extract
 #' definitions, such as that returned by
 #' \code{\link{get_recent_extracts_info_tbl}}, to a list of \code{ipums_extract}
-#' objects. For an overview of ipumsr API functionality, see
+#' objects.
+#'
+#' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @param extract_tbl A \code{\link[tibble]{tbl_df}} (or \code{data.frame})
-#'   where each row contains the definition of one extract.
+#'   as returned by \code{\link{get_recent_extracts_info_tbl()}} that contains
+#'   the specifications for one or more \code{ipums_extract} objects.
 #' @param validate Logical (\code{TRUE} or \code{FALSE}) value indicating
 #'   whether to check that each row of \code{extract_tbl} contains a valid and
 #'   complete extract definition. Defaults to \code{TRUE}
 #'
 #' @family ipums_api
-#' @return A list of length equal to the number of rows of \code{extract_tbl}.
+#' @return A list of length equal to the number of extracts represented in
+#'   \code{extract_tbl}. Unique extracts can be identified by their extract
+#'   number.
 #'
 #' @examples
 #' \dontrun{
@@ -314,22 +301,21 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
 }
 
-
-# > Convert extract list to tbl ----
-
 #' Convert a list of extract definitions to a tibble
 #'
 #' Convert a list of \code{ipums_extract} objects to a
-#' \code{\link[tibble]{tbl_df}} in which each row contains the definition of one
-#' extract. For an overview of ipumsr API functionality, see
+#' \code{\link[tibble]{tbl_df}} that contains the extract specifications.
+#'
+#' @details
+#' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @param extract_list A list of \code{ipums_extract} objects.
+#' @param extract_list A list of objects inheriting from \code{ipums_extract}
 #'
 #' @family ipums_api
-#' @return A \code{\link[tibble]{tbl_df}} with number of rows equal to the
-#'   length of \code{extract_list}, in which each rows contains the definition
-#'   of one extract.
+#' @return A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
+#'   and whose values represent the specified parameters for those fields.
+#'   Extracts can be uniquely identified by their extract number.
 #'
 #' @examples
 #' \dontrun{
@@ -366,9 +352,23 @@ extract_list_to_tbl <- function(extract_list) {
 
 }
 
+# Internal functions -----------------------------------------------------------
 
-
-
+#' Convert a single extract to a tibble
+#'
+#' @description
+#' S3 generic to allow for collection-specific method dispatch when converting
+#' extract objects to tibble format. collection-specific functionality is
+#' needed because NHGIS extracts return a tibble whose extracts are spread
+#' across multiple rows. However, we cannot perform dispatch on a list of
+#' extract objects directly, as is done in extract_list_to_tbl.
+#'
+#' @param x An object inheriting from \code{ipums_extract}
+#'
+#' @return A tibble representing the specifications for the extract \code{x}.
+#'   These can be combined to form a larger tibble for multiple recent extracts.
+#'
+#' @noRd
 extract_to_tbl <- function(x) {
   UseMethod("extract_to_tbl")
 }
@@ -469,7 +469,21 @@ extract_to_tbl.nhgis_extract <- function(x) {
 
 }
 
-
+#' Flatten a long-format tibble of NHGIS extract specifications
+#'
+#' Converts tibble where each extract is spread out across multiple rows to a
+#' tibble where each row represents a specific extract. This enables the use of
+#' a standard conversion method from an extract tibble to list across microdata
+#' and NHGIS, even though NHGIS extract tibbles are delivered in a different
+#' layout.
+#'
+#' @param extract_tbl Tibble of NHGIS extract specifications as provided by
+#'   \code{get_recent_extracts_info_tbl(collection = "nhgis")}
+#'
+#' @return A tibble where each row represents a single NHGIS extract. Fields
+#'   with multiple values are collapsed as list-columns.
+#'
+#' @noRd
 collapse_nhgis_extract_tbl <- function(extract_tbl) {
 
   if (!requireNamespace("tidyr", quietly = TRUE)) {
@@ -544,8 +558,11 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
 
 }
 
-
-
+#' This is currently used only to catch unexpected names in
+#' \code{extract_tbl_to_list()}. However, unexpected names vary across
+#' collections, so we use an S3 generic.
+#'
+#' @noRd
 get_extract_tbl_fields <- function(x) {
   UseMethod("get_extract_tbl_fields")
 }
@@ -575,11 +592,18 @@ get_extract_tbl_fields.ipums_extract <- function(x) {
   )
 }
 
-
-
-
-
-extract_list_from_json <- function(extract_json, ...) {
+#' Convert JSON containing extract specifications to an extract object
+#'
+#' @param extract_json JSON containing the extract specification as returned
+#'   by the extract API
+#' @param validate Logical indicating whether the created extract object should
+#'   be validated using \code{validate_ipums_extract}
+#'
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition. Each collection produces an object of its own class.
+#'
+#' @noRd
+extract_list_from_json <- function(extract_json, validate) {
   UseMethod("extract_list_from_json")
 }
 

@@ -1,11 +1,10 @@
+
 # This file is part of the ipumsr R package created by IPUMS.
 # For copyright and licensing information, see the NOTICE and LICENSE files
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
 # Exported functions ------------------------------------------------------
-
-# > Revise extract definition ----
 
 #' Modify values in an existing extract definition
 #'
@@ -49,12 +48,6 @@ NULL
 #' @export
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
-}
-
-#' @rdname revise_extract
-#' @export
-remove_from_extract <- function(extract, ...) {
-  UseMethod("remove_from_extract")
 }
 
 #' Add values to an existing NHGIS extract
@@ -283,13 +276,116 @@ add_to_extract.nhgis_extract <- function(extract,
 
 }
 
+#' Add values to an existing USA extract
+#'
+#' @description
+#' Add new values to any extract fields of a USA extract.
+#'
+#' To remove existing values from an extract, see
+#' \code{\link{remove_from_extract.usa_extract}}.
+#'
+#' @inheritParams define_extract_micro
+#' @param samples Character vector of samples to add to the extract, if any.
+#' @param variables Character vector of variables to add to the extract, if any.
+#' @param validate Logical value indicating whether to check the modified
+#'   extract structure for validity. Defaults to \code{TRUE}
+#'
+#' @return A modified \code{usa_extract} object
+#' @export
+#'
+#' @examples
+#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#'
+#' add_to_extract(
+#'   my_extract,
+#'   description = "Revised extract",
+#'   samples = "us2014a"
+#' )
+add_to_extract.usa_extract <- function(extract,
+                                       description = NULL,
+                                       samples = NULL,
+                                       variables = NULL,
+                                       data_format = NULL,
+                                       data_structure = NULL,
+                                       rectangular_on = NULL,
+                                       validate = TRUE) {
 
+  extract <- copy_ipums_extract(extract)
 
+  # Move this to validate_ipums_extract.usa_extract()?
+  if (!is.null(data_structure) && data_structure != "rectangular") {
+    stop(
+      "Currently, the `data_structure` argument must be equal to ",
+      "\"rectangular\"; in the future, the API will also support ",
+      "\"hierarchical\" extracts.",
+      call. = FALSE
+    )
+  }
+
+  if (!is.null(rectangular_on) && rectangular_on != "P") {
+    stop(
+      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+      "the future, the API will also support `rectangular_on = \"H\".",
+      call. = FALSE
+    )
+  }
+
+  add_vars <- list(
+    samples = samples,
+    variables = variables
+  )
+
+  # Currently don't have analogous warning for NHGIS so removing for consistency?
+  # purrr::map(
+  #   names(add_vars),
+  #   ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
+  #     warning(
+  #       "The following ", .x, " are already included in the ",
+  #       "supplied extract definition, and thus will not be added: ",
+  #       paste0(
+  #         intersect(add_vars[[.x]], extract[[.x]]),
+  #         collapse = "\", \""
+  #       ),
+  #       "\"",
+  #       call. = FALSE
+  #     )
+  #   }
+  # )
+
+  extract <- modify_flat_fields(
+    extract,
+    samples = samples,
+    variables = variables,
+    modification = "add"
+  )
+
+  extract <- modify_flat_fields(
+    extract,
+    description = description,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    modification = "replace"
+  )
+
+  if (validate) {
+    extract <- validate_ipums_extract(extract)
+  }
+
+  extract
+
+}
+
+#' @rdname revise_extract
+#' @export
+remove_from_extract <- function(extract, ...) {
+  UseMethod("remove_from_extract")
+}
 
 #' Remove values from an existing NHGIS extract
 #'
 #' @description
-#' Remove existing values present in any extract fields of an NHGIS extract.
+#' Remove existing values present in extract fields of an NHGIS extract.
 #' This can include removing entire datasets and/or time series tables (along
 #' with their associated subfields) or removing subfield values for existing
 #' datasets and/or time series tables.
@@ -523,83 +619,37 @@ remove_from_extract.nhgis_extract <- function(extract,
 
 }
 
+#' Remove values from an existing USA extract
+#'
+#' @description
+#' Remove existing values from extract fields of a USA extract.
+#'
+#' To add new values to an extract, see
+#' \code{\link{add_to_extract.usa_extract}}.
+#'
+#' @inheritParams define_extract_micro
+#' @param samples Character vector of samples to remove from the extract,
+#'   if any.
+#' @param variables Character vector of variables to remove from the extract,
+#'   if any.
+#' @param validate Logical value indicating whether to check the modified
+#'   extract structure for validity. Defaults to \code{TRUE}
+#'
+#' @return A modified \code{usa_extract} object
 #' @export
-add_to_extract.usa_extract <- function(extract,
-                                       description = NULL,
-                                       samples = NULL,
-                                       variables = NULL,
-                                       data_format = NULL,
-                                       data_structure = NULL,
-                                       rectangular_on = NULL,
-                                       validate = TRUE) {
-
-  extract <- copy_ipums_extract(extract)
-
-  # Move this to validate_ipums_extract.usa_extract()?
-  if (!is.null(data_structure) && data_structure != "rectangular") {
-    stop(
-      "Currently, the `data_structure` argument must be equal to ",
-      "\"rectangular\"; in the future, the API will also support ",
-      "\"hierarchical\" extracts.",
-      call. = FALSE
-    )
-  }
-
-  if (!is.null(rectangular_on) && rectangular_on != "P") {
-    stop(
-      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-      "the future, the API will also support `rectangular_on = \"H\".",
-      call. = FALSE
-    )
-  }
-
-  add_vars <- list(
-    samples = samples,
-    variables = variables
-  )
-
-  # Currently don't have analogous warning for NHGIS
-  # purrr::map(
-  #   names(add_vars),
-  #   ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
-  #     warning(
-  #       "The following ", .x, " are already included in the ",
-  #       "supplied extract definition, and thus will not be added: ",
-  #       paste0(
-  #         intersect(add_vars[[.x]], extract[[.x]]),
-  #         collapse = "\", \""
-  #       ),
-  #       "\"",
-  #       call. = FALSE
-  #     )
-  #   }
-  # )
-
-  extract <- modify_flat_fields(
-    extract,
-    samples = samples,
-    variables = variables,
-    modification = "add"
-  )
-
-  extract <- modify_flat_fields(
-    extract,
-    description = description,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    modification = "replace"
-  )
-
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
-
-  extract
-
-}
-
-#' @export
+#'
+#' @examples
+#' my_extract <- define_extract_micro(
+#'   collection = "usa",
+#'   description = "Example",
+#'   samples = c("us2013a" "us2014a"),
+#'   variables = "YEAR"
+#' )
+#'
+#' remove_from_extract(
+#'   my_extract,
+#'   samples = "us2014a"
+#' )
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
@@ -620,6 +670,7 @@ remove_from_extract.usa_extract <- function(extract,
     variables = variables
   )
 
+  # Currently don't have analogous warning for NHGIS so removing for consistency?
   # purrr::walk(
   #   names(to_remove),
   #   ~if (any(!to_remove[[.x]] %in% extract[[.x]])) {
@@ -1180,4 +1231,3 @@ copy_ipums_extract <- function(extract) {
   extract
 
 }
-

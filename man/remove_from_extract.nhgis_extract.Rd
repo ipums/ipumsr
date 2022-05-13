@@ -52,7 +52,7 @@ specified in \code{datasets}. See details for available syntax options.}
 extents for all datasets included in the extract. Use \code{"*"}
 to select all available extents. Required when any dataset in the extract
 includes a \code{ds_geog_levels} value that requires extent selection.
-See \code{\link{get_nhgis_metadata}} to determine whether a requested
+See \code{\link{get_nhgis_metadata}()} to determine whether a requested
 \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 extent selection only for blocks and block groups.}
 
@@ -79,7 +79,7 @@ extract structure for validity. Defaults to \code{TRUE}}
 A modified \code{nhgis_extract} object
 }
 \description{
-Remove existing values present in any extract fields of an NHGIS extract.
+Remove existing values present in extract fields of an NHGIS extract.
 This can include removing entire datasets and/or time series tables (along
 with their associated subfields) or removing subfield values for existing
 datasets and/or time series tables.

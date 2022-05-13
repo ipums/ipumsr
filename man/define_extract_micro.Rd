@@ -42,15 +42,29 @@ An object inheriting from class \code{ipums_extract} containing the
 }
 \description{
 Define an extract request object to be submitted via the IPUMS microdata
-extract API. For an overview of \code{ipumsr} microdata API functionality,
-see \code{vignette("ipums-api", package = "ipumsr")}.
+extract API.
+}
+\details{
+For an overview of \code{ipumsr} microdata API functionality,
+see \code{vignette("ipums-api", package = "ipumsr")}
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
 }
 \seealso{
-Other ipums_api_micro: 
+Other ipums_api: 
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract}}
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
+\code{\link{download_extract}()},
+\code{\link{extract_list_to_tbl}()},
+\code{\link{extract_tbl_to_list}()},
+\code{\link{get_extract_info}()},
+\code{\link{get_recent_extracts_info}},
+\code{\link{ipums_data_collections}()},
+\code{\link{is_extract_ready}()},
+\code{\link{save_extract_as_json}()},
+\code{\link{submit_extract}()},
+\code{\link{wait_for_extract}()}
 }
-\concept{ipums_api_micro}
+\concept{ipums_api}

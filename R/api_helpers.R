@@ -1,11 +1,26 @@
 
-# > List data collections ----
+# This file is part of the ipumsr R package created by IPUMS.
+# For copyright and licensing information, see the NOTICE and LICENSE files
+# in this project's top-level directory, and also on-line at:
+#   https://github.com/ipums/ipumsr
+
+# Exported functions -----------------------------------------------------------
 
 #' List IPUMS data collections
 #'
-#' List IPUMS data collections with corresponding codes used by the IPUMS API.
-#' Note that some data collections do not yet have API support. For an overview
-#' of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#' List IPUMS data collections with corresponding codes used by the IPUMS
+#' extract API. Note that some data collections do not yet have API support.
+#'
+#' Currently, \code{ipumsr} supports extract definitions for the following
+#' collections:
+#'
+#' \itemize{
+#'   \item{IPUMS NHGIS}
+#'   \item{IPUMS USA}
+#' }
+#'
+#' For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @family ipums_api
 #' @return A \code{\link[tibble]{tbl_df}} with two columns containing the
@@ -34,6 +49,8 @@ ipums_data_collections <- function() {
   )
 }
 
+# Internal functions -----------------------------------------------------------
+
 #' Convert all download file paths in a cassette file to be relative to the
 #' working directory
 #'
@@ -52,13 +69,11 @@ convert_paths_in_cassette_file_to_relative <- function(cassette_path) {
   writeLines(lines, con = cassette_path)
 }
 
-
 skip_if_no_api_access <- function(have_api_access) {
   if (!have_api_access) {
     return(testthat::skip("no API access and no saved API responses"))
   }
 }
-
 
 #' Convert an absolute path to be relative to the working directory
 #'
@@ -182,8 +197,7 @@ standardize_extract_identifier <- function(extract) {
   list(collection = collection, number = number)
 }
 
-
-# Should be moved to utils
+# Should be moved to utils?
 `%||%` <- function(a, b) {
   if (is.null(a)) {
     b

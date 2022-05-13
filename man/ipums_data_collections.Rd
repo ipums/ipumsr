@@ -11,9 +11,20 @@ A \code{\link[tibble]{tbl_df}} with two columns containing the
   full collection name and the corresponding code used by the IPUMS API.
 }
 \description{
-List IPUMS data collections with corresponding codes used by the IPUMS API.
-Note that some data collections do not yet have API support. For an overview
-of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+List IPUMS data collections with corresponding codes used by the IPUMS
+extract API. Note that some data collections do not yet have API support.
+}
+\details{
+Currently, \code{ipumsr} supports extract definitions for the following
+collections:
+
+\itemize{
+  \item{IPUMS NHGIS}
+  \item{IPUMS USA}
+}
+
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 # Print a tibble of all IPUMS data collections:
@@ -22,11 +33,14 @@ ipums_data_collections()
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{is_extract_ready}()},
 \code{\link{save_extract_as_json}()},

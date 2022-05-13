@@ -7,17 +7,19 @@
 extract_list_to_tbl(extract_list)
 }
 \arguments{
-\item{extract_list}{A list of \code{ipums_extract} objects.}
+\item{extract_list}{A list of objects inheriting from \code{ipums_extract}}
 }
 \value{
-A \code{\link[tibble]{tbl_df}} with number of rows equal to the
-  length of \code{extract_list}, in which each rows contains the definition
-  of one extract.
+A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
+  and whose values represent the specified parameters for those fields.
+  Extracts can be uniquely identified by their extract number.
 }
 \description{
 Convert a list of \code{ipums_extract} objects to a
-\code{\link[tibble]{tbl_df}} in which each row contains the definition of one
-extract. For an overview of ipumsr API functionality, see
+\code{\link[tibble]{tbl_df}} that contains the extract specifications.
+}
+\details{
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -37,10 +39,13 @@ extract_list_to_tbl(list_of_last_10_extracts)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},

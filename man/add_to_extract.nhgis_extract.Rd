@@ -64,7 +64,7 @@ available syntax options).}
 extents for all datasets included in the extract. Use \code{"*"}
 to select all available extents. Required when any dataset in the extract
 includes a \code{ds_geog_levels} value that requires extent selection.
-See \code{\link{get_nhgis_metadata}} to determine whether a requested
+See \code{\link{get_nhgis_metadata}()} to determine whether a requested
 \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 extent selection only for blocks and block groups.}
 
@@ -75,7 +75,7 @@ breakdown values in one file, or \code{"separate_files"}, which splits each
 data type or breakdown value into its own file. Required if any datasets
 included in the extract consist of multiple data types (for instance,
 estimates and margins of error) or have multiple breakdown values
-specified. See \code{\link{get_nhgis_metadata}} to determine whether a
+specified. See \code{\link{get_nhgis_metadata}()} to determine whether a
 requested dataset has multiple data types.}
 
 \item{time_series_tables}{Character vector of time series tables to add or

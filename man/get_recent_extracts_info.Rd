@@ -4,6 +4,7 @@
 \alias{get_recent_extracts_info}
 \alias{get_recent_extracts_info_list}
 \alias{get_recent_extracts_info_tbl}
+\alias{get_last_extract_info}
 \title{Get information on recent extracts}
 \usage{
 get_recent_extracts_info_list(
@@ -17,12 +18,14 @@ get_recent_extracts_info_tbl(
   how_many = 10,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
+
+get_last_extract_info(collection, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{collection}{The IPUMS data collection for the extract.}
 
-\item{how_many}{Number of recent extracts for which you'd like information.
-Defaults to 10 extracts.}
+\item{how_many}{Number of extracts for which you'd like information, starting
+with the most recent extract. Defaults to the 10 most recent extracts.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
@@ -34,8 +37,16 @@ For \code{get_recent_extracts_info_list()}, a list of
 }
 \description{
 Get information on recent extracts for a given IPUMS collection
-via the IPUMS API, returned either as a list or tibble. For an overview of
-ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+via the IPUMS API, returned either as a list or tibble.
+}
+\details{
+\code{get_last_extract_info(collection)} is a convenience function that is
+similar to \code{get_recent_extracts_info_list(collection, how_many = 1)},
+but returns an object inheriting from class \code{ipums_extract} rather than
+a list of the object.
+
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 \dontrun{
@@ -69,14 +80,36 @@ revised_income_extract <- revise_extract_micro(
 submitted_revised_income_extract <- submit_extract(revised_income_extract)
 }
 
+# get_last_extract_info() can be used for convenience in the extract
+# submission workflow as shown below:
+my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+
+\dontrun{
+submit_extract(my_extract)
+
+# Oops, forgot to capture the return object from submit_extract. Grab it with:
+submitted_extract <- get_last_extract_info("usa")
+
+# View the extract number
+submitted_extract$number
+
+# Check if submitted extract is ready
+is_extract_ready(submitted_extract) # returns TRUE or FALSE
+
+# Or have R check periodically until the extract is ready
+downloadable_extract <- wait_for_extract(submitted_extract)
+}
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{save_extract_as_json}()},

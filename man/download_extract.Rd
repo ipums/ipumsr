@@ -34,10 +34,22 @@ exist. Defaults to \code{FALSE}.}
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-Invisibly, the path to the downloaded .xml DDI file.
+Invisibly returns the path(s) to the files required to read the data
+  requested in the extract.
 }
 \description{
-Download an IPUMS data extract via the IPUMS API. For an overview of ipumsr
+Download a completed IPUMS data extract via the IPUMS extract API.
+}
+\details{
+For NHGIS extracts, data files and GIS files will be saved in separate zip
+archives. \code{download_extract()} will return a character vector including
+the file paths to all downloaded files.
+
+For microdata extracts, only the file path to the downloaded .xml DDI file
+will be returned, as it is sufficient for loading the data provided in the
+associated .gz data file.
+
+For an overview of ipumsr
 API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -61,10 +73,13 @@ path_to_ddi_file <- download_extract(c("usa", "1"))
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},

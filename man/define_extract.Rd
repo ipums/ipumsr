@@ -5,7 +5,7 @@
 \title{Define an IPUMS extract object}
 \description{
 Specify the parameters for a new IPUMS extract request object to be
-submitted via the IPUMS API.
+submitted via the IPUMS extract API.
 
 Currently, \code{ipumsr} supports extract definitions for the following
 collections:
@@ -15,26 +15,29 @@ collections:
   \item{IPUMS USA}
 }
 
-For information on how to define an extract for a specific collection, use
-the links below:
+For information on defining NHGIS extracts, see
+\code{\link{define_extract_nhgis}()}
 
-\itemize{
-  \item{\code{\link{define_extract_nhgis}}}
-  \item{\code{\link{define_extract_micro}}}
-}
+For information defining extracts for IPUMS microdata collections, see
+\code{\link{define_extract_micro}()}
 
 For an overview of \code{ipumsr} API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \seealso{
-Other ipums_api_micro: 
+Other ipums_api: 
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()}
-
-Other ipums_api_nhgis: 
-\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
 \code{\link{define_extract_nhgis}()},
-\code{\link{get_nhgis_metadata}()}
+\code{\link{download_extract}()},
+\code{\link{extract_list_to_tbl}()},
+\code{\link{extract_tbl_to_list}()},
+\code{\link{get_extract_info}()},
+\code{\link{get_recent_extracts_info}},
+\code{\link{ipums_data_collections}()},
+\code{\link{is_extract_ready}()},
+\code{\link{save_extract_as_json}()},
+\code{\link{submit_extract}()},
+\code{\link{wait_for_extract}()}
 }
-\concept{ipums_api_micro}
-\concept{ipums_api_nhgis}
+\concept{ipums_api}

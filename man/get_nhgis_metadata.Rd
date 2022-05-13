@@ -63,10 +63,4 @@ get_nhgis_metadata(dataset = "1980_STF1")
 get_nhgis_metadata(dataset = "1980_STF1", ds_table = "NT1A")
 get_nhgis_metadata(time_series_table = "CW3")
 }
-\seealso{
-Other ipums_api_nhgis: 
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}}
-}
 \concept{ipums_api_nhgis}

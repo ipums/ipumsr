@@ -4,6 +4,8 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
+# Exported functions -----------------------------------------------------------
+
 #' View NHGIS metadata
 #'
 #' @description
@@ -136,6 +138,19 @@ get_nhgis_metadata <- function(type = NULL,
 
 }
 
+# Internal functions -----------------------------------------------------------
+
+#' Generate a URL to submit to the NHGIS metadata API
+#'
+#' @param base_url Base url to which arguments passed to \code{...} will be
+#'   appended.
+#' @param ... Arbitrary number of named arguments. Arguments will be appended
+#'   to the \code{base_url} in the format \{argument_name\}/\{argument_value\}
+#'
+#' @return A character with the URL corresponding to the metadata API request
+#'   for the provided values of \code{...}
+#'
+#' @noRd
 metadata_request_url <- function(base_url, ...) {
 
   dots <- rlang::list2(...)
@@ -160,6 +175,15 @@ metadata_request_url <- function(base_url, ...) {
 
 }
 
+#' Submit a request to the IPUMS metadata API and parse response
+#'
+#' @param request_url URL for the request
+#' @param api_key API key
+#'
+#' @return Either a tibble/data.frame or list object with the metadata for the
+#'   provided URL
+#'
+#' @noRd
 metadata_request <- function(request_url,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
 

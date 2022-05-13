@@ -7,16 +7,21 @@
 define_extract_from_json(extract_json, collection)
 }
 \arguments{
-\item{extract_json}{A JSON string, or the path to file containing JSON.}
+\item{extract_json}{A JSON string, or the path to file containing the
+JSON-formatted extract definition.}
 
 \item{collection}{The IPUMS data collection for the extract.}
 }
 \value{
-An object of class "ipums_extract".
+An object inheriting from class \code{ipums_extract} containing the
+  extract definition. Each collection produces an object of its own class.
 }
 \description{
-Create an object inheriting from class "ipums_extract" based on an extract
-definition formatted as JSON. For an overview of ipumsr API functionality,
+Create an \code{ipums_extract} object using an extract
+definition formatted as JSON.
+}
+\details{
+For an overview of ipumsr API functionality,
 see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -31,14 +36,19 @@ identical(my_extract, copy_of_my_extract)
 
 }
 \seealso{
-Other ipums_api_micro: 
+Other ipums_api: 
 \code{\link{define_extract_micro}()},
-\code{\link{define_extract}}
-
-Other ipums_api_nhgis: 
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract}},
-\code{\link{get_nhgis_metadata}()}
+\code{\link{download_extract}()},
+\code{\link{extract_list_to_tbl}()},
+\code{\link{extract_tbl_to_list}()},
+\code{\link{get_extract_info}()},
+\code{\link{get_recent_extracts_info}},
+\code{\link{ipums_data_collections}()},
+\code{\link{is_extract_ready}()},
+\code{\link{save_extract_as_json}()},
+\code{\link{submit_extract}()},
+\code{\link{wait_for_extract}()}
 }
-\concept{ipums_api_micro}
-\concept{ipums_api_nhgis}
+\concept{ipums_api}

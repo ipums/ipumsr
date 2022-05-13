@@ -8,20 +8,26 @@ extract_tbl_to_list(extract_tbl, validate = TRUE)
 }
 \arguments{
 \item{extract_tbl}{A \code{\link[tibble]{tbl_df}} (or \code{data.frame})
-where each row contains the definition of one extract.}
+as returned by \code{\link{get_recent_extracts_info_tbl()}} that contains
+the specifications for one or more \code{ipums_extract} objects.}
 
 \item{validate}{Logical (\code{TRUE} or \code{FALSE}) value indicating
 whether to check that each row of \code{extract_tbl} contains a valid and
 complete extract definition. Defaults to \code{TRUE}}
 }
 \value{
-A list of length equal to the number of rows of \code{extract_tbl}.
+A list of length equal to the number of extracts represented in
+  \code{extract_tbl}. Unique extracts can be identified by their extract
+  number.
 }
 \description{
 Convert a \code{\link[tibble]{tbl_df}} (or \code{data.frame}) of extract
 definitions, such as that returned by
 \code{\link{get_recent_extracts_info_tbl}}, to a list of \code{ipums_extract}
-objects. For an overview of ipumsr API functionality, see
+objects.
+}
+\details{
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -51,10 +57,13 @@ submitted_revised_income_extract <- submit_extract(revised_income_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},

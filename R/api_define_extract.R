@@ -6,13 +6,11 @@
 
 # Exported functions -----------------------------------------------------------
 
-# > Define extract ----
-
 #' Define an IPUMS extract object
 #'
 #' @description
 #' Specify the parameters for a new IPUMS extract request object to be
-#' submitted via the IPUMS API.
+#' submitted via the IPUMS extract API.
 #'
 #' Currently, \code{ipumsr} supports extract definitions for the following
 #' collections:
@@ -22,28 +20,29 @@
 #'   \item{IPUMS USA}
 #' }
 #'
-#' For information on how to define an extract for a specific collection, use
-#' the links below:
+#' For information on defining NHGIS extracts, see
+#' \code{\link{define_extract_nhgis}()}
 #'
-#' \itemize{
-#'   \item{\code{\link{define_extract_nhgis}}}
-#'   \item{\code{\link{define_extract_micro}}}
-#' }
+#' For information defining extracts for IPUMS microdata collections, see
+#' \code{\link{define_extract_micro}()}
 #'
 #' For an overview of \code{ipumsr} API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @family ipums_api_micro
-#' @family ipums_api_nhgis
+#' @family ipums_api
 #'
 #' @name define_extract
 NULL
 
 #' Define a microdata extract request
 #'
+#' @description
 #' Define an extract request object to be submitted via the IPUMS microdata
-#' extract API. For an overview of \code{ipumsr} microdata API functionality,
-#' see \code{vignette("ipums-api", package = "ipumsr")}.
+#' extract API.
+#'
+#' @details
+#' For an overview of \code{ipumsr} microdata API functionality,
+#' see \code{vignette("ipums-api", package = "ipumsr")}
 #'
 #' @param collection The IPUMS data collection for the extract.
 #' @param description Description of the extract.
@@ -60,7 +59,7 @@ NULL
 #'   extract will be rectangularized on person records. In the future, the API
 #'   will also support household-only extracts (\code{rectangular_on = "H"}).
 #'
-#' @family ipums_api_micro
+#' @family ipums_api
 #'
 #' @return An object inheriting from class \code{ipums_extract} containing the
 #'   extract definition. Each collection produces an object of its own class.
@@ -158,7 +157,7 @@ define_extract_micro <- function(collection,
 #'
 #' Users can find more information on the values that can be passed to these
 #' subfield arguments for a given dataset or time series table by using
-#' \code{\link{get_nhgis_metadata}}.
+#' \code{\link{get_nhgis_metadata}()}.
 #'
 #' For general information on the IPUMS NHGIS Extract API, click
 #' \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
@@ -182,7 +181,7 @@ define_extract_micro <- function(collection,
 #'   obtain the data contained in the requested summary tables. Use \code{"*"}
 #'   to select all available years for the specified dataset. This is a subfield
 #'   of \code{datasets} (see details for available syntax options). Not all
-#'   datasets allow year selection; see \code{\link{get_nhgis_metadata}} to
+#'   datasets allow year selection; see \code{\link{get_nhgis_metadata}()} to
 #'   determine if a dataset allows year selection.
 #' @param ds_breakdown_values Character vector or list of selected breakdown
 #'   values to apply to the requested summary tables. If more than one breakdown
@@ -193,7 +192,7 @@ define_extract_micro <- function(collection,
 #'   extents for all datasets included in the extract. Use \code{"*"}
 #'   to select all available extents. Required when any dataset in the extract
 #'   includes a \code{ds_geog_levels} value that requires extent selection.
-#'   See \code{\link{get_nhgis_metadata}} to determine whether a requested
+#'   See \code{\link{get_nhgis_metadata}()} to determine whether a requested
 #'   \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 #'   extent selection only for blocks and block groups.
 #' @param breakdown_and_data_type_layout The desired layout
@@ -203,7 +202,7 @@ define_extract_micro <- function(collection,
 #'   data type or breakdown value into its own file. Required if any datasets
 #'   included in the extract consist of multiple data types (for instance,
 #'   estimates and margins of error) or have multiple breakdown values
-#'   specified. See \code{\link{get_nhgis_metadata}} to determine whether a
+#'   specified. See \code{\link{get_nhgis_metadata}()} to determine whether a
 #'   requested dataset has multiple data types.
 #' @param time_series_tables Character vector of time series tables to include
 #'   in the extract, if any. For more information on NHGIS time series tables,
@@ -227,7 +226,7 @@ define_extract_micro <- function(collection,
 #'   row. Required when any datasets or time series tables are included in the
 #'   extract.
 #'
-#' @family ipums_api_nhgis
+#' @family ipums_api
 #'
 #' @return An object of class \code{nhgis_extract} containing the extract
 #'   definition.
@@ -338,21 +337,24 @@ define_extract_nhgis <- function(description = "",
 
 }
 
-# > Define extract from json ----
-
 #' Create an extract object from a JSON-formatted definition
 #'
-#' Create an object inheriting from class "ipums_extract" based on an extract
-#' definition formatted as JSON. For an overview of ipumsr API functionality,
+#' @description
+#' Create an \code{ipums_extract} object using an extract
+#' definition formatted as JSON.
+#'
+#' @details
+#' For an overview of ipumsr API functionality,
 #' see \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @param extract_json A JSON string, or the path to file containing JSON.
+#' @param extract_json A JSON string, or the path to file containing the
+#'   JSON-formatted extract definition.
 #' @inheritParams define_extract_micro
 #'
-#' @family ipums_api_micro
-#' @family ipums_api_nhgis
+#' @family ipums_api
 #'
-#' @return An object of class "ipums_extract".
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition. Each collection produces an object of its own class.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -412,26 +414,28 @@ define_extract_from_json <- function(extract_json, collection) {
 
 }
 
-# > Save extract as json ----
-
 #' Save an extract definition to disk as JSON
 #'
-#' Save an extract definition to a JSON-formatted file. For an overview of
-#' ipumsr API functionality, see
+#' @description
+#' Save an \code{ipums_extract} object to a JSON-formatted file.
+#'
+#' @details
+#' Note that this function only saves out the properties of an extract
+#' that are required to submit a new extract request for that extract
+#' definition. Extract properties \code{submitted}, \code{download_links},
+#' \code{number}, and \code{status} are not written.
+#'
+#' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams submit_extract
 #' @param file File path at which to write the JSON-formatted extract
 #'   definition.
 #'
-#' @details
-#' Note that this function only saves out the properties of an extract
-#' that are required to submit a new extract request, namely, the description,
-#' data structure, data format, samples, and variables.
-#'
 #' @family ipums_api
 #'
-#' @return The file path where the extract definition was written, invisibly.
+#' @return Invisibly returns the file path where the extract definition was
+#'   written.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -573,6 +577,31 @@ print.nhgis_extract <- function(x) {
 
 # > Constructors ---------------
 
+#' Create a new extract object
+#'
+#' @description
+#' Creates an object inheriting from class \code{ipums_extract} for use in
+#' interacting with the IPUMS extract API.
+#'
+#' @param collection Character indicating the IPUMS collection for this extract.
+#'   See \code{\link{ipums_data_collections}()}.
+#' @param description Description of the extract.
+#' @param submitted Logical indicating whether this extract has been sumitted
+#'   to the IPUMS extract API. See \code{\link{submit_extract}()}.
+#' @param download_links List of paths to the data included in the API response
+#'   after submitting an extract.
+#' @param number Number of the extract returned by the extract API on
+#'   submission.
+#' @param status Character indicating the current status of the extract as
+#'   returned by the extract API. If the extract has not been submitted, the
+#'   status is set to "unsubmitted".
+#' @param ... Additional arguments used in creating extract definitions for
+#'   specific data collections.
+#'
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition. Each collection produces an object of its own class.
+#'
+#' @noRd
 new_ipums_extract <- function(collection = NA_character_,
                               description = NA_character_,
                               submitted = FALSE,
@@ -598,6 +627,19 @@ new_ipums_extract <- function(collection = NA_character_,
 
 }
 
+#' Create a new IPUMS JSON object
+#'
+#' @description
+#' Creates a classed JSON object to allow for collection-specific method
+#' dispatch when reading extract definitions from JSON.
+#'
+#' @param json A JSON-formatted extract definition
+#' @param collection The collection of the extract represented in \code{json}
+#'
+#' @return JSON-formatted text with class \code{ipums_json}. Each collection
+#'  produces an object of its own class.
+#'
+#' @noRd
 new_ipums_json <- function(json, collection) {
   structure(
     json,
@@ -611,7 +653,36 @@ validate_ipums_extract <- function(x) {
   UseMethod("validate_ipums_extract")
 }
 
+#' Validate the structure of an NHGIS extract object
+#'
+#' @description
+#' Ensures that the structure of a provided \code{nhgis_extract} object is
+#' compatible with the structure expected for interacting with the IPUMS extract
+#' API.
+#'
+#' Validation checks currently implemented are:
+#'
+#' \itemize{
+#'   \item{An extract contains at least one dataset, time series table, or
+#'     shapefile}
+#'   \item{Fields that take a single value are of length one and have accepted
+#'     values}
+#'   \item{An extract contains a collection and description}
+#'   \item{All datasets in an extract have associated tables and geog levels}
+#'   \item{All dataset subfields are of the same length as the number of
+#'     datasets in the extract}
+#'   \item{All time series tables in an extract have associated geog levels}
+#'   \item{All time series table subfields are of the same length as the number
+#'     of time series tables in the extract}
+#' }
+#'
+#' @param x An \code{nhgis_extract} object
+#'
+#' @return Returns the input extract object
+#'
 #' @export
+#'
+#' @noRd
 validate_ipums_extract.nhgis_extract <- function(x) {
 
   types <- nhgis_extract_types(x)
@@ -865,7 +936,29 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 
 }
 
+#' Validate the structure of an IPUMS USA extract object
+#'
+#' @description
+#' Ensures that the structure of a provided \code{usa_extract} object is
+#' compatible with the structure expected for interacting with the IPUMS extract
+#' API.
+#'
+#' Validation checks currently implemented are:
+#'
+#' \itemize{
+#'   \item{An extract contains samples, variables, a description,
+#'     data structure, and data format,}
+#'   \item{Fields that take a single value have accepted values}
+#'   \item{rectangular_on is only provided if data structure is rectangular}
+#' }
+#'
+#' @param x A \code{usa_extract} object
+#'
+#' @return Returns the input extract object
+#'
 #' @export
+#'
+#' @noRd
 validate_ipums_extract.usa_extract <- function(x) {
 
   must_be_non_missing <- c("description", "data_structure",

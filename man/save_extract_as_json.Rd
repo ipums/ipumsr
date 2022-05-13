@@ -14,17 +14,20 @@ returned from another ipumsr API function.}
 definition.}
 }
 \value{
-The file path where the extract definition was written, invisibly.
+Invisibly returns the file path where the extract definition was
+  written.
 }
 \description{
-Save an extract definition to a JSON-formatted file. For an overview of
-ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Save an \code{ipums_extract} object to a JSON-formatted file.
 }
 \details{
 Note that this function only saves out the properties of an extract
-that are required to submit a new extract request, namely, the description,
-data structure, data format, samples, and variables.
+that are required to submit a new extract request for that extract
+definition. Extract properties \code{submitted}, \code{download_links},
+\code{number}, and \code{status} are not written.
+
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -39,11 +42,14 @@ identical(my_extract, copy_of_my_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},

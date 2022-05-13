@@ -42,7 +42,7 @@ included in the extract.}
 obtain the data contained in the requested summary tables. Use \code{"*"}
 to select all available years for the specified dataset. This is a subfield
 of \code{datasets} (see details for available syntax options). Not all
-datasets allow year selection; see \code{\link{get_nhgis_metadata}} to
+datasets allow year selection; see \code{\link{get_nhgis_metadata}()} to
 determine if a dataset allows year selection.}
 
 \item{ds_breakdown_values}{Character vector or list of selected breakdown
@@ -55,7 +55,7 @@ syntax options).}
 extents for all datasets included in the extract. Use \code{"*"}
 to select all available extents. Required when any dataset in the extract
 includes a \code{ds_geog_levels} value that requires extent selection.
-See \code{\link{get_nhgis_metadata}} to determine whether a requested
+See \code{\link{get_nhgis_metadata}()} to determine whether a requested
 \code{ds_geog_level} requires extent selection. Currently, NHGIS supports
 extent selection only for blocks and block groups.}
 
@@ -66,7 +66,7 @@ breakdown values in one file, or \code{"separate_files"}, which splits each
 data type or breakdown value into its own file. Required if any datasets
 included in the extract consist of multiple data types (for instance,
 estimates and margins of error) or have multiple breakdown values
-specified. See \code{\link{get_nhgis_metadata}} to determine whether a
+specified. See \code{\link{get_nhgis_metadata}()} to determine whether a
 requested dataset has multiple data types.}
 
 \item{time_series_tables}{Character vector of time series tables to include
@@ -133,7 +133,7 @@ There are three ways the values passed to these arguments can be provided:
 
 Users can find more information on the values that can be passed to these
 subfield arguments for a given dataset or time series table by using
-\code{\link{get_nhgis_metadata}}.
+\code{\link{get_nhgis_metadata}()}.
 
 For general information on the IPUMS NHGIS Extract API, click
 \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
@@ -176,9 +176,19 @@ define_extract_nhgis(
 
 }
 \seealso{
-Other ipums_api_nhgis: 
+Other ipums_api: 
 \code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
 \code{\link{define_extract}},
-\code{\link{get_nhgis_metadata}()}
+\code{\link{download_extract}()},
+\code{\link{extract_list_to_tbl}()},
+\code{\link{extract_tbl_to_list}()},
+\code{\link{get_extract_info}()},
+\code{\link{get_recent_extracts_info}},
+\code{\link{ipums_data_collections}()},
+\code{\link{is_extract_ready}()},
+\code{\link{save_extract_as_json}()},
+\code{\link{submit_extract}()},
+\code{\link{wait_for_extract}()}
 }
-\concept{ipums_api_nhgis}
+\concept{ipums_api}

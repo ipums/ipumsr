@@ -20,11 +20,15 @@ or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
 See Examples section below for examples of each form.}
 }
 \value{
-An \code{ipums_extract} object.
+An object inheriting from class \code{ipums_extract} containing the
+  extract definition. Each collection produces an object of its own class.
 }
 \description{
-Get information about a submitted extract via the IPUMS API. For an overview
-of ipumsr API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+Get information about a submitted extract via the IPUMS API.
+}
+\details{
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -47,10 +51,13 @@ get_extract_info(c("usa", "1"))
 }
 \seealso{
 Other ipums_api: 
+\code{\link{define_extract_from_json}()},
+\code{\link{define_extract_micro}()},
+\code{\link{define_extract_nhgis}()},
+\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
-\code{\link{get_last_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
