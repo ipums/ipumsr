@@ -7,8 +7,10 @@
 submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{extract}{An extract object created with \code{\link{define_extract_micro}} or
-returned from another ipumsr API function.}
+\item{extract}{An \code{ipums_extract} for an IPUMS
+collection with API support. This can be a user-defined extract (see
+\code{\link{define_extract}}) or an extract object returned from another
+\code{ipumsr} API function.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
@@ -20,7 +22,10 @@ An object of class \code{ipums_extract} containing the extract
 \description{
 Given an extract definition object, submit an extract request via the IPUMS
 API, and return a modified copy of the extract object with the newly-assigned
-extract number. For an overview of ipumsr API functionality, see
+extract number.
+}
+\details{
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{

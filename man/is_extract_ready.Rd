@@ -9,7 +9,7 @@ is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 \arguments{
 \item{extract}{One of:
   \itemize{
-    \item{An object of class \code{ipums_extract}}
+    \item{An object inheriting from class \code{ipums_extract}}
     \item{The data collection and extract number formatted as a single
           string of the form \code{"collection:number"}}
     \item{The data collection and extract number formatted as a vector of the
@@ -25,8 +25,7 @@ A logical vector of length one.
 \description{
 This function uses the IPUMS API to check whether the given extract is ready
 to download, returning TRUE for extracts that are ready and FALSE for those
-that are not. For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+that are not.
 }
 \details{
 This function checks the "download_links" element of the supplied extract to
@@ -38,6 +37,9 @@ extract files are subject to removal from the IPUMS servers 72 hours after
 they first become available. Completed extracts older than 72 hours will
 still have a "completed" status, but will return \code{FALSE} from
 \code{is_extract_ready()}, because the extract files are no longer available.
+
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")

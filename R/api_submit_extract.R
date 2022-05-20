@@ -11,11 +11,16 @@
 #'
 #' Given an extract definition object, submit an extract request via the IPUMS
 #' API, and return a modified copy of the extract object with the newly-assigned
-#' extract number. For an overview of ipumsr API functionality, see
+#' extract number.
+#'
+#' @details
+#' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @param extract An extract object created with \code{\link{define_extract_micro}} or
-#'   returned from another ipumsr API function.
+#' @param extract An \code{ipums_extract} for an IPUMS
+#'   collection with API support. This can be a user-defined extract (see
+#'   \code{\link{define_extract}}) or an extract object returned from another
+#'   \code{ipumsr} API function.
 #' @param api_key API key associated with your user account. Defaults to the
 #'   value of environment variable "IPUMS_API_KEY".
 #'
@@ -82,11 +87,13 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Wait for extract to finish
 #'
 #' Wait for an extract to finish by periodically checking its status via the
-#' IPUMS API and returning when the extract is ready to download. For an
+#' IPUMS API and returning when the extract is ready to download.
+#'
+#' @details
+#' For an
 #' overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @inheritParams define_extract_micro
 #' @inheritParams download_extract
 #' @inheritParams get_extract_info
 #' @inheritParams submit_extract
@@ -103,7 +110,6 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   status of the extract is checked, and when the extract is ready to
 #'   download. Setting this argument to \code{FALSE} will silence these
 #'   messages.
-#'
 #'
 #' @family ipums_api
 #' @return An object of class \code{ipums_extract} containing the extract
@@ -202,8 +208,7 @@ wait_for_extract <- function(extract,
 #'
 #' This function uses the IPUMS API to check whether the given extract is ready
 #' to download, returning TRUE for extracts that are ready and FALSE for those
-#' that are not. For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' that are not.
 #'
 #' @details
 #' This function checks the "download_links" element of the supplied extract to
@@ -215,6 +220,9 @@ wait_for_extract <- function(extract,
 #' they first become available. Completed extracts older than 72 hours will
 #' still have a "completed" status, but will return \code{FALSE} from
 #' \code{is_extract_ready()}, because the extract files are no longer available.
+#'
+#' For an overview of ipumsr API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams get_extract_info
 #'

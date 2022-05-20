@@ -16,7 +16,7 @@ wait_for_extract(
 \arguments{
 \item{extract}{One of:
   \itemize{
-    \item{An object of class \code{ipums_extract}}
+    \item{An object inheriting from class \code{ipums_extract}}
     \item{The data collection and extract number formatted as a single
           string of the form \code{"collection:number"}}
     \item{The data collection and extract number formatted as a vector of the
@@ -52,7 +52,10 @@ An object of class \code{ipums_extract} containing the extract
 }
 \description{
 Wait for an extract to finish by periodically checking its status via the
-IPUMS API and returning when the extract is ready to download. For an
+IPUMS API and returning when the extract is ready to download.
+}
+\details{
+For an
 overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }

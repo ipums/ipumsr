@@ -7,8 +7,10 @@
 save_extract_as_json(extract, file)
 }
 \arguments{
-\item{extract}{An extract object created with \code{\link{define_extract_micro}} or
-returned from another ipumsr API function.}
+\item{extract}{An \code{ipums_extract} for an IPUMS
+collection with API support. This can be a user-defined extract (see
+\code{\link{define_extract}}) or an extract object returned from another
+\code{ipumsr} API function.}
 
 \item{file}{File path at which to write the JSON-formatted extract
 definition.}

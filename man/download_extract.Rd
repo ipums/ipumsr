@@ -14,7 +14,7 @@ download_extract(
 \arguments{
 \item{extract}{One of:
   \itemize{
-    \item{An object of class \code{ipums_extract}}
+    \item{An object inheriting from class \code{ipums_extract}}
     \item{The data collection and extract number formatted as a single
           string of the form \code{"collection:number"}}
     \item{The data collection and extract number formatted as a vector of the
