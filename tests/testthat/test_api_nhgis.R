@@ -904,6 +904,51 @@ test_that("Removing parent fields occurs before evaluating subfields", {
 
 })
 
+test_that("Revisions do not alter unspecified extract fields", {
+
+  extract1 <- define_extract_nhgis(
+    shapefiles = "Test"
+  )
+
+  extract2 <- add_to_extract(
+    extract1,
+    datasets = "Test",
+    ds_tables = "Test",
+    ds_geog_levels = "Test"
+  )
+
+  extract3 <- suppressWarnings(
+    add_to_extract(
+      extract2,
+      tst_geog_levels = "Test"
+    )
+  )
+
+  # Test on an extract of multiple types
+  expect_identical(nhgis_extract, add_to_extract(nhgis_extract))
+  expect_identical(nhgis_extract, remove_from_extract(nhgis_extract))
+
+  # Test on an extract of a single type
+  expect_identical(extract1, add_to_extract(extract1))
+  expect_identical(extract1, remove_from_extract(extract1))
+
+  expect_null(extract2$time_series_tables)
+  expect_null(extract2$tst_geog_levels)
+  expect_null(extract2$tst_layout)
+
+  expect_warning(
+    add_to_extract(
+      extract2,
+      tst_geog_levels = "Test"
+    ),
+    "The following parameters are not relevant for an nhgis_extract that"
+  )
+
+  expect_null(extract3$time_series_tables)
+  expect_equal(extract3$tst_geog_levels, "Test")
+
+})
+
 test_that("Ambiguous extract revisions throw correct warnings", {
   expect_warning(
     add_to_extract(nhgis_extract, ds_tables = list("A")),

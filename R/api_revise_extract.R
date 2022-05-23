@@ -791,7 +791,9 @@ add_nested_fields <- function(extract, ...) {
 
   all_field_vals <- union(extract[[field]], new_field_vals)
 
-  extract[[field]] <- all_field_vals
+  if (!is.null(all_field_vals)) {
+    extract[[field]] <- all_field_vals
+  }
 
   purrr::walk(
     subfields,
@@ -881,10 +883,16 @@ add_nested_fields <- function(extract, ...) {
   purrr::walk(
     subfields,
     ~{
-      extract[[.x]] <<- reduce_list_by_name(
+      new_val <- reduce_list_by_name(
         c(extract[[.x]], subfield_vals_recycled[[.x]]),
         f = union
       )
+
+      if (is_empty(new_val)) {
+        extract[.x] <<- list(NULL)
+      } else {
+        extract[[.x]] <<- new_val
+      }
     }
   )
 
@@ -1236,6 +1244,10 @@ validate_remove_fields <- function(extract, bad_remove_fields, ...) {
 #'
 #' @noRd
 reduce_list_by_name <- function(l, f) {
+
+  if (!is_named(l)) {
+    return(l)
+  }
 
   labs <- unique(names(l))
 

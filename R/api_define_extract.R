@@ -1302,6 +1302,10 @@ recycle_subfields <- function(extract, ...) {
 #' @noRd
 recycle_to_named_list <- function(l, names) {
 
+  if (is.null(names)) {
+    return(l)
+  }
+
   l <- recycle_to_list(l, length(names))
 
   if (any(have_name(l))) {
