@@ -6,45 +6,38 @@
 
 # Exported functions ------------------------------------------------------
 
-#' Modify values in an existing extract definition
+#' Add values to an existing IPUMS extract
 #'
 #' @description
-#' Add, remove, or update values for specific fields in an existing extract.
-#' These functions are S3 generics whose behavior will depend on the class (i.e.
-#' collection) of the extract being modified.
+#' Add or update values for specific fields in an existing \code{ipums_extract}
+#' object. This function is an S3 generic whose behavior will depend on the
+#' class (i.e. collection) of the extract being modified.
 #'
-#' In general, for a given collection, the arguments to these functions are
-#' identical to those used when defining an extract for that collection. For
-#' documentation on defining an extract, see \code{\link{define_extract}}.
+#' In general, for a given collection, the arguments to \code{add_to_extract}
+#' are identical to those used when defining an extract for that collection. For
+#' more about defining an extract, click \link[=define_extract]{here}.
 #'
-#' For collection-specific documentation, see:
+#' For collection-specific documentation, see the links below:
 #'
 #' \itemize{
-#'   \item IPUMS NHGIS:
-#'   \itemize{
-#'     \item \code{\link{add_to_extract.nhgis_extract}}
-#'     \item \code{\link{remove_from_extract.nhgis_extract}}
-#'   }
-#'   \item IPUMS USA:
-#'   \itemize{
-#'     \item \code{\link{add_to_extract.usa_extract}}
-#'     \item \code{\link{remove_from_extract.usa_extract}}
-#'   }
+#'   \item To add to an \strong{NHGIS} extract, click
+#'     \link[=add_to_extract.nhgis_extract]{here}
+#'   \item To add to a \strong{microdata} extract, click
+#'     \link[=add_to_extract.usa_extract]{here}
 #' }
+#'
+#' To remove existing values from an extract, see
+#' \code{\link{remove_from_extract}}.
 #'
 #' @param extract An object inheriting from \code{ipums_extract}
 #' @param ... Additional arguments specifying the extract fields and values to
-#'   modify. The available arguments correspond to the available arguments in
-#'   the extract definition function for the class of the extract specified in
-#'   \code{extract}.
+#'   add to the extract. The available arguments correspond to the available
+#'   arguments in the extract definition function for the class of the extract
+#'   specified in \code{extract}.
 #'
 #' @return An object of the same class as \code{extract} containing the modified
 #'   extract definition
 #'
-#' @name revise_extract
-NULL
-
-#' @rdname revise_extract
 #' @export
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
@@ -58,8 +51,8 @@ add_to_extract <- function(extract, ...) {
 #' subfields, modifying dataset and/or time series table subfields, or
 #' updating extract-wide parameters.
 #'
-#' To remove existing values from an extract, see
-#' \code{\link{remove_from_extract.nhgis_extract}}.
+#' To remove existing values from an NHGIS extract, click
+#' \link[=remove_from_extract.nhgis_extract]{here}.
 #'
 #' In general, adding to an extract follows the same syntax conventions as used
 #' in \code{\link{define_extract_nhgis}}. See details for more information
@@ -164,9 +157,6 @@ add_to_extract <- function(extract, ...) {
 #'   extract structure for validity. Defaults to \code{TRUE}
 #'
 #' @return A modified \code{nhgis_extract} object
-#'
-#' @seealso \code{\link{remove_from_extract.nhgis_extract}},
-#'   \code{\link{revise_extract}}
 #'
 #' @export
 #'
@@ -281,8 +271,8 @@ add_to_extract.nhgis_extract <- function(extract,
 #' @description
 #' Add new values to any extract fields of a USA extract.
 #'
-#' To remove existing values from an extract, see
-#' \code{\link{remove_from_extract.usa_extract}}.
+#' To remove existing values from a USA extract, click
+#' \link[=remove_from_extract.usa_extract]{here}.
 #'
 #' @inheritParams define_extract_micro
 #' @param samples Character vector of samples to add to the extract, if any.
@@ -291,6 +281,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #'   extract structure for validity. Defaults to \code{TRUE}
 #'
 #' @return A modified \code{usa_extract} object
+#'
 #' @export
 #'
 #' @examples
@@ -376,7 +367,39 @@ add_to_extract.usa_extract <- function(extract,
 
 }
 
-#' @rdname revise_extract
+#' Remove values from an existing IPUMS extract
+#'
+#' @description
+#' Remove values for specific fields in an existing \code{ipums_extract}
+#' object. This function is an S3 generic whose behavior will depend on the
+#' class (i.e. collection) of the extract being modified.
+#'
+#' In general, for a given collection, the arguments to
+#' \code{remove_from_extract} are identical to those used when defining an
+#' extract for that collection. For more about defining an extract, click
+#' \link[=define_extract]{here}.
+#'
+#' For collection-specific documentation, see the links below:
+#'
+#' \itemize{
+#'   \item To remove from an \strong{NHGIS} extract, click
+#'     \link[=remove_from_extract.nhgis_extract]{here}
+#'   \item To remove from a \strong{microdata} extract, click
+#'     \link[=remove_from_extract.usa_extract]{here}
+#' }
+#'
+#' To add new values to an extract, see
+#' \code{\link{add_to_extract}}.
+#'
+#' @param extract An object inheriting from \code{ipums_extract}
+#' @param ... Additional arguments specifying the extract fields and values to
+#'   remove from the extract. The available arguments correspond to the
+#'   available arguments in the extract definition function for the class of the
+#'   extract specified in \code{extract}.
+#'
+#' @return An object of the same class as \code{extract} containing the modified
+#'   extract definition
+#'
 #' @export
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
@@ -390,9 +413,8 @@ remove_from_extract <- function(extract, ...) {
 #' with their associated subfields) or removing subfield values for existing
 #' datasets and/or time series tables.
 #'
-#' To add new values to an extract or to replace values in fields that apply to
-#' the entire extract, use \code{\link{add_to_extract.nhgis_extract}}. When
-#' replacing values,
+#' To add new values or replace existing values in an NHGIS extract, click
+#' \link[=add_to_extract.nhgis_extract]{here}. When replacing values,
 #' it is recommended to first add new values using \code{add_to_extract} before
 #' removing unwanted values with \code{remove_from_extract} to avoid the
 #' possibility of producing an invalid extract specification.
@@ -489,9 +511,6 @@ remove_from_extract <- function(extract, ...) {
 #' @param ... Ignored
 #'
 #' @return A modified \code{nhgis_extract} object
-#'
-#' @seealso \code{\link{add_to_extract.nhgis_extract}},
-#'   \code{\link{revise_extract}}
 #'
 #' @export
 #'
@@ -624,8 +643,8 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' @description
 #' Remove existing values from extract fields of a USA extract.
 #'
-#' To add new values to an extract, see
-#' \code{\link{add_to_extract.usa_extract}}.
+#' To add new values to a USA extract, click
+#' \link[=add_to_extract.usa_extract]{here}.
 #'
 #' @inheritParams define_extract_micro
 #' @param samples Character vector of samples to remove from the extract,

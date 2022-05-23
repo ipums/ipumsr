@@ -120,8 +120,8 @@ adding new datasets and/or time series tables along with associated
 subfields, modifying dataset and/or time series table subfields, or
 updating extract-wide parameters.
 
-To remove existing values from an extract, see
-\code{\link{remove_from_extract.nhgis_extract}}.
+To remove existing values from an NHGIS extract, click
+\link[=remove_from_extract.nhgis_extract]{here}.
 
 In general, adding to an extract follows the same syntax conventions as used
 in \code{\link{define_extract_nhgis}}. See details for more information
@@ -205,8 +205,4 @@ add_to_extract(
   ds_tables = list(`1990_STF1` = "NP4", `1980_STF1` = "NT1B"),
   ds_geog_levels = "nation"
 )
-}
-\seealso{
-\code{\link{remove_from_extract.nhgis_extract}},
-  \code{\link{revise_extract}}
 }

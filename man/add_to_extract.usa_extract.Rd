@@ -42,8 +42,8 @@ A modified \code{usa_extract} object
 \description{
 Add new values to any extract fields of a USA extract.
 
-To remove existing values from an extract, see
-\code{\link{remove_from_extract.usa_extract}}.
+To remove existing values from a USA extract, click
+\link[=remove_from_extract.usa_extract]{here}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")

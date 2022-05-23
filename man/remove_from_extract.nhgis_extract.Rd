@@ -84,9 +84,8 @@ This can include removing entire datasets and/or time series tables (along
 with their associated subfields) or removing subfield values for existing
 datasets and/or time series tables.
 
-To add new values to an extract or to replace values in fields that apply to
-the entire extract, use \code{\link{add_to_extract.nhgis_extract}}. When
-replacing values,
+To add new values or replace existing values in an NHGIS extract, click
+\link[=add_to_extract.nhgis_extract]{here}. When replacing values,
 it is recommended to first add new values using \code{add_to_extract} before
 removing unwanted values with \code{remove_from_extract} to avoid the
 possibility of producing an invalid extract specification.
@@ -182,8 +181,4 @@ remove_from_extract(
 # So you should typically add to an extract before removing:
 add_to_extract(extract, ds_geog_levels = "state") \%>\%
   remove_from_extract(ds_geog_levels = "county")
-}
-\seealso{
-\code{\link{add_to_extract.nhgis_extract}},
-  \code{\link{revise_extract}}
 }

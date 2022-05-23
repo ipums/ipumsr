@@ -28,8 +28,8 @@ A modified \code{usa_extract} object
 \description{
 Remove existing values from extract fields of a USA extract.
 
-To add new values to an extract, see
-\code{\link{add_to_extract.usa_extract}}.
+To add new values to a USA extract, click
+\link[=add_to_extract.usa_extract]{here}.
 }
 \examples{
 my_extract <- define_extract_micro(
