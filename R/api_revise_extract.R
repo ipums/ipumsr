@@ -108,6 +108,7 @@ add_to_extract <- function(extract, ...) {
 #' \code{remove_from_extract}.
 #'
 #' @inheritParams define_extract_nhgis
+#' @inheritParams submit_extract
 #' @param datasets Character vector of datasets to add or modify in the extract.
 #'   Dataset names that do not already exist in the extract will be added along
 #'   with the values passed to any dataset subfield arguments. Dataset names
@@ -155,6 +156,7 @@ add_to_extract <- function(extract, ...) {
 #'   any. For more information on NHGIS shapefiles, click here.
 #' @param validate Logical value indicating whether to check the modified
 #'   extract structure for validity. Defaults to \code{TRUE}
+#' @param ... Ignored
 #'
 #' @return A modified \code{nhgis_extract} object
 #'
@@ -203,7 +205,8 @@ add_to_extract.nhgis_extract <- function(extract,
                                          tst_layout = NULL,
                                          shapefiles = NULL,
                                          data_format = NULL,
-                                         validate = TRUE) {
+                                         validate = TRUE,
+                                         ...) {
 
   extract <- copy_ipums_extract(extract)
 
@@ -212,6 +215,17 @@ add_to_extract.nhgis_extract <- function(extract,
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
       "be applied to all datasets.",
+      call. = FALSE
+    )
+  }
+
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    warning(
+      "The following were not recognized as valid fields ",
+      "for an object of class `", extract$collection, "_extract`: `",
+      paste0(names(dots), collapse = "`, `"), "`.",
       call. = FALSE
     )
   }
@@ -275,10 +289,12 @@ add_to_extract.nhgis_extract <- function(extract,
 #' \link[=remove_from_extract.usa_extract]{here}.
 #'
 #' @inheritParams define_extract_micro
+#' @inheritParams submit_extract
 #' @param samples Character vector of samples to add to the extract, if any.
 #' @param variables Character vector of variables to add to the extract, if any.
 #' @param validate Logical value indicating whether to check the modified
 #'   extract structure for validity. Defaults to \code{TRUE}
+#' @param ... Ignored
 #'
 #' @return A modified \code{usa_extract} object
 #'
@@ -299,9 +315,21 @@ add_to_extract.usa_extract <- function(extract,
                                        data_format = NULL,
                                        data_structure = NULL,
                                        rectangular_on = NULL,
-                                       validate = TRUE) {
+                                       validate = TRUE,
+                                       ...) {
 
   extract <- copy_ipums_extract(extract)
+
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    warning(
+      "The following were not recognized as valid fields ",
+      "for an object of class`", extract$collection, "_extract`: `",
+      paste0(names(dots), collapse = "`, `"), "`.",
+      call. = FALSE
+    )
+  }
 
   # Move this to validate_ipums_extract.usa_extract()?
   if (!is.null(data_structure) && data_structure != "rectangular") {
@@ -472,6 +500,7 @@ remove_from_extract <- function(extract, ...) {
 #' validation while you make the replacement.
 #'
 #' @inheritParams define_extract_nhgis
+#' @inheritParams submit_extract
 #' @param datasets Character vector of datasets to remove from the extract.
 #'   All dataset subfields associated with these datasets will also be removed.
 #' @param ds_tables Character vector or list of summary tables to remove from
@@ -515,6 +544,9 @@ remove_from_extract <- function(extract, ...) {
 #' @export
 #'
 #' @examples
+#'
+#' library(dplyr)
+#'
 #' extract <- define_extract_nhgis(
 #'   datasets = "1990_STF1",
 #'   ds_tables = c("NP1", "NP2", "NP3"),
@@ -647,12 +679,14 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' \link[=add_to_extract.usa_extract]{here}.
 #'
 #' @inheritParams define_extract_micro
+#' @inheritParams submit_extract
 #' @param samples Character vector of samples to remove from the extract,
 #'   if any.
 #' @param variables Character vector of variables to remove from the extract,
 #'   if any.
 #' @param validate Logical value indicating whether to check the modified
 #'   extract structure for validity. Defaults to \code{TRUE}
+#' @param ... Ignored
 #'
 #' @return A modified \code{usa_extract} object
 #' @export
@@ -661,7 +695,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' my_extract <- define_extract_micro(
 #'   collection = "usa",
 #'   description = "Example",
-#'   samples = c("us2013a" "us2014a"),
+#'   samples = c("us2013a", "us2014a"),
 #'   variables = "YEAR"
 #' )
 #'
@@ -1168,7 +1202,7 @@ validate_remove_fields <- function(extract, bad_remove_fields, ...) {
   if (length(tried_to_remove) > 0) {
     warning(
       "The following fields cannot be removed from an object of class `",
-      paste0(extract$collection, "_extract"), "`: `",
+      extract$collection, "_extract`: `",
       paste0(tried_to_remove, collapse = "`, `"), "`.\nTo ",
       "replace these values, use add_to_extract().",
       call. = FALSE
@@ -1177,10 +1211,9 @@ validate_remove_fields <- function(extract, bad_remove_fields, ...) {
 
   if (length(invalid_fields) > 0) {
     warning(
-      "The following were not recognized as valid fields for an object of ",
-      "class `", paste0(extract$collection, "_extract"), "`: `",
-      paste0(invalid_fields, collapse = "`, `"),
-      "`. These values will be ignored.",
+      "The following were not recognized as valid fields ",
+      "for an object of class `", extract$collection, "_extract`", ": `",
+      paste0(names(dots), collapse = "`, `"), "`.",
       call. = FALSE
     )
   }

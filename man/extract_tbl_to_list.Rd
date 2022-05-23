@@ -8,7 +8,7 @@ extract_tbl_to_list(extract_tbl, validate = TRUE)
 }
 \arguments{
 \item{extract_tbl}{A \code{\link[tibble]{tbl_df}} (or \code{data.frame})
-as returned by \code{\link{get_recent_extracts_info_tbl()}} that contains
+as returned by \code{\link{get_recent_extracts_info_tbl}} that contains
 the specifications for one or more \code{ipums_extract} objects.}
 
 \item{validate}{Logical (\code{TRUE} or \code{FALSE}) value indicating

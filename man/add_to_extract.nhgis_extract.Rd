@@ -19,10 +19,16 @@
   tst_layout = NULL,
   shapefiles = NULL,
   data_format = NULL,
-  validate = TRUE
+  validate = TRUE,
+  ...
 )
 }
 \arguments{
+\item{extract}{An \code{ipums_extract} for an IPUMS
+collection with API support. This can be a user-defined extract (see
+\code{\link{define_extract}}) or an extract object returned from another
+\code{ipumsr} API function.}
+
 \item{description}{Description of the extract.}
 
 \item{datasets}{Character vector of datasets to add or modify in the extract.
@@ -110,6 +116,8 @@ extract.}
 
 \item{validate}{Logical value indicating whether to check the modified
 extract structure for validity. Defaults to \code{TRUE}}
+
+\item{...}{Ignored}
 }
 \value{
 A modified \code{nhgis_extract} object

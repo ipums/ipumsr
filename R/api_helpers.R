@@ -101,7 +101,7 @@ convert_to_relative_path <- function(path) {
   if (on_same_branch) {
     if (path_length > wd_length) {
       return(
-        do.call(file.path, as.list(tail(path_components, -min_length)))
+        do.call(file.path, as.list(utils::tail(path_components, -min_length)))
       )
     } else {
       return(
@@ -252,7 +252,7 @@ ipums_api_json_request <- function(verb,
     httr::user_agent(
       paste0(
         "https://github.com/ipums/ipumsr ",
-        as.character(packageVersion("ipumsr"))
+        as.character(utils::packageVersion("ipumsr"))
       )
     ),
     httr::content_type_json(),

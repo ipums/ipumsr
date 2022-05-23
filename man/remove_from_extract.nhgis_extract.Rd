@@ -20,6 +20,11 @@
 )
 }
 \arguments{
+\item{extract}{An \code{ipums_extract} for an IPUMS
+collection with API support. This can be a user-defined extract (see
+\code{\link{define_extract}}) or an extract object returned from another
+\code{ipumsr} API function.}
+
 \item{datasets}{Character vector of datasets to remove from the extract.
 All dataset subfields associated with these datasets will also be removed.}
 
@@ -143,6 +148,9 @@ of temporarily producing an invalid extract. Alternatively, you can set
 validation while you make the replacement.
 }
 \examples{
+
+library(dplyr)
+
 extract <- define_extract_nhgis(
   datasets = "1990_STF1",
   ds_tables = c("NP1", "NP2", "NP3"),

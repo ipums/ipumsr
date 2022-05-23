@@ -905,7 +905,6 @@ test_that("Removing parent fields occurs before evaluating subfields", {
 })
 
 test_that("Ambiguous extract revisions throw correct warnings", {
-
   expect_warning(
     add_to_extract(nhgis_extract, ds_tables = list("A")),
     paste0(
@@ -913,7 +912,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "datasets in this extract \\(2\\)"
     )
   )
-
   expect_warning(
     add_to_extract(
       nhgis_extract,
@@ -926,7 +924,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "datasets to be modified \\(1\\)"
     )
   )
-
   expect_warning(
     add_to_extract(
       nhgis_extract,
@@ -938,7 +935,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "will be ignored."
     )
   )
-
   expect_warning(
     add_to_extract(
       nhgis_extract,
@@ -950,7 +946,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "list, not a vector."
     )
   )
-
   expect_warning(
     add_to_extract(
       nhgis_extract,
@@ -961,7 +956,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "exist in this extract \\(\"\"\\). These values will be ignored."
     )
   )
-
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -973,7 +967,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "`nhgis_extract`: `description`, `data_format`.\nTo replace these values"
     )
   )
-
   expect_warning(
     add_to_extract(
       nhgis_extract,
@@ -981,7 +974,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
     ),
     "`geographic_extents` was provided as a list, but this parameter"
   )
-
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -992,7 +984,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       " they were not found in this extract's time_series_tables \\(\"CW3\"\\)."
     )
   )
-
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -1004,7 +995,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "\\(\"2014_2018_ACS5a\", \"2015_2019_ACS5a\"\\)."
     )
   )
-
   expect_error(
     remove_from_extract(
       nhgis_extract,
@@ -1015,7 +1005,6 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "`ds_geog_levels`"
     )
   )
-
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -1026,7 +1015,16 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "class `nhgis_extract`: `bad_field`"
     )
   )
-
+  expect_warning(
+    add_to_extract(
+      nhgis_extract,
+      bad_field = "not in extract"
+    ),
+    regexp = paste0(
+      "The following were not recognized as valid fields for an object of ",
+      "class `nhgis_extract`: `bad_field`"
+    )
+  )
 })
 
 # > Recent extracts ------------------------------

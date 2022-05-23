@@ -265,7 +265,7 @@ ipums_api_download_request <- function(url,
     httr::user_agent(
       paste0(
         "https://github.com/ipums/ipumsr ",
-        as.character(packageVersion("ipumsr"))
+        as.character(utils::packageVersion("ipumsr"))
       )
     ),
     add_user_auth_header(api_key),

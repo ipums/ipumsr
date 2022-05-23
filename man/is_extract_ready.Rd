@@ -18,6 +18,9 @@ is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
 or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
 See Examples section below for examples of each form.}
+
+\item{api_key}{API key associated with your user account. Defaults to the
+value of environment variable "IPUMS_API_KEY".}
 }
 \value{
 A logical vector of length one.

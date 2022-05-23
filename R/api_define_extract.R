@@ -457,7 +457,7 @@ save_extract_as_json <- function(extract, file) {
 # > Print methods -----------
 
 #' @export
-print.ipums_extract <- function(x) {
+print.ipums_extract <- function(x, ...) {
 
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
@@ -473,7 +473,7 @@ print.ipums_extract <- function(x) {
 }
 
 #' @export
-print.usa_extract <- function(x) {
+print.usa_extract <- function(x, ...) {
 
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
@@ -492,7 +492,7 @@ print.usa_extract <- function(x) {
 }
 
 #' @export
-print.nhgis_extract <- function(x) {
+print.nhgis_extract <- function(x, ...) {
 
   # Ensure proper printing for extracts created via new_ipums_extract()
   # (which have not been recycled yet) (is this misleading?)

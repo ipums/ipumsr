@@ -192,7 +192,7 @@ metadata_request <- function(request_url,
     httr::user_agent(
       paste0(
         "https://github.com/ipums/ipumsr ",
-        as.character(packageVersion("ipumsr"))
+        as.character(utils::packageVersion("ipumsr"))
       )
     ),
     httr::content_type_json(),

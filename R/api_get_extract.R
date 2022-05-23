@@ -25,8 +25,9 @@
 #' The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
 #' or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
 #' See Examples section below for examples of each form.
-#' @inheritParams define_extract_micro
+#'
 #' @inheritParams download_extract
+#' @inheritParams submit_extract
 #'
 #' @family ipums_api
 #' @return An object inheriting from class \code{ipums_extract} containing the
@@ -212,7 +213,7 @@ get_last_extract_info <- function(collection,
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @param extract_tbl A \code{\link[tibble]{tbl_df}} (or \code{data.frame})
-#'   as returned by \code{\link{get_recent_extracts_info_tbl()}} that contains
+#'   as returned by \code{\link{get_recent_extracts_info_tbl}} that contains
 #'   the specifications for one or more \code{ipums_extract} objects.
 #' @param validate Logical (\code{TRUE} or \code{FALSE}) value indicating
 #'   whether to check that each row of \code{extract_tbl} contains a valid and
@@ -565,8 +566,13 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
   )
 
   # Reorder
-  var_sort <- c("collection", "number", formalArgs(define_extract_nhgis),
+  var_sort <- c("collection", "number",
+                "description", "datasets", "ds_tables", "ds_geog_levels",
+                "ds_years", "ds_breakdown_values", "geographic_extents",
+                "breakdown_and_data_type_layout", "time_series_tables",
+                "tst_geog_levels", "tst_layout", "shapefiles", "data_format",
                 "submitted", "download_links", "status")
+
   extract_tbl <- extract_tbl[, var_sort]
 
   extract_tbl
@@ -585,8 +591,11 @@ get_extract_tbl_fields <- function(x) {
 #' @export
 get_extract_tbl_fields.nhgis_extract <- function(x) {
   c(
-    formalArgs(define_extract_nhgis),
-    "collection", "submitted", "download_links", "number", "status",
+    "collection", "description", "datasets", "ds_tables", "ds_geog_levels",
+    "ds_years", "ds_breakdown_values", "geographic_extents",
+    "breakdown_and_data_type_layout", "time_series_tables", "tst_geog_levels",
+    "tst_layout", "shapefiles", "data_format",
+    "submitted", "download_links", "number", "status",
     "name", "data_type" # Used in long-format NHGIS tbl structure
   )
 }
@@ -594,7 +603,8 @@ get_extract_tbl_fields.nhgis_extract <- function(x) {
 #' @export
 get_extract_tbl_fields.usa_extract <- function(x) {
   c(
-    formalArgs(define_extract_micro),
+    "collection", "description", "samples", "variables",
+    "data_format", "data_structure", "rectangular_on",
     "submitted", "download_links", "number", "status"
   )
 }

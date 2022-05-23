@@ -12,10 +12,16 @@
   data_format = NULL,
   data_structure = NULL,
   rectangular_on = NULL,
-  validate = TRUE
+  validate = TRUE,
+  ...
 )
 }
 \arguments{
+\item{extract}{An \code{ipums_extract} for an IPUMS
+collection with API support. This can be a user-defined extract (see
+\code{\link{define_extract}}) or an extract object returned from another
+\code{ipumsr} API function.}
+
 \item{description}{Description of the extract.}
 
 \item{samples}{Character vector of samples to add to the extract, if any.}
@@ -35,6 +41,8 @@ will also support household-only extracts (\code{rectangular_on = "H"}).}
 
 \item{validate}{Logical value indicating whether to check the modified
 extract structure for validity. Defaults to \code{TRUE}}
+
+\item{...}{Ignored}
 }
 \value{
 A modified \code{usa_extract} object
