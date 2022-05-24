@@ -27,7 +27,7 @@
 #' }
 #'
 #' To remove existing values from an extract, see
-#' \code{\link{remove_from_extract}}.
+#' \code{\link{remove_from_extract}()}.
 #'
 #' @param extract An object inheriting from \code{ipums_extract}
 #' @param ... Additional arguments specifying the extract fields and values to
@@ -52,10 +52,10 @@ add_to_extract <- function(extract, ...) {
 #' updating extract-wide parameters.
 #'
 #' To remove existing values from an NHGIS extract, click
-#' \link[=remove_from_extract.nhgis_extract]{here}.
+#' \code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract}()}.
 #'
 #' In general, adding to an extract follows the same syntax conventions as used
-#' in \code{\link{define_extract_nhgis}}. See details for more information
+#' in \code{\link{define_extract_nhgis}()}. See details for more information
 #' on how values passed to dataset and time series table subfields are
 #' interpreted.
 #'
@@ -109,6 +109,9 @@ add_to_extract <- function(extract, ...) {
 #'
 #' @inheritParams define_extract_nhgis
 #' @inheritParams submit_extract
+#' @param extract A \code{nhgis_extract} object. This can be a user-defined
+#'   extract (see \code{\link{define_extract_nhgis}()}) or an extract object
+#'   returned from another \code{ipumsr} API function.
 #' @param datasets Character vector of datasets to add or modify in the extract.
 #'   Dataset names that do not already exist in the extract will be added along
 #'   with the values passed to any dataset subfield arguments. Dataset names
@@ -184,7 +187,7 @@ add_to_extract <- function(extract, ...) {
 #'   ds_geog_levels = c("county", "state")
 #' )
 #'
-#' # Modify specific datasets.
+#' # Modify existing datasets.
 #' # Vectors recycle to all datasets, lists match by index or name.
 #' add_to_extract(
 #'   extract,
@@ -285,11 +288,12 @@ add_to_extract.nhgis_extract <- function(extract,
 #' @description
 #' Add new values to any extract fields of a USA extract.
 #'
-#' To remove existing values from a USA extract, click
-#' \link[=remove_from_extract.usa_extract]{here}.
+#' To remove existing values from a USA extract, see
+#' \code{\link[=remove_from_extract.usa_extract]{remove_from_extract}()}.
 #'
-#' @inheritParams define_extract_micro
-#' @inheritParams submit_extract
+#' @param extract A \code{usa_extract} object. This can be a user-defined
+#'   extract (see \code{\link{define_extract_micro}()}) or an extract object
+#'   returned from another \code{ipumsr} API function.
 #' @param samples Character vector of samples to add to the extract, if any.
 #' @param variables Character vector of variables to add to the extract, if any.
 #' @param validate Logical value indicating whether to check the modified
@@ -417,7 +421,7 @@ add_to_extract.usa_extract <- function(extract,
 #' }
 #'
 #' To add new values to an extract, see
-#' \code{\link{add_to_extract}}.
+#' \code{\link{add_to_extract}()}.
 #'
 #' @param extract An object inheriting from \code{ipums_extract}
 #' @param ... Additional arguments specifying the extract fields and values to
@@ -441,14 +445,15 @@ remove_from_extract <- function(extract, ...) {
 #' with their associated subfields) or removing subfield values for existing
 #' datasets and/or time series tables.
 #'
-#' To add new values or replace existing values in an NHGIS extract, click
-#' \link[=add_to_extract.nhgis_extract]{here}. When replacing values,
-#' it is recommended to first add new values using \code{add_to_extract} before
-#' removing unwanted values with \code{remove_from_extract} to avoid the
-#' possibility of producing an invalid extract specification.
+#' To add new values or replace existing values in an NHGIS extract, see
+#' \code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract}()}.
+#' When replacing values, it is recommended to first add new values using
+#' \code{add_to_extract} before removing unwanted values with
+#' \code{remove_from_extract} to avoid the possibility of producing an invalid
+#' extract specification.
 #'
 #' In general, removing from an extract follows the same syntax conventions
-#' as used in \code{\link{define_extract_nhgis}}. See details for more
+#' as used in \code{\link{define_extract_nhgis}()}. See details for more
 #' information on how values passed to dataset and/or time series table
 #' subfields are interpreted.
 #'
@@ -486,7 +491,7 @@ remove_from_extract <- function(extract, ...) {
 #' will be automatically removed. (For instance, if all time
 #' series tables are removed from an extract, \code{tst_layout} will also be
 #' removed.) Thus, it is not necessary to explicitly remove these values. To
-#' replace the existing values for these fields, use \code{add_to_extract}.
+#' replace the existing values for these fields, see \code{add_to_extract}.
 #'
 #' Note that it is possible to produce invalid extracts using
 #' \code{remove_from_extract} (for instance, an extract that includes a
@@ -501,6 +506,9 @@ remove_from_extract <- function(extract, ...) {
 #'
 #' @inheritParams define_extract_nhgis
 #' @inheritParams submit_extract
+#' @param extract A \code{nhgis_extract} object. This can be a user-defined
+#'   extract (see \code{\link{define_extract_nhgis}()}) or an extract object
+#'   returned from another \code{ipumsr} API function.
 #' @param datasets Character vector of datasets to remove from the extract.
 #'   All dataset subfields associated with these datasets will also be removed.
 #' @param ds_tables Character vector or list of summary tables to remove from
@@ -675,11 +683,12 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' @description
 #' Remove existing values from extract fields of a USA extract.
 #'
-#' To add new values to a USA extract, click
-#' \link[=add_to_extract.usa_extract]{here}.
+#' To add new values to a USA extract, see
+#' \code{\link[=add_to_extract.usa_extract]{add_to_extract}()}.
 #'
-#' @inheritParams define_extract_micro
-#' @inheritParams submit_extract
+#' @param extract A \code{usa_extract} object. This can be a user-defined
+#'   extract (see \code{\link{define_extract_micro}()}) or an extract object
+#'   returned from another \code{ipumsr} API function.
 #' @param samples Character vector of samples to remove from the extract,
 #'   if any.
 #' @param variables Character vector of variables to remove from the extract,

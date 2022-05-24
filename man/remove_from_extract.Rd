@@ -38,5 +38,5 @@ For collection-specific documentation, see the links below:
 }
 
 To add new values to an extract, see
-\code{\link{add_to_extract}}.
+\code{\link{add_to_extract}()}.
 }

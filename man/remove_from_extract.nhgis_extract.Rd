@@ -20,10 +20,9 @@
 )
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
+\item{extract}{A \code{nhgis_extract} object. This can be a user-defined
+extract (see \code{\link{define_extract_nhgis}()}) or an extract object
+returned from another \code{ipumsr} API function.}
 
 \item{datasets}{Character vector of datasets to remove from the extract.
 All dataset subfields associated with these datasets will also be removed.}
@@ -89,14 +88,15 @@ This can include removing entire datasets and/or time series tables (along
 with their associated subfields) or removing subfield values for existing
 datasets and/or time series tables.
 
-To add new values or replace existing values in an NHGIS extract, click
-\link[=add_to_extract.nhgis_extract]{here}. When replacing values,
-it is recommended to first add new values using \code{add_to_extract} before
-removing unwanted values with \code{remove_from_extract} to avoid the
-possibility of producing an invalid extract specification.
+To add new values or replace existing values in an NHGIS extract, see
+\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract}()}.
+When replacing values, it is recommended to first add new values using
+\code{add_to_extract} before removing unwanted values with
+\code{remove_from_extract} to avoid the possibility of producing an invalid
+extract specification.
 
 In general, removing from an extract follows the same syntax conventions
-as used in \code{\link{define_extract_nhgis}}. See details for more
+as used in \code{\link{define_extract_nhgis}()}. See details for more
 information on how values passed to dataset and/or time series table
 subfields are interpreted.
 }
@@ -134,7 +134,7 @@ Any extract fields that are rendered irrelevant after modifying the extract
 will be automatically removed. (For instance, if all time
 series tables are removed from an extract, \code{tst_layout} will also be
 removed.) Thus, it is not necessary to explicitly remove these values. To
-replace the existing values for these fields, use \code{add_to_extract}.
+replace the existing values for these fields, see \code{add_to_extract}.
 
 Note that it is possible to produce invalid extracts using
 \code{remove_from_extract} (for instance, an extract that includes a

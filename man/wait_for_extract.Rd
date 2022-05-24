@@ -47,8 +47,8 @@ messages.}
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-An object of class \code{ipums_extract} containing the extract
-  definition and the URLs from which to download extract files.
+An object inheriting from class \code{ipums_extract} containing the
+  extract definition and the URLs from which to download files.
 }
 \description{
 Wait for an extract to finish by periodically checking its status via the

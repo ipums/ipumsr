@@ -106,6 +106,11 @@ extract API.
 For more information on NHGIS data, click
 \href{https://www.nhgis.org/data-availability}{here}. For the NHGIS FAQ,
 click \href{https://www.nhgis.org/frequently-asked-questions-faq}{here}.
+
+For general information on the IPUMS NHGIS Extract API, click
+\href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
+Note that some of the terminology used in the API has been altered
+for use in the \code{ipumsr} package.
 }
 \details{
 NHGIS extracts may contain multiple datasets or time series tables. Each
@@ -134,11 +139,6 @@ There are three ways the values passed to these arguments can be provided:
 Users can find more information on the values that can be passed to these
 subfield arguments for a given dataset or time series table by using
 \code{\link{get_nhgis_metadata}()}.
-
-For general information on the IPUMS NHGIS Extract API, click
-\href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
-Note that some of the terminology used in the API has been altered
-for use in the \code{ipumsr} package.
 }
 \examples{
 define_extract_nhgis(
@@ -159,15 +159,14 @@ define_extract_nhgis(
 
 # To attach specific subfield values to each dataset or time series table,
 # pass a list to the subfield argument.
-
-# Items matched by index:
+# With an unnamed list, items are matched by index:
 define_extract_nhgis(
   description = "Extract with multiple time series tables",
   time_series_tables = c("CW3", "CW5"),
   tst_geog_levels = list("state", "county")
 )
 
-# Items matched by name:
+# With a named list, items are matched by name:
 define_extract_nhgis(
   description = "Extract with multiple time series tables",
   time_series_tables = c("CW3", "CW5"),

@@ -24,10 +24,9 @@
 )
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
+\item{extract}{A \code{nhgis_extract} object. This can be a user-defined
+extract (see \code{\link{define_extract_nhgis}()}) or an extract object
+returned from another \code{ipumsr} API function.}
 
 \item{description}{Description of the extract.}
 
@@ -129,10 +128,10 @@ subfields, modifying dataset and/or time series table subfields, or
 updating extract-wide parameters.
 
 To remove existing values from an NHGIS extract, click
-\link[=remove_from_extract.nhgis_extract]{here}.
+\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract}()}.
 
 In general, adding to an extract follows the same syntax conventions as used
-in \code{\link{define_extract_nhgis}}. See details for more information
+in \code{\link{define_extract_nhgis}()}. See details for more information
 on how values passed to dataset and time series table subfields are
 interpreted.
 }
@@ -206,7 +205,7 @@ extract <- add_to_extract(
   ds_geog_levels = c("county", "state")
 )
 
-# Modify specific datasets.
+# Modify existing datasets.
 # Vectors recycle to all datasets, lists match by index or name.
 add_to_extract(
   extract,

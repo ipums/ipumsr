@@ -16,8 +16,9 @@ collection with API support. This can be a user-defined extract (see
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-An object of class \code{ipums_extract} containing the extract
-  definition and newly-assigned extract number of the submitted extract.
+An object inheriting from class \code{ipums_extract} containing the
+  extract definition and a newly-assigned extract number for the submitted
+  extract.
 }
 \description{
 Given an extract definition object, submit an extract request via the IPUMS

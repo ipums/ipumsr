@@ -18,7 +18,8 @@ complete extract definition. Defaults to \code{TRUE}}
 \value{
 A list of length equal to the number of extracts represented in
   \code{extract_tbl}. Unique extracts can be identified by their extract
-  number.
+  number, which is contained in the \code{number} column of
+  \code{extract_tbl}
 }
 \description{
 Convert a \code{\link[tibble]{tbl_df}} (or \code{data.frame}) of extract

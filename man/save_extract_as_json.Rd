@@ -12,7 +12,7 @@ collection with API support. This can be a user-defined extract (see
 \code{\link{define_extract}}) or an extract object returned from another
 \code{ipumsr} API function.}
 
-\item{file}{File path at which to write the JSON-formatted extract
+\item{file}{File path to which to write the JSON-formatted extract
 definition.}
 }
 \value{

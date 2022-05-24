@@ -88,12 +88,11 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' via the IPUMS API, returned either as a list or tibble.
 #'
 #' @details
-#' \code{get_last_extract_info(collection)} is a convenience function that is
-#' similar to \code{get_recent_extracts_info_list(collection, how_many = 1)},
+#' \code{get_last_extract_info()} is a convenience function that is
+#' similar to \code{get_recent_extracts_info_list(..., how_many = 1)},
 #' but returns an object inheriting from class \code{ipums_extract} rather than
-#' a list of the object.
+#' a list of \code{ipums_extract} objects.
 #'
-#' @details
 #' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
@@ -222,7 +221,8 @@ get_last_extract_info <- function(collection,
 #' @family ipums_api
 #' @return A list of length equal to the number of extracts represented in
 #'   \code{extract_tbl}. Unique extracts can be identified by their extract
-#'   number.
+#'   number, which is contained in the \code{number} column of
+#'   \code{extract_tbl}
 #'
 #' @examples
 #' \dontrun{
@@ -331,7 +331,9 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #' @family ipums_api
 #' @return A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
 #'   and whose values represent the specified parameters for those fields.
-#'   Extracts can be uniquely identified by their extract number.
+#'   Unique extracts can be identified by their extract
+#'   number, which is contained in the \code{number} column of the output
+#'   \code{tbl_df}
 #'
 #' @examples
 #' \dontrun{

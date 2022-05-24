@@ -12,6 +12,7 @@
 #' Specify the parameters for a new IPUMS extract request object to be
 #' submitted via the IPUMS extract API.
 #'
+#' @section Supported collections:
 #' Currently, \code{ipumsr} supports extract definitions for the following
 #' collections:
 #'
@@ -25,6 +26,14 @@
 #'
 #' For information defining extracts for IPUMS microdata collections, see
 #' \code{\link{define_extract_micro}()}
+#'
+#' @section Value:
+#' These functions produce an object inheriting from class \code{ipums_extract}
+#' with a subclass based on the collection corresponding to the extract. For
+#' instance, an IPUMS NHGIS extract created with
+#' \code{\link{define_extract_nhgis}} will return an object of classes
+#' \code{nhgis_extract} and \code{ipums_extract}. These objects are compatible
+#' with the rest of the API functionality provided by \code{ipumsr}.
 #'
 #' For an overview of \code{ipumsr} API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
@@ -131,6 +140,11 @@ define_extract_micro <- function(collection,
 #' \href{https://www.nhgis.org/data-availability}{here}. For the NHGIS FAQ,
 #' click \href{https://www.nhgis.org/frequently-asked-questions-faq}{here}.
 #'
+#' For general information on the IPUMS NHGIS Extract API, click
+#' \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
+#' Note that some of the terminology used in the API has been altered
+#' for use in the \code{ipumsr} package.
+#'
 #' @details
 #' NHGIS extracts may contain multiple datasets or time series tables. Each
 #' dataset or time series table is associated with several subfields that apply
@@ -158,11 +172,6 @@ define_extract_micro <- function(collection,
 #' Users can find more information on the values that can be passed to these
 #' subfield arguments for a given dataset or time series table by using
 #' \code{\link{get_nhgis_metadata}()}.
-#'
-#' For general information on the IPUMS NHGIS Extract API, click
-#' \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{here}.
-#' Note that some of the terminology used in the API has been altered
-#' for use in the \code{ipumsr} package.
 #'
 #' @param description Description of the extract.
 #' @param datasets Character vector of datasets to include in the extract,
@@ -250,15 +259,14 @@ define_extract_micro <- function(collection,
 #'
 #' # To attach specific subfield values to each dataset or time series table,
 #' # pass a list to the subfield argument.
-#'
-#' # Items matched by index:
+#' # With an unnamed list, items are matched by index:
 #' define_extract_nhgis(
 #'   description = "Extract with multiple time series tables",
 #'   time_series_tables = c("CW3", "CW5"),
 #'   tst_geog_levels = list("state", "county")
 #' )
 #'
-#' # Items matched by name:
+#' # With a named list, items are matched by name:
 #' define_extract_nhgis(
 #'   description = "Extract with multiple time series tables",
 #'   time_series_tables = c("CW3", "CW5"),
@@ -429,7 +437,7 @@ define_extract_from_json <- function(extract_json, collection) {
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
 #' @inheritParams submit_extract
-#' @param file File path at which to write the JSON-formatted extract
+#' @param file File path to which to write the JSON-formatted extract
 #'   definition.
 #'
 #' @family ipums_api
@@ -1374,6 +1382,7 @@ recycle_to_list <- function(x, n, labels = NULL) {
     l <- x
   }
 
+  # Can be removed? Not sure if used.
   if (length(labels) == length(l)) {
     l <- setNames(l, labels)
   }

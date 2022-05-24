@@ -5,8 +5,6 @@
 
 # Exported functions ------------------------------------------------------
 
-# > Submit extract ----
-
 #' Submit an extract request via the IPUMS API
 #'
 #' Given an extract definition object, submit an extract request via the IPUMS
@@ -25,8 +23,9 @@
 #'   value of environment variable "IPUMS_API_KEY".
 #'
 #' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing the extract
-#'   definition and newly-assigned extract number of the submitted extract.
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition and a newly-assigned extract number for the submitted
+#'   extract.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -82,8 +81,6 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
 }
 
-# > Wait for extract ----
-
 #' Wait for extract to finish
 #'
 #' Wait for an extract to finish by periodically checking its status via the
@@ -112,8 +109,8 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   messages.
 #'
 #' @family ipums_api
-#' @return An object of class \code{ipums_extract} containing the extract
-#'   definition and the URLs from which to download extract files.
+#' @return An object inheriting from class \code{ipums_extract} containing the
+#'   extract definition and the URLs from which to download files.
 #'
 #' @examples
 #' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
@@ -201,8 +198,6 @@ wait_for_extract <- function(extract,
 
   extract
 }
-
-# > Check if downloadable ----
 
 #' Is the extract ready to download?
 #'

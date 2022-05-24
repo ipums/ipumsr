@@ -36,10 +36,11 @@
 #' @param time_series_table Character indicating the name of the
 #'   time series table for which to obtain metadata.
 #'
-#' @return If obtaining summary metadata, a \code{tibble} containing metadata
-#'   for the specified data type. If obtaining metadata for a single dataset,
-#'   summary table, or time series table, a named list containing metadata for
-#'   that data source.
+#' @return If obtaining summary metadata, a \code{\link[tibble]{tibble}}
+#'   containing metadata for the specified data type. If obtaining metadata
+#'   for a single dataset, summary table, or time series table, a named list
+#'   containing metadata for that data source.
+#'
 #' @export
 #'
 #' @family ipums_api_nhgis

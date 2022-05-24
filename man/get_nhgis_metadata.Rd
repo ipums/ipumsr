@@ -31,10 +31,10 @@ time series table for which to obtain metadata.}
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-If obtaining summary metadata, a \code{tibble} containing metadata
-  for the specified data type. If obtaining metadata for a single dataset,
-  summary table, or time series table, a named list containing metadata for
-  that data source.
+If obtaining summary metadata, a \code{\link[tibble]{tibble}}
+  containing metadata for the specified data type. If obtaining metadata
+  for a single dataset, summary table, or time series table, a named list
+  containing metadata for that data source.
 }
 \description{
 NHGIS metadata is provided for individual datasets, summary tables, and

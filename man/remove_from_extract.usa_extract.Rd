@@ -13,10 +13,9 @@
 )
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
+\item{extract}{A \code{usa_extract} object. This can be a user-defined
+extract (see \code{\link{define_extract_micro}()}) or an extract object
+returned from another \code{ipumsr} API function.}
 
 \item{samples}{Character vector of samples to remove from the extract,
 if any.}
@@ -35,8 +34,8 @@ A modified \code{usa_extract} object
 \description{
 Remove existing values from extract fields of a USA extract.
 
-To add new values to a USA extract, click
-\link[=add_to_extract.usa_extract]{here}.
+To add new values to a USA extract, see
+\code{\link[=add_to_extract.usa_extract]{add_to_extract}()}.
 }
 \examples{
 my_extract <- define_extract_micro(

@@ -37,5 +37,5 @@ For collection-specific documentation, see the links below:
 }
 
 To remove existing values from an extract, see
-\code{\link{remove_from_extract}}.
+\code{\link{remove_from_extract}()}.
 }

@@ -6,6 +6,8 @@
 \description{
 Specify the parameters for a new IPUMS extract request object to be
 submitted via the IPUMS extract API.
+}
+\section{Supported collections}{
 
 Currently, \code{ipumsr} supports extract definitions for the following
 collections:
@@ -20,10 +22,21 @@ For information on defining NHGIS extracts, see
 
 For information defining extracts for IPUMS microdata collections, see
 \code{\link{define_extract_micro}()}
+}
+
+\section{Value}{
+
+These functions produce an object inheriting from class \code{ipums_extract}
+with a subclass based on the collection corresponding to the extract. For
+instance, an IPUMS NHGIS extract created with
+\code{\link{define_extract_nhgis}} will return an object of classes
+\code{nhgis_extract} and \code{ipums_extract}. These objects are compatible
+with the rest of the API functionality provided by \code{ipumsr}.
 
 For an overview of \code{ipumsr} API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
+
 \seealso{
 Other ipums_api: 
 \code{\link{define_extract_from_json}()},

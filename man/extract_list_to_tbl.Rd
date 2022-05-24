@@ -12,7 +12,9 @@ extract_list_to_tbl(extract_list)
 \value{
 A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
   and whose values represent the specified parameters for those fields.
-  Extracts can be uniquely identified by their extract number.
+  Unique extracts can be identified by their extract
+  number, which is contained in the \code{number} column of the output
+  \code{tbl_df}
 }
 \description{
 Convert a list of \code{ipums_extract} objects to a

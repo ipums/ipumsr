@@ -17,27 +17,13 @@
 )
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
-
-\item{description}{Description of the extract.}
+\item{extract}{A \code{usa_extract} object. This can be a user-defined
+extract (see \code{\link{define_extract_micro}()}) or an extract object
+returned from another \code{ipumsr} API function.}
 
 \item{samples}{Character vector of samples to add to the extract, if any.}
 
 \item{variables}{Character vector of variables to add to the extract, if any.}
-
-\item{data_format}{The desired format of the extract data file (one of
-"fixed_width", "csv", "stata", "spss", or "sas9").}
-
-\item{data_structure}{Currently, this must be "rectangular", which is also
-the default. In the future, the API will also support "hierarchical"
-extracts.}
-
-\item{rectangular_on}{Currently, this must be "P", indicating that the
-extract will be rectangularized on person records. In the future, the API
-will also support household-only extracts (\code{rectangular_on = "H"}).}
 
 \item{validate}{Logical value indicating whether to check the modified
 extract structure for validity. Defaults to \code{TRUE}}
@@ -50,8 +36,8 @@ A modified \code{usa_extract} object
 \description{
 Add new values to any extract fields of a USA extract.
 
-To remove existing values from a USA extract, click
-\link[=remove_from_extract.usa_extract]{here}.
+To remove existing values from a USA extract, see
+\code{\link[=remove_from_extract.usa_extract]{remove_from_extract}()}.
 }
 \examples{
 my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")

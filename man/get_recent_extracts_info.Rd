@@ -40,10 +40,10 @@ Get information on recent extracts for a given IPUMS collection
 via the IPUMS API, returned either as a list or tibble.
 }
 \details{
-\code{get_last_extract_info(collection)} is a convenience function that is
-similar to \code{get_recent_extracts_info_list(collection, how_many = 1)},
+\code{get_last_extract_info()} is a convenience function that is
+similar to \code{get_recent_extracts_info_list(..., how_many = 1)},
 but returns an object inheriting from class \code{ipums_extract} rather than
-a list of the object.
+a list of \code{ipums_extract} objects.
 
 For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
