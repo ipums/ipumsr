@@ -1,4 +1,4 @@
-# ipumsr (development version)
+# ipumsr 0.5.0
 
 * Split `revise_extract_micro()` into `add_to_extract()` and 
   `remove_from_extract()`
