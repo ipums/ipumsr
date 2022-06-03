@@ -1,11 +1,9 @@
 # ipumsr 0.5.0
 
-* Split `revise_extract_micro()` into `add_to_extract()` and 
-  `remove_from_extract()`
-  
-* Include endpoint information (IPUMS collection and API version) when saving an extract as json.
-
-* Read endpoint information (IPUMS collection and API version) from json when they are included.
+* Added functions for interacting with the IPUMS microdata extract API. For an 
+  overview of this new functionality, see the API vignette with 
+  `vignette("ipums-api", package = "ipumsr")`. Special thanks to @robe2037, 
+  @renae-r, and @ehrlichd for their work on the API functions!
 
 # ipumsr 0.4.5
 

@@ -58,8 +58,9 @@ library(purrr) # not necessary to use API functions, but used in some examples
 
 # Setting up your API key
 
-If you don’t have an IPUMS USA account, 
-[register for access](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenuor).
+If you don’t have an IPUMS USA or IPUMS CPS account, you'll need to register for 
+access. Here's where you can [register for IPUMS USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu), or [register for IPUMS CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu). You'll also need to request API beta access by emailing 
+ipums+api@umn.edu, as mentioned above.
 
 Once you're registered, you'll need to 
 [create an API key](https://account.ipums.org/api_keys).
