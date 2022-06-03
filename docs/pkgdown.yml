@@ -1,7 +1,8 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
+pandoc: 2.17.1.1
+pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
+  ipums-api: ipums-api.html
   ipums-bigdata: ipums-bigdata.html
   ipums-cps: ipums-cps.html
   ipums-geography: ipums-geography.html
@@ -9,8 +10,8 @@ articles:
   ipums-terra: ipums-terra.html
   ipums: ipums.html
   value-labels: value-labels.html
-last_built: 2020-07-28T15:16Z
+last_built: 2022-06-03T14:30Z
 urls:
-  reference: http://tech.popdata.org/ipumsr//reference
-  article: http://tech.popdata.org/ipumsr//articles
+  reference: http://tech.popdata.org/ipumsr/reference
+  article: http://tech.popdata.org/ipumsr/articles
 

@@ -2,21 +2,21 @@
   "index_name": "ipumsr",
   "start_urls": [
     {
-      "url": "http://tech.popdata.org/ipumsr//index.html",
+      "url": "http://tech.popdata.org/ipumsr/index.html",
       "selectors_key": "homepage",
       "tags": [
         "homepage"
       ]
     },
     {
-      "url": "http://tech.popdata.org/ipumsr//reference",
+      "url": "http://tech.popdata.org/ipumsr/reference",
       "selectors_key": "reference",
       "tags": [
         "reference"
       ]
     },
     {
-      "url": "http://tech.popdata.org/ipumsr//articles",
+      "url": "http://tech.popdata.org/ipumsr/articles",
       "selectors_key": "articles",
       "tags": [
         "articles"
@@ -30,7 +30,7 @@
     "/articles/index.html"
   ],
   "sitemap_urls": [
-    "http://tech.popdata.org/ipumsr//sitemap.xml"
+    "http://tech.popdata.org/ipumsr/sitemap.xml"
   ],
   "selectors": {
     "homepage": {

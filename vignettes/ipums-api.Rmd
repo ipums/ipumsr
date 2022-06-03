@@ -1,5 +1,5 @@
 ---
-title: "Interacting with the IPUMS USA microdata extract API"
+title: "Interacting with the IPUMS microdata extract API"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ipums-api}
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 # Warning: New features currently in development
 
 The IPUMS microdata extract API is still in beta testing, and the interface 
-for interacting with the API with ipumsr could still change in response to 
+for interacting with the API using ipumsr could still change in response to 
 tester feedback. If you are interested in becoming a beta tester, email 
 ipums+api@umn.edu.
 
