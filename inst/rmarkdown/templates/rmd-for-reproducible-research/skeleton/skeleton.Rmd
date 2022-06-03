@@ -26,11 +26,14 @@ suppressPackageStartupMessages(suppressWarnings({
 
 ## Setup - First Time
 
-This script is intended to semi-automate parts of the IPUMS data acquisition process, using the [microdata API]().  In order to run, users must: 
+This script is intended to semi-automate parts of the IPUMS data acquisition process, using the [microdata API](https://beta.developer.ipums.org/docs/apiprogram/).  In order to run, users must: 
 
-1. Have an account with one or more IPUMS project
-1. Register for an [IPUMS microdata API key](https://developer.ipums.org/docs/apiprogram/)
-1. Add your API key as an [environmental variable](https://tech.popdata.org/ipumsr/dev/)
+1. Register for access to IPUMS data, currently two projects have API support:
+  * [IPUMS USA](https://usa.ipums.org/usa-action/menu)
+  * [IPUMS CPS](https://cps.ipums.org/cps-action/menu)
+1. Email `ipums+api@umn.edu` to register for beta access
+1. Generate an [IPUMS microdata API key](https://account.ipums.org/api_keys)
+1. Add your API key as an [environment variable](https://tech.popdata.org/ipumsr/reference/set_ipums_api_key.html)
 
 
 **Some Notes on this file:**
@@ -47,7 +50,7 @@ This template makes it easy for users to share their custom IPUMS data extracts,
 * When starting an analysis/project, it handles every step between "creating an extract online" and "analyzing the data". 
 * When sharing the template with others, it will automatically submit, download, and compile the report for the end user in just 2 clicks - allowing you to share interactive, data driven reports with colleagues without needing to send massive data files.  
 
-To get started, build your data extract via the Data Cart GUI on [ipums.org](www.ipums.org), and be sure to take note of which IPUMS **collection** you are using (EG, "USA", "CPS"), and which **extract number** you'd like to use. Enter them in the relevant `parameters` below, along with a **descriptive name** to help keep track of your files and the **data directory** you'd like your files to go in.
+To get started, build your data extract via the Data Cart GUI on either [IPUMS USA](https://usa.ipums.org/usa-action/variables/group) or [IPUMS CPS](https://cps.ipums.org/cps-action/variables/group) and be sure to take note of which IPUMS **collection** you are using (EG, "USA", "CPS"), and which **extract number** you'd like to use (or leave it as `""` for most recent). Enter them in the relevant `parameters` below, along with a **descriptive name** to help keep track of your files and the **data directory** you'd like your files to go in.
 
 Fill in the 4 parameters below and click `knit` or run `rmarkdown::render()` to begin. Read on for more info on parameters and how the back-end code works. Or, `knit` twice to get your data, then skip ahead to [## Analysis Awaits] to continue as usual. **Some Notes:**
 
@@ -67,7 +70,7 @@ collection <- "usa"
 
 extract_num <- ""
 
-data_dir <- file.path("new_Data")
+data_dir <- file.path("Data")
 
 descriptive_name <- "template"
 
@@ -141,7 +144,7 @@ if(json_present){
 
 
 if(length(input_json) > 1){
-  stop(" NOT an error:Multiple .json definitions present, please use a separate data_dir for each .json",call. = F)
+  stop(" NOT an error: Multiple .json definitions present, please use a separate data_dir for each .json",call. = F)
 }
 
 if(!identical(input_json, json_filename)){
@@ -229,7 +232,7 @@ IPUMS only ensures data will be available for 72 hours, after that point users w
             file.path(data_dir, chk_name),
             row.names = F)
   
-  stop(" NOT an error:Specified extract expired, resubmitting, check back in a few mins",call. = F)
+  stop(" NOT an error: Specified extract expired, resubmitting, check back in a few mins",call. = F)
   
   
 ```
@@ -253,6 +256,8 @@ IPUMS only ensures data will be available for 72 hours, after that point users w
               file.path(data_dir, ddi_rename))
   file.rename(file.path(data_dir, data_filename),
               file.path(data_dir, data_rename))
+  
+  data_present <- TRUE
   
 ```
 
