@@ -20,3 +20,4 @@
 ^Meta$
 ^src-i386
 ^\.github$
+^CRAN-SUBMISSION$
