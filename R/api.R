@@ -990,6 +990,8 @@ download_extract <- function(extract,
 #'   arguments in the extract definition function for the class of the extract
 #'   specified in \code{extract}.
 #'
+#' @family ipums_api
+#'
 #' @return An object of the same class as \code{extract} containing the modified
 #'   extract definition
 #'
@@ -1287,6 +1289,8 @@ add_to_extract.nhgis_extract <- function(extract,
 #'   remove from the extract. The available arguments correspond to the
 #'   available arguments in the extract definition function for the class of the
 #'   extract specified in \code{extract}.
+#'
+#' @family ipums_api
 #'
 #' @return An object of the same class as \code{extract} containing the modified
 #'   extract definition
@@ -1606,7 +1610,7 @@ remove_from_extract.cps_extract <- function(extract,
 #' similar to `get_recent_extracts_info_list(..., how_many = 1)`,
 #' but returns an [`ipums_extract`][ipums_extract-class] rather than
 #' a list of `ipums_extract` objects.
-#' 
+#'
 #' @param collection The code for an IPUMS data collection. For a list of the
 #'   codes used to refer to the data collections, see [ipums_data_collections()].
 #' @param how_many Number of recent extracts for which you'd like information.
@@ -1905,7 +1909,7 @@ extract_list_to_tbl <- function(extract_list) {
 #'   status of API support for the collection.
 #'
 #' @export
-#' 
+#'
 #' @examples
 #' # Print a tibble of all IPUMS data collections:
 #' ipums_data_collections()
