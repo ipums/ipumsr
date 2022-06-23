@@ -175,7 +175,7 @@ submitted_usa_extract <- get_extract_info(submitted_usa_extract)
 To print the latest status, you can use:
 
 ```{r}
-submitted_extract$status
+submitted_usa_extract$status
 ```
 
 If you forget to capture the return value of `submit_extract()`, you can pull 
@@ -327,7 +327,11 @@ variable to it:
 
 ```{r}
 old_extract <- get_extract_info("usa:33")
-new_extract <- add_to_extract(old_extract, samples = "us2020a", vars = "RELATE")
+new_extract <- add_to_extract(
+  old_extract, 
+  samples = "us2020a", 
+  variables = "RELATE"
+)
 ```
 
 The `add_to_extract()` function returns an `ipums_extract` object that has been 
@@ -361,9 +365,9 @@ second-most-recent extract and revise it for resubmission, you could use:
 
 ```{r}
 second_most_recent_extract <- get_recent_extracts_info_list("usa")[[2]]
-revised_extract <- revise_extract_micro(
+revised_extract <- add_to_extract(
   second_most_recent_extract, 
-  samples_to_add = "us2010a"
+  samples = "us2010a"
 )
 ```
 
@@ -387,7 +391,7 @@ For example, to find extracts with descriptions including the word "occupation",
 you could use:
 
 ```{r}
-recent_usa_extracts %>%  
+recent_usa_extracts_tbl %>%  
   filter(grepl("occupation", description))
 ```
 
@@ -397,7 +401,7 @@ example, to find extracts including the variable "AGE", you could use
 `purrr::map_lgl()` like this:
 
 ```{r}
-recent_usa_extracts %>% 
+recent_usa_extracts_tbl %>% 
   filter(map_lgl(variables, ~"AGE" %in% .x))
 ```
 
