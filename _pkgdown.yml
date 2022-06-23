@@ -1,12 +1,15 @@
 url: http://tech.popdata.org/ipumsr/
 template:
-  path: "pkgdown/templates"
   params:
     docsearch:
       api_key: 4ffa912ace97d2493f6ed39f20e94316
       index_name: ipumsr
+footer:
+  structure:
+    left: Developed by [IPUMS](https://www.ipums.org) at the University of Minnesota
+    right: built_with
 development:
-  mode: devel
+  mode: release
 navbar:
   title: "ipumsr"
   type: inverse
@@ -91,17 +94,21 @@ reference:
       - lbl_add
       - lbl_add_vals
       - lbl
-  - title: "Interact with the IPUMS USA extract API (in development, not yet on CRAN)"
+  - title: "Interact with the IPUMS API"
     contents:
-      - define_extract_micro
+      - set_ipums_api_key
+      - define_extract_usa
+      - define_extract_cps
+      - ipums_extract-class
       - submit_extract
-      - get_extract_info
-      - get_last_extract_info
-      - get_recent_extracts_info
       - wait_for_extract
       - is_extract_ready
       - download_extract
-      - revise_extract_micro
+      - get_extract_info
+      - get_last_extract_info
+      - get_recent_extracts_info
+      - add_to_extract
+      - remove_from_extract
       - save_extract_as_json
       - define_extract_from_json
       - ipums_data_collections

@@ -7,21 +7,17 @@
 extract_list_to_tbl(extract_list)
 }
 \arguments{
-\item{extract_list}{A list of objects inheriting from \code{ipums_extract}}
+\item{extract_list}{A list of \code{\link[=ipums_extract-class]{ipums_extract}} objects.}
 }
 \value{
-A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
-  and whose values represent the specified parameters for those fields.
-  Unique extracts can be identified by their extract
-  number, which is contained in the \code{number} column of the output
-  \code{tbl_df}
+A \code{\link[tibble:tbl_df-class]{tibble}} with number of rows equal to the
+length of \code{extract_list}, in which each row contains the definition
+of one extract.
 }
 \description{
-Convert a list of \code{ipums_extract} objects to a
-\code{\link[tibble]{tbl_df}} that contains the extract specifications.
-}
-\details{
-For an overview of ipumsr API functionality, see
+Convert a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects to a
+\code{\link[tibble:tbl_df-class]{tibble}} in which each row contains the definition of
+one extract. For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -41,17 +37,19 @@ extract_list_to_tbl(list_of_last_10_extracts)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract}()},
+\code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
+\code{\link{define_extract_usa}()},
 \code{\link{download_extract}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
+\code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

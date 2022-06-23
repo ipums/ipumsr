@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -59,7 +61,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -77,8 +79,12 @@
     <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
-    <li class="divider">
     <li>
+      <a href="../articles/ipums-api.html">IPUMS data extract API</a>
+    </li>
+    <li class="divider">
+    </li>
+<li>
       <a href="../articles/ipums-cps.html">CPS exercise</a>
     </li>
     <li>
@@ -88,7 +94,7 @@
       <a href="../articles/ipums-terra.html">IPUMS Terra exercise</a>
     </li>
     <li>
-      <a href="https://ipums.org/exercises.shtml">More project exercises</a>
+      <a href="https://ipums.org/exercises.shtml" class="external-link">More project exercises</a>
     </li>
   </ul>
 </li>
@@ -98,19 +104,19 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ipums/ipumsr">
+  <a href="https://github.com/ipums/ipumsr" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://forum.ipums.org">
+  <a href="https://forum.ipums.org" class="external-link">
     <span class="fa fa-users"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://www.ipums.org/">
+  <a href="https://www.ipums.org/" class="external-link">
     <span class="fa fa-globe"></span>
      
   </a>
@@ -131,38 +137,45 @@
 
       
 
-      </header><script src="ipums-cps_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>
 <code>ipumsr</code> Example - CPS</h1>
-                        <h4 class="author">Minnesota Population Center</h4>
+                        <h4 data-toc-skip class="author">Minnesota
+Population Center</h4>
             
-            <h4 class="date">2020-07-28</h4>
+            <h4 data-toc-skip class="date">2022-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/master/vignettes/ipums-cps.Rmd"><code>vignettes/ipums-cps.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/vignettes/ipums-cps.Rmd" class="external-link"><code>vignettes/ipums-cps.Rmd</code></a></small>
       <div class="hidden name"><code>ipums-cps.Rmd</code></div>
 
     </div>
 
     
     
-<div id="ipums---cps-extraction-and-analysis" class="section level1">
-<h1 class="hasAnchor">
-<a href="#ipums---cps-extraction-and-analysis" class="anchor"></a>IPUMS - CPS Extraction and Analysis</h1>
-<div id="exercise-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exercise-1" class="anchor"></a>Exercise 1</h2>
-<p>OBJECTIVE: Gain an understanding of how the IPUMS dataset is structured and how it can be leveraged to explore your research interests. This exercise will use the IPUMS dataset to explore associations between health and work status and to create basic frequencies of food stamp usage.</p>
-<p>This vignette is adapted from the CPS Data Training Exercise available here: <a href="https://pop.umn.edu/sites/pop.umn.edu/files/final_review_-_cps_spss_exercise_1_0.pdf" class="uri">https://pop.umn.edu/sites/pop.umn.edu/files/final_review_-_cps_spss_exercise_1_0.pdf</a></p>
-<div id="research-questions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#research-questions" class="anchor"></a>Research Questions</h3>
-<p>What is the frequency of food stamp recipiency in the US? Are health and work statuses related?</p>
+<div class="section level2">
+<h2 id="ipums---cps-extraction-and-analysis">IPUMS - CPS Extraction and Analysis<a class="anchor" aria-label="anchor" href="#ipums---cps-extraction-and-analysis"></a>
+</h2>
+<div class="section level3">
+<h3 id="exercise-1">Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1"></a>
+</h3>
+<p>OBJECTIVE: Gain an understanding of how the IPUMS dataset is
+structured and how it can be leveraged to explore your research
+interests. This exercise will use the IPUMS dataset to explore
+associations between health and work status and to create basic
+frequencies of food stamp usage.</p>
+<p>This vignette is adapted from the CPS Data Training Exercise
+available here: <a href="https://pop.umn.edu/sites/pop.umn.edu/files/final_review_-_cps_spss_exercise_1_0.pdf" class="external-link uri">https://pop.umn.edu/sites/pop.umn.edu/files/final_review_-_cps_spss_exercise_1_0.pdf</a></p>
+<div class="section level4">
+<h4 id="research-questions">Research Questions<a class="anchor" aria-label="anchor" href="#research-questions"></a>
+</h4>
+<p>What is the frequency of food stamp recipiency in the US? Are health
+and work statuses related?</p>
 </div>
-<div id="objectives" class="section level3">
-<h3 class="hasAnchor">
-<a href="#objectives" class="anchor"></a>Objectives</h3>
+<div class="section level4">
+<h4 id="objectives">Objectives<a class="anchor" aria-label="anchor" href="#objectives"></a>
+</h4>
 <ul>
 <li>Create and download an IPUMS data extract</li>
 <li>Decompress data file and read data into R</li>
@@ -170,9 +183,9 @@
 <li>Validate data analysis work using answer key</li>
 </ul>
 </div>
-<div id="ipums-variables" class="section level3">
-<h3 class="hasAnchor">
-<a href="#ipums-variables" class="anchor"></a>IPUMS Variables</h3>
+<div class="section level4">
+<h4 id="ipums-variables">IPUMS Variables<a class="anchor" aria-label="anchor" href="#ipums-variables"></a>
+</h4>
 <ul>
 <li>PERNUM: Person number in sample unit</li>
 <li>FOODSTMP: Food stamp receipt</li>
@@ -183,26 +196,36 @@
 </ul>
 </div>
 </div>
-<div id="download-extract-from-ipums-website" class="section level2">
-<h2 class="hasAnchor">
-<a href="#download-extract-from-ipums-website" class="anchor"></a>Download Extract from IPUMS Website</h2>
+<div class="section level3">
+<h3 id="download-extract-from-ipums-website">Download Extract from IPUMS Website<a class="anchor" aria-label="anchor" href="#download-extract-from-ipums-website"></a>
+</h3>
 <ol style="list-style-type: decimal">
-<li><p><strong>Register with IPUMS</strong> - Go to <a href="http://cps.ipums.org" class="uri">http://cps.ipums.org</a>, click on CPS Registration and apply for access. On login screen, enter email address and password and submit it!</p></li>
+<li><p><strong>Register with IPUMS</strong> - Go to <a href="http://cps.ipums.org" class="external-link uri">http://cps.ipums.org</a>, click
+on CPS Registration and apply for access. On login screen, enter email
+address and password and submit it!</p></li>
 <li><p><strong>Make an Extract</strong></p></li>
 </ol>
 <ul>
-<li>Go to <a href="http://cps.ipums.org" class="uri">http://cps.ipums.org</a>, click on CPS Registration and Apply for access</li>
+<li>Go to <a href="http://cps.ipums.org" class="external-link uri">http://cps.ipums.org</a>, click on CPS Registration and
+Apply for access</li>
 <li>On login screen, enter email address and password and submit</li>
 <li>Go back to homepage and go to Select Data</li>
-<li>Click the Select Samples box, check the box for the 2011 ASEC sample, click the Submit sample selections box</li>
-<li>Using the drop down menu or search feature, select the following variables:
+<li>Click the Select Samples box, check the box for the 2011 ASEC
+sample, click the Submit sample selections box</li>
+<li>Using the drop down menu or search feature, select the following
+variables:
 <ul>
-<li>PERNUM: Person number in sample unit (under Person &gt; Core &gt; Technical in the drop down)</li>
-<li>FOODSTMP: Food stamp receipt (under Household &gt; Core &gt; Economic Characteristics; note that we do not want “FOODSTAMP: Family market value of food stamps”)</li>
+<li>PERNUM: Person number in sample unit (under Person &gt; Core &gt;
+Technical in the drop down)</li>
+<li>FOODSTMP: Food stamp receipt (under Household &gt; Core &gt;
+Economic Characteristics; note that we do not want “FOODSTAMP: Family
+market value of food stamps”)</li>
 <li>AGE: Age (under Person &gt; Core &gt; Demographics)</li>
 <li>EMPSTAT: Employment status (under Person &gt; Core &gt; Work)</li>
-<li>AHRSWORKT: Hours worked last week (under Person &gt; Core &gt; Work)</li>
-<li>HEALTH: Health status (under Person &gt; Annual Social &amp; Economic Supplement (ASEC) &gt; Disability)</li>
+<li>AHRSWORKT: Hours worked last week (under Person &gt; Core &gt;
+Work)</li>
+<li>HEALTH: Health status (under Person &gt; Annual Social &amp;
+Economic Supplement (ASEC) &gt; Disability)</li>
 </ul>
 </li>
 </ul>
@@ -211,307 +234,353 @@
 </ol>
 <ul>
 <li>Click the orange VIEW CART button under your data cart</li>
-<li>Review variable selection. Click the orange Create Data Extract button</li>
-<li>Review the ‘Extract Request Summary’ screen, describe your extract and click Submit Extract</li>
+<li>Review variable selection. Click the orange Create Data Extract
+button</li>
+<li>Review the ‘Extract Request Summary’ screen, describe your extract
+and click Submit Extract</li>
 <li>You will get an email when the data is available to download</li>
-<li>To get to the page to download the data, follow the link in the email, or follow the Download and Revise Extracts link on the homepage</li>
+<li>To get to the page to download the data, follow the link in the
+email, or follow the Download and Revise Extracts link on the
+homepage</li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
 <li><strong>Download the Data</strong></li>
 </ol>
 <ul>
-<li>Go to <a href="http://cps.ipums.org" class="uri">http://cps.ipums.org</a> and click on Download or Revise Extracts</li>
+<li>Go to <a href="http://cps.ipums.org" class="external-link uri">http://cps.ipums.org</a> and click on Download or Revise
+Extracts</li>
 <li>Right-click on the data link next to extract you created</li>
 <li>Choose “Save Target As…” (or “Save Link As…”)</li>
-<li>Save into “Documents” (that should pop up as the default location)</li>
+<li>Save into “Documents” (that should pop up as the default
+location)</li>
 <li>Do the same thing for the DDI link next to the extract</li>
 </ul>
 </div>
-<div id="getting-the-data-into-r" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-the-data-into-r" class="anchor"></a>Getting the data into R</h2>
-<p>You will need to change the filepaths noted below to the place where you have saved the extracts.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ipumsr</span>)
+<div class="section level3">
+<h3 id="getting-the-data-into-r">Getting the data into R<a class="anchor" aria-label="anchor" href="#getting-the-data-into-r"></a>
+</h3>
+<p>You will need to change the filepaths noted below to the place where
+you have saved the extracts.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org" class="external-link">ipumsr</a></span><span class="op">)</span>
 
 <span class="co"># Change these filepaths to the filepaths of your downloaded extract</span>
-<span class="no">cps_ddi_file</span> <span class="kw">&lt;-</span> <span class="st">"cps_00001.xml"</span>
-<span class="no">cps_data_file</span> <span class="kw">&lt;-</span> <span class="st">"cps_00001.dat"</span></pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">cps_ddi</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span>(<span class="no">cps_ddi_file</span>) <span class="co"># Contains metadata, nice to have as separate object</span>
-<span class="no">cps_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span>(<span class="no">cps_ddi_file</span>, <span class="kw">data_file</span> <span class="kw">=</span> <span class="no">cps_data_file</span>)
+<span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="st">"cps_00001.xml"</span>
+<span class="va">cps_data_file</span> <span class="op">&lt;-</span> <span class="st">"cps_00001.dat"</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span> <span class="co"># Contains metadata, nice to have as separate object</span>
+<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span><span class="op">)</span>
 <span class="co">#&gt; Use of data from IPUMS-CPS is subject to conditions including that users should</span>
-<span class="co">#&gt; cite the data appropriately. Use command `ipums_conditions()` for more details.</span></pre></body></html></div>
-<p>Note that the <code>data_file</code> argument is optional if you didn’t change the data file name and have it saved in your working directory; <code>read_ipums_micro</code> can use information from the DDI file to locate the corresponding data file.</p>
+<span class="co">#&gt; cite the data appropriately. Use command `ipums_conditions()` for more details.</span></code></pre></div>
+<p>Note that the <code>data_file</code> argument is optional if you
+didn’t change the data file name and have it saved in your working
+directory; <code>read_ipums_micro</code> can use information from the
+DDI file to locate the corresponding data file.</p>
 </div>
-<div id="exercises" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exercises" class="anchor"></a>Exercises</h2>
-<p>These exercises include example code written in the “tidyverse” style, meaning that they use the dplyr package. This package provides easy to use functions for data analysis, including <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html">slice()</a></code> and the pipe (<code><a href="https://dplyr.tidyverse.org/reference/reexports.html">%&gt;%</a></code>). There a numerous other ways you could solve these answers, including using the base R, the <code>data.table</code> package and others.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>, <span class="kw">warn.conflicts</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<div id="analyze-the-sample-part-i-frequencies-of-foodstmp" class="section level3">
-<h3 class="hasAnchor">
-<a href="#analyze-the-sample-part-i-frequencies-of-foodstmp" class="anchor"></a>Analyze the Sample – Part I Frequencies of FOODSTMP</h3>
+<div class="section level3">
+<h3 id="exercises">Exercises<a class="anchor" aria-label="anchor" href="#exercises"></a>
+</h3>
+<p>These exercises include example code written in the “tidyverse”
+style, meaning that they use the dplyr package. This package provides
+easy to use functions for data analysis, including
+<code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code>,
+<code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice()</a></code> and the pipe (<code>%&gt;%</code>). There a
+numerous other ways you could solve these answers, including using the
+base R, the <code>data.table</code> package and others.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="section level4">
+<h4 id="analyze-the-sample-part-i-frequencies-of-foodstmp">Analyze the Sample – Part I Frequencies of FOODSTMP<a class="anchor" aria-label="anchor" href="#analyze-the-sample-part-i-frequencies-of-foodstmp"></a>
+</h4>
 <ol style="list-style-type: upper-alpha">
-<li>On the website, find the codes page for the FOODSTMP variable and write down the code value, and what category each code represents.</li>
+<li>On the website, find the codes page for the FOODSTMP variable and
+write down the code value, and what category each code represents.</li>
 </ol>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Can find on the website or from the data</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span>(<span class="no">cps_ddi</span>, <span class="no">FOODSTMP</span>)
-<span class="co">#&gt; # A tibble: 3 x 2</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Can find on the website or from the data</span>
+<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="va">FOODSTMP</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span>
 <span class="co">#&gt;     val lbl  </span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span>
-<span class="co">#&gt; 1     0 NIU  </span>
-<span class="co">#&gt; 2     1 No   </span>
-<span class="co">#&gt; 3     2 Yes</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     0 NIU  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     1 No   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     2 Yes</span>
 
-<span class="co">#    A: 0 = NIU, 1 = No, 2 = Yes</span></pre></body></html></div>
+<span class="co">#    A: 0 = NIU, 1 = No, 2 = Yes</span></code></pre></div>
 <ol start="2" style="list-style-type: upper-alpha">
-<li>What is the universe for FOODSTMP in 2011 (under the Universe tab on the website)?</li>
+<li>What is the universe for FOODSTMP in 2011 (under the Universe tab on
+the website)?</li>
 </ol>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span>(<span class="no">cps_ddi</span>, <span class="st">"FOODSTMP"</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"FOODSTMP"</span><span class="op">)</span>
 
 <span class="co">#    A: (Only available on website)</span>
 <span class="co">#       All interviewed households and group quarters. </span>
 <span class="co">#       Note the NIU on the codes page, this is a household variable and the</span>
-<span class="co">#       NIU cases are the vacant households.</span></pre></body></html></div>
+<span class="co">#       NIU cases are the vacant households.</span></code></pre></div>
 <ol start="3" style="list-style-type: upper-alpha">
 <li>How many people received food stamps in 2011?</li>
 </ol>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># We will be working with the FOODSTMP variable a lot, so </span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># We will be working with the FOODSTMP variable a lot, so </span>
 <span class="co"># let's turn it into a factor</span>
-<span class="no">cps_data</span> <span class="kw">&lt;-</span> <span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">FOODSTMP_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(<span class="no">FOODSTMP</span>))
+<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>FOODSTMP_factor <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">FOODSTMP</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">FOODSTMP_factor</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">n_foodstmp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">WTSUPP</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">pct_foodstmp</span> <span class="kw">=</span> <span class="no">n_foodstmp</span> / <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">n_foodstmp</span>))
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
-<span class="co">#&gt; # A tibble: 2 x 3</span>
+<span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">FOODSTMP_factor</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n_foodstmp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">WTSUPP</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_foodstmp <span class="op">=</span> <span class="va">n_foodstmp</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_foodstmp</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
 <span class="co">#&gt;   FOODSTMP_factor n_foodstmp pct_foodstmp</span>
-<span class="co">#&gt;   &lt;fct&gt;                &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 No              267365863.        0.872</span>
-<span class="co">#&gt; 2 Yes              39187348.        0.128</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> No              267<span style="text-decoration: underline;">365</span>863.        0.872</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Yes              39<span style="text-decoration: underline;">187</span>348.        0.128</span>
 
-<span class="co">#    A: 39,187,348</span></pre></body></html></div>
+<span class="co">#    A: 39,187,348</span></code></pre></div>
 <ol start="4" style="list-style-type: upper-alpha">
 <li>What proportion of the population received food stamps in 2011?</li>
 </ol>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">#    A: 12.8% (found in code from previous question)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#    A: 12.8% (found in code from previous question)</span></code></pre></div>
 </div>
-<div id="using-household-weights-hwtsupp" class="section level3">
-<h3 class="hasAnchor">
-<a href="#using-household-weights-hwtsupp" class="anchor"></a>Using household weights (HWTSUPP)</h3>
-<p>Suppose you were interested not in the number of people living in homes that received food stamps, but in the number of households that were food stamp participants. To get this statistic you would need to use the household weight.</p>
-<p>In order to use household weight, you should be careful to select only one person from each household to represent that household’s characteristics. You will need to apply the household weight (HWTSUPP).</p>
+<div class="section level4">
+<h4 id="using-household-weights-hwtsupp">Using household weights (HWTSUPP)<a class="anchor" aria-label="anchor" href="#using-household-weights-hwtsupp"></a>
+</h4>
+<p>Suppose you were interested not in the number of people living in
+homes that received food stamps, but in the number of households that
+were food stamp participants. To get this statistic you would need to
+use the household weight.</p>
+<p>In order to use household weight, you should be careful to select
+only one person from each household to represent that household’s
+characteristics. You will need to apply the household weight
+(HWTSUPP).</p>
 <ol style="list-style-type: upper-alpha">
 <li>How many households received food stamps in 2011?</li>
 </ol>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">SERIAL</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>() <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">FOODSTMP_factor</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">n_foodstmp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">HWTSUPP</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">pct_foodstmp</span> <span class="kw">=</span> <span class="no">n_foodstmp</span> / <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">n_foodstmp</span>))
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
-<span class="co">#&gt; # A tibble: 2 x 3</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SERIAL</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">FOODSTMP_factor</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n_foodstmp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HWTSUPP</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_foodstmp <span class="op">=</span> <span class="va">n_foodstmp</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_foodstmp</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
 <span class="co">#&gt;   FOODSTMP_factor n_foodstmp pct_foodstmp</span>
-<span class="co">#&gt;   &lt;fct&gt;                &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 No              107139102.        0.893</span>
-<span class="co">#&gt; 2 Yes              12855283.        0.107</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> No              107<span style="text-decoration: underline;">139</span>102.        0.893</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Yes              12<span style="text-decoration: underline;">855</span>283.        0.107</span>
 
-<span class="co">#    A: 12,855,283</span></pre></body></html></div>
+<span class="co">#    A: 12,855,283</span></code></pre></div>
 <ol start="2" style="list-style-type: upper-alpha">
 <li>What proportion of households received food stamps in 2011?</li>
 </ol>
-<div class="sourceCode" id="cb9"><html><body><pre class="r">#    A: 10.7% (found in code from previous question)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#    A: 10.7% (found in code from previous question)</span></code></pre></div>
 </div>
-<div id="analyze-the-sample-part-ii-relationships-in-the-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#analyze-the-sample-part-ii-relationships-in-the-data" class="anchor"></a>Analyze the Sample – Part II Relationships in the Data</h3>
+<div class="section level4">
+<h4 id="analyze-the-sample-part-ii-relationships-in-the-data">Analyze the Sample – Part II Relationships in the Data<a class="anchor" aria-label="anchor" href="#analyze-the-sample-part-ii-relationships-in-the-data"></a>
+</h4>
 <ol style="list-style-type: upper-alpha">
 <li>What is the universe for EMPSTAT in 2011?</li>
 </ol>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span>(<span class="no">cps_ddi</span>, <span class="st">"EMPSTAT"</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"EMPSTAT"</span><span class="op">)</span>
 
-<span class="co">#    A: Age 15+</span></pre></body></html></div>
+<span class="co">#    A: Age 15+</span></code></pre></div>
 <ol start="2" style="list-style-type: upper-alpha">
-<li>What are the possible responses and codes for the self-reported HEALTH variable?</li>
+<li>What are the possible responses and codes for the self-reported
+HEALTH variable?</li>
 </ol>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span>(<span class="no">cps_ddi</span>, <span class="no">HEALTH</span>)
-<span class="co">#&gt; # A tibble: 5 x 2</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="va">HEALTH</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="co">#&gt;     val lbl      </span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1     1 Excellent</span>
-<span class="co">#&gt; 2     2 Very good</span>
-<span class="co">#&gt; 3     3 Good     </span>
-<span class="co">#&gt; 4     4 Fair     </span>
-<span class="co">#&gt; 5     5 Poor</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 Excellent</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 Very good</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 Good     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 Fair     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 Poor</span>
 
-<span class="co">#    A: 1 = Excellent, 2 = Very Good, 3 = Good, 4 = Fair, 5 = Poor</span></pre></body></html></div>
+<span class="co">#    A: 1 = Excellent, 2 = Very Good, 3 = Good, 4 = Fair, 5 = Poor</span></code></pre></div>
 <ol start="3" style="list-style-type: upper-alpha">
-<li>What percent of people with ‘poor’ self-reported health are at work?</li>
+<li>What percent of people with ‘poor’ self-reported health are at
+work?</li>
 </ol>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">HEALTH</span> <span class="kw">==</span> <span class="fl">5</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">emp_pct</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span>(<span class="no">EMPSTAT</span> <span class="kw">==</span> <span class="fl">10</span>, <span class="no">WTSUPP</span>))
-<span class="co">#&gt; # A tibble: 1 x 1</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">HEALTH</span> <span class="op">==</span> <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>emp_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">EMPSTAT</span> <span class="op">==</span> <span class="fl">10</span>, <span class="va">WTSUPP</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 1</span></span>
 <span class="co">#&gt;   emp_pct</span>
-<span class="co">#&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   0.116</span>
+<span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   0.116</span>
 
-<span class="co">#    A: 11.6%</span></pre></body></html></div>
+<span class="co">#    A: 11.6%</span></code></pre></div>
 <ol start="4" style="list-style-type: upper-alpha">
-<li>What percent of people with ‘very good’ self-reported health are at work?</li>
+<li>What percent of people with ‘very good’ self-reported health are at
+work?</li>
 </ol>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">HEALTH</span> <span class="kw">==</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">emp_pct</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span>(<span class="no">EMPSTAT</span> <span class="kw">==</span> <span class="fl">10</span>, <span class="no">WTSUPP</span>))
-<span class="co">#&gt; # A tibble: 1 x 1</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">HEALTH</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>emp_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">EMPSTAT</span> <span class="op">==</span> <span class="fl">10</span>, <span class="va">WTSUPP</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 1</span></span>
 <span class="co">#&gt;   emp_pct</span>
-<span class="co">#&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   0.516</span>
+<span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   0.516</span>
 
-<span class="co">#    A: 51.6%</span></pre></body></html></div>
+<span class="co">#    A: 51.6%</span></code></pre></div>
 <ol start="5" style="list-style-type: upper-alpha">
 <li>In the EMPSTAT universe, what percent of people:</li>
 </ol>
 <ol style="list-style-type: lower-roman">
 <li>self-report ‘poor’ health and are at work?</li>
 </ol>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span>(<span class="no">cps_ddi</span>, <span class="no">EMPSTAT</span>)
-<span class="co">#&gt; # A tibble: 14 x 2</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="va">EMPSTAT</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 14 × 2</span></span>
 <span class="co">#&gt;      val lbl                           </span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                         </span>
-<span class="co">#&gt;  1     0 NIU                           </span>
-<span class="co">#&gt;  2     1 Armed Forces                  </span>
-<span class="co">#&gt;  3    10 At work                       </span>
-<span class="co">#&gt;  4    12 Has job, not at work last week</span>
-<span class="co">#&gt;  5    20 Unemployed                    </span>
-<span class="co">#&gt;  6    21 Unemployed, experienced worker</span>
-<span class="co">#&gt;  7    22 Unemployed, new worker        </span>
-<span class="co">#&gt;  8    30 Not in labor force            </span>
-<span class="co">#&gt;  9    31 NILF, housework               </span>
-<span class="co">#&gt; 10    32 NILF, unable to work          </span>
-<span class="co">#&gt; 11    33 NILF, school                  </span>
-<span class="co">#&gt; 12    34 NILF, other                   </span>
-<span class="co">#&gt; 13    35 NILF, unpaid, lt 15 hours     </span>
-<span class="co">#&gt; 14    36 NILF, retired</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     0 NIU                           </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     1 Armed Forces                  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>    10 At work                       </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>    12 Has job, not at work last week</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>    20 Unemployed                    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>    21 Unemployed, experienced worker</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>    22 Unemployed, new worker        </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>    30 Not in labor force            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>    31 NILF, housework               </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    32 NILF, unable to work          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    33 NILF, school                  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    34 NILF, other                   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">13</span>    35 NILF, unpaid, lt 15 hours     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">14</span>    36 NILF, retired</span>
 
 <span class="co"># 10 is the code for "At work"</span>
 
-<span class="no">pct_emp_by_health</span> <span class="kw">&lt;-</span> <span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">AGE</span> <span class="kw">&gt;=</span> <span class="fl">15</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">HEALTH_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(<span class="no">HEALTH</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">HEALTH_factor</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">emp_pct</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span>(<span class="no">EMPSTAT</span> <span class="kw">==</span> <span class="fl">10</span>, <span class="no">WTSUPP</span>))
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
+<span class="va">pct_emp_by_health</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGE</span> <span class="op">&gt;=</span> <span class="fl">15</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>HEALTH_factor <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH_factor</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>emp_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">EMPSTAT</span> <span class="op">==</span> <span class="fl">10</span>, <span class="va">WTSUPP</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">pct_emp_by_health</span>
-<span class="co">#&gt; # A tibble: 5 x 2</span>
+<span class="va">pct_emp_by_health</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="co">#&gt;   HEALTH_factor emp_pct</span>
-<span class="co">#&gt;   &lt;fct&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Excellent       0.639</span>
-<span class="co">#&gt; 2 Very good       0.640</span>
-<span class="co">#&gt; 3 Good            0.521</span>
-<span class="co">#&gt; 4 Fair            0.282</span>
-<span class="co">#&gt; 5 Poor            0.118</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Excellent       0.639</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Very good       0.640</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Good            0.521</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Fair            0.282</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Poor            0.118</span>
 
-<span class="co">#    A: 11.8%</span></pre></body></html></div>
+<span class="co">#    A: 11.8%</span></code></pre></div>
 <ol start="2" style="list-style-type: lower-roman">
 <li>self-report ‘very good’ health and are at work?</li>
 </ol>
-<div class="sourceCode" id="cb15"><html><body><pre class="r">#    A: 64.0% (found in code from previous question)</pre></body></html></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#    A: 64.0% (found in code from previous question)</span></code></pre></div>
 </div>
-<div id="analyze-the-sample-part-iii-relationships-in-the-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#analyze-the-sample-part-iii-relationships-in-the-data" class="anchor"></a>Analyze the Sample – Part III Relationships in the Data</h3>
+<div class="section level4">
+<h4 id="analyze-the-sample-part-iii-relationships-in-the-data">Analyze the Sample – Part III Relationships in the Data<a class="anchor" aria-label="anchor" href="#analyze-the-sample-part-iii-relationships-in-the-data"></a>
+</h4>
 <ol style="list-style-type: upper-alpha">
 <li>What is the universe for AHRSWORK?</li>
 </ol>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span>(<span class="no">cps_ddi</span>, <span class="st">"AHRSWORK"</span>)
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_website.html">ipums_website</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"AHRSWORK"</span><span class="op">)</span>
 
-<span class="co">#     A: Civilians age 15+, at work last week</span></pre></body></html></div>
+<span class="co">#     A: Civilians age 15+, at work last week</span></code></pre></div>
 <ol start="2" style="list-style-type: upper-alpha">
-<li>What are the average hours of work for each self-reported health category?</li>
+<li>What are the average hours of work for each self-reported health
+category?</li>
 </ol>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">avg_hrs_by_health</span> <span class="kw">&lt;-</span> <span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">AGE</span> <span class="kw">&gt;=</span> <span class="fl">15</span> <span class="kw">&amp;</span> <span class="no">AHRSWORKT</span> <span class="kw">&lt;</span> <span class="fl">999</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">HEALTH_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(<span class="no">HEALTH</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">HEALTH_factor</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">mean_hours_worked</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span>(<span class="no">AHRSWORKT</span>, <span class="no">WTSUPP</span>))
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">avg_hrs_by_health</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGE</span> <span class="op">&gt;=</span> <span class="fl">15</span> <span class="op">&amp;</span> <span class="va">AHRSWORKT</span> <span class="op">&lt;</span> <span class="fl">999</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>HEALTH_factor <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH_factor</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_hours_worked <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="va">WTSUPP</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">avg_hrs_by_health</span>
-<span class="co">#&gt; # A tibble: 5 x 2</span>
+<span class="va">avg_hrs_by_health</span> 
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="co">#&gt;   HEALTH_factor mean_hours_worked</span>
-<span class="co">#&gt;   &lt;fct&gt;                     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Excellent                  38.4</span>
-<span class="co">#&gt; 2 Very good                  38.7</span>
-<span class="co">#&gt; 3 Good                       37.8</span>
-<span class="co">#&gt; 4 Fair                       35.7</span>
-<span class="co">#&gt; 5 Poor                       32.4</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Excellent                  38.4</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Very good                  38.7</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Good                       37.8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Fair                       35.7</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Poor                       32.4</span>
 
 <span class="co">#     A: Excellent  38.4</span>
 <span class="co">#        Very good  38.7</span>
 <span class="co">#        Good       37.8</span>
 <span class="co">#        Fair       35.7</span>
-<span class="co">#        Poor       32.4</span></pre></body></html></div>
+<span class="co">#        Poor       32.4</span></code></pre></div>
 </div>
-<div id="bonus" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bonus" class="anchor"></a>Bonus</h3>
+<div class="section level4">
+<h4 id="bonus">Bonus<a class="anchor" aria-label="anchor" href="#bonus"></a>
+</h4>
 <ol style="list-style-type: upper-alpha">
-<li>Use the <code>ipumsr</code> package metadata functions (like <code><a href="../reference/ipums_var_info.html">ipums_var_label()</a></code> and <code><a href="../reference/ipums_file_info.html">ipums_file_info()</a></code>) and <code>ggplot2</code> to make a graph of the relationship between HEALTH and percent employed (from Part III above).</li>
+<li>Use the <code>ipumsr</code> package metadata functions (like
+<code><a href="../reference/ipums_var_info.html">ipums_var_label()</a></code> and <code><a href="../reference/ipums_file_info.html">ipums_file_info()</a></code>) and
+<code>ggplot2</code> to make a graph of the relationship between HEALTH
+and percent employed (from Part III above).</li>
 </ol>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 
-<span class="no">x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_label</a></span>(<span class="no">cps_data</span>, <span class="no">HEALTH</span>)
-<span class="no">source_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ipums_file_info.html">ipums_file_info</a></span>(<span class="no">cps_ddi</span>, <span class="st">"ipums_project"</span>)
+<span class="va">x_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps_data</span>, <span class="va">HEALTH</span><span class="op">)</span>
+<span class="va">source_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_file_info.html">ipums_file_info</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"ipums_project"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">pct_emp_by_health</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">HEALTH_factor</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">emp_pct</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span>(<span class="kw">stat</span> <span class="kw">=</span> <span class="st">"identity"</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"#00263a"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="no">x_label</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="st">"Percent employed"</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw pkg">scales</span><span class="kw ns">::</span><span class="no"><a href="https://scales.r-lib.org//reference/label_percent.html">percent</a></span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Low Self-Reported Health Status Correlated with Unemployment"</span>,
-    <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"Among age 15+ from CPS 2011 ASEC sample"</span>,
-    <span class="kw">caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Source: "</span>, <span class="no">source_info</span>)
-  )</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pct_emp_by_health</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">HEALTH_factor</span>, y <span class="op">=</span> <span class="va">emp_pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, fill <span class="op">=</span> <span class="st">"#00263a"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="va">x_label</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span><span class="st">"Percent employed"</span>, labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"Low Self-Reported Health Status Correlated with Unemployment"</span>, 
+    subtitle <span class="op">=</span> <span class="st">"Among age 15+ from CPS 2011 ASEC sample"</span>,
+    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Source: "</span>, <span class="va">source_info</span><span class="op">)</span>
+  <span class="op">)</span></code></pre></div>
 <p><img src="ipums-cps_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <ol start="2" style="list-style-type: upper-alpha">
-<li>Are there any variables that might be confounding this relationship? How might you explore this relationship?</li>
+<li>Are there any variables that might be confounding this relationship?
+How might you explore this relationship?</li>
 </ol>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="co"># Age is likely correlated with self-reported health and employment, so a good </span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Age is likely correlated with self-reported health and employment, so a good </span>
 <span class="co"># analysis would control for this.</span>
 
 <span class="co"># One way to do so graphically is to make faceted plots by age group</span>
-<span class="no">pct_emp_by_health_age</span> <span class="kw">&lt;-</span> <span class="no">cps_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">AGE</span> <span class="kw">&gt;=</span> <span class="fl">15</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">AGE_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(
-      <span class="no">AGE</span>,
-      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">15</span>, <span class="fl">25</span>, <span class="fl">35</span>, <span class="fl">45</span>, <span class="fl">55</span>, <span class="fl">65</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">AGE</span>)),
-      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"15-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span>, <span class="st">"55-64"</span>, <span class="st">"65+"</span>),
-      <span class="kw">include.lowest</span> <span class="kw">=</span> <span class="fl">TRUE</span>
-    ),
-    <span class="kw">HEALTH_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(<span class="no">HEALTH</span>)
-  ) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">HEALTH_factor</span>, <span class="no">AGE_factor</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">emp_pct</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span>(<span class="no">EMPSTAT</span> <span class="kw">==</span> <span class="fl">10</span>, <span class="no">WTSUPP</span>))
-<span class="co">#&gt; `summarise()` regrouping output by 'HEALTH_factor' (override with `.groups` argument)</span>
+<span class="va">pct_emp_by_health_age</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGE</span> <span class="op">&gt;=</span> <span class="fl">15</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    AGE_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span>
+      <span class="va">AGE</span>, 
+      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">25</span>, <span class="fl">35</span>, <span class="fl">45</span>, <span class="fl">55</span>, <span class="fl">65</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">)</span><span class="op">)</span>, 
+      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"15-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span>, <span class="st">"55-64"</span>, <span class="st">"65+"</span><span class="op">)</span>,
+      include.lowest <span class="op">=</span> <span class="cn">TRUE</span>
+    <span class="op">)</span>,
+    HEALTH_factor <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH_factor</span>, <span class="va">AGE_factor</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>emp_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">EMPSTAT</span> <span class="op">==</span> <span class="fl">10</span>, <span class="va">WTSUPP</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
 
-<span class="no">x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_label</a></span>(<span class="no">cps_data</span>, <span class="no">HEALTH</span>)
-<span class="no">source_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ipums_file_info.html">ipums_file_info</a></span>(<span class="no">cps_ddi</span>, <span class="st">"ipums_project"</span>)
+<span class="va">x_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps_data</span>, <span class="va">HEALTH</span><span class="op">)</span>
+<span class="va">source_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_file_info.html">ipums_file_info</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"ipums_project"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">pct_emp_by_health_age</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">HEALTH_factor</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">emp_pct</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span>(<span class="kw">stat</span> <span class="kw">=</span> <span class="st">"identity"</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"#00263a"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="no">x_label</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="st">"Percent employed"</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="kw pkg">scales</span><span class="kw ns">::</span><span class="no"><a href="https://scales.r-lib.org//reference/label_percent.html">percent</a></span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">AGE_factor</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Low Self-Reported Health Status Correlated with Unemployment"</span>,
-    <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"Among age 15+ from CPS 2011 ASEC sample"</span>,
-    <span class="kw">caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Source: "</span>, <span class="no">source_info</span>)
-  )</pre></body></html></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pct_emp_by_health_age</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">HEALTH_factor</span>, y <span class="op">=</span> <span class="va">emp_pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, fill <span class="op">=</span> <span class="st">"#00263a"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span><span class="va">x_label</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span><span class="st">"Percent employed"</span>, labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">AGE_factor</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"Low Self-Reported Health Status Correlated with Unemployment"</span>, 
+    subtitle <span class="op">=</span> <span class="st">"Among age 15+ from CPS 2011 ASEC sample"</span>,
+    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Source: "</span>, <span class="va">source_info</span><span class="op">)</span>
+  <span class="op">)</span></code></pre></div>
 <p><img src="ipums-cps_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 </div>
 </div>
@@ -529,11 +598,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.ipums.org">IPUMS</a> at the University of Minnesota.</p>
+  <p>Developed by <a href="https://www.ipums.org" class="external-link">IPUMS</a> at the University of Minnesota.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> .</p>
 </div>
 
       </footer>

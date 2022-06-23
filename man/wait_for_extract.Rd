@@ -15,23 +15,27 @@ wait_for_extract(
 }
 \arguments{
 \item{extract}{One of:
-  \itemize{
-    \item{An object inheriting from class \code{ipums_extract}}
-    \item{The data collection and extract number formatted as a single
-          string of the form \code{"collection:number"}}
-    \item{The data collection and extract number formatted as a vector of the
-          form \code{c("collection", "number")}}
-  }
+\itemize{
+\item An \code{\link[=ipums_extract-class]{ipums_extract}} object
+\item The data collection and extract number formatted as a single string of the
+form \code{"collection:number"}
+\item The data collection and extract number formatted as a vector of the form
+\code{c("collection", "number")}
+}
+
 The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
 or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.}
+See Examples section below for examples of each form.
+
+For a list of codes used to refer to each collection, see
+\code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{initial_delay_seconds}{How many seconds to wait before first status
 check.}
 
 \item{max_delay_seconds}{Maximum seconds to wait between status checks. The
 function doubles the wait time after each check, but will cap the wait
-wait time at this maximum value (300 seconds, or 5 minutes, by default).}
+time at this maximum value (300 seconds, or 5 minutes, by default).}
 
 \item{timeout_seconds}{Maximum total number of seconds to continue waiting
 for the extract before throwing an error. Defaults to 10,800 seconds (three
@@ -47,25 +51,22 @@ messages.}
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-An object inheriting from class \code{ipums_extract} containing the
-  extract definition and the URLs from which to download files.
+An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
+extract definition and the URLs from which to download extract files.
 }
 \description{
 Wait for an extract to finish by periodically checking its status via the
-IPUMS API and returning when the extract is ready to download.
-}
-\details{
-For an
-overview of ipumsr API functionality, see
+IPUMS API and returning when the extract is ready to download. For an
+overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Wait for extract by supplying extract object:
+# Wait for extract by supplying ipums_extract object:
 downloadable_extract <- wait_for_extract(submitted_extract)
 
 # By supplying the data collection and extract number, as a string:
@@ -80,10 +81,10 @@ downloadable_extract <- wait_for_extract(c("usa", "1"))
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract}()},
+\code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
+\code{\link{define_extract_usa}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
@@ -91,7 +92,9 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
+\code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()}
 }
 \concept{ipums_api}

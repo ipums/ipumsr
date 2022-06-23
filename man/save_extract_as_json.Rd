@@ -2,15 +2,12 @@
 % Please edit documentation in R/api_define_extract.R
 \name{save_extract_as_json}
 \alias{save_extract_as_json}
-\title{Save an extract definition to disk as JSON}
+\title{Save an \code{\link[=ipums_extract-class]{ipums_extract}} to disk as JSON}
 \usage{
 save_extract_as_json(extract, file)
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
+\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{file}{File path to which to write the JSON-formatted extract
 definition.}
@@ -20,34 +17,32 @@ Invisibly returns the file path where the extract definition was
   written.
 }
 \description{
-Save an \code{ipums_extract} object to a JSON-formatted file.
+Save an \code{\link[=ipums_extract-class]{ipums_extract}} to a JSON-formatted file.
+For an overview of ipumsr microdata API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 Note that this function only saves out the properties of an extract
-that are required to submit a new extract request for that extract
-definition. Extract properties \code{submitted}, \code{download_links},
-\code{number}, and \code{status} are not written.
-
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+that are required to submit a new extract request, namely, the description,
+data structure, data format, samples, variables, and collection.
 }
 \examples{
-my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 
 extract_json_path <- file.path(tempdir(), "usa_extract.json")
 save_extract_as_json(my_extract, file = extract_json_path)
 
-copy_of_my_extract <- define_extract_from_json(extract_json_path, "usa")
+copy_of_my_extract <- define_extract_from_json(extract_json_path)
 
 identical(my_extract, copy_of_my_extract)
 
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract}()},
+\code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
+\code{\link{define_extract_usa}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
@@ -55,6 +50,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract}()},
+\code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

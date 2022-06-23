@@ -43,21 +43,71 @@
 #' @name define_extract
 NULL
 
-#' Define a microdata extract request
+# > `ipums_extract` class ----
+
+#' `ipums_extract` class
 #'
+#' @md
 #' @description
-#' Define an extract request object to be submitted via the IPUMS microdata
-#' extract API.
+#' The `ipums_extract` class provides a data structure for storing the
+#' definition and status of a submitted or unsubmitted IPUMS data extract,
+#' for the purpose of interacting with the IPUMS extract API.
 #'
-#' @details
-#' For an overview of \code{ipumsr} microdata API functionality,
-#' see \code{vignette("ipums-api", package = "ipumsr")}
+#' It is a superclass encompassing all of the collection-specific extract
+#' classes.
 #'
-#' @param collection The IPUMS data collection for the extract.
+#' All objects with class `ipums_extract` will also have a collection-specific
+#' subclass (e.g. `usa_extract`, `cps_extract`) to accommodate
+#' collection-specific differences in extract options and contents, but all
+#' these subclasses share similarities as described below.
+#'
+#' For an overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
+#'
+#' @section Properties of `ipums_extract`:
+#'
+#' Objects of class `ipums_extract` have:
+#' * A `class` attribute of the form `c("<collection>_extract", "ipums_extract")`
+#'   (e.g. `c("cps_extract", "ipums_extract")`).
+#' * A base type of `"list"`.
+#' * A `names` attribute that is a character vector the same length as the
+#'   underlying list.
+#'
+#' @section Behavior of `ipums_extract`:
+#'
+#' Objects of class `ipums_extract`:
+#' * Can be created from scratch with a function that has a name of the form
+#'   `define_extract_<collection>()` (e.g. [define_extract_usa()]).
+#' * Can be created from existing extract definitions with functions
+#'   [define_extract_from_json()] and [get_extract_info()].
+#' * Can be submitted for processing with [submit_extract()]. After submission,
+#'   you can have your R session periodically check the status of the submitted
+#'   extract, and wait until it is ready to download, with [wait_for_extract()].
+#'   You can also check whether it is ready to download directly with
+#'   [is_extract_ready()].
+#' * Can be revised with [add_to_extract()] and [remove_from_extract()].
+#' * Can be saved to a JSON-formatted file with [save_extract_as_json()].
+#' @name ipums_extract-class
+NULL
+
+
+
+
+
+# > Define extract ----
+
+#' Define an IPUMS USA extract request
+#'
+#' Define an IPUMS USA extract request to be submitted via the IPUMS microdata
+#' extract API. For an overview of ipumsr microdata API functionality, see
+#' \code{vignette("ipums-api", package = "ipumsr")}.
+#'
+#' @md
+#'
 #' @param description Description of the extract.
 #' @param samples Character vector of samples to include in the extract. Samples
 #'   should be specified using the
-#'   \href{https://usa.ipums.org/usa-action/samples/sample_ids}{Sample ID values}.
+#'   [sample ID values](https://usa.ipums.org/usa-action/samples/sample_ids).
 #' @param variables Character vector of variables to include in the extract.
 #' @param data_format The desired format of the extract data file (one of
 #'   "fixed_width", "csv", "stata", "spss", or "sas9").
@@ -66,48 +116,25 @@ NULL
 #'   extracts.
 #' @param rectangular_on Currently, this must be "P", indicating that the
 #'   extract will be rectangularized on person records. In the future, the API
-#'   will also support household-only extracts (\code{rectangular_on = "H"}).
+#'   will also support household-only extracts (`rectangular_on = "H"`).
 #'
 #' @family ipums_api
-#'
-#' @return An object inheriting from class \code{ipums_extract} containing the
-#'   extract definition. Each collection produces an object of its own class.
+#' @return An object of class [`c("usa_extract", "ipums_extract")`][ipums_extract-class]
+#'   containing the extract definition.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #' @export
-define_extract_micro <- function(collection,
-                                 description,
-                                 samples,
-                                 variables,
-                                 data_format = c("fixed_width", "csv", "stata",
-                                                 "spss", "sas9"),
-                                 data_structure = "rectangular",
-                                 rectangular_on = "P") {
+define_extract_usa <- function(description,
+                               samples,
+                               variables,
+                               data_format = c("fixed_width", "csv", "stata",
+                                               "spss", "sas9"),
+                               data_structure = "rectangular",
+                               rectangular_on = "P") {
 
   data_format <- match.arg(data_format)
-  if (data_structure != "rectangular") {
-    stop(
-      "Currently, the `data_structure` argument must be equal to ",
-      "\"rectangular\"; in the future, the API will also support ",
-      "\"hierarchical\" extracts.",
-      call. = FALSE
-    )
-  }
-  if (rectangular_on != "P") {
-    stop(
-      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-      "the future, the API will also support `rectangular_on = \"H\".",
-      call. = FALSE
-    )
-  }
-  # For now this next block is irrelevant, but leave it for whenever we add
-  # support for rectangular_on = "H"
-  rectangular_on <- if(data_structure == "rectangular") {
-    match.arg(rectangular_on)
-  } else NA_character_
 
-  stopifnot(is.character(collection), length(collection) == 1)
   stopifnot(is.character(description), length(description) == 1)
   stopifnot(is.character(data_structure), length(data_structure) == 1)
   stopifnot(is.character(rectangular_on), length(rectangular_on) == 1)
@@ -115,8 +142,73 @@ define_extract_micro <- function(collection,
   stopifnot(is.character(samples))
   stopifnot(is.character(variables))
 
+  # For now this next block is irrelevant; uncomment it whenever we add
+  # support for rectangular_on = "H"
+  # rectangular_on <- if (data_structure == "rectangular") {
+  #   match.arg(rectangular_on)
+  # } else NA_character_
+
   extract <- new_ipums_extract(
-    collection = collection,
+    collection = "usa",
+    description = description,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_format = data_format,
+    samples = samples,
+    variables = variables
+  )
+
+  extract <- validate_ipums_extract(extract)
+
+  extract
+}
+
+
+#' Define an IPUMS CPS extract request
+#'
+#' Define an IPUMS CPS extract request to be submitted via the IPUMS microdata
+#' extract API. For an overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
+#'
+#' @md
+#'
+#' @inheritParams define_extract_usa
+#' @param samples Character vector of samples to include in the extract. Samples
+#'   should be specified using the
+#'   [sample ID values](https://cps.ipums.org/cps-action/samples/sample_ids).
+#'
+#' @family ipums_api
+#' @return An object of class [`c("cps_extract", "ipums_extract")`][ipums_extract-class]
+#'   containing the extract definition.
+#'
+#' @examples
+#' my_extract <- define_extract_cps("Example", "cps2020_03s", "YEAR")
+#' @export
+define_extract_cps <- function(description,
+                               samples,
+                               variables,
+                               data_format = c("fixed_width", "csv", "stata",
+                                               "spss", "sas9"),
+                               data_structure = "rectangular",
+                               rectangular_on = "P") {
+
+  data_format <- match.arg(data_format)
+
+  stopifnot(is.character(description), length(description) == 1)
+  stopifnot(is.character(data_structure), length(data_structure) == 1)
+  stopifnot(is.character(rectangular_on), length(rectangular_on) == 1)
+  stopifnot(is.character(data_format), length(data_format) == 1)
+  stopifnot(is.character(samples))
+  stopifnot(is.character(variables))
+
+  # For now this next block is irrelevant; uncomment it whenever we add
+  # support for rectangular_on = "H"
+  # rectangular_on <- if (data_structure == "rectangular") {
+  #   match.arg(rectangular_on)
+  # } else NA_character_
+
+  extract <- new_ipums_extract(
+    collection = "cps",
     description = description,
     data_structure = data_structure,
     rectangular_on = rectangular_on,
@@ -345,67 +437,36 @@ define_extract_nhgis <- function(description = "",
 
 }
 
-#' Create an extract object from a JSON-formatted definition
+#' Create an [`ipums_extract`][ipums_extract-class] object from a JSON-formatted
+#' definition
 #'
-#' @description
-#' Create an \code{ipums_extract} object using an extract
-#' definition formatted as JSON.
+#' Create an [`ipums_extract`][ipums_extract-class] object based on an extract
+#' definition formatted as JSON. For an overview of ipumsr microdata API functionality,
+#' see `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' For an overview of ipumsr API functionality,
-#' see \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
-#' @param extract_json A JSON string, or the path to file containing the
-#'   JSON-formatted extract definition.
-#' @inheritParams define_extract_micro
+#' @param extract_json The path to a file containing the JSON definition, or a
+#'   JSON string.
 #'
 #' @family ipums_api
-#'
-#' @return An object inheriting from class \code{ipums_extract} containing the
-#'   extract definition. Each collection produces an object of its own class.
+#' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' extract_json_path <- file.path(tempdir(), "usa_extract.json")
 #' save_extract_as_json(my_extract, file = extract_json_path)
 #'
-#' copy_of_my_extract <- define_extract_from_json(extract_json_path, "usa")
+#' copy_of_my_extract <- define_extract_from_json(extract_json_path)
 #'
 #' identical(my_extract, copy_of_my_extract)
 #'
 #' @export
-define_extract_from_json <- function(extract_json, collection) {
-
-  if (missing(collection)) {
-    stop("`collection` is a required argument", call. = FALSE)
-  }
-
-  if (!collection %in% ipums_data_collections()$code_for_api) {
-    stop(
-      paste0(
-        '"', collection, '"', " is not a valid code for an IPUMS data ",
-        "collection. To see all valid collection codes, use ",
-        "`ipums_data_collections()`"
-      ),
-      call. = FALSE
-    )
-  }
-
-  extract_json <- new_ipums_json(extract_json, collection)
-
-  tryCatch(
-    list_of_extracts <- extract_list_from_json(
-      extract_json,
-      validate = TRUE
-    ),
-    error = function(cnd) {
-      stop(
-        conditionMessage(cnd),
-        "\n\nDid you specify the correct collection for this extract?",
-        call. = FALSE
-      )
-    }
+define_extract_from_json <- function(extract_json) {
+  list_of_extracts <- extract_list_from_json(
+    extract_json,
+    validate = TRUE
   )
 
   if (length(list_of_extracts) != 1) {
@@ -417,75 +478,82 @@ define_extract_from_json <- function(extract_json, collection) {
       call. = FALSE
     )
   }
-
+  json_api_version <- api_version_from_json(extract_json)
+  if (microdata_api_version() != json_api_version){
+    warning(
+      "The extract defined in ", extract_json, " was made using API version ",
+      json_api_version, ". ipumsr is currently configured to submit extract ",
+      "requests using API version ", microdata_api_version(), ".",
+      call. = FALSE
+    )
+  }
   list_of_extracts[[1]]
 
 }
 
-#' Save an extract definition to disk as JSON
+
+# > Save extract as json ----
+
+#' Save an [`ipums_extract`][ipums_extract-class] to disk as JSON
 #'
-#' @description
-#' Save an \code{ipums_extract} object to a JSON-formatted file.
+#' Save an [`ipums_extract`][ipums_extract-class] to a JSON-formatted file.
+#' For an overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' Note that this function only saves out the properties of an extract
-#' that are required to submit a new extract request for that extract
-#' definition. Extract properties \code{submitted}, \code{download_links},
-#' \code{number}, and \code{status} are not written.
-#'
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
 #' @inheritParams submit_extract
 #' @param file File path to which to write the JSON-formatted extract
 #'   definition.
 #'
+#' @details Note that this function only saves out the properties of an extract
+#'   that are required to submit a new extract request, namely, the description,
+#'   data structure, data format, samples, variables, and collection.
 #' @family ipums_api
 #'
 #' @return Invisibly returns the file path where the extract definition was
 #'   written.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' extract_json_path <- file.path(tempdir(), "usa_extract.json")
 #' save_extract_as_json(my_extract, file = extract_json_path)
 #'
-#' copy_of_my_extract <- define_extract_from_json(extract_json_path, "usa")
+#' copy_of_my_extract <- define_extract_from_json(extract_json_path)
 #'
 #' identical(my_extract, copy_of_my_extract)
 #'
 #' @export
 save_extract_as_json <- function(extract, file) {
-  extract_as_json <- extract_to_request_json(extract)
+  extract_as_json <- extract_to_request_json(
+    extract,
+    include_endpoint_info=TRUE
+  )
   writeLines(jsonlite::prettify(extract_as_json), con = file)
   invisible(file)
 }
 
 #' Submit an extract request via the IPUMS API
 #'
-#' Given an extract definition object, submit an extract request via the IPUMS
-#' API, and return a modified copy of the extract object with the newly-assigned
-#' extract number.
+#' Given an [`ipums_extract`][ipums_extract-class] object, submit an extract
+#' request via the IPUMS API, and return a modified copy of the extract object
+#' with the newly-assigned extract number. For an overview of ipumsr microdata API
+#' functionality, see `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
-#' @param extract An \code{ipums_extract} for an IPUMS
-#'   collection with API support. This can be a user-defined extract (see
-#'   \code{\link{define_extract}}) or an extract object returned from another
-#'   \code{ipumsr} API function.
+#' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param api_key API key associated with your user account. Defaults to the
 #'   value of environment variable "IPUMS_API_KEY".
 #'
 #' @family ipums_api
-#' @return An object inheriting from class \code{ipums_extract} containing the
-#'   extract definition and a newly-assigned extract number for the submitted
+#' @return An [`ipums_extract`][ipums_extract-class] object containing the
+#'   extract definition and newly-assigned extract number of the submitted
 #'   extract.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' \dontrun{
 #' # `submit_extract()` returns an ipums_extract object updated to include the
@@ -540,38 +608,40 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
 #' Get information about a submitted extract
 #'
-#' Get information about a submitted extract via the IPUMS API.
+#' Get information about a submitted extract via the IPUMS API. For an overview
+#' of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
 #' @param extract One of:
-#'   \itemize{
-#'     \item{An object inheriting from class \code{ipums_extract}}
-#'     \item{The data collection and extract number formatted as a single
-#'           string of the form \code{"collection:number"}}
-#'     \item{The data collection and extract number formatted as a vector of the
-#'           form \code{c("collection", "number")}}
-#'   }
-#' The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-#' or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
+#'
+#' * An [`ipums_extract`][ipums_extract-class] object
+#' * The data collection and extract number formatted as a single string of the
+#'   form `"collection:number"`
+#' * The data collection and extract number formatted as a vector of the form
+#'   `c("collection", "number")`
+#'
+#' The extract number does not need to be zero-padded (e.g., use `"usa:1"`
+#' or `c("usa", "1")`, not `"usa:00001"` or `c("usa", "00001")`).
 #' See Examples section below for examples of each form.
 #'
+#' For a list of codes used to refer to each collection, see
+#' [ipums_data_collections()].
+#' @inheritParams define_extract_usa
 #' @inheritParams download_extract
 #' @inheritParams submit_extract
 #'
 #' @family ipums_api
-#' @return An object inheriting from class \code{ipums_extract} containing the
-#'   extract definition. Each collection produces an object of its own class.
+#' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Get info by supplying extract object:
+#' # Get info by supplying an ipums_extract object:
 #' get_extract_info(submitted_extract)
 #'
 #' # Get info by supplying the data collection and extract number, as a string:
@@ -594,7 +664,7 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   if (is.na(extract$number)) {
     stop(
       "Extract number cannot be a missing value; please supply an ",
-      "ipums_extract object returned by `submit_extract()`, or the data ",
+      "extract object returned by `submit_extract()`, or the data ",
       "collection and number of a submitted extract.",
       call. = FALSE
     )
@@ -617,13 +687,13 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Wait for extract to finish
 #'
 #' Wait for an extract to finish by periodically checking its status via the
-#' IPUMS API and returning when the extract is ready to download.
+#' IPUMS API and returning when the extract is ready to download. For an
+#' overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' For an
-#' overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
+#' @inheritParams define_extract_usa
 #' @inheritParams download_extract
 #' @inheritParams get_extract_info
 #' @inheritParams submit_extract
@@ -631,27 +701,27 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   check.
 #' @param max_delay_seconds Maximum seconds to wait between status checks. The
 #'   function doubles the wait time after each check, but will cap the wait
-#'   wait time at this maximum value (300 seconds, or 5 minutes, by default).
+#'   time at this maximum value (300 seconds, or 5 minutes, by default).
 #' @param timeout_seconds Maximum total number of seconds to continue waiting
 #'   for the extract before throwing an error. Defaults to 10,800 seconds (three
 #'   hours).
-#' @param verbose If \code{TRUE}, the default, messages will be printed at the
+#' @param verbose If `TRUE`, the default, messages will be printed at the
 #'   beginning of each wait interval with the current wait time, each time the
 #'   status of the extract is checked, and when the extract is ready to
-#'   download. Setting this argument to \code{FALSE} will silence these
+#'   download. Setting this argument to `FALSE` will silence these
 #'   messages.
 #'
 #' @family ipums_api
-#' @return An object inheriting from class \code{ipums_extract} containing the
-#'   extract definition and the URLs from which to download files.
+#' @return An [`ipums_extract`][ipums_extract-class] object containing the
+#'   extract definition and the URLs from which to download extract files.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Wait for extract by supplying extract object:
+#' # Wait for extract by supplying ipums_extract object:
 #' downloadable_extract <- wait_for_extract(submitted_extract)
 #'
 #' # By supplying the data collection and extract number, as a string:
@@ -712,7 +782,11 @@ wait_for_extract <- function(extract,
       }
       is_finished <- TRUE
     } else if (is_failed) {
-      err_message <- "Extract has finished, but is not in a downloadable state"
+      err_message <- paste0(
+        "Extract has finished, but is not in a downloadable state, likely ",
+        "because the extract files have been removed from IPUMS servers. Try ",
+        "resubmitting the extract with `submit_extract()`."
+      )
       is_error_state <- TRUE
     } else if (is_timed_out) {
       err_message <- "Max timeout elapsed"
@@ -737,7 +811,10 @@ wait_for_extract <- function(extract,
 #'
 #' This function uses the IPUMS API to check whether the given extract is ready
 #' to download, returning TRUE for extracts that are ready and FALSE for those
-#' that are not.
+#' that are not. For an overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
+#'
+#' @md
 #'
 #' @details
 #' This function checks the "download_links" element of the supplied extract to
@@ -747,11 +824,8 @@ wait_for_extract <- function(extract,
 #' to download, but not all "completed" extracts are ready to download, because
 #' extract files are subject to removal from the IPUMS servers 72 hours after
 #' they first become available. Completed extracts older than 72 hours will
-#' still have a "completed" status, but will return \code{FALSE} from
-#' \code{is_extract_ready()}, because the extract files are no longer available.
-#'
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' still have a "completed" status, but will return `FALSE` from
+#' `is_extract_ready()`, because the extract files are no longer available.
 #'
 #' @inheritParams get_extract_info
 #'
@@ -759,12 +833,12 @@ wait_for_extract <- function(extract,
 #' @return A logical vector of length one.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Check if extract is ready by supplying extract object:
+#' # Check if extract is ready by supplying an ipums_extract object:
 #' is_extract_ready(submitted_extract)
 #'
 #' # By supplying the data collection and extract number, as a string:
@@ -783,7 +857,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   if (is.na(extract$number)) {
     stop(
-      "ipums_extract object has a missing value in the 'number' field. If ",
+      "extract object has a missing value in the 'number' field. If ",
       "an extract object is supplied, it must be a submitted extract with a ",
       "non-missing extract number.", call. = FALSE
     )
@@ -805,7 +879,8 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
 #' Download an IPUMS data extract
 #'
-#' Download a completed IPUMS data extract via the IPUMS extract API.
+#' Download an IPUMS data extract via the IPUMS API. For an overview of ipumsr
+#' microdata API functionality, see `vignette("ipums-api", package = "ipumsr")`.
 #'
 #' @details
 #' For NHGIS extracts, data files and GIS files will be saved in separate zip
@@ -816,28 +891,27 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' will be returned, as it is sufficient for loading the data provided in the
 #' associated .gz data file.
 #'
-#' For an overview of ipumsr
-#' API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
 #' @inheritParams get_extract_info
-#' @inheritParams define_extract_micro
+#' @inheritParams define_extract_usa
 #' @inheritParams submit_extract
 #' @param download_dir In what folder should the downloaded files be saved?
 #'   Defaults to current working directory.
 #' @param overwrite Logical indicating whether to overwrite files that already
-#'   exist. Defaults to \code{FALSE}.
+#'   exist. Defaults to `FALSE`.
 #'
 #' @family ipums_api
 #' @return Invisibly returns the path(s) to the files required to read the data
 #'   requested in the extract.
 #'
 #' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Download extract by supplying extract object:
+#' # Download extract by supplying an ipums_extract object:
 #' path_to_ddi_file <- download_extract(submitted_extract)
 #'
 #' # By supplying the data collection and extract number, as a string:
@@ -924,120 +998,24 @@ add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
 
-#' Add values to an existing USA extract
-#'
-#' @description
-#' Add new values to any extract fields of a USA extract.
-#'
-#' To remove existing values from a USA extract, see
-#' \code{\link[=remove_from_extract.usa_extract]{remove_from_extract}()}.
-#'
-#' @param extract A \code{usa_extract} object. This can be a user-defined
-#'   extract (see \code{\link{define_extract_micro}()}) or an extract object
-#'   returned from another \code{ipumsr} API function.
-#' @param samples Character vector of samples to add to the extract, if any.
-#' @param variables Character vector of variables to add to the extract, if any.
-#' @param validate Logical value indicating whether to check the modified
-#'   extract structure for validity. Defaults to \code{TRUE}
-#' @param ... Ignored
-#'
-#' @return A modified \code{usa_extract} object
-#'
 #' @export
-#'
-#' @examples
-#' my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
-#'
-#' add_to_extract(
-#'   my_extract,
-#'   description = "Revised extract",
-#'   samples = "us2014a"
-#' )
 add_to_extract.usa_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
                                        variables = NULL,
                                        data_format = NULL,
-                                       data_structure = NULL,
-                                       rectangular_on = NULL,
                                        validate = TRUE,
                                        ...) {
 
-  extract <- copy_ipums_extract(extract)
-
-  dots <- rlang::list2(...)
-
-  if (length(dots) > 0) {
-    warning(
-      "The following were not recognized as valid fields ",
-      "for an object of class`", extract$collection, "_extract`: `",
-      paste0(names(dots), collapse = "`, `"), "`.",
-      call. = FALSE
-    )
-  }
-
-  # Move this to validate_ipums_extract.usa_extract()?
-  if (!is.null(data_structure) && data_structure != "rectangular") {
-    stop(
-      "Currently, the `data_structure` argument must be equal to ",
-      "\"rectangular\"; in the future, the API will also support ",
-      "\"hierarchical\" extracts.",
-      call. = FALSE
-    )
-  }
-
-  if (!is.null(rectangular_on) && rectangular_on != "P") {
-    stop(
-      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-      "the future, the API will also support `rectangular_on = \"H\".",
-      call. = FALSE
-    )
-  }
-
-  add_vars <- list(
-    samples = samples,
-    variables = variables
-  )
-
-  # Currently don't have analogous warning for NHGIS so removing for consistency?
-  # purrr::map(
-  #   names(add_vars),
-  #   ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
-  #     warning(
-  #       "The following ", .x, " are already included in the ",
-  #       "supplied extract definition, and thus will not be added: ",
-  #       paste0(
-  #         intersect(add_vars[[.x]], extract[[.x]]),
-  #         collapse = "\", \""
-  #       ),
-  #       "\"",
-  #       call. = FALSE
-  #     )
-  #   }
-  # )
-
-  extract <- modify_flat_fields(
-    extract,
-    samples = samples,
-    variables = variables,
-    modification = "add"
-  )
-
-  extract <- modify_flat_fields(
+  add_to_extract_micro(
     extract,
     description = description,
+    samples = samples,
+    variables = variables,
     data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    modification = "replace"
+    validate = validate,
+    ...
   )
-
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
-
-  extract
-
 }
 
 #' Add values to an existing NHGIS extract
@@ -1318,90 +1296,20 @@ remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
 }
 
-#' Remove values from an existing USA extract
-#'
-#' @description
-#' Remove existing values from extract fields of a USA extract.
-#'
-#' To add new values to a USA extract, see
-#' \code{\link[=add_to_extract.usa_extract]{add_to_extract}()}.
-#'
-#' @param extract A \code{usa_extract} object. This can be a user-defined
-#'   extract (see \code{\link{define_extract_micro}()}) or an extract object
-#'   returned from another \code{ipumsr} API function.
-#' @param samples Character vector of samples to remove from the extract,
-#'   if any.
-#' @param variables Character vector of variables to remove from the extract,
-#'   if any.
-#' @param validate Logical value indicating whether to check the modified
-#'   extract structure for validity. Defaults to \code{TRUE}
-#' @param ... Ignored
-#'
-#' @return A modified \code{usa_extract} object
 #' @export
-#'
-#' @examples
-#' my_extract <- define_extract_micro(
-#'   collection = "usa",
-#'   description = "Example",
-#'   samples = c("us2013a", "us2014a"),
-#'   variables = "YEAR"
-#' )
-#'
-#' remove_from_extract(
-#'   my_extract,
-#'   samples = "us2014a"
-#' )
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
                                             validate = TRUE,
                                             ...) {
 
-  extract <- copy_ipums_extract(extract)
-
-  extract <- validate_remove_fields(
-    extract,
-    bad_remove_fields = c("description", "data_format",
-                          "data_structure", "rectangular_on"),
-    ...
-  )
-
-  to_remove <- list(
-    samples = samples,
-    variables = variables
-  )
-
-  # Currently don't have analogous warning for NHGIS so removing for consistency?
-  # purrr::walk(
-  #   names(to_remove),
-  #   ~if (any(!to_remove[[.x]] %in% extract[[.x]])) {
-  #     warning(
-  #       "The following ", .x, " are not included in the ",
-  #       "supplied extract definition, and thus will not be removed: \"",
-  #       paste0(
-  #         setdiff(to_remove[[.x]], extract[[.x]]),
-  #         collapse = "\", \""
-  #       ),
-  #       "\"",
-  #       call. = FALSE
-  #     )
-  #   }
-  # )
-
-  extract <- modify_flat_fields(
-    extract,
+  remove_from_extract_micro(
+    extract = extract,
     samples = samples,
     variables = variables,
-    modification = "remove"
+    validate = validate,
+    ...
   )
-
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
-
-  extract
-
 }
 
 #' Remove values from an existing NHGIS extract
@@ -1515,7 +1423,6 @@ remove_from_extract.usa_extract <- function(extract,
 #' @param ... Ignored
 #'
 #' @return A modified \code{nhgis_extract} object
-#'
 #' @export
 #'
 #' @examples
@@ -1645,31 +1552,71 @@ remove_from_extract.nhgis_extract <- function(extract,
 
 }
 
+#' @export
+add_to_extract.cps_extract <- function(extract,
+                                       description = NULL,
+                                       samples = NULL,
+                                       variables = NULL,
+                                       data_format = NULL,
+                                       validate = TRUE,
+                                       ...) {
+
+  add_to_extract_micro(
+    extract,
+    description = description,
+    samples = samples,
+    variables = variables,
+    data_format = data_format,
+    validate = validate,
+    ...
+  )
+}
+
+#' @export
+remove_from_extract.cps_extract <- function(extract,
+                                            samples = NULL,
+                                            variables = NULL,
+                                            validate = TRUE,
+                                            ...) {
+
+  remove_from_extract_micro(
+    extract = extract,
+    samples = samples,
+    variables = variables,
+    validate = validate,
+    ...
+  )
+}
+
+
+# > Get info on recent extracts ----
 
 #' Get information on recent extracts
 #'
 #' @description
 #' Get information on recent extracts for a given IPUMS collection
-#' via the IPUMS API, returned either as a list or tibble.
+#' via the IPUMS API, returned either as a list or tibble. For an overview of
+#' ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
+#'
+#' @md
 #'
 #' @details
-#' \code{get_last_extract_info()} is a convenience function that is
-#' similar to \code{get_recent_extracts_info_list(..., how_many = 1)},
-#' but returns an object inheriting from class \code{ipums_extract} rather than
-#' a list of \code{ipums_extract} objects.
-#'
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
-#'
-#' @inheritParams define_extract_micro
-#' @param how_many Number of extracts for which you'd like information, starting
-#'   with the most recent extract. Defaults to the 10 most recent extracts.
+#' `get_last_extract_info` is a convenience function that is
+#' similar to `get_recent_extracts_info_list(..., how_many = 1)`,
+#' but returns an [`ipums_extract`][ipums_extract-class] rather than
+#' a list of `ipums_extract` objects.
+#' 
+#' @param collection The code for an IPUMS data collection. For a list of the
+#'   codes used to refer to the data collections, see [ipums_data_collections()].
+#' @param how_many Number of recent extracts for which you'd like information.
+#'   Defaults to 10 extracts.
 #' @inheritParams submit_extract
 #'
 #' @family ipums_api
-#' @return For \code{get_recent_extracts_info_list()}, a list of
-#'   \code{ipums_extract} objects. For \code{get_recent_extracts_info_tbl()},
-#'   a \code{\link[tibble]{tbl_df}} with information on one extract in each row.
+#' @return For `get_recent_extracts_info_list()`, a list of extract objects. For
+#'   `get_recent_extracts_info_tbl()`, a [`tibble`][tibble::tbl_df-class] with
+#'   information on one extract in each row.
 #'
 #' @examples
 #' \dontrun{
@@ -1695,9 +1642,9 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' income_extracts <- extract_tbl_to_list(income_extracts)
 #'
 #' # Now it's easier to operate on those elements as extract objects:
-#' revised_income_extract <- revise_extract_micro(
+#' revised_income_extract <- add_to_extract(
 #'   income_extracts[[1]],
-#'   samples_to_add = "us2018a"
+#'   samples = "us2018a"
 #' )
 #'
 #' submitted_revised_income_extract <- submit_extract(revised_income_extract)
@@ -1769,26 +1716,26 @@ get_last_extract_info <- function(collection,
 
 #' Convert a tibble of extract definitions to a list
 #'
-#' Convert a \code{\link[tibble]{tbl_df}} (or \code{data.frame}) of extract
-#' definitions, such as that returned by
-#' \code{\link{get_recent_extracts_info_tbl}}, to a list of \code{ipums_extract}
-#' objects.
+#' Convert a [`tibble`][tibble::tbl_df-class] (or
+#' [`data.frame`][base::data.frame()]) of extract definitions, such as that
+#' returned by [get_recent_extracts_info_tbl()], to a list of
+#' [`ipums_extract`][ipums_extract-class] objects. For an overview of ipumsr microdata API
+#' functionality, see `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
-#' @param extract_tbl A \code{\link[tibble]{tbl_df}} (or \code{data.frame})
-#'   as returned by \code{\link{get_recent_extracts_info_tbl}} that contains
-#'   the specifications for one or more \code{ipums_extract} objects.
-#' @param validate Logical (\code{TRUE} or \code{FALSE}) value indicating
-#'   whether to check that each row of \code{extract_tbl} contains a valid and
-#'   complete extract definition. Defaults to \code{TRUE}
+#' @param extract_tbl A [`tibble`][tibble::tbl_df-class] (or
+#'   [`data.frame`][base::data.frame()]) that contains
+#'   the specifications for one or more [`ipums_extract`][ipums_extract-class] objects.
+#' @param validate Logical (`TRUE` or `FALSE`) value indicating whether to
+#'   check that each row of `extract_tbl` contains a valid and complete extract
+#'   definition. Defaults to `TRUE`.
 #'
 #' @family ipums_api
 #' @return A list of length equal to the number of extracts represented in
-#'   \code{extract_tbl}. Unique extracts can be identified by their extract
-#'   number, which is contained in the \code{number} column of
-#'   \code{extract_tbl}
+#'   `extract_tbl`. Unique extracts can be identified by their extract
+#'   number, which is contained in the `number` column of
+#'   `extract_tbl`
 #'
 #' @examples
 #' \dontrun{
@@ -1806,9 +1753,9 @@ get_last_extract_info <- function(collection,
 #' income_extracts <- extract_tbl_to_list(income_extracts)
 #'
 #' # Now it's easier to operate on those elements as extract objects:
-#' revised_income_extract <- revise_extract_micro(
+#' revised_income_extract <- add_to_extract(
 #'   income_extracts[[1]],
-#'   samples_to_add = "us2018a"
+#'   samples = "us2018a"
 #' )
 #'
 #' submitted_revised_income_extract <- submit_extract(revised_income_extract)
@@ -1885,21 +1832,18 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
 #' Convert a list of extract definitions to a tibble
 #'
-#' Convert a list of \code{ipums_extract} objects to a
-#' \code{\link[tibble]{tbl_df}} that contains the extract specifications.
+#' Convert a list of [`ipums_extract`][ipums_extract-class] objects to a
+#' [`tibble`][tibble::tbl_df-class] in containing the specifications for
+#' one or more extracts. For an overview of ipumsr microdata API functionality, see
+#' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @details
-#' For an overview of ipumsr API functionality, see
-#' \code{vignette("ipums-api", package = "ipumsr")}.
+#' @md
 #'
-#' @param extract_list A list of objects inheriting from \code{ipums_extract}
+#' @param extract_list A list of [`ipums_extract`][ipums_extract-class] objects.
 #'
 #' @family ipums_api
-#' @return A \code{\link[tibble]{tbl_df}} whose columns represent extract fields
-#'   and whose values represent the specified parameters for those fields.
-#'   Unique extracts can be identified by their extract
-#'   number, which is contained in the \code{number} column of the output
-#'   \code{tbl_df}
+#' @return A [`tibble`][tibble::tbl_df-class] representing the specifications
+#'   for each of the extracts represented in `extract_list`
 #'
 #' @examples
 #' \dontrun{
@@ -1939,8 +1883,8 @@ extract_list_to_tbl <- function(extract_list) {
 
 #' List IPUMS data collections
 #'
-#' List IPUMS data collections with corresponding codes used by the IPUMS
-#' extract API. Note that some data collections do not yet have API support.
+#' List IPUMS data collections with corresponding codes used by the IPUMS API.
+#' Note that some data collections do not yet have API support.
 #'
 #' Currently, \code{ipumsr} supports extract definitions for the following
 #' collections:
@@ -1953,31 +1897,106 @@ extract_list_to_tbl <- function(extract_list) {
 #' For an overview of ipumsr API functionality, see
 #' \code{vignette("ipums-api", package = "ipumsr")}.
 #'
-#' @family ipums_api
-#' @return A \code{\link[tibble]{tbl_df}} with two columns containing the
-#'   full collection name and the corresponding code used by the IPUMS API.
+#' @md
 #'
+#' @family ipums_api
+#' @return A [`tibble`][tibble::tbl_df-class] with three columns containing the
+#'   full collection name, the corresponding code used by the IPUMS API, and the
+#'   status of API support for the collection.
+#'
+#' @export
+#' 
 #' @examples
 #' # Print a tibble of all IPUMS data collections:
 #' ipums_data_collections()
-#'
-#' @export
 ipums_data_collections <- function() {
   tibble::tribble(
-    ~collection_name, ~code_for_api,
-    "IPUMS USA", "usa",
-    "IPUMS CPS", "cps",
-    "IPUMS International", "ipumsi",
-    "IPUMS NHGIS", "nhgis",
-    "IPUMS AHTUS", "ahtus",
-    "IPUMS MTUS", "mtus",
-    "IPUMS ATUS", "atus",
-    "IPUMS DHS", "dhs",
-    "IPUMS Higher Ed", "highered",
-    "IPUMS MEPS", "meps",
-    "IPUMS NHIS", "nhis",
-    "IPUMS PMA", "pma"
+    ~collection_name, ~code_for_api, ~api_support,
+    "IPUMS USA", "usa", "beta",
+    "IPUMS CPS", "cps", "beta",
+    "IPUMS International", "ipumsi", "none",
+    "IPUMS NHGIS", "nhgis", "none",
+    "IPUMS AHTUS", "ahtus", "none",
+    "IPUMS MTUS", "mtus", "none",
+    "IPUMS ATUS", "atus", "none",
+    "IPUMS DHS", "dhs", "none",
+    "IPUMS Higher Ed", "highered", "none",
+    "IPUMS MEPS", "meps", "none",
+    "IPUMS NHIS", "nhis", "none",
+    "IPUMS PMA", "pma", "none"
   )
+}
+
+# > Set IPUMS API key ----
+
+#' Set your IPUMS API key
+#'
+#' Set your IPUMS API key for the duration of your session, or indefinitely by
+#' adding it to the file ".Renviron" in your home directory. In either case,
+#' this function works by assigning your API key as the value of the environment
+#' variable `IPUMS_API_KEY`. If you choose to save your key to ".Renviron", this
+#' function will create a backup copy of the file before modifying. This
+#' function is modeled after the `census_api_key()` function
+#' from the R package [tidycensus](https://walker-data.com/tidycensus/).
+#'
+#' @md
+#'
+#' @param api_key API key associated with your user account, formatted in
+#'   quotes.
+#' @param save Do you want to save this value for future sessions by adding it
+#'   to the file ".Renviron" in your home directory? Defaults to `FALSE`.
+#' @param overwrite Do you want to overwrite any existing value of
+#'   `IPUMS_API_KEY` in the file ".Renviron"? Defaults to `FALSE`.
+#'
+#' @return The value of `api_key`, invisibly.
+#' @family ipums_api
+#' @export
+set_ipums_api_key <- function(api_key, save = FALSE, overwrite = FALSE) {
+  if (save) {
+    home_dir <- Sys.getenv("HOME")
+    renviron_file <- file.path(home_dir, ".Renviron")
+    if (!file.exists(renviron_file)) {
+      file.create(renviron_file)
+      renviron_lines <- character(0)
+    } else {
+      file.copy(renviron_file, to = file.path(home_dir, ".Renviron_backup"))
+      message(
+        "Existing .Renviron file copied to '", home_dir, "/.Renviron_backup' ",
+        "for backup purposes."
+      )
+
+      renviron_lines <- readLines(renviron_file)
+
+      if (isTRUE(overwrite)) {
+        renviron_lines <- renviron_lines[
+          !fostr_detect(renviron_lines, "^IPUMS_API_KEY")
+        ]
+        writeLines(renviron_lines, con = renviron_file)
+      } else {
+        if (any(fostr_detect(renviron_lines, "^IPUMS_API_KEY"))) {
+          stop(
+            "A saved IPUMS_API_KEY already exists. To overwrite it, set ",
+            "argument `overwrite` to TRUE.",
+            call. = FALSE
+          )
+        }
+      }
+    }
+
+    line_to_set_ipums_api_key <- paste0("IPUMS_API_KEY = \"", api_key, "\"")
+    writeLines(
+      c(renviron_lines, line_to_set_ipums_api_key),
+      con = renviron_file
+    )
+    Sys.setenv(IPUMS_API_KEY = api_key)
+    message("Your IPUMS API key has been set and saved for future sessions.")
+  }
+  Sys.setenv(IPUMS_API_KEY = api_key)
+  message(
+    "Your IPUMS API key has been set. To save your key for future sessions, ",
+    "set argument `save` to TRUE."
+  )
+  invisible(api_key)
 }
 
 # Non-exported functions ---------------------------------------------------
@@ -2027,7 +2046,7 @@ new_ipums_extract <- function(collection = NA_character_,
 
   structure(
     out,
-    class = c(paste0(collection, "_extract"), "ipums_extract", class(out))
+    class = c(paste0(collection, "_extract"), "ipums_extract")
   )
 
 }
@@ -2061,7 +2080,7 @@ standardize_extract_identifier <- function(extract) {
   if (length(extract) != 2) {
     stop(
       paste0(
-        "Expected extract to be either an `ipums_extract` object, a ",
+        "Expected extract to be an extract object, a ",
         "length-two vector where the first element is an IPUMS collection ",
         "and the second is an extract number, or a single string with a ':' ",
         "separating the collection from the extract number."
@@ -2408,18 +2427,34 @@ validate_ipums_extract.usa_extract <- function(x) {
     )
   }
 
+  # Remove these once we allow for hierarchical and rectangular on H extracts
+  if (x$data_structure != "rectangular") {
+    stop(
+      "Currently, the `data_structure` argument must be equal to ",
+      "\"rectangular\"; in the future, the API will also support ",
+      "\"hierarchical\" extracts.",
+      call. = FALSE
+    )
+  }
+  if (x$rectangular_on != "P") {
+    stop(
+      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+      "the future, the API will also support `rectangular_on = \"H\".",
+      call. = FALSE
+    )
+  }
+
   stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
-  stopifnot(x$data_structure == "rectangular")
-  stopifnot(x$rectangular_on == "P")
+  stopifnot(x$data_structure %in% c("rectangular", "hierarchical"))
 
   if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
     stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
-         "of 'H' or 'P'")
+         "of 'H' or 'P'", call. = FALSE)
   }
 
   if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
     stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
-         "missing")
+         "missing", call. = FALSE)
   }
 
   x
@@ -2566,10 +2601,12 @@ print.nhgis_extract <- function(x, ...) {
   invisible(x)
 }
 
+#' @importFrom rlang .data
+#' @noRd
 format_collection_for_printing <- function(collection) {
   collection_info <- dplyr::filter(
     ipums_data_collections(),
-    code_for_api == collection
+    .data$code_for_api == collection
   )
 
   if (nrow(collection_info) == 0) {
@@ -2703,12 +2740,12 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
 }
 
 
-extract_to_request_json <- function(extract) {
+extract_to_request_json <- function(extract, include_endpoint_info) {
   UseMethod("extract_to_request_json")
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(extract) {
+extract_to_request_json.nhgis_extract <- function(extract, include_endpoint_info = FALSE) {
 
   # if (is.null(extract$description) || is.na(extract$description)) {
   #   extract$description <- ""
@@ -2752,12 +2789,20 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     ~!(any(is.na(.x)) || is_empty(.x))
   )
 
+  if (include_endpoint_info){
+    endpoint_info <- list(
+      collection = extract$collection,
+      api_version = ipums_api_version(extract$collection)
+    )
+    request_list <- append(request_list, endpoint_info)
+  }
+
   jsonlite::toJSON(request_list)
 
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(extract) {
+extract_to_request_json.usa_extract <- function(extract, include_endpoint_info = FALSE) {
 
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
@@ -2777,6 +2822,14 @@ extract_to_request_json.usa_extract <- function(extract) {
     samples = format_samples_for_json(extract$samples),
     variables = format_variables_for_json(extract$variables)
   )
+
+  if (include_endpoint_info){
+    endpoint_info <- list(
+      collection = extract$collection,
+      api_version = ipums_api_version(extract$collection)
+    )
+    request_list <- append(request_list, endpoint_info)
+  }
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 
@@ -2803,7 +2856,7 @@ format_samples_for_json <- function(samples) {
     return(EMPTY_NAMED_LIST)
   }
   sample_spec <- purrr::map(seq_along(samples), ~ EMPTY_NAMED_LIST)
-  setNames(sample_spec, samples)
+  purrr::set_names(sample_spec, samples)
 }
 
 format_variables_for_json <- function(variables) {
@@ -2811,7 +2864,7 @@ format_variables_for_json <- function(variables) {
     return(EMPTY_NAMED_LIST)
   }
   var_spec <- purrr::map(seq_along(variables), ~ EMPTY_NAMED_LIST)
-  var_spec <- setNames(var_spec, variables)
+  purrr::set_names(var_spec, variables)
 }
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
@@ -2855,6 +2908,7 @@ format_nhgis_field_for_json <- function(...) {
 
 #' Writes the given url to file_path. Returns the file path of the
 #' downloaded data. Raises an error if the request is not successful.
+#' @importFrom utils packageVersion
 #' @noRd
 ipums_api_download_request <- function(url,
                                        file_path,
@@ -3020,6 +3074,7 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
 #'   length-one character vector containing the response from the API
 #'   formatted as JSON. Otherwise, the function throws an error.
 #'
+#' @importFrom utils packageVersion
 #' @noRd
 ipums_api_json_request <- function(verb,
                                    collection,
@@ -3330,7 +3385,6 @@ modify_flat_fields <- function(extract,
                                modification = c("add", "remove", "replace")) {
 
   modification <- match.arg(modification)
-
   dots <- rlang::list2(...)
 
   stopifnot(is_named(dots))
@@ -3386,6 +3440,83 @@ modify_flat_fields <- function(extract,
 
 }
 
+#' Helper taking advantage of the fact that USA and CPS work the same way for
+#' now
+#'
+#' @noRd
+add_to_extract_micro <- function(extract,
+                                 description = NULL,
+                                 samples = NULL,
+                                 variables = NULL,
+                                 data_format = NULL,
+                                 data_structure = NULL,
+                                 rectangular_on = NULL,
+                                 validate = TRUE,
+                                 ...) {
+
+  extract <- copy_ipums_extract(extract)
+
+  if (!is.null(data_structure) && data_structure != "rectangular") {
+    stop(
+      "Currently, the `data_structure` argument must be equal to ",
+      "\"rectangular\"; in the future, the API will also support ",
+      "\"hierarchical\" extracts.",
+      call. = FALSE
+    )
+  }
+
+  if (!is.null(rectangular_on) && rectangular_on != "P") {
+    stop(
+      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+      "the future, the API will also support `rectangular_on = \"H\".",
+      call. = FALSE
+    )
+  }
+
+  add_vars <- list(
+    samples = samples,
+    variables = variables
+  )
+
+  purrr::map(
+    names(add_vars),
+    ~if (any(add_vars[[.x]] %in% extract[[.x]])) {
+      warning(
+        "The following ", .x, " are already included in the ",
+        "supplied extract definition, and thus will not be added: \"",
+        paste0(
+          intersect(add_vars[[.x]], extract[[.x]]),
+          collapse = "\", \""
+        ),
+        "\"",
+        call. = FALSE
+      )
+    }
+  )
+
+  extract <- modify_flat_fields(
+    extract,
+    samples = samples,
+    variables = variables,
+    modification = "add"
+  )
+
+  extract <- modify_flat_fields(
+    extract,
+    description = description,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    modification = "replace"
+  )
+
+  if (validate) {
+    extract <- validate_ipums_extract(extract)
+  }
+
+  extract
+
+}
 
 #' Add nested fields to an extract object
 #'
@@ -3530,6 +3661,61 @@ add_nested_fields <- function(extract, ...) {
 
 }
 
+#' Helper taking advantage of the fact that USA and CPS work the same way for
+#' now
+#'
+#' @noRd
+remove_from_extract_micro <- function(extract,
+                                      samples = NULL,
+                                      variables = NULL,
+                                      validate = TRUE,
+                                      ...) {
+
+  extract <- copy_ipums_extract(extract)
+
+  extract <- validate_remove_fields(
+    extract,
+    bad_remove_fields = c("description", "data_format",
+                          "data_structure", "rectangular_on"),
+    ...
+  )
+
+  to_remove <- list(
+    samples = samples,
+    variables = variables
+  )
+
+  purrr::walk(
+    names(to_remove),
+    ~if (any(!to_remove[[.x]] %in% extract[[.x]])) {
+      warning(
+        "The following ", .x, " are not included in the ",
+        "supplied extract definition, and thus will not be removed: \"",
+        paste0(
+          setdiff(to_remove[[.x]], extract[[.x]]),
+          collapse = "\", \""
+        ),
+        "\"",
+        call. = FALSE
+      )
+    }
+  )
+
+  extract <- modify_flat_fields(
+    extract,
+    samples = samples,
+    variables = variables,
+    modification = "remove"
+  )
+
+  if (validate) {
+    extract <- validate_ipums_extract(extract)
+  }
+
+  extract
+
+}
+
 #' Remove nested fields from an extract object
 #'
 #' Removes fields that contain subfields along with their associated subfield
@@ -3622,7 +3808,6 @@ remove_nested_fields <- function(extract, ..., subfields, ancillary_fields) {
   extract
 
 }
-
 
 #' Remove values in extract subfields
 #'
@@ -3805,7 +3990,7 @@ validate_remove_fields <- function(extract, bad_remove_fields, ...) {
   if ("collection" %in% names(dots)) {
     stop(
       "Cannot modify collection of an existing extract. To create an extract",
-      " from a new collection, use define_extract_micro().",
+      " from a new collection, use the appropriate `define_extract_` function.",
       call. = FALSE
     )
   }
@@ -4140,10 +4325,21 @@ ipums_collection_versions <- function() {
   )
 }
 
+api_version_from_json <- function(extract_json) {
+  extract <- jsonlite::fromJSON(
+    extract_json,
+    simplifyVector = FALSE
+  )
+  extract$api_version
+}
+
+
+EMPTY_NAMED_LIST <- setNames(list(), character(0))
 
 #' Convert an absolute path to be relative to the working directory
 #'
 #' This is only used in unit tests at the moment
+#' @importFrom utils tail
 #' @noRd
 convert_to_relative_path <- function(path) {
   path_components <- strsplit(path, "/|\\\\", perl = TRUE)[[1]]
@@ -4440,13 +4636,6 @@ recycle_to_list <- function(x, n, labels = NULL) {
   l
 
 }
-
-
-
-
-
-
-EMPTY_NAMED_LIST <- setNames(list(), character(0))
 
 # Should be moved to utils?
 `%||%` <- function(a, b) {

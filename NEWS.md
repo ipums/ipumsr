@@ -1,5 +1,12 @@
 # ipumsr (development version)
 
+# ipumsr 0.5.0
+
+* Added functions for interacting with the IPUMS microdata extract API. For an 
+  overview of this new functionality, see the API vignette with 
+  `vignette("ipums-api", package = "ipumsr")`. Special thanks to @robe2037, 
+  @renae-r, and @ehrlichd for their work on the API functions!
+
 # ipumsr 0.4.5
 
 * Fixed bug causing a read error for some labeled string variables (#61, thanks 

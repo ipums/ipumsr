@@ -7,30 +7,24 @@
 submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} for an IPUMS
-collection with API support. This can be a user-defined extract (see
-\code{\link{define_extract}}) or an extract object returned from another
-\code{ipumsr} API function.}
+\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-An object inheriting from class \code{ipums_extract} containing the
-  extract definition and a newly-assigned extract number for the submitted
-  extract.
+An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
+extract definition and newly-assigned extract number of the submitted
+extract.
 }
 \description{
-Given an extract definition object, submit an extract request via the IPUMS
-API, and return a modified copy of the extract object with the newly-assigned
-extract number.
-}
-\details{
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Given an \code{\link[=ipums_extract-class]{ipums_extract}} object, submit an extract
+request via the IPUMS API, and return a modified copy of the extract object
+with the newly-assigned extract number. For an overview of ipumsr microdata API
+functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 
 \dontrun{
 # `submit_extract()` returns an ipums_extract object updated to include the
@@ -54,10 +48,10 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract}()},
+\code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
+\code{\link{define_extract_usa}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
@@ -65,7 +59,9 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
+\code{\link{set_ipums_api_key}()},
 \code{\link{wait_for_extract}()}
 }
 \concept{ipums_api}

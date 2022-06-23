@@ -22,7 +22,8 @@ get_recent_extracts_info_tbl(
 get_last_extract_info(collection, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{collection}{The IPUMS data collection for the extract.}
+\item{collection}{The code for an IPUMS data collection. For a list of the
+codes used to refer to the data collections, see \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{how_many}{Number of extracts for which you'd like information, starting
 with the most recent extract. Defaults to the 10 most recent extracts.}
@@ -31,13 +32,15 @@ with the most recent extract. Defaults to the 10 most recent extracts.}
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-For \code{get_recent_extracts_info_list()}, a list of
-  \code{ipums_extract} objects. For \code{get_recent_extracts_info_tbl()},
-  a \code{\link[tibble]{tbl_df}} with information on one extract in each row.
+For \code{get_recent_extracts_info_list()}, a list of extract objects. For
+\code{get_recent_extracts_info_tbl()}, a \code{\link[tibble:tbl_df-class]{tibble}} with
+information on one extract in each row.
 }
 \description{
 Get information on recent extracts for a given IPUMS collection
-via the IPUMS API, returned either as a list or tibble.
+via the IPUMS API, returned either as a list or tibble. For an overview of
+ipumsr microdata API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 \code{get_last_extract_info()} is a convenience function that is
@@ -72,9 +75,9 @@ income_extracts <- tbl_of_last_10_extracts[description_mentions_income, ]
 income_extracts <- extract_tbl_to_list(income_extracts)
 
 # Now it's easier to operate on those elements as extract objects:
-revised_income_extract <- revise_extract_micro(
+revised_income_extract <- add_to_extract(
   income_extracts[[1]],
-  samples_to_add = "us2018a"
+  samples = "us2018a"
 )
 
 submitted_revised_income_extract <- submit_extract(revised_income_extract)
@@ -102,17 +105,19 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract}()},
+\code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
-\code{\link{define_extract_micro}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
+\code{\link{define_extract_usa}()},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
+\code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

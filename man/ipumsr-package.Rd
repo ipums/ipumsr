@@ -6,9 +6,9 @@
 \alias{ipumsr-package}
 \title{ipumsr: Read 'IPUMS' Extract Files}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-An easy way to import census, survey and geographic data provided by 'IPUMS' into R plus tools to help use the associated metadata to make analysis easier. 'IPUMS' data describing 1.4 billion individuals drawn from over 750 censuses and surveys is available free of charge from our website <https://ipums.org>.
+An easy way to import census, survey and geographic data provided by 'IPUMS' into R plus tools to help use the associated metadata to make analysis easier. 'IPUMS' data describing 1.4 billion individuals drawn from over 750 censuses and surveys is available free of charge from our website \url{https://www.ipums.org}.
 }
 \seealso{
 Useful links:
@@ -30,6 +30,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Joe Grover [contributor]
+  \item Finn Roberts [contributor]
   \item Minnesota Population Center \email{ipums@umn.edu} [copyright holder]
 }
 

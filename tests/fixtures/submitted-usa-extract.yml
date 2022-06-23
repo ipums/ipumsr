@@ -17,9 +17,10 @@ http_interactions:
       message: 'Success: (200) OK'
     headers:
       cache-control: max-age=0, private, must-revalidate
+      content-length: '425'
       content-type: application/json; charset=utf-8
-      date: Thu, 28 Apr 2022 21:19:59 GMT
-      etag: W/"b51abc9ec85bccab4732391873c6b234"
+      date: Fri, 27 May 2022 22:06:08 GMT
+      etag: W/"dd31f1172196f6f2c7fd06c8b88ddb08"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.13
       status: 200 OK
@@ -32,14 +33,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 1cd5ded3-b77e-4096-9768-128a3eabf985
-      x-runtime: '1.741739'
+      x-request-id: 1ce4430e-c656-45aa-a7c7-4394c157cbeb
+      x-runtime: '0.527749'
       x-xss-protection: 1; mode=block
       content-length: '424'
     body:
       encoding: UTF-8
       file: no
       string: '{"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Test
-        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{},"number":28,"status":"queued"}'
-  recorded_at: 2022-04-28 21:19:59 GMT
+        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{},"number":112,"status":"queued"}'
+  recorded_at: 2022-05-27 22:06:07 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
