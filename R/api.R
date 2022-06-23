@@ -530,7 +530,11 @@ wait_for_extract <- function(extract,
       }
       is_finished <- TRUE
     } else if (is_failed) {
-      err_message <- "Extract has finished, but is not in a downloadable state"
+      err_message <- paste0(
+        "Extract has finished, but is not in a downloadable state, likely ",
+        "because the extract files have been removed from IPUMS servers. Try ",
+        "resubmitting the extract with `submit_extract()`."
+      )
       is_error_state <- TRUE
     } else if (is_timed_out) {
       err_message <- "Max timeout elapsed"
