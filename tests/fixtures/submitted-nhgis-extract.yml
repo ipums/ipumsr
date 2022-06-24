@@ -19,8 +19,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 28 Apr 2022 21:17:02 GMT
-      etag: W/"5673df2ebbf5db60a2992ea53f629df3"
+      date: Fri, 24 Jun 2022 19:25:58 GMT
+      etag: W/"f783d03af6e23794a53a15378abde1a3"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
       status: 200 OK
@@ -33,14 +33,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 70c9fdfe-589d-4fc3-8368-a1a3ad2f98ae
-      x-runtime: '0.618928'
+      x-request-id: 730118b1-1714-4408-a4db-23c1b1e09fb3
+      x-runtime: '0.570842'
       x-xss-protection: 1; mode=block
       content-length: '525'
     body:
       encoding: UTF-8
       file: no
-      string: '{"number":478,"data_format":"csv_no_header","description":"Extract
+      string: '{"number":572,"data_format":"csv_no_header","description":"Extract
         for R client testing","status":null,"download_links":null,"datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file"}'
-  recorded_at: 2022-04-28 21:17:02 GMT
+  recorded_at: 2022-06-24 19:25:58 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

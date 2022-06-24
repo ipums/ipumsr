@@ -21,8 +21,7 @@ nhgis_extract_shp <- define_extract_nhgis(
   shapefiles = "110_blck_grp_2019_tl2019"
 )
 
-usa_extract <- define_extract_micro(
-  collection = "usa",
+usa_extract <- define_extract_usa(
   samples = "us2017b",
   variables = "YEAR",
   description = "Test extract",
@@ -45,23 +44,6 @@ if (have_api_access) {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
 
-  # Modify ready-nhgis-extract.yml to only includes the final http request, so
-  # it returns the ready-to-download extract immediately on subsequent runs
-  ready_nhgis_extract_cassette_file <- file.path(
-    vcr::vcr_test_path("fixtures"), "ready-nhgis-extract.yml"
-  )
-
-  ready_nhgis_lines <- readLines(ready_nhgis_extract_cassette_file)
-  last_request_start_line <- max(which(grepl("^- request:", ready_nhgis_lines)))
-
-  writeLines(
-    c(
-      ready_nhgis_lines[[1]],
-      ready_nhgis_lines[last_request_start_line:length(ready_nhgis_lines)]
-    ),
-    con = ready_nhgis_extract_cassette_file
-  )
-
   # Shapefile-only extract
   vcr::use_cassette("submitted-nhgis-extract-shp", {
     submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
@@ -71,49 +53,17 @@ if (have_api_access) {
     ready_nhgis_extract_shp <- wait_for_extract(submitted_nhgis_extract_shp)
   })
 
-  # Modify ready-nhgis-extract.yml to only includes the final http request, so that
-  # it returns the ready-to-download extract immediately on subsequent runs
-  ready_nhgis_extract_cassette_file_shp <- file.path(
-    vcr::vcr_test_path("fixtures"), "ready-nhgis-extract-shp.yml"
-  )
-
-  ready_nhgis_lines_shp <- readLines(ready_nhgis_extract_cassette_file_shp)
-  last_request_start_line_shp <- max(which(grepl("^- request:", ready_nhgis_lines_shp)))
-
-  writeLines(
-    c(
-      ready_nhgis_lines_shp[[1]],
-      ready_nhgis_lines_shp[last_request_start_line_shp:length(ready_nhgis_lines_shp)]
-    ),
-    con = ready_nhgis_extract_cassette_file_shp
-  )
+  # Modify ready-<collection>-extract.yml files to only include the final http
+  # request, so that they return the ready-to-download extract immediately on
+  # subsequent runs.
+  modify_ready_extract_cassette_file("ready-nhgis-extract.yml")
+  modify_ready_extract_cassette_file("ready-nhgis-extract-shp.yml")
 
   # USA extract
-  # Can add back in when including both together in same test script
+  # TODO: move tests that use this to test_api.R
   vcr::use_cassette("submitted-usa-extract", {
     submitted_usa_extract <- submit_extract(usa_extract)
   })
-  #
-  # vcr::use_cassette("ready-usa-extract", {
-  #   ready_usa_extract <- wait_for_extract(submitted_usa_extract)
-  # })
-  #
-  # # Modify ready-nhgis-extract.yml to only includes the final http request, so that
-  # # it returns the ready-to-download extract immediately on subsequent runs
-  # ready_usa_extract_cassette_file <- file.path(
-  #   vcr::vcr_test_path("fixtures"), "ready-usa-extract.yml"
-  # )
-  #
-  # ready_usa_lines <- readLines(ready_usa_extract_cassette_file)
-  # last_request_start_line <- max(which(grepl("^- request:", ready_usa_lines)))
-  #
-  # writeLines(
-  #   c(
-  #     ready_usa_lines[[1]],
-  #     ready_usa_lines[last_request_start_line:length(ready_usa_lines)]
-  #   ),
-  #   con = ready_usa_extract_cassette_file
-  # )
 
   # Recent extracts
   vcr::use_cassette("recent-nhgis-extracts-list", {
@@ -532,13 +482,13 @@ tryCatch(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[1])
       )
-      table_data_file_path <- convert_to_relative_path(table_data_file_path)
+      # table_data_file_path <- convert_to_relative_path(table_data_file_path)
 
       gis_data_file_path <- file.path(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[2])
       )
-      gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
+      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
 
       expect_match(table_data_file_path, "_csv\\.zip$")
       expect_match(gis_data_file_path, "_shape\\.zip$")
@@ -604,7 +554,7 @@ tryCatch(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths)
       )
-      gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
+      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
 
       expect_match(gis_data_file_path, "_shape\\.zip$")
 
@@ -669,13 +619,13 @@ tryCatch(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[1])
       )
-      table_data_file_path <- convert_to_relative_path(table_data_file_path)
+      # table_data_file_path <- convert_to_relative_path(table_data_file_path)
 
       gis_data_file_path <- file.path(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[2])
       )
-      gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
+      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
 
       expect_match(table_data_file_path, "_csv\\.zip$")
       expect_match(gis_data_file_path, "_shape\\.zip$")
@@ -1050,6 +1000,13 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "`ds_geog_levels`"
     )
   )
+  expect_silent(
+    remove_from_extract(
+      nhgis_extract,
+      ds_geog_levels = "nation",
+      validate = FALSE
+    )
+  )
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -1188,12 +1145,8 @@ test_that("We can export to and import from JSON for NHGIS", {
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
   on.exit(unlink(json_tmpfile))
   save_extract_as_json(nhgis_extract, json_tmpfile)
-  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile, "nhgis")
+  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
-  expect_error(
-    define_extract_from_json(json_tmpfile, "usa"),
-    ".+Did you specify the correct collection for this extract?"
-  )
 })
 
 test_that("We can export to and import from JSON, submitted NHGIS extract", {
@@ -1201,17 +1154,10 @@ test_that("We can export to and import from JSON, submitted NHGIS extract", {
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
   on.exit(unlink(json_tmpfile))
   save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
-  copy_of_submitted_nhgis_extract <- define_extract_from_json(
-    json_tmpfile,
-    "nhgis"
-  )
+  copy_of_submitted_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(
     ipumsr:::copy_ipums_extract(submitted_nhgis_extract),
     copy_of_submitted_nhgis_extract
-  )
-  expect_error(
-    define_extract_from_json(json_tmpfile, "usa"),
-    ".+Did you specify the correct collection for this extract?"
   )
 })
 
@@ -1222,11 +1168,11 @@ test_that("We can get correct API version info for each collection", {
   expect_equal(ipums_api_version("nhgis"), "v1")
   expect_equal(
     ipums_api_version("usa"),
-    dplyr::filter(ipums_collection_versions(), collection == "usa")$version
+    dplyr::filter(ipums_data_collections(), code_for_api == "usa")$api_support
   )
   expect_equal(
     ipums_api_version("nhgis"),
-    dplyr::filter(ipums_collection_versions(), collection == "nhgis")$version
+    dplyr::filter(ipums_data_collections(), code_for_api == "nhgis")$api_support
   )
   expect_error(ipums_api_version("fake collection"), "No API version found")
 })

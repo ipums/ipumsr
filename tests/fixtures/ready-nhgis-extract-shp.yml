@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/479?collection=nhgis&version=v1
+    uri: https://api.ipums.org/extracts/573?collection=nhgis&version=v1
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 28 Apr 2022 21:19:57 GMT
-      etag: W/"1e1a935a82b1c461a0ab835a73eff284"
+      date: Fri, 24 Jun 2022 19:29:15 GMT
+      etag: W/"405772e0ba6cced7f07560431b6e8d46"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
       status: 200 OK
@@ -32,13 +32,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 105bc007-432b-44cf-8d55-213b2d65856a
-      x-runtime: '1.027865'
+      x-request-id: 13a0f21a-ba26-4fec-95c2-393996522f65
+      x-runtime: '0.933020'
       x-xss-protection: 1; mode=block
       content-length: '365'
     body:
       encoding: UTF-8
       file: no
-      string: '{"number":479,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1805392/nhgis0479_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}'
-  recorded_at: 2022-04-28 21:19:57 GMT
+      string: '{"number":573,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834306/nhgis0573_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}'
+  recorded_at: 2022-06-24 19:29:15 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

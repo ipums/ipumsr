@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/112?collection=usa&version=beta
+    uri: https://api.ipums.org/extracts/39?collection=usa&version=beta
     body:
       encoding: ''
       string: ''
@@ -17,10 +17,9 @@ http_interactions:
       message: 'Success: (200) OK'
     headers:
       cache-control: max-age=0, private, must-revalidate
-      content-length: '1757'
       content-type: application/json; charset=utf-8
-      date: Fri, 27 May 2022 22:06:38 GMT
-      etag: W/"8c8b85858a849a708fbad6dfa09f294a"
+      date: Fri, 24 Jun 2022 19:30:17 GMT
+      etag: W/"ec8ecff7718b575ef58b77f0baa11b63"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.13
       status: 200 OK
@@ -33,20 +32,20 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e3c7acbe-ec44-43df-bab4-cfb6f6853262
-      x-runtime: '0.316580'
+      x-request-id: 91f38981-172b-4bb9-b697-f04f4b13e9e6
+      x-runtime: '0.340862'
       x-xss-protection: 1; mode=block
       content-length: '1756'
     body:
       encoding: UTF-8
       file: no
       string: '{"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Test
-        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{"ddi_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.xml","bytes":35232,"sha256":"171d38fb990b0948b69a2220bdd52977dfac29c1b6a4c9e88ef2221058ef7cae"},"basic_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.cbk","bytes":7235,"sha256":"c219458f28a3b74da606355bf6ca261bbd146f9b485f9e57a5184fe0cf8a73e3"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.dat.gz","bytes":167521,"sha256":"3e034a707a699ff5136aa76958712d3a05c02dd782b8e573e7545ecaf911318a"},"spss_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.sps","bytes":5980,"sha256":"06451062ee1c689084283fef47bf36b9e891beb6cbd99b172f89cad4241e22ea"},"sas_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.sas","bytes":5986,"sha256":"d4d6ffe12452bb61aedd2142a4e8f85f075f5521f2cf0c02ab32ebc1d211a31b"},"stata_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.do","bytes":10652,"sha256":"3256062c5a03342b09cdd057601e6781225eafbb53572b9a4725cce95d6027bb"},"R_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.R","bytes":406,"sha256":"b4d635be0e7d6f7d44cbce2681501e500e1e773465354c937dcba4d88b6926de"}},"number":112,"status":"completed"}'
-  recorded_at: 2022-05-27 22:06:38 GMT
+        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"download_links":{"ddi_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.xml","bytes":35234,"sha256":"236ed797e3517a3719b8e76b67b2dec65550dcf16fd4de69646acebcf0c390c2"},"R_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.R","bytes":406,"sha256":"6b7b83c0bd593557d4de21771edb64602ad4339647c985e2db6bcf36750962b2"},"sas_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.sas","bytes":5986,"sha256":"487902ff856928a88738a4ceb9d17096a5efcf11513c5e2fe9fe2ec99b3dd458"},"basic_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.cbk","bytes":7235,"sha256":"c219458f28a3b74da606355bf6ca261bbd146f9b485f9e57a5184fe0cf8a73e3"},"stata_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.do","bytes":10652,"sha256":"94f0631d834c61a736738ca096a52bf2b22f4adb7e273968355278d21f223022"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.dat.gz","bytes":167521,"sha256":"3e034a707a699ff5136aa76958712d3a05c02dd782b8e573e7545ecaf911318a"},"spss_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.sps","bytes":5980,"sha256":"c82bc3b4379c7b3996834dafb9f32f4ea021c27cc64edbea1af572465184f250"}},"number":39,"status":"completed"}'
+  recorded_at: 2022-06-24 19:30:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.xml
     body:
       encoding: ''
       string: ''
@@ -62,28 +61,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.xml"; filename*=UTF-8''usa_00112.xml
-      content-length: '35232'
+      content-disposition: attachment; filename="usa_00039.xml"; filename*=UTF-8''usa_00039.xml
       content-type: application/xml
-      date: Fri, 27 May 2022 22:06:38 GMT
-      etag: '"62914b52-89a0"'
-      last-modified: Fri, 27 May 2022 22:06:10 GMT
+      date: Fri, 24 Jun 2022 19:30:17 GMT
+      etag: '"62b61095-89a2"'
+      last-modified: Fri, 24 Jun 2022 19:29:25 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=8vA7pgygnlmZcLv7qKJehuQZM2GdpYAPpWIx2vOhPUgTF20soLmRro2f4rhxtze6it0eUbdWr6FxOtpJ4MlaY5pL%2B4aEhpK%2BcGN3zwQN5VLlKn5p6SnEeuBfyXLvjUiygtom3kxHbjNiyD8e0Zqg59YfX2q%2Baj57fexSD8wiJKgLC2aq3elBD8GCr5nCD5mBXMfDpzEI8pS5mFeT5WFYfM3WnhYTsgrmtY4WIvV3vfwBkl%2BCZpTIUVm%2Bmwew0wc%3D--2Zt9dbWO2Ub3CyRP--P9CgaFkgZwpFK0ckkzT%2B4A%3D%3D;
+      set-cookie: _session_id=sKvzmMnoRsb9US1Q%2BmU5p971vzRgmP82iHrCPvJb4qeXDEo0c9NhaGZFZERF66diIHkZctz3pPI5wNrYMz1eibbRLwmna8m%2BPaObsAmIOBOPdfpDjO%2FyrQuCsrShwvM5akHfXgZ%2FFk9Tes%2BDSFYghrXBA%2BbN4IBJ3zHjaTC3IFymK9f%2FjdaRPw0vf9EkJBGbTs9BqvS%2F80YE7OZkHHIbYUbPdxZ0BM2%2BLTUhGT%2Fp3GvQLi4vFDSLBhpz3YeV92A%3D--jigSu8d%2BII8W3CVp--trW4RlA0n3DqGd477pOpPA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '35046'
+      content-length: '35234'
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/usa_00112.xml
-  recorded_at: 2022-05-27 22:06:38 GMT
+      string: ../fixtures/usa_00039.xml
+  recorded_at: 2022-06-24 19:30:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.dat.gz
     body:
       encoding: ''
       string: ''
@@ -99,14 +97,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.dat.gz"; filename*=UTF-8''usa_00112.dat.gz
-      content-length: '167521'
+      content-disposition: attachment; filename="usa_00039.dat.gz"; filename*=UTF-8''usa_00039.dat.gz
       content-type: application/gzip
-      date: Fri, 27 May 2022 22:06:38 GMT
-      etag: '"62914b55-28e61"'
-      last-modified: Fri, 27 May 2022 22:06:13 GMT
+      date: Fri, 24 Jun 2022 19:30:18 GMT
+      etag: '"62b61097-28e61"'
+      last-modified: Fri, 24 Jun 2022 19:29:27 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=ARLDLZe8vfgd9sxgI5pOTlIBFOMiZKdxHy%2BOTorr%2BPAWLbDo%2B8SM9Dbol8RgIdESxwl1CukuJDqoZMpV2imuDrtz5IkprA8skJWtKYictxhueKSLS42brmMzL3JB0QV4Uuv%2B8f0fVzfcNavNocBnGoe1a%2FyqXRV4TgQhOlDKXQaQNmCBQ2b72jk8rA5PIPj9Mp4viporKZvAz2K3SHtnaqO9X1uQaExVQ0HSwodr7A2KaKnQBQJWj1B2zTRGoXI%3D--xG9hq9BcdpXIK7QP--feXmRt80GYBso6rIfnch%2FQ%3D%3D;
+      set-cookie: _session_id=%2F6aZ5J5md%2BgLgNVLGo9VCsz66xaZNdiH5OS0M7ffcMpMH01R864GDX%2F%2FM3mjM31V6qWE1SEJMXjkMcaL%2FsEYD%2BVa4BwjiCC%2FpKZQZMg09mueCj9%2BdgWjZagH6fdtt%2FmzSTAPGUgndWO9zs2geutJJXkqlrTd5tRZhOaAO0PRx%2FB5XeEeaipdhlNgEF7hSpi45fMfwMoCZ26Xz%2FYydRSsPMrUj0UB8NcJ98mgIcK0RbDJ9RHOvv3nqApI4qdEKIU%3D--zYWVHaN7NBc2OfxA--ztuQ4NwQCnrjn%2Fj848sN9w%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -115,6 +112,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/usa_00112.dat.gz
-  recorded_at: 2022-05-27 22:06:38 GMT
+      string: ../fixtures/usa_00039.dat.gz
+  recorded_at: 2022-06-24 19:30:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

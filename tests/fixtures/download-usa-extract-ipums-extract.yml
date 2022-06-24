@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.xml
     body:
       encoding: ''
       string: ''
@@ -17,28 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.xml"; filename*=UTF-8''usa_00112.xml
-      content-length: '35232'
+      content-disposition: attachment; filename="usa_00039.xml"; filename*=UTF-8''usa_00039.xml
       content-type: application/xml
-      date: Fri, 27 May 2022 22:06:37 GMT
-      etag: '"62914b52-89a0"'
-      last-modified: Fri, 27 May 2022 22:06:10 GMT
+      date: Fri, 24 Jun 2022 19:30:17 GMT
+      etag: '"62b61095-89a2"'
+      last-modified: Fri, 24 Jun 2022 19:29:25 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=mEnz%2BKWJRBF6tvWG9pdPKE7fMSXvE%2Bpuc6NFANj%2FI%2BHCiFcQ9cfwNNHrdHLy7SDiK3acdSjMyHnAAOJV6CgyFvChtTf9HNQHtroci3NMEmmswpBSibjodJBJIS%2BFAFC8cu7QS%2BMDCt1%2FxKCUBpiLqemrvftOw4TsFgEMwFdyqYncxGYf%2Fi%2Fm9U3kq0Yecdpk0%2BNxlPKfGW2uPf6EGI4K%2BPcytryG704sYz1UWhokC%2B9px6We%2FI4dCnhNCNxy8zg%3D--gUNnH9KJReks%2FqpQ--b3aL6075WninZZThm7MeDg%3D%3D;
+      set-cookie: _session_id=6pPOUlv38t5aPL4YwP8Yj8Nb0%2Fb70KjFhv44Swi1oU1wSjVqnm6W7desymqMabc6ZixN07saDHhEmJS4bXDW0cZoA%2F7uoszm8uFPCEQBo32790uCR7jaIY49ky64PizBziZ13XauPAb8VAPZa83GTkI8O%2BAsE3rEJB19IuQw7Wk%2FnVFu43lcb4x50EaqexTjlM8OjOPZE52hgDZYFysOiq5ui%2FIxYLzNXxSKvoGI0DdjyGUl4515HspsMlspL%2Fs%3D--z8tVvmdLuadNqF0G--8UWnfzuymlfX%2FvPi%2FPfhpA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '35046'
+      content-length: '35234'
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/usa_00112.xml
-  recorded_at: 2022-05-27 22:06:37 GMT
+      string: ../fixtures/usa_00039.xml
+  recorded_at: 2022-06-24 19:30:17 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1834308/usa_00039.dat.gz
     body:
       encoding: ''
       string: ''
@@ -54,14 +53,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.dat.gz"; filename*=UTF-8''usa_00112.dat.gz
-      content-length: '167521'
+      content-disposition: attachment; filename="usa_00039.dat.gz"; filename*=UTF-8''usa_00039.dat.gz
       content-type: application/gzip
-      date: Fri, 27 May 2022 22:06:37 GMT
-      etag: '"62914b55-28e61"'
-      last-modified: Fri, 27 May 2022 22:06:13 GMT
+      date: Fri, 24 Jun 2022 19:30:17 GMT
+      etag: '"62b61097-28e61"'
+      last-modified: Fri, 24 Jun 2022 19:29:27 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=v6Tn43XZtV5HPxEk0qZ4YZwaLrBEr%2Fn7FBwKHB3mJ5%2F6EEd4rc%2F6XVHOoKt4nybJBUkRRsBPtEJ8NEWovqdadJhE%2Bog2s%2BvGdACr%2FXg5Ijdb6jF4yc7lduelC16evy1WXsFWtvdn%2FjWsuDy%2FrUg8WyABBJLxCdOdO2iO1JpBIETOzTiclY74tGk7dUjT6qos%2Baa5Pqm2m3QYcGEB5VzDM0eJbDesORRS8v5Ojci83g2bZZhsvq6OtIe6MSbA6Yg%3D--OJ0Op%2FwYToY3hSkP--xYA9vfkiKhJg1Ntdbg%2BeHg%3D%3D;
+      set-cookie: _session_id=KEcPVNpIs5tIqvI94HXZQhC6GnkOCasP2j4paoruFOmgN9zm47oKJfKJXFIhMkwOOjXLx2LdrgRQwEMtTyGWFWKqWr89vdcHVwJsDSlMju%2Bn3nBrumcsOVNtlDxMTSNvSnYBUNEemKXnaDUWlk%2B0xwksb1kjHh0KW4y3rWBP3bBXLlQq6wiL92YL%2FqW%2BvNU8mDYDSi6kZKJqyzJ9FcvdNKLfu13Uz5qkD0kMGVIPs06qPVSfvCnssHieHZnCcD8%3D--rScziqjDBo9sGVdc--igCNnfatA77k47a1CAPiFA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -70,6 +68,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/usa_00112.dat.gz
-  recorded_at: 2022-05-27 22:06:37 GMT
+      string: ../fixtures/usa_00039.dat.gz
+  recorded_at: 2022-06-24 19:30:17 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
