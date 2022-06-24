@@ -464,6 +464,22 @@ define_extract_nhgis <- function(description = "",
 #'
 #' @export
 define_extract_from_json <- function(extract_json) {
+
+  collection <- jsonlite::fromJSON(extract_json)$collection
+
+  if (is.null(collection)) {
+    stop(
+      "Could not determine the collection associated with this extract ",
+      "definition. Ensure that the JSON file includes an element containing ",
+      "the IPUMS collection associated with the extract. ",
+      "(For example, `\"collection\": \"usa\"`)",
+      call. = FALSE
+    )
+  }
+
+  extract_json <- new_ipums_json(extract_json, collection)
+  json_api_version <- api_version_from_json(extract_json)
+
   list_of_extracts <- extract_list_from_json(
     extract_json,
     validate = TRUE
@@ -478,15 +494,23 @@ define_extract_from_json <- function(extract_json) {
       call. = FALSE
     )
   }
-  json_api_version <- api_version_from_json(extract_json)
-  if (microdata_api_version() != json_api_version){
+
+  if (is.null(json_api_version)) {
     warning(
-      "The extract defined in ", extract_json, " was made using API version ",
+      "Could not determine the API version corresponding to the provided ",
+      "extract definition. ipumsr is currently configured to submit extract ",
+      "requests using API version ", ipums_api_version(collection), ".",
+      call. = FALSE
+    )
+  } else if (ipums_api_version(collection) != json_api_version){
+    warning(
+      "The extract provided in `extract_json` was made using API version ",
       json_api_version, ". ipumsr is currently configured to submit extract ",
-      "requests using API version ", microdata_api_version(), ".",
+      "requests using API version ", ipums_api_version(collection), ".",
       call. = FALSE
     )
   }
+
   list_of_extracts[[1]]
 
 }
@@ -528,7 +552,7 @@ define_extract_from_json <- function(extract_json) {
 save_extract_as_json <- function(extract, file) {
   extract_as_json <- extract_to_request_json(
     extract,
-    include_endpoint_info=TRUE
+    include_endpoint_info = TRUE
   )
   writeLines(jsonlite::prettify(extract_as_json), con = file)
   invisible(file)
@@ -2071,7 +2095,7 @@ new_ipums_extract <- function(collection = NA_character_,
 new_ipums_json <- function(json, collection) {
   structure(
     json,
-    class = c(paste0(collection, "_json"), "ipums_json")
+    class = c(paste0(collection, "_json"), "ipums_json", class(json))
   )
 }
 
