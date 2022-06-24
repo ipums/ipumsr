@@ -2424,8 +2424,62 @@ validate_ipums_extract.usa_extract <- function(x) {
 
   if (any(is_missing)) {
     stop(
-      "The following elements of a usa_extract must not contain missing ",
-      "values: ",
+      "The following elements of a `", x$collection, "_extract` ",
+      "must not contain missing values: ",
+      paste0(must_be_non_missing[is_missing], collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  # Remove these once we allow for hierarchical and rectangular on H extracts
+  if (x$data_structure != "rectangular") {
+    stop(
+      "Currently, the `data_structure` argument must be equal to ",
+      "\"rectangular\"; in the future, the API will also support ",
+      "\"hierarchical\" extracts.",
+      call. = FALSE
+    )
+  }
+  if (x$rectangular_on != "P") {
+    stop(
+      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+      "the future, the API will also support `rectangular_on = \"H\".",
+      call. = FALSE
+    )
+  }
+
+  stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
+  stopifnot(x$data_structure %in% c("rectangular", "hierarchical"))
+
+  if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
+    stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
+         "of 'H' or 'P'", call. = FALSE)
+  }
+
+  if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
+    stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
+         "missing", call. = FALSE)
+  }
+
+  x
+
+}
+
+#' @export
+validate_ipums_extract.cps_extract <- function(x) {
+
+  must_be_non_missing <- c("description", "data_structure",
+                           "data_format", "samples", "variables")
+
+  is_missing <- purrr::map_lgl(
+    must_be_non_missing,
+    ~any(is.null(x[[.]])) || any(is.na(x[[.]])) || any(is_empty(x[[.]]))
+  )
+
+  if (any(is_missing)) {
+    stop(
+      "The following elements of a `", x$collection, "_extract` ",
+      "must not contain missing values: ",
       paste0(must_be_non_missing[is_missing], collapse = ", "),
       call. = FALSE
     )
@@ -2468,20 +2522,12 @@ validate_ipums_extract.usa_extract <- function(x) {
 #' @export
 validate_ipums_extract.ipums_extract <- function(x) {
 
-  if(!x$collection %in% ipums_collection_versions()$collection) {
-    stop(
-      paste0(
-        "No API version found for collection `", x$collection, "`\n",
-        "IPUMS API is currently available for the following collections: ",
-        paste0(ipums_collection_versions()$collection, collapse = ", ")
-      ),
-      call. = FALSE
-    )
-  } else {
-    warning(
-      paste0("Unable to validate extract for collection `", x$collection, "`.")
-    )
-  }
+  # Throw error if no API for collection
+  ipums_api_version(x$collection)
+
+  warning(
+    paste0("Unable to validate extract for collection `", x$collection, "`.")
+  )
 
   x
 
@@ -2506,6 +2552,25 @@ print.ipums_extract <- function(x, ...) {
 
 #' @export
 print.usa_extract <- function(x, ...) {
+
+  to_cat <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
+    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    "\n", print_truncated_vector(x$samples, "Samples: "),
+    "\n", print_truncated_vector(x$variables, "Variables: "),
+    "\n"
+  )
+
+  cat(to_cat)
+
+  invisible(x)
+
+}
+
+#' @export
+print.cps_extract <- function(x, ...) {
 
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
@@ -2793,6 +2858,34 @@ extract_to_request_json.nhgis_extract <- function(extract, include_endpoint_info
     ~!(any(is.na(.x)) || is_empty(.x))
   )
 
+
+  jsonlite::toJSON(request_list)
+
+}
+
+#' @export
+extract_to_request_json.usa_extract <- function(extract,
+                                                include_endpoint_info = FALSE) {
+
+  if (is.null(extract$description) || is.na(extract$description)) {
+    extract$description <- ""
+  }
+
+  if (is.null(extract$data_format) || is.na(extract$data_format)) {
+    extract$data_format <- ""
+  }
+
+  request_list <- list(
+    description = extract$description,
+    data_structure = format_data_structure_for_json(
+      extract$data_structure,
+      extract$rectangular_on
+    ),
+    data_format = extract$data_format,
+    samples = format_samples_for_json(extract$samples),
+    variables = format_variables_for_json(extract$variables)
+  )
+
   if (include_endpoint_info){
     endpoint_info <- list(
       collection = extract$collection,
@@ -2801,12 +2894,13 @@ extract_to_request_json.nhgis_extract <- function(extract, include_endpoint_info
     request_list <- append(request_list, endpoint_info)
   }
 
-  jsonlite::toJSON(request_list)
+  jsonlite::toJSON(request_list, auto_unbox = TRUE)
 
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(extract, include_endpoint_info = FALSE) {
+extract_to_request_json.cps_extract <- function(extract,
+                                                include_endpoint_info = FALSE) {
 
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
@@ -2963,6 +3057,39 @@ ipums_extract_specific_download <- function(extract,
 
 #' @export
 ipums_extract_specific_download.usa_extract <- function(extract,
+                                                        download_dir,
+                                                        overwrite,
+                                                        api_key) {
+
+  ddi_url <- extract$download_links$ddi_codebook$url
+  data_url <- extract$download_links$data$url
+
+  ddi_file_path <- normalizePath(
+    file.path(download_dir, basename(ddi_url)),
+    winslash = "/",
+    mustWork = FALSE
+  )
+
+  data_file_path <- normalizePath(
+    file.path(download_dir, basename(data_url)),
+    winslash = "/",
+    mustWork = FALSE
+  )
+
+  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
+  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
+
+  message(
+    paste0("DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
+           "to ", data_file_path)
+  )
+
+  invisible(ddi_file_path)
+
+}
+
+#' @export
+ipums_extract_specific_download.cps_extract <- function(extract,
                                                         download_dir,
                                                         overwrite,
                                                         api_key) {
@@ -3312,6 +3439,52 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
   )
 }
 
+
+#' @export
+extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
+
+  list_of_extract_info <- jsonlite::fromJSON(
+    extract_json,
+    simplifyVector = FALSE
+  )
+
+  # The response only has names when it contains info on a single extract. In
+  #   that case, we want to make sure this function returns an unnamed list of
+  #   length one, to ensure consistency in the structure of the return value.
+  list_contains_info_on_single_extract <- !is.null(names(list_of_extract_info))
+
+  if (list_contains_info_on_single_extract) {
+    list_of_extract_info <- list(list_of_extract_info)
+  }
+
+  purrr::map(
+    list_of_extract_info,
+    function(x) {
+      out <- new_ipums_extract(
+        collection = "cps",
+        description = x$description,
+        data_structure = names(x$data_structure),
+        rectangular_on = ifelse(
+          names(x$data_structure) == "rectangular",
+          x$data_structure$rectangular$on,
+          NA_character_
+        ),
+        data_format = x$data_format,
+        samples = names(x$samples),
+        variables = names(x$variables),
+        submitted = ifelse("number" %in% names(x), TRUE, FALSE),
+        download_links = if ("download_links" %in% names(x)) {
+          x$download_links
+        } else EMPTY_NAMED_LIST,
+        number = ifelse("number" %in% names(x), x$number, NA_integer_),
+        status = ifelse("status" %in% names(x), x$status, "unsubmitted")
+      )
+      if (validate) validate_ipums_extract(out)
+      out
+    }
+  )
+}
+
 parse_400_error <- function(res) {
   response_content <- jsonlite::fromJSON(
     httr::content(res, "text"),
@@ -3339,6 +3512,19 @@ extract_is_completed_and_has_links <- function(extract) {
 
 #' @export
 extract_is_completed_and_has_links.usa_extract <- function(extract) {
+  status <- extract$status
+  download_links <- extract$download_links
+
+  has_url <- function(links, name) {
+    return (is.list(links[[name]]) && is.character(links[[name]][["url"]]))
+  }
+
+  status == "completed" && has_url(download_links, "ddi_codebook") &&
+    has_url(download_links, "data")
+}
+
+#' @export
+extract_is_completed_and_has_links.cps_extract <- function(extract) {
   status <- extract$status
   download_links <- extract$download_links
 
@@ -4070,6 +4256,19 @@ extract_to_tbl.usa_extract <- function(x) {
 }
 
 #' @export
+extract_to_tbl.cps_extract <- function(x) {
+
+  if (is.character(x$samples)) x$samples <- list(x$samples)
+  if (is.character(x$variables)) x$variables <- list(x$variables)
+  x$download_links <- list(x$download_links)
+
+  unclassed_extract <- unclass(x)
+
+  do.call(tibble::tibble, unclassed_extract)
+
+}
+
+#' @export
 extract_to_tbl.nhgis_extract <- function(x) {
 
   base_vars <- list(
@@ -4271,6 +4470,15 @@ get_extract_tbl_fields.nhgis_extract <- function(x) {
 
 #' @export
 get_extract_tbl_fields.usa_extract <- function(x) {
+  c(
+    "collection", "description", "samples", "variables",
+    "data_format", "data_structure", "rectangular_on",
+    "submitted", "download_links", "number", "status"
+  )
+}
+
+#' @export
+get_extract_tbl_fields.cps_extract <- function(x) {
   c(
     "collection", "description", "samples", "variables",
     "data_format", "data_structure", "rectangular_on",

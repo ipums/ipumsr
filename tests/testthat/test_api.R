@@ -154,10 +154,29 @@ test_that("ipums_extract validate method works", {
     "argument \"description\" is missing"
   )
   expect_error(
-    validate_ipums_extract(define_extract_usa(description = "Test",
-                                            samples = "Test",
-                                            variables = "Test",
-                                            data_format = "Test")),
+    validate_ipums_extract(define_extract_cps()),
+    "argument \"description\" is missing"
+  )
+  expect_error(
+    validate_ipums_extract(
+      define_extract_usa(
+        description = "Test",
+        samples = "Test",
+        variables = "Test",
+        data_format = "Test"
+      )
+    ),
+    "\'arg\' should be one of"
+  )
+  expect_error(
+    validate_ipums_extract(
+      define_extract_cps(
+        description = "Test",
+        samples = "Test",
+        variables = "Test",
+        data_format = "Test"
+      )
+    ),
     "\'arg\' should be one of"
   )
 })
@@ -403,7 +422,7 @@ tryCatch(
 test_that("An extract request with missing collection returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract()),
-    regex = "No API version found for collection `NA`"
+    regex = "No API version found for collection \"NA\""
   )
 })
 
@@ -411,7 +430,7 @@ test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
     regexp = paste0(
-      "The following elements of a usa_extract must not contain missing ",
+      "The following elements of a `usa_extract` must not contain missing ",
       "values:"
     )
   )
@@ -423,7 +442,7 @@ test_that("An extract request with missing samples returns correct error", {
       ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
     ),
     regexp = paste0(
-      "The following elements of a usa_extract must not contain missing ",
+      "The following elements of a `usa_extract` must not contain missing ",
       "values:"
     )
   )
@@ -605,7 +624,7 @@ test_that("Improper extract revisions throw warnings or errors", {
   expect_error(
     remove_from_extract(usa_extract, samples = usa_extract$samples),
     paste0(
-      "The following elements of an extract definition must not contain missing",
+      "The following elements of a `usa_extract` must not contain missing",
       " values: samples"
     )
   )
@@ -619,7 +638,7 @@ test_that("Improper extract revisions throw warnings or errors", {
   expect_error(
     remove_from_extract(usa_extract, variables = usa_extract$variables),
     paste0(
-      "The following elements of an extract definition must not contain missing",
+      "The following elements of a `usa_extract` must not contain missing",
       " values: variables"
     )
   )
