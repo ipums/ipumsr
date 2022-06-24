@@ -1919,7 +1919,7 @@ ipums_data_collections <- function() {
     "IPUMS USA", "usa", "beta",
     "IPUMS CPS", "cps", "beta",
     "IPUMS International", "ipumsi", "none",
-    "IPUMS NHGIS", "nhgis", "none",
+    "IPUMS NHGIS", "nhgis", "v1",
     "IPUMS AHTUS", "ahtus", "none",
     "IPUMS MTUS", "mtus", "none",
     "IPUMS ATUS", "atus", "none",
@@ -4296,16 +4296,21 @@ api_extracts_path <- function() {
   basename(api_base_url())
 }
 
+#' @importFrom rlang .data
+#' @noRd
 ipums_api_version <- function(collection) {
 
-  versions <- ipums_collection_versions()
+  versions <- dplyr::filter(
+    ipums_data_collections(),
+    .data$api_support != "none"
+  )
 
-  if(!collection %in% versions$collection) {
+  if(!collection %in% versions$code_for_api) {
     stop(
       paste0(
-        "No API version found for collection `", collection, "`\n",
-        "IPUMS API is currently available for the following collections: ",
-        paste0(versions$collection, collapse = ", ")
+        "No API version found for collection \"", collection, "\"\n",
+        "IPUMS API is currently available for the following collections: \"",
+        paste0(versions$code_for_api, collapse = "\", \""), "\""
       ),
       call. = FALSE
     )
@@ -4314,19 +4319,11 @@ ipums_api_version <- function(collection) {
   api_version <- Sys.getenv("IPUMS_API_VERSION")
 
   if (api_version == "") {
-    versions[[which(versions$collection == collection), "version"]]
+    versions[[which(versions$code_for_api == collection), "api_support"]]
   } else {
     api_version
   }
 
-}
-
-ipums_collection_versions <- function() {
-  tibble::tribble(
-    ~collection, ~version,
-    "usa", "beta",
-    "nhgis", "v1"
-  )
 }
 
 api_version_from_json <- function(extract_json) {
