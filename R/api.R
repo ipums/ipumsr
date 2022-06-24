@@ -2814,7 +2814,8 @@ extract_to_request_json <- function(extract, include_endpoint_info) {
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(extract, include_endpoint_info = FALSE) {
+extract_to_request_json.nhgis_extract <- function(extract,
+                                                  include_endpoint_info = FALSE) {
 
   # if (is.null(extract$description) || is.na(extract$description)) {
   #   extract$description <- ""
@@ -2858,6 +2859,13 @@ extract_to_request_json.nhgis_extract <- function(extract, include_endpoint_info
     ~!(any(is.na(.x)) || is_empty(.x))
   )
 
+  if (include_endpoint_info){
+    endpoint_info <- list(
+      collection = jsonlite::unbox(extract$collection),
+      api_version = jsonlite::unbox(ipums_api_version(extract$collection))
+    )
+    request_list <- append(request_list, endpoint_info)
+  }
 
   jsonlite::toJSON(request_list)
 
