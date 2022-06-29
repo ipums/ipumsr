@@ -8,21 +8,9 @@
 \usage{
 remove_from_extract(extract, ...)
 
-\method{remove_from_extract}{usa_extract}(
-  extract,
-  samples = NULL,
-  variables = NULL,
-  validate = TRUE,
-  ...
-)
+\method{remove_from_extract}{usa_extract}(extract, samples = NULL, variables = NULL, ...)
 
-\method{remove_from_extract}{cps_extract}(
-  extract,
-  samples = NULL,
-  variables = NULL,
-  validate = TRUE,
-  ...
-)
+\method{remove_from_extract}{cps_extract}(extract, samples = NULL, variables = NULL, ...)
 }
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
@@ -34,9 +22,6 @@ if any.}
 
 \item{variables}{Character vector of variables to remove from the extract,
 if any.}
-
-\item{validate}{Logical value indicating whether to check the modified
-extract structure for validity. Defaults to \code{TRUE}.}
 }
 \value{
 A modified IPUMS USA or CPS extract object

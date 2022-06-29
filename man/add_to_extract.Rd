@@ -14,7 +14,6 @@ add_to_extract(extract, ...)
   samples = NULL,
   variables = NULL,
   data_format = NULL,
-  validate = TRUE,
   ...
 )
 
@@ -24,7 +23,6 @@ add_to_extract(extract, ...)
   samples = NULL,
   variables = NULL,
   data_format = NULL,
-  validate = TRUE,
   ...
 )
 }
@@ -43,9 +41,6 @@ or the \href{https://cps.ipums.org/cps-action/samples/sample_ids}{CPS sample ID 
 
 \item{data_format}{The desired format of the extract data file (one of
 "fixed_width", "csv", "stata", "spss", or "sas9").}
-
-\item{validate}{Logical value indicating whether to check the modified
-extract structure for validity. Defaults to \code{TRUE}.}
 }
 \value{
 A modified IPUMS USA or CPS extract object
