@@ -1044,6 +1044,26 @@ add_to_extract.usa_extract <- function(extract,
   )
 }
 
+#' @export
+add_to_extract.cps_extract <- function(extract,
+                                       description = NULL,
+                                       samples = NULL,
+                                       variables = NULL,
+                                       data_format = NULL,
+                                       validate = TRUE,
+                                       ...) {
+
+  add_to_extract_micro(
+    extract,
+    description = description,
+    samples = samples,
+    variables = variables,
+    data_format = data_format,
+    validate = validate,
+    ...
+  )
+}
+
 #' Add values to an existing NHGIS extract
 #'
 #' @description
@@ -1340,6 +1360,22 @@ remove_from_extract.usa_extract <- function(extract,
   )
 }
 
+#' @export
+remove_from_extract.cps_extract <- function(extract,
+                                            samples = NULL,
+                                            variables = NULL,
+                                            validate = TRUE,
+                                            ...) {
+
+  remove_from_extract_micro(
+    extract = extract,
+    samples = samples,
+    variables = variables,
+    validate = validate,
+    ...
+  )
+}
+
 #' Remove values from an existing NHGIS extract
 #'
 #' @description
@@ -1579,43 +1615,6 @@ remove_from_extract.nhgis_extract <- function(extract,
   extract
 
 }
-
-#' @export
-add_to_extract.cps_extract <- function(extract,
-                                       description = NULL,
-                                       samples = NULL,
-                                       variables = NULL,
-                                       data_format = NULL,
-                                       validate = TRUE,
-                                       ...) {
-
-  add_to_extract_micro(
-    extract,
-    description = description,
-    samples = samples,
-    variables = variables,
-    data_format = data_format,
-    validate = validate,
-    ...
-  )
-}
-
-#' @export
-remove_from_extract.cps_extract <- function(extract,
-                                            samples = NULL,
-                                            variables = NULL,
-                                            validate = TRUE,
-                                            ...) {
-
-  remove_from_extract_micro(
-    extract = extract,
-    samples = samples,
-    variables = variables,
-    validate = validate,
-    ...
-  )
-}
-
 
 # > Get info on recent extracts ----
 
