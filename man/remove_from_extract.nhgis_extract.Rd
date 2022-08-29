@@ -15,7 +15,6 @@
   time_series_tables = NULL,
   tst_geog_levels = NULL,
   shapefiles = NULL,
-  validate = TRUE,
   ...
 )
 }
@@ -73,9 +72,6 @@ in \code{time_series_tables}. See details for available syntax options.}
 
 \item{shapefiles}{Character vector of shapefiles to remove from the extract,
 if any. For more information on NHGIS shapefiles, click here.}
-
-\item{validate}{Logical value indicating whether to check the modified
-extract structure for validity. Defaults to \code{TRUE}}
 
 \item{...}{Ignored}
 }
@@ -177,16 +173,4 @@ remove_from_extract(
   extract,
   tst_geog_levels = list(CW5 = "state", CW3 = "county")
 )
-
-# It is possible to get invalid extracts:
-\dontrun{
-remove_from_extract(
-  extract,
-  ds_geog_levels = "county",
-  validate = TRUE
-)}
-
-# So you should typically add to an extract before removing:
-add_to_extract(extract, ds_geog_levels = "state") \%>\%
-  remove_from_extract(ds_geog_levels = "county")
 }

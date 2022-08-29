@@ -19,7 +19,6 @@
   tst_layout = NULL,
   shapefiles = NULL,
   data_format = NULL,
-  validate = TRUE,
   ...
 )
 }
@@ -112,9 +111,6 @@ The default \code{"csv_no_header"} provides only a minimal header in the
 first row, while \code{"csv_header"} adds a second, more descriptive header
 row. Required when any datasets or time series tables are included in the
 extract.}
-
-\item{validate}{Logical value indicating whether to check the modified
-extract structure for validity. Defaults to \code{TRUE}}
 
 \item{...}{Ignored}
 }

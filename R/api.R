@@ -1030,7 +1030,6 @@ add_to_extract.usa_extract <- function(extract,
                                        samples = NULL,
                                        variables = NULL,
                                        data_format = NULL,
-                                       validate = TRUE,
                                        ...) {
 
   add_to_extract_micro(
@@ -1039,9 +1038,9 @@ add_to_extract.usa_extract <- function(extract,
     samples = samples,
     variables = variables,
     data_format = data_format,
-    validate = validate,
     ...
   )
+
 }
 
 #' @export
@@ -1050,7 +1049,6 @@ add_to_extract.cps_extract <- function(extract,
                                        samples = NULL,
                                        variables = NULL,
                                        data_format = NULL,
-                                       validate = TRUE,
                                        ...) {
 
   add_to_extract_micro(
@@ -1059,9 +1057,9 @@ add_to_extract.cps_extract <- function(extract,
     samples = samples,
     variables = variables,
     data_format = data_format,
-    validate = validate,
     ...
   )
+
 }
 
 #' Add values to an existing NHGIS extract
@@ -1178,8 +1176,6 @@ add_to_extract.cps_extract <- function(extract,
 #'   being added to the extract.
 #' @param shapefiles Character vector of shapefiles to add to the extract, if
 #'   any. For more information on NHGIS shapefiles, click here.
-#' @param validate Logical value indicating whether to check the modified
-#'   extract structure for validity. Defaults to \code{TRUE}
 #' @param ... Ignored
 #'
 #' @return A modified \code{nhgis_extract} object
@@ -1229,7 +1225,6 @@ add_to_extract.nhgis_extract <- function(extract,
                                          tst_layout = NULL,
                                          shapefiles = NULL,
                                          data_format = NULL,
-                                         validate = TRUE,
                                          ...) {
 
   extract <- copy_ipums_extract(extract)
@@ -1247,9 +1242,9 @@ add_to_extract.nhgis_extract <- function(extract,
 
   if (length(dots) > 0) {
     warning(
-      "The following were not recognized as valid fields ",
-      "for an object of class `", extract$collection, "_extract`: `",
-      paste0(names(dots), collapse = "`, `"), "`.",
+      "The following fields were either not found in the provided extract ",
+      "or cannot be modified: `",
+      paste0(names(dots), collapse = "`, `"), "`",
       call. = FALSE
     )
   }
@@ -1296,9 +1291,7 @@ add_to_extract.nhgis_extract <- function(extract,
     extract$tst_layout <- extract$tst_layout %||% "time_by_column_layout"
   }
 
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
+  extract <- validate_ipums_extract(extract)
 
   extract
 
@@ -1348,32 +1341,30 @@ remove_from_extract <- function(extract, ...) {
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
-                                            validate = TRUE,
                                             ...) {
 
   remove_from_extract_micro(
     extract = extract,
     samples = samples,
     variables = variables,
-    validate = validate,
     ...
   )
+
 }
 
 #' @export
 remove_from_extract.cps_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
-                                            validate = TRUE,
                                             ...) {
 
   remove_from_extract_micro(
     extract = extract,
     samples = samples,
     variables = variables,
-    validate = validate,
     ...
   )
+
 }
 
 #' Remove values from an existing NHGIS extract
@@ -1482,8 +1473,6 @@ remove_from_extract.cps_extract <- function(extract,
 #'   in \code{time_series_tables}. See details for available syntax options.
 #' @param shapefiles Character vector of shapefiles to remove from the extract,
 #'   if any. For more information on NHGIS shapefiles, click here.
-#' @param validate Logical value indicating whether to check the modified
-#'   extract structure for validity. Defaults to \code{TRUE}
 #' @param ... Ignored
 #'
 #' @return A modified \code{nhgis_extract} object
@@ -1519,18 +1508,6 @@ remove_from_extract.cps_extract <- function(extract,
 #'   extract,
 #'   tst_geog_levels = list(CW5 = "state", CW3 = "county")
 #' )
-#'
-#' # It is possible to get invalid extracts:
-#' \dontrun{
-#' remove_from_extract(
-#'   extract,
-#'   ds_geog_levels = "county",
-#'   validate = TRUE
-#' )}
-#'
-#' # So you should typically add to an extract before removing:
-#' add_to_extract(extract, ds_geog_levels = "state") %>%
-#'   remove_from_extract(ds_geog_levels = "county")
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               ds_tables = NULL,
@@ -1541,18 +1518,22 @@ remove_from_extract.nhgis_extract <- function(extract,
                                               time_series_tables = NULL,
                                               tst_geog_levels = NULL,
                                               shapefiles = NULL,
-                                              validate = TRUE,
                                               ...) {
 
   extract <- copy_ipums_extract(extract)
 
-  # Throw more informative warning if user thinks they can remove these fields:
-  extract <- validate_remove_fields(
-    extract,
-    bad_remove_fields = c("description", "breakdown_and_data_type_layout",
-                          "tst_layout", "data_format"),
-    ...
-  )
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    warning(
+      "The following fields were either not found in the provided extract ",
+      "or cannot be removed: `",
+      paste0(names(dots), collapse = "`, `"), "`\n",
+      "See `add_to_extract()` to replace existing values in applicable extract ",
+      "fields.",
+      call. = FALSE
+    )
+  }
 
   if (is.list(geographic_extents)) {
     warning(
@@ -1608,9 +1589,17 @@ remove_from_extract.nhgis_extract <- function(extract,
     extract["data_format"] <- list(NULL)
   }
 
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
+  tryCatch(
+    extract <- validate_ipums_extract(extract),
+    error = function(cond) {
+      stop(
+        conditionMessage(cond),
+        "\nTo replace existing values in an extract, first add new values ",
+        "with `add_to_extract()`, then remove existing ones.",
+        call. = FALSE
+      )
+    }
+  )
 
   extract
 
@@ -3672,10 +3661,20 @@ add_to_extract_micro <- function(extract,
                                  data_format = NULL,
                                  data_structure = NULL,
                                  rectangular_on = NULL,
-                                 validate = TRUE,
                                  ...) {
 
   extract <- copy_ipums_extract(extract)
+
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    warning(
+      "The following fields were either not found in the provided extract ",
+      "or cannot be modified: `",
+      paste0(names(dots), collapse = "`, `"), "`",
+      call. = FALSE
+    )
+  }
 
   if (!is.null(data_structure) && data_structure != "rectangular") {
     stop(
@@ -3731,9 +3730,7 @@ add_to_extract_micro <- function(extract,
     modification = "replace"
   )
 
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
+  extract <- validate_ipums_extract(extract)
 
   extract
 
@@ -3889,17 +3886,23 @@ add_nested_fields <- function(extract, ...) {
 remove_from_extract_micro <- function(extract,
                                       samples = NULL,
                                       variables = NULL,
-                                      validate = TRUE,
                                       ...) {
 
   extract <- copy_ipums_extract(extract)
 
-  extract <- validate_remove_fields(
-    extract,
-    bad_remove_fields = c("description", "data_format",
-                          "data_structure", "rectangular_on"),
-    ...
-  )
+
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    warning(
+      "The following fields were either not found in the provided extract ",
+      "or cannot be removed: `",
+      paste0(names(dots), collapse = "`, `"), "`\n",
+      "See `add_to_extract()` to replace existing values in applicable extract ",
+      "fields.",
+      call. = FALSE
+    )
+  }
 
   to_remove <- list(
     samples = samples,
@@ -3929,9 +3932,20 @@ remove_from_extract_micro <- function(extract,
     modification = "remove"
   )
 
-  if (validate) {
-    extract <- validate_ipums_extract(extract)
-  }
+  # I believe the only way to produce an invalid extract from removal is
+  # to remove all fields of a certain value. This takes advantage of this fact
+  # to improve the validation error message.
+  tryCatch(
+    extract <- validate_ipums_extract(extract),
+    error = function(cond) {
+      stop(
+        conditionMessage(cond),
+        "\nTo replace existing values in an extract, first add new values ",
+        "with `add_to_extract()`, then remove existing ones.",
+        call. = FALSE
+      )
+    }
+  )
 
   extract
 
@@ -4186,59 +4200,6 @@ setdiff_null <- function(x, y) {
   }
 
   v
-
-}
-
-#' Produce warnings for invalid extract revision requests
-#'
-#' Convenience function to throw more informative warnings on invalid extract
-#' revision specifications. Currently used to direct users to
-#' \code{add_to_extract()} when attempting to remove non-optional fields in
-#' \code{remove_from_extract()}. (Otherwise, users would face a potentially
-#' unexpected unused argument error)
-#'
-#' @param extract An object inheriting from class \code{ipums_extract}
-#' @param bad_remove_fields Character vector of names of fields that should
-#'   trigger warnings if user attempts to remove them from an extract
-#' @param ... Arbitrary selection of named arguments. Used to warn against use
-#'   of extract fields that do not exist in the extract.
-#'
-#' @noRd
-validate_remove_fields <- function(extract, bad_remove_fields, ...) {
-
-  dots <- rlang::list2(...)
-
-  if ("collection" %in% names(dots)) {
-    stop(
-      "Cannot modify collection of an existing extract. To create an extract",
-      " from a new collection, use the appropriate `define_extract_` function.",
-      call. = FALSE
-    )
-  }
-
-  tried_to_remove <- bad_remove_fields[bad_remove_fields %in% names(dots)]
-  invalid_fields <- names(dots)[!names(dots) %in% bad_remove_fields]
-
-  if (length(tried_to_remove) > 0) {
-    warning(
-      "The following fields cannot be removed from an object of class `",
-      extract$collection, "_extract`: `",
-      paste0(tried_to_remove, collapse = "`, `"), "`.\nTo ",
-      "replace these values, use add_to_extract().",
-      call. = FALSE
-    )
-  }
-
-  if (length(invalid_fields) > 0) {
-    warning(
-      "The following were not recognized as valid fields ",
-      "for an object of class `", extract$collection, "_extract`", ": `",
-      paste0(names(dots), collapse = "`, `"), "`.",
-      call. = FALSE
-    )
-  }
-
-  extract
 
 }
 

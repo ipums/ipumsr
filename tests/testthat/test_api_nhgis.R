@@ -814,12 +814,15 @@ test_that("Can remove full fields from an NHGIS extract", {
 test_that("Can remove subfields from an NHGIS extract", {
 
   revised <- remove_from_extract(
-    nhgis_extract,
+    add_to_extract(
+      nhgis_extract,
+      ds_geog_levels = list(`2014_2018_ACS5a` = "tract"),
+      tst_geog_levels = "tract"
+    ),
     ds_tables = "B01001",
     ds_geog_levels = list(`2014_2018_ACS5a` = "nation"),
     tst_geog_levels = c("state", "blck_grp"),
-    geographic_extents = "420",
-    validate = FALSE
+    geographic_extents = "420"
   )
 
   expect_equal(revised$datasets, nhgis_extract$datasets)
@@ -830,12 +833,12 @@ test_that("Can remove subfields from an NHGIS extract", {
   )
   expect_equal(
     revised$ds_geog_levels,
-    list(`2014_2018_ACS5a` = NULL,
+    list(`2014_2018_ACS5a` = "tract",
          `2015_2019_ACS5a` = "blck_grp")
   )
 
   expect_equal(revised$time_series_tables, nhgis_extract$time_series_tables)
-  expect_equal(revised$tst_geog_levels, list(CW3 = NULL))
+  expect_equal(revised$tst_geog_levels, list(CW3 = "tract"))
 
   expect_equal(revised$geographic_extents, "110")
 
@@ -899,7 +902,7 @@ test_that("Revisions do not alter unspecified extract fields", {
 
 })
 
-test_that("Ambiguous extract revisions throw correct warnings", {
+test_that("Improper extract revisions throw warnings or errors", {
   expect_warning(
     add_to_extract(nhgis_extract, ds_tables = list("A")),
     paste0(
@@ -954,12 +957,12 @@ test_that("Ambiguous extract revisions throw correct warnings", {
   expect_warning(
     remove_from_extract(
       nhgis_extract,
-      data_format = "csv_header",
-      description = "Test"
+      description = "Extract for R client testing",
+      bad_field = "not in extract"
     ),
     regexp = paste0(
-      "The following fields cannot be removed from an object of class ",
-      "`nhgis_extract`: `description`, `data_format`.\nTo replace these values"
+      "The following fields were either not found in the provided extract ",
+      "or cannot be removed: `description`, `bad_field`"
     )
   )
   expect_warning(
@@ -1000,32 +1003,27 @@ test_that("Ambiguous extract revisions throw correct warnings", {
       "`ds_geog_levels`"
     )
   )
+  expect_warning(
+    add_to_extract(nhgis_extract, vars = "var", number = 45),
+    paste0(
+      "The following fields were either not found in the ",
+      "provided extract or cannot be modified: `vars`, `number`"
+    )
+  )
+  expect_identical(
+    suppressWarnings(add_to_extract(nhgis_extract, vars = "var")),
+    nhgis_extract
+  )
+  expect_identical(
+    suppressWarnings(remove_from_extract(nhgis_extract, vars = "var")),
+    nhgis_extract
+  )
   expect_silent(
-    remove_from_extract(
-      nhgis_extract,
-      ds_geog_levels = "nation",
-      validate = FALSE
-    )
+    add_to_extract(nhgis_extract, description = "Test")
   )
   expect_warning(
-    remove_from_extract(
-      nhgis_extract,
-      bad_field = "not in extract"
-    ),
-    regexp = paste0(
-      "The following were not recognized as valid fields for an object of ",
-      "class `nhgis_extract`: `bad_field`"
-    )
-  )
-  expect_warning(
-    add_to_extract(
-      nhgis_extract,
-      bad_field = "not in extract"
-    ),
-    regexp = paste0(
-      "The following were not recognized as valid fields for an object of ",
-      "class `nhgis_extract`: `bad_field`"
-    )
+    add_to_extract(nhgis_extract, data_format = c("csv_header", "fixed_width")),
+    "Multiple values passed to `data_format`, which must be length 1"
   )
 })
 
