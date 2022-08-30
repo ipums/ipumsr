@@ -127,6 +127,7 @@ get_nhgis_metadata <- function(type = NULL,
 
   metadata_url <- metadata_request_url(
     base_url = nhgis_api_metadata_url(),
+    collection = "nhgis",
     datasets = dataset,
     data_tables = ds_table,
     time_series_tables = time_series_table,
@@ -145,6 +146,8 @@ get_nhgis_metadata <- function(type = NULL,
 #'
 #' @param base_url Base url to which arguments passed to \code{...} will be
 #'   appended.
+#' @param collection Collection for which to request metadata. Used to include
+#'   correct API version in the output request URL
 #' @param ... Arbitrary number of named arguments. Arguments will be appended
 #'   to the \code{base_url} in the format \{argument_name\}/\{argument_value\}
 #'
@@ -152,7 +155,7 @@ get_nhgis_metadata <- function(type = NULL,
 #'   for the provided values of \code{...}
 #'
 #' @noRd
-metadata_request_url <- function(base_url, ...) {
+metadata_request_url <- function(base_url, collection, ...) {
 
   dots <- rlang::list2(...)
 
@@ -169,7 +172,7 @@ metadata_request_url <- function(base_url, ...) {
 
   api_url <- httr::modify_url(
     url = url,
-    query = paste0("version=", ipums_api_version("nhgis"))
+    query = paste0("version=", ipums_api_version(collection))
   )
 
   api_url
@@ -188,16 +191,25 @@ metadata_request_url <- function(base_url, ...) {
 metadata_request <- function(request_url,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  res <- httr::GET(
-    url = request_url,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
+  tryCatch(
+    res <- httr::GET(
+      url = request_url,
+      httr::user_agent(
+        paste0(
+          "https://github.com/ipums/ipumsr ",
+          as.character(utils::packageVersion("ipumsr"))
+        )
+      ),
+      httr::content_type_json(),
+      add_user_auth_header(api_key)
     ),
-    httr::content_type_json(),
-    add_user_auth_header(api_key)
+    error = function(cond) {
+      stop(
+        "Metadata request failed with the following error:\n\n", cond, "\n",
+        "You may have requested a field that does not exist.",
+        call. = FALSE
+      )
+    }
   )
 
   metadata <- jsonlite::fromJSON(
@@ -206,12 +218,8 @@ metadata_request <- function(request_url,
   )
 
   if (httr::http_error(res)) {
-    stop(
-      "Extract submission failed for ", request_url, ".\n",
-      "Status: ", metadata$status$code, "\n",
-      "Details: ", metadata$detail,
-      call. = FALSE
-    )
+    error_details <- parse_400_error(res)
+    stop(error_details, call. = FALSE)
   }
 
   metadata_type <- class(metadata)

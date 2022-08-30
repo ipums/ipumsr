@@ -1283,16 +1283,20 @@ test_that("We throw errors on bad metadata requests", {
     "`type` must be one of"
   )
   expect_error(
-    get_nhgis_metadata(dataset = "Bad dataset"),
+    get_nhgis_metadata(dataset = "bad-dataset"),
     "Couldn't find Dataset"
   )
   expect_error(
-    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "Bad table"),
+    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "bad-table"),
     "Couldn't find DataTable"
   )
   expect_error(
-    get_nhgis_metadata(time_series_table = "Bad tst"),
+    get_nhgis_metadata(time_series_table = "bad-tst"),
     "Couldn't find TimeSeriesTable"
+  )
+  expect_error(
+    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "bad table"),
+    "bad/illegal format or missing URL"
   )
   expect_error(
     get_nhgis_metadata(dataset = "1980_STF1", time_series_table = "CW3"),
