@@ -2603,36 +2603,35 @@ print.cps_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
 
-  # Ensure proper printing for extracts created via new_ipums_extract()
-  # (which have not been recycled yet) (is this misleading?)
-  # x <- recycle_subfields(
-  #   x,
-  #   datasets = c("ds_tables",
-  #                "ds_geog_levels",
-  #                "ds_years",
-  #                "ds_breakdown_values"),
-  #   time_series_tables = "tst_geog_levels"
-  # )
-
   types <- nhgis_extract_types(x)
 
   if("datasets" %in% types) {
 
-    n_datasets <- length(x$datasets)
-
     ds_to_cat <- purrr::map(
-      1:n_datasets,
+      seq_along(x$datasets),
       ~format_dataset_for_printing(
         x$datasets[[.x]],
         x$ds_tables[[.x]],
         x$ds_geog_levels[[.x]],
         x$ds_years[[.x]],
-        x$ds_breakdown_values[[.x]],
-        x$geographic_extents
+        x$ds_breakdown_values[[.x]]
       )
     )
 
-    ds_to_cat <- purrr::reduce(ds_to_cat, paste0)
+    extents_to_cat <- paste0(
+      "\n",
+      print_truncated_vector(
+        x$geographic_extents,
+        "Geographic extents: ",
+        FALSE
+      ),
+      "\n"
+    )
+
+    ds_to_cat <- purrr::reduce(
+      c(ds_to_cat, extents_to_cat),
+      paste0
+    )
 
   } else {
     ds_to_cat <- NULL
@@ -2641,7 +2640,7 @@ print.nhgis_extract <- function(x, ...) {
   if("time_series_tables" %in% types) {
 
     tst_to_cat <- purrr::map(
-      1:length(x$time_series_tables),
+      seq_along(x$time_series_tables),
       ~format_tst_for_printing(
         x$time_series_tables[[.x]],
         x$tst_geog_levels[[.x]]
@@ -2658,7 +2657,11 @@ print.nhgis_extract <- function(x, ...) {
 
     shp_to_cat <- paste0(
       "\n",
-      print_truncated_vector(x$shapefiles, "Shapefiles: ", FALSE)
+      print_truncated_vector(
+        x$shapefiles,
+        "Shapefiles: ",
+        FALSE
+      )
     )
 
   } else {
@@ -2702,8 +2705,7 @@ format_dataset_for_printing <- function(dataset,
                                         ds_tables,
                                         geog_levels,
                                         ds_years = NULL,
-                                        ds_breakdown_values = NULL,
-                                        geographic_extents = NULL) {
+                                        ds_breakdown_values = NULL) {
   output <- paste0(
     "\n",
     print_truncated_vector(
@@ -2746,19 +2748,6 @@ format_dataset_for_printing <- function(dataset,
       print_truncated_vector(
         ds_breakdown_values,
         "Breakdowns: ",
-        FALSE
-      ),
-      "\n"
-    )
-  }
-
-  if (!is.null(geographic_extents)) {
-    output <- paste0(
-      output,
-      "  ",
-      print_truncated_vector(
-        geographic_extents,
-        "Extents: ",
         FALSE
       ),
       "\n"
