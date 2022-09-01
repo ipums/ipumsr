@@ -1334,7 +1334,11 @@ test_that("We throw errors on bad metadata requests", {
   )
   expect_error(
     get_nhgis_metadata(ds_table = "P8"),
-    "If a `ds_table` is specified, a `dataset` must also be specified"
+    "`ds_table` must be specified with a corresponding `dataset`"
+  )
+  expect_error(
+    get_nhgis_metadata(time_series_table = "CW3", ds_table = "a"),
+    "`ds_table` must be specified with a corresponding `dataset`"
   )
 
 })

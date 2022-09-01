@@ -86,15 +86,14 @@ get_nhgis_metadata <- function(type = NULL,
     )
   }
 
-  if (all(is.null(type),
-          is.null(dataset),
-          is.null(time_series_table))) {
+  if (is.null(type) && is.null(dataset)) {
     if (!is.null(ds_table)) {
-      stop(
-        "If a `ds_table` is specified, a `dataset` must also be specified.",
-        call. = FALSE
-      )
-    } else {
+        stop(
+          "`ds_table` must be specified with a corresponding `dataset`.",
+          call. = FALSE
+        )
+    }
+    if (is.null(time_series_table)) {
       stop(
         "At least one of `type`, `dataset`, or `time_series_table`",
         " must be specified.",
@@ -110,7 +109,8 @@ get_nhgis_metadata <- function(type = NULL,
     if (!type %in% c("datasets", "time_series_tables", "shapefiles")) {
       stop(
         "`type` must be one of \"datasets\", \"time_series_tables\", or ",
-        "\"shapefiles\"",
+        "\"shapefiles\". \nTo get metadata for a single dataset, summary table, ",
+        "or time series table, use the corresponding argument.",
         call. = FALSE
       )
     }
@@ -205,8 +205,10 @@ metadata_request <- function(request_url,
     ),
     error = function(cond) {
       stop(
-        "Metadata request failed with the following error:\n\n", cond, "\n",
-        "You may have requested a field that does not exist.",
+        "Unable to submit metadata request. Received the following error:\n\n",
+        cond,
+        "\nThe metadata value you requested may have produced an invalid ",
+        "request URL.",
         call. = FALSE
       )
     }
