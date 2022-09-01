@@ -2605,6 +2605,9 @@ print.nhgis_extract <- function(x, ...) {
 
   types <- nhgis_extract_types(x)
 
+  style_shp <- extract_field_styler(NHGIS_SHP_COLOR, "bold")
+  style_extents <- extract_field_styler(NHGIS_DS_COLOR, "bold")
+
   if("datasets" %in% types) {
 
     ds_to_cat <- purrr::map(
@@ -2618,20 +2621,20 @@ print.nhgis_extract <- function(x, ...) {
       )
     )
 
-    extents_to_cat <- paste0(
-      "\n",
-      print_truncated_vector(
-        x$geographic_extents,
-        "Geographic extents: ",
-        FALSE
-      ),
-      "\n"
-    )
+    if (!is.null(x$geographic_extents)) {
+      extents_to_cat <- paste0(
+        "\n\n",
+        print_truncated_vector(
+          x$geographic_extents,
+          style_extents("Geographic extents: "),
+          FALSE
+        )
+      )
 
-    ds_to_cat <- purrr::reduce(
-      c(ds_to_cat, extents_to_cat),
-      paste0
-    )
+      ds_to_cat <- c(ds_to_cat, extents_to_cat)
+    }
+
+    ds_to_cat <- purrr::reduce(ds_to_cat, paste0)
 
   } else {
     ds_to_cat <- NULL
@@ -2656,10 +2659,10 @@ print.nhgis_extract <- function(x, ...) {
   if("shapefiles" %in% types) {
 
     shp_to_cat <- paste0(
-      "\n",
+      "\n\n",
       print_truncated_vector(
         x$shapefiles,
-        "Shapefiles: ",
+        style_shp("Shapefiles: "),
         FALSE
       )
     )
@@ -2673,7 +2676,6 @@ print.nhgis_extract <- function(x, ...) {
     format_collection_for_printing(x$collection),
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n",
     ds_to_cat,
     tst_to_cat,
     shp_to_cat,
@@ -2706,51 +2708,52 @@ format_dataset_for_printing <- function(dataset,
                                         geog_levels,
                                         ds_years = NULL,
                                         ds_breakdown_values = NULL) {
+
+  style_field <- extract_field_styler(NHGIS_DS_COLOR, "bold")
+  style_subfield <- extract_field_styler("bold")
+
   output <- paste0(
-    "\n",
+    "\n\n",
     print_truncated_vector(
       dataset,
-      "Dataset: ",
+      style_field("Dataset: "),
       FALSE
     ),
     "\n  ",
     print_truncated_vector(
       ds_tables,
-      "Tables: ",
+      style_subfield("Tables: "),
       FALSE
     ),
     "\n  ",
     print_truncated_vector(
       geog_levels,
-      "Geog Levels: ",
+      style_subfield("Geog Levels: "),
       FALSE
-    ),
-    "\n"
+    )
   )
 
   if (!is.null(ds_years)) {
     output <- paste0(
       output,
-      "  ",
+      "\n  ",
       print_truncated_vector(
         ds_years,
-        "Years: ",
+        style_subfield("Years: "),
         FALSE
-      ),
-      "\n"
+      )
     )
   }
 
   if (!is.null(ds_breakdown_values)) {
     output <- paste0(
       output,
-      "  ",
+      "\n  ",
       print_truncated_vector(
         ds_breakdown_values,
-        "Breakdowns: ",
+        style_subfield("Breakdowns: "),
         FALSE
-      ),
-      "\n"
+      )
     )
   }
 
@@ -2760,23 +2763,39 @@ format_dataset_for_printing <- function(dataset,
 
 format_tst_for_printing <- function(time_series_table, tst_geog_levels) {
 
+  style_field <- extract_field_styler(NHGIS_TST_COLOR, "bold")
+  style_subfield <- extract_field_styler("bold")
+
   paste0(
-    "\n",
+    "\n\n",
     print_truncated_vector(
       time_series_table,
-      "Time Series Table: ",
+      style_field("Time Series Table: "),
       FALSE
     ),
     "\n  ",
     print_truncated_vector(
       tst_geog_levels,
-      "Geog Levels: ",
+      style_subfield("Geog Levels: "),
       FALSE
-    ),
-    "\n"
+    )
   )
 
 }
+
+extract_field_styler <- function(...) {
+  if (rlang::is_installed("crayon")) {
+    style <- crayon::combine_styles(...)
+  } else {
+    style <- function(x) x
+  }
+
+  style
+}
+
+NHGIS_DS_COLOR <- "#3F7AB3"
+NHGIS_TST_COLOR <- "#529770"
+NHGIS_SHP_COLOR <- "#CB5037"
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 
@@ -2793,7 +2812,13 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
     paste0(label, full_list)
   )
 
-  if (nchar(untruncated) > max_width) {
+  if (rlang::is_installed("crayon")) {
+    count_chr <- function(x) crayon::col_nchar(x)
+  } else {
+    count_chr <- function(x) nchar(x)
+  }
+
+  if (count_chr(untruncated) > max_width) {
     return(paste0(substr(untruncated, 1, max_width - 3), "..."))
   }
 
