@@ -2793,9 +2793,9 @@ extract_field_styler <- function(...) {
   style
 }
 
-NHGIS_DS_COLOR <- "#3F7AB3"
-NHGIS_TST_COLOR <- "#529770"
-NHGIS_SHP_COLOR <- "#CB5037"
+NHGIS_DS_COLOR <- "blue"
+NHGIS_TST_COLOR <- "green"
+NHGIS_SHP_COLOR <- "yellow"
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 

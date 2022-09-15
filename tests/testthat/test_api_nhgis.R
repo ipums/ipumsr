@@ -141,10 +141,11 @@ test_that("NHGIS extracts get correct default values", {
 })
 
 test_that("Extract print coloring works", {
+  local_reproducible_output(crayon = TRUE)
   expect_equal(
     format_dataset_for_printing("A", "B", "C"),
     paste0(
-      "\n\n\033[38;5;68m\033[1mDataset: ",
+      "\n\n\033[34m\033[1mDataset: ",
       "\033[22m\033[39mA\n  \033[1mTables: ",
       "\033[22mB\n  \033[1mGeog Levels: \033[22mC"
     )
@@ -152,22 +153,18 @@ test_that("Extract print coloring works", {
   expect_equal(
     format_tst_for_printing("A", "B"),
     paste0(
-      "\n\n\033[38;5;72m\033[1mTime Series Table: ",
+      "\n\n\033[32m\033[1mTime Series Table: ",
       "\033[22m\033[39mA\n  \033[1mGeog Levels: \033[22mB"
     )
   )
-  withr::with_envvar(
-    new = c("NO_COLOR" = TRUE),
-    code = {
-      expect_equal(
-        format_dataset_for_printing("A", "B", "C"),
-        "\n\nDataset: A\n  Tables: B\n  Geog Levels: C"
-      )
-      expect_equal(
-        format_tst_for_printing("A", "B"),
-        "\n\nTime Series Table: A\n  Geog Levels: B"
-      )
-    }
+  local_reproducible_output(crayon = FALSE)
+  expect_equal(
+    format_dataset_for_printing("A", "B", "C"),
+    "\n\nDataset: A\n  Tables: B\n  Geog Levels: C"
+  )
+  expect_equal(
+    format_tst_for_printing("A", "B"),
+    "\n\nTime Series Table: A\n  Geog Levels: B"
   )
 })
 
