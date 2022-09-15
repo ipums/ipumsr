@@ -1210,6 +1210,7 @@ test_that("We can get correct API version info for each collection", {
 test_that("We can get summary metadata for all data types", {
 
   ds_meta <- get_nhgis_metadata("datasets")
+  dt_meta <- get_nhgis_metadata("data_tables")
   tst_meta <- get_nhgis_metadata("time_series_tables")
   shp_meta <- get_nhgis_metadata("shapefiles")
 
@@ -1219,7 +1220,13 @@ test_that("We can get summary metadata for all data types", {
     colnames(ds_meta),
     c("name", "group", "description", "sequence")
   )
-  expect_equal(ds_meta[1,]$name, "1790_cPop")
+
+  expect_true(tibble::is_tibble(dt_meta))
+  expect_equal(ncol(dt_meta), 5)
+  expect_equal(
+    colnames(dt_meta),
+    c("dataset", "name", "nhgis_code", "description", "sequence")
+  )
 
   expect_true(tibble::is_tibble(tst_meta))
   expect_equal(ncol(tst_meta), 6)
@@ -1228,9 +1235,6 @@ test_that("We can get summary metadata for all data types", {
     c("name", "description", "geographic_integration",
       "sequence", "years", "geog_levels")
   )
-  expect_equal(tst_meta[1,]$name, "A00")
-  expect_type(tst_meta$years, "list")
-  expect_type(tst_meta$geog_levels, "list")
 
   expect_true(tibble::is_tibble(shp_meta))
   expect_equal(ncol(shp_meta), 6)
@@ -1239,8 +1243,44 @@ test_that("We can get summary metadata for all data types", {
     c("name", "year", "geographic_level",
       "extent", "basis", "sequence")
   )
-  expect_equal(shp_meta[1,]$name, "us_state_1790_tl2000")
 
+})
+
+test_that("We can filter summary metadata", {
+  dt_meta <- get_nhgis_metadata(
+    "data_tables",
+    keywords = c("sex", "age", "race", "hispanic")
+  )
+
+  expect_true(all(grepl("[Ss]ex", dt_meta$description)))
+  expect_true(all(grepl("[Aa]ge", dt_meta$description )))
+  expect_true(all(grepl("[Rr]ace", dt_meta$description)))
+  expect_true(all(grepl("[Hh]ispanic", dt_meta$description)))
+
+  dt_meta <- get_nhgis_metadata(
+    "data_tables",
+    keywords = c("sex", "age", "race", "hispanic"),
+    match_all = FALSE
+  )
+
+  expect_true(
+    all(grepl("[Ss]ex|[Aa]ge|[Rr]ace|[Hh]ispanic", dt_meta$description))
+  )
+
+  expect_warning(
+    get_nhgis_metadata("shapefiles", keywords = "state"),
+    paste0(
+      "`keywords` only implemented when `type` is one of \"datasets\", ",
+      "\"data_tables\", or \"time_series_tables\""
+    )
+  )
+  expect_warning(
+    get_nhgis_metadata(dataset = "1990_STF1", keywords = "state"),
+    paste0(
+      "`keywords` only implemented when `type` is one of \"datasets\", ",
+      "\"data_tables\", or \"time_series_tables\""
+    )
+  )
 })
 
 test_that("We can get metadata for specific data sources", {

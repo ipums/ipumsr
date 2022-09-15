@@ -9,11 +9,13 @@ get_nhgis_metadata(
   dataset = NULL,
   ds_table = NULL,
   time_series_table = NULL,
+  keywords = NULL,
+  match_all = TRUE,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
 \arguments{
-\item{type}{If provided, one of \code{"datasets"},
+\item{type}{If provided, one of \code{"datasets"}, \code{"data_tables"},
 \code{"time_series_tables"}, or \code{"shapefiles"} indicating the desired
 summary metadata.}
 
@@ -26,6 +28,16 @@ the provided \code{dataset}.}
 
 \item{time_series_table}{Character indicating the name of the
 time series table for which to obtain metadata.}
+
+\item{keywords}{Optional vector of strings used to subset requested summary
+metadata. Only records for those entities whose description field contains
+the provided keywords will be included in the output. Keywords are
+interpreted as regular expressions and are case-insensitive.}
+
+\item{match_all}{If TRUE, metadata records whose description contains
+all of the provided `keywords` will be included in the output. If FALSE,
+any metadata records whose description contains at least one of the
+provided `keywords` will be included in the output.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
@@ -53,10 +65,11 @@ For more information on the NHGIS metadata API, click
 \href{https://developer.ipums.org/docs/workflows/explore_metadata/nhgis/}{here}
 }
 \examples{
-# Metadata for all datasets, time series tables, or shapefiles
 get_nhgis_metadata("datasets")
 get_nhgis_metadata("time_series_tables")
 get_nhgis_metadata("shapefiles")
+
+get_nhgis_metadata("data_tables", keywords = c("Sex", "Age", "Race"))
 
 # Metadata for a particular data source
 get_nhgis_metadata(dataset = "1980_STF1")
