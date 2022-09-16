@@ -158,6 +158,14 @@ get_nhgis_metadata <- function(type = NULL,
         api_key
       )
     } else if (type == "data_tables") {
+      rlang::warn(
+        paste0(
+          "Table metadata may not include recently released datasets. ",
+          "To see table metadata for these datasets, provide the dataset ",
+          "name to `get_nhgis_metadata()`"),
+        .frequency = "once",
+        .frequency_id = "dt_meta"
+      )
       metadata <- table_metadata
     }
 

@@ -1207,9 +1207,13 @@ test_that("We can get correct API version info for each collection", {
 test_that("We can get summary metadata for all data types", {
 
   ds_meta <- get_nhgis_metadata("datasets")
-  dt_meta <- get_nhgis_metadata("data_tables")
   tst_meta <- get_nhgis_metadata("time_series_tables")
   shp_meta <- get_nhgis_metadata("shapefiles")
+
+  expect_warning(
+    dt_meta <- get_nhgis_metadata("data_tables"),
+    "Table metadata"
+  )
 
   expect_true(tibble::is_tibble(ds_meta))
   expect_equal(ncol(ds_meta), 4)
