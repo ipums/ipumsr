@@ -2,78 +2,106 @@
 % Please edit documentation in R/api_metadata_nhgis.R
 \name{get_nhgis_metadata}
 \alias{get_nhgis_metadata}
-\title{View NHGIS metadata}
+\title{Get NHGIS Metadata}
 \usage{
 get_nhgis_metadata(
-  type = NULL,
+  data_type = NULL,
   dataset = NULL,
   ds_table = NULL,
   time_series_table = NULL,
-  keywords = NULL,
+  ...,
   match_all = TRUE,
+  match_case = FALSE,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
 \arguments{
-\item{type}{If provided, one of \code{"datasets"}, \code{"data_tables"},
-\code{"time_series_tables"}, or \code{"shapefiles"} indicating the desired
-summary metadata.}
+\item{data_type}{One of "datasets", "data_tables",
+"time_series_tables", or "shapefiles" indicating the type of summary
+metadata to retrieve.}
 
-\item{dataset}{Character indicating the name of the dataset for
-which to obtain metadata. Required if \code{ds_table} is specified.}
+\item{dataset}{Name of the dataset for which to retrieve metadata.}
 
-\item{ds_table}{Character indicating the name of the summary
-table for which to obtain metadata. The summary table must be present in
-the provided \code{dataset}.}
+\item{ds_table}{Name of the data table for which to retrieve metadata.
+If provided, an associated \code{dataset} must also be specified.}
 
-\item{time_series_table}{Character indicating the name of the
-time series table for which to obtain metadata.}
+\item{time_series_table}{Name of the time series table for which to retrieve
+metadata.}
 
-\item{keywords}{Optional vector of strings used to subset requested summary
-metadata. Only records for those entities whose description field contains
-the provided keywords will be included in the output. Keywords are
-interpreted as regular expressions and are case-insensitive.}
+\item{...}{Optional set of character vectors used to filter the requested
+summary metadata. These values are interpreted as
+regular expressions that are matched to the values in the metadata column
+whose name matches that provided in the argument. Only metadata records
+whose values match the provided expressions will be included in the output.
+Only used when \code{data_type} is provided. See examples.}
 
-\item{match_all}{If TRUE, metadata records whose description contains
-all of the provided \code{keywords} will be included in the output. If FALSE,
-any metadata records whose description contains at least one of the
-provided \code{keywords} will be included in the output.}
+\item{match_all}{If \code{TRUE}, only metadata records that match \emph{all} of the
+expressions provided in \code{...} will be included in the output. If \code{FALSE},
+metadata records that match \emph{any} of the expressions will be included.
+Defaults to \code{TRUE}.}
+
+\item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
+the expressions provided in \code{...}. Defaults to \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-If obtaining summary metadata, a \code{\link[tibble]{tibble}}
-containing metadata for the specified data type. If obtaining metadata
-for a single dataset, summary table, or time series table, a named list
-containing metadata for that data source.
+If \code{data_type} is provided, a \code{\link[tibble:tbl_df-class]{tibble}} of
+summary metadata for all data sources of the provided \code{data_type}.
+Otherwise, a named list of metadata for the specified \code{dataset},
+\code{data_table}, or \code{time_series_table}.
 }
 \description{
-NHGIS metadata is provided for individual datasets, summary tables, and
-time series tables as well as in summary form for all available datasets,
-time series tables, and shapefiles.
+Retrieve information about available NHGIS datasets, data tables, time
+series tables, and shapefiles.
 
-Use the \code{type} argument to obtain summary metadata for all datasets,
-time series tables, or shapefiles.
+To retrieve summary metadata for all available data sources of a particular
+type, use the \code{data_type} argument. To retrieve detailed metadata for a
+single data source, use the \code{dataset}, \code{ds_table}, or \code{time_series_table}
+arguments.
+}
+\details{
+Metadata is only provided for a single \code{data_type} or data source at a  time.
 
-Use the \code{dataset}, \code{ds_table}, or \code{time_series_table}
-arguments to get detailed metadata for a specific dataset, summary table,
-or time series table, respectively. Only one of \code{type}, \code{dataset},
-or \code{time_series_table} may be provided at a time.
+If \code{data_type} is not specified, then either \code{dataset}, \code{dataset} and
+\code{ds_table}, or \code{time_series_table} must be provided.
 
-For more information on the NHGIS metadata API, click
-\href{https://developer.ipums.org/docs/workflows/explore_metadata/nhgis/}{here}
+The expressions provided in \code{...} must match the column names present in the
+summary metadata for each data type. The following summarizes the columns
+available for each data type:
+\itemize{
+\item Datasets: \code{name}, \code{group}, \code{description}, \code{sequence}
+\item Data tables: \code{dataset}, \code{name}, \code{nhgis_code}, \code{description}, \code{sequence}
+\item Time series tables: \code{name}, \code{description}, \code{geographic_integration},
+\code{sequence}, \code{years}, \code{geog_levels}
+\item Shapefiles: \code{name}, \code{year}, \code{geographic_level}, \code{extent}, \code{basis},
+\code{sequence}
+}
 }
 \examples{
+# Get summary metadata for all available sources of a given data type
 get_nhgis_metadata("datasets")
-get_nhgis_metadata("time_series_tables")
-get_nhgis_metadata("shapefiles")
 
-get_nhgis_metadata("data_tables", keywords = c("Sex", "Age", "Race"))
+# Filter summary metadata to records that meet specific criteria.
 
-# Metadata for a particular data source
-get_nhgis_metadata(dataset = "1980_STF1")
-get_nhgis_metadata(dataset = "1980_STF1", ds_table = "NT1A")
-get_nhgis_metadata(time_series_table = "CW3")
+# This returns records whose description includes both "Sex" and "Age" and
+# whose years include 1990 and 2000:
+get_nhgis_metadata(
+  "time_series_tables",
+  description = c("Sex", "Age"),
+  years = c(1990, 2000)
+)
+
+# Alternatively, return records whose description includes
+# either "Sex" or "Age"
+get_nhgis_metadata(
+  "time_series_tables",
+  description = c("Sex", "Age"),
+  match_all = FALSE
+)
+
+# Get metadata for single data source
+get_nhgis_metadata(dataset = "1990_STF1")
+get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
 }
-\concept{ipums_api_nhgis}

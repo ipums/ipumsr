@@ -1383,40 +1383,38 @@ test_that("We can get summary metadata for all data types", {
 })
 
 test_that("We can filter summary metadata", {
-  dt_meta <- get_nhgis_metadata(
-    "data_tables",
-    keywords = c("sex", "age", "race", "hispanic")
+
+  tst_meta <- get_nhgis_metadata(
+    "time_series_tables",
+    description = c("Sex", "Age"),
+    years = c("1990", "2000"),
+    geographic_integration = "Standard"
   )
 
-  expect_true(all(grepl("[Ss]ex", dt_meta$description)))
-  expect_true(all(grepl("[Aa]ge", dt_meta$description )))
-  expect_true(all(grepl("[Rr]ace", dt_meta$description)))
-  expect_true(all(grepl("[Hh]ispanic", dt_meta$description)))
+  dt_meta <- get_nhgis_metadata("data_tables", dataset = "1790_cPop")
 
-  dt_meta <- get_nhgis_metadata(
-    "data_tables",
-    keywords = c("sex", "age", "race", "hispanic"),
-    match_all = FALSE
-  )
-
+  expect_true(all(grepl("[Ss]ex", tst_meta$description)))
+  expect_true(all(grepl("[Aa]ge", tst_meta$description)))
   expect_true(
-    all(grepl("[Ss]ex|[Aa]ge|[Rr]ace|[Hh]ispanic", dt_meta$description))
+    all(purrr::map_lgl(tst_meta$years, ~all(c("1990", "2000") %in% .x)))
+  )
+  expect_true(all(grepl("[Ss]tandard", tst_meta$geographic_integration)))
+
+  expect_equal(
+    nrow(get_nhgis_metadata("datasets", name = c("1790_cPop", "1800_cPop"))),
+    0
+  )
+  expect_equal(
+    nrow(get_nhgis_metadata(
+      "datasets",
+      name = c("1790_cPop", "1800_cPop"),
+      match_all = FALSE
+    )),
+    2
   )
 
-  expect_warning(
-    get_nhgis_metadata("shapefiles", keywords = "state"),
-    paste0(
-      "`keywords` only implemented when `type` is one of \"datasets\", ",
-      "\"data_tables\", or \"time_series_tables\""
-    )
-  )
-  expect_warning(
-    get_nhgis_metadata(dataset = "1990_STF1", keywords = "state"),
-    paste0(
-      "`keywords` only implemented when `type` is one of \"datasets\", ",
-      "\"data_tables\", or \"time_series_tables\""
-    )
-  )
+  expect_equal(unique(dt_meta$dataset), "1790_cPop")
+
 })
 
 test_that("We can get metadata for specific data sources", {
@@ -1473,27 +1471,28 @@ test_that("We can get metadata for specific data sources", {
 })
 
 test_that("We throw errors on bad metadata requests", {
-
   expect_error(
-    get_nhgis_metadata(),
-    "At least one of `type`, `dataset`, or `time_series_table`"
+    get_nhgis_metadata(dataset = c("A", "B")),
+    "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(
-      type = c("shapefiles", "time_series_tables")
-    ),
-    "Can only retrieve metadata for a single value of `type` at a time"
+    get_nhgis_metadata(time_series_table = c("A", "B")),
+    "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(type = "Bad type"),
-    "`type` must be one of"
+    get_nhgis_metadata(ds_table = c("A", "B")),
+    "`ds_table` must be specified with a corresponding `dataset`"
+  )
+  expect_error(
+    get_nhgis_metadata(ds_table = "A", dataset = c("A", "B")),
+    "Can only retrieve metadata"
   )
   expect_error(
     get_nhgis_metadata(dataset = "bad-dataset"),
     "Couldn't find Dataset"
   )
   expect_error(
-    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "bad-table"),
+    get_nhgis_metadata(ds_table = "bad-table", dataset = "1980_STF1"),
     "Couldn't find DataTable"
   )
   expect_error(
@@ -1501,25 +1500,11 @@ test_that("We throw errors on bad metadata requests", {
     "Couldn't find TimeSeriesTable"
   )
   expect_error(
-    get_nhgis_metadata(dataset = "1980_STF1", ds_table = "bad table"),
+    get_nhgis_metadata(ds_table = "bad table", dataset = "1980_STF1"),
     "bad/illegal format or missing URL"
-  )
-  expect_error(
-    get_nhgis_metadata(dataset = "1980_STF1", time_series_table = "CW3"),
-    "Only one of `type`, `dataset`, or `time_series_table` may be specified"
   )
   expect_error(
     get_nhgis_metadata(ds_table = "P8"),
     "`ds_table` must be specified with a corresponding `dataset`"
   )
-  expect_error(
-    get_nhgis_metadata(time_series_table = "CW3", ds_table = "a"),
-    "`ds_table` must be specified with a corresponding `dataset`"
-  )
-
 })
-
-
-
-
-
