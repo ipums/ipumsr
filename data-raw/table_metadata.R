@@ -9,11 +9,17 @@ datasets <- get_nhgis_metadata("datasets")$name
 
 table_metadata <- purrr::map_dfr(
   datasets,
-  ~dplyr::mutate(
-    get_nhgis_metadata(dataset = .x)$data_tables,
-    dataset = .x,
-    .before = name
-  )
+  ~{
+    meta <- dplyr::mutate(
+      get_nhgis_metadata(dataset = .x)$data_tables,
+      dataset = .x,
+      .before = name
+    )
+
+    Sys.sleep(1) # Avoid API request limit
+
+    meta
+  }
 )
 
 readr::write_csv(table_metadata, "data-raw/table_metadata.csv")
