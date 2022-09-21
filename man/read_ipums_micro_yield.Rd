@@ -128,8 +128,8 @@ Other ipums_read:
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></li>
-<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -172,8 +172,8 @@ Other ipums_read:
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></li>
-<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></span></li>
 </ul>
 </details>
 }}
