@@ -3587,6 +3587,24 @@ extract_to_request_json.nhgis_extract <- function(extract,
 
 }
 
+geog_extent_lookup <- function(states) {
+  purrr::map_chr(
+    states,
+    ~if (.x %in% state_extent_codes$description) {
+      state_extent_codes[.x == state_extent_codes$description, ]$name
+    } else {
+      .x
+    }
+  )
+}
+
+# tst_year_lookup <- function() {
+#   list(
+#     "125" = 2008:2012,
+#     "195" = 2015:2019
+#   )
+# }
+
 #' @export
 extract_to_request_json.usa_extract <- function(extract,
                                                 include_endpoint_info = FALSE) {

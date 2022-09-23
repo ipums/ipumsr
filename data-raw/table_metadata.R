@@ -13,7 +13,7 @@ table_metadata <- purrr::map_dfr(
     meta <- dplyr::mutate(
       get_nhgis_metadata(dataset = .x)$data_tables,
       dataset = .x,
-      .before = name
+      .after = name
     )
 
     Sys.sleep(1) # Avoid API request limit
@@ -22,5 +22,4 @@ table_metadata <- purrr::map_dfr(
   }
 )
 
-readr::write_csv(table_metadata, "data-raw/table_metadata.csv")
 usethis::use_data(table_metadata, overwrite = TRUE, internal = TRUE)
