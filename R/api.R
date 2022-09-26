@@ -413,7 +413,10 @@ define_extract_nhgis <- function(description = "",
     ds_geog_levels = ds_geog_levels,
     ds_years = ds_years,
     ds_breakdown_values = ds_breakdown_values,
-    geographic_extents = unlist(geographic_extents),
+    geographic_extents = geog_extent_lookup(
+      unlist(geographic_extents),
+      state_geog_lookup$abbs
+    ),
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
     time_series_tables = unlist(time_series_tables),
     tst_geog_levels = tst_geog_levels,
@@ -1579,7 +1582,10 @@ remove_from_extract.nhgis_extract <- function(extract,
   extract <- modify_flat_fields(
     extract,
     shapefiles = shapefiles,
-    geographic_extents = geographic_extents,
+    geographic_extents = geog_extent_lookup(
+      unlist(geographic_extents),
+      state_geog_lookup$abbs
+    ),
     modification = "remove"
   )
 
@@ -2877,7 +2883,10 @@ extract_to_request_json.nhgis_extract <- function(extract,
     time_series_table_layout = jsonlite::unbox(
       extract$tst_layout
     ),
-    geographic_extents = extract$geographic_extents
+    geographic_extents = geog_extent_lookup(
+      extract$geographic_extents,
+      state_geog_lookup$codes
+    )
   )
 
   request_list <- purrr::keep(
@@ -3404,7 +3413,10 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         } else {
           purrr::map(x$datasets, ~unlist(.x$breakdown_values))
         },
-        geographic_extents = unlist(x$geographic_extents),
+        geographic_extents = geog_extent_lookup(
+          unlist(x$geographic_extents),
+          state_geog_lookup$abbs
+        ),
         breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
         time_series_tables = names(x$time_series_tables),
         tst_geog_levels = if (no_tsts) {
@@ -4861,4 +4873,31 @@ recycle_to_list <- function(x, n, labels = NULL) {
   }
 }
 
+geog_extent_lookup <- function(values, lookup_key) {
 
+  values_lower <- tolower(values)
+
+  # not_in_key <- !values_lower %in% names(lookup_key)
+  #
+  # if (any(not_in_key)) {
+  #   warning(
+  #     "Values `", paste0(values[not_in_key], collapse = "`, `"),
+  #     "` were not found.",
+  #     call. = FALSE
+  #   )
+  # }
+
+  if (length(values_lower) == 0){
+    return(NULL)
+  }
+
+  recoded <- toupper(dplyr::recode(values_lower, !!!lookup_key))
+
+  # if (!is.null(print_style)) {
+  #   print_style <- rlang::as_function(print_style)
+  #   recoded <- print_style(recoded)
+  # }
+
+  recoded
+
+}

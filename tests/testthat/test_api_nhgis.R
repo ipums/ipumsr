@@ -8,7 +8,7 @@ nhgis_extract <- define_extract_nhgis(
   dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
   ds_tables = c("B01001", "B01002"),
   ds_geog_levels = list("nation", "blck_grp"),
-  geographic_extents = c("110", "420"),
+  geographic_extents = c("110", "Pennsylvania"),
   # breakdown_and_data_type_layout = "single_file",
   time_series_table = "CW3",
   tst_geog_levels = "state",
@@ -183,7 +183,7 @@ test_that("nhgis_extract print method works", {
       "\n  Tables: B01001, B01002",
       "\n  Geog Levels: blck_grp",
       "\n",
-      "\nGeographic extents: 110, 420",
+      "\nGeographic extents: DC, PA",
       "\n",
       "\nTime Series Table: CW3",
       "\n  Geog Levels: state",
@@ -381,7 +381,7 @@ test_that("Can submit an NHGIS extract of multiple types", {
   expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
   expect_equal(submitted_nhgis_extract$tst_geog_levels, list("CW3" = "state"))
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_equal(submitted_nhgis_extract$geographic_extents, c("110", "420"))
+  expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
   expect_true(submitted_nhgis_extract$submitted)
   expect_equal(submitted_nhgis_extract$status, "submitted") # Currently fails because API does not return status upon submission
   expect_identical(
@@ -812,7 +812,7 @@ test_that("Can remove full fields from an NHGIS extract", {
     nhgis_extract,
     datasets = "2015_2019_ACS5a",
     time_series_tables = "CW3",
-    geographic_extents = "110"
+    geographic_extents = "DC"
   )
 
   expect_equal(revised$datasets, "2014_2018_ACS5a")
@@ -834,7 +834,7 @@ test_that("Can remove full fields from an NHGIS extract", {
   expect_null(revised$tst_geog_levels)
   expect_null(revised$tst_layout)
 
-  expect_equal(revised$geographic_extents, "420")
+  expect_equal(revised$geographic_extents, "PA")
 
 })
 
@@ -867,7 +867,7 @@ test_that("Can remove subfields from an NHGIS extract", {
   expect_equal(revised$time_series_tables, nhgis_extract$time_series_tables)
   expect_equal(revised$tst_geog_levels, list(CW3 = "tract"))
 
-  expect_equal(revised$geographic_extents, "110")
+  expect_equal(revised$geographic_extents, "DC")
 
 })
 
