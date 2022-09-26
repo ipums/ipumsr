@@ -4234,7 +4234,8 @@ parse_400_error <- function(res) {
   response_detail <- response_content$detail
   response_detail <- unlist(response_detail)
   error_message <- paste0(
-    "Received status code 400, with the following details:\n\n",
+    "Received status code ", res$status_code,
+    " with the following details:\n\n",
     paste0(response_detail, collapse = "\n\n")
   )
   return(error_message)

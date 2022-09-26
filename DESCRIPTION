@@ -24,6 +24,7 @@ Imports:
     hipread (>= 0.2.0),
     purrr,
     R6,
+    rappdirs,
     raster,
     readr,
     rlang,

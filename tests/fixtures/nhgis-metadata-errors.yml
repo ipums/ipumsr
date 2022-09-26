@@ -1,0 +1,661 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/bad-dataset?version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Mon, 26 Sep 2022 19:51:58 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 404 Not Found
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: e5dbbfff-1f2d-4c7d-8fec-bc6209c80bcf
+      x-runtime: '0.015818'
+      x-xss-protection: 1; mode=block
+      content-length: '100'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find Dataset."}'
+  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/1980_STF1/data_tables/bad-table?version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Mon, 26 Sep 2022 19:51:58 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 404 Not Found
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 2e92362a-126d-4e66-b21b-30775b621199
+      x-runtime: '0.009883'
+      x-xss-protection: 1; mode=block
+      content-length: '102'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find DataTable."}'
+  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/bad-tst?version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Mon, 26 Sep 2022 19:51:58 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 404 Not Found
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 79f93bc1-55ad-4b72-a6e8-ac1972b0efb8
+      x-runtime: '0.010958'
+      x-xss-protection: 1; mode=block
+      content-length: '108'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find TimeSeriesTable."}'
+  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables?version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Mon, 26 Sep 2022 19:51:58 GMT
+      etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 719aa48f-8f3c-4ea6-8250-1758bab2372b
+      x-runtime: '0.006822'
+      x-xss-protection: 1; mode=block
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"name":"A00","description":"Total Population","geographic_integration":"Nominal","sequence":0.01,"years":["1790","1800","1810","1820","1830","1840","1850","1860","1870","1880","1890","1900","1910","1920","1930","1940","1950","1960","1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county"]},{"name":"AV0","description":"Total
+        Population","geographic_integration":"Nominal","sequence":0.02,"years":["1970","1980","1990","2000","2010","125","2020","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B78","description":"Total
+        Population","geographic_integration":"Nominal","sequence":0.03,"years":["1980","1990","2000","2010","125","2020","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CL8","description":"Total
+        Population","geographic_integration":"Standardized to 2010","sequence":0.04,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A57","description":"Persons
+        by Urban/Rural Status [4]","geographic_integration":"Nominal","sequence":5.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"A59","description":"Persons
+        by Urban/Rural Status [4]","geographic_integration":"Nominal","sequence":5.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CL9","description":"Persons
+        by Urban/Rural Status [4]","geographic_integration":"Standardized to 2010","sequence":5.03,"years":["2010","1990","2000"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A08","description":"Persons
+        by Sex [2]","geographic_integration":"Nominal","sequence":10.01,"years":["2010","1860","1870","1880","1890","1900","1910","1920","1930","1940","1950","1960","1970","1980","1990","2000","1820","1830","1840","1850"],"geog_levels":["state","county"]},{"name":"AV1","description":"Persons
+        by Sex [2]","geographic_integration":"Nominal","sequence":10.02,"years":["1970","1980","1990","2000","2010","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CM0","description":"Persons
+        by Sex [2]","geographic_integration":"Standardized to 2010","sequence":10.03,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"D08","description":"Persons
+        by Age [2]: Children and Adults","geographic_integration":"Nominal","sequence":20.01,"years":["1990","2000","2010","2020","1970","1980"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"D06","description":"Persons
+        by Age [2]: Children and Adults","geographic_integration":"Standardized to
+        2010","sequence":20.02,"years":["2000","2010","2020","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B57","description":"Persons
+        by Age [18]","geographic_integration":"Nominal","sequence":20.03,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AX8","description":"Persons
+        by Age [22]","geographic_integration":"Nominal","sequence":20.04,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CW3","description":"Persons
+        by Age [22]","geographic_integration":"Standardized to 2010","sequence":20.05,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CN5","description":"Persons
+        by Age [23]","geographic_integration":"Standardized to 2010","sequence":20.06,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A38","description":"Persons
+        by Detailed Age [101]","geographic_integration":"Nominal","sequence":20.07,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"AT3","description":"Persons
+        by Detailed Age [103]","geographic_integration":"Nominal","sequence":20.08,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CW4","description":"Persons
+        Under 20 Years by Age [14]","geographic_integration":"Standardized to 2010","sequence":20.09,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CN6","description":"Persons
+        Under 20 Years by Age [20]","geographic_integration":"Standardized to 2010","sequence":20.1,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AR9","description":"Median
+        Age of Persons","geographic_integration":"Nominal","sequence":25.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"B58","description":"Persons
+        by Sex [2] by Age [18]","geographic_integration":"Nominal","sequence":30.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A60","description":"Persons
+        by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":30.02,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CW5","description":"Persons
+        by Sex [2] by Age [22]","geographic_integration":"Standardized to 2010","sequence":30.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CN7","description":"Persons
+        by Sex [2] by Age [23]","geographic_integration":"Standardized to 2010","sequence":30.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A58","description":"Persons
+        by Sex [2] by Detailed Age [101]","geographic_integration":"Nominal","sequence":30.05,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"A61","description":"Persons
+        by Sex [2] by Detailed Age [103]","geographic_integration":"Nominal","sequence":30.06,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CW6","description":"Persons
+        Under 20 Years by Sex [2] by Age [14]","geographic_integration":"Standardized
+        to 2010","sequence":30.07,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CN8","description":"Persons
+        Under 20 Years by Sex [2] by Age [20]","geographic_integration":"Standardized
+        to 2010","sequence":30.08,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AS0","description":"Median
+        Age of Persons by Sex [2]","geographic_integration":"Nominal","sequence":35.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"B18","description":"Persons
+        by Race [5*]","geographic_integration":"Nominal","sequence":50.01,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AA0","description":"Persons
+        by Race [6*]","geographic_integration":"Nominal","sequence":50.02,"years":["1980","1990","2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B07","description":"Persons
+        by Race [7*]","geographic_integration":"Nominal","sequence":50.03,"years":["2000","2010","1990","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CM1","description":"Persons
+        by Race [7*]","geographic_integration":"Standardized to 2010","sequence":50.04,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B08","description":"Persons
+        by Detailed Race [10*]","geographic_integration":"Nominal","sequence":50.05,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B09","description":"Persons
+        by Detailed Race [17*]","geographic_integration":"Nominal","sequence":50.06,"years":["1990","2000","2010","1980"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B12","description":"Persons
+        Who Are American Indian and Alaska Native* by Tribe [29]","geographic_integration":"Nominal","sequence":50.07,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"B11","description":"Persons
+        Who Are Asian* by Specific Asian Category [17]","geographic_integration":"Nominal","sequence":50.08,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"B13","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander* by Specific Pacific Islander
+        Category [12]","geographic_integration":"Nominal","sequence":50.09,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"B49","description":"Persons
+        by Races Tallied [7*]","geographic_integration":"Nominal","sequence":50.1,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CM2","description":"Persons
+        by Races Tallied [7*]","geographic_integration":"Standardized to 2010","sequence":50.11,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A69","description":"Persons
+        by Race Combination [70]","geographic_integration":"Nominal","sequence":50.12,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CM3","description":"Persons
+        by Race Combination [70]","geographic_integration":"Standardized to 2010","sequence":50.13,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A35","description":"Persons
+        of Hispanic or Latino Origin","geographic_integration":"Nominal","sequence":60.01,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CP4","description":"Persons
+        by Hispanic or Latino Origin [2]","geographic_integration":"Standardized to
+        2010","sequence":60.02,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A36","description":"Persons
+        by Hispanic or Latino Origin [6]","geographic_integration":"Nominal","sequence":60.03,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A37","description":"Persons
+        by Hispanic or Latino Origin [30]","geographic_integration":"Nominal","sequence":60.04,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"BL2","description":"Persons
+        by Hispanic or Latino Origin [30]","geographic_integration":"Nominal","sequence":60.05,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY6","description":"Persons
+        by Single Race/Ethnicity [5]","geographic_integration":"Nominal","sequence":70.01,"years":["1980","1990","2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY7","description":"Persons
+        by Single Race/Ethnicity [6]","geographic_integration":"Nominal","sequence":70.02,"years":["1990","2000","2010","1980","2020"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CY8","description":"Persons
+        by Single Race/Ethnicity [6]","geographic_integration":"Standardized to 2010","sequence":70.03,"years":["1990","2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CV4","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [5*]","geographic_integration":"Nominal","sequence":70.04,"years":["1980","1990","2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AE7","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [6*]","geographic_integration":"Nominal","sequence":70.05,"years":["1980","1990","2000","2010","2020"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CW7","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [6*]","geographic_integration":"Standardized
+        to 2010","sequence":70.06,"years":["1990","2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B10","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [7]","geographic_integration":"Nominal","sequence":70.07,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP6","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [7]","geographic_integration":"Standardized
+        to 2010","sequence":70.08,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AF1","description":"Persons
+        by Hispanic or Latino Origin [2*] by Races Tallied [7*]","geographic_integration":"Nominal","sequence":70.09,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP7","description":"Persons
+        by Hispanic or Latino Origin [2*] by Races Tallied [7*]","geographic_integration":"Standardized
+        to 2010","sequence":70.1,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AF0","description":"Persons
+        Who Are Not Hispanic or Latino by Race Combination [70]","geographic_integration":"Nominal","sequence":70.11,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP8","description":"Persons
+        Who Are Not Hispanic or Latino by Race Combination [70]","geographic_integration":"Standardized
+        to 2010","sequence":70.12,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B21","description":"Persons
+        by Sex [2] by Race [5*]","geographic_integration":"Nominal","sequence":80.01,"years":["1970","1990","2000","2010","1980"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AX3","description":"Persons
+        by Sex [2] by Race [6*]","geographic_integration":"Nominal","sequence":80.02,"years":["1990","2000","2010","1980"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CW8","description":"Persons
+        by Sex [2] by Race [6*]","geographic_integration":"Standardized to 2010","sequence":80.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AX2","description":"Persons
+        by Sex [2] by Race [7]","geographic_integration":"Nominal","sequence":80.04,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN9","description":"Persons
+        by Sex [2] by Race [7]","geographic_integration":"Standardized to 2010","sequence":80.05,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AC4","description":"Persons
+        Who Are White* by Age [5]","geographic_integration":"Nominal","sequence":90.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AC3","description":"Persons
+        Who Are White* by Age [22]","geographic_integration":"Nominal","sequence":90.02,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CW9","description":"Persons
+        Who Are White* by Age [22]","geographic_integration":"Standardized to 2010","sequence":90.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AA2","description":"Persons
+        Who Are White Alone by Age [23]","geographic_integration":"Nominal","sequence":90.04,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO0","description":"Persons
+        Who Are White Alone by Age [23]","geographic_integration":"Standardized to
+        2010","sequence":90.05,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AA1","description":"Persons
+        Who Are White* by Detailed Age [101]","geographic_integration":"Nominal","sequence":90.06,"years":["1970","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AZ0","description":"Persons
+        Who Are White Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.07,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD6","description":"Persons
+        Who Are Black or African American* by Age [5]","geographic_integration":"Nominal","sequence":90.08,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AD2","description":"Persons
+        Who Are Black or African American* by Age [22]","geographic_integration":"Nominal","sequence":90.09,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CX0","description":"Persons
+        Who Are Black or African American* by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":90.1,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AC6","description":"Persons
+        Who Are Black or African American Alone by Age [23]","geographic_integration":"Nominal","sequence":90.11,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO1","description":"Persons
+        Who Are Black or African American Alone by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":90.12,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AC5","description":"Persons
+        Who Are Black or African American* by Detailed Age [101]","geographic_integration":"Nominal","sequence":90.13,"years":["1970","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AZ1","description":"Persons
+        Who Are Black or African American Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.14,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AE6","description":"Single-Race*
+        Persons Who Are Not White or Black by Age [4]","geographic_integration":"Nominal","sequence":90.15,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AE1","description":"Single-Race*
+        Persons Who Are Not White or Black by Age [8]","geographic_integration":"Nominal","sequence":90.16,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AD7","description":"Persons
+        Who Are American Indian and Alaska Native* by Age [5]","geographic_integration":"Nominal","sequence":90.17,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD3","description":"Persons
+        Who Are American Indian and Alaska Native* by Age [22]","geographic_integration":"Nominal","sequence":90.18,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX1","description":"Persons
+        Who Are American Indian and Alaska Native* by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":90.19,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AC7","description":"Persons
+        Who Are American Indian and Alaska Native Alone by Age [23]","geographic_integration":"Nominal","sequence":90.2,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO2","description":"Persons
+        Who Are American Indian and Alaska Native Alone by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":90.21,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ2","description":"Persons
+        Who Are American Indian and Alaska Native Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.22,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD8","description":"Persons
+        Who Are Asian and Pacific Islander* by Age [5]","geographic_integration":"Nominal","sequence":90.23,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD4","description":"Persons
+        Who Are Asian and Pacific Islander* by Age [22]","geographic_integration":"Nominal","sequence":90.24,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX2","description":"Persons
+        Who Are Asian and Pacific Islander* by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":90.25,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AC8","description":"Persons
+        Who Are Asian Alone by Age [23]","geographic_integration":"Nominal","sequence":90.26,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO3","description":"Persons
+        Who Are Asian Alone by Age [23]","geographic_integration":"Standardized to
+        2010","sequence":90.27,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ3","description":"Persons
+        Who Are Asian Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.28,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AC9","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone by Age [23]","geographic_integration":"Nominal","sequence":90.29,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO4","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":90.3,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ4","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.31,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B06","description":"Persons
+        Who Are Some Other Race* by Age [5]","geographic_integration":"Nominal","sequence":90.32,"years":["1990","2000","2010","1980"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD5","description":"Persons
+        Who Are Some Other Race* by Age [22]","geographic_integration":"Nominal","sequence":90.33,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX3","description":"Persons
+        Who Are Some Other Race* by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":90.34,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AD0","description":"Persons
+        Who Are Some Other Race Alone by Age [23]","geographic_integration":"Nominal","sequence":90.35,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO5","description":"Persons
+        Who Are Some Other Race Alone by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":90.36,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ5","description":"Persons
+        Who Are Some Other Race Alone by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.37,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AD1","description":"Persons
+        Who Are Two or More Races by Age [23]","geographic_integration":"Nominal","sequence":90.38,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CO6","description":"Persons
+        Who Are Two or More Races by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":90.39,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ6","description":"Persons
+        Who Are Two or More Races by Detailed Age [103]","geographic_integration":"Nominal","sequence":90.4,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CW1","description":"Persons
+        Who Are 18 Years and Over by Race Combination [70]","geographic_integration":"Nominal","sequence":90.41,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CW2","description":"Persons
+        Who Are 18 Years and Over by Race Combination [70]","geographic_integration":"Standardized
+        to 2010","sequence":90.42,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AE0","description":"Persons
+        Who Are White* by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":100.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AE5","description":"Persons
+        Who Are White* by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":100.02,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CX4","description":"Persons
+        Who Are White* by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":100.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CO7","description":"Persons
+        Who Are White Alone by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AD9","description":"Persons
+        Who Are Black or African American* by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":100.05,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AE4","description":"Persons
+        Who Are Black or African American* by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":100.06,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CX5","description":"Persons
+        Who Are Black or African American* by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":100.07,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CO8","description":"Persons
+        Who Are Black or African American Alone by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.08,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AZ9","description":"Single-Race*
+        Persons Who Are Not White or Black by Sex [2] by Age [8]","geographic_integration":"Nominal","sequence":100.09,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AE8","description":"Persons
+        Who Are American Indian and Alaska Native* by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":100.1,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AE9","description":"Persons
+        Who Are American Indian and Alaska Native* by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":100.11,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX6","description":"Persons
+        Who Are American Indian and Alaska Native* by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":100.12,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CO9","description":"Persons
+        Who Are American Indian and Alaska Native Alone by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.13,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AF2","description":"Persons
+        Who Are Asian and Pacific Islander* by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":100.14,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AF3","description":"Persons
+        Who Are Asian and Pacific Islander* by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":100.15,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX7","description":"Persons
+        Who Are Asian and Pacific Islander* by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":100.16,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B00","description":"Persons
+        Who Are Asian Alone by Sex [2] by Age [23]","geographic_integration":"Nominal","sequence":100.17,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP0","description":"Persons
+        Who Are Asian Alone by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.18,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B01","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone by Sex [2] by Age
+        [23]","geographic_integration":"Nominal","sequence":100.19,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP1","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone by Sex [2] by Age
+        [23]","geographic_integration":"Standardized to 2010","sequence":100.2,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CY9","description":"Persons
+        Who Are Some Other Race* by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":100.21,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AF4","description":"Persons
+        Who Are Some Other Race* by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":100.22,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX8","description":"Persons
+        Who Are Some Other Race* by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":100.23,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CP2","description":"Persons
+        Who Are Some Other Race Alone by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.24,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AF5","description":"Persons
+        Who Are Two or More Races by Sex [2] by Age [23]","geographic_integration":"Nominal","sequence":100.25,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CP3","description":"Persons
+        Who Are Two or More Races by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":100.26,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AX4","description":"Persons
+        Who Are Hispanic or Latino by Sex [2]","geographic_integration":"Nominal","sequence":110.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CU6","description":"Persons
+        Who Are Hispanic or Latino by Sex [2]","geographic_integration":"Standardized
+        to 2010","sequence":110.02,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AW2","description":"Persons
+        Who Are Hispanic or Latino by Age [4]","geographic_integration":"Nominal","sequence":120.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AW5","description":"Persons
+        Who Are Hispanic or Latino by Age [22]","geographic_integration":"Nominal","sequence":120.02,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CX9","description":"Persons
+        Who Are Hispanic or Latino by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":120.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CU7","description":"Persons
+        Who Are Hispanic or Latino by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":120.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AW1","description":"Persons
+        Who Are Hispanic or Latino and Under 20 Years by Detailed Age [14]","geographic_integration":"Nominal","sequence":120.05,"years":["2000","2010","1990"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AW6","description":"Persons
+        Who Are Hispanic or Latino by Detailed Age [103]","geographic_integration":"Nominal","sequence":120.06,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A51","description":"Persons
+        Who Are Hispanic or Latino by Sex [2] by Age [5]","geographic_integration":"Nominal","sequence":130.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A52","description":"Persons
+        Who Are Hispanic or Latino by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":130.02,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY0","description":"Persons
+        Who Are Hispanic or Latino by Sex [2] by Age [22]","geographic_integration":"Standardized
+        to 2010","sequence":130.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CP5","description":"Persons
+        Who Are Hispanic or Latino by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":130.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CU9","description":"Persons
+        Who Are Not Hispanic or Latino by Sex [2] by Race [7]","geographic_integration":"Nominal","sequence":140.01,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CU8","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Sex [2]","geographic_integration":"Standardized
+        to 2010","sequence":140.02,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AW9","description":"Persons
+        by Hispanic or Latino Origin [2] by Race [4*] by Age [4]","geographic_integration":"Nominal","sequence":150.01,"years":["2000","2010","1980"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AX1","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Age [23]","geographic_integration":"Nominal","sequence":150.02,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CV2","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":150.03,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AX0","description":"Persons
+        Who Are 18 Years and Over and Not Hispanic or Latino by Race Combination [70]","geographic_integration":"Nominal","sequence":150.04,"years":["2000","2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CV3","description":"Persons
+        Who Are 18 Years and Over and Not Hispanic or Latino by Race Combination [70]","geographic_integration":"Standardized
+        to 2010","sequence":150.05,"years":["2000","2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CV0","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Sex [2] by Age [23]","geographic_integration":"Nominal","sequence":160.01,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CV1","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Sex [2] by Age [23]","geographic_integration":"Standardized
+        to 2010","sequence":160.02,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AI1","description":"Persons
+        Who Are White Alone, Not Hispanic or Latino by Sex [2] by Detailed Age [103]","geographic_integration":"Nominal","sequence":160.03,"years":["2010","2000"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AG8","description":"Persons
+        Who Are Black or African American Alone, Not Hispanic or Latino by Sex [2]
+        by Detailed Age [103]","geographic_integration":"Nominal","sequence":160.04,"years":["2010","2000"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AG7","description":"Persons
+        Who Are American Indian and Alaska Native Alone, Not Hispanic or Latino by
+        Sex [2] by Detailed Age [103]","geographic_integration":"Nominal","sequence":160.05,"years":["2010","2000"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B77","description":"Persons
+        Who Are Asian Alone, Not Hispanic or Latino by Sex [2] by Detailed Age [103]","geographic_integration":"Nominal","sequence":160.06,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AG6","description":"Persons
+        Who Are Native Hawaiian and Other Pacific Islander Alone, Not Hispanic or
+        Latino by Sex [2] by Detailed Age [103]","geographic_integration":"Nominal","sequence":160.07,"years":["2010","2000"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B75","description":"Persons
+        Who Are Some Other Race Alone, Not Hispanic or Latino by Sex [2] by Detailed
+        Age [103]","geographic_integration":"Nominal","sequence":160.08,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B76","description":"Persons
+        Who Are Two or More Races, Not Hispanic or Latino by Sex [2] by Detailed Age
+        [103]","geographic_integration":"Nominal","sequence":160.09,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B14","description":"Persons
+        by Living Arrangements [2]","geographic_integration":"Nominal","sequence":500.01,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CP9","description":"Persons
+        by Living Arrangements [2]","geographic_integration":"Standardized to 2010","sequence":500.02,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B16","description":"Persons
+        in Households by Household Type [2]","geographic_integration":"Nominal","sequence":500.03,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CQ0","description":"Persons
+        in Households by Household Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":500.04,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AU9","description":"Persons
+        in Group Quarters by Group Quarters Type [2]","geographic_integration":"Nominal","sequence":500.05,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CQ1","description":"Persons
+        in Group Quarters by Group Quarters Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":500.06,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AA3","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [6]","geographic_integration":"Nominal","sequence":500.07,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"CQ3","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [7]","geographic_integration":"Nominal","sequence":500.08,"years":["1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"AA6","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [22*]","geographic_integration":"Nominal","sequence":500.09,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CQ2","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [6]","geographic_integration":"Standardized
+        to 2010","sequence":500.1,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"D09","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [7]","geographic_integration":"Nominal","sequence":500.11,"years":["2010","2020"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"D07","description":"Persons
+        in Group Quarters by Detailed Group Quarters Type [7]","geographic_integration":"Standardized
+        to 2010","sequence":500.12,"years":["2010","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AS9","description":"Persons
+        in Households by Sex [2]","geographic_integration":"Nominal","sequence":510.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"CQ4","description":"Persons
+        in Households by Sex [2]","geographic_integration":"Standardized to 2010","sequence":510.02,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AR6","description":"Persons
+        in Group Quarters by Sex [2]","geographic_integration":"Nominal","sequence":510.03,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"CQ5","description":"Persons
+        in Group Quarters by Sex [2]","geographic_integration":"Standardized to 2010","sequence":510.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AR7","description":"Persons
+        in Group Quarters by Sex [2] by Group Quarters Type [2]","geographic_integration":"Nominal","sequence":510.05,"years":["1970","1990","2000","2010","1980"],"geog_levels":["state","county","cty_sub"]},{"name":"CQ6","description":"Persons
+        in Group Quarters by Sex [2] by Group Quarters Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":510.06,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AR8","description":"Persons
+        in Group Quarters by Sex [2] by Detailed Group Quarters Type [7]","geographic_integration":"Nominal","sequence":510.07,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CQ8","description":"Persons
+        in Group Quarters by Sex [2] by Detailed Group Quarters Type [8]","geographic_integration":"Nominal","sequence":510.08,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CQ7","description":"Persons
+        in Group Quarters by Sex [2] by Detailed Group Quarters Type [6]","geographic_integration":"Standardized
+        to 2010","sequence":510.09,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A39","description":"Persons
+        in Households by Age [16]","geographic_integration":"Nominal","sequence":520.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"B17","description":"Persons
+        in Households by Age [22]","geographic_integration":"Nominal","sequence":520.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CQ9","description":"Persons
+        Under 18 Years in Households","geographic_integration":"Nominal","sequence":520.03,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CR0","description":"Persons
+        Under 18 Years in Households","geographic_integration":"Standardized to 2010","sequence":520.04,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CR1","description":"Persons
+        65 Years and Over in Households","geographic_integration":"Nominal","sequence":520.05,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CR2","description":"Persons
+        65 Years and Over in Households","geographic_integration":"Standardized to
+        2010","sequence":520.06,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CR3","description":"Persons
+        65 Years and Over in Households by Household Type [2]","geographic_integration":"Nominal","sequence":520.07,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CR4","description":"Persons
+        65 Years and Over in Households by Household Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":520.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AY6","description":"Persons
+        in Group Quarters by Age [3]","geographic_integration":"Nominal","sequence":520.09,"years":["1980","1990","2000","2010","1970"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CR5","description":"Persons
+        in Group Quarters by Age [3]","geographic_integration":"Standardized to 2010","sequence":520.1,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AH4","description":"Persons
+        in Group Quarters by Age [3] by Group Quarters Type [2]","geographic_integration":"Nominal","sequence":520.11,"years":["1990","2000","2010","1970","1980"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CR6","description":"Persons
+        in Group Quarters by Age [3] by Group Quarters Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":520.12,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AY7","description":"Persons
+        in Group Quarters by Age [3] by Detailed Group Quarters Type [8]","geographic_integration":"Nominal","sequence":520.13,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CR7","description":"Persons
+        in Group Quarters by Age [3] by Detailed Group Quarters Type [6]","geographic_integration":"Standardized
+        to 2010","sequence":520.14,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CR8","description":"Persons
+        in Group Quarters by Group Quarters Type [2] by Age [13]","geographic_integration":"Nominal","sequence":520.15,"years":["1980","1990","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"CS6","description":"Persons
+        in Group Quarters by Group Quarters Type [2] by Age [14]","geographic_integration":"Nominal","sequence":520.16,"years":["1990","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"CR9","description":"Persons
+        Under 18 Years in Group Quarters by Group Quarters Type [2] by Age [7]","geographic_integration":"Nominal","sequence":520.17,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CS0","description":"Persons
+        Under 18 Years in Group Quarters by Group Quarters Type [2] by Age [7]","geographic_integration":"Standardized
+        to 2010","sequence":520.18,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A71","description":"Persons
+        in Households by Sex [2] by Age [16]","geographic_integration":"Nominal","sequence":530.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"A72","description":"Persons
+        in Households by Sex [2] by Age [22]","geographic_integration":"Nominal","sequence":530.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"A73","description":"Persons
+        in Households by Sex [2] by Age [23]","geographic_integration":"Nominal","sequence":530.03,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CS7","description":"Persons
+        in Households by Sex [2] by Age [3]","geographic_integration":"Standardized
+        to 2010","sequence":530.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AT0","description":"Persons
+        in Group Quarters by Sex [2] by Age [3]","geographic_integration":"Nominal","sequence":530.05,"years":["1980","2000","2010","1990"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CS8","description":"Persons
+        in Group Quarters by Sex [2] by Age [3]","geographic_integration":"Standardized
+        to 2010","sequence":530.06,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A44","description":"Persons
+        in Group Quarters by Sex [2] by Age [3] by Group Quarters Type [2]","geographic_integration":"Nominal","sequence":530.07,"years":["2000","2010","1980","1990"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CS9","description":"Persons
+        in Group Quarters by Sex [2] by Age [3] by Group Quarters Type [2]","geographic_integration":"Standardized
+        to 2010","sequence":530.08,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A45","description":"Persons
+        in Group Quarters by Sex [2] by Age [3] by Detailed Group Quarters Type [8]","geographic_integration":"Nominal","sequence":530.09,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CT0","description":"Persons
+        in Group Quarters by Sex [2] by Age [3] by Detailed Group Quarters Type [6]","geographic_integration":"Standardized
+        to 2010","sequence":530.1,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CT1","description":"Persons
+        in Group Quarters by Sex [2] by Group Quarters Type [2] by Age [11]","geographic_integration":"Nominal","sequence":530.11,"years":["1980","1990","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"CT2","description":"Persons
+        in Group Quarters by Sex [2] by Group Quarters Type [2] by Age [12]","geographic_integration":"Nominal","sequence":530.12,"years":["1990","2010"],"geog_levels":["nation","region","division","state","county"]},{"name":"AT4","description":"Persons
+        65 Years and Over in Group Quarters by Sex [2] by Detailed Group Quarters
+        Type [7]","geographic_integration":"Nominal","sequence":530.13,"years":["1990","2000","2010"],"geog_levels":["nation","state"]},{"name":"AR5","description":"Total
+        Households","geographic_integration":"Nominal","sequence":1000.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CM4","description":"Total
+        Households","geographic_integration":"Standardized to 2010","sequence":1000.02,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"BF1","description":"Households
+        by Household Type [6]","geographic_integration":"Nominal","sequence":1110.01,"years":["1980","1990","2000","1970","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CS1","description":"Households
+        by Household Type [6]","geographic_integration":"Standardized to 2010","sequence":1110.02,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CS3","description":"Nonfamily
+        Households by Household Size [2]","geographic_integration":"Nominal","sequence":1130.01,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CS4","description":"Nonfamily
+        Households by Household Size [2]","geographic_integration":"Standardized to
+        2010","sequence":1130.02,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A53","description":"Households
+        by Household Type [2] by Household Size [7]","geographic_integration":"Nominal","sequence":1130.03,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub","place"]},{"name":"CS2","description":"Households
+        by Household Type [2] by Household Size [7]","geographic_integration":"Standardized
+        to 2010","sequence":1130.04,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A68","description":"Total
+        Families","geographic_integration":"Nominal","sequence":2000.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CM5","description":"Total
+        Families","geographic_integration":"Standardized to 2010","sequence":2000.02,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CL5","description":"Persons
+        in Families","geographic_integration":"Nominal","sequence":2010.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"B15","description":"Persons
+        in Families","geographic_integration":"Nominal","sequence":2010.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CM6","description":"Persons
+        in Families","geographic_integration":"Standardized to 2010","sequence":2010.03,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AG4","description":"Families
+        by Family Type [3] by Presence and Age of Own Children [4]","geographic_integration":"Nominal","sequence":2060.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"AG5","description":"Families
+        by Family Type [3] by Presence and Age of Own Children [5]","geographic_integration":"Nominal","sequence":2060.02,"years":["1990","2000","2010","1980"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CS5","description":"Families
+        by Family Type [3] by Presence and Age of Own Children [5]","geographic_integration":"Standardized
+        to 2010","sequence":2060.03,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A47","description":"Persons
+        in Households by Household Type [2*] by Relationship [4]","geographic_integration":"Nominal","sequence":2500.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B02","description":"Persons
+        in Households by Household Type [2*] by Relationship [5]","geographic_integration":"Nominal","sequence":2500.02,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"A48","description":"Persons
+        in Households by Household Type [2] by Relationship [4]","geographic_integration":"Nominal","sequence":2500.03,"years":["2000","2010","1980","1990"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B03","description":"Persons
+        in Households by Household Type [2] by Relationship [7]","geographic_integration":"Nominal","sequence":2500.04,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"A65","description":"Persons
+        in Households by Household Type [2] by Relationship (Detailed Child Types)
+        [7]","geographic_integration":"Nominal","sequence":2500.05,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY1","description":"Persons
+        in Households by Household Type [2] by Relationship (Detailed Child Types)
+        [7]","geographic_integration":"Standardized to 2010","sequence":2500.06,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A66","description":"Persons
+        in Households by Household Type [2] by Relationship [9]","geographic_integration":"Nominal","sequence":2500.07,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CT3","description":"Persons
+        in Households by Household Type [2] by Relationship [9]","geographic_integration":"Standardized
+        to 2010","sequence":2500.08,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CT4","description":"Nonrelatives
+        by Household Type [2] by Relationship [2]","geographic_integration":"Nominal","sequence":2500.09,"years":["1980","1990","2000"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CT5","description":"Nonrelatives
+        by Household Type [2] by Relationship [2]","geographic_integration":"Nominal","sequence":2500.1,"years":["1980","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub","place"]},{"name":"CT6","description":"Nonrelatives
+        by Household Type [2] by Relationship [2]","geographic_integration":"Nominal","sequence":2500.11,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CT7","description":"Nonrelatives
+        by Household Type [2] by Relationship [4]","geographic_integration":"Nominal","sequence":2500.12,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B35","description":"Persons
+        Under 18 Years in Households by Relationship [5] and (for Own Children) by
+        Family Type [2]","geographic_integration":"Nominal","sequence":2520.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A46","description":"Persons
+        Under 18 Years in Households by Relationship [5] and (for Own Children) by
+        Family Type [4]","geographic_integration":"Nominal","sequence":2520.02,"years":["1980","1990","2000","2010","1970"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CY2","description":"Persons
+        Under 18 Years in Households by Relationship [5] and (for Own Children) by
+        Family Type [4]","geographic_integration":"Standardized to 2010","sequence":2520.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B99","description":"Persons
+        Under 18 Years in Households by Relationship [7] and (for Own Children) by
+        Family Type [4]","geographic_integration":"Nominal","sequence":2520.04,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CT8","description":"Persons
+        Under 18 Years in Households by Relationship [7] and (for Own Children) by
+        Family Type [4]","geographic_integration":"Standardized to 2010","sequence":2520.05,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CT9","description":"Persons
+        Under 18 Years In Households by Relationship [5] and (for 3 Relationships)
+        by Age [2]","geographic_integration":"Nominal","sequence":2520.06,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CU0","description":"Persons
+        Under 18 Years In Households by Relationship [5] and (for 3 Relationships)
+        by Age [3]","geographic_integration":"Nominal","sequence":2520.07,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub","place"]},{"name":"B67","description":"Persons
+        Under 18 Years In Households by Relationship [5] and (for 3 Relationships)
+        by Age [7]","geographic_integration":"Nominal","sequence":2520.08,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CU1","description":"Persons
+        Under 18 Years In Households by Relationship [5] and (for 3 Relationships)
+        by Age [7]","geographic_integration":"Standardized to 2010","sequence":2520.09,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CU2","description":"Own
+        Children by Family Type [4] and (for 3 Family Types) by Age [2]","geographic_integration":"Nominal","sequence":2520.1,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub"]},{"name":"B66","description":"Own
+        Children by Family Type [4] and (for 3 Family Types) by Age [5]","geographic_integration":"Nominal","sequence":2520.11,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CU3","description":"Own
+        Children by Family Type [4] and (for 3 Family Types) by Age [5]","geographic_integration":"Standardized
+        to 2010","sequence":2520.12,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B04","description":"Persons
+        65 Years and Over in Households by Household Type [2*] by Relationship [4]","geographic_integration":"Nominal","sequence":2520.13,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B05","description":"Persons
+        65 Years and Over in Households by Household Type [2] by Relationship [4]","geographic_integration":"Nominal","sequence":2520.14,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY3","description":"Persons
+        65 Years and Over in Households by Household Type [2] by Relationship [4]","geographic_integration":"Standardized
+        to 2010","sequence":2520.15,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CU4","description":"Persons
+        65 Years and Over in Households by Household Type [2] by Relationship [5]","geographic_integration":"Nominal","sequence":2520.16,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"CU5","description":"Persons
+        65 Years and Over in Households by Household Type [2] by Relationship [5]","geographic_integration":"Standardized
+        to 2010","sequence":2520.17,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"BL1","description":"Persons
+        of Marrying Age* by Sex [2] by Marital Status [6]","geographic_integration":"Nominal","sequence":4010.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"BB1","description":"Persons
+        of Marrying Age* by Sex [2] by Marital Status [8]","geographic_integration":"Nominal","sequence":4010.02,"years":["1970","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A34","description":"Persons
+        of Marrying Age* by Sex [2] by Marital Status [5] by Age [7]","geographic_integration":"Nominal","sequence":4010.03,"years":["1970","2000","1980","1990","125","195"],"geog_levels":["state","county","cty_sub"]},{"name":"BM7","description":"Persons
+        of Marrying Age* by Sex [2] by Marital Status [5] by Age [7]","geographic_integration":"Nominal","sequence":4010.04,"years":["1970","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"BM4","description":"Persons
+        15 Years and Over by Sex [2] by Marital Status [5] by Age [11]","geographic_integration":"Nominal","sequence":4010.05,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"BM5","description":"Persons
+        15 Years and Over by Sex [2] by Marital Status [5] by Age [12]","geographic_integration":"Nominal","sequence":4010.06,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","cty_sub"]},{"name":"BM6","description":"Persons
+        15 Years and Over by Sex [2] by Marital Status [6] by Age [12]","geographic_integration":"Nominal","sequence":4010.07,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AT5","description":"Persons
+        by Nativity [2]","geographic_integration":"Nominal","sequence":4200.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AL8","description":"Native
+        Persons by Place of Birth [8*]","geographic_integration":"Nominal","sequence":4400.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AL9","description":"Native
+        Persons by Place of Birth [10]","geographic_integration":"Nominal","sequence":4400.02,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AK7","description":"Foreign-Born
+        Persons by Place of Birth (Regions) [6*]","geographic_integration":"Nominal","sequence":4400.03,"years":["2000","1970","1980","1990","125","195"],"geog_levels":["state","county"]},{"name":"AB9","description":"Foreign-Born
+        Persons by Place of Birth [25*]","geographic_integration":"Nominal","sequence":4400.04,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"CB2","description":"Persons
+        Born in (Former) Yugoslavia","geographic_integration":"Nominal","sequence":4400.05,"years":["1970","1980","1990","2000"],"geog_levels":["state","county"]},{"name":"AJ6","description":"Foreign-Born
+        Persons by Place of Birth [30*]","geographic_integration":"Nominal","sequence":4400.06,"years":["1970","1990","125","195"],"geog_levels":["state","county"]},{"name":"AJ7","description":"Foreign-Born
+        Persons by Place of Birth [33*]","geographic_integration":"Nominal","sequence":4400.07,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"AK0","description":"Persons
+        Born in Africa by Place of Birth [2]","geographic_integration":"Nominal","sequence":4400.08,"years":["1980","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AJ9","description":"Persons
+        Born in United Kingdom by Place of Birth [3]","geographic_integration":"Nominal","sequence":4400.09,"years":["1980","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AK2","description":"Foreign-Born
+        Persons by Place of Birth [78*]","geographic_integration":"Nominal","sequence":4400.1,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"AK4","description":"Foreign-Born
+        Persons by Place of Birth [94*]","geographic_integration":"Nominal","sequence":4400.11,"years":["1990","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"AK8","description":"Foreign-Born
+        Persons by Place of Birth (Subregions) [24*]","geographic_integration":"Nominal","sequence":4400.12,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AK5","description":"Foreign-Born
+        Persons by Place of Birth [97*]","geographic_integration":"Nominal","sequence":4400.13,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B69","description":"Persons
+        25 Years and Over by Educational Attainment [3]","geographic_integration":"Nominal","sequence":5000.01,"years":["1980","1990","2000","1970","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"BW7","description":"Persons
+        25 Years and Over by Educational Attainment [5]","geographic_integration":"Nominal","sequence":5000.02,"years":["1970","1980","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B85","description":"Persons
+        25 Years and Over by Educational Attainment [7]","geographic_integration":"Nominal","sequence":5000.03,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B86","description":"Persons
+        18 Years and Over by Educational Attainment [3]","geographic_integration":"Nominal","sequence":5000.04,"years":["1980","2000","1990","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B87","description":"Persons
+        18 Years and Over by Educational Attainment [7]","geographic_integration":"Nominal","sequence":5000.05,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BX3","description":"Persons
+        25 Years and Over by Sex [2] by Educational Attainment [6]","geographic_integration":"Nominal","sequence":5010.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"A79","description":"Persons
+        25 Years and Over by Sex [2] by Educational Attainment [7]","geographic_integration":"Nominal","sequence":5010.02,"years":["1970","1980","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"A80","description":"Persons
+        25 Years and Over by Sex [2] by Educational Attainment [13]","geographic_integration":"Nominal","sequence":5010.03,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"B88","description":"Persons
+        25 Years and Over by Sex [2] by Educational Attainment [16]","geographic_integration":"Nominal","sequence":5010.04,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B89","description":"Persons
+        18 Years and Over by Sex [2] by Age [4] by Educational Attainment [3]","geographic_integration":"Nominal","sequence":5010.05,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"B90","description":"Persons
+        18 Years and Over by Sex [2] by Age [5] by Educational Attainment [6]","geographic_integration":"Nominal","sequence":5010.06,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"B91","description":"Persons
+        18 Years and Over by Sex [2] by Age [5] by Educational Attainment [7]","geographic_integration":"Nominal","sequence":5010.07,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B84","description":"Persons
+        16 Years and Over by Labor Force and Employment Status [6]","geographic_integration":"Nominal","sequence":6000.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A63","description":"Persons
+        16 Years and Over in Labor Force by Age [6]","geographic_integration":"Nominal","sequence":6000.02,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"A64","description":"Persons
+        16 Years and Over by Age [9] by Labor Force and Employment Status [6]","geographic_integration":"Nominal","sequence":6000.03,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"AF9","description":"Persons
+        16 Years and Over by Age [12] by Labor Force and Employment Status [6]","geographic_integration":"Nominal","sequence":6000.04,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"BT7","description":"Persons
+        16 Years and Over by Age [13] by Labor Force and Employment Status [6]","geographic_integration":"Nominal","sequence":6000.05,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BS4","description":"Persons
+        16 Years and Over by Sex [2] by Labor Force and Employment Status [6]","geographic_integration":"Nominal","sequence":6010.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A67","description":"Persons
+        16 Years and Over in Labor Force by Sex [2] by Age [6]","geographic_integration":"Nominal","sequence":6010.02,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"BS5","description":"Persons
+        16 Years and Over in Labor Force by Sex [2] by Age [7]","geographic_integration":"Nominal","sequence":6010.03,"years":["1970","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A70","description":"Persons
+        16 Years and Over by Sex [2] by Age [9] by Labor Force and Employment Status
+        [6]","geographic_integration":"Nominal","sequence":6010.04,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"A74","description":"Persons
+        16 Years and Over by Sex [2] by Age [12] by Labor Force and Employment Status
+        [6]","geographic_integration":"Nominal","sequence":6010.05,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county"]},{"name":"BT6","description":"Persons
+        16 Years and Over by Sex [2] by Age [13] by Labor Force and Employment Status
+        [6]","geographic_integration":"Nominal","sequence":6010.06,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"C54","description":"Workers
+        of Working Age* by Means of Transportation to Work [9]","geographic_integration":"Nominal","sequence":6500.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AC2","description":"Workers
+        16 Years and Over by Means of Transportation to Work [18]","geographic_integration":"Nominal","sequence":6500.02,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"C53","description":"Workers
+        16 Years and Over by Means of Transportation to Work [20]","geographic_integration":"Nominal","sequence":6500.03,"years":["2000","1990","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CW0","description":"Total
+        Commuters (Workers 16 Years and Over Who Did Not Work from Home)","geographic_integration":"Nominal","sequence":6500.04,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"C50","description":"Commuters
+        by Travel Time to Work [8]","geographic_integration":"Nominal","sequence":6510.01,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"C51","description":"Commuters
+        by Travel Time to Work [12]","geographic_integration":"Nominal","sequence":6510.02,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"C98","description":"Aggregate
+        Travel Time to Work for Commuters","geographic_integration":"Nominal","sequence":6520.01,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BS7","description":"Households
+        by Income* in Previous Year [4]","geographic_integration":"Nominal","sequence":7000.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B70","description":"Households
+        by Income in Previous Year [10]","geographic_integration":"Nominal","sequence":7000.02,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B71","description":"Households
+        by Income in Previous Year [15]","geographic_integration":"Nominal","sequence":7000.03,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B72","description":"Households
+        by Income in Previous Year [16]","geographic_integration":"Nominal","sequence":7000.04,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B79","description":"Median
+        Household Income in Previous Year","geographic_integration":"Nominal","sequence":7005.01,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A88","description":"Families
+        by Income in Previous Year [5]","geographic_integration":"Nominal","sequence":7200.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A89","description":"Families
+        by Income in Previous Year [10]","geographic_integration":"Nominal","sequence":7200.02,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A90","description":"Families
+        by Income in Previous Year [15]","geographic_integration":"Nominal","sequence":7200.03,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A91","description":"Families
+        by Income in Previous Year [16]","geographic_integration":"Nominal","sequence":7200.04,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AB2","description":"Median
+        Family Income in Previous Year","geographic_integration":"Nominal","sequence":7205.01,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BD5","description":"Per
+        Capita Income in Previous Year","geographic_integration":"Nominal","sequence":7400.01,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AX6","description":"Persons
+        for Whom Poverty Status is Determined","geographic_integration":"Nominal","sequence":7599.01,"years":["1980","1990","2000","125","1970","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CL6","description":"Persons*
+        below Poverty Level in Previous Year","geographic_integration":"Nominal","sequence":7600.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AX7","description":"Persons*
+        by Poverty Status in Previous Year [2]","geographic_integration":"Nominal","sequence":7600.02,"years":["1980","1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"C19","description":"Persons*
+        by Ratio of Income to Poverty Level in Previous Year [2]","geographic_integration":"Nominal","sequence":7605.01,"years":["1990","2000","125","1970","1980","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CL7","description":"Persons*
+        by Ratio of Income to Poverty Level in Previous Year [7]","geographic_integration":"Nominal","sequence":7605.02,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"C20","description":"Persons*
+        by Ratio of Income to Poverty Level in Previous Year [9]","geographic_integration":"Nominal","sequence":7605.03,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BV8","description":"Persons*
+        65 Years and Over by Poverty Status in Previous Year [2]","geographic_integration":"Nominal","sequence":7620.01,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"BV6","description":"Persons*
+        by Poverty Status in Previous Year [2] by Age [4]","geographic_integration":"Nominal","sequence":7620.02,"years":["1980","1990"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BV3","description":"Persons*
+        by Poverty Status in Previous Year [2] by Age [5]","geographic_integration":"Nominal","sequence":7620.03,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"BV5","description":"Persons*
+        by Poverty Status in Previous Year [2] by Age [6]","geographic_integration":"Nominal","sequence":7620.04,"years":["1980","125","2000","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"BV7","description":"Persons*
+        by Poverty Status in Previous Year [2] by Age [11]","geographic_integration":"Nominal","sequence":7620.05,"years":["1990","125","2000","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"BV4","description":"Persons*
+        by Poverty Status in Previous Year [2] by Age [13]","geographic_integration":"Nominal","sequence":7620.06,"years":["2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"A41","description":"Total
+        Housing Units","geographic_integration":"Nominal","sequence":10000.01,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CM7","description":"Total
+        Housing Units","geographic_integration":"Standardized to 2010","sequence":10000.02,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A62","description":"Housing
+        Units by Urban/Rural Status [2]","geographic_integration":"Nominal","sequence":10005.01,"years":["1980","1990","2000","2010","1970"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AZ7","description":"Housing
+        Units by Urban/Rural Status [4]","geographic_integration":"Nominal","sequence":10005.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CM8","description":"Housing
+        Units by Urban/Rural Status [4]","geographic_integration":"Standardized to
+        2010","sequence":10005.03,"years":["2010","1990","2000"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A43","description":"Housing
+        Units by Occupancy Status [2]","geographic_integration":"Nominal","sequence":10010.01,"years":["1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CM9","description":"Housing
+        Units by Occupancy Status [2]","geographic_integration":"Standardized to 2010","sequence":10010.02,"years":["2000","2010","1990","2020"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AT1","description":"Vacant
+        Housing Units by Vacancy Status [5]","geographic_integration":"Nominal","sequence":10010.03,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"A49","description":"Vacant
+        Housing Units by Vacancy Status [6]","geographic_integration":"Nominal","sequence":10010.04,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN0","description":"Vacant
+        Housing Units by Vacancy Status [6]","geographic_integration":"Standardized
+        to 2010","sequence":10010.05,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B37","description":"Occupied
+        Housing Units by Tenure [2]","geographic_integration":"Nominal","sequence":10010.06,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"AT2","description":"Occupied
+        Housing Units by Tenure [2]","geographic_integration":"Nominal","sequence":10010.07,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN1","description":"Occupied
+        Housing Units by Tenure [2]","geographic_integration":"Standardized to 2010","sequence":10010.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B80","description":"Occupied
+        Housing Units by Tenure and Mortgage Status [3]","geographic_integration":"Nominal","sequence":10010.09,"years":["1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"B36","description":"Persons
+        in Occupied Housing Units by Tenure [2]","geographic_integration":"Nominal","sequence":10015.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"A40","description":"Persons
+        in Occupied Housing Units by Tenure [2]","geographic_integration":"Nominal","sequence":10015.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN2","description":"Persons
+        in Occupied Housing Units by Tenure [2]","geographic_integration":"Standardized
+        to 2010","sequence":10015.03,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B38","description":"Occupied
+        Housing Units by Race of Householder [4*]","geographic_integration":"Nominal","sequence":10050.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"B34","description":"Occupied
+        Housing Units by Race of Householder [6*]","geographic_integration":"Nominal","sequence":10050.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY4","description":"Occupied
+        Housing Units by Race of Householder [6*]","geographic_integration":"Standardized
+        to 2010","sequence":10050.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"BK9","description":"Occupied
+        Housing Units by Race of Householder [7]","geographic_integration":"Nominal","sequence":10050.04,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN3","description":"Occupied
+        Housing Units by Race of Householder [7]","geographic_integration":"Standardized
+        to 2010","sequence":10050.05,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CZ0","description":"Occupied
+        Housing Units by Races Tallied for Householders [7]","geographic_integration":"Nominal","sequence":10050.06,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CZ1","description":"Occupied
+        Housing Units by Races Tallied for Householders [7]","geographic_integration":"Standardized
+        to 2010","sequence":10050.07,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B39","description":"Occupied
+        Housing Units by Tenure [2] by Race of Householder [4*]","geographic_integration":"Nominal","sequence":10050.08,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AE2","description":"Occupied
+        Housing Units by Tenure [2] by Race of Householder [6*]","geographic_integration":"Nominal","sequence":10050.09,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CY5","description":"Occupied
+        Housing Units by Tenure [2] by Race of Householder [6*]","geographic_integration":"Standardized
+        to 2010","sequence":10050.1,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"AE3","description":"Occupied
+        Housing Units by Tenure [2] by Race of Householder [7]","geographic_integration":"Nominal","sequence":10050.11,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CN4","description":"Occupied
+        Housing Units by Tenure [2] by Race of Householder [7]","geographic_integration":"Standardized
+        to 2010","sequence":10050.12,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CZ2","description":"Occupied
+        Housing Units with Hispanic or Latino Householder","geographic_integration":"Nominal","sequence":10060.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CZ3","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2]","geographic_integration":"Nominal","sequence":10060.02,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CZ4","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2]","geographic_integration":"Standardized
+        to 2010","sequence":10060.03,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"A50","description":"Occupied
+        Housing Units with Hispanic or Latino Householder by Tenure [2]","geographic_integration":"Nominal","sequence":10060.04,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CZ5","description":"Occupied
+        Housing Units by Tenure [2] by Hispanic or Latino Origin of Householder [2]","geographic_integration":"Nominal","sequence":10060.05,"years":["1980","1990","2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"CZ6","description":"Occupied
+        Housing Units by Tenure [2] by Hispanic or Latino Origin of Householder [2]","geographic_integration":"Standardized
+        to 2010","sequence":10060.06,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CZ7","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Race of Householder
+        [6*]","geographic_integration":"Nominal","sequence":10070.01,"years":["1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CZ8","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Race of Householder
+        [6*]","geographic_integration":"Standardized to 2010","sequence":10070.02,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"CZ9","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Race of Householder
+        [7]","geographic_integration":"Nominal","sequence":10070.03,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"D00","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Race of Householder
+        [7]","geographic_integration":"Standardized to 2010","sequence":10070.04,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"D04","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Races Tallied
+        for Householders [7]","geographic_integration":"Nominal","sequence":10070.05,"years":["2000","2010"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"D05","description":"Occupied
+        Housing Units by Hispanic or Latino Origin of Householder [2] by Races Tallied
+        for Householders [7]","geographic_integration":"Standardized to 2010","sequence":10070.06,"years":["2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"D01","description":"Occupied
+        Housing Units with Householder Who Is White (Single Race*), Not Hispanic or
+        Latino by Tenure [2]","geographic_integration":"Nominal","sequence":10070.07,"years":["1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"D02","description":"Occupied
+        Housing Units with Householder Who Is White (Single Race*), Not Hispanic or
+        Latino by Tenure [2]","geographic_integration":"Standardized to 2010","sequence":10070.08,"years":["1990","2000","2010"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"D03","description":"Occupied
+        Housing Units by Tenure [2] by Hispanic or Latino Origin of Householder [2]
+        by Race of Householder [6*]","geographic_integration":"Nominal","sequence":10070.09,"years":["1980","1990","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CV5","description":"Occupied
+        Housing Units by Household Size [6]","geographic_integration":"Nominal","sequence":10500.01,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV6","description":"Occupied
+        Housing Units by Household Size [7]","geographic_integration":"Nominal","sequence":10500.02,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"CV7","description":"Occupied
+        Housing Units by Household Size [7]","geographic_integration":"Nominal","sequence":10500.03,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV8","description":"Occupied
+        Housing Units by Household Size [7]","geographic_integration":"Standardized
+        to 2010","sequence":10500.04,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]},{"name":"B68","description":"Occupied
+        Housing Units by Tenure [2] by Household Size [6]","geographic_integration":"Nominal","sequence":10500.05,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"A42","description":"Occupied
+        Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.06,"years":["1970","1980","1990","2000","2010"],"geog_levels":["state","county","cty_sub","place"]},{"name":"BL0","description":"Occupied
+        Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
+        Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
+        to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
+  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
