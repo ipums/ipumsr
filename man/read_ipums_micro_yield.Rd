@@ -125,14 +125,14 @@ Other ipums_read:
 \item \href{#method-yield}{\code{IpumsLongYield$yield()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done">}\href{../../hipread/html/HipYield.html#method-is_done}{\code{hipread::HipYield$is_done()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset">}\href{../../hipread/html/HipYield.html#method-reset}{\code{hipread::HipYield$reset()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
@@ -169,14 +169,14 @@ Other ipums_read:
 \item \href{#method-yield}{\code{IpumsListYield$yield()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done">}\href{../../hipread/html/HipYield.html#method-is_done}{\code{hipread::HipYield$is_done()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset">}\href{../../hipread/html/HipYield.html#method-reset}{\code{hipread::HipYield$reset()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="is_done"><a href='../../hipread/html/HipYield.html#method-HipYield-is_done'><code>hipread::HipYield$is_done()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="HipYield" data-id="reset"><a href='../../hipread/html/HipYield.html#method-HipYield-reset'><code>hipread::HipYield$reset()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}

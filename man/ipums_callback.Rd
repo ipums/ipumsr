@@ -57,17 +57,17 @@ or add value/variable labels to the data.
 \item \href{#method-clone}{\code{IpumsChunkCallback$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue">}\href{../../hipread/html/ChunkCallback.html#method-continue}{\code{hipread::ChunkCallback$continue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally">}\href{../../hipread/html/ChunkCallback.html#method-finally}{\code{hipread::ChunkCallback$finally()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="initialize">}\href{../../hipread/html/ChunkCallback.html#method-initialize}{\code{hipread::ChunkCallback$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="receive">}\href{../../hipread/html/ChunkCallback.html#method-receive}{\code{hipread::ChunkCallback$receive()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="result">}\href{../../hipread/html/ChunkCallback.html#method-result}{\code{hipread::ChunkCallback$result()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-continue'><code>hipread::ChunkCallback$continue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-finally'><code>hipread::ChunkCallback$finally()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="initialize"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-initialize'><code>hipread::ChunkCallback$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="receive"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-receive'><code>hipread::ChunkCallback$receive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="result"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-result'><code>hipread::ChunkCallback$result()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_ipums_fields"></a>}}
 \if{latex}{\out{\hypertarget{method-set_ipums_fields}{}}}
@@ -112,15 +112,15 @@ The objects of this class are cloneable with this method.
 \item \href{#method-clone}{\code{IpumsSideEffectCallback$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally">}\href{../../hipread/html/ChunkCallback.html#method-finally}{\code{hipread::ChunkCallback$finally()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="result">}\href{../../hipread/html/ChunkCallback.html#method-result}{\code{hipread::ChunkCallback$result()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields">}\href{../../ipumsr/html/IpumsChunkCallback.html#method-set_ipums_fields}{\code{ipumsr::IpumsChunkCallback$set_ipums_fields()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-finally'><code>hipread::ChunkCallback$finally()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="result"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-result'><code>hipread::ChunkCallback$result()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields"><a href='../../ipumsr/html/IpumsChunkCallback.html#method-IpumsChunkCallback-set_ipums_fields'><code>ipumsr::IpumsChunkCallback$set_ipums_fields()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
@@ -179,14 +179,14 @@ The objects of this class are cloneable with this method.
 \item \href{#method-clone}{\code{IpumsDataFrameCallback$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue">}\href{../../hipread/html/ChunkCallback.html#method-continue}{\code{hipread::ChunkCallback$continue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields">}\href{../../ipumsr/html/IpumsChunkCallback.html#method-set_ipums_fields}{\code{ipumsr::IpumsChunkCallback$set_ipums_fields()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-continue'><code>hipread::ChunkCallback$continue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields"><a href='../../ipumsr/html/IpumsChunkCallback.html#method-IpumsChunkCallback-set_ipums_fields'><code>ipumsr::IpumsChunkCallback$set_ipums_fields()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
@@ -254,14 +254,14 @@ The objects of this class are cloneable with this method.
 \item \href{#method-clone}{\code{IpumsListCallback$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue">}\href{../../hipread/html/ChunkCallback.html#method-continue}{\code{hipread::ChunkCallback$continue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields">}\href{../../ipumsr/html/IpumsChunkCallback.html#method-set_ipums_fields}{\code{ipumsr::IpumsChunkCallback$set_ipums_fields()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-continue'><code>hipread::ChunkCallback$continue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields"><a href='../../ipumsr/html/IpumsChunkCallback.html#method-IpumsChunkCallback-set_ipums_fields'><code>ipumsr::IpumsChunkCallback$set_ipums_fields()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
@@ -328,15 +328,15 @@ The objects of this class are cloneable with this method.
 \item \href{#method-clone}{\code{IpumsBiglmCallback$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue">}\href{../../hipread/html/ChunkCallback.html#method-continue}{\code{hipread::ChunkCallback$continue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally">}\href{../../hipread/html/ChunkCallback.html#method-finally}{\code{hipread::ChunkCallback$finally()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields">}\href{../../ipumsr/html/IpumsChunkCallback.html#method-set_ipums_fields}{\code{ipumsr::IpumsChunkCallback$set_ipums_fields()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="continue"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-continue'><code>hipread::ChunkCallback$continue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="hipread" data-topic="ChunkCallback" data-id="finally"><a href='../../hipread/html/ChunkCallback.html#method-ChunkCallback-finally'><code>hipread::ChunkCallback$finally()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ipumsr" data-topic="IpumsChunkCallback" data-id="set_ipums_fields"><a href='../../ipumsr/html/IpumsChunkCallback.html#method-IpumsChunkCallback-set_ipums_fields'><code>ipumsr::IpumsChunkCallback$set_ipums_fields()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
