@@ -27,6 +27,10 @@ For \code{read_terra_raster} A \code{\link[raster]{raster}} object, for
 \description{
 Read a single raster datasets downloaded from the IPUMS Terra extract system using
 \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
+
+\emph{Note: Reading IPUMS Terra raster extracts requires installation of the
+raster R package, which is no longer installed automatically when you install
+ipumsr.}
 }
 \examples{
 \dontrun{
