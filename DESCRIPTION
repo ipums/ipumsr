@@ -24,7 +24,6 @@ Imports:
     hipread (>= 0.2.0),
     purrr,
     R6,
-    raster,
     readr,
     rlang,
     tibble,
@@ -53,5 +52,6 @@ Suggests:
     RSQLite,
     dbplyr,
     vcr (>= 0.6.0),
-    withr
+    withr,
+    raster
 VignetteBuilder: knitr

@@ -6,6 +6,23 @@ ex_file <- function(x) {
   system.file("extdata", x, package = "ipumsexamples")
 }
 
+test_that("read_terra_raster throws error if raster isn't installed", {
+  raster_file <- ex_file("2552_bundle.zip")
+  if (!file.exists(raster_file)) {
+    skip("Couldn't find raster example file. ipumsexamples likely not installed.")
+  }
+  raster_path <- try(find.package("raster"), silent = TRUE)
+  if (!inherits(raster_path, "try-error")) {
+    renamed_path <- file.path(dirname(raster_path), "notraster")
+    on.exit(file.rename(renamed_path, raster_path))
+    stopifnot(file.rename(raster_path, renamed_path))
+  }
+  expect_error(
+    raster <- read_terra_raster_list(raster_file, verbose = FALSE),
+    regexp = "requires installation of the raster package"
+  )
+})
+
 test_that("Terra raster works", {
   raster_file <- ex_file("2552_bundle.zip")
   if (!file.exists(raster_file)) {
