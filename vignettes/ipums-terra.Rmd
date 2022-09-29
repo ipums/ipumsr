@@ -87,6 +87,15 @@ than IPUMS Terra, which which pulls from our microdata projects, but I use
 Terra to show off the way it helps moving between data types.
 
 ## Raster data
+**Note: As of ipumsr 0.5.1, the raster package is no longer installed 
+automatically when you install ipumsr. To use the raster-reading functions in 
+ipumsr, you must now install the raster package explicitly, with:**
+
+```{r eval = FALSE}
+install.packages("raster")
+```
+
+
 IPUMS Terra includes raster data on the average temperature 1950-2000 by month
 from the WorldClim dataset. It also converts area-level summaries of some
 variables from the US census microdata to raster grid, so we can get the total
