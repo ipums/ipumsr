@@ -5,57 +5,59 @@
 \title{Get NHGIS Metadata}
 \usage{
 get_nhgis_metadata(
-  data_type = NULL,
+  type = NULL,
   dataset = NULL,
-  ds_table = NULL,
+  data_table = NULL,
   time_series_table = NULL,
+  ...,
   match_all = TRUE,
   match_case = FALSE,
   update_tables = FALSE,
-  api_key = Sys.getenv("IPUMS_API_KEY"),
-  ...
+  api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
 \arguments{
-\item{data_type}{One of "datasets", "data_tables",
+\item{type}{One of "datasets", "data_tables",
 "time_series_tables", or "shapefiles" indicating the type of summary
 metadata to retrieve.}
 
 \item{dataset}{Name of the dataset for which to retrieve metadata.}
 
-\item{ds_table}{Name of the data table for which to retrieve metadata.
+\item{data_table}{Name of the data table for which to retrieve metadata.
 If provided, an associated \code{dataset} must also be specified.}
 
 \item{time_series_table}{Name of the time series table for which to retrieve
 metadata.}
+
+\item{...}{Optional set of character vectors used to filter the requested
+summary metadata. These values are interpreted as
+regular expressions that are matched to the values in the metadata column
+with the same name as that given for the argument. Only metadata records
+whose values match the provided expressions will be included in the output.
+Only used when \code{type} is provided. See details.}
 
 \item{match_all}{If \code{TRUE}, only metadata records that match \emph{all} of the
 expressions provided in \code{...} will be included in the output. If \code{FALSE},
 metadata records that match \emph{any} of the expressions will be included.
 Defaults to \code{TRUE}.}
 
-\item{match_case}{If \code{TRUE} use case-sensitive matching when interpreting
-the expressions provided in \code{...}. Defaults to \code{FALSE}.}
+\item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
+the expressions provided in \code{...} (note that this does not apply to
+\code{dataset}, \code{data_table}, or \code{time_series_table} arguments). Defaults to
+\code{FALSE}.}
 
-\item{update_tables}{If \code{TRUE} and \code{data_type = "data_tables"}, update the
-provided data table metadata to include any recently released
-datasets that are not yet included in the default summary metadata and
-cache the updated data for future use. If the current data table summary
+\item{update_tables}{If \code{TRUE} and \code{type = "data_tables"}, update the
+provided data table summary metadata to include tables for any recently
+released datasets that are not yet included by default. The updated
+metadata will be cached for future use. If the current data table summary
 metadata are already up to date, this does nothing. See details.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
-
-\item{...}{Optional set of character vectors used to filter the requested
-summary metadata. These values are interpreted as
-regular expressions that are matched to the values in the metadata column
-whose name matches the given argument name. Only metadata records
-whose values match the provided expressions will be included in the output.
-Only used when \code{data_type} is provided. See examples.}
 }
 \value{
-If \code{data_type} is provided, a \code{\link[tibble:tbl_df-class]{tibble}} of
-summary metadata for all data sources of the provided \code{data_type}.
+If \code{type} is provided, a \code{\link[tibble:tbl_df-class]{tibble}} of
+summary metadata for all data sources of the provided \code{type}.
 Otherwise, a named list of metadata for the specified \code{dataset},
 \code{data_table}, or \code{time_series_table}.
 }
@@ -64,23 +66,23 @@ Retrieve information about available NHGIS datasets, data tables, time
 series tables, and shapefiles.
 
 To retrieve summary metadata for all available data sources of a particular
-type, use the \code{data_type} argument. To retrieve detailed metadata for a
-single data source, use the \code{dataset}, \code{ds_table}, or \code{time_series_table}
+type, use the \code{type} argument. To retrieve detailed metadata for a
+single data source, use the \code{dataset}, \code{data_table}, or \code{time_series_table}
 arguments.
 }
 \details{
 \subsection{General use}{
 
-If \code{data_type} is not specified, then either \code{dataset}, \code{time_series_table},
-or both \code{dataset} and \code{ds_table}, must be provided. Metadata is only
-provided for a single \code{data_type} or data source at a time.
+If \code{type} is not specified, then either \code{dataset}, \code{time_series_table},
+or both \code{dataset} and \code{data_table} must be provided. Metadata is only
+provided for a single \code{type} or data source at a time.
 }
 
 \subsection{Filtering}{
 
 The names of the expressions provided in \code{...} should be found in the
 column names of the summary metadata for each data type. The
-following summarizes the columns available for each data type:
+following summarizes the columns available for each type:
 \itemize{
 \item Datasets: \code{name}, \code{group}, \code{description}, \code{sequence}
 \item Data tables: \code{dataset}, \code{name}, \code{nhgis_code}, \code{description}, \code{sequence}
@@ -90,9 +92,10 @@ following summarizes the columns available for each data type:
 \code{sequence}
 }
 
-The expressions in \code{...} are interpreted as regular expressions. This is
+The expressions in \code{...} are interpreted as regular expressions, which
+allows for partial matching. This is
 typically the desired behavior when searching for keywords in data source
-descriptions, but a precise match may be useful for unique fields,
+descriptions, but an exact match may be useful for unique fields,
 like dataset or data table names. Any terms can be wrapped in \code{"^"} and \code{"$"}
 to enforce an exact match. For instance,
 \code{get_nhgis_metadata("data_tables", name = "^NT1$")} will match tables whose
@@ -111,7 +114,8 @@ a warning if it detects any datasets whose tables are not included in the
 data table summary metadata. The metadata for the data tables
 associated with these datasets can be included by setting
 \code{update_tables = TRUE}. Note that updating these metadata will result in an
-API request for each missing dataset.
+API request for each missing dataset (the IPUMS API is rate limited to 100
+API requests per minute).
 
 The updated data will automatically
 be cached across R sessions in the directory given by
@@ -142,5 +146,5 @@ get_nhgis_metadata(
 
 # Get metadata for single data source
 get_nhgis_metadata(dataset = "1990_STF1")
-get_nhgis_metadata(ds_table = "NP1", dataset = "1990_STF1")
+get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
 }

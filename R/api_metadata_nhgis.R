@@ -5,7 +5,6 @@
 #   https://github.com/ipums/ipumsr
 
 # Exported functions -----------------------------------------------------------
-
 #' Get NHGIS Metadata
 #'
 #' @description
@@ -13,21 +12,21 @@
 #' series tables, and shapefiles.
 #'
 #' To retrieve summary metadata for all available data sources of a particular
-#' type, use the `data_type` argument. To retrieve detailed metadata for a
-#' single data source, use the `dataset`, `ds_table`, or `time_series_table`
+#' type, use the `type` argument. To retrieve detailed metadata for a
+#' single data source, use the `dataset`, `data_table`, or `time_series_table`
 #' arguments.
 #'
 #' @details
 #' ## General use
-#' If `data_type` is not specified, then either `dataset`, `time_series_table`,
-#' or both `dataset` and `ds_table`, must be provided. Metadata is only
-#' provided for a single `data_type` or data source at a time.
+#' If `type` is not specified, then either `dataset`, `time_series_table`,
+#' or both `dataset` and `data_table` must be provided. Metadata is only
+#' provided for a single `type` or data source at a time.
 #'
 #' @details
 #' ## Filtering
 #' The names of the expressions provided in `...` should be found in the
 #' column names of the summary metadata for each data type. The
-#' following summarizes the columns available for each data type:
+#' following summarizes the columns available for each type:
 #'
 #' * Datasets: `name`, `group`, `description`, `sequence`
 #' * Data tables: `dataset`, `name`, `nhgis_code`, `description`, `sequence`
@@ -36,9 +35,10 @@
 #' * Shapefiles: `name`, `year`, `geographic_level`, `extent`, `basis`,
 #'   `sequence`
 #'
-#' The expressions in `...` are interpreted as regular expressions. This is
+#' The expressions in `...` are interpreted as regular expressions, which
+#' allows for partial matching. This is
 #' typically the desired behavior when searching for keywords in data source
-#' descriptions, but a precise match may be useful for unique fields,
+#' descriptions, but an exact match may be useful for unique fields,
 #' like dataset or data table names. Any terms can be wrapped in `"^"` and `"$"`
 #' to enforce an exact match. For instance,
 #' `get_nhgis_metadata("data_tables", name = "^NT1$")` will match tables whose
@@ -56,7 +56,8 @@
 #' data table summary metadata. The metadata for the data tables
 #' associated with these datasets can be included by setting
 #' `update_tables = TRUE`. Note that updating these metadata will result in an
-#' API request for each missing dataset.
+#' API request for each missing dataset (the IPUMS API is rate limited to 100
+#' API requests per minute).
 #'
 #' The updated data will automatically
 #' be cached across R sessions in the directory given by
@@ -64,34 +65,36 @@
 #' `get_nhgis_metadata("data_tables")`, consider clearing the cache directory.
 #'
 #' @inheritParams submit_extract
-#' @param data_type One of "datasets", "data_tables",
+#' @param type One of "datasets", "data_tables",
 #'   "time_series_tables", or "shapefiles" indicating the type of summary
 #'   metadata to retrieve.
 #' @param dataset Name of the dataset for which to retrieve metadata.
-#' @param ds_table Name of the data table for which to retrieve metadata.
+#' @param data_table Name of the data table for which to retrieve metadata.
 #'   If provided, an associated `dataset` must also be specified.
 #' @param time_series_table Name of the time series table for which to retrieve
 #'   metadata.
+#' @param ... Optional set of character vectors used to filter the requested
+#'   summary metadata. These values are interpreted as
+#'   regular expressions that are matched to the values in the metadata column
+#'   with the same name as that given for the argument. Only metadata records
+#'   whose values match the provided expressions will be included in the output.
+#'   Only used when `type` is provided. See details.
 #' @param match_all If `TRUE`, only metadata records that match *all* of the
 #'   expressions provided in `...` will be included in the output. If `FALSE`,
 #'   metadata records that match *any* of the expressions will be included.
 #'   Defaults to `TRUE`.
-#' @param match_case If `TRUE` use case-sensitive matching when interpreting
-#'   the expressions provided in `...`. Defaults to `FALSE`.
-#' @param update_tables If `TRUE` and `data_type = "data_tables"`, update the
-#'   provided data table metadata to include any recently released
-#'   datasets that are not yet included in the default summary metadata and
-#'   cache the updated data for future use. If the current data table summary
+#' @param match_case If `TRUE`, use case-sensitive matching when interpreting
+#'   the expressions provided in `...` (note that this does not apply to
+#'   `dataset`, `data_table`, or `time_series_table` arguments). Defaults to
+#'   `FALSE`.
+#' @param update_tables If `TRUE` and `type = "data_tables"`, update the
+#'   provided data table summary metadata to include tables for any recently
+#'   released datasets that are not yet included by default. The updated
+#'   metadata will be cached for future use. If the current data table summary
 #'   metadata are already up to date, this does nothing. See details.
-#' @param ... Optional set of character vectors used to filter the requested
-#'   summary metadata. These values are interpreted as
-#'   regular expressions that are matched to the values in the metadata column
-#'   whose name matches the given argument name. Only metadata records
-#'   whose values match the provided expressions will be included in the output.
-#'   Only used when `data_type` is provided. See examples.
 #'
-#' @return If `data_type` is provided, a [`tibble`][tibble::tbl_df-class] of
-#'   summary metadata for all data sources of the provided `data_type`.
+#' @return If `type` is provided, a [`tibble`][tibble::tbl_df-class] of
+#'   summary metadata for all data sources of the provided `type`.
 #'   Otherwise, a named list of metadata for the specified `dataset`,
 #'   `data_table`, or `time_series_table`.
 #' @export
@@ -121,25 +124,25 @@
 #'
 #' # Get metadata for single data source
 #' get_nhgis_metadata(dataset = "1990_STF1")
-#' get_nhgis_metadata(ds_table = "NP1", dataset = "1990_STF1")
-get_nhgis_metadata <- function(data_type = NULL,
+#' get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
+get_nhgis_metadata <- function(type = NULL,
                                dataset = NULL,
-                               ds_table = NULL,
+                               data_table = NULL,
                                time_series_table = NULL,
+                               ...,
                                match_all = TRUE,
                                match_case = FALSE,
                                update_tables = FALSE,
-                               api_key = Sys.getenv("IPUMS_API_KEY"),
-                               ...) {
+                               api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  summary_req <- !is.null(data_type)
-  ds_req <- !is.null(dataset) && (data_type %||% "") != "data_tables"
-  dt_req <- !is.null(ds_table)
+  summary_req <- !is.null(type)
+  ds_req <- !is.null(dataset) && (type %||% "") != "data_tables"
+  dt_req <- !is.null(data_table)
   tst_req <- !is.null(time_series_table)
 
   if (sum(summary_req, ds_req, tst_req) > 1) {
     stop(
-      "Only one of `data_type`, `dataset`, or `time_series_table` may be ",
+      "Only one of `type`, `dataset`, or `time_series_table` may be ",
       "specified at a time.",
       call. = FALSE
     )
@@ -147,21 +150,21 @@ get_nhgis_metadata <- function(data_type = NULL,
 
   if (dt_req && !ds_req) {
     stop(
-      "`ds_table` must be specified with a corresponding `dataset`.",
+      "`data_table` must be specified with a corresponding `dataset`.",
       call. = FALSE
     )
   }
 
   if (!any(summary_req, ds_req, tst_req)) {
     stop(
-      "One of `data_type`, `dataset`, or `time_series_table` must be ",
+      "One of `type`, `dataset`, or `time_series_table` must be ",
       "specified.",
       call. = FALSE
     )
   }
 
   is_too_long <- purrr::map_lgl(
-    list(data_type, dataset, ds_table, time_series_table),
+    list(type, dataset, data_table, time_series_table),
     ~length(.x) > 1
   )
 
@@ -169,7 +172,7 @@ get_nhgis_metadata <- function(data_type = NULL,
     stop(
       "Can only retrieve metadata for one `",
       paste0(
-        c("data_type", "dataset", "ds_table", "time_series_table")[is_too_long],
+        c("type", "dataset", "data_table", "time_series_table")[is_too_long],
         collapse = "`, `"
       ),
       "` at a time.",
@@ -180,7 +183,7 @@ get_nhgis_metadata <- function(data_type = NULL,
   if (summary_req) {
 
     metadata <- get_nhgis_summary_metadata(
-      data_type = data_type,
+      type = type,
       api_key = api_key,
       update_tables = update_tables
     )
@@ -198,7 +201,7 @@ get_nhgis_metadata <- function(data_type = NULL,
     api_url <- metadata_request_url(
       .base_url = nhgis_api_metadata_url(),
       datasets = dataset,
-      data_tables = ds_table,
+      data_tables = data_table,
       time_series_tables = time_series_table
     )
 
@@ -219,26 +222,26 @@ get_nhgis_metadata <- function(data_type = NULL,
 #'
 #' @inheritParams get_nhgis_metadata
 #'
-#' @return Tibble of summary metadata for the requested `data_type`
+#' @return Tibble of summary metadata for the requested `type`
 #'
 #' @noRd
-get_nhgis_summary_metadata <- function(data_type,
+get_nhgis_summary_metadata <- function(type,
                                        update_tables = FALSE,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  if (!data_type %in% c("datasets", "data_tables",
+  if (!type %in% c("datasets", "data_tables",
                         "time_series_tables", "shapefiles")) {
     stop(
-      "`data_type` must be one of \"datasets\", ",
+      "`type` must be one of \"datasets\", ",
       "\"data_tables\", \"time_series_tables\", or \"shapefiles\"",
       call. = FALSE
     )
   }
 
-  if (data_type == "data_tables") {
+  if (type == "data_tables") {
 
     metadata <- tryCatch(
-      load_cached_data(pattern = data_type),
+      load_cached_data(pattern = type),
       error = function(cnd) table_metadata
     )
 
@@ -253,7 +256,7 @@ get_nhgis_summary_metadata <- function(data_type,
     metadata <- request_metadata(
       metadata_request_url(
         .base_url = nhgis_api_metadata_url(),
-        data_type
+        type
       ),
       api_key
     )
@@ -282,7 +285,7 @@ check_table_metadata <- function(metadata,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   datasets <- get_nhgis_summary_metadata(
-    data_type = "datasets",
+    type = "datasets",
     api_key = api_key
   )
 

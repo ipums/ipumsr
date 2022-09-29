@@ -36,7 +36,7 @@ if (have_api_access) {
 
   vcr::use_cassette("nhgis-metadata-single-source", {
     single_ds_meta <- get_nhgis_metadata(dataset = ds)
-    single_dt_meta <- get_nhgis_metadata(dataset = ds, ds_table = dt)
+    single_dt_meta <- get_nhgis_metadata(dataset = ds, data_table = dt)
     single_tst_meta <- get_nhgis_metadata(time_series_table = tst)
   })
 
@@ -44,7 +44,7 @@ if (have_api_access) {
   vcr::use_cassette("nhgis-metadata-errors", {
     ds_err <- catch_cnd(get_nhgis_metadata(dataset = "bad-dataset"))$message
     dt_err <- catch_cnd(
-      get_nhgis_metadata(ds_table = "bad-table", dataset = "1980_STF1")
+      get_nhgis_metadata(data_table = "bad-table", dataset = "1980_STF1")
     )$message
     tst_err <- catch_cnd(
       get_nhgis_metadata(time_series_table = "bad-tst")
@@ -196,18 +196,18 @@ test_that("We throw errors on bad metadata requests", {
     "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(ds_table = "A", dataset = c("A", "B")),
+    get_nhgis_metadata(data_table = "A", dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
 
   # Table metadata needs dataset
   expect_error(
-    get_nhgis_metadata(ds_table = c("A", "B")),
-    "`ds_table` must be specified with a corresponding `dataset`"
+    get_nhgis_metadata(data_table = c("A", "B")),
+    "`data_table` must be specified with a corresponding `dataset`"
   )
   expect_error(
-    get_nhgis_metadata(ds_table = "P8"),
-    "`ds_table` must be specified with a corresponding `dataset`"
+    get_nhgis_metadata(data_table = "P8"),
+    "`data_table` must be specified with a corresponding `dataset`"
   )
 
   # API errors
@@ -218,7 +218,7 @@ test_that("We throw errors on bad metadata requests", {
   expect_true(grepl("Authorization field missing", err_no_key))
 
   expect_error(
-    get_nhgis_metadata(ds_table = "bad table", dataset = "1980_STF1"),
+    get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
     "bad/illegal format or missing URL"
   )
 
