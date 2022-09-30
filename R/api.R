@@ -2609,81 +2609,55 @@ print.cps_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
 
-  types <- nhgis_extract_types(x)
+  style_ds <- extract_field_styler(NHGIS_DS_COLOR, "bold")
 
-  style_shp <- extract_field_styler(NHGIS_SHP_COLOR, "bold")
-  style_extents <- extract_field_styler(NHGIS_DS_COLOR, "bold")
-
-  if("datasets" %in% types) {
-
-    ds_to_cat <- purrr::map(
-      seq_along(x$datasets),
-      ~format_dataset_for_printing(
-        x$datasets[[.x]],
-        x$ds_tables[[.x]],
-        x$ds_geog_levels[[.x]],
-        x$ds_years[[.x]],
-        x$ds_breakdown_values[[.x]]
-      )
+  ds_to_cat <- purrr::map(
+    seq_along(x$datasets),
+    ~format_field_for_printing(
+      parent_field = list("Dataset: " = x$datasets[[.x]]),
+      subfields = list(
+        "Tables: " = x$ds_tables[x$datasets][[.x]],
+        "Geog Levels: " = x$ds_geog_levels[x$datasets][[.x]],
+        "Years: " = x$ds_years[x$datasets][[.x]],
+        "Breakdowns: " = x$ds_breakdown_values[x$datasets][[.x]]
+      ),
+      parent_style = style_ds,
+      subfield_style = extract_field_styler("bold")
     )
+  )
 
-    if (!is.null(x$geographic_extents)) {
-      extents_to_cat <- paste0(
-        "\n\n",
-        print_truncated_vector(
-          x$geographic_extents,
-          style_extents("Geographic extents: "),
-          FALSE
-        )
-      )
-
-      ds_to_cat <- c(ds_to_cat, extents_to_cat)
-    }
-
-    ds_to_cat <- purrr::reduce(ds_to_cat, paste0)
-
-  } else {
-    ds_to_cat <- NULL
-  }
-
-  if("time_series_tables" %in% types) {
-
-    tst_to_cat <- purrr::map(
-      seq_along(x$time_series_tables),
-      ~format_tst_for_printing(
-        x$time_series_tables[[.x]],
-        x$tst_geog_levels[[.x]]
-      )
+  ds_to_cat <- c(
+    ds_to_cat,
+    format_field_for_printing(
+      parent_field = list("Geographic extents: " = x$geographic_extents),
+      parent_style = style_ds
     )
+  )
 
-    tst_to_cat <- purrr::reduce(tst_to_cat, paste0)
-
-  } else {
-    tst_to_cat <- NULL
-  }
-
-  if("shapefiles" %in% types) {
-
-    shp_to_cat <- paste0(
-      "\n\n",
-      print_truncated_vector(
-        x$shapefiles,
-        style_shp("Shapefiles: "),
-        FALSE
-      )
+  tst_to_cat <- purrr::map(
+    seq_along(x$time_series_tables),
+    ~format_field_for_printing(
+      parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
+      subfields = list(
+        "Geog Levels: " = x$tst_geog_levels[x$time_series_tables][[.x]]
+      ),
+      parent_style = extract_field_styler(NHGIS_TST_COLOR, "bold"),
+      subfield_style = extract_field_styler("bold")
     )
+  )
 
-  } else {
-    shp_to_cat <- NULL
-  }
+  shp_to_cat <- format_field_for_printing(
+    parent_field = list("Shapefiles: " = x$shapefiles),
+    parent_style = extract_field_styler(NHGIS_SHP_COLOR, "bold")
+  )
 
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
     "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    ds_to_cat,
-    tst_to_cat,
+    paste0(ds_to_cat, collapse = ""),
+    paste0(tst_to_cat, collapse = ""),
     shp_to_cat,
     "\n"
   )
@@ -2691,6 +2665,7 @@ print.nhgis_extract <- function(x, ...) {
   cat(to_cat)
 
   invisible(x)
+
 }
 
 #' @importFrom rlang .data
@@ -2709,83 +2684,47 @@ format_collection_for_printing <- function(collection) {
 }
 
 
-format_dataset_for_printing <- function(dataset,
-                                        ds_tables,
-                                        geog_levels,
-                                        ds_years = NULL,
-                                        ds_breakdown_values = NULL) {
+format_field_for_printing <- function(parent_field = NULL,
+                                      subfields = NULL,
+                                      parent_style = NULL,
+                                      subfield_style = NULL,
+                                      padding = 2) {
 
-  style_field <- extract_field_styler(NHGIS_DS_COLOR, "bold")
-  style_subfield <- extract_field_styler("bold")
+  stopifnot(length(parent_field) == 1)
+
+  parent_val <- parent_field[[1]]
+  parent_name <- names(parent_field)
+
+  if (is.null(parent_val)) {
+    return(NULL)
+  }
+
+  style_field <- parent_style %||% extract_field_styler("reset")
+  style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    "\n\n",
+    paste0(rep("\n", padding), collapse = ""),
     print_truncated_vector(
-      dataset,
-      style_field("Dataset: "),
-      FALSE
-    ),
-    "\n  ",
-    print_truncated_vector(
-      ds_tables,
-      style_subfield("Tables: "),
-      FALSE
-    ),
-    "\n  ",
-    print_truncated_vector(
-      geog_levels,
-      style_subfield("Geog Levels: "),
+      parent_val,
+      style_field(parent_name),
       FALSE
     )
   )
 
-  if (!is.null(ds_years)) {
-    output <- paste0(
-      output,
-      "\n  ",
-      print_truncated_vector(
-        ds_years,
-        style_subfield("Years: "),
-        FALSE
-      )
-    )
-  }
-
-  if (!is.null(ds_breakdown_values)) {
-    output <- paste0(
-      output,
-      "\n  ",
-      print_truncated_vector(
-        ds_breakdown_values,
-        style_subfield("Breakdowns: "),
-        FALSE
-      )
+  if (!is.null(subfields)) {
+    purrr::map(
+      names(subfields),
+      ~if (!is.null(subfields[[.x]])) {
+        output <<- paste0(
+          output,
+          "\n  ",
+          print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
+        )
+      }
     )
   }
 
   output
-
-}
-
-format_tst_for_printing <- function(time_series_table, tst_geog_levels) {
-
-  style_field <- extract_field_styler(NHGIS_TST_COLOR, "bold")
-  style_subfield <- extract_field_styler("bold")
-
-  paste0(
-    "\n\n",
-    print_truncated_vector(
-      time_series_table,
-      style_field("Time Series Table: "),
-      FALSE
-    ),
-    "\n  ",
-    print_truncated_vector(
-      tst_geog_levels,
-      style_subfield("Geog Levels: "),
-      FALSE
-    )
-  )
 
 }
 
