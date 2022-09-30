@@ -7,6 +7,7 @@ Authors@R: c(
   person("Joe Grover", role = "ctb"),
   person("Finn Roberts", role = "ctb"),
   person("Dan Ehrlich", role = "ctb"),
+  person("Renae Rodgers", role = "ctb"),
   person("Minnesota Population Center", email = "ipums@umn.edu", role = "cph")
   )
 Contact: ipums@umn.edu
