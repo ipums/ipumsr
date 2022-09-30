@@ -141,30 +141,61 @@ test_that("NHGIS extracts get correct default values", {
 })
 
 test_that("Extract print coloring works", {
+
   local_reproducible_output(crayon = TRUE)
   expect_equal(
-    format_dataset_for_printing("A", "B", "C"),
+    format_field_for_printing(
+      parent_field = list("Dataset: " = "A"),
+      subfields = list(
+        "Tables: " = "B",
+        "Geog Levels: " = "C"
+      ),
+      parent_style = extract_field_styler(NHGIS_DS_COLOR, "bold"),
+      subfield_style = extract_field_styler("bold"),
+      padding = 1
+    ),
     paste0(
-      "\n\n\033[34m\033[1mDataset: ",
+      "\n\033[34m\033[1mDataset: ",
       "\033[22m\033[39mA\n  \033[1mTables: ",
       "\033[22mB\n  \033[1mGeog Levels: \033[22mC"
     )
   )
-  expect_equal(
-    format_tst_for_printing("A", "B"),
+
+  expect_match(
+    format_field_for_printing(
+      parent_field = list("Dataset: " = "A"),
+      subfields = list(
+        "Tables: " = "B",
+        "Geog Levels: " = "C"
+      )
+    ),
     paste0(
-      "\n\n\033[32m\033[1mTime Series Table: ",
-      "\033[22m\033[39mA\n  \033[1mGeog Levels: \033[22mB"
-    )
+      "\n\n\033[0mDataset: ",
+      "\033[0m\033[22m\033[23m\033[24m",
+      "\033[27m\033[28m\033[29m\033[39m\033[49mA\n  ",
+      "\033[0mTables: ",
+      "\033[0m\033[22m\033[23m\033[24m\033[27m\033",
+      "[28m\033[29m\033[39m\033[49mB\n  ",
+      "\033[0mGeog Levels: \033[0m\033[22m\033[23m\033",
+      "[24m\033[27m\033[28m\033[29m\033[39m\033[49mC",
+      collapse = ""
+    ),
+    fixed = TRUE
   )
+
   local_reproducible_output(crayon = FALSE)
   expect_equal(
-    format_dataset_for_printing("A", "B", "C"),
+    format_field_for_printing(
+      parent_field = list("Dataset: " = "A"),
+      subfields = list(
+        "Tables: " = "B",
+        "Geog Levels: " = "C"
+      ),
+      parent_style = extract_field_styler(NHGIS_DS_COLOR, "bold"),
+      subfield_style = extract_field_styler("bold"),
+      padding = 2
+    ),
     "\n\nDataset: A\n  Tables: B\n  Geog Levels: C"
-  )
-  expect_equal(
-    format_tst_for_printing("A", "B"),
-    "\n\nTime Series Table: A\n  Geog Levels: B"
   )
 })
 
