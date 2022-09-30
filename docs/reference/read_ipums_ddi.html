@@ -19,7 +19,7 @@ usage for the data and positions for the fixed-width file."><meta property="og:i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -125,17 +125,24 @@ usage for the data and positions for the fixed-width file.</p>
     <h2>Arguments</h2>
     <dl><dt>ddi_file</dt>
 <dd><p>Filepath to DDI xml file</p></dd>
+
+
 <dt>data_layer</dt>
 <dd><p>If ddi_file is an extract with multiple DDIs, dplyr
 <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></code>-style notation indicating which .xml data
 layer to load.</p></dd>
+
+
 <dt>lower_vars</dt>
 <dd><p>Logical indicating whether to convert variable names
 to lowercase (default is FALSE, in line with IPUMS conventions)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An <code>ipums_ddi</code> object with metadata information.</p>
+    
+
+<p>An <code>ipums_ddi</code> object with metadata information.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

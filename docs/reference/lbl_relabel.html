@@ -19,7 +19,7 @@ that does not have a label."><meta property="og:image" content="http://tech.popd
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -125,6 +125,8 @@ that does not have a label.</p>
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></code> vector</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Two-sided formulas where the left hand side is a label placeholder
 (created with the <code><a href="lbl.html">lbl</a></code> function) or a value that already exists
@@ -133,10 +135,13 @@ vector that indicates which labels should be relabeled. The right hand side
 is passed to a function similar to <code><a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">as_function</a></code>, so
 also accepts quosure-style lambda functions (that use values .val and .lbl).
 See examples for more information.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A haven::labelled vector</p>
+    
+
+<p>A haven::labelled vector</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

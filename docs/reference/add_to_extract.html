@@ -23,7 +23,7 @@ vignette("ipums-api", package = "ipumsr").'><meta property="og:image" content="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -155,26 +155,41 @@ will replace the existing value with the supplied value.</p>
     <h2>Arguments</h2>
     <dl><dt>extract</dt>
 <dd><p>An <code><a href="ipums_extract-class.html">ipums_extract</a></code> object.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to methods.</p></dd>
+
+
 <dt>description</dt>
 <dd><p>Description of the extract.</p></dd>
+
+
 <dt>samples</dt>
 <dd><p>Character vector of samples to add to the extract, if any.
 Use the <a href="https://usa.ipums.org/usa-action/samples/sample_ids" class="external-link">USA sample ID values</a>
 or the <a href="https://cps.ipums.org/cps-action/samples/sample_ids" class="external-link">CPS sample ID values</a>.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>Character vector of variables to add to the extract, if any.</p></dd>
+
+
 <dt>data_format</dt>
 <dd><p>The desired format of the extract data file (one of
 "fixed_width", "csv", "stata", "spss", or "sas9").</p></dd>
+
+
 <dt>validate</dt>
 <dd><p>Logical value indicating whether to check the modified
 extract structure for validity. Defaults to <code>TRUE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A modified IPUMS USA or CPS extract object</p>
+    
+
+<p>A modified IPUMS USA or CPS extract object</p>
     </div>
     <div id="note">
     <h2>Note</h2>

@@ -20,7 +20,7 @@ vignette("ipums-api", package = "ipumsr").'><meta property="og:image" content="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -143,30 +143,43 @@ or <code>c("usa", "1")</code>, not <code>"usa:00001"</code> or <code>c("usa", "0
 See Examples section below for examples of each form.</p>
 <p>For a list of codes used to refer to each collection, see
 <code><a href="ipums_data_collections.html">ipums_data_collections()</a></code>.</p></dd>
+
+
 <dt>initial_delay_seconds</dt>
 <dd><p>How many seconds to wait before first status
 check.</p></dd>
+
+
 <dt>max_delay_seconds</dt>
 <dd><p>Maximum seconds to wait between status checks. The
 function doubles the wait time after each check, but will cap the wait
 time at this maximum value (300 seconds, or 5 minutes, by default).</p></dd>
+
+
 <dt>timeout_seconds</dt>
 <dd><p>Maximum total number of seconds to continue waiting
 for the extract before throwing an error. Defaults to 10,800 seconds (three
 hours).</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>If <code>TRUE</code>, the default, messages will be printed at the
 beginning of each wait interval with the current wait time, each time the
 status of the extract is checked, and when the extract is ready to
 download. Setting this argument to <code>FALSE</code> will silence these
 messages.</p></dd>
+
+
 <dt>api_key</dt>
 <dd><p>API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An <code><a href="ipums_extract-class.html">ipums_extract</a></code> object containing the
+    
+
+<p>An <code><a href="ipums_extract-class.html">ipums_extract</a></code> object containing the
 extract definition and the URLs from which to download extract files.</p>
     </div>
     <div id="see-also">

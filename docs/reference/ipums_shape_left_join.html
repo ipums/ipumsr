@@ -19,7 +19,7 @@ in the shape files does not always match those in the data files."><meta propert
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -155,24 +155,35 @@ in the shape files does not always match those in the data files.</p>
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>A dataset, usually one that has been aggregated to a geographic level.</p></dd>
+
+
 <dt>shape_data</dt>
 <dd><p>A shape file (loaded with <code><a href="read_ipums_sf.html">read_ipums_sf</a></code> or <code>read_ipums_sp</code>)</p></dd>
+
+
 <dt>by</dt>
 <dd><p>A vector of variable names to join on. Like the dplyr join functions, named vectors
  indicate that the names are different between the data and shape file.
  shape files to load. Accepts a character vector specifying the file name, or
 <code><a href="dplyr_select_style.html">dplyr_select_style</a></code> conventions. Can load multiple shape files,
   which will be combined.</p></dd>
+
+
 <dt>suffix</dt>
 <dd><p>For variables that are found in both, but aren't joined on, a suffix
 to put on the variables. Defaults to nothing for data variables and "_SHAPE" for
 variables from the shape file.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>I <code>TRUE</code>, will report information about geometries dropped in the merge.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>returns a sf or a SpatialPolygonsDataFrame depending on what was passed in.</p>
+    
+
+<p>returns a sf or a SpatialPolygonsDataFrame depending on what was passed in.</p>
     </div>
 
     <div id="ref-examples">
@@ -195,7 +206,7 @@ variables from the shape file.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.9.1, GDAL 3.3.2, PROJ 7.2.1; sf_use_s2() is TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> options:        ENCODING=latin1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `US_pmsa_1990' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e8722d263a\US_pmsa_1990.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `C:\Users\derek\AppData\Local\Temp\RtmpKG1gRc\file24b852145b87\US_pmsa_1990.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 8 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
@@ -225,7 +236,7 @@ variables from the shape file.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> To mute warnings of possible GDAL/OSR exportToProj4() degradation,</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> use options("rgdal_show_exportToProj4_warnings"="none") before loading sp or rgdal.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OGR data source with driver: ESRI Shapefile </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e8143d553e", layer: "US_pmsa_1990"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "C:\Users\derek\AppData\Local\Temp\RtmpKG1gRc\file24b8359cad1", layer: "US_pmsa_1990"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> with 71 features</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> It has 8 fields</span>
 <span class="r-in"></span>

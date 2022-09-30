@@ -18,7 +18,7 @@ SpatialPolygonsDataFrame (sp) objects."><meta property="og:image" content="http:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -142,14 +142,20 @@ SpatialPolygonsDataFrame (sp) objects.</p>
     <dl><dt>shape_file</dt>
 <dd><p>Filepath to one or more .shp files, a .zip file from an IPUMS extract
 or a path to an unzipped folder.</p></dd>
+
+
 <dt>shape_layer</dt>
 <dd><p>For .zip extracts with multiple datasets, the name of the
  shape files to load. Accepts a character vector specifying the file name, or
 <code><a href="dplyr_select_style.html">dplyr_select_style</a></code> conventions. Can load multiple shape files,
   which will be combined.</p></dd>
+
+
 <dt>vars</dt>
 <dd><p>Which variables in the shape file's data to keep (NULL the default
 keeps all)</p></dd>
+
+
 <dt>encoding</dt>
 <dd><p>The text encoding to use when reading the shape file. Typically
 the defaults should read the data correctly, but for some extracts you may
@@ -158,19 +164,28 @@ may need to. For microdata projects, the default NULL will look for a .cpg
 file to determine the encoding and if none is available, it will default to
 latin1. The NHGIS and the IPUMS Terra functions specify the encoding for
 those projects (latin1 and UTF-8 respectively).</p></dd>
+
+
 <dt>bind_multiple</dt>
 <dd><p>If <code>TRUE</code>, will combine multiple shape files found into
 a single object.</p></dd>
+
+
 <dt>add_layer_var</dt>
 <dd><p>Whether to add a variable named <code>layer</code> that indicates
 which shape_layer the data came from. NULL, the default, uses TRUE if more than
 1 layer is found, and FALSE otherwise.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>I <code>TRUE</code>, will report progress information</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>read_ipums_sf</code> returns a sf object and <code>read_ipums_sp</code> returns
+    
+
+<p><code>read_ipums_sf</code> returns a sf object and <code>read_ipums_sp</code> returns
   a SpatialPolygonsDataFrame.</p>
     </div>
     <div id="see-also">
@@ -194,7 +209,7 @@ which shape_layer the data came from. NULL, the default, uses TRUE if more than
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> options:        ENCODING=latin1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `US_pmsa_1990' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e8528d51ed\US_pmsa_1990.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `C:\Users\derek\AppData\Local\Temp\RtmpKG1gRc\file24b85d09511d\US_pmsa_1990.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 8 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
@@ -207,7 +222,7 @@ which shape_layer the data came from. NULL, the default, uses TRUE if more than
 <span class="r-in">  <span class="va">sp_data</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_sp</span><span class="op">(</span><span class="va">shape_file</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OGR data source with driver: ESRI Shapefile </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e86055288f", layer: "US_pmsa_1990"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "C:\Users\derek\AppData\Local\Temp\RtmpKG1gRc\file24b8468d71f6", layer: "US_pmsa_1990"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> with 71 features</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> It has 8 fields</span>
 <span class="r-in"></span>

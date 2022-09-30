@@ -18,7 +18,7 @@ set_ipums_var_attributes."><meta property="og:image" content="http://tech.popdat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -124,16 +124,23 @@ set_ipums_var_attributes."><meta property="og:image" content="http://tech.popdat
     <dl><dt>data</dt>
 <dd><p>A dplyr <code>tbl</code> object (generally a <code>tbl_lazy</code>
 object stored in a database.</p></dd>
+
+
 <dt>ddi</dt>
 <dd><p>A DDI object, read with <code><a href="read_ipums_ddi.html">read_ipums_ddi</a></code>.</p></dd>
+
+
 <dt>var_attrs</dt>
 <dd><p>One or more of <code>val_labels</code>, <code>var_label</code> and
 <code>var_desc</code> describing what kinds of attributes you want to add.
 If NULL, will not add any attributes.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A local <code>tbl_df</code> data.frame with IPUMS attributes attached</p>
+    
+
+<p>A local <code>tbl_df</code> data.frame with IPUMS attributes attached</p>
     </div>
 
   </div>

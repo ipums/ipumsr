@@ -19,7 +19,7 @@ vignette("ipums-api", package = "ipumsr").'><meta property="og:image" content="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -132,27 +132,43 @@ extract API. For an overview of ipumsr microdata API functionality, see
     <h2>Arguments</h2>
     <dl><dt>description</dt>
 <dd><p>Description of the extract.</p></dd>
+
+
 <dt>samples</dt>
 <dd><p>Character vector of samples to include in the extract. Samples
 should be specified using the
 <a href="https://usa.ipums.org/usa-action/samples/sample_ids" class="external-link">sample ID values</a>.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>Character vector of variables to include in the extract.</p></dd>
+
+
 <dt>data_format</dt>
 <dd><p>The desired format of the extract data file (one of
 "fixed_width", "csv", "stata", "spss", or "sas9").</p></dd>
+
+
 <dt>data_structure</dt>
 <dd><p>Currently, this must be "rectangular", which is also
 the default. In the future, the API will also support "hierarchical"
 extracts.</p></dd>
+
+
 <dt>rectangular_on</dt>
 <dd><p>Currently, this must be "P", indicating that the
 extract will be rectangularized on person records. In the future, the API
 will also support household-only extracts (<code>rectangular_on = "H"</code>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code><a href="ipums_extract-class.html">c("usa_extract", "ipums_extract")</a></code>containing the extract definition.</p>
+    
+
+<p>An object of class <code><a href="ipums_extract-class.html">c("usa_extract", "ipums_extract")</a></code></p>
+
+
+<p>containing the extract definition.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

@@ -19,7 +19,7 @@ into a separate object and use it instead."><meta property="og:image" content="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -132,9 +132,13 @@ into a separate object and use it instead.</p>
     <dl><dt>object</dt>
 <dd><p>A DDI object (loaded with <code><a href="read_ipums_ddi.html">read_ipums_ddi</a></code>), a data.frame
 with ipums metadata attached, or a single column from an ipums data.frame.</p></dd>
+
+
 <dt>vars</dt>
 <dd><p>dplyr <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></code>-style notation for the variables to
 give information about</p></dd>
+
+
 <dt>var</dt>
 <dd><p>select-style notation for a single variable</p>
 <p><code>ipums_var_info()</code> loads all available variable information for one or more
@@ -151,10 +155,13 @@ decimals and variable type.</p>
 In order to make sure that they are available, it is best to keep a copy of the
 separate from the data your are manipulating using <code><a href="read_ipums_ddi.html">read_ipums_ddi</a></code>. Then
 you can refer to the IPUMS documentation in this object.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>ipums_var_info</code> returns a <code>tbl_df</code> data frame with variable information, and
+    
+
+<p><code>ipums_var_info</code> returns a <code>tbl_df</code> data frame with variable information, and
   the other functions return a length 1 character vector.</p>
     </div>
 

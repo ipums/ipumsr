@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -154,43 +154,63 @@
 <dd><p>Path to the data file, which can either be the .zip file directly
 downloaded from the IPUMS Terra website, path to the unzipped folder, or to the
 csv unzipped from the download.</p></dd>
+
+
 <dt>data_layer</dt>
 <dd><p>For .zip extracts with multiple datasets, the name of the
  data to load. Accepts a character vector specifying the file name, or
 <code><a href="dplyr_select_style.html">dplyr_select_style</a></code> conventions. Data layer must uniquely identify
 a dataset.</p></dd>
+
+
 <dt>ddi_file</dt>
 <dd><p>(Optional) If the download is unzipped, path to the .xml file which
 provides usage and citation information for extract.</p></dd>
+
+
 <dt>cb_file</dt>
 <dd><p>(Optional) If the download is unzipped, path to the .txt file which
 provides usage and citation information for extract.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Logical, indicating whether to print progress information
 to console.</p></dd>
+
+
 <dt>var_attrs</dt>
 <dd><p>Variable attributes to add from the DDI, defaults to
 adding all (val_labels, var_label and var_desc). See
 <code><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></code> for more details.</p></dd>
+
+
 <dt>shape_file</dt>
 <dd><p>(Optional) If the download is unzipped, path to the .zip,
 folder path or .shp file representing the the shape file. If only the data
 table is needed, can be set to FALSE to indicate not to load the shape
 file.</p></dd>
+
+
 <dt>shape_layer</dt>
 <dd><p>(Defaults to using the same value as data_layer) Specification
 of which shape files to load using the same semantics as <code>data_layer</code>. Can
 load multiple shape files, which will be combined.</p></dd>
+
+
 <dt>shape_encoding</dt>
 <dd><p>The text encoding to use when reading the shape file. Typically
 the defaults should read the data correctly, but for some extracts you may need
 to set them manually, but if funny characters appear in your data, you may need
 to. Defaults to "UTF-8" for IPUMS Terra.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>read_terra_area</code> returns a <code>tbl_df</code> with the tabular data,
-<code>read_terra_area_sf</code> returns a <code>sf</code> object with tabular data and shapes,
+    
+
+<p><code>read_terra_area</code> returns a <code>tbl_df</code> with the tabular data,</p>
+<p></p>
+<p><code>read_terra_area_sf</code> returns a <code>sf</code> object with tabular data and shapes,
   and <code>read_terra_area_sp</code> returns a <code>SpatialPolygonsDataFrame</code> with
   data and shapes.</p>
     </div>

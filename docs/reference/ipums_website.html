@@ -21,7 +21,7 @@ variables."><meta property="og:image" content="http://tech.popdata.org/ipumsr/lo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -137,28 +137,43 @@ variables.</p>
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A DDI or empty (if specifying project)</p></dd>
+
+
 <dt>var</dt>
 <dd><p>A single variable name in a character vector</p></dd>
+
+
 <dt>project</dt>
 <dd><p>If not using a DDI (or object with a project attribute)
 A name of an IPUMS project, one of:
   "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
   "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
   or "IPUMS Terra"</p></dd>
+
+
 <dt>launch</dt>
 <dd><p>If <code>TRUE</code>, launch the website.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>If <code>TRUE</code>, message user if no variable specific websites are available</p></dd>
+
+
 <dt>var_label</dt>
 <dd><p>Sometimes the variable label is useful for finding the correct URL. Only needed
 if not passing in the ddi object.</p></dd>
+
+
 <dt>homepage_if_missing</dt>
 <dd><p>If <code>TRUE</code>, Return homepage if project does not provide variable
 specific web pages.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The url to the page on ipums.org (silently if launch is <code>TRUE</code>)</p>
+    
+
+<p>The url to the page on ipums.org (silently if launch is <code>TRUE</code>)</p>
     </div>
     <div id="details">
     <h2>Details</h2>
