@@ -90,10 +90,6 @@ NULL
 #' @name ipums_extract-class
 NULL
 
-
-
-
-
 # > Define extract ----
 
 #' Define an IPUMS USA extract request
@@ -135,18 +131,27 @@ define_extract_usa <- function(description,
 
   data_format <- match.arg(data_format)
 
-  stopifnot(is.character(description), length(description) == 1)
-  stopifnot(is.character(data_structure), length(data_structure) == 1)
-  stopifnot(is.character(rectangular_on), length(rectangular_on) == 1)
-  stopifnot(is.character(data_format), length(data_format) == 1)
-  stopifnot(is.character(samples))
-  stopifnot(is.character(variables))
+  # Remove these once we allow for hierarchical and rectangular on H extracts
+  if (data_structure != "rectangular") {
+    rlang::abort(
+      paste0(
+        "Currently, the `data_structure` argument must be equal to ",
+        "\"rectangular\"; in the future, the API will also support ",
+        "\"hierarchical\" extracts."
+      )
+    )
+  }
 
-  # For now this next block is irrelevant; uncomment it whenever we add
-  # support for rectangular_on = "H"
-  # rectangular_on <- if (data_structure == "rectangular") {
-  #   match.arg(rectangular_on)
-  # } else NA_character_
+  # Note when hierarchical extracts are supported, default rectangular_on
+  # should be `NULL` as rectangular_on must be missing for hierarchical extracts
+  if (rectangular_on != "P") {
+    rlang::abort(
+      paste0(
+        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+        "the future, the API will also support `rectangular_on = \"H\"."
+      ),
+    )
+  }
 
   extract <- new_ipums_extract(
     collection = "usa",
@@ -194,18 +199,27 @@ define_extract_cps <- function(description,
 
   data_format <- match.arg(data_format)
 
-  stopifnot(is.character(description), length(description) == 1)
-  stopifnot(is.character(data_structure), length(data_structure) == 1)
-  stopifnot(is.character(rectangular_on), length(rectangular_on) == 1)
-  stopifnot(is.character(data_format), length(data_format) == 1)
-  stopifnot(is.character(samples))
-  stopifnot(is.character(variables))
+  # Remove these once we allow for hierarchical and rectangular on H extracts
+  if (data_structure != "rectangular") {
+    rlang::abort(
+      paste0(
+        "Currently, the `data_structure` argument must be equal to ",
+        "\"rectangular\"; in the future, the API will also support ",
+        "\"hierarchical\" extracts."
+      )
+    )
+  }
 
-  # For now this next block is irrelevant; uncomment it whenever we add
-  # support for rectangular_on = "H"
-  # rectangular_on <- if (data_structure == "rectangular") {
-  #   match.arg(rectangular_on)
-  # } else NA_character_
+  # Note when hierarchical extracts are supported, default rectangular_on
+  # should be `NULL` as rectangular_on must be missing for hierarchical extracts
+  if (rectangular_on != "P") {
+    rlang::abort(
+      paste0(
+        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
+        "the future, the API will also support `rectangular_on = \"H\"."
+      ),
+    )
+  }
 
   extract <- new_ipums_extract(
     collection = "cps",
@@ -2124,437 +2138,713 @@ standardize_extract_identifier <- function(extract) {
 }
 
 
+#' Validate the structure of an IPUMS extract object
+#'
+#' @description
+#' Ensures that the structure of an extract object is consistent with what is
+#' required by the IPUMS Extract API.
+#'
+#' The checks are primarily handled by wrapper function
+#' `validate_extract_field()` and its helper functions. See the documentation
+#' for these functions for more details on their arguments and implementation.
+#'
+#' @param x Object inheriting from class `ipums_extract`
+#'
+#' @return The input extract object `x`, invisibly
+#'
+#' @md
+#' @noRd
 validate_ipums_extract <- function(x) {
   UseMethod("validate_ipums_extract")
 }
 
-#' Validate the structure of an NHGIS extract object
-#'
-#' @description
-#' Ensures that the structure of a provided \code{nhgis_extract} object is
-#' compatible with the structure expected for interacting with the IPUMS extract
-#' API.
-#'
-#' Validation checks currently implemented are:
-#'
-#' \itemize{
-#'   \item{An extract contains at least one dataset, time series table, or
-#'     shapefile}
-#'   \item{Fields that take a single value are of length one and have accepted
-#'     values}
-#'   \item{An extract contains a collection and description}
-#'   \item{All datasets in an extract have associated tables and geog levels}
-#'   \item{All dataset subfields are of the same length as the number of
-#'     datasets in the extract}
-#'   \item{All time series tables in an extract have associated geog levels}
-#'   \item{All time series table subfields are of the same length as the number
-#'     of time series tables in the extract}
-#' }
-#'
-#' @param x An \code{nhgis_extract} object
-#'
-#' @return Returns the input extract object
-#'
 #' @export
-#'
-#' @noRd
 validate_ipums_extract.nhgis_extract <- function(x) {
 
-  types <- nhgis_extract_types(x)
+  # Call base .ipums_extract method
+  NextMethod(x)
 
-  if (length(types) == 0) {
-    stop(
-      "An nhgis_extract must contain at least one of `datasets`, ",
-      "`time_series_tables`, or `shapefiles`.",
-      call. = FALSE
+  includes_ds <- !is.null(x$datasets) && !is_na(x$datasets)
+  includes_tst <- !is.null(x$time_series_tables) && !is_na(x$time_series_tables)
+  includes_shp <- !is.null(x$shapefiles) && !is_na(x$shapefiles)
+
+  if (!any(includes_ds, includes_tst, includes_shp)) {
+    rlang::abort(
+      paste0(
+        "An `nhgis_extract` must contain at least one of `datasets`, ",
+        "`time_series_tables`, or `shapefiles`."
+      )
     )
   }
 
-  has_na <- purrr::map_lgl(
-    types,
-    ~any(is.na(x[[.]]))
+  if (any(is.na(x$datasets)) ||
+      any(is.na(x$time_series_tables)) ||
+      any(is.na(x$shapefiles))) {
+    rlang::abort(
+      paste0(
+        "None of `datasets`, `time_series_tables`, or `shapefiles` ",
+        "can contain missing values."
+      )
+    )
+  }
+
+  # Specify the validation requirements for each extract field
+  extract_field_spec <-  list(
+    list(
+      field = "datasets",
+      type = "character"
+    ),
+    list(
+      field = "ds_tables",
+      required = includes_ds,
+      type = "list",
+      parent_field = "datasets"
+    ),
+    list(
+      field = "ds_geog_levels",
+      required = includes_ds,
+      type = "list",
+      parent_field = "datasets"
+    ),
+    list(
+      field = "ds_years",
+      type = "list",
+      parent_field = "datasets"
+    ),
+    list(
+      field = "ds_breakdown_values",
+      type = "list",
+      parent_field = "datasets"
+    ),
+    list(
+      field = "geographic_extents",
+      allowed = includes_ds,
+      must_be_missing_msg = " when no `datasets` are specified"
+    ),
+    list(
+      field = "breakdown_and_data_type_layout",
+      allowed = includes_ds,
+      choices = c("single_file", "separate_files"),
+      match_length = 1,
+      must_be_missing_msg = " when no `datasets` are specified"
+    ),
+    list(
+      field = "time_series_tables",
+      type = "character"
+    ),
+    list(
+      field = "tst_geog_levels",
+      required = includes_tst,
+      type = "list",
+      parent_field = "time_series_tables"
+    ),
+    list(
+      field = "tst_layout",
+      required = includes_tst,
+      allowed = includes_tst,
+      choices = c("time_by_row_layout", "time_by_column_layout",
+                  "time_by_file_layout"),
+      match_length = 1,
+      must_be_missing_msg = " when no `time_series_tables` are specified",
+      must_be_present_msg = " when any `time_series_tables` are specified"
+    ),
+    list(
+      field = "shapefiles",
+      type = "character"
+    ),
+    list(
+      field = "data_format",
+      required = includes_ds || includes_tst,
+      allowed = includes_ds || includes_tst,
+      choices = c("csv_header", "csv_no_header", "fixed_width"),
+      match_length = 1,
+      must_be_missing_msg =
+        " when no `datasets` or `time_series_tables` are specified",
+      must_be_present_msg =
+        " when any `datasets` or `time_series_tables` are specified"
+    )
   )
 
-  if (any(has_na)) {
-    stop(
-      "An nhgis_extract cannot include missing values in `",
-      paste0(types[has_na], collapse = "`, `"), "`.",
-      call. = FALSE
+  # Validate based on each argument's validation specifications
+  # Collect errors and display together.
+  extract_issues <- purrr::map(
+    extract_field_spec,
+    ~tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        cnd$message
+      }
     )
-  }
-
-  must_be_single <- c("description",
-                      "breakdown_and_data_type_layout",
-                      "tst_layout",
-                      "data_format")
-
-  is_too_long <- purrr::map_lgl(
-    must_be_single,
-    ~length(x[[.]]) > 1
   )
 
-  if (any(is_too_long)) {
-    stop(
-      "The following fields of an `nhgis_extract` must be of length 1: `",
-      paste0(must_be_single[is_too_long], collapse = "`, `"), "`.",
-      call. = FALSE
-    )
-  }
+  extract_issues <- unlist(purrr::compact(extract_issues))
 
-  is_missing <- purrr::map_lgl(
-    c("collection", "description"),
-    ~is_na(x[[.]]) | is_empty(x[[.]])
-  )
-
-  is_present <- !purrr::map_lgl(
-    names(x),
-    ~is_empty(x[[.]]) || any(is.na(x[[.]]))
-  )
-
-  vars_present <- names(x)[is_present]
-
-  if (any(is_missing)) {
-    stop(
-      "An nhgis_extract must contain values for: `",
-      paste0(c("collection", "description")[is_missing], collapse = "`, `"),
-      "`.",
-      call. = FALSE
-    )
-  }
-
-  if (!is_null(x$data_format)) {
-    if (!x$data_format %in% c("csv_header", "csv_no_header", "fixed_width")) {
-      stop(
-        "`data_format` must be one of `csv_header`, `csv_no_header`",
-        " or `fixed_width`.",
-        call. = FALSE
-      )
-    }
-  }
-
-  if (!is_null(x$breakdown_and_data_type_layout)) {
-    if (!x$breakdown_and_data_type_layout %in% c("single_file",
-                                                 "separate_files")) {
-      stop(
-        "`breakdown_and_data_type_layout` must be one of `single_file`",
-        " or `separate_files`.",
-        call. = FALSE
-      )
-    }
-  }
-
-  if (!is_null(x$tst_layout)) {
-    if (!x$tst_layout %in% c("time_by_row_layout",
-                             "time_by_column_layout",
-                             "time_by_file_layout")) {
-      stop(
-        "`tst_layout` must be one of `time_by_row_layout`, ",
-        "`time_by_column_layout` or `time_by_file_layout`.",
-        call. = FALSE
-      )
-    }
-  }
-
-  if ("datasets" %in% types) {
-
-    must_be_non_missing <- c("ds_tables", "ds_geog_levels", "data_format")
-    must_have_same_length <- c("ds_tables", "ds_geog_levels",
-                               "ds_years", "ds_breakdown_values")
-
-    is_missing <- purrr::map_lgl(
-      must_be_non_missing[1:2],
-      function(y) any(
-        purrr::map_lgl(
-          x[[y]],
-          ~any(is.na(.x)) || is_empty(.x)
-        )
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `nhgis_extract` object:",
+        purrr::set_names(extract_issues, "x")
       )
     )
-
-    missing_df <- is_null(x$data_format) || is_na(x$data_format)
-
-    is_missing <- c(is_missing, missing_df)
-
-    if (any(is_missing)) {
-      stop(
-        "An nhgis_extract that contains datasets must also contain ",
-        "values for: `",
-        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`.",
-        call. = FALSE
-      )
-    }
-
-    # Non-list elements will be recycled, so only need to worry about
-    # var lengths if lists are provided in args.
-    var_length <- purrr::map_dbl(must_have_same_length, ~length(x[[.]]))
-
-    wrong_length <- purrr::map_lgl(
-      must_have_same_length,
-      ~is_list(x[[.]]) && length(x[[.]]) != length(x$datasets)
-    )
-
-    length_msg <- purrr::imap_chr(
-      must_have_same_length,
-      ~paste0("`", .x, "` (", var_length[.y], ")")
-    )
-
-    if (any(wrong_length)) {
-      stop(
-        "The number of selections provided in ",
-        paste0(length_msg[wrong_length], collapse = ", "),
-        " does not match the number of datasets (", length(x$datasets),
-        "). \nTo recycle selections across datasets, ensure values are stored ",
-        "in a vector, not a list.",
-        call. = FALSE
-      )
-    }
-
-  } else {
-
-    ds_sub_vars <- c("ds_tables", "ds_geog_levels",
-                     "ds_years", "ds_breakdown_values",
-                     "geographic_extents",
-                     "breakdown_and_data_type_layout")
-
-    extra_vars <- ds_sub_vars[ds_sub_vars %in% vars_present]
-
-    if (length(extra_vars) > 0) {
-      warning(
-        "The following parameters are not relevant for an nhgis_extract that ",
-        "does not include any datasets: `",
-        paste0(extra_vars, collapse = "`, `"), "`.",
-        # "`. These parameters will be ignored.",
-        call. = FALSE
-      )
-    }
-
   }
 
-  if ("time_series_tables" %in% types) {
-
-    must_be_non_missing <- c("tst_geog_levels",
-                             "data_format",
-                             "tst_layout")
-
-    is_missing <- purrr::map_lgl(
-      must_be_non_missing[1],
-      function(y) any(
-        purrr::map_lgl(
-          x[[y]],
-          ~any(is.na(.x)) || is_empty(.x)
-        )
-      )
-    )
-
-    missing_df <- is_null(x$data_format) || is_na(x$data_format)
-    missing_tstl <- is_null(x$tst_layout) ||
-      is_na(x$tst_layout)
-
-    is_missing <- c(is_missing, missing_df, missing_tstl)
-
-    if (any(is_missing)) {
-      stop(
-        "An nhgis_extract that contains time series tables must also contain ",
-        "values for: `",
-        paste0(must_be_non_missing[is_missing], collapse = "`, `"), "`.",
-        call. = FALSE
-      )
-    }
-
-    if (is_list(x$tst_geog_levels) &&
-        length(x$tst_geog_levels) != length(x$time_series_tables)) {
-      stop(
-        "The number of selections provided in `tst_geog_levels` (",
-        length(x$tst_geog_levels),
-        ") does not match the number of time series tables (",
-        length(x$time_series_tables),
-        "). \nTo recycle selections across time series tables, ensure values ",
-        "are stored in a vector, not a list.",
-        call. = FALSE
-      )
-    }
-
-  } else {
-
-    tst_sub_vars <- c("tst_geog_levels", "tst_layout")
-    extra_vars <- tst_sub_vars[tst_sub_vars %in% vars_present]
-
-    if (length(extra_vars) > 0) {
-      warning(
-        "The following parameters are not relevant for an nhgis_extract that ",
-        "does not include any time series tables: `",
-        paste0(extra_vars, collapse = "`, `"), "`.",
-        # "`. These parameters will be ignored.",
-        call. = FALSE
-      )
-    }
-
-  }
-
-  if ("shapefiles" %in% types && length(types) == 1) {
-
-    not_relevant <- c("data_format")
-    extra_vars <- intersect(not_relevant, vars_present)
-
-    if (length(extra_vars) > 0) {
-      warning(
-        "The following parameters are not relevant for an nhgis_extract that ",
-        "does not include any time series tables or datasets: `",
-        paste0(extra_vars, collapse = "`, `"), "`.",
-        # "`. These parameters will be ignored.",
-        call. = FALSE
-      )
-    }
-  }
-
-  x
+  invisible(x)
 
 }
 
-#' Validate the structure of an IPUMS USA extract object
-#'
-#' @description
-#' Ensures that the structure of a provided \code{usa_extract} object is
-#' compatible with the structure expected for interacting with the IPUMS extract
-#' API.
-#'
-#' Validation checks currently implemented are:
-#'
-#' \itemize{
-#'   \item{An extract contains samples, variables, a description,
-#'     data structure, and data format,}
-#'   \item{Fields that take a single value have accepted values}
-#'   \item{rectangular_on is only provided if data structure is rectangular}
-#' }
-#'
-#' @param x A \code{usa_extract} object
-#'
-#' @return Returns the input extract object
-#'
 #' @export
-#'
-#' @noRd
 validate_ipums_extract.usa_extract <- function(x) {
 
-  must_be_non_missing <- c("description", "data_structure",
-                           "data_format", "samples", "variables")
+  NextMethod(x)
 
-  is_missing <- purrr::map_lgl(
-    must_be_non_missing,
-    ~any(is.null(x[[.]])) || any(is.na(x[[.]])) || any(is_empty(x[[.]]))
+  extract_field_spec <- list(
+    list(
+      field = "data_structure",
+      required = TRUE,
+      choices = c("rectangular", "hierarchical"),
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "rectangular_on",
+      required = isTRUE(x$data_structure == "rectangular"),
+      allowed = isTRUE(x$data_structure == "rectangular"),
+      choices = c("P", "H"),
+      must_be_present_msg = " when `data_structure == \"rectangular\"`",
+      must_be_missing_msg = " when `data_structure != \"rectangular\"`",
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "data_format",
+      required = TRUE,
+      choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "samples",
+      required = TRUE,
+      type = "character"
+    ),
+    list(
+      field = "variables",
+      required = TRUE,
+      type = "character"
+    )
   )
 
-  if (any(is_missing)) {
-    stop(
-      "The following elements of a `", x$collection, "_extract` ",
-      "must not contain missing values: ",
-      paste0(must_be_non_missing[is_missing], collapse = ", "),
-      call. = FALSE
+  extract_issues <- purrr::map(
+    extract_field_spec,
+    ~tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        cnd$message
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `usa_extract` object:",
+        purrr::set_names(extract_issues, "x")
+      )
     )
   }
 
-  # Remove these once we allow for hierarchical and rectangular on H extracts
-  if (x$data_structure != "rectangular") {
-    stop(
-      "Currently, the `data_structure` argument must be equal to ",
-      "\"rectangular\"; in the future, the API will also support ",
-      "\"hierarchical\" extracts.",
-      call. = FALSE
-    )
-  }
-  if (x$rectangular_on != "P") {
-    stop(
-      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-      "the future, the API will also support `rectangular_on = \"H\".",
-      call. = FALSE
-    )
-  }
-
-  stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
-  stopifnot(x$data_structure %in% c("rectangular", "hierarchical"))
-
-  if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
-    stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
-         "of 'H' or 'P'", call. = FALSE)
-  }
-
-  if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
-    stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
-         "missing", call. = FALSE)
-  }
-
-  x
+  invisible(x)
 
 }
 
 #' @export
 validate_ipums_extract.cps_extract <- function(x) {
 
-  must_be_non_missing <- c("description", "data_structure",
-                           "data_format", "samples", "variables")
+  NextMethod(x)
 
-  is_missing <- purrr::map_lgl(
-    must_be_non_missing,
-    ~any(is.null(x[[.]])) || any(is.na(x[[.]])) || any(is_empty(x[[.]]))
+  extract_field_spec <- list(
+    list(
+      field = "data_structure",
+      required = TRUE,
+      choices = c("rectangular", "hierarchical"),
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "rectangular_on",
+      required = isTRUE(x$data_structure == "rectangular"),
+      allowed = isTRUE(x$data_structure == "rectangular"),
+      choices = c("P", "H"),
+      must_be_present_msg = " when `data_structure == \"rectangular\"`",
+      must_be_missing_msg = " when `data_structure != \"rectangular\"`",
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "data_format",
+      required = TRUE,
+      choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "samples",
+      required = TRUE,
+      type = "character"
+    ),
+    list(
+      field = "variables",
+      required = TRUE,
+      type = "character"
+    )
   )
 
-  if (any(is_missing)) {
-    stop(
-      "The following elements of a `", x$collection, "_extract` ",
-      "must not contain missing values: ",
-      paste0(must_be_non_missing[is_missing], collapse = ", "),
-      call. = FALSE
+  extract_issues <- purrr::map(
+    extract_field_spec,
+    ~tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        cnd$message
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `cps_extract` object:",
+        purrr::set_names(extract_issues, "x")
+      )
     )
   }
 
-  # Remove these once we allow for hierarchical and rectangular on H extracts
-  if (x$data_structure != "rectangular") {
-    stop(
-      "Currently, the `data_structure` argument must be equal to ",
-      "\"rectangular\"; in the future, the API will also support ",
-      "\"hierarchical\" extracts.",
-      call. = FALSE
-    )
-  }
-  if (x$rectangular_on != "P") {
-    stop(
-      "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-      "the future, the API will also support `rectangular_on = \"H\".",
-      call. = FALSE
-    )
-  }
-
-  stopifnot(x$data_format %in% c("fixed_width", "csv","stata", "spss", "sas9"))
-  stopifnot(x$data_structure %in% c("rectangular", "hierarchical"))
-
-  if (x$data_structure == "rectangular" & !x$rectangular_on %in% c("H", "P")) {
-    stop("If `data_structure` is 'rectangular', `rectangular_on` must be one ",
-         "of 'H' or 'P'", call. = FALSE)
-  }
-
-  if (x$data_structure == "hierarchical" & !is.na(x$rectangular_on)) {
-    stop("If `data_structure` is 'hierarchical', `rectangular_on` must be ",
-         "missing", call. = FALSE)
-  }
-
-  x
+  invisible(x)
 
 }
 
+#' @importFrom rlang .data
 #' @export
 validate_ipums_extract.ipums_extract <- function(x) {
 
   # Throw error if no API for collection
   ipums_api_version(x$collection)
 
-  warning(
-    paste0("Unable to validate extract for collection `", x$collection, "`.")
+  extract_field_spec <- list(
+    list(
+      field = "collection",
+      required = TRUE,
+      type = "character",
+      match_length = 1
+    ),
+    list(
+      field = "description",
+      required = TRUE,
+      match_length = 1,
+      type = "character"
+    ),
+    list(
+      field = "status",
+      choices = c("unsubmitted", "queued", "started", "produced",
+                  "canceled", "failed", "completed"),
+      match_length = 1
+    ),
+    list(
+      field = "download_links",
+      type = "list"
+    ),
+    list(
+      field = "number",
+      match_length = 1,
+      type = c("character", "integer", "double")
+    )
   )
+
+  # Validate based on each argument's validation specifications
+  # Collect errors and display together.
+  extract_issues <- purrr::map(
+    extract_field_spec,
+    ~tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        cnd$message
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `ipums_extract` object:",
+        purrr::set_names(extract_issues, "x")
+      )
+    )
+  }
 
   x
 
 }
 
+#' Validate the structure of a single field in an IPUMS extract
+#'
+#' @description
+#' Check whether an extract field has the structure expected based on the
+#' values for several input arguments.
+#'
+#' `validate_extract_field()` is a wrapper for several helper functions:
+#'   * `validate_subfield_names()` checks whether a child field of
+#'     another extract field (e.g. `ds_tables` nests within `datasets` in NHGIS
+#'     extracts) has names that match the parent field values.
+#'   * `validate_exists()` checks whether an extract field is missing and
+#'     required or provided and not allowed.
+#'   * `validate_choices()` checks whether the values provided in an extract
+#'     field are in a vector of accepted choices.
+#'   * `validate_length()` checks whether the correct number of values is
+#'     provided for an extract field.
+#'   * `validate_type()` checks whether an extract field is of the correct
+#'     data type.
+#'
+#' Any arguments that are left `NULL` are not used for validation.
+#'
+#' @details
+#' This function provides a consistent syntax for the specification of
+#' extract requirements at the level of a single extract field. If an extract
+#' type requires validation checks that cannot be encapsulated in a single
+#' field, they can be included in that extract type's validation method.
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_extract_field <- function(extract,
+                                   field,
+                                   required = FALSE,
+                                   allowed = TRUE,
+                                   choices = NULL,
+                                   type = NULL,
+                                   match_length = NULL,
+                                   must_be_present_msg = NULL,
+                                   must_be_missing_msg = NULL,
+                                   parent_field = NULL) {
+
+  if (!is_null(parent_field)) {
+    # Child field is only allowed when its parent field is provided.
+    allowed <- !is_null(extract[[parent_field]])
+
+    # Child field messages default to use parent_field for convenience
+    must_be_present_msg <- must_be_present_msg %||%
+      paste0(
+        " for any of the provided `",
+        paste0(parent_field, collapse = "`, `"),
+        "`"
+      )
+
+    must_be_missing_msg <- must_be_missing_msg %||%
+      paste0(" when no `", paste0(parent_field, collapse = "`, `"), "` are specified")
+  } else {
+    parent_field_msg <- NULL
+  }
+
+  if (required) {
+    allowed <- TRUE
+  }
+
+  # Check that field has correct names if names are required
+  # (e.g. for nested fields)
+  validate_subfield_names(
+    extract,
+    field,
+    parent_field = parent_field,
+    required = required
+  )
+
+  # Check that the correct number of field values are provided
+  validate_length(
+    extract,
+    field,
+    match_length = match_length %||% parent_field
+  )
+
+  # Check that field exists if required or is missing if not allowed
+  validate_exists(
+    extract,
+    field,
+    required = required,
+    allowed = allowed,
+    must_be_present_msg = must_be_present_msg,
+    must_be_missing_msg = must_be_missing_msg
+  )
+
+  # Check that field value is in the list of accepted choices
+  validate_choices(
+    extract,
+    field,
+    choices = choices
+  )
+
+  # Check that field is of the correct data type
+  validate_type(
+    extract,
+    field,
+    type = type
+  )
+
+  invisible(NULL)
+
+}
+
+
+#' Check whether an extract field exists or has missing values
+#'
+#' @details
+#' Throws an error if an extract field is required and missing, or if an
+#' extract field is not allowed to be in an extract and is present
+#' (for instance, if a certain field must be missing if another field is
+#' specified).
+#'
+#' @param extract An object inheriting from `ipums_extract`.
+#' @param field Character of length 1 containing the name of the extract field
+#'   to check for validity.
+#' @param required Logical indicating whether this field is required to be
+#'   present in the extract.
+#' @param allowed Logical indicating whether this field is allowed to be
+#'   present in the extract.
+#' @param must_be_present_msg Message to append to the output error message when
+#'   `field` is required but does not exist in the extract. This can be used
+#'   to provide context about when the `field` must be present in the extract.
+#'   The default output error message is
+#'   `{field} must not contain missing values`
+#' @param must_be_missing_msg Message to append to the output error message when
+#'   `field` is not allowed to be in the extract but is still provided. This
+#'   can be used to provide context about when the `field` must be missing
+#'   from the extract. The default output error message is
+#'   `{field} must be missing`
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_exists <- function(extract,
+                            field,
+                            required = FALSE,
+                            allowed = TRUE,
+                            must_be_present_msg = NULL,
+                            must_be_missing_msg = NULL) {
+
+  values <- extract[[field]]
+
+  if (is_null(required) && is_null(allowed)) {
+    return(invisible(NULL))
+  }
+
+  is_missing <- is_empty(values) || is_na(values) || length(values) == 0
+  has_missing_values <- any(purrr::map_lgl(values, is.null)) ||
+    any(is.na(unlist(values)))
+
+  if (!allowed && !is_missing) {
+    rlang::abort(
+      paste0("`", field, "` must be missing", must_be_missing_msg, ".")
+    )
+  }
+
+  if (required && (has_missing_values || is_missing)) {
+    rlang::abort(
+      paste0("`", field,
+             "` must not contain missing values", must_be_present_msg, ".")
+    )
+  }
+
+  invisible(NULL)
+}
+
+#' Check whether an extract field is of the correct length
+#'
+#' @details
+#' Throws an error if an extract field is not of a given length or is not the
+#' same length as another extract field.
+#'
+#' @param extract An object inheriting from `ipums_extract`.
+#' @param field Character of length 1 containing the name of the extract field
+#'   to check for validity.
+#' @param match_length Numeric or character value indicating the number
+#'   of values expected in the given `field`. If a character value is provided,
+#'   it should reference the name of another extract field. The length of the
+#'   given `field` is then expected to be the same length as the field provided
+#'   to `match_length`. If `parent_field` is provided, defaults to the length
+#'   of the extract's `parent_field`.
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_length <- function(extract, field, match_length = NULL) {
+
+  values <- extract[[field]]
+
+  if (is_character(match_length)) {
+
+    length_msg <- paste0(
+      "`", field, "` must be the same length as `",
+      paste0(match_length, collapse = "`, `"), "`"
+    )
+
+    match_length <- sum(
+      purrr::map_dbl(
+        match_length,
+        ~length(extract[[.x]]))
+    )
+
+  } else {
+    length_msg <- paste0("`", field, "` must be length ", match_length, ".")
+  }
+
+  if (is_null(values) || length(values) == 0 ||
+      is_null(match_length) || match_length == 0) {
+    return(invisible(NULL))
+  }
+
+  if (!is.null(match_length) && length(values) != match_length) {
+    rlang::abort(length_msg)
+  }
+
+  invisible(NULL)
+
+}
+
+#' Check whether an extract field's values are in a selection of choices
+#'
+#' @details
+#' Throws an error if any values in an extract field are not found in a set
+#' of accepted choices
+#'
+#' @param extract An object inheriting from `ipums_extract`.
+#' @param field Character of length 1 containing the name of the extract field
+#'   to check for validity.
+#' @param choices Character vector of acceptable values for the given `field`.
+#'   Any values found in `field` must be included in `choices`.
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_choices <- function(extract, field, choices = NULL) {
+
+  values <- extract[[field]]
+
+  if (is_null(choices) || is_null(values)) {
+    return(invisible(NULL))
+  }
+
+  if (!all(values %in% choices)) {
+    rlang::abort(paste0(
+      "`", field, "` must be one of \"",
+      paste0(choices, collapse = "\", \""), "\""
+    ))
+  }
+
+  invisible(NULL)
+
+}
+
+#' Check whether an extract field is of the correct type
+#'
+#' @details
+#' Throws an error if an extract field is not of a given type. Uses `typeOf()`
+#' to determine the value to compare to `type`.
+#'
+#' @param extract An object inheriting from `ipums_extract`.
+#' @param field Character of length 1 containing the name of the extract field
+#'   to check for validity.
+#' @param type Character vector of acceptable types for the given `field`.
+#'   Values should correspond to the expected output when `typeOf()` is
+#'   applied to the extract field.
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_type <- function(extract, field, type = NULL) {
+
+  values <- extract[[field]]
+
+  if (is_null(type) || is_null(values)) {
+    return(invisible(NULL))
+  }
+
+  if (!typeof(values) %in% type) {
+    rlang::abort(
+      paste0(
+        "`", field, "` must be of type `", paste0(type, collapse = "` or `"),
+        "`, not `", typeof(values), "`."
+      )
+    )
+  }
+
+  invisible(NULL)
+
+}
+
+#' Check whether an extract subfield is consistent with its parent field
+#'
+#' @details
+#' An extract field that is a child of a given parent field must be a list
+#' whose names are identical to the values provided in that field's parent
+#' field. The list must also be the same length as the parent field.
+#'
+#' @param extract An object inheriting from `ipums_extract`.
+#' @param field Character of length 1 containing the name of the extract field
+#'   to check for validity.
+#' @param parent_field Character indicating the name of the extract field that
+#'   serves as the parent field to `field`. The values in `field` are expected
+#'   to be lists with the same length and names as the extract's `parent_field`
+#'   Providing `parent_field` also automatically modifies some of the default
+#'   validation error messages for improved intuition in this situation.
+#' @param required Logical indicating whether this field is required to be
+#'   present in the extract.
+#'
+#' @return NULL, invisibly
+#' @noRd
+#' @md
+validate_subfield_names <- function(extract,
+                                    field,
+                                    parent_field = NULL,
+                                    required = FALSE) {
+
+  values <- extract[[field]]
+
+  parent_values <- unlist(purrr::map(
+    parent_field,
+    ~extract[[.x]]
+  ))
+
+  parent_field <- paste0("`", paste0(parent_field, collapse = "`, `"), "`")
+
+  if (is_null(parent_values) || is_null(values)) {
+    return(invisible(NULL))
+  }
+
+  non_na_names <- names(values)[!is.na(names(values))]
+
+  if (!all(non_na_names %in% parent_values)) {
+    rlang::abort(
+      paste0(
+        "All names in `", field, "` must be present in this extract's ",
+        parent_field, "."
+      )
+    )
+  }
+
+  if (!all(parent_values %in% names(values))) {
+    rlang::abort(
+      paste0(
+        "All ", parent_field, " must be associated with a value in `",
+        field, "`."
+      )
+    )
+  }
+
+  invisible(NULL)
+}
 
 #' @export
 print.ipums_extract <- function(x, ...) {
@@ -4475,13 +4765,14 @@ ipums_api_version <- function(collection) {
   )
 
   if(!collection %in% versions$code_for_api) {
-    stop(
-      paste0(
-        "No API version found for collection \"", collection, "\"\n",
-        "IPUMS API is currently available for the following collections: \"",
-        paste0(versions$code_for_api, collapse = "\", \""), "\""
-      ),
-      call. = FALSE
+    rlang::abort(
+      c(
+        paste0("No API version found for collection \"", collection, "\""),
+        "i" = paste0(
+          "IPUMS API is currently available for the following collections: \"",
+          paste0(versions$code_for_api, collapse = "\", \""), "\""
+        )
+      )
     )
   }
 
