@@ -942,55 +942,36 @@ test_that("Revisions do not alter unspecified extract fields", {
 })
 
 test_that("Improper extract revisions throw warnings or errors", {
-  expect_warning(
-    add_to_extract(nhgis_extract, ds_tables = list("A")),
+  expect_error(
+    remove_from_extract(
+      nhgis_extract,
+      datasets = "2014_2018_ACS5a",
+      ds_tables = list("a", "b"),
+      ds_geog_levels = list("a"),
+      ds_years = list(C = "c"),
+      tst_geog_levels = list(not_in_extract = "blck_grp")
+    ),
     paste0(
-      "The number of values in `ds_tables` \\(1\\) does not match the number of ",
-      "datasets in this extract \\(2\\)"
+      "`ds_tables` must be the same length as `datasets`.+",
+      "All names in `ds_years` must be present in this extract\'s `datasets`.+",
+      "All names in `tst_geog_levels` must be present in this extract\'s ",
+      "`time_series_tables`"
     )
   )
-  expect_warning(
+  expect_error(
     add_to_extract(
       nhgis_extract,
       datasets = c("New"),
       ds_tables = list("A", "B"),
-      ds_geog_levels = "A"
-    ),
-    paste0(
-      "The number of values in `ds_tables` \\(2\\) does not match the number of ",
-      "datasets to be modified \\(1\\)"
-    )
-  )
-  expect_warning(
-    add_to_extract(
-      nhgis_extract,
+      ds_geog_levels = "A",
+      ds_years = list(C = "c"),
       tst_geog_levels = list(not_in_extract = "blck_grp")
     ),
     paste0(
-      "The specification for `tst_geog_levels` references time_series_tables ",
-      "that do not exist in this extract \\(\"not_in_extract\"\\). These values ",
-      "will be ignored."
-    )
-  )
-  expect_warning(
-    add_to_extract(
-      nhgis_extract,
-      tst_geog_levels = c(not_in_extract = "blck_grp")
-    ),
-    paste0(
-      "Ignoring names in the specification for `tst_geog_levels`. To apply ",
-      "values to time_series_tables by name, ensure values are stored in a ",
-      "list, not a vector."
-    )
-  )
-  expect_warning(
-    add_to_extract(
-      nhgis_extract,
-      ds_geog_levels = list("blck_grp", `2014_2018_ACS5a` = "nation")
-    ),
-    paste0(
-      "The specification for `ds_geog_levels` references datasets that do not ",
-      "exist in this extract \\(\"\"\\). These values will be ignored."
+      "`ds_tables` must be the same length as `datasets`.+",
+      "All names in `ds_years` must be present in this extract\'s `datasets`.+",
+      "All names in `tst_geog_levels` must be present in this extract\'s ",
+      "`time_series_tables`"
     )
   )
   expect_warning(
@@ -1017,8 +998,8 @@ test_that("Improper extract revisions throw warnings or errors", {
       time_series_tables = "TST"
     ),
     paste0(
-      "Some time_series_tables \\(\"TST\"\\) could not be removed because",
-      " they were not found in this extract's time_series_tables \\(\"CW3\"\\)."
+      "Some `time_series_tables` \\(\"TST\"\\) could not be removed because ",
+      "they were not found among this extract's `time_series_tables`"
     )
   )
   expect_warning(
@@ -1027,9 +1008,8 @@ test_that("Improper extract revisions throw warnings or errors", {
       datasets = "DS"
     ),
     paste0(
-      "Some datasets \\(\"DS\"\\) could not be removed because",
-      " they were not found in this extract's datasets ",
-      "\\(\"2014_2018_ACS5a\", \"2015_2019_ACS5a\"\\)."
+      "Some `datasets` \\(\"DS\"\\) could not be removed because ",
+      "they were not found among this extract's `datasets`"
     )
   )
   expect_error(
@@ -1059,9 +1039,9 @@ test_that("Improper extract revisions throw warnings or errors", {
   expect_silent(
     add_to_extract(nhgis_extract, description = "Test")
   )
-  expect_warning(
+  expect_error(
     add_to_extract(nhgis_extract, data_format = c("csv_header", "fixed_width")),
-    "Multiple values passed to `data_format`, which must be length 1"
+    "`data_format` must be length 1"
   )
 })
 
@@ -1103,20 +1083,20 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$ds_tables[[1]],
-    unname(ready_nhgis_extract$ds_tables)
+    ready_nhgis_extract$ds_tables
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$ds_geog_levels[[1]],
-    unname(ready_nhgis_extract$ds_geog_levels)
+    ready_nhgis_extract$ds_geog_levels
   )
   # When NULL, values are not recycled in the tbl format:
   expect_equal(
     row_level_nhgis_tbl_submitted$ds_years[[1]],
-    unlist(unname(ready_nhgis_extract$ds_years))
+    ready_nhgis_extract$ds_years
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$ds_breakdown_values[[1]],
-    unname(ready_nhgis_extract$ds_breakdown_values)
+    ready_nhgis_extract$ds_breakdown_values
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$time_series_tables[[1]],
@@ -1124,7 +1104,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$tst_geog_levels[[1]],
-    unname(ready_nhgis_extract$tst_geog_levels)
+    ready_nhgis_extract$tst_geog_levels
   )
   expect_equal(
     row_level_nhgis_tbl_submitted$shapefiles[[1]],
@@ -1221,6 +1201,7 @@ test_that("We can get summary metadata for all data types", {
   tst_meta <- get_nhgis_metadata("time_series_tables")
   shp_meta <- get_nhgis_metadata("shapefiles")
 
+  # Should only warn at start of session
   expect_warning(
     dt_meta <- get_nhgis_metadata("data_tables"),
     "Table metadata"

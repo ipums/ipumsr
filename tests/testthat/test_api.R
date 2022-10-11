@@ -714,13 +714,13 @@ test_that("Improper extract revisions throw warnings or errors", {
     add_to_extract(usa_extract, data_format = "bad_format"),
     "`data_format` must be one of"
   )
-  expect_warning(
+  expect_error(
     add_to_extract(
       usa_extract,
       samples = "New Sample",
       data_format = c("csv", "bad_format"),
     ),
-    "Multiple values passed to `data_format`, which must be length 1"
+    "`data_format` must be length 1"
   )
 })
 

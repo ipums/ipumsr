@@ -82,7 +82,7 @@ submitted_revised_income_extract <- submit_extract(revised_income_extract)
 
 # get_last_extract_info() can be used for convenience in the extract
 # submission workflow as shown below:
-my_extract <- define_extract_micro("usa", "Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 
 \dontrun{
 submit_extract(my_extract)
