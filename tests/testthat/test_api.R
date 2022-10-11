@@ -95,6 +95,12 @@ test_that("Attempt to define a hierarchical extract throws an error", {
     ),
     regexp = "must be equal to \"rectangular\""
   )
+  expect_error(
+    define_extract_cps(
+      "Test", "us2017b", "YEAR", rectangular_on = "H"
+    ),
+    "Currently, the `rectangular_on` argument must be equal to \"P\""
+  )
 })
 
 
@@ -159,25 +165,90 @@ test_that("ipums_extract validate method works", {
   )
   expect_error(
     validate_ipums_extract(
-      define_extract_usa(
-        description = "Test",
-        samples = "Test",
-        variables = "Test",
-        data_format = "Test"
+      new_ipums_extract(
+        "usa"
       )
     ),
-    "\'arg\' should be one of"
+    "`description` must not contain missing values"
   )
   expect_error(
     validate_ipums_extract(
-      define_extract_cps(
+      new_ipums_extract(
+        "usa",
+        description = ""
+      )
+    ),
+    paste0(
+      "`data_structure` must not contain missing.+",
+      "`data_format` must not contain missing.+",
+      "`samples` must not contain missing.+",
+      "`variables` must not contain missing.+"
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "cps",
         description = "Test",
         samples = "Test",
         variables = "Test",
-        data_format = "Test"
+        data_format = "Test",
+        data_structure = "Test"
       )
     ),
-    "\'arg\' should be one of"
+    paste0(
+      "`data_structure` must be one of.+",
+      "`data_format` must be one of "
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = "",
+        data_structure = "hierarchical",
+        rectangular_on = "B",
+        samples = "Test",
+        variables = "Test",
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`rectangular_on` must be missing when ",
+      "`data_structure != \"rectangular\"`."
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = "",
+        data_structure = "rectangular",
+        samples = "Test",
+        variables = "Test",
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`rectangular_on` must not contain missing values when ",
+      "`data_structure == \"rectangular\"`."
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "cps",
+        description = "",
+        data_structure = "hierarchical",
+        samples = list("A"),
+        variables = list("B"),
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`samples` must be of type `character`, not `list`.+",
+      "`variables` must be of type `character`, not `list`"
+    )
   )
 })
 
@@ -429,10 +500,7 @@ test_that("An extract request with missing collection returns correct error", {
 test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
-    regexp = paste0(
-      "The following elements of a `usa_extract` must not contain missing ",
-      "values:"
-    )
+    "`description` must not contain missing values"
   )
 })
 
@@ -441,9 +509,11 @@ test_that("An extract request with missing samples returns correct error", {
     submit_extract(
       ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
     ),
-    regexp = paste0(
-      "The following elements of a `usa_extract` must not contain missing ",
-      "values:"
+    paste0(
+      "`data_structure` must not contain missing values.+",
+      "`data_format` must not contain missing values.+",
+      "`samples` must not contain missing values.+",
+      "`variables` must not contain missing values"
     )
   )
 })
@@ -636,13 +706,13 @@ test_that("Improper extract revisions throw warnings or errors", {
       variables = usa_extract$variables
     ),
     paste0(
-      "The following elements of a `usa_extract` must not contain missing",
-      " values: samples, variables"
+      "`samples` must not contain missing values.+",
+      "`variables` must not contain missing values.+"
     )
   )
   expect_error(
     add_to_extract(usa_extract, data_format = "bad_format"),
-    "x\\$data_format %in% c\\(\"fixed_width\""
+    "`data_format` must be one of"
   )
   expect_warning(
     add_to_extract(
