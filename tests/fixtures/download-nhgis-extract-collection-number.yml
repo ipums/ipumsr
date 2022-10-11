@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/572?collection=nhgis&version=v1
+    uri: https://api.ipums.org/extracts/670?collection=nhgis&version=v1
     body:
       encoding: ''
       string: ''
@@ -18,34 +18,34 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 24 Jun 2022 19:29:30 GMT
-      etag: W/"06dbbfaed22ac0c808ea1584c042ae70"
+      date: Tue, 11 Oct 2022 14:15:41 GMT
+      etag: W/"71fc30f795b745a9975c96c93ed4e5bf"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: c2fb9e12-644e-43c8-9f50-26121dc5c8ce
-      x-runtime: '0.852188'
+      x-request-id: b7354b2f-363f-4424-9f51-f70fcc4cfa6a
+      x-runtime: '1.072595'
       x-xss-protection: 1; mode=block
-      content-length: '891'
+      content-length: '894'
     body:
       encoding: UTF-8
       file: no
-      string: '{"number":572,"data_format":"csv_header","description":"Extract for
-        R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834304/nhgis0572_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834304/nhgis0572_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834304/nhgis0572_shape.zip"},"datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file"}'
-  recorded_at: 2022-06-24 19:29:34 GMT
+      string: '{"number":670,"data_format":"csv_no_header","description":"Extract
+        for R client testing","status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885600/nhgis0670_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885600/nhgis0670_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885600/nhgis0670_shape.zip"},"datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file"}'
+  recorded_at: 2022-10-11 14:15:45 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834304/nhgis0572_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885600/nhgis0670_csv.zip
     body:
       encoding: ''
       string: ''
@@ -61,27 +61,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0572_csv.zip"; filename*=UTF-8''nhgis0572_csv.zip
+      content-disposition: attachment; filename="nhgis0670_csv.zip"; filename*=UTF-8''nhgis0670_csv.zip
       content-type: application/zip
-      date: Fri, 24 Jun 2022 19:29:30 GMT
-      etag: '"62b6101f-162b0d"'
-      last-modified: Fri, 24 Jun 2022 19:27:27 GMT
+      date: Tue, 11 Oct 2022 14:15:41 GMT
+      etag: '"63457a45-162b0e"'
+      last-modified: Tue, 11 Oct 2022 14:14:29 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=SMtIy%2BPB%2Bjmcrryhbd6iFSnumzHcJ77dEmxQ32aRh949tQqWUJGeBEcnnz%2Fu27rk82NT%2F0Ot8YXAHRi2PyGitK5vyQ8FhOJgNZmsPc%2BrCZn0gn2I73PQeaC1GzQpBpvnUPqMvQWsyhl9tJ7Xcq3LxgOsl%2B%2BLldiZcQ9CCE6PpNQ4fnXAIrBk1wxkW1yxAIqesybGgV8axAEY0OhIaOnZwwrJucq%2F38fvDbOHG3KlaTAlpTbIWb2Oi9JGib8yEqg%3D--aNIcwp%2FQI1EEFZrO--YGw8Tk4oF0zsZ9i5riUMaQ%3D%3D;
+      set-cookie: _session_id=OAsPRd%2B6FCA4apOXNUx%2B2sAMMQeZL%2BtOCEYx%2BGX%2B2nBbv2XAfeumnLY%2F9k5UN7AYXbIX%2BMpXLswrigmorG%2Fm4NukMkgdtv%2FBR%2F6xtavcstU6D5ioxtjXen9jeBXizVmofPLHDhaJ9sz9rjVybmiDFFpknmYyoZ2UFVhjo9059gmocX0ZMWAmTZv7%2BGIGyYMZESbi%2BQTigyX33mGD7ASyfPgmaSyuYwwaCz8cdN014%2BJZ%2BlH2T0sOqRcOOvqxF3k%3D--xrnVCOkEtB3oHkiw--I6Z9XMnonv01cpJ8UILwVg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '1452813'
+      content-length: '1452814'
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0572_csv.zip
-  recorded_at: 2022-06-24 19:29:34 GMT
+      string: ../fixtures/nhgis0670_csv.zip
+  recorded_at: 2022-10-11 14:15:45 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834304/nhgis0572_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885600/nhgis0670_shape.zip
     body:
       encoding: ''
       string: ''
@@ -97,13 +97,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0572_shape.zip"; filename*=UTF-8''nhgis0572_shape.zip
+      content-disposition: attachment; filename="nhgis0670_shape.zip"; filename*=UTF-8''nhgis0670_shape.zip
       content-type: application/zip
-      date: Fri, 24 Jun 2022 19:29:30 GMT
-      etag: '"62b60fce-7ca95"'
-      last-modified: Fri, 24 Jun 2022 19:26:06 GMT
+      date: Tue, 11 Oct 2022 14:15:42 GMT
+      etag: '"634579d9-7ca95"'
+      last-modified: Tue, 11 Oct 2022 14:12:41 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=dgRbEitW60Yi90yP027mz9c%2B3rP6W8ijaUXyF4Kb8xZgay8NsYD1C7cxRrw4JLbBvEDo9%2BE95W7pvYQb7y%2FrxR8OWWnVSdIYtKCn2O5SyFyM%2BrgoZZ%2Fbht2PjrxFyfDHqn3NsebiGzLIw9jHnM2NEFTz8qu%2BXPuNFJg1tJq2zNKh8BJ3e46TLansiyQKYErZzgxEEa%2B6x5A5Mvp4nPudmIhkvJ9aE19iqsIR5%2BLAA1uucdCjHOT94YY6UGYx3aw%3D--lG6ty2RlLDoF0pLM--rikqIqVQOU3uuFCZ4Tp9KQ%3D%3D;
+      set-cookie: _session_id=DYbXex5mYkg%2Bv7GNIUupcaLaTqAw4hqhyxDdRjQCrEjU99maPsh9ZBju06WwwPSqu5ux%2B%2Bo3fZpp3hkyGQffS60VrTJC9RHdLFM5l3B2RvcO3Ckfi7d0HHSlqsiGv73uh03Zyemgkl0c4Bb%2FagYIyKQi34PSObXOohPv2g8SVaqArsoOk2wLL54B8JxyTCedmZnYk%2FJ4g3cj0ObD5JniEywy9ysXbNUxZ8gtx16PQuAzmCdbbm9o1pVHCTR27k8%3D--w8zeDXwqaPZhWQZJ--Isdwa01ZT2bPMTjIE5TfwQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -112,6 +112,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0572_shape.zip
-  recorded_at: 2022-06-24 19:29:34 GMT
+      string: ../fixtures/nhgis0670_shape.zip
+  recorded_at: 2022-10-11 14:15:45 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

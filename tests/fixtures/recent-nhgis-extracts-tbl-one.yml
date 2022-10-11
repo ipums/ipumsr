@@ -18,27 +18,27 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 24 Jun 2022 19:29:37 GMT
-      etag: W/"046ba7a360087bb4880b497dbdf0eb97"
+      date: Tue, 11 Oct 2022 14:15:47 GMT
+      etag: W/"c692207149800e1ebe8d91dde81a59f6"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: be04ad4e-f38c-4c65-887d-c71f2ecac265
-      x-runtime: '1.073527'
+      x-request-id: 8bc33a6c-fe02-4da3-8dd2-1687276e1e09
+      x-runtime: '0.940712'
       x-xss-protection: 1; mode=block
       content-length: '367'
     body:
       encoding: UTF-8
       file: no
-      string: '[{"number":573,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1834306/nhgis0573_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}]'
-  recorded_at: 2022-06-24 19:29:37 GMT
+      string: '[{"number":671,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885604/nhgis0671_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}]'
+  recorded_at: 2022-10-11 14:15:47 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
