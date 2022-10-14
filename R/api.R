@@ -1884,6 +1884,10 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #' @export
 extract_list_to_tbl <- function(extract_list) {
 
+  if ("ipums_extract" %in% class(extract_list)) {
+    extract_list <- list(extract_list)
+  }
+
   extract_types <- unique(
     purrr::map_chr(
       extract_list,
