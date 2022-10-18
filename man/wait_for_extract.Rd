@@ -48,7 +48,7 @@ download. Setting this argument to \code{FALSE} will silence these
 messages.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of environment variable \code{"IPUMS_API_KEY"}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the

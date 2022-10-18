@@ -24,7 +24,7 @@ For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of environment variable \code{"IPUMS_API_KEY"}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.

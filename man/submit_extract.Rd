@@ -10,7 +10,7 @@ submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of environment variable \code{"IPUMS_API_KEY"}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the

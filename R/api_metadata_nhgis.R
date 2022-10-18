@@ -5,6 +5,7 @@
 #   https://github.com/ipums/ipumsr
 
 # Exported functions -----------------------------------------------------------
+
 #' Get NHGIS Metadata
 #'
 #' @description
@@ -16,37 +17,122 @@
 #' single data source, use the `dataset`, `data_table`, or `time_series_table`
 #' arguments.
 #'
-#' @details
-#' ## General use
-#' If `type` is not specified, then either `dataset`, `time_series_table`,
-#' or both `dataset` and `data_table` must be provided. Metadata is only
+#' See the **metadata availability** section below for more information on the
+#' metadata provided for each data type.
+#'
+#' @section Metadata availability:
+#' The following sections summarize the metadata fields provided for each data
+#' type. Summary metadata include a subset of the fields provided for individual
+#' data sources.
+#'
+#' The names of the arguments that can be passed to `...` for each `type` are
+#' indicated with an asterisk.
+#'
+#' ## Datasets:
+#'
+#' - ***`name`:** The unique identifier for the dataset. This is the code that is
+#'   used to refer to the dataset when interacting with the NHGIS extract API.
+#' - ***`group:`** The group of datasets to which the dataset belongs.
+#'   For instance, 5 separate datasets are part of the
+#'   `"2015 American Community Survey"` group.
+#' - ***`description:`** A short description of the dataset.
+#' - ***`sequence:`** Order in which the dataset will appear in the metadata API
+#'   and extracts.
+#' - **`has_multiple_data_types:`** Logical value indicating whether multiple
+#'   data types exist for this dataset. For example, ACS
+#'   datasets include both estimates and margins of error.
+#' - **`data_tables:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#'   codes, and descriptions for all data tables available for the dataset.
+#'   See **data tables** section below.
+#' - **`geog_levels:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#'   descriptions, and extent information for the geographic levels available
+#'   for the dataset. The `has_geog_extent_selection` field contains logical
+#'   values indicating whether extent selection is allowed (and required) for
+#'   the associated geographic level. See `geographic_instances` below.
+#' - **`breakdowns:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#'   types, descriptions, and breakdown values for all breakdowns available
+#'   for the dataset.
+#' - **`years:`** A vector of years for which the dataset is available. This
+#'   field is only present if a dataset is available for multiple years. Note
+#'   that ACS datasets are not considered to be available for multiple years.
+#' - **`geographic_instances:`** A [`tibble`][tibble::tbl_df-class] containing
+#'   names and descriptions for all valid geographic extents for the
+#'   dataset. This field is only present if at least one of the dataset's
+#'   `geog_levels` allows geographic extent selection.
+#'
+#' ## Data tables:
+#'
+#' - ***`name`:** The unique identifier for the data table. This is the code that
+#'   is used to refer to the data table when interacting with the NHGIS extract
+#'   API.
+#' - ***`dataset`:** The dataset with which the data table is associated.
+#' - ***`description`:** A short description of the data table.
+#' - **`universe`:** The statistical population measured by this data table
+#'   (e.g. persons, families, occupied housing units, etc.)
+#' - ***`nhgis_code`:** The code identifying the data table in the extract.
+#'   Variables in the extract data will include column names prefixed with this
+#'   code.
+#' - ***`sequence`:** Order in which the data table will appear in the metadata
+#'   API and extracts.
+#' - **`variables`:** A [`tibble`][tibble::tbl_df-class] containing variable
+#'   descriptions and codes for the data table
+#'
+#' ## Time series tables:
+#'
+#' - ***`name`:** The unique identifier for the time series table. This is the
+#'   code that is used to refer to the time series table when interacting with
+#'   the NHGIS extract API.
+#' - ***`description`:** A short description of the time series table.
+#' - ***`geographic_integration`:** The method by which the time series table
+#'   aligns geographic units across time. `"Nominal"` integration indicates
+#'   that geographic units are aligned by name (disregarding changes in unit
+#'   boundaries). `"Standardized"` integration indicates that data from multiple
+#'   time points are standardized to the indicated year's census units. For
+#'   more information, click
+#'   [here](https://www.nhgis.org/time-series-tables#geographic-integration).
+#' - ***`sequence`:** Order in which the time series table will appear in the
+#'   metadata API and extracts.
+#' - **`time_series`:** A [`tibble`][tibble::tbl_df-class] containing names
+#'   and descriptions for the individual time series available for the
+#'   time series table.
+#' - ***`years`:** A [`tibble`][tibble::tbl_df-class] containing
+#'   information on the available data years for the
+#'   time series table.
+#' - ***`geog_levels`:** A [`tibble`][tibble::tbl_df-class] containing names
+#'   and descriptions for the geographic levels available
+#'   for the time series table.
+#'
+#' ## Shapefiles:
+#'
+#' - ***`name`:** The unique identifier for the shapefile. This is the
+#'   code that is used to refer to the shapefile when interacting with
+#'   the NHGIS extract API.
+#' - ***`year`:** The survey year in which the shapefile's represented areas
+#'   were used for tabulations, which may be different than the vintage of the
+#'   represented areas. For more information, click
+#'   [here](https://www.nhgis.org/gis-files#years).
+#' - ***`geographic_level`:** The geographic level of the shapefile.
+#' - ***`extent`:** The geographic extent covered by the shapefile.
+#' - ***`basis`:** The derivation source of the shapefile.
+#' - ***`sequence`:** Order in which the shapefile will appear in the
+#'   metadata API and extracts.
+#'
+#' @section Notes:
+#' If `type` is not specified, then a `dataset`, `time_series_table`,
+#' or both a `dataset` and a `data_table` must be provided. Metadata is only
 #' provided for a single `type` or data source at a time.
-#'
-#' @details
-#' ## Filtering
-#' The names of the expressions provided in `...` should be found in the
-#' column names of the summary metadata for each data type. The
-#' following summarizes the columns available for each type:
-#'
-#' * Datasets: `name`, `group`, `description`, `sequence`
-#' * Data tables: `dataset`, `name`, `nhgis_code`, `description`, `sequence`
-#' * Time series tables: `name`, `description`, `geographic_integration`,
-#'   `sequence`, `years`, `geog_levels`
-#' * Shapefiles: `name`, `year`, `geographic_level`, `extent`, `basis`,
-#'   `sequence`
 #'
 #' The expressions in `...` are interpreted as regular expressions, which
 #' allows for partial matching. This is
 #' typically the desired behavior when searching for keywords in data source
-#' descriptions, but an exact match may be useful for unique fields,
-#' like dataset or data table names. Any terms can be wrapped in `"^"` and `"$"`
+#' descriptions, but an exact match may be useful for certain fields,
+#' like data table names. Any terms can be wrapped in `"^"` and `"$"`
 #' to enforce an exact match. For instance,
 #' `get_nhgis_metadata("data_tables", name = "^NT1$")` will match tables whose
 #' name is `"NT1"` exactly, rather than all tables that have `"NT1"` somewhere
 #' in their name.
 #'
-#' @details
-#' ## Data table metadata
+#' ## Data table summary metadata
 #' The IPUMS NHGIS API does not currently provide updated summary metadata
 #' for data tables by default. Therefore, the metadata provided for data tables
 #' may be incomplete if new datasets have recently been added.
@@ -64,34 +150,41 @@
 #' `rappdirs::user_cache_dir("ipumsr")`. If you get unexpected results from
 #' `get_nhgis_metadata("data_tables")`, consider clearing the cache directory.
 #'
+#'
 #' @inheritParams submit_extract
-#' @param type One of "datasets", "data_tables",
-#'   "time_series_tables", or "shapefiles" indicating the type of summary
+#' @param type One of `"datasets"`, `"data_tables"`,
+#'   `"time_series_tables"`, or `"shapefiles"` indicating the type of summary
 #'   metadata to retrieve.
-#' @param dataset Name of the dataset for which to retrieve metadata.
-#' @param data_table Name of the data table for which to retrieve metadata.
-#'   If provided, an associated `dataset` must also be specified.
-#' @param time_series_table Name of the time series table for which to retrieve
-#'   metadata.
-#' @param ... Optional set of character vectors used to filter the requested
-#'   summary metadata. These values are interpreted as
-#'   regular expressions that are matched to the values in the metadata column
-#'   with the same name as that given for the argument. Only metadata records
+#' @param dataset Name of an individual dataset for which to retrieve metadata.
+#' @param data_table Name of an individual data table for which to retrieve
+#'   metadata. If provided, an associated `dataset` must also be specified.
+#' @param time_series_table Name of an individual time series table for which
+#'   to retrieve metadata.
+#' @param ... Optional set of arguments used to filter the requested
+#'   summary metadata.
+#'
+#'   Each argument should be named and consist of a
+#'   character vector. Each string in the vector is interpreted as
+#'   a regular expression that is matched to the values in the metadata column
+#'   with the same name as the argument name. Only metadata records
 #'   whose values match the provided expressions will be included in the output.
-#'   Only used when `type` is provided. See details.
+#'
+#'   Only used when `type` is provided. See **metadata availability** section
+#'   below.
 #' @param match_all If `TRUE`, only metadata records that match *all* of the
 #'   expressions provided in `...` will be included in the output. If `FALSE`,
 #'   metadata records that match *any* of the expressions will be included.
 #'   Defaults to `TRUE`.
 #' @param match_case If `TRUE`, use case-sensitive matching when interpreting
-#'   the expressions provided in `...` (note that this does not apply to
-#'   `dataset`, `data_table`, or `time_series_table` arguments). Defaults to
-#'   `FALSE`.
+#'   the expressions provided in `...`. Defaults to `FALSE`.
 #' @param update_tables If `TRUE` and `type = "data_tables"`, update the
-#'   provided data table summary metadata to include tables for any recently
-#'   released datasets that are not yet included by default. The updated
-#'   metadata will be cached for future use. If the current data table summary
-#'   metadata are already up to date, this does nothing. See details.
+#'   provided data table summary metadata to include records for tables
+#'   associated with recently-released datasets that are not yet included by
+#'   default. The updated metadata will be cached for future use.
+#'
+#'   If the current data table summary
+#'   metadata are already up to date, this does nothing. See **notes** section
+#'   below.
 #'
 #' @return If `type` is provided, a [`tibble`][tibble::tbl_df-class] of
 #'   summary metadata for all data sources of the provided `type`.

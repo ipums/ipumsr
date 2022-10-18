@@ -30,7 +30,7 @@ see \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 Defaults to 10 extracts.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of environment variable \code{"IPUMS_API_KEY"}.}
 }
 \value{
 For \code{get_recent_extracts_info_list()}, a list of extract objects.

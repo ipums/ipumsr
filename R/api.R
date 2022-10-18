@@ -637,7 +637,7 @@ save_extract_as_json <- function(extract, file) {
 #'
 #' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param api_key API key associated with your user account. Defaults to the
-#'   value of environment variable "IPUMS_API_KEY".
+#'   value of environment variable `"IPUMS_API_KEY"`.
 #'
 #' @family ipums_api
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the

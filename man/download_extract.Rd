@@ -35,7 +35,7 @@ Defaults to current working directory.}
 exist. Defaults to \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of environment variable \code{"IPUMS_API_KEY"}.}
 }
 \value{
 Invisibly returns the path(s) to the files required to read the data
