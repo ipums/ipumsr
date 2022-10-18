@@ -1086,6 +1086,104 @@ test_that("Improper extract revisions throw warnings or errors", {
   )
 })
 
+test_that("Can combine extracts", {
+
+  x1 <- define_extract_nhgis(
+    description = "Combining",
+    shapefiles = "S1"
+  )
+
+  x2 <- define_extract_nhgis(
+    datasets = c("A", "B"),
+    data_tables = list(c("D1", "D2"), "D3"),
+    time_series_tables = c("T1", "T2"),
+    geog_levels = "G1",
+    tst_layout = "time_by_file_layout"
+  )
+
+  x3 <- define_extract_nhgis(
+    datasets = "C",
+    data_tables = c("D2", "D4"),
+    geog_levels = c("G2", "G3"),
+    years = "Y1",
+    shapefiles = "S1",
+    data_format = "fixed_width",
+  )
+
+  x <- combine_extracts(x1, x2, x3)
+
+  expect_equal(
+    x$datasets,
+    union(
+      union(
+        x1$datasets,
+        x2$datasets
+      ),
+      x3$datasets
+    )
+  )
+  expect_equal(
+    x$time_series_tables,
+    union(
+      union(
+        x1$time_series_tables,
+        x2$time_series_tables
+      ),
+      x3$time_series_tables
+    )
+  )
+  expect_equal(
+    x$shapefiles,
+    "S1"
+  )
+
+  expect_equal(
+    x$data_tables,
+    c(x1$data_tables,
+      x2$data_tables,
+      x3$data_tables)
+  )
+  expect_equal(
+    x$geog_levels,
+    c(x1$geog_levels,
+      x2$geog_levels,
+      x3$geog_levels)[c(x$datasets, x$time_series_tables)]
+  )
+  expect_equal(
+    x$years,
+    c(x1$years,
+      x2$years,
+      x3$years)
+  )
+  expect_equal(
+    x$breakdown_values,
+    c(x1$breakdown_values,
+      x2$breakdown_values,
+      x3$breakdown_values)
+  )
+
+  expect_equal(
+    x$tst_layout,
+    x2$tst_layout
+  )
+  expect_equal(
+    x$data_format,
+    x2$data_format
+  )
+  expect_equal(
+    x$description,
+    x1$description
+  )
+
+  expect_error(
+    combine_extracts(
+      x1, define_extract_usa("A", "B", "C")
+    ),
+    "same collection"
+  )
+
+})
+
 # > Recent extracts ------------------------------
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {

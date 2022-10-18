@@ -90,6 +90,8 @@ NULL
 #' @section Revising an extract:
 #' * Modify values in an existing extract defiition with [add_to_extract()] and
 #' [remove_from_extract()]
+#' * Combine definitions from multiple extracts into a single extract with
+#' [combine_extracts()]
 #'
 #' @section Saving an extract:
 #' * Save an extract to a JSON-formatted file with [save_extract_as_json()]
@@ -296,6 +298,9 @@ define_extract_cps <- function(description,
 #' When handling extracts with multiple datasets and/or time series tables,
 #' it is safest to explicitly match the subfield values with datasets and
 #' time series tables by using the named list syntax.
+#'
+#' Alternatively, extract definitions for individual datasets and
+#' time series tables can be combined using [combine_extracts()].
 #'
 #' For more information on valid values for these arguments, see
 #' [get_nhgis_metadata()].
@@ -1895,6 +1900,150 @@ remove_from_extract.nhgis_extract <- function(extract,
   )
 
   extract <- validate_ipums_extract(extract)
+
+  extract
+
+}
+
+#' Combine IPUMS extracts into a single extract definition
+#'
+#' Creates a single extract that includes all of the specifications included in
+#' a set of `ipums_extract` objects.
+#'
+#' @details
+#' Values that exist in more than one of the provided extracts will be
+#' de-duplicated such that only one entry for the duplicated specification is
+#' included in the final extract.
+#'
+#' Some extract fields can only take a single value. In the event that the
+#' extracts being combined each have different values for such a field, the
+#' value found in the first extract provided to `...` is retained in the final
+#' extract.
+#'
+#' To add or remove values in extract fields, see [add_to_extract] or
+#' [remove_from_extract].
+#'
+#' @param ... Arbitrary number of `ipums_extract` objects to be combined. All
+#'   extracts must belong to the same collection.
+#'
+#' @return An `ipums_extract` object of the same collection as the extracts
+#'   provided in `...` containing the combined extract definition.
+#'
+#' @export
+#'
+#' @examples
+#' ext1 <- define_extract_nhgis(
+#'   datasets = "2011_2015_ACS5a",
+#'   data_tables = "B00001",
+#'   geog_levels = "county"
+#' )
+#'
+#' ext2 <- define_extract_nhgis(
+#'   datasets = c("2011_2015_ACS5a", "2012_2016_ACS5a"),
+#'   data_tables = c("B00002", "B01001"),
+#'   geog_levels = "county"
+#' )
+#'
+#' combine_extracts(ext1, ext2)
+combine_extracts <- function(...) {
+  UseMethod("combine_extracts")
+}
+
+#' @export
+combine_extracts.usa_extract <- function(...) {
+
+  extracts <- rlang::list2(...)
+
+  collection <- purrr::map_chr(extracts, ~.x$collection)
+
+  if (length(unique(collection)) != 1) {
+    rlang::abort("Can only combine extracts of the same collection.")
+  }
+
+  extract <- purrr::reduce(
+    extracts,
+    # Warnings are not as relevant when combining extracts.
+    # We can also remove warnings from add to extract...
+    ~suppressWarnings(
+      add_to_extract(
+        .x,
+        description = .x$description,
+        samples = .y$samples,
+        variables = .y$variables,
+        data_format = .x$data_format %||% .y$data_format,
+        data_structure = .x$data_structure %||% .y$data_structure,
+        rectangular_on = .x$rectangular_on %||% .y$rectangular_on
+      )
+    )
+  )
+
+  extract
+
+}
+
+#' @export
+combine_extracts.cps_extract <- function(...) {
+
+  extracts <- rlang::list2(...)
+
+  collection <- purrr::map_chr(extracts, ~.x$collection)
+
+  if (length(unique(collection)) != 1) {
+    rlang::abort("Can only combine extracts of the same collection.")
+  }
+
+  extract <- purrr::reduce(
+    extracts,
+    # Warnings are not as relevant when combining extracts.
+    # We can also remove warnings from add to extract...
+    ~suppressWarnings(
+      add_to_extract(
+        .x,
+        description = .x$description,
+        samples = .y$samples,
+        variables = .y$variables,
+        data_format = .x$data_format %||% .y$data_format,
+        data_structure = .x$data_structure %||% .y$data_structure,
+        rectangular_on = .x$rectangular_on %||% .y$rectangular_on
+      )
+    )
+  )
+
+  extract
+
+}
+
+#' @export
+combine_extracts.nhgis_extract <- function(...) {
+
+  extracts <- rlang::list2(...)
+
+  collection <- purrr::map_chr(extracts, ~.x$collection)
+
+  if (length(unique(collection)) != 1) {
+    rlang::abort("Can only combine extracts of the same collection.")
+  }
+
+  extract <- purrr::reduce(
+    extracts,
+    ~add_to_extract(
+      .x,
+      description = .x$description,
+      datasets = .y$datasets,
+      data_tables = .y$data_tables,
+      time_series_tables = .y$time_series_tables,
+      geog_levels = .y$geog_levels,
+      years = .y$years,
+      breakdown_values = .y$breakdown_values,
+      geographic_extents = .y$geographic_extents,
+      breakdown_and_data_type_layout =
+        .x$breakdown_and_data_type_layout %||%
+        .y$breakdown_and_data_type_layout,
+      tst_layout = .x$tst_layout %||% .y$tst_layout,
+      shapefiles = .y$shapefiles,
+      data_format = .x$data_format %||% .y$data_format
+    )
+  )
 
   extract
 

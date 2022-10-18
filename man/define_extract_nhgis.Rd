@@ -174,6 +174,9 @@ When handling extracts with multiple datasets and/or time series tables,
 it is safest to explicitly match the subfield values with datasets and
 time series tables by using the named list syntax.
 
+Alternatively, extract definitions for individual datasets and
+time series tables can be combined using \code{\link[=combine_extracts]{combine_extracts()}}.
+
 For more information on valid values for these arguments, see
 \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}}.
 }
