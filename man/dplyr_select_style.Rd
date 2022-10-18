@@ -11,10 +11,10 @@ based on dplyr's \code{\link[dplyr]{select}} function. See details for more info
 There are 3 broad categories of methods for specifying arguments for these select-style
 parameters.
 \itemize{
- \item{"Character Vector"}{A character vector of names (such as \code{c("var1", "var2", "var3")})}
- \item{"'Bare' Vector"}{A vector of 'bare' names (such as \code{c(var1, var2, var3)})}
- \item{"Helper Functions"}{Helper functions from \code{dplyr::select} such as
-    \code{starts_with()}, \code{contains} and others.}
+\item{"Character Vector"}{A character vector of names (such as \code{c("var1", "var2", "var3")})}
+\item{"'Bare' Vector"}{A vector of 'bare' names (such as \code{c(var1, var2, var3)})}
+\item{"Helper Functions"}{Helper functions from \code{dplyr::select} such as
+\code{starts_with()}, \code{contains} and others.}
 }
 }
 \examples{

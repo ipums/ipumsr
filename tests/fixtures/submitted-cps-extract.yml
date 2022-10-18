@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 11 Oct 2022 14:20:01 GMT
-      etag: W/"9c1416126b8d7d74ea1e5e76c34d0766"
+      date: Fri, 14 Oct 2022 21:40:05 GMT
+      etag: W/"f8dbeaaa7bc103285ba5c93f0a6eed34"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
@@ -32,14 +32,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: f53572f5-9694-4756-bfc6-b00a4d202012
-      x-runtime: '2.994490'
+      x-request-id: a2c148c4-f3e5-4ba9-af66-414c59702e38
+      x-runtime: '1.084750'
       x-xss-protection: 1; mode=block
       content-length: '494'
     body:
       encoding: UTF-8
       file: no
       string: '{"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"download_links":{},"number":8,"status":"queued"}'
-  recorded_at: 2022-10-11 14:20:01 GMT
+        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"download_links":{},"number":9,"status":"queued"}'
+  recorded_at: 2022-10-14 21:40:05 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

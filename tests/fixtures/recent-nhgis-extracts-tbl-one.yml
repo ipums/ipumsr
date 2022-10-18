@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 11 Oct 2022 14:15:47 GMT
-      etag: W/"c692207149800e1ebe8d91dde81a59f6"
+      date: Fri, 14 Oct 2022 21:40:02 GMT
+      etag: W/"eafa93f85388111bb504e2e9f3285a47"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
@@ -32,13 +32,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 8bc33a6c-fe02-4da3-8dd2-1687276e1e09
-      x-runtime: '0.940712'
+      x-request-id: 5200761f-24d2-4cd4-905d-793efdcf5164
+      x-runtime: '0.927411'
       x-xss-protection: 1; mode=block
       content-length: '367'
     body:
       encoding: UTF-8
       file: no
-      string: '[{"number":671,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885604/nhgis0671_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}]'
-  recorded_at: 2022-10-11 14:15:47 GMT
+      string: '[{"number":673,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1889220/nhgis0673_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}]'
+  recorded_at: 2022-10-14 21:40:03 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

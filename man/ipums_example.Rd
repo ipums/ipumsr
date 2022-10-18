@@ -7,11 +7,11 @@
 ipums_example(path = NULL)
 }
 \arguments{
-\item{path}{Name of file. If `NULL`, the example files will be listed.}
+\item{path}{Name of file. If \code{NULL}, the example files will be listed.}
 }
 \value{
 The filepath to an example file, or if path is empty, a vector of all
-  available files.
+available files.
 }
 \description{
 Get access to example extracts.

@@ -12,11 +12,11 @@ from the website, or the path to the unzipped .txt file).}
 
 \item{data_layer}{dplyr \code{\link[dplyr]{select}}-style notation for uniquely
 identifying the data layer to load. Required for reading from .zip files
- for extracts with multiple files.}
+for extracts with multiple files.}
 }
 \value{
 A \code{ipums_ddi} object with information on the variables included in the
-  csv file of a NHGIS extract.
+csv file of a NHGIS extract.
 }
 \description{
 Read text formatted codebooks provided by some IPUMS extract systems such as

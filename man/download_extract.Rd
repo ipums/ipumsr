@@ -23,7 +23,7 @@ form \code{"collection:number"}
 
 The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
 or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.
+See below for examples of each form.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
@@ -42,13 +42,15 @@ Invisibly returns the path(s) to the files required to read the data
 requested in the extract.
 }
 \description{
-Download an IPUMS data extract via the IPUMS API. For an overview of ipumsr
+Download an IPUMS data extract via the IPUMS API.
+
+For an overview of ipumsr
 microdata API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
-For NHGIS extracts, data files and GIS files will be saved in separate zip
-archives. \code{download_extract()} will return a character vector including
-the file paths to all downloaded files.
+For NHGIS extracts, data files and GIS files (shapefiles) will be saved in
+separate zip archives. \code{download_extract()} will return a character vector
+including the file paths to all downloaded files.
 
 For microdata extracts, only the file path to the downloaded .xml DDI file
 will be returned, as it is sufficient for loading the data provided in the
@@ -75,6 +77,8 @@ path_to_ddi_file <- download_extract(c("usa", "1"))
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -87,6 +91,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

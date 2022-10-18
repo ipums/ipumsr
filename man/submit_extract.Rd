@@ -48,6 +48,8 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -61,6 +63,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

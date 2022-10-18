@@ -45,7 +45,7 @@ you can refer to the IPUMS documentation in this object.}
 }
 \value{
 \code{ipums_var_info} returns a \code{tbl_df} data frame with variable information, and
-  the other functions return a length 1 character vector.
+the other functions return a length 1 character vector.
 }
 \description{
 Get IPUMS metadata information about variables loaded into R. Will try to read

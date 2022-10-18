@@ -45,7 +45,7 @@ downloaded from the IPUMS Terra website, path to the unzipped folder, or to the
 csv unzipped from the download.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
- data to load. Accepts a character vector specifying the file name, or
+data to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
 a dataset.}
 
@@ -78,9 +78,9 @@ to. Defaults to "UTF-8" for IPUMS Terra.}
 }
 \value{
 \code{read_terra_area} returns a \code{tbl_df} with the tabular data,
-  \code{read_terra_area_sf} returns a \code{sf} object with tabular data and shapes,
-  and \code{read_terra_area_sp} returns a \code{SpatialPolygonsDataFrame} with
-  data and shapes.
+\code{read_terra_area_sf} returns a \code{sf} object with tabular data and shapes,
+and \code{read_terra_area_sp} returns a \code{SpatialPolygonsDataFrame} with
+data and shapes.
 }
 \description{
 Reads a area-level dataset downloaded from the IPUMS Terra extract system.

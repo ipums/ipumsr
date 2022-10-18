@@ -23,29 +23,33 @@ get_last_extract_info(collection, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{collection}{The code for an IPUMS data collection. For a list of the
-codes used to refer to the data collections, see \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
+codes used to refer to the data collections,
+see \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
-\item{how_many}{Number of recent extracts for which you'd like information.
+\item{how_many}{Number of recent extracts for which to retrieve information.
 Defaults to 10 extracts.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
-For \code{get_recent_extracts_info_list()}, a list of extract objects. For
-\code{get_recent_extracts_info_tbl()}, a \code{\link[tibble:tbl_df-class]{tibble}} with
-information on one extract in each row.
+For \code{get_recent_extracts_info_list()}, a list of extract objects.
+
+For \code{get_recent_extracts_info_tbl()}, a \code{\link[tibble:tbl_df-class]{tibble}}
+representing extract specifications. Each column corresponds to an extract
+field.
 }
 \description{
 Get information on recent extracts for a given IPUMS collection
-via the IPUMS API, returned either as a list or tibble. For an overview of
-ipumsr microdata API functionality, see
+via the IPUMS API.
+
+For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 \code{get_last_extract_info} is a convenience function that is
 similar to \code{get_recent_extracts_info_list(..., how_many = 1)},
-but returns an \code{\link[=ipums_extract-class]{ipums_extract}} rather than
+but returns an \code{\link[=ipums_extract-class]{ipums_extract}} object rather than
 a list of \code{ipums_extract} objects.
 }
 \examples{
@@ -87,7 +91,8 @@ my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
 \dontrun{
 submit_extract(my_extract)
 
-# Oops, forgot to capture the return object from submit_extract. Grab it with:
+# Oops, forgot to capture the return object from submit_extract.
+# Grab it with:
 submitted_extract <- get_last_extract_info("usa")
 
 # View the extract number
@@ -102,6 +107,8 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -114,6 +121,8 @@ Other ipums_api:
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
