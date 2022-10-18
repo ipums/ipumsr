@@ -16,34 +16,34 @@ or add value/variable labels to the data.
 }
 \details{
 \describe{
- \item{IpumsSideEffectCallback}{
-   Callback function that is used only for side effects, no results are returned.
-   Initialize with a function that takes 2 arguments x (which will be the data chunk)
-   and an integer that indicates the position of the first observation in the chunk.
-   If the function returns \code{FALSE}, no more chunks will be read.
- }
- \item{IpumsDataFrameCallback}{
- Callback function that combines each result together into a data.frame at the end.
-   Initialize the same was as IpumsSideEffectCallback, and the results from the
-   function will be fed into a data.frame.
- }
- \item{IpumsListCallback}{
-   Callback function that returns a list, where each item is the result from a chunk.
-   Initalize the same was as IpumsSideEffectCallback.
- }
- \item{IpumsBiglmCallback}{
-   Callback function that performs a regression on the full dataset, one chunk
-   at a time using the biglm package. Initialize with arguments \code{model} (A
-   formula of your model and \code{prep} a function like the other callback arguments
-   that prepares the data before running the regression. Other arguments are
-   passed to biglm.
- }
- \item{IpumsChunkCallback}{
-   (Only needed for advanced usage) Callback interface definition, all
-    callback functions for IPUMS data should inherit from this class, and should
-    use private method \code{ipumsify} on the data to handle implicit decimals
-    and value labels.
-  }
+\item{IpumsSideEffectCallback}{
+Callback function that is used only for side effects, no results are returned.
+Initialize with a function that takes 2 arguments x (which will be the data chunk)
+and an integer that indicates the position of the first observation in the chunk.
+If the function returns \code{FALSE}, no more chunks will be read.
+}
+\item{IpumsDataFrameCallback}{
+Callback function that combines each result together into a data.frame at the end.
+Initialize the same was as IpumsSideEffectCallback, and the results from the
+function will be fed into a data.frame.
+}
+\item{IpumsListCallback}{
+Callback function that returns a list, where each item is the result from a chunk.
+Initalize the same was as IpumsSideEffectCallback.
+}
+\item{IpumsBiglmCallback}{
+Callback function that performs a regression on the full dataset, one chunk
+at a time using the biglm package. Initialize with arguments \code{model} (A
+formula of your model and \code{prep} a function like the other callback arguments
+that prepares the data before running the regression. Other arguments are
+passed to biglm.
+}
+\item{IpumsChunkCallback}{
+(Only needed for advanced usage) Callback interface definition, all
+callback functions for IPUMS data should inherit from this class, and should
+use private method \code{ipumsify} on the data to handle implicit decimals
+and value labels.
+}
 }
 }
 \keyword{internal}
@@ -53,8 +53,8 @@ or add value/variable labels to the data.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-set_ipums_fields}{\code{IpumsChunkCallback$set_ipums_fields()}}
-\item \href{#method-clone}{\code{IpumsChunkCallback$clone()}}
+\item \href{#method-IpumsChunkCallback-set_ipums_fields}{\code{IpumsChunkCallback$set_ipums_fields()}}
+\item \href{#method-IpumsChunkCallback-clone}{\code{IpumsChunkCallback$clone()}}
 }
 }
 \if{html}{\out{
@@ -69,8 +69,8 @@ or add value/variable labels to the data.
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_ipums_fields"></a>}}
-\if{latex}{\out{\hypertarget{method-set_ipums_fields}{}}}
+\if{html}{\out{<a id="method-IpumsChunkCallback-set_ipums_fields"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsChunkCallback-set_ipums_fields}{}}}
 \subsection{Method \code{set_ipums_fields()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsChunkCallback$set_ipums_fields(
@@ -83,8 +83,8 @@ or add value/variable labels to the data.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IpumsChunkCallback-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsChunkCallback-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
@@ -106,10 +106,10 @@ The objects of this class are cloneable with this method.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsSideEffectCallback$new()}}
-\item \href{#method-receive}{\code{IpumsSideEffectCallback$receive()}}
-\item \href{#method-continue}{\code{IpumsSideEffectCallback$continue()}}
-\item \href{#method-clone}{\code{IpumsSideEffectCallback$clone()}}
+\item \href{#method-IpumsSideEffectCallback-new}{\code{IpumsSideEffectCallback$new()}}
+\item \href{#method-IpumsSideEffectCallback-receive}{\code{IpumsSideEffectCallback$receive()}}
+\item \href{#method-IpumsSideEffectCallback-continue}{\code{IpumsSideEffectCallback$continue()}}
+\item \href{#method-IpumsSideEffectCallback-clone}{\code{IpumsSideEffectCallback$clone()}}
 }
 }
 \if{html}{\out{
@@ -122,8 +122,8 @@ The objects of this class are cloneable with this method.
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsSideEffectCallback-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsSideEffectCallback-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsSideEffectCallback$new(callback)}\if{html}{\out{</div>}}
@@ -131,8 +131,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-receive"></a>}}
-\if{latex}{\out{\hypertarget{method-receive}{}}}
+\if{html}{\out{<a id="method-IpumsSideEffectCallback-receive"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsSideEffectCallback-receive}{}}}
 \subsection{Method \code{receive()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsSideEffectCallback$receive(data, index)}\if{html}{\out{</div>}}
@@ -140,8 +140,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-continue"></a>}}
-\if{latex}{\out{\hypertarget{method-continue}{}}}
+\if{html}{\out{<a id="method-IpumsSideEffectCallback-continue"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsSideEffectCallback-continue}{}}}
 \subsection{Method \code{continue()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsSideEffectCallback$continue()}\if{html}{\out{</div>}}
@@ -149,8 +149,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IpumsSideEffectCallback-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsSideEffectCallback-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
@@ -172,11 +172,11 @@ The objects of this class are cloneable with this method.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsDataFrameCallback$new()}}
-\item \href{#method-receive}{\code{IpumsDataFrameCallback$receive()}}
-\item \href{#method-result}{\code{IpumsDataFrameCallback$result()}}
-\item \href{#method-finally}{\code{IpumsDataFrameCallback$finally()}}
-\item \href{#method-clone}{\code{IpumsDataFrameCallback$clone()}}
+\item \href{#method-IpumsDataFrameCallback-new}{\code{IpumsDataFrameCallback$new()}}
+\item \href{#method-IpumsDataFrameCallback-receive}{\code{IpumsDataFrameCallback$receive()}}
+\item \href{#method-IpumsDataFrameCallback-result}{\code{IpumsDataFrameCallback$result()}}
+\item \href{#method-IpumsDataFrameCallback-finally}{\code{IpumsDataFrameCallback$finally()}}
+\item \href{#method-IpumsDataFrameCallback-clone}{\code{IpumsDataFrameCallback$clone()}}
 }
 }
 \if{html}{\out{
@@ -188,8 +188,8 @@ The objects of this class are cloneable with this method.
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsDataFrameCallback-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsDataFrameCallback-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsDataFrameCallback$new(callback)}\if{html}{\out{</div>}}
@@ -197,8 +197,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-receive"></a>}}
-\if{latex}{\out{\hypertarget{method-receive}{}}}
+\if{html}{\out{<a id="method-IpumsDataFrameCallback-receive"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsDataFrameCallback-receive}{}}}
 \subsection{Method \code{receive()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsDataFrameCallback$receive(data, index)}\if{html}{\out{</div>}}
@@ -206,8 +206,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-result"></a>}}
-\if{latex}{\out{\hypertarget{method-result}{}}}
+\if{html}{\out{<a id="method-IpumsDataFrameCallback-result"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsDataFrameCallback-result}{}}}
 \subsection{Method \code{result()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsDataFrameCallback$result()}\if{html}{\out{</div>}}
@@ -215,8 +215,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-finally"></a>}}
-\if{latex}{\out{\hypertarget{method-finally}{}}}
+\if{html}{\out{<a id="method-IpumsDataFrameCallback-finally"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsDataFrameCallback-finally}{}}}
 \subsection{Method \code{finally()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsDataFrameCallback$finally()}\if{html}{\out{</div>}}
@@ -224,8 +224,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IpumsDataFrameCallback-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsDataFrameCallback-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
@@ -247,11 +247,11 @@ The objects of this class are cloneable with this method.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsListCallback$new()}}
-\item \href{#method-receive}{\code{IpumsListCallback$receive()}}
-\item \href{#method-result}{\code{IpumsListCallback$result()}}
-\item \href{#method-finally}{\code{IpumsListCallback$finally()}}
-\item \href{#method-clone}{\code{IpumsListCallback$clone()}}
+\item \href{#method-IpumsListCallback-new}{\code{IpumsListCallback$new()}}
+\item \href{#method-IpumsListCallback-receive}{\code{IpumsListCallback$receive()}}
+\item \href{#method-IpumsListCallback-result}{\code{IpumsListCallback$result()}}
+\item \href{#method-IpumsListCallback-finally}{\code{IpumsListCallback$finally()}}
+\item \href{#method-IpumsListCallback-clone}{\code{IpumsListCallback$clone()}}
 }
 }
 \if{html}{\out{
@@ -263,8 +263,8 @@ The objects of this class are cloneable with this method.
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsListCallback-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListCallback-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListCallback$new(callback)}\if{html}{\out{</div>}}
@@ -272,8 +272,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-receive"></a>}}
-\if{latex}{\out{\hypertarget{method-receive}{}}}
+\if{html}{\out{<a id="method-IpumsListCallback-receive"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListCallback-receive}{}}}
 \subsection{Method \code{receive()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListCallback$receive(data, index)}\if{html}{\out{</div>}}
@@ -281,8 +281,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-result"></a>}}
-\if{latex}{\out{\hypertarget{method-result}{}}}
+\if{html}{\out{<a id="method-IpumsListCallback-result"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListCallback-result}{}}}
 \subsection{Method \code{result()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListCallback$result()}\if{html}{\out{</div>}}
@@ -290,8 +290,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-finally"></a>}}
-\if{latex}{\out{\hypertarget{method-finally}{}}}
+\if{html}{\out{<a id="method-IpumsListCallback-finally"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListCallback-finally}{}}}
 \subsection{Method \code{finally()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListCallback$finally()}\if{html}{\out{</div>}}
@@ -299,8 +299,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IpumsListCallback-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListCallback-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
@@ -322,10 +322,10 @@ The objects of this class are cloneable with this method.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsBiglmCallback$new()}}
-\item \href{#method-receive}{\code{IpumsBiglmCallback$receive()}}
-\item \href{#method-result}{\code{IpumsBiglmCallback$result()}}
-\item \href{#method-clone}{\code{IpumsBiglmCallback$clone()}}
+\item \href{#method-IpumsBiglmCallback-new}{\code{IpumsBiglmCallback$new()}}
+\item \href{#method-IpumsBiglmCallback-receive}{\code{IpumsBiglmCallback$receive()}}
+\item \href{#method-IpumsBiglmCallback-result}{\code{IpumsBiglmCallback$result()}}
+\item \href{#method-IpumsBiglmCallback-clone}{\code{IpumsBiglmCallback$clone()}}
 }
 }
 \if{html}{\out{
@@ -338,8 +338,8 @@ The objects of this class are cloneable with this method.
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsBiglmCallback-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsBiglmCallback-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsBiglmCallback$new(model, prep = function(x, pos) x, ...)}\if{html}{\out{</div>}}
@@ -347,8 +347,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-receive"></a>}}
-\if{latex}{\out{\hypertarget{method-receive}{}}}
+\if{html}{\out{<a id="method-IpumsBiglmCallback-receive"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsBiglmCallback-receive}{}}}
 \subsection{Method \code{receive()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsBiglmCallback$receive(data, index)}\if{html}{\out{</div>}}
@@ -356,8 +356,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-result"></a>}}
-\if{latex}{\out{\hypertarget{method-result}{}}}
+\if{html}{\out{<a id="method-IpumsBiglmCallback-result"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsBiglmCallback-result}{}}}
 \subsection{Method \code{result()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsBiglmCallback$result()}\if{html}{\out{</div>}}
@@ -365,8 +365,8 @@ The objects of this class are cloneable with this method.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IpumsBiglmCallback-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsBiglmCallback-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -9,23 +9,25 @@ extract_tbl_to_list(extract_tbl, validate = TRUE)
 \arguments{
 \item{extract_tbl}{A \code{\link[tibble:tbl_df-class]{tibble}} (or
 \code{\link[base:data.frame]{data.frame}}) that contains
-the specifications for one or more \code{\link[=ipums_extract-class]{ipums_extract}} objects.}
+the specifications for one or more \code{\link[=ipums_extract-class]{ipums_extract}}
+objects.}
 
-\item{validate}{Logical (\code{TRUE} or \code{FALSE}) value indicating whether to
+\item{validate}{Logical value indicating whether to
 check that each row of \code{extract_tbl} contains a valid and complete extract
 definition. Defaults to \code{TRUE}.}
 }
 \value{
 A list of length equal to the number of extracts represented in
 \code{extract_tbl}. Unique extracts can be identified by their extract
-number, which is contained in the \code{number} column of
-\code{extract_tbl}
+number, which is contained in the \code{number} column of \code{extract_tbl}.
 }
 \description{
 Convert a \code{\link[tibble:tbl_df-class]{tibble}} (or
 \code{\link[base:data.frame]{data.frame}}) of extract definitions, such as that
 returned by \code{\link[=get_recent_extracts_info_tbl]{get_recent_extracts_info_tbl()}}, to a list of
-\code{\link[=ipums_extract-class]{ipums_extract}} objects. For an overview of ipumsr microdata API
+\code{\link[=ipums_extract-class]{ipums_extract}} objects.
+
+For an overview of ipumsr microdata API
 functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -55,6 +57,8 @@ submitted_revised_income_extract <- submit_extract(revised_income_extract)
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -67,6 +71,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

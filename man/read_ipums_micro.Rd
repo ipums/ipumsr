@@ -54,9 +54,9 @@ when reading in the DDI.}
 }
 \value{
 \code{read_ipums_micro} returns a single tbl_df data frame, and
-  \code{read_ipums_micro_list} returns a list of data frames, named by
-  the Record Type. See 'Details' for more
-  information.
+\code{read_ipums_micro_list} returns a list of data frames, named by
+the Record Type. See 'Details' for more
+information.
 }
 \description{
 Reads a dataset downloaded from the IPUMS extract system.

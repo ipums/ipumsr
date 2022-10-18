@@ -45,10 +45,10 @@ ipums_shape_full_join(
 \item{shape_data}{A shape file (loaded with \code{\link{read_ipums_sf}} or \code{read_ipums_sp})}
 
 \item{by}{A vector of variable names to join on. Like the dplyr join functions, named vectors
- indicate that the names are different between the data and shape file.
- shape files to load. Accepts a character vector specifying the file name, or
+indicate that the names are different between the data and shape file.
+shape files to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-  which will be combined.}
+which will be combined.}
 
 \item{suffix}{For variables that are found in both, but aren't joined on, a suffix
 to put on the variables. Defaults to nothing for data variables and "_SHAPE" for

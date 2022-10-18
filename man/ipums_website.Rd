@@ -21,9 +21,9 @@ ipums_website(
 
 \item{project}{If not using a DDI (or object with a project attribute)
 A name of an IPUMS project, one of:
-  "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
-  "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
-  or "IPUMS Terra"}
+"IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
+"ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
+or "IPUMS Terra"}
 
 \item{launch}{If \code{TRUE}, launch the website.}
 

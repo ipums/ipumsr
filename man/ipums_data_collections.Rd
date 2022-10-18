@@ -16,23 +16,20 @@ List IPUMS data collections with corresponding codes used by the IPUMS API.
 Note that some data collections do not yet have API support.
 }
 \details{
-Currently, \code{ipumsr} supports extract definitions for the following
-collections:
-
+Currently, ipumsr supports extract definitions for the following collections:
 \itemize{
-\item{IPUMS NHGIS}
-\item{IPUMS USA}
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS NHGIS
 }
 
 For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
-\examples{
-# Print a tibble of all IPUMS data collections:
-ipums_data_collections()
-}
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -45,6 +42,8 @@ Other ipums_api:
 \code{\link{get_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

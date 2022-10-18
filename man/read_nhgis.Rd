@@ -39,7 +39,7 @@ downloaded from the website, the path to the unzipped folder, or
 the path to the unzipped .csv file directly).}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
- data to load. Accepts a character vector specifying the file name, or
+data to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
 a dataset.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{is_extract_ready}
 \alias{is_extract_ready}
-\title{Is the extract ready to download?}
+\title{Check if a submitted extract is ready to download}
 \usage{
 is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
@@ -18,7 +18,7 @@ form \code{"collection:number"}
 
 The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
 or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.
+See below for examples of each form.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
@@ -31,20 +31,23 @@ A logical vector of length one.
 }
 \description{
 This function uses the IPUMS API to check whether the given extract is ready
-to download, returning TRUE for extracts that are ready and FALSE for those
-that are not. For an overview of ipumsr microdata API functionality, see
+to download, returning \code{TRUE} for extracts that are ready and \code{FALSE} for
+those that are not.
+
+For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
-This function checks the "download_links" element of the supplied extract to
-determine whether the extract files are available to download.
-The "status" of a submitted extract is one of "queued", "started", "produced",
-"canceled", "failed", or "completed". Only "completed" extracts can be ready
-to download, but not all "completed" extracts are ready to download, because
-extract files are subject to removal from the IPUMS servers 72 hours after
-they first become available. Completed extracts older than 72 hours will
-still have a "completed" status, but will return \code{FALSE} from
-\code{is_extract_ready()}, because the extract files are no longer available.
+This function checks the \code{"download_links"} element of the supplied extract
+to determine whether the extract files are available to download.
+
+The "status" of a submitted extract is one of \code{"queued"}, \code{"started"},
+\code{"produced"}, \code{"canceled"}, \code{"failed"}, or \code{"completed"}. Only completed
+extracts can be ready to download, but not all completed extracts are ready
+to download, because extract files are subject to removal from the IPUMS
+servers 72 hours after they first become available. Completed extracts older
+than 72 hours will still have a "completed" status, but will return \code{FALSE}
+from \code{is_extract_ready()}, because the extract files are no longer available.
 }
 \examples{
 my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
@@ -67,6 +70,8 @@ is_extract_ready(c("usa", "1"))
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -79,6 +84,8 @@ Other ipums_api:
 \code{\link{get_extract_info}()},
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

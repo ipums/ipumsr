@@ -58,7 +58,7 @@ with IPUMS conventions). Note that this argument will be ignored if
 argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
 See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
 when reading in the DDI. Also note that if reading in chunks from a .csv or
-.csv.gz file, the callback function will be called *before* variable names
+.csv.gz file, the callback function will be called \emph{before} variable names
 are converted to lowercase, and thus should reference uppercase variable
 names.}
 }

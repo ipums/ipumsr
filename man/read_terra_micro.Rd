@@ -22,7 +22,7 @@ folder, or to the csv unzipped from the download.}
 provides usage and citation information for extract.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
- data to load. Accepts a character vector specifying the file name, or
+data to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
 a dataset.}
 
@@ -37,8 +37,8 @@ adding all (val_labels, var_label and var_desc). See
 }
 \value{
 \code{read_terra_micro} returns a \code{tbl_df} with the tabular data. Use
-  \code{\link{read_ipums_sf}} or \code{\link{read_ipums_sp}} to read shape
-  data out of a microdata Terra extract.
+\code{\link{read_ipums_sf}} or \code{\link{read_ipums_sp}} to read shape
+data out of a microdata Terra extract.
 }
 \description{
 Reads a microdata dataset downloaded from the IPUMS Terra extract system.

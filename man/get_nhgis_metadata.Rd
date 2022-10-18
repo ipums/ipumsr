@@ -35,18 +35,18 @@ the provided keywords will be included in the output. Keywords are
 interpreted as regular expressions and are case-insensitive.}
 
 \item{match_all}{If TRUE, metadata records whose description contains
-all of the provided `keywords` will be included in the output. If FALSE,
+all of the provided \code{keywords} will be included in the output. If FALSE,
 any metadata records whose description contains at least one of the
-provided `keywords` will be included in the output.}
+provided \code{keywords} will be included in the output.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable "IPUMS_API_KEY".}
 }
 \value{
 If obtaining summary metadata, a \code{\link[tibble]{tibble}}
-  containing metadata for the specified data type. If obtaining metadata
-  for a single dataset, summary table, or time series table, a named list
-  containing metadata for that data source.
+containing metadata for the specified data type. If obtaining metadata
+for a single dataset, summary table, or time series table, a named list
+containing metadata for that data source.
 }
 \description{
 NHGIS metadata is provided for individual datasets, summary tables, and

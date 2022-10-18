@@ -14,7 +14,7 @@ read_terra_raster_list(data_file, data_layer = NULL, verbose = TRUE)
 from the website, or the path to the unzipped .tiff file(s)).}
 
 \item{data_layer}{For .zip extracts with multiple raster datasets, the name of the
- data to load. Accepts a character vector specifying the file name, or
+data to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions.}
 
 \item{verbose}{Logical, indicating whether to print progress information
@@ -22,7 +22,7 @@ to console.}
 }
 \value{
 For \code{read_terra_raster} A \code{\link[raster]{raster}} object, for
-  \code{read_terra_raster_list} A list of raster objects.
+\code{read_terra_raster_list} A list of raster objects.
 }
 \description{
 Read a single raster datasets downloaded from the IPUMS Terra extract system using

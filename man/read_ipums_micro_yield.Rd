@@ -69,15 +69,15 @@ These functions return an IpumsYield R6 object which have the following
 methods:
 \itemize{
 \item \code{yield(n = 10000)} A function to read the next 'yield' from the data,
-  returns a `tbl_df` (or list of `tbl_df` for `hipread_list_yield()`)
-  with up to n rows (it will return NULL if no rows are left, or all
-  available ones if less than n are available).
+returns a \code{tbl_df} (or list of \code{tbl_df} for \code{hipread_list_yield()})
+with up to n rows (it will return NULL if no rows are left, or all
+available ones if less than n are available).
 \item \code{reset()} A function to reset the data so that the next yield will
-  read data from the start.
+read data from the start.
 \item \code{is_done()} A function that returns whether the file has been completely
-  read yet or not.
+read yet or not.
 \item \code{cur_pos} A property that contains the next row number that will be
-   read (1-indexed).
+read (1-indexed).
 }
 }
 \examples{
@@ -121,8 +121,8 @@ Other ipums_read:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsLongYield$new()}}
-\item \href{#method-yield}{\code{IpumsLongYield$yield()}}
+\item \href{#method-IpumsLongYield-new}{\code{IpumsLongYield$new()}}
+\item \href{#method-IpumsLongYield-yield}{\code{IpumsLongYield$yield()}}
 }
 }
 \if{html}{\out{
@@ -134,8 +134,8 @@ Other ipums_read:
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsLongYield-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsLongYield-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsLongYield$new(
@@ -150,8 +150,8 @@ Other ipums_read:
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-yield"></a>}}
-\if{latex}{\out{\hypertarget{method-yield}{}}}
+\if{html}{\out{<a id="method-IpumsLongYield-yield"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsLongYield-yield}{}}}
 \subsection{Method \code{yield()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsLongYield$yield(n = 10000)}\if{html}{\out{</div>}}
@@ -165,8 +165,8 @@ Other ipums_read:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IpumsListYield$new()}}
-\item \href{#method-yield}{\code{IpumsListYield$yield()}}
+\item \href{#method-IpumsListYield-new}{\code{IpumsListYield$new()}}
+\item \href{#method-IpumsListYield-yield}{\code{IpumsListYield$yield()}}
 }
 }
 \if{html}{\out{
@@ -178,8 +178,8 @@ Other ipums_read:
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IpumsListYield-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListYield-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListYield$new(
@@ -194,8 +194,8 @@ Other ipums_read:
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-yield"></a>}}
-\if{latex}{\out{\hypertarget{method-yield}{}}}
+\if{html}{\out{<a id="method-IpumsListYield-yield"></a>}}
+\if{latex}{\out{\hypertarget{method-IpumsListYield-yield}{}}}
 \subsection{Method \code{yield()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IpumsListYield$yield(n = 10000)}\if{html}{\out{</div>}}

@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1885604/nhgis0671_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1889220/nhgis0673_shape.zip
     body:
       encoding: ''
       string: ''
@@ -17,13 +17,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0671_shape.zip"; filename*=UTF-8''nhgis0671_shape.zip
+      content-disposition: attachment; filename="nhgis0673_shape.zip"; filename*=UTF-8''nhgis0673_shape.zip
       content-type: application/zip
-      date: Tue, 11 Oct 2022 14:15:39 GMT
-      etag: '"63457a7a-7ca95"'
-      last-modified: Tue, 11 Oct 2022 14:15:22 GMT
+      date: Fri, 14 Oct 2022 21:39:54 GMT
+      etag: '"6349d719-7ca95"'
+      last-modified: Fri, 14 Oct 2022 21:39:37 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=X9zds23btyKDMW4GYY2tMl1nqjCpXw7tclxokowyVq%2FfCRaJ8427qcZCA5tR6nOYrTbGbIjoYXV50g%2FIPNN6Vn2GFHFRGkh473GWlTme9e5yYpVag4do9SAakDNsbPcRNGDObJ8qSdOwz7IpafLXE7JWaL%2FW23v%2FdpkOx3iPxr2QzPmyAGgVgOQMqdooOPyDwTVvf7l%2FGKixo66wjuirH3gNEEAhLYDD%2BmLWz2k3uIY03x9R2qEmfvrzyE3mrSE%3D--4KYVPP%2BGMcuxeC7t--wEIHUk7c7yHtCWa0AE1Rmg%3D%3D;
+      set-cookie: _session_id=HhybMq%2BGhSX9P%2B6%2BKdfbeEbTjgqKyQm9SptTNgRMzclhLTiZM7nNhBXzEIaO0UoAZ%2BSO1aQUyOZgwyirXcK4IbDdbj4l%2Bpcn3TIM8065FiBV2ihJSBM1t2hzbB3OxS9Lhzltb61Xq1fmIQ59RdL1PcOySDxEMi3pKAX7SkASUlZdzCcQUkwxGLmAdoBiIaPUGdyDf%2FFGIpewLOG7KtMvPHqQvsaXwVaj%2Ba0M0%2BLUbe3cQj6zJyr7vNMq%2FcRl0l8%3D--M81S8qeH59C2FFTe--QSvZvM30rHBm1M2kKt%2F0qg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -32,6 +32,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0671_shape.zip
-  recorded_at: 2022-10-11 14:15:40 GMT
+      string: ../fixtures/nhgis0673_shape.zip
+  recorded_at: 2022-10-14 21:39:55 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

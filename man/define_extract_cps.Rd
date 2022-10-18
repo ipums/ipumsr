@@ -23,18 +23,18 @@ should be specified using the
 \item{variables}{Character vector of variables to include in the extract.}
 
 \item{data_format}{The desired format of the extract data file (one of
-"fixed_width", "csv", "stata", "spss", or "sas9").}
+\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}).}
 
-\item{data_structure}{Currently, this must be "rectangular", which is also
-the default. In the future, the API will also support "hierarchical"
+\item{data_structure}{Currently, this must be \code{"rectangular"}, which is also
+the default. In the future, the API will also support \code{"hierarchical"}
 extracts.}
 
-\item{rectangular_on}{Currently, this must be "P", indicating that the
+\item{rectangular_on}{Currently, this must be \code{"P"}, indicating that the
 extract will be rectangularized on person records. In the future, the API
 will also support household-only extracts (\code{rectangular_on = "H"}).}
 }
 \value{
-An object of class \code{\link[=ipums_extract-class]{c("cps_extract", "ipums_extract")}}
+An object of class \code{\link[=ipums_extract-class]{cps_extract}}
 containing the extract definition.
 }
 \description{
@@ -44,9 +44,12 @@ extract API. For an overview of ipumsr microdata API functionality, see
 }
 \examples{
 my_extract <- define_extract_cps("Example", "cps2020_03s", "YEAR")
+
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
@@ -59,6 +62,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

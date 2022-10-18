@@ -7,29 +7,35 @@
 set_ipums_api_key(api_key, save = FALSE, overwrite = FALSE)
 }
 \arguments{
-\item{api_key}{API key associated with your user account, formatted in
-quotes.}
+\item{api_key}{API key associated with your user account.}
 
-\item{save}{Do you want to save this value for future sessions by adding it
-to the file ".Renviron" in your home directory? Defaults to \code{FALSE}.}
+\item{save}{If \code{TRUE}, save the key for use in future
+sessions by adding it to the \code{.Renviron} file in your home directory.
+Defaults to \code{FALSE}.}
 
-\item{overwrite}{Do you want to overwrite any existing value of
-\code{IPUMS_API_KEY} in the file ".Renviron"? Defaults to \code{FALSE}.}
+\item{overwrite}{If \code{TRUE}, overwrite any existing value of
+\code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
+Defaults to \code{FALSE}.}
 }
 \value{
 The value of \code{api_key}, invisibly.
 }
 \description{
-Set your IPUMS API key for the duration of your session, or indefinitely by
-adding it to the file ".Renviron" in your home directory. In either case,
-this function works by assigning your API key as the value of the environment
-variable \code{IPUMS_API_KEY}. If you choose to save your key to ".Renviron", this
-function will create a backup copy of the file before modifying. This
-function is modeled after the \code{census_api_key()} function
-from the R package \href{https://walker-data.com/tidycensus/}{tidycensus}.
+Set your IPUMS API key as the value associated with the \code{IPUMS_API_KEY}
+environment variable.
+
+The key can be stored for the duration of your session or for future
+sessions. If saved for future sessions, it is added to the \code{.Renviron}
+file in your home directory. If you choose to save your key to \code{.Renviron},
+this function will create a backup copy of the file before modifying.
+
+This function is modeled after the \code{census_api_key()} function
+from \href{https://walker-data.com/tidycensus/}{tidycensus}.
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -43,6 +49,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{submit_extract}()},

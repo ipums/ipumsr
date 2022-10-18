@@ -7,7 +7,7 @@
 remove_from_extract(extract, ...)
 }
 \arguments{
-\item{extract}{An object inheriting from \code{ipums_extract}}
+\item{extract}{An \code{ipums_extract} object}
 
 \item{...}{Additional arguments specifying the extract fields and values to
 remove from the extract. The available arguments correspond to the
@@ -16,32 +16,32 @@ extract specified in \code{extract}.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
-  extract definition
+extract definition
 }
 \description{
 Remove values for specific fields in an existing \code{ipums_extract}
 object. This function is an S3 generic whose behavior will depend on the
-class (i.e. collection) of the extract being modified.
+subclass (i.e. collection) of the extract being modified.
+\itemize{
+\item To remove from an \strong{NHGIS} extract, click
+\link[=remove_from_extract.nhgis_extract]{here}
+\item To remove from a \strong{USA} extract, click '
+\link[=remove_from_extract.usa_extract]{here}
+\item To remove from a \strong{CPS} extract, click
+\link[=remove_from_extract.cps_extract]{here}
+}
 
 In general, for a given collection, the arguments to
-\code{remove_from_extract} are identical to those used when defining an
+\code{remove_from_extract()} are identical to those used when defining an
 extract for that collection. For more about defining an extract, click
 \link[=define_extract]{here}.
 
-For collection-specific documentation, see the links below:
-
-\itemize{
-  \item To remove from an \strong{NHGIS} extract, click
-    \link[=remove_from_extract.nhgis_extract]{here}
-  \item To remove from a \strong{microdata} extract, click
-    \link[=remove_from_extract.usa_extract]{here}
-}
-
-To add new values to an extract, see
-\code{\link{add_to_extract}()}.
+To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract()}}.
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -55,6 +55,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()},

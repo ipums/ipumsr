@@ -5,49 +5,79 @@
 \title{\code{ipums_extract} class}
 \description{
 The \code{ipums_extract} class provides a data structure for storing the
-definition and status of a submitted or unsubmitted IPUMS data extract,
+definition and status of a submitted or unsubmitted IPUMS data extract
 for the purpose of interacting with the IPUMS extract API.
 
-It is a superclass encompassing all of the collection-specific extract
-classes.
+\code{ipums_extract} is a superclass encompassing all of the collection-specific
+extract classes.
 
 All objects with class \code{ipums_extract} will also have a collection-specific
 subclass (e.g. \code{usa_extract}, \code{cps_extract}) to accommodate
-collection-specific differences in extract options and contents, but all
-these subclasses share similarities as described below.
+collection-specific differences in extract options and content. All
+collection-specific subclasses share the similarities described below.
 
 For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
-\section{Properties of \code{ipums_extract}}{
-
+\section{Properties}{
 
 Objects of class \code{ipums_extract} have:
 \itemize{
-\item A \code{class} attribute of the form \code{c("<collection>_extract", "ipums_extract")}
-(e.g. \code{c("cps_extract", "ipums_extract")}).
-\item A base type of \code{"list"}.
+\item A \code{class} attribute of the form
+\code{c("{collection}_extract", "ipums_extract")}
+(e.g. \code{c("cps_extract", "ipums_extract")})
+\item A base type of \code{"list"}
 \item A \code{names} attribute that is a character vector the same length as the
-underlying list.
+underlying list
 }
 }
 
-\section{Behavior of \code{ipums_extract}}{
+\section{Creating an extract}{
 
-
-Objects of class \code{ipums_extract}:
 \itemize{
-\item Can be created from scratch with a function that has a name of the form
-\verb{define_extract_<collection>()} (e.g. \code{\link[=define_extract_usa]{define_extract_usa()}}).
-\item Can be created from existing extract definitions with functions
-\code{\link[=define_extract_from_json]{define_extract_from_json()}} and \code{\link[=get_extract_info]{get_extract_info()}}.
-\item Can be submitted for processing with \code{\link[=submit_extract]{submit_extract()}}. After submission,
-you can have your R session periodically check the status of the submitted
-extract, and wait until it is ready to download, with \code{\link[=wait_for_extract]{wait_for_extract()}}.
-You can also check whether it is ready to download directly with
-\code{\link[=is_extract_ready]{is_extract_ready()}}.
-\item Can be revised with \code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}}.
-\item Can be saved to a JSON-formatted file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}.
+\item Create an \code{ipums_extract} object from scratch with the appropriate
+\link{define_extract} function. These functions take the form
+\verb{define_extract_\{collection\}} (e.g. \code{\link[=define_extract_usa]{define_extract_usa()}})
+\item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve a previously-submitted
+extract. Previous extract definitions can be
+viewed with \link{get_recent_extracts_info}
+\item Create an \code{ipums_extract} object from a JSON-formatted definition with
+\code{\link[=define_extract_from_json]{define_extract_from_json()}}
+}
+}
+
+\section{Submitting an extract}{
+
+\itemize{
+\item Use \code{\link[=submit_extract]{submit_extract()}} to submit an extract for processing through the
+IPUMS extract API.
+\item \code{\link[=wait_for_extract]{wait_for_extract()}} will periodically check the status of a submitted
+extract until it is ready to download.
+\item Use \code{\link[=is_extract_ready]{is_extract_ready()}} to manually check whether a submitted extract
+is ready to download
+}
+}
+
+\section{Downloading an extract}{
+
+\itemize{
+\item Download the data contained in a completed extract with
+\code{\link[=download_extract]{download_extract()}}
+}
+}
+
+\section{Revising an extract}{
+
+\itemize{
+\item Modify values in an existing extract defiition with \code{\link[=add_to_extract]{add_to_extract()}} and
+\code{\link[=remove_from_extract]{remove_from_extract()}}
+}
+}
+
+\section{Saving an extract}{
+
+\itemize{
+\item Save an extract to a JSON-formatted file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}
 }
 }
 

@@ -9,36 +9,32 @@ submitted via the IPUMS extract API.
 }
 \section{Supported collections}{
 
-Currently, \code{ipumsr} supports extract definitions for the following
+Currently, ipumsr supports extract definitions for the following
 collections:
-
 \itemize{
-  \item{IPUMS NHGIS}
-  \item{IPUMS USA}
+\item \strong{IPUMS NHGIS}: \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+\item \strong{IPUMS USA}: \code{\link[=define_extract_usa]{define_extract_usa()}}
+\item \strong{IPUMS CPS}: \code{\link[=define_extract_cps]{define_extract_cps()}}
 }
-
-For information on defining NHGIS extracts, see
-\code{\link{define_extract_nhgis}()}
-
-For information defining extracts for IPUMS microdata collections, see
-\code{\link{define_extract_micro}()}
 }
 
 \section{Value}{
 
-These functions produce an object inheriting from class \code{ipums_extract}
+These functions produce an \code{\link[=ipums_extract-class]{ipums_extract}} object
 with a subclass based on the collection corresponding to the extract. For
 instance, an IPUMS NHGIS extract created with
-\code{\link{define_extract_nhgis}} will return an object of classes
+\code{define_extract_nhgis()} will return an object of classes
 \code{nhgis_extract} and \code{ipums_extract}. These objects are compatible
-with the rest of the API functionality provided by \code{ipumsr}.
+with the rest of the API functionality provided by ipumsr.
 
-For an overview of \code{ipumsr} API functionality, see
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
@@ -51,6 +47,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

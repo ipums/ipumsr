@@ -30,9 +30,9 @@ read_ipums_sp(
 or a path to an unzipped folder.}
 
 \item{shape_layer}{For .zip extracts with multiple datasets, the name of the
- shape files to load. Accepts a character vector specifying the file name, or
+shape files to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-  which will be combined.}
+which will be combined.}
 
 \item{vars}{Which variables in the shape file's data to keep (NULL the default
 keeps all)}
@@ -56,7 +56,7 @@ which shape_layer the data came from. NULL, the default, uses TRUE if more than
 }
 \value{
 \code{read_ipums_sf} returns a sf object and \code{read_ipums_sp} returns
-  a SpatialPolygonsDataFrame.
+a SpatialPolygonsDataFrame.
 }
 \description{
 Reads the boundary files from an IPUMS extract into R as simple features (sf) objects or

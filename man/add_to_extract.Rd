@@ -7,40 +7,37 @@
 add_to_extract(extract, ...)
 }
 \arguments{
-\item{extract}{An object inheriting from \code{ipums_extract}}
+\item{extract}{An \code{ipums_extract} object}
 
 \item{...}{Additional arguments specifying the extract fields and values to
-add to the extract. The available arguments correspond to the available
+add to the extract. Argument names should correspond to the available
 arguments in the extract definition function for the class of the extract
 specified in \code{extract}.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
-  extract definition
+extract definition
 }
 \description{
-Add or update values for specific fields in an existing \code{ipums_extract}
-object. This function is an S3 generic whose behavior will depend on the
-class (i.e. collection) of the extract being modified.
-
-In general, for a given collection, the arguments to \code{add_to_extract}
-are identical to those used when defining an extract for that collection. For
-more about defining an extract, click \link[=define_extract]{here}.
-
-For collection-specific documentation, see the links below:
-
+Add or replace values in an existing \code{ipums_extract} object.
+This function is an S3 generic whose behavior will depend on the
+subclass (i.e. collection) of the extract being modified.
 \itemize{
-  \item To add to an \strong{NHGIS} extract, click
-    \link[=add_to_extract.nhgis_extract]{here}
-  \item To add to a \strong{microdata} extract, click
-    \link[=add_to_extract.usa_extract]{here}
+\item To add to an \strong{NHGIS} extract, click \link[=add_to_extract.nhgis_extract]{here}
+\item To add to a \strong{USA} extract, click \link[=add_to_extract.usa_extract]{here}
+\item To add to a \strong{CPS} extract, click \link[=add_to_extract.cps_extract]{here}
 }
 
-To remove existing values from an extract, see
-\code{\link{remove_from_extract}()}.
+In general, for a given collection, the arguments to \code{add_to_extract()}
+are identical to those used when defining an extract for that collection. For
+more information about defining an extract, click \link[=define_extract]{here}.
+
+To remove existing values from an extract, see \code{\link[=remove_from_extract]{remove_from_extract()}}.
 }
 \seealso{
 Other ipums_api: 
+\code{\link{add_to_extract.cps_extract}()},
+\code{\link{add_to_extract.usa_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
@@ -53,6 +50,8 @@ Other ipums_api:
 \code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
+\code{\link{remove_from_extract.cps_extract}()},
+\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

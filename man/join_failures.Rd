@@ -12,8 +12,8 @@ join_failures(join_results)
 }
 \value{
 returns a list of data.frames, where the first item (shape) is the observations
-  dropped from the shape file and the second (data) is the observations dropped from the
-  data.
+dropped from the shape file and the second (data) is the observations dropped from the
+data.
 }
 \description{
 Helper for learning which observations were dropped from a dataset because
