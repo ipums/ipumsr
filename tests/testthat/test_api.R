@@ -575,43 +575,53 @@ test_that("Improper extract revisions throw warnings or errors", {
     regexp = "already included"
   )
   expect_warning(
-    remove_from_extract(usa_extract, variables = "RELATE"),
+    remove_from_extract(cps_extract, variables = "RELATE"),
     regexp = "are not included"
   )
   expect_warning(
-    remove_from_extract(usa_extract, description = "description"),
+    remove_from_extract(usa_extract,
+                        description = "description",
+                        invalid = "invalid"),
     paste0(
-      "The following fields cannot be removed from an object of class ",
-      "`usa_extract`: `description`.\nTo replace these values"
+      "The following fields were either not found in the provided extract ",
+      "or cannot be removed: `description`, `invalid`\nSee ",
+      "`add_to_extract\\(\\)`"
     )
   )
   expect_warning(
-    remove_from_extract(usa_extract, bad_field = "bad field"),
+    add_to_extract(cps_extract,
+                   description = "description",
+                   invalid = "invalid"),
     paste0(
-      "The following were not recognized as valid fields for an object of class",
-      " `usa_extract`: `bad_field`."
-    )
-  )
-  expect_error(
-    remove_from_extract(usa_extract, samples = usa_extract$samples),
-    paste0(
-      "The following elements of an extract definition must not contain missing",
-      " values: samples"
+      "The following fields were either not found in the provided extract ",
+      "or cannot be modified: `invalid`"
     )
   )
   expect_silent(
+    add_to_extract(cps_extract, description = "description")
+  )
+  expect_error(
     remove_from_extract(
       usa_extract,
       samples = usa_extract$samples,
-      validate = FALSE
+      variables = usa_extract$variables
+    ),
+    paste0(
+      "The following elements of an extract definition must not contain missing",
+      " values: samples, variables"
     )
   )
   expect_error(
-    remove_from_extract(usa_extract, variables = usa_extract$variables),
-    paste0(
-      "The following elements of an extract definition must not contain missing",
-      " values: variables"
-    )
+    add_to_extract(usa_extract, data_format = "bad_format"),
+    "x\\$data_format %in% c\\(\"fixed_width\""
+  )
+  expect_warning(
+    add_to_extract(
+      usa_extract,
+      samples = "New Sample",
+      data_format = c("csv", "bad_format"),
+    ),
+    "Multiple values passed to `data_format`, which must be length 1"
   )
 })
 
