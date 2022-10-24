@@ -1559,7 +1559,8 @@ ipums_api_download_request <- function(url,
       )
     ),
     add_user_auth_header(api_key),
-    httr::write_disk(file_path, overwrite = TRUE)
+    httr::write_disk(file_path, overwrite = TRUE),
+    httr::progress()
   )
 
   if (httr::http_status(response)$category != "Success") {
