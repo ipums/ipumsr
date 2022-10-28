@@ -455,10 +455,10 @@ or geographic levels, you will need to load the data separately and then
 combine.</p>
 <p>So in our example, we run the following to load the data:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_codebook.html">read_ipums_codebook</a></span><span class="op">(</span><span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0024_csv.zip"</span><span class="op">)</span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">nhgis_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_codebook.html">read_ipums_codebook</a></span><span class="op">(</span><span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0706_csv.zip"</span><span class="op">)</span><span class="op">)</span> 
 <span class="va">nhgis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis_sf</a></span><span class="op">(</span>
-  data_file <span class="op">=</span> <span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0024_csv.zip"</span><span class="op">)</span>,
-  shape_file <span class="op">=</span> <span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0024_shape_small.zip"</span><span class="op">)</span>,
+  data_file <span class="op">=</span> <span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0706_csv.zip"</span><span class="op">)</span>,
+  shape_file <span class="op">=</span> <span class="fu">ex_file</span><span class="op">(</span><span class="st">"nhgis0706_shape_small.zip"</span><span class="op">)</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
 <span class="co">#&gt; Warning: `as.tibble()` was deprecated in tibble 2.0.0.</span>

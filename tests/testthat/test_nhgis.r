@@ -2,9 +2,9 @@ context("NHGIS")
 
 # Manually set these constants...
 rows <- 71
-vars_data <- 17
-vars_data_shape_sf <- 24
-vars_data_shape_sp <- 23
+vars_data <- 25
+vars_data_shape_sf <- 32
+vars_data_shape_sp <- 31
 d6z001_label <- "1989 to March 1990"
 d6z001_var_desc <- "Year Structure Built (D6Z)"
 pmsa_first2_sort <- c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
@@ -12,7 +12,7 @@ pmsa_first2_sort <- c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
 test_that(
   "Can read NHGIS extract (data only)", {
     nhgis <- read_nhgis(
-      ipums_example("nhgis0008_csv.zip"),
+      ipums_example("nhgis0707_csv.zip"),
       verbose = FALSE
     )
 
@@ -21,7 +21,7 @@ test_that(
     expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
     expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
     expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), c("tbl_df", "tbl", "data.frame"))
+    expect_equal(class(nhgis), c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
   })
 
 
@@ -29,8 +29,8 @@ test_that(
   "Can read NHGIS extract (with shape as sf)", {
     skip_if_not_installed("sf")
     nhgis <- read_nhgis_sf(
-      ipums_example("nhgis0008_csv.zip"),
-      ipums_example("nhgis0008_shape_small.zip"),
+      ipums_example("nhgis0707_csv.zip"),
+      ipums_example("nhgis0707_shape_small.zip"),
       verbose = FALSE
     )
 
@@ -48,12 +48,12 @@ test_that(
     skip_if_not_installed("sf")
     temp_dir <- tempfile()
     dir.create(temp_dir)
-    utils::unzip(ipums_example("nhgis0008_csv.zip"), exdir = temp_dir)
-    utils::unzip(ipums_example("nhgis0008_shape_small.zip"), exdir = temp_dir)
+    utils::unzip(ipums_example("nhgis0707_csv.zip"), exdir = temp_dir)
+    utils::unzip(ipums_example("nhgis0707_shape_small.zip"), exdir = temp_dir)
 
     nhgis <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv"),
-      file.path(temp_dir, "nhgis0008_shape/nhgis0008_shapefile_tl2000_us_pmsa_1990.zip"),
+      file.path(temp_dir, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv"),
+      file.path(temp_dir, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"),
       verbose = FALSE
     )
 
@@ -65,8 +65,8 @@ test_that(
     expect_equal(class(nhgis), c("sf", "tbl_df", "tbl", "data.frame"))
 
     nhgis2 <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0008_csv"),
-      file.path(temp_dir, "nhgis0008_shape"),
+      file.path(temp_dir, "nhgis0707_csv"),
+      file.path(temp_dir, "nhgis0707_shape"),
       verbose = FALSE
     )
     expect_equal(nrow(nhgis), nrow(nhgis2))
@@ -83,15 +83,15 @@ test_that(
     skip_if_not_installed("sf")
     temp_dir <- tempfile()
     dir.create(temp_dir)
-    utils::unzip(ipums_example("nhgis0008_csv.zip"), exdir = temp_dir)
-    utils::unzip(ipums_example("nhgis0008_shape_small.zip"), exdir = temp_dir)
+    utils::unzip(ipums_example("nhgis0707_csv.zip"), exdir = temp_dir)
+    utils::unzip(ipums_example("nhgis0707_shape_small.zip"), exdir = temp_dir)
     utils::unzip(
-      file.path(temp_dir, "nhgis0008_shape/nhgis0008_shapefile_tl2000_us_pmsa_1990.zip"),
+      file.path(temp_dir, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"),
       exdir = temp_dir
     )
 
     nhgis <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv"),
+      file.path(temp_dir, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv"),
       file.path(temp_dir, "US_pmsa_1990.shp"),
       verbose = FALSE
     )
@@ -110,8 +110,8 @@ test_that(
     skip_if_not_installed("rgdal")
     skip_if_not_installed("sp")
     nhgis <- read_nhgis_sp(
-      ipums_example("nhgis0008_csv.zip"),
-      ipums_example("nhgis0008_shape_small.zip"),
+      ipums_example("nhgis0707_csv.zip"),
+      ipums_example("nhgis0707_shape_small.zip"),
       verbose = FALSE
     )
 
@@ -131,14 +131,14 @@ test_that(
     skip_if_not_installed("sp")
 
     nhgis_sf <- read_nhgis_sf(
-      ipums_example("nhgis0008_csv.zip"),
-      ipums_example("nhgis0008_shape_small.zip"),
+      ipums_example("nhgis0707_csv.zip"),
+      ipums_example("nhgis0707_shape_small.zip"),
       verbose = FALSE
     )
 
     nhgis_sp <- read_nhgis_sp(
-      ipums_example("nhgis0008_csv.zip"),
-      ipums_example("nhgis0008_shape_small.zip"),
+      ipums_example("nhgis0707_csv.zip"),
+      ipums_example("nhgis0707_shape_small.zip"),
       verbose = FALSE
     )
 

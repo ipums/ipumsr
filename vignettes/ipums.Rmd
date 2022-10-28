@@ -224,10 +224,10 @@ read_ipums_micro(cf, vars = c(one_of("YEAR"), starts_with("INC")), verbose = FAL
 # `data_layer` and `shape_layer` arguments to `read_nhgis()` and terra functions
 # also use it.
 # (Sometimes extracts have multiple files, though all examples only have one)
-nf <- ipums_example("nhgis0008_csv.zip")
+nf <- ipums_example("nhgis0707_csv.zip")
 ipums_list_files(nf)
 
-ipums_list_files(nf, data_layer = "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv")
+ipums_list_files(nf, data_layer = "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv")
 
 ipums_list_files(nf, data_layer = contains("ds135"))
 ```

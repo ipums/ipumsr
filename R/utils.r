@@ -473,3 +473,123 @@ fostr_named_capture_single <- function(string, pattern, only_matches = FALSE) {
   if (ncol(out) > 1) stop("Found multiple capture groups when expected only one")
   out[[1]]
 }
+
+#' Simplify GIS files in downloaded NHGIS extract data
+#'
+#' @description
+#' Reads GIS files found in a .zip archive as downloaded from NHGIS,
+#' simplifies them to reduce file size, and repackages into the same compressed
+#' structure as provided when downloaded directly.
+#'
+#' This is used primarily to prepare data that will be used in tests,
+#' particularly in data-reading tests.
+#'
+#' @param file Path to zip archive containing the GIS files to simplify. This
+#'   is consistent with the file name provided by `download_extract()`
+#'
+#' @return `file`, invisibly
+#'
+#' @noRd
+simplify_nhgis_gis_file <- function(file) {
+
+  if (!rlang::is_installed("rmapshaper")) {
+    rlang::abort("`rmapshaper` is required to simplify an NHGIS GIS extract")
+  }
+
+  orig_wd <- getwd()
+
+  path <- fostr_split(file, "/")[[1]]
+  dirname <- fostr_replace(path[length(path)], ".zip$", "")
+
+  if (path[length(path) - 1] == "ipumsr") {
+    filepath <- getwd()
+    shp_dir <- dirname
+  } else {
+    filepath <- paste0(
+      path[(which(path == "ipumsr") + 1):(length(path) - 1)],
+      collapse = "/"
+    )
+    shp_dir <- file.path(filepath, dirname)
+  }
+
+  unzip(zipfile = file, exdir = filepath)
+
+  n_files <- length(list.files(shp_dir))
+
+  message("Simplifying files...")
+
+  shp_data <- purrr::map(
+    1:n_files,
+    ~tryCatch(
+      rmapshaper::ms_simplify(
+        read_ipums_sf(
+          file,
+          shape_layer = !!.x,
+          verbose = FALSE
+        ),
+        keep = 0.01
+      ),
+      error = function(cnd) {
+        rlang::warn(paste0("Some files could not be simplified."))
+
+        read_ipums_sf(
+          file,
+          shape_layer = !!.x,
+          verbose = FALSE
+        )
+      }
+    )
+  )
+
+  setwd(shp_dir)
+
+  inner_files_zip_name <- dir()
+
+  inner_files <- purrr::map_chr(
+    inner_files_zip_name,
+    ~fostr_replace(
+      fostr_subset(unzip(.x, list = TRUE)$Name, ".shp$"),
+      ".shp$",
+      ""
+    )
+  )
+
+  unlink(inner_files_zip_name)
+
+  purrr::walk2(
+    shp_data,
+    inner_files,
+    ~suppressWarnings(
+      sf::st_write(
+        .x,
+        dsn = getwd(),
+        layer = .y,
+        driver = "ESRI Shapefile"
+      )
+    )
+  )
+
+  purrr::walk2(
+    inner_files,
+    inner_files_zip_name,
+    ~{
+      files <- dir(pattern = .x)
+      zip(.y, files)
+      unlink(files)
+    }
+  )
+
+  setwd("..")
+
+  zip(
+    paste0(dirname, ".zip"),
+    file.path(dirname, dir(dirname))
+  )
+
+  unlink(dirname, recursive = TRUE)
+
+  setwd(orig_wd)
+
+  invisible(file)
+
+}

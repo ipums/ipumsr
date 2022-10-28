@@ -56,5 +56,6 @@ Suggests:
     dbplyr,
     vcr (>= 0.6.0),
     withr,
-    crayon
+    crayon,
+    rmapshaper
 VignetteBuilder: knitr

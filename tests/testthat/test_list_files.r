@@ -5,8 +5,8 @@ ex_file <- function(x) {
   system.file("extdata", x, package = "ipumsexamples")
 }
 
-nhgis_csv <- ipums_example("nhgis0008_csv.zip")
-nhgis_shp <- ipums_example("nhgis0008_shape_small.zip")
+nhgis_csv <- ipums_example("nhgis0707_csv.zip")
+nhgis_shp <- ipums_example("nhgis0707_shape_small.zip")
 terra_raster <- ex_file("2552_bundle.zip")
 terra_micro <- ex_file("3484_bundle.zip")
 terra_area <- ex_file("3485_bundle.zip")
@@ -18,10 +18,10 @@ test_that("Listing files from nhgis csv zip works", {
 
   all_files <- ipums_list_files(nhgis_csv)
   expect_equal(all_files$type, "data")
-  expect_equal(all_files$file, "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv")
+  expect_equal(all_files$file, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv")
 
   data_files <- ipums_list_data(nhgis_csv)
-  expect_equal(data_files$file, "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv")
+  expect_equal(data_files$file, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv")
 
   shape_files <- ipums_list_shape(nhgis_csv)
   expect_equal(nrow(shape_files), 0)
@@ -37,10 +37,10 @@ test_that("Listing files from nhgis shape zip works", {
 
   all_files <- ipums_list_files(nhgis_shp)
   expect_equal(all_files$type, "shape")
-  expect_equal(all_files$file, "nhgis0008_shape/nhgis0008_shapefile_tl2000_us_pmsa_1990.zip")
+  expect_equal(all_files$file, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip")
 
   shape_files <- ipums_list_shape(nhgis_shp)
-  expect_equal(shape_files$file, "nhgis0008_shape/nhgis0008_shapefile_tl2000_us_pmsa_1990.zip")
+  expect_equal(shape_files$file, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip")
 
   data_files <- ipums_list_data(nhgis_shp)
   expect_equal(nrow(data_files), 0)

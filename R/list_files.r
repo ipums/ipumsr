@@ -22,7 +22,7 @@
 #'   raster files to look for
 #' @return A \code{tbl_df} data.frame containing the files available
 #' @examples
-#' nhgis_file <- ipums_example("nhgis0008_csv.zip")
+#' nhgis_file <- ipums_example("nhgis0707_csv.zip")
 #' ipums_list_files(nhgis_file) # Only one extract available
 #'
 #' @export
