@@ -241,105 +241,145 @@ determine_encoding <- function(shape_file_vector, encoding = NULL) {
 
 # Gather the programming logic around going from an IPUMS download to
 # an unzipped folder with a shape file in it (possibly in a temp folder)
-shape_file_prep <- function(shape_file, shape_layer, bind_multiple, shape_temp) {
+shape_file_prep <- function(shape_file,
+                            shape_layer,
+                            bind_multiple,
+                            shape_temp) {
+
   # Case 1: Shape file specified is a .zip file or a directory
+  shape_is_shp <- tools::file_ext(shape_file) == "shp"
   shape_is_zip <- tools::file_ext(shape_file) == "zip"
   shape_is_dir <- tools::file_ext(shape_file) == ""
-  if (shape_is_zip | shape_is_dir) {
-    read_shape_files <- character(0) # Start with empty list of files to read
-    # Case 1a: First layer has zip files of shape files within it
-    shape_zips <- find_files_in(shape_file, "zip", shape_layer, multiple_ok = TRUE)
 
-    if (!bind_multiple && length(shape_zips) > 1) {
-      stop(paste(
-        custom_format_text(
-          "Multiple shape files found, please set the `bind_multiple` ",
-          "argument to `TRUE` to combine them together, or use the ",
-          "`shape_layer` argument to specify a single layer.",
-          indent = 2, exdent = 2
-        ),
-        custom_format_text(
-          paste(shape_zips, collapse = ", "), indent = 4, exdent = 4
-        ),
-        sep = "\n"
-      ))
-    }
+  # TODO: May need to check that multiple are handled?
+  # What if a user wants to bind_multiple on multiple .shp files?
+  # I don't think this ^ is currently supported
+  if (shape_is_shp) {
+    return(shape_file)
+  }
 
-    if (length(shape_zips) >= 1) {
-      if (shape_is_zip) {
-        purrr::walk(shape_zips, function(x) {
+  if (shape_is_zip) {
+    files <- unzip(shape_file, list = TRUE)$Name
+  } else if (shape_is_dir) {
+    files <- list.files(shape_file)
+  } else {
+    rlang::abort(
+      paste0(
+        "Expected `shape_file` to be a directory, .zip archive,",
+        "or .shp file."
+      )
+    )
+  }
+
+  # If no more layers, look for shapefiles:
+  if (!any(tools::file_ext(files) == "zip" | tools::file_ext(files) == "")) {
+    # First layer has .shp files within it
+    shape_shps <- tryCatch(
+      find_files_in(
+        shape_file,
+        "shp",
+        shape_layer,
+        multiple_ok = bind_multiple,
+        none_ok = FALSE
+      ),
+      error = function(cnd) {
+        if (grepl("^Multiple files found", conditionMessage(cnd))) {
+          bind_hint <- c("i" = "To combine files, set `bind_multiple = TRUE`")
+        } else {
+          bind_hint <- NULL
+        }
+
+        rlang::abort(
+          c(conditionMessage(cnd), bind_hint),
+          call = expr(find_files_in())
+        )
+      }
+    )
+
+    read_shape_files <- purrr::map_chr(
+      shape_shps,
+      function(x) {
+        # ignore "sbn", "sbx" because R doesn't use them
+        shape_shp_files <- paste0(
+          fostr_sub(x, 1, -4),
+          c("shp", "dbf", "prj", "shx")
+        )
+
+        if (shape_is_zip) {
+          utils::unzip(shape_file, shape_shp_files, exdir = shape_temp)
+
+          # If there is a cpg file (encoding information) extract that
+          all_files <- utils::unzip(shape_file, list = TRUE)$Name
+          cpg_file <- ".cpg" == tolower(purrr::map_chr(all_files, ipums_file_ext))
+          if (any(cpg_file)) {
+            utils::unzip(shape_file, all_files[cpg_file], exdir = shape_temp)
+          }
+
+          file.path(shape_temp, shape_shp_files[1])
+        } else {
+          file.path(shape_file, x)
+        }
+      }
+    )
+  } else {
+    # First layer has zip files of shape files within it
+    shape_zips <- tryCatch(
+      find_files_in(
+        shape_file,
+        "zip",
+        shape_layer,
+        multiple_ok = bind_multiple,
+        none_ok = FALSE
+      ),
+      error = function(cnd) {
+        if (grepl("^Multiple files found", conditionMessage(cnd))) {
+          bind_hint <- c("i" = "To combine files, set `bind_multiple = TRUE`")
+        } else {
+          bind_hint <- NULL
+        }
+
+        rlang::abort(
+          c(conditionMessage(cnd), bind_hint),
+          call = expr(find_files_in())
+        )
+      }
+    )
+
+    if (shape_is_zip) {
+      purrr::walk(
+        shape_zips,
+        function(x) {
           utils::unzip(shape_file, x, exdir = shape_temp)
           utils::unzip(file.path(shape_temp, x), exdir = shape_temp)
-        })
-      } else {
-        purrr::walk(file.path(shape_file, shape_zips), function(x) {
+        }
+      )
+    } else {
+      purrr::walk(
+        file.path(shape_file, shape_zips),
+        function(x) {
           utils::unzip(x, exdir = shape_temp)
-        })
-      }
-      read_shape_files <- dir(shape_temp, "\\.shp$", full.names = TRUE)
+        }
+      )
     }
 
-    # Case 1b: First layer has .shp files within it
-    if (length(read_shape_files) == 0) {
-      shape_shps <- find_files_in(shape_file, "shp", shape_layer, multiple_ok = TRUE)
+    read_shape_files <- dir(shape_temp, "\\.shp$", full.names = TRUE)
 
-      if (!bind_multiple && length(shape_shps) > 1) {
-        stop(paste(
-          custom_format_text(
-            "Multiple shape files found, please set the `bind_multiple` ",
-            "argument to `TRUE` to combine them together, or use the ",
-            "`shape_layer` argument to specify a single layer.",
-            indent = 2, exdent = 2
-          ),
-          custom_format_text(
-            paste(shape_shps, collapse = ", "), indent = 4, exdent = 4
-          ),
-          sep = "\n"
-        ))
-      }
-
-      if (length(shape_shps) >= 1) {
-        read_shape_files <- purrr::map_chr(shape_shps, function(x) {
-          shape_shp_files <- paste0(
-            fostr_sub(x, 1, -4),
-            # ignore "sbn", "sbx" because R doesn't use them
-            c("shp", "dbf", "prj", "shx")
-          )
-
-          if (shape_is_zip) {
-            utils::unzip(shape_file, shape_shp_files, exdir = shape_temp)
-
-            # If there is a cpg file (encoding information) extract that
-            all_files <- utils::unzip(shape_file, list = TRUE)$Name
-            cpg_file <- ".cpg" == tolower(purrr::map_chr(all_files, ipums_file_ext))
-            if (any(cpg_file)) {
-              utils::unzip(shape_file, all_files[cpg_file], exdir = shape_temp)
-            }
-
-            file.path(shape_temp, shape_shp_files[1])
-          } else {
-            file.path(shape_file, shape_shps)
-          }
-        })
-      }
-
-      if (length(read_shape_files) == 0) {
-        stop(call. = FALSE, custom_format_text(
-          "Directory/zip file not formatted as expected. Please check your `shape_layer` ",
-          "argument or unzip and try again.", indent = 2, exdent = 2
-        ))
-      }
-    }
   }
 
-  # Case 2: Shape file specified is a .shp file
-  shape_is_shp <- tools::file_ext(shape_file) == "shp"
-  if (shape_is_shp) {
-    read_shape_files <- shape_file
+  # If no shapefiles or if multiple and bind_multiple = FALSE (this can happen
+  # if someone tries to read a zip of a zip/dir where there are 2 shps in the
+  # inner zip) something was not as expected.
+  # TODO: improve to inform users the expected structure
+  if (length(read_shape_files) == 0 ||
+      (length(read_shape_files) > 1 && !bind_multiple)) {
+    rlang::abort(
+      c(
+        "Directory/zip file not formatted as expected. ",
+        "i" = "Please check your `shape_layer` argument or unzip and try again."
+      )
+    )
   }
 
-  if (!shape_is_zip & !shape_is_dir & !shape_is_shp) {
-    stop("Expected `shape_file` to be a directory, .zip or .shp file.")
-  }
   read_shape_files
+
 }

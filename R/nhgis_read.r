@@ -184,30 +184,13 @@ read_nhgis_fwf <- function(data_file, data_layer = NULL, ...) {
 
     utils::unzip(data_file, exdir = fwf_dir)
 
-    filename <- find_files_in(
-      list.files(fwf_dir, full.names = TRUE),
-      "dat",
-      data_layer
-    )
-
-    if (length(filename) == 0) {
-      rlang::abort(
-        c(
-          paste0("`data_layer` did not match any files in the provided `data_file`."),
-          "i" = "Use `ipums_list_files()` to see available data files for this extract"
-        )
-      )
-    }
-
-    file <- list.files(
-      fwf_dir,
-      pattern = filename,
-      full.names = TRUE,
-      recursive = TRUE
-    )
+    filename <- find_files_in(data_file, "dat", data_layer, none_ok = FALSE)
+    file <- file.path(fwf_dir, filename)
 
   } else if (is_dir) {
-    filename <- find_files_in(data_file, "dat", data_layer)
+
+    filename <- find_files_in(data_file, "dat", data_layer, none_ok = FALSE)
+
     file <- file.path(data_file, filename)
   } else {
     file <- data_file
@@ -227,16 +210,7 @@ read_nhgis_csv <- function(data_file, data_layer = NULL, ...) {
   is_dir <- file_is_dir(data_file)
 
   if (is_zip || is_dir) {
-    filename <- find_files_in(data_file, "csv", data_layer)
-
-    if (length(filename) == 0) {
-      rlang::abort(
-        c(
-          paste0("`data_layer` did not match any files in the provided `data_file`."),
-          "i" = "Use `ipums_list_files()` to see available data files for this extract"
-        )
-      )
-    }
+    filename <- find_files_in(data_file, "csv", data_layer, none_ok = FALSE)
   }
 
   if (is_zip) {

@@ -26,42 +26,90 @@ select_var_rows <- function(df, vars, filter_var = "var_name") {
 }
 
 
-find_files_in <- function(
-  file,
-  name_ext = NULL,
-  name_select = quo(NULL),
-  multiple_ok = FALSE
-) {
+find_files_in <- function(file,
+                          name_ext = NULL,
+                          name_select = quo(NULL),
+                          multiple_ok = FALSE,
+                          none_ok = TRUE) {
+
   if (file_is_zip(file)) {
     file_names <- utils::unzip(file, list = TRUE)$Name
   } else if (file_is_dir(file)) {
     file_names <- dir(file)
   } else {
-    stop(paste0(
-      "Expected a folder or a zip file to look for files in, but got:\n",
-      file
-    ))
+    stop(
+      paste0(
+        "Expected a folder or a zip file to look for files in, but got:\n",
+        file
+      )
+    )
   }
 
-
-  if (!is.null(name_ext)) file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
-  if (!quo_is_null(name_select)) file_names <- tidyselect::vars_select(file_names, !!name_select)
-
-  if (!multiple_ok && length(file_names) > 1) {
-    arg_name <- deparse(substitute(name_select))
-    stop(paste(
-      custom_format_text(
-        "Multiple files found, please use the `", arg_name, "` argument to ",
-        "specify which you want to load.", indent = 2, exdent = 2
-      ),
-      custom_format_text(
-        paste(file_names, collapse = ", "), indent = 4, exdent = 4
-      ),
-      sep = "\n"
-    ), call. = FALSE)
+  if (!is.null(name_ext)) {
+    file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
   }
 
-  unname(file_names)
+  # TODO consider changing name_select default to NULL and this to is_null
+  # for simplification? Don't know if we need quo() as NULL appears to behave
+  # similarly. May also affect eval_select behavior
+  if (!quo_is_null(name_select)) {
+
+    names(file_names) <- file_names
+
+    selection <- tryCatch(
+      tidyselect::eval_select(name_select, file_names),
+      error = function(cnd) {
+        # Rename tidyselect errors for increased clarity in our context
+        cnd <- fostr_replace_all(
+          fostr_replace_all(conditionMessage(cnd), "column", "file"),
+          "Column",
+          "File"
+        )
+
+        # Add available file names to error message
+        rlang::abort(
+          c(
+            cnd,
+            "Available files:", purrr::set_names(file_names, "*")
+          ),
+          call = expr(find_files_in())
+        )
+      }
+    )
+
+    file_names_sel <- file_names[selection]
+
+  } else {
+    file_names_sel <- file_names
+  }
+
+  arg_name <- deparse(substitute(name_select))
+
+  if (!none_ok && length(file_names_sel) == 0) {
+    rlang::abort(
+      c(
+        paste0(
+          "The provided `", arg_name,
+          "` did not select any of the available files:"
+        ),
+        purrr::set_names(file_names, "*")
+      )
+    )
+  }
+
+  if (!multiple_ok && length(file_names_sel) > 1) {
+    rlang::abort(
+      c(
+        paste0(
+          "Multiple files found, please use the `", arg_name, "` argument to ",
+          "specify which you want to load:"
+        ),
+        purrr::set_names(file_names_sel, "*")
+      )
+    )
+  }
+
+  unname(file_names_sel)
 }
 
 #' Add IPUMS variable attributes to a data.frame
