@@ -54,7 +54,7 @@
 #' @export
 read_nhgis <- function(data_file,
                        data_layer = NULL,
-                       verbose = TRUE,
+                       verbose = FALSE,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        ...) {
 
@@ -120,124 +120,49 @@ read_nhgis <- function(data_file,
   data
 
 }
+
 #' @rdname read_nhgis
 #' @export
-read_nhgis_sf <- function(
-  data_file,
-  shape_file,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "latin1",
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
+read_nhgis_sf <- function(shape_file,
+                          shape_layer = NULL,
+                          vars = NULL,
+                          encoding = NULL,
+                          bind_multiple = FALSE,
+                          add_layer_var = NULL,
+                          verbose = FALSE) {
 
-) {
-  data <- read_nhgis(data_file, !!enquo(data_layer), verbose)
-
-  shape_layer <- enquo(shape_layer)
-  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
-  if (verbose) cat("Reading geography...\n")
-
-  sf_data <- read_ipums_sf(
-    shape_file, !!shape_layer, verbose = verbose, encoding = shape_encoding
+  read_ipums_sf(
+    shape_file,
+    shape_layer = !!enquo(shape_layer),
+    vars = !!enquo(vars),
+    encoding = encoding,
+    bind_multiple = bind_multiple,
+    add_layer_var = add_layer_var,
+    verbose = verbose
   )
 
-  # Only join on vars that are in both and are called "GISJOIN*"
-  join_vars <- intersect(names(data), names(sf_data))
-  join_vars <- fostr_subset(join_vars, "GISJOIN.*")
-
-  # Drop overlapping vars besides join var from shape file
-  drop_vars <- dplyr::intersect(names(data), names(sf_data))
-  drop_vars <- dplyr::setdiff(drop_vars, join_vars)
-  sf_data <- dplyr::select(sf_data, -one_of(drop_vars))
-
-  # Avoid a warning by adding attributes from the join_vars in data to
-  # join_vars in sf_data
-  purrr::walk(join_vars, function(vvv) {
-    attributes(sf_data[[vvv]]) <<- attributes(data[[vvv]])
-  })
-
-  # Coerce to data.frame to avoid sf#414 (fixed in development version of sf)
-  data <- dplyr::full_join(as.data.frame(sf_data), as.data.frame(data), by = join_vars)
-  data <- sf::st_as_sf(tibble::as_tibble(data))
-
-  # Check if any data rows are missing (merge failures where not in shape file)
-  if (verbose) {
-    missing_in_shape <- purrr::map_lgl(data$geometry, is.null)
-    if (any(missing_in_shape)) {
-      gis_join_failures <- data$GISJOIN[missing_in_shape]
-      cat(paste(
-        custom_format_text(
-          "There are ", sum(missing_in_shape), " rows of data that ",
-          "have data but no geography. This can happen because:"
-        ),
-        custom_format_text(
-          "Shape files do not include some census geographies such ",
-          "as 'Crews of Vessels' tracts that do not have a defined area",
-          indent = 2, exdent = 2
-        ),
-        custom_format_text(
-          "Shape files have been simplified which sometimes drops ",
-          "entire geographies (especially small ones)."
-        ),
-        sep = "\n"
-      ))
-    }
-  }
-  data
 }
 
 #' @rdname read_nhgis
 #' @export
-read_nhgis_sp <- function(
-  data_file,
-  shape_file,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "latin1",
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-  data <- read_nhgis(data_file, !!enquo(data_layer), verbose)
+read_nhgis_sp <- function(shape_file,
+                          shape_layer = NULL,
+                          vars = NULL,
+                          encoding = NULL,
+                          bind_multiple = FALSE,
+                          add_layer_var = NULL,
+                          verbose = FALSE) {
 
-  shape_layer <- enquo(shape_layer)
-  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
-  if (verbose) cat("Reading geography...\n")
-
-  sp_data <- read_ipums_sp(
-    shape_file, !!shape_layer, verbose = verbose, encoding = shape_encoding
+  read_ipums_sp(
+    shape_file,
+    shape_layer = !!enquo(shape_layer),
+    vars = !!enquo(vars),
+    encoding = encoding,
+    bind_multiple = bind_multiple,
+    add_layer_var = add_layer_var,
+    verbose = verbose
   )
 
-  # Only join on vars that are in both and are called "GISJOIN*"
-  join_vars <- intersect(names(data), names(sp_data@data))
-  join_vars <- fostr_subset(join_vars, "GISJOIN.*")
-
-  # Drop overlapping vars besides join var from shape file
-  drop_vars <- dplyr::intersect(names(data), names(sp_data@data))
-  drop_vars <- dplyr::setdiff(drop_vars, join_vars)
-  sp_data@data <- dplyr::select(sp_data@data, -one_of(drop_vars))
-
-  out <- sp::merge(sp_data, data, by = join_vars, all.x = TRUE)
-
-  # Check if any data rows are missing (merge failures where not in shape file)
-  if (verbose) {
-    missing_in_shape <- dplyr::anti_join(
-      dplyr::select(data, one_of(join_vars)),
-      dplyr::select(out@data, one_of(join_vars)),
-      by = join_vars
-    )
-    if (nrow(missing_in_shape) > 0) {
-      gis_join_failures <- purrr::pmap_chr(missing_in_shape, function(...) paste(..., sep = "-"))
-      message(paste0(
-        "There are ", nrow(missing_in_shape), " rows of data that ",
-        "have data but no geography. This can happen because:\n  Shape files ",
-        "do not include some census geographies such as 'Crews of Vessels' ",
-        "tracts that do not have a defined area\n  Shape files have been simplified ",
-        "which sometimes drops entire geographies (especially small ones)."
-      ))
-    }
-  }
-  out
 }
 
 # Internal ---------------------

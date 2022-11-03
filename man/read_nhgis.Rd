@@ -9,29 +9,29 @@
 read_nhgis(
   data_file,
   data_layer = NULL,
-  verbose = TRUE,
+  verbose = FALSE,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   ...
 )
 
 read_nhgis_sf(
-  data_file,
   shape_file,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "latin1",
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
+  shape_layer = NULL,
+  vars = NULL,
+  encoding = NULL,
+  bind_multiple = FALSE,
+  add_layer_var = NULL,
+  verbose = FALSE
 )
 
 read_nhgis_sp(
-  data_file,
   shape_file,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "latin1",
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
+  shape_layer = NULL,
+  vars = NULL,
+  encoding = NULL,
+  bind_multiple = FALSE,
+  add_layer_var = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
