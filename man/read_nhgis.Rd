@@ -10,7 +10,8 @@ read_nhgis(
   data_file,
   data_layer = NULL,
   verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
+  var_attrs = c("val_labels", "var_label", "var_desc"),
+  ...
 )
 
 read_nhgis_sf(

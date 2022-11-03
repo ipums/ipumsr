@@ -3,7 +3,6 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-
 #' Read data from an NHGIS extract
 #'
 #' Reads a dataset downloaded from the NHGIS extract system. Relies on csv files
@@ -53,76 +52,74 @@
 #'
 #' @family ipums_read
 #' @export
-read_nhgis <- function(
-  data_file,
-  data_layer = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
+read_nhgis <- function(data_file,
+                       data_layer = NULL,
+                       verbose = TRUE,
+                       var_attrs = c("val_labels", "var_label", "var_desc"),
+                       ...) {
+
   data_layer <- enquo(data_layer)
 
   custom_check_file_exists(data_file)
 
-  # Read data files ----
-  data_is_zip_or_dir <- path_is_zip_or_dir(data_file)
-  if (data_is_zip_or_dir) {
-    csv_name <- find_files_in(data_file, "csv", data_layer)
-    cb_ddi_info <- try(read_ipums_codebook(data_file, !!data_layer), silent = TRUE)
+  if (file_is_zip(data_file)) {
+    files <- unzip(data_file, list = TRUE)$Name
+    cb_ddi_info <- try(
+      read_ipums_codebook(data_file, !!data_layer),
+      silent = TRUE
+    )
+  } else if (file_is_dir(data_file)) {
+    files <- list.files(data_file)
+    cb_ddi_info <- try(
+      read_ipums_codebook(data_file, !!data_layer),
+      silent = TRUE
+    )
   } else {
-    cb_name <- fostr_replace(data_file, "\\.csv$", "_codebook.txt")
-    cb_ddi_info <- try(read_ipums_codebook(cb_name), silent = TRUE)
+    files <- list.files(dirname(data_file))
+    # If direct file path provided, look in parent directory for codebook
+    cb_ddi_info <- try(
+      read_ipums_codebook(dirname(data_file)),
+      silent = TRUE
+    )
   }
 
-  if (inherits(cb_ddi_info, "try-error")) cb_ddi_info <- nhgis_empty_ddi
+  if (inherits(cb_ddi_info, "try-error")) {
+    cb_ddi_info <- NHGIS_EMPTY_DDI
+  }
 
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
-  cb_ddi_info$encoding <- "ISO-8859-1"
+  # TODO: I assume this is supposed to be `file_encoding` not `encoding`?
+  # Check.
+  cb_ddi_info$file_encoding <- "ISO-8859-1"
 
+  # TODO: reconsider custom_cat formatting.
+  # TODO: Conditions should be displayed when loading package?
   if (verbose) custom_cat(short_conditions_text(cb_ddi_info))
 
   # Read data
   if (verbose) cat("\n\nReading data file...\n")
   extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
 
-  if (file_is_zip(data_file)) {
-    data <- readr::read_csv(
-      unz(data_file, csv_name),
-      col_types = readr::cols(.default = "c"),
-      locale = extract_locale,
-      progress = show_readr_progress(verbose)
-    )
-  } else if (file_is_dir(data_file)) {
-    data <- readr::read_csv(
-      file.path(data_file, csv_name),
-      col_types = readr::cols(.default = "c"),
-      locale = extract_locale,
-      progress = show_readr_progress(verbose)
-    )
-  }else {
-    data <- readr::read_csv(
-      data_file,
-      col_types = readr::cols(.default = "c"),
-      locale = extract_locale,
-      progress = show_readr_progress(verbose)
-    )
+  # TODO: should check this on invalid file structures--i.e.
+  # dirs with no csvs or dat files, etc.
+  file_is_csv <- any(purrr::map_lgl(files, ~tools::file_ext(.x) == "csv"))
+
+  # TODO: readr progress currently does not responsd to local verbose arg
+  # TODO: readr show_col_types does not repsond to local verbose arg.
+  # May remove verbose arg.
+  if (file_is_csv) {
+    data <- read_nhgis_csv(data_file, data_layer = !!data_layer, ...)
+  } else {
+    data <- read_nhgis_fwf(data_file, data_layer = !!data_layer, ...)
   }
 
-  # If extract is NHGIS's "enhanced" csvs with an extra header row,
-  # then remove the first row.
-  # (determine by checking if the first row is entirely character
-  # values that can't be converted to numeric)
-  first_row <- readr::type_convert(data[1, ], col_types = readr::cols())
-  first_row_char <- purrr::map_lgl(first_row, rlang::is_character)
-  if (all(first_row_char)) data <- data[-1, ]
-
-  data <- readr::type_convert(data, col_types = readr::cols())
-
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
-  data
-}
 
+  data
+
+}
 #' @rdname read_nhgis
 #' @export
 read_nhgis_sf <- function(
@@ -243,10 +240,114 @@ read_nhgis_sp <- function(
   out
 }
 
+# Internal ---------------------
 
+read_nhgis_fwf <- function(data_file, data_layer = NULL, ...) {
+
+  data_layer <- enquo(data_layer)
+
+  is_zip <- file_is_zip(data_file)
+  is_dir <- file_is_dir(data_file)
+
+  if (is_zip) {
+
+    # Cannot use fwf_empty() col_positions on an unz() connection
+    # Must unzip file to allow for fwf_empty() specification
+    fwf_dir <- tempfile()
+    dir.create(fwf_dir)
+    on.exit(unlink(fwf_dir, recursive = TRUE))
+
+    utils::unzip(data_file, exdir = fwf_dir)
+
+    filename <- find_files_in(
+      list.files(fwf_dir, full.names = TRUE),
+      "dat",
+      data_layer
+    )
+
+    if (length(filename) == 0) {
+      rlang::abort(
+        c(
+          paste0("`data_layer` did not match any files in the provided `data_file`."),
+          "i" = "Use `ipums_list_files()` to see available data files for this extract"
+        )
+      )
+    }
+
+    file <- list.files(
+      fwf_dir,
+      pattern = filename,
+      full.names = TRUE,
+      recursive = TRUE
+    )
+
+  } else if (is_dir) {
+    filename <- find_files_in(data_file, "dat", data_layer)
+    file <- file.path(data_file, filename)
+  } else {
+    file <- data_file
+  }
+
+  data <- readr::read_fwf(file, ...)
+
+  data
+
+}
+
+read_nhgis_csv <- function(data_file, data_layer = NULL, ...) {
+
+  data_layer <- enquo(data_layer)
+
+  is_zip <- file_is_zip(data_file)
+  is_dir <- file_is_dir(data_file)
+
+  if (is_zip || is_dir) {
+    filename <- find_files_in(data_file, "csv", data_layer)
+
+    if (length(filename) == 0) {
+      rlang::abort(
+        c(
+          paste0("`data_layer` did not match any files in the provided `data_file`."),
+          "i" = "Use `ipums_list_files()` to see available data files for this extract"
+        )
+      )
+    }
+  }
+
+  if (is_zip) {
+    file <- unz(data_file, filename)
+  } else if (is_dir) {
+    file <- file.path(data_file, filename)
+  } else {
+    file <- data_file
+  }
+
+  data <- readr::read_csv(file, ...)
+
+  # TODO: testing that reformatting this stuff does handle
+  # header row correctly
+
+  # If extract is NHGIS's "enhanced" csvs with an extra header row,
+  # then remove the first row.
+  # (determine by checking if the first row is entirely character
+  # values that can't be converted to numeric)
+  first_row_char <- all(
+    purrr::map_lgl(
+      readr::type_convert(data[1, ], col_types = readr::cols()),
+      rlang::is_character
+    )
+  )
+
+  if (first_row_char) {
+    data <- readr::type_convert(data[-1, ], col_types = readr::cols())
+  }
+
+  data
+
+}
 
 # Fills in a default condition if we can't find codebook for nhgis
-nhgis_empty_ddi <- make_ddi_from_scratch(
+NHGIS_EMPTY_DDI <- make_ddi_from_scratch(
   ipums_project = "NHGIS",
   file_type = "rectangular",
   conditions = paste0(
