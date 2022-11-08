@@ -557,25 +557,27 @@ tryCatch(
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
 
-      data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("blck_grp"),
-                         verbose = FALSE)
+      data <- read_nhgis(
+        table_data_file_path,
+        data_layer = contains("blck_grp"),
+        show_conditions = FALSE
+      )
+
       expect_equal(nrow(data), 10190)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
-      data_shp_sf <- read_nhgis_sf(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sf <- read_nhgis_sf(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp")
+      )
       expect_s3_class(data_shp_sf, "sf")
 
-      data_shp_sp <- read_nhgis_sp(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sp <- read_nhgis_sp(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp"),
+        verbose = FALSE
+      )
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
@@ -621,10 +623,10 @@ tryCatch(
 
       expect_true(file.exists(gis_data_file_path))
 
-      data_shp_sf <- read_ipums_sf(gis_data_file_path, verbose = FALSE)
+      data_shp_sf <- read_nhgis_sf(gis_data_file_path)
       expect_s3_class(data_shp_sf, "sf")
 
-      data_shp_sp <-  read_ipums_sp(gis_data_file_path, verbose = FALSE)
+      data_shp_sp <- read_nhgis_sp(gis_data_file_path, verbose = FALSE)
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
@@ -694,25 +696,27 @@ tryCatch(
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
 
-      data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("state"),
-                         verbose = FALSE)
+      data <- read_nhgis(
+        table_data_file_path,
+        data_layer = contains("state"),
+        show_conditions = FALSE
+      )
+
       expect_equal(nrow(data), 153)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
-      data_shp_sf <- read_nhgis_sf(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sf <- read_nhgis_sf(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp")
+      )
       expect_s3_class(data_shp_sf, "sf")
 
-      data_shp_sp <- read_nhgis_sp(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sp <- read_nhgis_sp(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp"),
+        verbose = FALSE
+      )
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),

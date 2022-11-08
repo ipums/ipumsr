@@ -376,8 +376,8 @@ custom_check_file_exists <- function(file, extra_ext = NULL) {
     file <- file[1]
     if (dirname(file) == ".") {
       stop(paste0(
-        "Could not find file named '", file, "' in current working directory:\n  ",
-        getwd(), "\nDo you need to change the directory with `setwd()`?"
+        "Could not find file named '", file, "' in current working directory (",
+        getwd(), ")"
       ))
     } else {
       stop(paste0(
@@ -421,6 +421,7 @@ release_questions <- function() {
   }
   out
 }
+
 
 
 readr_to_hipread_specs <- function(positions, types) {
@@ -570,21 +571,12 @@ simplify_nhgis_gis_file <- function(file) {
     1:n_files,
     ~tryCatch(
       rmapshaper::ms_simplify(
-        read_ipums_sf(
-          file,
-          shape_layer = !!.x,
-          verbose = FALSE
-        ),
+        read_ipums_sf(file, shape_layer = !!.x),
         keep = 0.01
       ),
       error = function(cnd) {
         rlang::warn(paste0("Some files could not be simplified."))
-
-        read_ipums_sf(
-          file,
-          shape_layer = !!.x,
-          verbose = FALSE
-        )
+        read_ipums_sf(file, shape_layer = !!.x)
       }
     )
   )

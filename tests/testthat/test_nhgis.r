@@ -1,178 +1,171 @@
 context("NHGIS")
 
+nhgis_single_ds <- ipums_example("nhgis0707_csv.zip")
+nhgis_single_shp <- ipums_example("nhgis0707_shape_small.zip")
+
+nhgis_multi_ds <-  ipums_example("nhgis0712_csv.zip")
+nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
+
 # Manually set these constants...
 rows <- 71
 vars_data <- 25
-vars_data_shape_sf <- 32
-vars_data_shape_sp <- 31
-d6z001_label <- "1989 to March 1990"
-d6z001_var_desc <- "Year Structure Built (D6Z)"
-pmsa_first2_sort <- c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
+pmsa_first2_codes <- c("0080", "0360")
 
-test_that(
-  "Can read NHGIS extract (data only)", {
-    nhgis <- read_nhgis(
-      ipums_example("nhgis0707_csv.zip"),
-      verbose = FALSE
-    )
+# Read single files -------------------------------
 
-    expect_equal(nrow(nhgis), rows)
-    expect_equal(ncol(nhgis), vars_data)
-    expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
-    expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
-    expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
-  })
+test_that("Can read NHGIS extract: single dataset", {
 
+  expect_output(
+    nhgis <- read_nhgis(nhgis_single_ds),
+    "Use of data from NHGIS is subject"
+  )
 
-test_that(
-  "Can read NHGIS extract (with shape as sf)", {
-    skip_if_not_installed("sf")
-    nhgis <- read_nhgis_sf(
-      ipums_example("nhgis0707_csv.zip"),
-      ipums_example("nhgis0707_shape_small.zip"),
-      verbose = FALSE
-    )
+  expect_equal(nrow(nhgis), rows)
+  expect_equal(ncol(nhgis), vars_data)
+  expect_equal(attr(nhgis$D6Z001, "label"), "1989 to March 1990")
+  expect_equal(attr(nhgis$D6Z001, "var_desc"), "Year Structure Built (D6Z)")
+  expect_equal(
+    nhgis$PMSA[1:2],
+    c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
+  )
+  expect_s3_class(nhgis, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 
-    expect_equal(nrow(nhgis), rows)
-    expect_equal(ncol(nhgis), vars_data_shape_sf)
-    expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
-    expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
-    expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), c("sf", "tbl_df", "tbl", "data.frame"))
-  })
+})
 
+test_that("Can read time series tables", {
 
-test_that(
-  "Can read NHGIS extract (with shape as sf - 1 layer unzipped)", {
-    skip_if_not_installed("sf")
-    temp_dir <- tempfile()
-    dir.create(temp_dir)
-    utils::unzip(ipums_example("nhgis0707_csv.zip"), exdir = temp_dir)
-    utils::unzip(ipums_example("nhgis0707_shape_small.zip"), exdir = temp_dir)
+  # TODO: Update this example
+  nhgis_timeseries <- system.file(
+    "extdata",
+    "nhgis0043_csv.zip",
+    package = "ipumsexamples"
+  )
 
-    nhgis <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv"),
-      file.path(temp_dir, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"),
-      verbose = FALSE
-    )
-
-    expect_equal(nrow(nhgis), rows)
-    expect_equal(ncol(nhgis), vars_data_shape_sf)
-    expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
-    expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
-    expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), c("sf", "tbl_df", "tbl", "data.frame"))
-
-    nhgis2 <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0707_csv"),
-      file.path(temp_dir, "nhgis0707_shape"),
-      verbose = FALSE
-    )
-    expect_equal(nrow(nhgis), nrow(nhgis2))
-    expect_equal(ncol(nhgis), ncol(nhgis2))
-    expect_equal(attr(nhgis[["D6Z001"]], "label"), attr(nhgis2[["D6Z001"]], "label"))
-    expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), attr(nhgis2[["D6Z001"]], "var_desc"))
-    expect_equal(sort(nhgis$PMSA)[1:2], sort(nhgis2$PMSA)[1:2])
-    expect_equal(class(nhgis), class(nhgis2))
-  })
-
-
-test_that(
-  "Can read NHGIS extract (with shape as sf - 2 layers unzipped)", {
-    skip_if_not_installed("sf")
-    temp_dir <- tempfile()
-    dir.create(temp_dir)
-    utils::unzip(ipums_example("nhgis0707_csv.zip"), exdir = temp_dir)
-    utils::unzip(ipums_example("nhgis0707_shape_small.zip"), exdir = temp_dir)
-    utils::unzip(
-      file.path(temp_dir, "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"),
-      exdir = temp_dir
-    )
-
-    nhgis <- read_nhgis_sf(
-      file.path(temp_dir, "nhgis0707_csv/nhgis0707_ds135_1990_pmsa.csv"),
-      file.path(temp_dir, "US_pmsa_1990.shp"),
-      verbose = FALSE
-    )
-
-    expect_equal(nrow(nhgis), rows)
-    expect_equal(ncol(nhgis), vars_data_shape_sf)
-    expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
-    expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
-    expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), c("sf", "tbl_df", "tbl", "data.frame"))
-  })
-
-
-test_that(
-  "Can read NHGIS extract (with shape as sp)", {
-    skip_if_not_installed("rgdal")
-    skip_if_not_installed("sp")
-    nhgis <- read_nhgis_sp(
-      ipums_example("nhgis0707_csv.zip"),
-      ipums_example("nhgis0707_shape_small.zip"),
-      verbose = FALSE
-    )
-
-    expect_equal(nrow(nhgis@data), rows)
-    expect_equal(ncol(nhgis@data), vars_data_shape_sp)
-    # Attributes get killed by sp::merge... I'm okay with supporting sf better than sp
-    #expect_equal(attr(nhgis[["D6Z001"]], "label"), d6z001_label)
-    #expect_equal(attr(nhgis[["D6Z001"]], "var_desc"), d6z001_var_desc)
-    expect_equal(sort(nhgis$PMSA)[1:2], pmsa_first2_sort)
-    expect_equal(class(nhgis), structure("SpatialPolygonsDataFrame", package = "sp"))
-  })
-
-test_that(
-  "NHGIS - sf and sp polygon-data relationships didn't get scrambled in import", {
-    skip_if_not_installed("sf")
-    skip_if_not_installed("rgdal")
-    skip_if_not_installed("sp")
-
-    nhgis_sf <- read_nhgis_sf(
-      ipums_example("nhgis0707_csv.zip"),
-      ipums_example("nhgis0707_shape_small.zip"),
-      verbose = FALSE
-    )
-
-    nhgis_sp <- read_nhgis_sp(
-      ipums_example("nhgis0707_csv.zip"),
-      ipums_example("nhgis0707_shape_small.zip"),
-      verbose = FALSE
-    )
-
-    check_geo <- nhgis_sf$GISJOIN[1]
-    expect_equal(
-      dplyr::filter(nhgis_sf, GISJOIN == check_geo)$geometry[[1]][[1]][[1]],
-      subset(nhgis_sp, GISJOIN == check_geo)@polygons[[1]]@Polygons[[1]]@coords
-    )
-
-  })
-
-
-test_that(
-  "Informative error when no data file", {
-    expect_error(read_nhgis("FAKE_FILE.zip"), "working directory")
-    expect_error(read_nhgis("C:/FAKE_FOLDER/FAKE_FILE.zip"), "check the path")
-  })
-
-
-test_that(
-  "Can read time series tables", {
-
-    nhgis_timeseries <-  system.file("extdata", "nhgis0043_csv.zip", package = "ipumsexamples")
-    if (!file.exists(nhgis_timeseries)) {
-      skip("Couldn't find nhgis time series. ipumsexamples likely not installed.")
-    }
-
-    data <- read_nhgis(nhgis_timeseries, verbose = FALSE)
-
-    expect_equal(nrow(data), 1L)
-    expect_equal(data$GISJOIN[[1]], "G1")
-    expect_equal(data$NATION[[1]], "United States")
-    expect_equal(data$B78AA1980[[1]], 226545805)
-    expect_equal(attr(data$B78AA125, "label"), "2008-2012: Persons: Total")
-    expect_equal(attr(data$B78AA125, "var_desc"), "Total Population (B78)")
+  if (!file.exists(nhgis_timeseries)) {
+    skip("Couldn't find nhgis time series. ipumsexamples likely not installed.")
   }
-)
+
+  data <- read_nhgis(nhgis_timeseries, show_conditions = FALSE)
+
+  expect_equal(nrow(data), 1L)
+  expect_equal(data$GISJOIN[[1]], "G1")
+  expect_equal(data$NATION[[1]], "United States")
+  expect_equal(data$B78AA1980[[1]], 226545805)
+  expect_equal(attr(data$B78AA125, "label"), "2008-2012: Persons: Total")
+  expect_equal(attr(data$B78AA125, "var_desc"), "Total Population (B78)")
+
+})
+
+# Select files when multiple exist -------------------------------
+
+test_that("Can select data files by index", {
+
+  nhgis1 <- read_nhgis(nhgis_multi_ds, data_layer = 1, show_conditions = FALSE)
+  nhgis2 <- read_nhgis(nhgis_multi_ds, data_layer = 2, show_conditions = FALSE)
+
+  expect_equal(dim(nhgis1), c(71, 18))
+  expect_equal(dim(nhgis2), c(71, 18))
+
+  expect_false(identical(nhgis1, nhgis2))
+
+  expect_true("EH3001" %in% colnames(nhgis1))
+  expect_true("ECI001" %in% colnames(nhgis2))
+
+})
+
+test_that("Can select data files with tidyselect", {
+
+  nhgis1 <- read_nhgis(
+    nhgis_multi_ds,
+    data_layer = contains("136"),
+    show_conditions = FALSE
+  )
+
+  nhgis2 <- read_nhgis(
+    nhgis_multi_ds,
+    data_layer = contains("135"),
+    show_conditions = FALSE
+  )
+
+  expect_equal(dim(nhgis1), c(71, 18))
+  expect_equal(dim(nhgis2), c(71, 18))
+
+  expect_false(identical(nhgis1, nhgis2))
+
+  expect_true("EH3001" %in% colnames(nhgis1))
+  expect_true("ECI001" %in% colnames(nhgis2))
+
+})
+
+# Can read data when provided in zip, dir, and shp formats -------
+
+# TODO: Docs need to show that some args to readOGR are already specified
+test_that("We can pass arguments to underlying reader functions", {
+
+  # TODO: Docs need to show that attr_vars doesn't work if col_names = FALSE
+  # Worth checking if there are other ipums things that break with ... args
+  expect_silent(
+    nhgis_data <- read_nhgis(
+      nhgis_single_ds,
+      show_conditions = FALSE,
+      show_col_types = FALSE,
+      progress = FALSE,
+      col_names = FALSE,
+      col_types = readr::cols(.default = readr::col_character()),
+      skip = 2
+    )
+  )
+
+  expect_equal(nrow(nhgis_data), rows - 1)
+  expect_equal(colnames(nhgis_data), paste0("X", 1:vars_data))
+  expect_equal(unique(purrr::map_chr(nhgis_data, class)), "character")
+
+})
+
+test_that("We get informative error messages when reading NHGIS extracts", {
+
+  expect_error(
+    read_nhgis("FAKE_FILE.zip", show_conditions = FALSE),
+    "Could not find file"
+  )
+
+  expect_error(
+    read_nhgis("C:/FAKE_FOLDER/FAKE_FILE.zip", show_conditions = FALSE),
+    "Could not find file, check the path"
+  )
+
+  expect_error(
+    nhgis <- read_nhgis(nhgis_multi_ds, show_conditions = FALSE),
+    "Multiple files found"
+  )
+  expect_error(
+    nhgis <- read_nhgis(
+      nhgis_multi_ds,
+      data_layer = contains("ds"),
+      show_conditions = FALSE
+    ),
+    "Multiple files found"
+  )
+  expect_error(
+    nhgis <- read_nhgis(
+      nhgis_multi_ds,
+      data_layer = 1:2,
+      show_conditions = FALSE
+    ),
+    "Multiple files found"
+  )
+
+  expect_error(
+    read_nhgis(nhgis_multi_ds, data_layer = 3, show_conditions = FALSE),
+    "Can't subset files past the end.+Available files:"
+  )
+  expect_error(
+    read_nhgis(
+      nhgis_multi_ds,
+      data_layer = contains("not-in-file"),
+      show_conditions = FALSE
+    ),
+    "The provided `data_layer` did not select any of the available files:"
+  )
+})
+

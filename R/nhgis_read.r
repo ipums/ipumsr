@@ -5,57 +5,35 @@
 
 #' Read data from an NHGIS extract
 #'
-#' Reads a dataset downloaded from the NHGIS extract system. Relies on csv files
-#' (with or without the extra header row).
+#' @description
+#' Load a dataset downloaded from the NHGIS extract system.
 #'
-#' @return \code{read_nhgis} returns a \code{tbl_df} with only the tabular data,
-#' \code{read_nhgis_sf} returns a \code{sf} object with data and the shapes, and
-#' \code{read_nhgis_sp} returns a \code{SpatialPolygonsDataFrame} with data and
-#' shapes.
-#' @param data_file Filepath to the data (either the .zip file directly
-#'   downloaded from the website, the path to the unzipped folder, or
-#'   the path to the unzipped .csv file directly).
-#' @param shape_file Filepath to the shape files (either the .zip
-#'   file directly downloaded from the website, or the path to the unzipped
-#'   folder, or the unzipped .shp file directly).
+#' @param data_file Path to the data file, a .zip archive from an IPUMS
+#'   extract, or a directory containing the data file.
 #' @param data_layer For .zip extracts with multiple datasets, the name of the
 #'   data to load. Accepts a character vector specifying the file name, or
 #'  \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
 #'  a dataset.
-#' @param shape_layer (Defaults to using the same value as data_layer) Specification
-#'   of which shape files to load using the same semantics as \code{data_layer}. Can
-#'   load multiple shape files, which will be combined.
-#' @param shape_encoding The text encoding to use when reading the shape file. Typically
-#'   the defaults should read the data correctly, but for some extracts you may need
-#'   to set them manually, but if funny characters appear in your data, you may need
-#'   to. Defaults to "latin1" for NHGIS.
-#' @param verbose Logical, indicating whether to print progress information to
-#'   console.
 #' @param var_attrs Variable attributes to add from the codebook, defaults to
 #'   adding all (val_labels, var_label and var_desc). See
 #'   \code{\link{set_ipums_var_attributes}} for more details.
+#' @param show_conditions If `TRUE`, print IPUMS conditions to console when
+#'   loading data. Defaults to `TRUE`.
+#' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
+#'   [`read_fwf()`][readr::read_fwf].
+#'
+#' @return A [`tibble`][tibble::tbl_df-class] of the data found in `data_file`.
+#'
 #' @examples
 #' csv_file <- ipums_example("nhgis0707_csv.zip")
-#' shape_file <- ipums_example("nhgis0707_shape_small.zip")
-#'
 #' data_only <- read_nhgis(csv_file)
-#'
-#' # If sf package is availble, can load as sf object
-#' if (require(sf)) {
-#'   sf_data <- read_nhgis_sf(csv_file, shape_file)
-#' }
-#'
-#' # If sp package is available, can load as SpatialPolygonsDataFrame
-#' if (require(rgdal) && require(sp)) {
-#'   sp_data <- read_nhgis_sp(csv_file, shape_file)
-#' }
 #'
 #' @family ipums_read
 #' @export
 read_nhgis <- function(data_file,
                        data_layer = NULL,
-                       verbose = FALSE,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
+                       show_conditions = TRUE,
                        ...) {
 
   data_layer <- enquo(data_layer)
@@ -76,7 +54,7 @@ read_nhgis <- function(data_file,
     )
   } else {
     files <- list.files(dirname(data_file))
-    # If direct file path provided, look in parent directory for codebook
+    # If direct file path provided, look in same directory for codebook
     cb_ddi_info <- try(
       read_ipums_codebook(dirname(data_file)),
       silent = TRUE
@@ -87,32 +65,33 @@ read_nhgis <- function(data_file,
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
+  if (show_conditions) {
+    custom_cat(short_conditions_text(cb_ddi_info))
+  }
+
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
-  # TODO: I assume this is supposed to be `file_encoding` not `encoding`?
-  # Check.
   cb_ddi_info$file_encoding <- "ISO-8859-1"
 
-  # TODO: reconsider custom_cat formatting.
-  # TODO: Conditions should be displayed when loading package?
-  if (verbose) custom_cat(short_conditions_text(cb_ddi_info))
-
-  # Read data
-  if (verbose) cat("\n\nReading data file...\n")
   extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
 
   # TODO: should check this on invalid file structures--i.e.
   # dirs with no csvs or dat files, etc.
   file_is_csv <- any(purrr::map_lgl(files, ~tools::file_ext(.x) == "csv"))
 
-  # TODO: readr progress currently does not responsd to local verbose arg
-  # TODO: readr show_col_types does not repsond to local verbose arg.
-  # May remove verbose arg.
   if (file_is_csv) {
-    data <- read_nhgis_csv(data_file, data_layer = !!data_layer, ...)
+    data <- read_nhgis_csv(
+      data_file,
+      data_layer = !!data_layer,
+      ...
+    )
   } else {
-    data <- read_nhgis_fwf(data_file, data_layer = !!data_layer, ...)
+    data <- read_nhgis_fwf(
+      data_file,
+      data_layer = !!data_layer,
+      ...
+    )
   }
 
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)

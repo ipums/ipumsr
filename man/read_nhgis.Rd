@@ -9,8 +9,8 @@
 read_nhgis(
   data_file,
   data_layer = NULL,
-  verbose = FALSE,
   var_attrs = c("val_labels", "var_label", "var_desc"),
+  show_conditions = TRUE,
   ...
 )
 
@@ -21,7 +21,7 @@ read_nhgis_sf(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
-  verbose = FALSE
+  ...
 )
 
 read_nhgis_sp(
@@ -31,64 +31,37 @@ read_nhgis_sp(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
-  verbose = FALSE
+  ...
 )
 }
 \arguments{
-\item{data_file}{Filepath to the data (either the .zip file directly
-downloaded from the website, the path to the unzipped folder, or
-the path to the unzipped .csv file directly).}
+\item{data_file}{Path to the data file, a .zip archive from an IPUMS
+extract, or a directory containing the data file.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
 data to load. Accepts a character vector specifying the file name, or
 \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
 a dataset.}
 
-\item{verbose}{Logical, indicating whether to print progress information to
-console.}
-
 \item{var_attrs}{Variable attributes to add from the codebook, defaults to
 adding all (val_labels, var_label and var_desc). See
 \code{\link{set_ipums_var_attributes}} for more details.}
 
-\item{shape_file}{Filepath to the shape files (either the .zip
-file directly downloaded from the website, or the path to the unzipped
-folder, or the unzipped .shp file directly).}
+\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
+loading data. Defaults to \code{TRUE}.}
 
-\item{shape_layer}{(Defaults to using the same value as data_layer) Specification
-of which shape files to load using the same semantics as \code{data_layer}. Can
-load multiple shape files, which will be combined.}
-
-\item{shape_encoding}{The text encoding to use when reading the shape file. Typically
-the defaults should read the data correctly, but for some extracts you may need
-to set them manually, but if funny characters appear in your data, you may need
-to. Defaults to "latin1" for NHGIS.}
+\item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
+\code{\link[readr:read_fwf]{read_fwf()}}.}
 }
 \value{
-\code{read_nhgis} returns a \code{tbl_df} with only the tabular data,
-\code{read_nhgis_sf} returns a \code{sf} object with data and the shapes, and
-\code{read_nhgis_sp} returns a \code{SpatialPolygonsDataFrame} with data and
-shapes.
+A \code{\link[tibble:tbl_df-class]{tibble}} of the data found in \code{data_file}.
 }
 \description{
-Reads a dataset downloaded from the NHGIS extract system. Relies on csv files
-(with or without the extra header row).
+Load a dataset downloaded from the NHGIS extract system.
 }
 \examples{
 csv_file <- ipums_example("nhgis0707_csv.zip")
-shape_file <- ipums_example("nhgis0707_shape_small.zip")
-
 data_only <- read_nhgis(csv_file)
-
-# If sf package is availble, can load as sf object
-if (require(sf)) {
-  sf_data <- read_nhgis_sf(csv_file, shape_file)
-}
-
-# If sp package is available, can load as SpatialPolygonsDataFrame
-if (require(rgdal) && require(sp)) {
-  sp_data <- read_nhgis_sp(csv_file, shape_file)
-}
 
 }
 \seealso{

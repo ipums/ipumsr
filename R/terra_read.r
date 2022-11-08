@@ -216,7 +216,7 @@ read_terra_area_sf <- function(
 
   if (is.null(shape_file)) shape_file <- data_file
   shape_data <- read_ipums_sf(
-    shape_file, !!shape_layer, encoding = shape_encoding, verbose = verbose
+    shape_file, !!shape_layer, encoding = shape_encoding
   )
 
   geo_vars <- unname(tidyselect::vars_select(names(data), starts_with("GEO")))
