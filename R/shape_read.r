@@ -385,18 +385,39 @@ careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
 # defaults of functions eg read_terra says UTF-8, but read_nghis says latin1),
 # then use that. If not, and a cpg file exists, use that. Else, assume latin1.
 determine_encoding <- function(shape_file_vector, encoding = NULL) {
-  if (!is.null(encoding)) return(encoding)
-  out <- purrr::map_chr(shape_file_vector, function(x) {
-    cpg_file <- dir(dirname(x), pattern = "\\.cpg$", ignore.case = TRUE, full.names = TRUE)
 
-    if (length(cpg_file) == 0) return("latin1")
+  if (!is.null(encoding)) {
+    return(encoding)
+  }
 
-    cpg_text <- readr::read_lines(cpg_file)[1]
-    if (fostr_detect(cpg_text, "ANSI 1252")) return("CP1252")
-    else if (fostr_detect(cpg_text, "UTF[[-][|:blank:]]?8")) return("UTF-8")
-    else return("latin1")
-  })
+  out <- purrr::map_chr(
+    shape_file_vector,
+    function(x) {
+      cpg_file <- dir(
+        dirname(x),
+        pattern = "\\.cpg$",
+        ignore.case = TRUE,
+        full.names = TRUE
+      )
+
+      if (length(cpg_file) == 0) {
+        return("latin1")
+      }
+
+      cpg_text <- readr::read_lines(cpg_file)[1]
+
+      if (fostr_detect(cpg_text, "ANSI 1252")) {
+        return("CP1252")
+      } else if (fostr_detect(cpg_text, "UTF[[-][[:blank:]]?8")) {
+        return("UTF-8")
+      } else {
+        return("latin1")
+      }
+    }
+  )
+
   out
+
 }
 
 
