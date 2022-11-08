@@ -3,7 +3,7 @@
 \name{read_ipums_sf}
 \alias{read_ipums_sf}
 \alias{read_ipums_sp}
-\title{Read boundary files from an IPUMS extract}
+\title{Read boundary (GIS) files from an IPUMS extract}
 \usage{
 read_ipums_sf(
   shape_file,
@@ -12,7 +12,7 @@ read_ipums_sf(
   encoding = NULL,
   bind_multiple = TRUE,
   add_layer_var = NULL,
-  verbose = TRUE
+  ...
 )
 
 read_ipums_sp(
@@ -22,45 +22,53 @@ read_ipums_sp(
   encoding = NULL,
   bind_multiple = TRUE,
   add_layer_var = NULL,
-  verbose = TRUE
+  ...
 )
 }
 \arguments{
-\item{shape_file}{Filepath to one or more .shp files, a .zip file from an IPUMS extract
-or a path to an unzipped folder.}
+\item{shape_file}{Path to a single .shp file, a .zip archive from an IPUMS
+extract, or a directory containing at least one .shp file.}
 
-\item{shape_layer}{For .zip extracts with multiple datasets, the name of the
-shape files to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-which will be combined.}
+\item{shape_layer}{For .zip extracts with multiple files, the name of the
+shape files to load. Accepts a character vector specifying the file name,
+an integer specifying the index of the file to load, or
+\code{\link{dplyr_select_style}} conventions. If multiple files are
+selected, \code{bind_multiple} must be equal to \code{TRUE}.}
 
-\item{vars}{Which variables in the shape file's data to keep (NULL the default
-keeps all)}
+\item{vars}{Names of variables to include in the output data.
+By default, includes all variables found in the provided \code{shape_file}.}
 
 \item{encoding}{The text encoding to use when reading the shape file. Typically
 the defaults should read the data correctly, but for some extracts you may
-need to set them manually, but if funny characters appear in your data, you
-may need to. For microdata projects, the default NULL will look for a .cpg
-file to determine the encoding and if none is available, it will default to
-latin1. The NHGIS and the IPUMS Terra functions specify the encoding for
-those projects (latin1 and UTF-8 respectively).}
+need to set them manually.
+If \code{NULL}, will attempt to guess the correct encoding using the associated
+.cpg file. If none is available, it will default to \code{"latin1"}.
+NHGIS files default to \code{"latin1"}. Terra files default to \code{"UTF-8"}.}
 
-\item{bind_multiple}{If \code{TRUE}, will combine multiple shape files found into
-a single object.}
+\item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
+row-bind the files into a single output. Note that some data sources may
+not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
+\code{SpatialPointsDataFrame}).}
 
-\item{add_layer_var}{Whether to add a variable named \code{layer} that indicates
-which shape_layer the data came from. NULL, the default, uses TRUE if more than
-1 layer is found, and FALSE otherwise.}
+\item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
+the file that each row originates from. By default, this column will be
+named \code{"layer"}. If \code{"layer"} already exists in the data, a unique name
+will be created to avoid name conflicts. The column name will always be
+prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
+\code{FALSE} otherwise.}
 
-\item{verbose}{I \code{TRUE}, will report progress information}
+\item{...}{Additional arguments passed to \code{\link[readr:read_sf]{sf::read_sf()}}
+or \code{\link[rgdal:readOGR]{rgdal::readOGR()}}. Note that some arguments are
+fixed.}
 }
 \value{
-\code{read_ipums_sf} returns a sf object and \code{read_ipums_sp} returns
-a SpatialPolygonsDataFrame.
+For \code{read_ipums_sf}, an \code{sf} object. For \code{read_ipums_sp},
+a \code{SpatialPolygonsDataFrame} or \code{SpatialPointsDataFrame} object.
 }
 \description{
-Reads the boundary files from an IPUMS extract into R as simple features (sf) objects or
-SpatialPolygonsDataFrame (sp) objects.
+Read spatial data from an IPUMS extract into R.
+Data can be loaded using \href{https://r-spatial.github.io/sf/}{\code{sf}} or
+\href{https://cran.r-project.org/web/packages/sp/index.html}{\code{sp}}.
 }
 \examples{
 shape_file <- ipums_example("nhgis0707_shape_small.zip")

@@ -108,7 +108,7 @@ read_nhgis_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
-                          verbose = FALSE) {
+                          ...) {
 
   read_ipums_sf(
     shape_file,
@@ -117,7 +117,7 @@ read_nhgis_sf <- function(shape_file,
     encoding = encoding,
     bind_multiple = bind_multiple,
     add_layer_var = add_layer_var,
-    verbose = verbose
+    ...
   )
 
 }
@@ -130,7 +130,7 @@ read_nhgis_sp <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
-                          verbose = FALSE) {
+                          ...) {
 
   read_ipums_sp(
     shape_file,
@@ -139,7 +139,7 @@ read_nhgis_sp <- function(shape_file,
     encoding = encoding,
     bind_multiple = bind_multiple,
     add_layer_var = add_layer_var,
-    verbose = verbose
+    ...
   )
 
 }

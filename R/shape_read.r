@@ -3,35 +3,45 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-
-#' Read boundary files from an IPUMS extract
+#' Read boundary (GIS) files from an IPUMS extract
 #'
-#' Reads the boundary files from an IPUMS extract into R as simple features (sf) objects or
-#' SpatialPolygonsDataFrame (sp) objects.
+#' @description
+#' Read spatial data from an IPUMS extract into R.
+#' Data can be loaded using [`sf`](https://r-spatial.github.io/sf/) or
+#' [`sp`](https://cran.r-project.org/web/packages/sp/index.html).
 #'
-#' @param shape_file Filepath to one or more .shp files, a .zip file from an IPUMS extract
-#'    or a path to an unzipped folder.
-#' @param shape_layer For .zip extracts with multiple datasets, the name of the
-#'   shape files to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-#'    which will be combined.
-#' @param vars Which variables in the shape file's data to keep (NULL the default
-#'   keeps all)
+#' @param shape_file Path to a single .shp file, a .zip archive from an IPUMS
+#'   extract, or a directory containing at least one .shp file.
+#' @param shape_layer For .zip extracts with multiple files, the name of the
+#'   shape files to load. Accepts a character vector specifying the file name,
+#'   an integer specifying the index of the file to load, or
+#'   \code{\link{dplyr_select_style}} conventions. If multiple files are
+#'   selected, `bind_multiple` must be equal to `TRUE`.
+#' @param vars Names of variables to include in the output data.
+#'   By default, includes all variables found in the provided `shape_file`.
 #' @param encoding The text encoding to use when reading the shape file. Typically
 #'   the defaults should read the data correctly, but for some extracts you may
-#'   need to set them manually, but if funny characters appear in your data, you
-#'   may need to. For microdata projects, the default NULL will look for a .cpg
-#'   file to determine the encoding and if none is available, it will default to
-#'   latin1. The NHGIS and the IPUMS Terra functions specify the encoding for
-#'   those projects (latin1 and UTF-8 respectively).
-#' @param bind_multiple If \code{TRUE}, will combine multiple shape files found into
-#'   a single object.
-#' @param add_layer_var Whether to add a variable named \code{layer} that indicates
-#'   which shape_layer the data came from. NULL, the default, uses TRUE if more than
-#'   1 layer is found, and FALSE otherwise.
-#' @param verbose I \code{TRUE}, will report progress information
-#' @return \code{read_ipums_sf} returns a sf object and \code{read_ipums_sp} returns
-#'   a SpatialPolygonsDataFrame.
+#'   need to set them manually.
+#'   If `NULL`, will attempt to guess the correct encoding using the associated
+#'   .cpg file. If none is available, it will default to `"latin1"`.
+#'   NHGIS files default to `"latin1"`. Terra files default to `"UTF-8"`.
+#' @param bind_multiple If `TRUE` and `shape_file` contains multiple .shp files,
+#'   row-bind the files into a single output. Note that some data sources may
+#'   not be able to be combined (e.g. `SpatialPolygonsDataFrame` and
+#'   `SpatialPointsDataFrame`).
+#' @param add_layer_var If `TRUE`, add a variable to the output data indicating
+#'   the file that each row originates from. By default, this column will be
+#'   named `"layer"`. If `"layer"` already exists in the data, a unique name
+#'   will be created to avoid name conflicts. The column name will always be
+#'   prefixed with `"layer"`. Defaults to `TRUE` if `bind_multiple = TRUE` and
+#'   `FALSE` otherwise.
+#' @param ... Additional arguments passed to [`sf::read_sf()`][readr::read_sf]
+#'   or [`rgdal::readOGR()`][rgdal::readOGR]. Note that some arguments are
+#'   fixed.
+#'
+#' @return For `read_ipums_sf`, an `sf` object. For `read_ipums_sp`,
+#'   a `SpatialPolygonsDataFrame` or `SpatialPointsDataFrame` object.
+#'
 #' @examples
 #' shape_file <- ipums_example("nhgis0707_shape_small.zip")
 #' # If sf package is availble, can load as sf object
@@ -46,10 +56,16 @@
 #'
 #' @family ipums_read
 #' @export
-read_ipums_sf <- function(
-  shape_file, shape_layer = NULL, vars = NULL, encoding = NULL,
-  bind_multiple = TRUE, add_layer_var = NULL, verbose = TRUE
-) {
+read_ipums_sf <- function(shape_file,
+                          shape_layer = NULL,
+                          vars = NULL,
+                          encoding = NULL,
+                          bind_multiple = TRUE,
+                          add_layer_var = NULL,
+                          ...) {
+
+  dots <- rlang::list2(...)
+
   shape_layer <- enquo(shape_layer)
   vars <- enquo(vars)
   load_sf_namespace()
@@ -59,19 +75,42 @@ read_ipums_sf <- function(
   dir.create(shape_temp)
   on.exit(unlink(shape_temp, recursive = TRUE))
 
-  read_shape_files <- shape_file_prep(shape_file, shape_layer, bind_multiple, shape_temp)
+  read_shape_files <- shape_file_prep(
+    shape_file,
+    shape_layer,
+    bind_multiple,
+    shape_temp
+  )
 
   encoding <- determine_encoding(read_shape_files, encoding)
+
+  if (!any(grepl("ENCODING", dots$options))) {
+    dots$options <- c(paste0("ENCODING=", encoding), dots$options)
+  } else {
+    rlang::warn(
+      paste0(
+        "Encoding specified in both `encoding` and `options` arguments. ",
+        "Using the value provided to `options`"
+      )
+    )
+  }
 
   out <- purrr::map2(
     read_shape_files,
     encoding,
     function(.x, .y) {
-      this_sf <- sf::read_sf(.x, quiet = !verbose, options = paste0("ENCODING=", .y))
-      if (!rlang::quo_is_null(vars)) this_sf <- dplyr::select(this_sf, !!vars)
+      args <- c(list(.x), dots)
+
+      this_sf <- rlang::exec(sf::read_sf, !!!args)
+
+      if (!rlang::quo_is_null(vars)) {
+        this_sf <- dplyr::select(this_sf, !!vars)
+      }
+
       this_sf
     }
   )
+
   names(out) <- fostr_sub(basename(read_shape_files), 1, -5)
   out <- careful_sf_rbind(out, add_layer_var)
 
@@ -79,55 +118,110 @@ read_ipums_sf <- function(
 }
 
 # Takes a list of sf's, fills in empty columns for you and binds them together.
-# Throws error if types don't match
-careful_sf_rbind <- function(sf_list, add_layer_var) {
-  if (is.null(add_layer_var)) add_layer_var <- length(sf_list) > 1
+# Warns if types don't match and are coerced
+careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
+
+  add_layer_var <- add_layer_var %||% (length(sf_list) > 1)
+
   if (add_layer_var) {
-    sf_list <- purrr::imap(sf_list, ~dplyr::mutate(.x, layer = .y))
+    existing_cols <- unique(unlist(purrr::map(sf_list, colnames)))
+    lyr_name <- make.unique(c(existing_cols, "layer"))
+    lyr_name <- lyr_name[length(lyr_name)]
+
+    if (lyr_name != "layer") {
+      rlang::warn(
+        paste0(
+          "Adding layer information to column \"", lyr_name,
+          "\", as \"layer\" is already present in data."
+        )
+      )
+    }
+
+    sf_list <- purrr::imap(
+      sf_list,
+      ~dplyr::mutate(.x, {{ lyr_name }} := .y, .before = dplyr::everything())
+    )
   }
 
   if (length(sf_list) == 1) {
     return(sf_list[[1]])
-  } else {
-    # Get var info for all columns
-    all_var_info <- purrr::map_df(sf_list, .id = "id", function(x) {
-      tibble::tibble(name = names(x), type = purrr::map(x, ~class(.)))
-    })
-
-    all_var_info <- dplyr::group_by(all_var_info, .data$name)
-    var_type_check <- dplyr::summarize(all_var_info, check = length(unique(.data$type)))
-    if (any(var_type_check$check != 1)) {
-      stop("Cannot combine shape files because variable types don't match.")
-    }
-    all_var_info <- dplyr::slice(all_var_info, 1)
-    all_var_info <- dplyr::ungroup(all_var_info)
-    all_var_info$id <- NULL
-
-    out <- purrr::map(sf_list, function(x) {
-      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
-      if (length(missing_vars) == 0) return(x)
-
-      for (vn in missing_vars) {
-        vtype <- all_var_info$type[all_var_info$name == vn][[1]]
-        if (identical(vtype, "character")) x[[vn]] <- NA_character_
-        else if (identical(vtype, "numeric")) x[[vn]] <- NA_real_
-        else if (identical(vtype, c("sfc_MULTIPOLYGON", "sfc"))) x[[vn]] <- vector("list", nrow(x))
-        else stop("Unexpected variable type in shape file.")
-      }
-      x
-    })
-    out <- do.call(rbind, out)
   }
-  sf::st_as_sf(tibble::as.tibble(out))
+
+  # Get var info for all columns
+  all_var_info <- purrr::map_df(
+    sf_list,
+    .id = "id",
+    ~tibble::tibble(name = names(.x), type = purrr::map(.x, class))
+  )
+
+  all_var_info <- dplyr::group_by(all_var_info, .data$name)
+
+  var_type_check <- dplyr::summarize(
+    all_var_info,
+    check = length(unique(.data$type))
+  )
+
+  # Warn on variable type coercion
+  if (any(var_type_check$check != 1)) {
+    bad_vars <- var_type_check$name[which(var_type_check$check > 1)]
+
+    bad_types <- purrr::map_chr(
+      bad_vars,
+      ~paste0(
+        all_var_info[all_var_info$name == .x, ]$type,
+        collapse = " vs. "
+      )
+    )
+
+    rlang::warn(
+      c(
+        "Coercing variables with inconsistent types across files: ",
+        purrr::set_names(
+          paste0("\"", bad_vars, "\" (", bad_types, ")"),
+          "*"
+        )
+      )
+    )
+  }
+
+  # Add missing values for cols that don't exist in all data sources
+  out <- purrr::map(
+    sf_list,
+    function(x) {
+      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
+
+      if (length(missing_vars) == 0) {
+        return(x)
+      }
+
+      purrr::walk(
+        missing_vars,
+        function(vn) {
+          x[[vn]] <<- NA
+        }
+      )
+
+      x
+    }
+  )
+
+  out <- do.call(rbind, out)
+
+  sf::st_as_sf(tibble::as_tibble(out))
+
 }
 
 
 #' @rdname read_ipums_sf
 #' @export
-read_ipums_sp <- function(
-  shape_file, shape_layer = NULL, vars = NULL, encoding = NULL,
-  bind_multiple = TRUE, add_layer_var = NULL, verbose = TRUE
-) {
+read_ipums_sp <- function(shape_file,
+                          shape_layer = NULL,
+                          vars = NULL,
+                          encoding = NULL,
+                          bind_multiple = TRUE,
+                          add_layer_var = NULL,
+                          ...) {
+
   shape_layer <- enquo(shape_layer)
   vars <- enquo(vars)
   load_rgdal_namespace()
@@ -137,7 +231,12 @@ read_ipums_sp <- function(
   dir.create(shape_temp)
   on.exit(unlink(shape_temp, recursive = TRUE))
 
-  read_shape_files <- shape_file_prep(shape_file, shape_layer, bind_multiple, shape_temp)
+  read_shape_files <- shape_file_prep(
+    shape_file,
+    shape_layer,
+    bind_multiple,
+    shape_temp
+  )
 
   encoding <- determine_encoding(read_shape_files, encoding)
 
@@ -148,65 +247,127 @@ read_ipums_sp <- function(
       this_sp <- rgdal::readOGR(
         dsn = dirname(.x),
         layer = fostr_sub(basename(.x), 1, -5),
-        verbose = verbose,
         stringsAsFactors = FALSE,
         encoding = .y,
-        use_iconv = TRUE
+        use_iconv = TRUE,
+        ...
       )
-      if (!rlang::quo_is_null(vars)) this_sp@data <- dplyr::select(this_sp@data, !!vars)
+
+      if (!rlang::quo_is_null(vars)) {
+        this_sp@data <- dplyr::select(this_sp@data, !!vars)
+      }
+
       this_sp
-    })
+    }
+  )
+
   names(out) <- fostr_sub(basename(read_shape_files), 1, -5)
   out <- careful_sp_rbind(out, add_layer_var)
 
   out
+
 }
 
 
 # Takes a list of SpatialPolygonsDataFrames, fills in empty columns for you and binds
 # them together.
-# Throws error if types don't match
-careful_sp_rbind <- function(sp_list, add_layer_var) {
-  if (is.null(add_layer_var)) add_layer_var <- length(sp_list) > 1
+# Warns if types don't match and are coerced
+careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
+
+  add_layer_var <- add_layer_var %||% (length(sp_list) > 1)
+
   if (add_layer_var) {
-    sp_list <- purrr::imap(sp_list, function(.x, .y) {
-      .x@data[["layer"]] <- .y
-      .x
-    })
+    existing_cols <- unique(unlist(purrr::map(sp_list, ~colnames(.x@data))))
+    lyr_name <- make.unique(c(existing_cols, "layer"))
+    lyr_name <- lyr_name[length(lyr_name)]
+
+    if (lyr_name != "layer") {
+      rlang::warn(
+        paste0(
+          "Adding layer information to column \"", lyr_name,
+          "\", as \"layer\" is already present in data."
+        )
+      )
+    }
+
+    sp_list <- purrr::imap(
+      sp_list,
+      function(.x, .y) {
+        .x@data <- dplyr::mutate(
+          .x@data,
+          {{ lyr_name }} := .y,
+          .before = dplyr::everything()
+        )
+        .x
+      }
+    )
   }
 
   if (length(sp_list) == 1) {
     return(sp_list[[1]])
-  } else {
-    # Get var info for all columns
-    all_var_info <- purrr::map_df(sp_list, .id = "id", function(x) {
-      tibble::tibble(name = names(x@data), type = purrr::map(x@data, ~class(.)))
-    })
-
-    all_var_info <- dplyr::group_by(all_var_info, .data$name)
-    var_type_check <- dplyr::summarize(all_var_info, check = length(unique(.data$type)))
-    if (any(var_type_check$check != 1)) {
-      stop("Cannot combine shape files because variable types don't match.")
-    }
-    all_var_info <- dplyr::slice(all_var_info, 1)
-    all_var_info <- dplyr::ungroup(all_var_info)
-    all_var_info$id <- NULL
-
-    out <- purrr::map(sp_list, function(x) {
-      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
-      if (length(missing_vars) == 0) return(x)
-
-      for (vn in missing_vars) {
-        vtype <- all_var_info$type[all_var_info$name == vn][[1]]
-        if (identical(vtype, "character")) x@data[[vn]] <- NA_character_
-        else if (identical(vtype, "numeric")) x@data[[vn]] <- NA_real_
-        else stop("Unexpected variable type in shape file.")
-      }
-      x
-    })
-    out <- do.call(rbind, out)
   }
+
+  all_var_info <- purrr::map_df(
+    sp_list,
+    .id = "id",
+    ~tibble::tibble(name = names(.x@data), type = purrr::map(.x@data, class))
+  )
+
+  all_var_info <- dplyr::group_by(all_var_info, .data$name)
+
+  var_type_check <- dplyr::summarize(
+    all_var_info,
+    check = length(unique(.data$type))
+  )
+
+  # Warn on variable type coercion
+  if (any(var_type_check$check != 1)) {
+    bad_vars <- var_type_check$name[which(var_type_check$check > 1)]
+
+    bad_types <- purrr::map_chr(
+      bad_vars,
+      ~paste0(
+        all_var_info[all_var_info$name == .x, ]$type,
+        collapse = " vs. "
+      )
+    )
+
+    rlang::warn(
+      c(
+        "Coercing variables with inconsistent types across files: ",
+        purrr::set_names(
+          paste0("\"", bad_vars, "\" (", bad_types, ")"),
+          "*"
+        )
+      )
+    )
+  }
+
+  # Add missing values for cols that don't exist in all data sources
+  out <- purrr::map(
+    sp_list,
+    function(x) {
+      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
+
+      if (length(missing_vars) == 0) {
+        return(x)
+      }
+
+      purrr::walk(
+        missing_vars,
+        function(vn) {
+          x@data[[vn]] <<- NA
+        }
+      )
+
+      x
+    }
+  )
+
+  out <- do.call(rbind, out)
+
   out
+
 }
 
 # Encoding:
@@ -214,7 +375,7 @@ careful_sp_rbind <- function(sp_list, add_layer_var) {
 # add to the spec a cpg file that can specify an encoding.
 ## NHGIS: Place names in 2010 have accents - and are latin1 encoded,
 ##        No indication of encoding.
-## IPUMSI: Brazil has a cpg file indicating the encoding is ANSI 1252,
+## IPUMSI: Brazil has a cpg file indicating the encoding is ANSI 1252,  # This is not true anymore?
 ##         while China has UTF-8 (but only english characters)
 ## USA:   Also have cpg files.
 ## Terrapop: Always UTF-8 (and sometimes has been ruined if the
@@ -253,7 +414,8 @@ shape_file_prep <- function(shape_file,
 
   # TODO: May need to check that multiple are handled?
   # What if a user wants to bind_multiple on multiple .shp files?
-  # I don't think this ^ is currently supported
+  # This is not currently supported because shape_file takes a single-length
+  # input
   if (shape_is_shp) {
     return(shape_file)
   }
@@ -273,6 +435,7 @@ shape_file_prep <- function(shape_file,
 
   # If no more layers, look for shapefiles:
   if (!any(tools::file_ext(files) == "zip" | tools::file_ext(files) == "")) {
+
     # First layer has .shp files within it
     shape_shps <- tryCatch(
       find_files_in(
@@ -321,7 +484,9 @@ shape_file_prep <- function(shape_file,
         }
       }
     )
+
   } else {
+
     # First layer has zip files of shape files within it
     shape_zips <- tryCatch(
       find_files_in(
