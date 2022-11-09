@@ -56,7 +56,7 @@ test_that("Listing files from terra raster zip works", {
 
   all_files <- ipums_list_files(terra_raster)
   expect_true(all(all_files$type == "raster"))
-  expect_equal(all_files$file[1], "PASTURE2000ZM2013.tiff")
+  expect_equal(all_files$file[1], "CROPLAND2000CH2013.tiff")
 
   data_files <- ipums_list_data(terra_raster)
   expect_equal(nrow(data_files), 0)
@@ -65,7 +65,7 @@ test_that("Listing files from terra raster zip works", {
   expect_equal(nrow(shape_files), 0)
 
   raster_files <- ipums_list_raster(terra_raster)
-  expect_equal(raster_files$file[1], "PASTURE2000ZM2013.tiff")
+  expect_equal(raster_files$file[1], "CROPLAND2000CH2013.tiff")
 })
 
 test_that("Listing files from terra area zip works", {

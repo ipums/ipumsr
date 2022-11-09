@@ -76,8 +76,8 @@ test_that("Can select data files by index", {
 
   expect_false(identical(nhgis1, nhgis2))
 
-  expect_true("EH3001" %in% colnames(nhgis1))
-  expect_true("ECI001" %in% colnames(nhgis2))
+  expect_true("ECI001" %in% colnames(nhgis1))
+  expect_true("EH3001" %in% colnames(nhgis2))
 
 })
 
@@ -85,13 +85,13 @@ test_that("Can select data files with tidyselect", {
 
   nhgis1 <- read_nhgis(
     nhgis_multi_ds,
-    data_layer = contains("136"),
+    data_layer = contains("135"),
     show_conditions = FALSE
   )
 
   nhgis2 <- read_nhgis(
     nhgis_multi_ds,
-    data_layer = contains("135"),
+    data_layer = contains("136"),
     show_conditions = FALSE
   )
 
@@ -100,8 +100,8 @@ test_that("Can select data files with tidyselect", {
 
   expect_false(identical(nhgis1, nhgis2))
 
-  expect_true("EH3001" %in% colnames(nhgis1))
-  expect_true("ECI001" %in% colnames(nhgis2))
+  expect_true("ECI001" %in% colnames(nhgis1))
+  expect_true("EH3001" %in% colnames(nhgis2))
 
 })
 

@@ -33,9 +33,9 @@ find_files_in <- function(file,
                           none_ok = TRUE) {
 
   if (file_is_zip(file)) {
-    file_names <- utils::unzip(file, list = TRUE)$Name
+    file_names <- sort(utils::unzip(file, list = TRUE)$Name)
   } else if (file_is_dir(file)) {
-    file_names <- dir(file)
+    file_names <- sort(dir(file))
   } else {
     stop(
       paste0(
@@ -49,9 +49,6 @@ find_files_in <- function(file,
     file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
   }
 
-  # TODO consider changing name_select default to NULL and this to is_null
-  # for simplification? Don't know if we need quo() as NULL appears to behave
-  # similarly. May also affect eval_select behavior
   if (!quo_is_null(name_select)) {
 
     names(file_names) <- file_names

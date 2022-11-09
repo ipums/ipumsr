@@ -67,7 +67,7 @@ test_that(
     file.create(file.path(temp_dir, "test.csv"))
     file.create(file.path(temp_dir, "abc.txt"))
 
-    file_names <- c("test1.txt", "test2.txt", "test.csv", "abc.txt")
+    file_names <- c("abc.txt", "test.csv", "test1.txt", "test2.txt")
     zip_file <- file.path(temp_dir, "test.zip")
 
     # Mess with wd because zip includes unwanted folders otherwise
@@ -137,7 +137,7 @@ test_that(
         name_select = rlang::quo(starts_with("test")),
         multiple_ok = TRUE
       ),
-      c("test1.txt", "test2.txt", "test.csv")
+      c("test.csv", "test1.txt", "test2.txt")
     )
   }
 )
