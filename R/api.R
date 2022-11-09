@@ -4653,46 +4653,41 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     # Subfields that are specific to datasets or time series tables
     # need to be rolled up while grouped by data type
     dplyr::group_by(
-      .data[["number"]],
-      .data[["data_type"]]
+      .data$number,
+      .data$data_type
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        c(.data[["data_tables"]],
-          .data[["years"]],
-          .data[["breakdown_values"]]),
+        c("data_tables", "years", "breakdown_values"),
         ~ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
     # Subfields that apply to both datasets and time series tables
     # need to be rolled up across datasets and tsts, but not shapefiles
     dplyr::group_by(
-      .data[["number"]],
-      is_ds_or_tst = .data[["data_type"]] %in%
-        c("datasets", "time_series_tables")
+      .data$number,
+      is_ds_or_tst = .data$data_type %in% c("datasets", "time_series_tables")
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        .data[["geog_levels"]],
+        "geog_levels",
         ~ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
-    dplyr::group_by(.data[["number"]]) %>%
-    dplyr::select(-.data[["is_ds_or_tst"]]) %>%
+    dplyr::group_by(.data$number) %>%
+    dplyr::select(-"is_ds_or_tst") %>%
     tidyr::pivot_wider(
-      names_from = .data[["data_type"]],
-      values_from = .data[["name"]],
+      names_from = "data_type",
+      values_from = "name",
       values_fn = list
     ) %>%
-    tidyr::fill(
-      dplyr::everything(),
-      .direction = "updown"
-    ) %>%
+    tidyr::fill(dplyr::everything(), .direction = "updown") %>%
     dplyr::distinct() %>%
     dplyr::ungroup()
 
   # Join to ensure all extract parameters are present (if the extract table
-  # does not include all of datasets, time_series_tables, or shapefiles)
+  # does not include at least one each of datasets, time_series_tables,
+  # and shapefiles)
   join_df <- tibble::tibble(
     shapefiles = list(NULL),
     time_series_tables = list(NULL),
@@ -4707,32 +4702,28 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        c(.data[["data_tables"]],
-          .data[["years"]],
-          .data[["breakdown_values"]]),
+        c("data_tables", "years", "breakdown_values"),
         function(d) purrr::map2(
           d,
-          .data[["datasets"]],
+          .data$datasets,
           ~recycle_extract_subfield(.x, .y)
         )
       ),
       dplyr::across(
-        .data[["geog_levels"]],
+        "geog_levels",
         function(d) purrr::map2(
           d,
-          purrr::map2(.data[["datasets"]], .data[["time_series_tables"]], c),
+          purrr::map2(.data$datasets, .data$time_series_tables, c),
           ~recycle_extract_subfield(.x, .y)
         )
       ),
     ) %>%
-    # For consistency of output after conversion to list
-    # define_extract_nhgis() and tbl to list conversion should align on all fields
+    # For consistency of output after conversion to list, define_extract_nhgis()
+    # and tbl to list conversion should align on all fields
     dplyr::mutate(
       dplyr::across(
-        c(.data[["data_format"]],
-          .data[["breakdown_and_data_type_layout"]],
-          .data[["tst_layout"]]),
-        ~ifelse(is.na(.x), list(NULL), list(.x))
+        c("data_format", "breakdown_and_data_type_layout", "tst_layout"),
+        ~ifelse(is.na(.x), list(NULL), .x)
       )
     )
 

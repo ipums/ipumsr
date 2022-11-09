@@ -1271,23 +1271,31 @@ test_that("Shapefile-only can be converted from tbl to list", {
 
 test_that("NHGIS tbl to list and list to tbl conversion works", {
   skip_if_no_api_access(have_api_access)
-  converted_to_list <- extract_tbl_to_list(
-    recent_nhgis_extracts_tbl,
-    validate = FALSE
-  )
+
+  converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
   converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
-  expect_identical(
-    recent_nhgis_extracts_list[[1]],
-    converted_to_list[[1]]
-  )
+
+  expect_identical(recent_nhgis_extracts_list, converted_to_list)
   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
+
   expect_error(
-    extract_list_to_tbl(
-      list(submitted_nhgis_extract,
-           submitted_usa_extract)
-    ),
+    extract_list_to_tbl(list(submitted_nhgis_extract, submitted_usa_extract)),
     "All extracts in `extract_list` must belong to same collection"
   )
+
+  # `nhgis_extract` does not include case where multiple DS with different
+  # subfields. Including here for a test of this scenario:
+  x <- define_extract_nhgis(
+    datasets = c("D1", "D2"),
+    data_tables = list("A", "B"),
+    geog_levels = "C"
+  )
+
+  expect_identical(
+    x,
+    extract_tbl_to_list(extract_to_tbl(x))[[1]]
+  )
+
 })
 
 # > JSON export -----------------------------------
