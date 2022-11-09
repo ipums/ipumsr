@@ -1,38 +1,46 @@
 context("NHGIS")
 
-nhgis_single_ds <- ipums_example("nhgis0707_csv.zip")
+nhgis_single_csv <- ipums_example("nhgis0707_csv.zip")
+nhgis_single_fwf <- ipums_example("nhgis0722_fixed.zip")
 nhgis_single_shp <- ipums_example("nhgis0707_shape_small.zip")
 
 nhgis_multi_ds <-  ipums_example("nhgis0712_csv.zip")
 nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
-# Manually set these constants...
 rows <- 71
 vars_data <- 25
-pmsa_first2_codes <- c("0080", "0360")
 
 # Read single files -------------------------------
 
 test_that("Can read NHGIS extract: single dataset", {
 
   expect_output(
-    nhgis <- read_nhgis(nhgis_single_ds),
+    nhgis_csv <- read_nhgis(nhgis_single_csv),
     "Use of data from NHGIS is subject"
   )
 
-  expect_equal(nrow(nhgis), rows)
-  expect_equal(ncol(nhgis), vars_data)
-  expect_equal(attr(nhgis$D6Z001, "label"), "1989 to March 1990")
-  expect_equal(attr(nhgis$D6Z001, "var_desc"), "Year Structure Built (D6Z)")
+  expect_warning(
+    nhgis_fwf <- read_nhgis(nhgis_single_fwf, show_conditions = FALSE),
+    "Data loaded from NHGIS fixed-width files may not be consistent"
+  )
+
+  expect_equal(nrow(nhgis_csv), rows)
+  expect_equal(ncol(nhgis_csv), vars_data)
+  expect_equal(attr(nhgis_csv$D6Z001, "label"), "1989 to March 1990")
+  expect_equal(attr(nhgis_csv$D6Z001, "var_desc"), "Year Structure Built (D6Z)")
   expect_equal(
-    nhgis$PMSA[1:2],
+    nhgis_csv$PMSA[1:2],
     c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
   )
-  expect_s3_class(nhgis, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
+  expect_s3_class(nhgis_csv, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
+
+  expect_equal(nrow(nhgis_fwf), rows)
+  expect_equal(ncol(nhgis_fwf), 14)
+  expect_equal(colnames(nhgis_fwf), paste0("X", 1:ncol(nhgis_fwf)))
 
 })
 
-test_that("Can read time series tables", {
+test_that("Can read NHGIS extract: single time series table", {
 
   # TODO: Update this example
   nhgis_timeseries <- system.file(
@@ -63,8 +71,8 @@ test_that("Can select data files by index", {
   nhgis1 <- read_nhgis(nhgis_multi_ds, data_layer = 1, show_conditions = FALSE)
   nhgis2 <- read_nhgis(nhgis_multi_ds, data_layer = 2, show_conditions = FALSE)
 
-  expect_equal(dim(nhgis1), c(71, 18))
-  expect_equal(dim(nhgis2), c(71, 18))
+  expect_equal(dim(nhgis1), c(rows, 18))
+  expect_equal(dim(nhgis2), c(rows, 18))
 
   expect_false(identical(nhgis1, nhgis2))
 
@@ -87,8 +95,8 @@ test_that("Can select data files with tidyselect", {
     show_conditions = FALSE
   )
 
-  expect_equal(dim(nhgis1), c(71, 18))
-  expect_equal(dim(nhgis2), c(71, 18))
+  expect_equal(dim(nhgis1), c(rows, 18))
+  expect_equal(dim(nhgis2), c(rows, 18))
 
   expect_false(identical(nhgis1, nhgis2))
 
@@ -106,7 +114,7 @@ test_that("We can pass arguments to underlying reader functions", {
   # Worth checking if there are other ipums things that break with ... args
   expect_silent(
     nhgis_data <- read_nhgis(
-      nhgis_single_ds,
+      nhgis_single_csv,
       show_conditions = FALSE,
       show_col_types = FALSE,
       progress = FALSE,
@@ -116,9 +124,26 @@ test_that("We can pass arguments to underlying reader functions", {
     )
   )
 
+  expect_warning(
+    nhgis_data_fwf <- read_nhgis(
+      nhgis_single_fwf,
+      show_conditions = FALSE,
+      col_positions = readr::fwf_widths(c(4, 2, 2, 1)),
+      col_types = "ccil"
+    ),
+    "Data loaded from NHGIS fixed-width files may not be consistent"
+  )
+
   expect_equal(nrow(nhgis_data), rows - 1)
   expect_equal(colnames(nhgis_data), paste0("X", 1:vars_data))
   expect_equal(unique(purrr::map_chr(nhgis_data, class)), "character")
+
+  expect_equal(nrow(nhgis_data_fwf), rows)
+  expect_equal(ncol(nhgis_data_fwf), 4)
+  expect_equal(
+    purrr::map_chr(nhgis_data_fwf, class),
+    c(X1 = "character", X2 = "character", X3 = "integer", X4 = "logical")
+  )
 
 })
 

@@ -146,7 +146,18 @@ read_nhgis_sp <- function(shape_file,
 
 # Internal ---------------------
 
-read_nhgis_fwf <- function(data_file, data_layer = NULL, ...) {
+read_nhgis_fwf <- function(data_file,
+                           data_layer = NULL,
+                           ...) {
+
+  rlang::warn(
+    paste0(
+      "Data loaded from NHGIS fixed-width files may not be consistent with the",
+      " information included in the data codebook by default.\n",
+      "Please consult the .txt and .do files associated with this extract ",
+      "to ensure data is parsed and recoded correctly."
+    )
+  )
 
   data_layer <- enquo(data_layer)
 
