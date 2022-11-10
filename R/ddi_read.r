@@ -256,26 +256,212 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
   )
 }
 
-
-#' Read metadata from a text codebook in a NHGIS or Terra area-level extract
+#' Read metadata from an NHGIS or Terra extract codebook file
 #'
-#' Read text formatted codebooks provided by some IPUMS extract systems such as
-#' NHGIS and Terra Area-level extracts in a format analogous to the DDIs
-#' available for other projects.
+#' @description
+#' NHGIS and Terra extracts include a .txt codebook file with metadata about
+#' the contents of the extract. This loads the information contained in this
+#' file into a structured format.
 #'
-#' @return
-#'   A \code{ipums_ddi} object with information on the variables included in the
-#'   csv file of a NHGIS extract.
-#' @param cb_file Filepath to the codebook (either the .zip file directly downloaded
-#'   from the website, or the path to the unzipped .txt file).
-#' @param data_layer dplyr \code{\link[dplyr]{select}}-style notation for uniquely
-#'   identifying the data layer to load. Required for reading from .zip files
-#'    for extracts with multiple files.
+#' Note: IPUMS Terra is no longer being actively maintained. For more
+#' information about decommissioning, click
+#' [here](https://terra.ipums.org/decommissioning).
+#'
+#' `read_ipums_codebook()` has been split into two functions:
+#' `read_nhgis_codebook()` and `read_terra_codebook()`. Use of
+#' `read_ipums_codebook()` is now discouraged.
+#'
+#' @param cb_file Path to the codebook file to be loaded. This can be a .zip
+#'   archive as provided by the extract system or [`download_extract()`],
+#'   a directory containing the codebook, or the codebook .txt file itself.
+#' @param data_layer dplyr \code{\link[dplyr]{select}}-style notation for
+#'   uniquely identifying the data layer to load. Required for reading from
+#'   .zip files for extracts with multiple files.
+#'
+#' @return An `ipums_ddi` object with information on the variables contained
+#'   in the data for the extract associated with the given `cb_file`.
+#'
 #' @examples
 #' # Example NHGIS extract
 #' nhgis_file <- ipums_example("nhgis0707_csv.zip")
-#' ddi <- read_ipums_codebook(nhgis_file)
-#' @family ipums_metadata
+#' codebook <- read_nhgis_codebook(nhgis_file)
+#'
+#' # Summary of variables included in the extract:
+#' codebook$var_info
+#'
+#' @rdname ipums_codebook
+#'
+#' @export
+read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
+
+  data_layer <- enquo(data_layer)
+
+  if (path_is_zip_or_dir(cb_file)) {
+
+    cb_name <- find_files_in(
+      cb_file,
+      "txt",
+      name_select = data_layer,
+      multiple_ok = FALSE,
+      none_ok = FALSE
+    )
+
+    if (file_is_zip(cb_file)) {
+      cb <- readr::read_lines(unz(cb_file, cb_name))
+    } else {
+      cb <- readr::read_lines(file.path(cb_file, cb_name))
+    }
+
+  } else {
+
+    cb <- readr::read_lines(cb_file)
+
+  }
+
+  # Section markers are a line full of dashes
+  # (setting to 5+ to eliminate false positives)
+  section_markers <- which(fostr_detect(cb, "^[-]{5,}$"))
+
+  dd <- find_cb_section(cb, "^Data Dictionary$", section_markers)
+
+  context_start <- which(dd == "Context Fields ") + 1
+  context_end <- which(fostr_detect(dd, "^[[:blank:]]$")) - 1
+  context_end <- min(context_end[context_end > context_start])
+  context_rows <- seq(context_start, context_end)
+
+  context_vars <- fostr_named_capture(
+    dd[context_rows],
+    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$"
+  )
+  context_vars$var_desc <- ""
+  context_vars <- context_vars[!is.na(context_vars$var_name), ]
+
+  table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*Table [0-9]+:"))
+
+  table_sections <- purrr::map2(
+    table_name_rows,
+    c(table_name_rows[-1], length(dd)),
+    ~seq(.x, .y - 1)
+  )
+
+  if (any(fostr_detect(cb, "^Time series layout:"))) {
+    table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+  } else {
+    table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_ds_tables(dd, .x))
+  }
+
+  var_info <- make_var_info_from_scratch(
+    var_name = c(context_vars$var_name, table_vars$var_name),
+    var_label = c(context_vars$var_label, table_vars$var_label),
+    var_desc = c(context_vars$var_desc, table_vars$var_desc)
+  )
+
+  # Get License and Condition section
+  conditions_text <- find_cb_section(
+    cb,
+    "^Citation and Use of .+ Data",
+    section_markers
+  )
+
+  conditions_text <- paste(conditions_text, collapse = "\n")
+
+  out <- make_ddi_from_scratch(
+    file_name = cb_name,
+    file_type = "rectangular",
+    ipums_project = "NHGIS",
+    var_info = var_info,
+    conditions = conditions_text
+  )
+
+  out
+
+}
+
+#' @rdname ipums_codebook
+#' @export
+read_terra_codebook <- function(cb_file, data_layer = NULL) {
+  read_ipums_codebook(cb_file, !!enquo(data_layer))
+}
+
+#' Helper function to read codebook information for an NHGIS
+#' extract that contains time series tables.
+#'
+#' @param dd Character vector of lines contained in the codebook's
+#'   "Data Dictionary" section.
+#' @param table_rows Indices of rows that include table variable information
+#'   within the provided `dd`.
+#'
+#' @return tibble of variable information
+#'
+#' @noRd
+read_nhgis_tst_tables <- function(dd, table_rows) {
+
+  table_name_and_code <- fostr_named_capture(
+    dd[table_rows[1]],
+    paste0(
+      "^[[:blank:]]*Table .+?:[[:blank:]]+\\((?<table_code>.+?)\\)",
+      "[[:blank:]]+(?<table_name>.+)$"
+    )
+  )
+
+  nhgis_table_code <- table_name_and_code$table_code
+  table_name <- table_name_and_code$table_name
+
+  time_series_headers <- fostr_detect(
+    dd[table_rows],
+    "^[[:blank:]]+Time series"
+  )
+
+  vars <- dd[table_rows][!time_series_headers]
+  vars <- vars[-1] # First row was table name/code
+  vars <- fostr_named_capture(
+    vars,
+    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+    only_matches = TRUE
+  )
+
+  vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+
+  vars
+
+}
+
+#' Helper function to read codebook information for an NHGIS
+#' extract that contains datasets.
+#'
+#' @param dd Character vector of lines contained in the codebook's
+#'   "Data Dictionary" section.
+#' @param table_rows Indices of rows that include table variable information
+#'   within the provided `dd`.
+#'
+#' @return tibble of variable information
+#'
+#' @noRd
+read_nhgis_ds_tables <- function(dd, table_rows) {
+
+  table_name <- fostr_named_capture_single(
+    dd[table_rows[1]],
+    "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
+  )
+
+  nhgis_table_code <- fostr_named_capture_single(
+    dd[table_rows[4]],
+    "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
+  )
+
+  vars <- fostr_named_capture(
+    dd[table_rows[-1:-4]],
+    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+    only_matches = TRUE
+  )
+
+  vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+
+  vars
+
+}
+
+#' @rdname ipums_codebook
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   data_layer <- enquo(data_layer)

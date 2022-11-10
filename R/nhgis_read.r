@@ -43,20 +43,20 @@ read_nhgis <- function(data_file,
   if (file_is_zip(data_file)) {
     files <- unzip(data_file, list = TRUE)$Name
     cb_ddi_info <- try(
-      read_ipums_codebook(data_file, !!data_layer),
+      read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
     )
   } else if (file_is_dir(data_file)) {
     files <- list.files(data_file)
     cb_ddi_info <- try(
-      read_ipums_codebook(data_file, !!data_layer),
+      read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
     )
   } else {
     files <- list.files(dirname(data_file))
     # If direct file path provided, look in same directory for codebook
     cb_ddi_info <- try(
-      read_ipums_codebook(dirname(data_file)),
+      read_nhgis_codebook(dirname(data_file)),
       silent = TRUE
     )
   }

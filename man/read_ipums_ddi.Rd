@@ -29,8 +29,4 @@ usage for the data and positions for the fixed-width file.
 ddi_file <- ipums_example("cps_00006.xml")
 ddi <- read_ipums_ddi(ddi_file)
 }
-\seealso{
-Other ipums_metadata: 
-\code{\link{read_ipums_codebook}()}
-}
 \concept{ipums_metadata}

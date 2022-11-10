@@ -194,3 +194,66 @@ test_that("We get informative error messages when reading NHGIS extracts", {
   )
 })
 
+test_that("Can read NHGIS codebook", {
+
+  cb_csv <- read_nhgis_codebook(nhgis_single_csv)
+  d_csv <- read_nhgis(
+    nhgis_single_csv,
+    show_conditions = FALSE,
+    progress = FALSE,
+    show_col_types = FALSE
+  )
+
+  vars <- cb_csv$var_info$var_name
+
+  cb_fwf <- read_nhgis_codebook(nhgis_single_fwf)
+
+  expect_error(
+    read_nhgis_codebook(nhgis_multi_ds),
+    "Multiple files found"
+  )
+
+  expect_equal(vars, colnames(d_csv))
+
+  # FWFs do not include GISJOIN info currently
+  expect_equal(
+    cb_fwf$var_info$var_name,
+    vars[2:length(vars)]
+  )
+
+  cb_multi <- read_nhgis_codebook(nhgis_multi_ds, data_layer = 1)
+  d_multi <- read_nhgis(
+    nhgis_multi_ds,
+    data_layer = 1,
+    show_conditions = FALSE,
+    progress = FALSE,
+    show_col_types = FALSE
+  )
+
+  expect_equal(
+    colnames(d_multi),
+    cb_multi$var_info$var_name
+  )
+
+})
+
+# Difficult to test because Terra is being decommissioned,
+# but creating this space if more thorough work is to be done later.
+#
+# TODO: I don't think any terra tests are being run because of
+# problem with check() locating data in ipumsexamples
+#
+# TODO: read_ipums_codebook should likely be deprecated. Should
+# talk about how to handle Terra decommissioning in R
+test_that("Can read Terra codebook", {
+  if (!file.exists(terra_area)) {
+    skip("Couldn't find terra area ipumsexamples likely not installed.")
+  }
+
+  cb <- read_terra_codebook(
+    system.file("extdata", "3485_bundle.zip", package = "ipumsexamples")
+  )
+
+  expect_equal(dim(cb$var_info), c(4, 10))
+
+})
