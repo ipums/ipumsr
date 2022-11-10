@@ -56,6 +56,10 @@ find_files_in <- function(file,
     selection <- tryCatch(
       tidyselect::eval_select(name_select, file_names),
       error = function(cnd) {
+        if (none_ok) {
+          return(character(0))
+        }
+
         # Rename tidyselect errors for increased clarity in our context
         cnd <- fostr_replace_all(
           fostr_replace_all(conditionMessage(cnd), "column", "file"),
