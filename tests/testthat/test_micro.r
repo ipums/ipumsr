@@ -38,7 +38,7 @@ test_that(
 
     temp <- readr::read_lines(ipums_example("cps_00006.dat.gz"))
     readr::write_lines(temp, temp_file)
-    on.exit(unlink(temp_file))
+    on.exit(unlink(temp_file), add = TRUE, after = FALSE)
 
     cps <- read_ipums_micro(
       ipums_example("cps_00006.xml"),

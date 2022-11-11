@@ -1298,7 +1298,7 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
 
 test_that("We can export to and import from JSON for NHGIS", {
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(nhgis_extract, json_tmpfile)
   copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
@@ -1307,7 +1307,7 @@ test_that("We can export to and import from JSON for NHGIS", {
 test_that("We can export to and import from JSON, submitted NHGIS extract", {
   skip_if_no_api_access(have_api_access)
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
   copy_of_submitted_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(

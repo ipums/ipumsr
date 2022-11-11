@@ -73,7 +73,11 @@ read_ipums_sf <- function(shape_file,
   # For zipped files, make a temp folder that will be cleaned
   shape_temp <- tempfile()
   dir.create(shape_temp)
-  on.exit(unlink(shape_temp, recursive = TRUE))
+  on.exit(
+    unlink(shape_temp, recursive = TRUE),
+    add = TRUE,
+    after = FALSE
+  )
 
   read_shape_files <- shape_file_prep(
     shape_file,
@@ -229,7 +233,11 @@ read_ipums_sp <- function(shape_file,
   # For zipped files, make a temp folder that will be cleaned
   shape_temp <- tempfile()
   dir.create(shape_temp)
-  on.exit(unlink(shape_temp, recursive = TRUE))
+  on.exit(
+    unlink(shape_temp, recursive = TRUE),
+    add = TRUE,
+    after = FALSE
+  )
 
   read_shape_files <- shape_file_prep(
     shape_file,
