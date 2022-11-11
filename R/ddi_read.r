@@ -307,14 +307,15 @@ read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
     )
 
     if (file_is_zip(cb_file)) {
-      cb <- readr::read_lines(unz(cb_file, cb_name))
+      cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
     } else {
-      cb <- readr::read_lines(file.path(cb_file, cb_name))
+      cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
     }
 
   } else {
 
-    cb <- readr::read_lines(cb_file)
+    cb_name <- cb_file
+    cb <- readr::read_lines(cb_file, progress = FALSE)
 
   }
 
@@ -336,7 +337,7 @@ read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
   context_vars$var_desc <- ""
   context_vars <- context_vars[!is.na(context_vars$var_name), ]
 
-  table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*Table [0-9]+:"))
+  table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)"))
 
   table_sections <- purrr::map2(
     table_name_rows,
@@ -439,23 +440,37 @@ read_nhgis_tst_tables <- function(dd, table_rows) {
 #' @noRd
 read_nhgis_ds_tables <- function(dd, table_rows) {
 
-  table_name <- fostr_named_capture_single(
-    dd[table_rows[1]],
-    "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
-  )
+  if (fostr_detect(dd[table_rows[1]], "Data Type")) {
 
-  nhgis_table_code <- fostr_named_capture_single(
-    dd[table_rows[4]],
-    "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
-  )
+    vars <- fostr_named_capture(
+      dd[table_rows],
+      "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+      only_matches = TRUE
+    )
 
-  vars <- fostr_named_capture(
-    dd[table_rows[-1:-4]],
-    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
-    only_matches = TRUE
-  )
+    vars$var_desc <- ""
 
-  vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+  } else {
+
+    table_name <- fostr_named_capture_single(
+      dd[table_rows[1]],
+      "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
+    )
+
+    nhgis_table_code <- fostr_named_capture_single(
+      dd[table_rows[4]],
+      "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
+    )
+
+    vars <- fostr_named_capture(
+      dd[table_rows[-1:-4]],
+      "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+      only_matches = TRUE
+    )
+
+    vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+
+  }
 
   vars
 

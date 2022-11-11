@@ -53,10 +53,16 @@ read_nhgis <- function(data_file,
       silent = TRUE
     )
   } else {
-    files <- list.files(dirname(data_file))
-    # If direct file path provided, look in same directory for codebook
+    files <- data_file
+
+    # If direct file provided, look for codebook with analogous name:
+    cb <- file.path(
+      dirname(data_file),
+      fostr_replace(basename(data_file), "\\..+$",  "_codebook.txt")
+    )
+
     cb_ddi_info <- try(
-      read_nhgis_codebook(dirname(data_file)),
+      read_nhgis_codebook(cb),
       silent = TRUE
     )
   }
