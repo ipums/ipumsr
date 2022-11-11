@@ -34,6 +34,7 @@ read_nhgis <- function(data_file,
                        data_layer = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        show_conditions = TRUE,
+                       na = NULL,
                        ...) {
 
   data_layer <- enquo(data_layer)
@@ -90,12 +91,14 @@ read_nhgis <- function(data_file,
     data <- read_nhgis_csv(
       data_file,
       data_layer = !!data_layer,
+      na = na %||% c("", "NA"),
       ...
     )
   } else {
     data <- read_nhgis_fwf(
       data_file,
       data_layer = !!data_layer,
+      na = na %||% c(".", "", "NA"),
       ...
     )
   }
@@ -154,16 +157,26 @@ read_nhgis_sp <- function(shape_file,
 
 read_nhgis_fwf <- function(data_file,
                            data_layer = NULL,
+                           do_file = NULL,
+                           na = c(".", "", "NA"),
                            ...) {
 
-  rlang::warn(
-    paste0(
-      "Data loaded from NHGIS fixed-width files may not be consistent with the",
-      " information included in the data codebook by default.\n",
-      "Please consult the .txt and .do files associated with this extract ",
-      "to ensure data is parsed and recoded correctly."
+  dots <- rlang::list2(...)
+
+  user_col_positions <- "col_positions" %in% names(dots)
+  user_do_file <- !is_null(do_file) && !is_FALSE(do_file)
+
+  if (user_col_positions && user_do_file) {
+    rlang::warn(
+      c(
+        "Only one of `col_positions` or `do_file` can be provided.",
+        "i" = "Using `col_positions` to determine column positions."
+      )
     )
-  )
+    warn_default_fwf_parsing()
+  }
+
+  col_spec <- NULL
 
   data_layer <- enquo(data_layer)
 
@@ -176,7 +189,11 @@ read_nhgis_fwf <- function(data_file,
     # Must unzip file to allow for fwf_empty() specification
     fwf_dir <- tempfile()
     dir.create(fwf_dir)
-    on.exit(unlink(fwf_dir, recursive = TRUE))
+    on.exit(
+      unlink(fwf_dir, recursive = TRUE),
+      add = TRUE,
+      after = FALSE
+    )
 
     utils::unzip(data_file, exdir = fwf_dir)
 
@@ -186,19 +203,104 @@ read_nhgis_fwf <- function(data_file,
   } else if (is_dir) {
 
     filename <- find_files_in(data_file, "dat", data_layer, none_ok = FALSE)
-
     file <- file.path(data_file, filename)
+
   } else {
+
     file <- data_file
+
   }
 
-  data <- readr::read_fwf(file, ...)
+  do_file <- do_file %||% fostr_replace(file, ".dat$", ".do")
+
+  if (is_FALSE(do_file) || user_col_positions) {
+    col_spec <- NULL
+    warn_default_fwf_parsing()
+  } else if (!file.exists(do_file)) {
+    if (user_do_file) {
+      rlang::warn(
+        c(
+          "Could not find the provided `do_file`.",
+          "i" = paste0(
+            "Make sure the provided `do_file` exists ",
+            "or use `col_positions` to specify column positions manually ",
+            "(see `?readr::read_fwf`)"
+          )
+        )
+      )
+      warn_default_fwf_parsing()
+    } else {
+      rlang::warn(
+        c(
+          "Could not find a .do file associated with the provided file.",
+          "i" = paste0(
+            "Use the `do_file` argument to provide an associated .do file ",
+            "or use `col_positions` to specify column positions manually ",
+            "(see `?readr::read_fwf`)"
+          )
+        )
+      )
+      warn_default_fwf_parsing()
+    }
+  } else if (file.exists(do_file) && !user_col_positions) {
+    col_spec <- tryCatch(
+      parse_nhgis_do_file(do_file),
+      error = function(cnd) {
+        rlang::warn(
+          c(
+            "Problem parsing .do file.",
+            "i" = paste0(
+              "Using default `col_positions` to parse file. ",
+              "(see `?readr::read_fwf`)"
+            )
+          )
+        )
+        warn_default_fwf_parsing()
+        NULL
+      }
+    )
+  }
+
+  if (!is_null(col_spec)) {
+
+    # If we have succesfully parsed the .do file, use its info to parse cols
+    data <- readr::read_fwf(
+      file,
+      col_positions = col_spec$col_positions,
+      col_types = col_spec$col_types,
+      na = na,
+      ...
+    )
+
+    if (!is_null(col_spec$col_recode)) {
+      # Rescale column values based on expressions in .do file
+      purrr::walk2(
+        col_spec$col_recode$cols,
+        col_spec$col_recode$exprs,
+        function(.x, .y) {
+          data[[.x]] <<- eval(.y, data)
+        }
+      )
+    }
+
+  } else {
+
+    # Otherwise, use default or user-provided parsing specs
+    data <- readr::read_fwf(
+      file,
+      na = na,
+      ...
+    )
+  }
 
   data
 
 }
 
-read_nhgis_csv <- function(data_file, data_layer = NULL, ...) {
+read_nhgis_csv <- function(data_file,
+                           data_layer = NULL,
+                           na = c("", "NA"),
+                           ...) {
 
   data_layer <- enquo(data_layer)
 
@@ -217,7 +319,7 @@ read_nhgis_csv <- function(data_file, data_layer = NULL, ...) {
     file <- data_file
   }
 
-  data <- readr::read_csv(file, ...)
+  data <- readr::read_csv(file, na = na, ...)
 
   # TODO: testing that reformatting this stuff does handle
   # header row correctly
@@ -241,13 +343,107 @@ read_nhgis_csv <- function(data_file, data_layer = NULL, ...) {
 
 }
 
+parse_nhgis_do_file <- function(file) {
+
+  do_lines <- trimws(readr::read_lines(file, progress = FALSE))
+
+  col_spec <- parse_col_positions(do_lines)
+  col_recode <- parse_col_recode(do_lines)
+
+  list(
+    col_types = col_spec$col_types,
+    col_positions = col_spec$col_positions,
+    col_recode = col_recode
+  )
+
+}
+
+parse_col_recode <- function(do_lines) {
+
+  recode_lines <- which(grepl("^replace", do_lines))
+
+  if (length(recode_lines) == 0) {
+    return(NULL)
+  }
+
+  recode_vals <- toupper(
+    fostr_replace(do_lines[recode_lines], "^replace ", "")
+  )
+
+  recode_vals <- fostr_split(recode_vals, "( +)?=( +)?")
+
+  cols <- purrr::map_chr(recode_vals, purrr::pluck(1))
+  exprs <- purrr::map_chr(recode_vals, purrr::pluck(2))
+
+  list(
+    cols = cols,
+    exprs = rlang::parse_exprs(exprs)
+  )
+
+}
+
+parse_col_positions <- function(do_lines) {
+
+  # Get positions and labels
+  start <- which(grepl("^quietly", do_lines)) + 1
+  end <- which(grepl("^using", do_lines)) - 1
+
+  col_info <- fostr_split(do_lines[start:end], "\\s{2,}")
+
+  col_types <- convert_col_types(purrr::map_chr(col_info, purrr::pluck(1)))
+  col_name <- toupper(purrr::map_chr(col_info, purrr::pluck(2)))
+  col_index <- fostr_split(purrr::map_chr(col_info, purrr::pluck(3)), "-")
+
+  col_start <- as.numeric(purrr::map_chr(col_index, purrr::pluck(1)))
+  col_end <- as.numeric(purrr::map_chr(col_index, purrr::pluck(2)))
+
+  list(
+    col_types = col_types,
+    col_positions = readr::fwf_positions(col_start, col_end, col_name)
+  )
+
+}
+
+convert_col_types <- function(types) {
+
+  types <- fostr_replace(types, "^str.+", "str")
+
+  recode_key <- c(
+    str = "c",
+    byte = "i",
+    int = "i",
+    long = "i",
+    float = "d",
+    double = "d"
+  )
+
+  paste0(dplyr::recode(types, !!!recode_key), collapse = "")
+
+}
+
+warn_default_fwf_parsing <- function() {
+  rlang::warn(
+    c(
+      paste0(
+        "Data loaded from NHGIS fixed-width files may not be consistent with the",
+        " information included in the data codebook when parsing column positions ",
+        "manually."
+      ),
+      "i" = paste0(
+        "Please consult the .txt and .do files associated with this extract ",
+        "to ensure data is recoded correctly."
+      )
+    )
+  )
+}
+
 # Fills in a default condition if we can't find codebook for nhgis
 NHGIS_EMPTY_DDI <- make_ddi_from_scratch(
   ipums_project = "NHGIS",
   file_type = "rectangular",
   conditions = paste0(
-    "Use of NHGIS data is subject to conditions, including that ",
-    "publications and research which employ NHGIS data should cite it ",
-    "appropiately. Please see www.nhgis.org for more information."
+    "Use of data from NHGIS is subject to conditions including that users ",
+    "should cite the data appropriately. ",
+    "Please see www.nhgis.org for more information."
   )
 )
