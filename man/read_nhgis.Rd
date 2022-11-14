@@ -11,6 +11,8 @@ read_nhgis(
   data_layer = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   show_conditions = TRUE,
+  na = NULL,
+  do_file = NULL,
   ...
 )
 
@@ -35,7 +37,7 @@ read_nhgis_sp(
 )
 }
 \arguments{
-\item{data_file}{Path to the data file, a .zip archive from an IPUMS
+\item{data_file}{Path to the data file, a .zip archive from an NHGIS
 extract, or a directory containing the data file.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
@@ -45,13 +47,64 @@ a dataset.}
 
 \item{var_attrs}{Variable attributes to add from the codebook, defaults to
 adding all (val_labels, var_label and var_desc). See
-\code{\link{set_ipums_var_attributes}} for more details.}
+\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 
 \item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
 loading data. Defaults to \code{TRUE}.}
 
+\item{na}{Character vector of strings to interpret as missing values.
+If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
+for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
+
+\item{do_file}{For fixed-width files, path to the .do file associated with
+the provided \code{data_file}. The .do file contains the specifications that
+indicate how to parse the fixed-width file to be loaded.
+If \code{NULL}, looks in the directory of the .dat file to be loaded for a .do
+file with the same name. If \code{FALSE} or if the .do file cannot be found,
+the .dat file will be parsed by the
+values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).
+
+Note that without a corresponding .do file, some columns may
+include implicit decimal values. When working with fixed-width data,
+consult the provided .do file if you are concerned that columns are not
+being parsed and recoded correctly.
+
+If you no longer have access to the .do file for this \code{data_file}, consider
+resubmitting the extract that produced the data.}
+
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}
+
+\item{shape_file}{Path to a single .shp file, a .zip archive from an IPUMS
+extract, or a directory containing at least one .shp file.}
+
+\item{shape_layer}{For .zip extracts with multiple files, the name of the
+shape files to load. Accepts a character vector specifying the file name,
+an integer specifying the index of the file to load, or
+\code{\link{dplyr_select_style}} conventions. If multiple files are
+selected, \code{bind_multiple} must be equal to \code{TRUE}.}
+
+\item{vars}{Names of variables to include in the output data.
+By default, includes all variables found in the provided \code{shape_file}.}
+
+\item{encoding}{The text encoding to use when reading the shape file. Typically
+the defaults should read the data correctly, but for some extracts you may
+need to set them manually.
+If \code{NULL}, will attempt to guess the correct encoding using the associated
+.cpg file. If none is available, it will default to \code{"latin1"}.
+NHGIS files default to \code{"latin1"}. Terra files default to \code{"UTF-8"}.}
+
+\item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
+row-bind the files into a single output. Note that some data sources may
+not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
+\code{SpatialPointsDataFrame}).}
+
+\item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
+the file that each row originates from. By default, this column will be
+named \code{"layer"}. If \code{"layer"} already exists in the data, a unique name
+will be created to avoid name conflicts. The column name will always be
+prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
+\code{FALSE} otherwise.}
 }
 \value{
 A \code{\link[tibble:tbl_df-class]{tibble}} of the data found in \code{data_file}.

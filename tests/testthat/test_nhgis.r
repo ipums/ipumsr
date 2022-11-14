@@ -15,7 +15,7 @@ vars_data <- 25
 
 test_that("Can read NHGIS extract: single dataset", {
 
-  expect_output(
+  expect_message(
     nhgis_csv <- read_nhgis(nhgis_single_csv),
     "Use of data from NHGIS is subject"
   )
@@ -382,5 +382,45 @@ test_that("Can read Terra codebook", {
   cb <- read_terra_codebook(terra_area)
 
   expect_equal(dim(cb$var_info), c(4, 10))
+
+})
+
+test_that("Unexpected extract structures throw errors", {
+
+  sps_tmpfile <- file.path(tempdir(), "test.sps")
+  csv_tmpfile <- file.path(tempdir(), "test.csv")
+  dat_tmpfile <- file.path(tempdir(), "test.dat")
+
+  on.exit(unlink(sps_tmpfile), add = TRUE, after = FALSE)
+  on.exit(unlink(csv_tmpfile), add = TRUE, after = FALSE)
+  on.exit(unlink(dat_tmpfile), add = TRUE, after = FALSE)
+
+  # Non-csv or dat file should not interfere with reading:
+  readr::write_lines("A", sps_tmpfile)
+
+  expect_error(
+    read_nhgis(tempdir()),
+    "No .csv or .dat files found.+To read an NHGIS shapefile"
+  )
+
+  # Single file should read normally:
+  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile)
+
+  expect_message(
+    x <- read_nhgis(tempdir()),
+    "Use of data from NHGIS"
+  )
+
+  # First row is removed because NHGIS thinks this extract has an
+  # extra header row. Not a concern here.
+  expect_equal(x$a, "b")
+
+  # Both csv and dat is ambiguous:
+  readr::write_csv(tibble::tibble(a = "a"), dat_tmpfile)
+
+  expect_error(
+    read_nhgis(tempdir()),
+    "Both .csv and .dat files found.+`data_file` should be"
+  )
 
 })

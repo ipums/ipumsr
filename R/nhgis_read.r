@@ -8,17 +8,35 @@
 #' @description
 #' Load a dataset downloaded from the NHGIS extract system.
 #'
-#' @param data_file Path to the data file, a .zip archive from an IPUMS
+#' @param data_file Path to the data file, a .zip archive from an NHGIS
 #'   extract, or a directory containing the data file.
 #' @param data_layer For .zip extracts with multiple datasets, the name of the
 #'   data to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
+#'  [`dplyr_select_style`] conventions. Data layer must uniquely identify
 #'  a dataset.
 #' @param var_attrs Variable attributes to add from the codebook, defaults to
 #'   adding all (val_labels, var_label and var_desc). See
-#'   \code{\link{set_ipums_var_attributes}} for more details.
+#'   [`set_ipums_var_attributes()`] for more details.
 #' @param show_conditions If `TRUE`, print IPUMS conditions to console when
 #'   loading data. Defaults to `TRUE`.
+#' @param na Character vector of strings to interpret as missing values.
+#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
+#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
+#' @param do_file For fixed-width files, path to the .do file associated with
+#'   the provided `data_file`. The .do file contains the specifications that
+#'   indicate how to parse the fixed-width file to be loaded.
+#'   If `NULL`, looks in the directory of the .dat file to be loaded for a .do
+#'   file with the same name. If `FALSE` or if the .do file cannot be found,
+#'   the .dat file will be parsed by the
+#'   values provided to `col_positions` (see [`read_fwf()`][readr::read_fwf]).
+#'
+#'   Note that without a corresponding .do file, some columns may
+#'   include implicit decimal values. When working with fixed-width data,
+#'   consult the provided .do file if you are concerned that columns are not
+#'   being parsed and recoded correctly.
+#'
+#'   If you no longer have access to the .do file for this `data_file`, consider
+#'   resubmitting the extract that produced the data.
 #' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
 #'   [`read_fwf()`][readr::read_fwf].
 #'
@@ -35,14 +53,59 @@ read_nhgis <- function(data_file,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        show_conditions = TRUE,
                        na = NULL,
+                       do_file = NULL,
                        ...) {
+
+  if (length(data_file) != 1) {
+    rlang::abort("`data_file` must be length 1")
+  }
 
   data_layer <- enquo(data_layer)
 
   custom_check_file_exists(data_file)
 
+  csv_files <- find_files_in(
+    data_file,
+    "csv",
+    multiple_ok = TRUE,
+    none_ok = TRUE
+  )
+
+  dat_files <- find_files_in(
+    data_file,
+    "dat",
+    multiple_ok = TRUE,
+    none_ok = TRUE
+  )
+
+  n_csvs <- length(csv_files)
+  n_dats <- length(dat_files)
+
+  if (n_csvs == 0 && n_dats == 0) {
+    rlang::abort(
+      c(
+        "No .csv or .dat files found in the provided `data_file`.",
+        "i" = paste0(
+          "`data_file` should be the path to a specific file or contain ",
+          "either .csv files or .dat files, not both."
+        ),
+        "i" = "To read an NHGIS shapefile, see `?read_nhgis_sf()`"
+      )
+    )
+  } else if (n_csvs > 0 && n_dats > 0) {
+    rlang::abort(
+      c(
+        "Both .csv and .dat files found in the provided `data_file`.",
+        "i" = paste0(
+          "`data_file` should be the path to a specific file or contain ",
+          "either .csv files or .dat files, not both."
+        )
+      )
+    )
+  }
+
   if (file_is_zip(data_file)) {
-    files <- unzip(data_file, list = TRUE)$Name
+    files <- utils::unzip(data_file, list = TRUE)$Name
     cb_ddi_info <- try(
       read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
@@ -72,10 +135,6 @@ read_nhgis <- function(data_file,
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
-  if (show_conditions) {
-    custom_cat(short_conditions_text(cb_ddi_info))
-  }
-
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
@@ -83,11 +142,7 @@ read_nhgis <- function(data_file,
 
   extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
 
-  # TODO: should check this on invalid file structures--i.e.
-  # dirs with no csvs or dat files, etc.
-  file_is_csv <- any(purrr::map_lgl(files, ~tools::file_ext(.x) == "csv"))
-
-  if (file_is_csv) {
+  if (n_csvs > 0) {
     data <- read_nhgis_csv(
       data_file,
       data_layer = !!data_layer,
@@ -98,6 +153,7 @@ read_nhgis <- function(data_file,
     data <- read_nhgis_fwf(
       data_file,
       data_layer = !!data_layer,
+      do_file = do_file,
       na = na %||% c(".", "", "NA"),
       ...
     )
@@ -105,11 +161,18 @@ read_nhgis <- function(data_file,
 
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
 
+  if (show_conditions) {
+    message(short_conditions_text(cb_ddi_info))
+  }
+
   data
 
 }
 
+#' @inheritParams read_ipums_sf
+#'
 #' @rdname read_nhgis
+#'
 #' @export
 read_nhgis_sf <- function(shape_file,
                           shape_layer = NULL,
@@ -131,7 +194,10 @@ read_nhgis_sf <- function(shape_file,
 
 }
 
+#' @inheritParams read_ipums_sf
+#'
 #' @rdname read_nhgis
+#'
 #' @export
 read_nhgis_sp <- function(shape_file,
                           shape_layer = NULL,
