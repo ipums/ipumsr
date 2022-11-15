@@ -19,7 +19,10 @@ ipums_locale <- function(encoding = NULL) {
 # rows based on values in a column of a data.frame.
 select_var_rows <- function(df, vars, filter_var = "var_name") {
   if (!quo_is_null(vars)) {
-    vars <- tidyselect::vars_select(df[[filter_var]], !!vars)
+    varnames <- df[[filter_var]]
+    names(varnames) <- varnames
+    vars <- names(tidyselect::eval_select(vars, varnames))
+
     df <- dplyr::filter(df, .data[[!!filter_var]] %in% vars)
   }
   df

@@ -7,7 +7,10 @@ ddi_filter_vars <- function(ddi, vars, out_type, verbose) {
   if (rlang::quo_is_null(vars)) {
     return(ddi)
   }
-  selected_vars <- tidyselect::vars_select(ddi$var_info$var_name, !!vars)
+
+  varnames <- ddi$var_info$var_name
+  names(varnames) <- varnames
+  selected_vars <- varnames[tidyselect::eval_select(vars, varnames)]
 
   if (ddi$file_type == "hierarchical" & out_type == "list") {
     key_vars <- purrr::flatten_chr(ddi$rectypes_keyvars$keyvars)
