@@ -562,7 +562,7 @@ simplify_nhgis_gis_file <- function(file) {
     shp_dir <- file.path(filepath, dirname)
   }
 
-  unzip(zipfile = file, exdir = filepath)
+  utils::unzip(zipfile = file, exdir = filepath)
 
   n_files <- length(list.files(shp_dir))
 
@@ -589,7 +589,7 @@ simplify_nhgis_gis_file <- function(file) {
   inner_files <- purrr::map_chr(
     inner_files_zip_name,
     ~fostr_replace(
-      fostr_subset(unzip(.x, list = TRUE)$Name, ".shp$"),
+      fostr_subset(utils::unzip(.x, list = TRUE)$Name, ".shp$"),
       ".shp$",
       ""
     )
@@ -615,14 +615,14 @@ simplify_nhgis_gis_file <- function(file) {
     inner_files_zip_name,
     ~{
       files <- dir(pattern = .x)
-      zip(.y, files)
+      utils::zip(.y, files)
       unlink(files)
     }
   )
 
   setwd("..")
 
-  zip(
+  utils::zip(
     paste0(dirname, ".zip"),
     file.path(dirname, dir(dirname))
   )
