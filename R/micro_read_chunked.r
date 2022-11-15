@@ -111,7 +111,7 @@ read_ipums_micro_chunked <- function(
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -180,7 +180,7 @@ read_ipums_micro_list_chunked <- function(
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)

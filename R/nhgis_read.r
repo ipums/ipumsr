@@ -135,6 +135,10 @@ read_nhgis <- function(data_file,
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
+  if (show_conditions) {
+    message(short_conditions_text(cb_ddi_info))
+  }
+
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
@@ -160,10 +164,6 @@ read_nhgis <- function(data_file,
   }
 
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
-
-  if (show_conditions) {
-    message(short_conditions_text(cb_ddi_info))
-  }
 
   data
 

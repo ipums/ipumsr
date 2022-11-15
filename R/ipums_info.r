@@ -216,6 +216,6 @@ short_conditions_text <- function(ddi) {
   paste0(
     "Use of data from ", ipums_file_info(ddi, "ipums_project"), " is subject ",
     "to conditions including that users should cite the data appropriately. ",
-    "Use command `ipums_conditions()` for more details.\n"
+    "Use command `ipums_conditions()` for more details."
   )
 }
