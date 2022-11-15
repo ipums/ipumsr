@@ -98,14 +98,10 @@ test_that("Can read extract at multiple file levels", {
 
   temp_dir <- tempfile()
   dir.create(temp_dir)
-  utils::unzip(nhgis_single_shp, exdir = temp_dir)
+  unzipped <- utils::unzip(nhgis_single_shp, exdir = temp_dir)
+  on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
-  shp_unzip <- read_ipums_sf(
-    file.path(
-      temp_dir,
-      "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"
-    )
-  )
+  shp_unzip <- read_ipums_sf(unzipped)
 
   expect_identical(shp, shp_unzip)
 
@@ -115,19 +111,26 @@ test_that("Can read extract at multiple file levels", {
 
   expect_identical(shp_unzip, shp_unzip_dir)
 
+  # Informative error when reading a directory with no shapefiles
+  expect_error(
+    read_ipums_sf(temp_dir),
+    "No .shp or .zip files found in the provided `shape_file`"
+  )
+
   # Read shp directly ------------
 
-  utils::unzip(
-    file.path(
-      temp_dir,
-      "nhgis0707_shape/nhgis0707_shapefile_tl2000_us_pmsa_1990.zip"
-    ),
+  unzipped_shp <- utils::unzip(
+    unzipped,
     exdir = temp_dir
   )
 
-  shp_direct <- read_ipums_sf(file.path(temp_dir, "US_pmsa_1990.shp"))
+  unzipped_shp <- unzipped_shp[grepl(".shp$", unzipped_shp)]
+
+  shp_direct <- read_ipums_sf(unzipped_shp)
+  dir_of_shp <- read_ipums_sf(dirname(unzipped_shp))
 
   expect_identical(shp_unzip_dir, shp_direct)
+  expect_identical(shp_direct, dir_of_shp)
 
 })
 

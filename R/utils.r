@@ -40,16 +40,19 @@ find_files_in <- function(file,
   } else if (file_is_dir(file)) {
     file_names <- sort(dir(file))
   } else {
-    stop(
-      paste0(
-        "Expected a folder or a zip file to look for files in, but got:\n",
-        file
-      )
-    )
+    file_names <- file
   }
 
   if (!is.null(name_ext)) {
     file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
+  }
+
+  if (!none_ok && length(file_names) == 0) {
+    rlang::abort(
+      paste0(
+        "Did not find any files matching extension \"",
+        name_ext, "\" in the provided file path.")
+    )
   }
 
   if (!quo_is_null(name_select)) {

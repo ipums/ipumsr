@@ -64,6 +64,8 @@ read_ipums_sf <- function(shape_file,
                           add_layer_var = NULL,
                           ...) {
 
+  custom_check_file_exists(shape_file)
+
   dots <- rlang::list2(...)
 
   shape_layer <- enquo(shape_layer)
@@ -436,36 +438,29 @@ shape_file_prep <- function(shape_file,
                             bind_multiple,
                             shape_temp) {
 
-  # Case 1: Shape file specified is a .zip file or a directory
   shape_is_shp <- tools::file_ext(shape_file) == "shp"
   shape_is_zip <- tools::file_ext(shape_file) == "zip"
   shape_is_dir <- tools::file_ext(shape_file) == ""
 
-  # TODO: May need to check that multiple are handled?
-  # What if a user wants to bind_multiple on multiple .shp files?
-  # This is not currently supported because shape_file takes a single-length
-  # input
   if (shape_is_shp) {
     return(shape_file)
   }
 
-  if (shape_is_zip) {
-    files <- unzip(shape_file, list = TRUE)$Name
-  } else if (shape_is_dir) {
-    files <- list.files(shape_file)
-  } else {
-    rlang::abort(
-      paste0(
-        "Expected `shape_file` to be a directory, .zip archive,",
-        "or .shp file."
-      )
-    )
-  }
+  shape_files <- find_files_in(
+    shape_file,
+    name_ext = "zip|shp",
+    multiple_ok = TRUE,
+    none_ok = TRUE
+  )
 
-  # If no more layers, look for shapefiles:
-  if (!any(tools::file_ext(files) == "zip" | tools::file_ext(files) == "")) {
+  has_shp <- any(grepl(".shp$", shape_files))
+  has_zip <- any(grepl(".zip$", shape_files))
 
-    # First layer has .shp files within it
+  # If there are any .shp files in this zip or dir, load them.
+  # Otherwise, we should have .zip files containing .shp files
+  if (has_shp) {
+
+    # Add hint to error if bind_multiple = FALSE and multiple files found
     shape_shps <- tryCatch(
       find_files_in(
         shape_file,
@@ -475,16 +470,15 @@ shape_file_prep <- function(shape_file,
         none_ok = FALSE
       ),
       error = function(cnd) {
-        if (grepl("^Multiple files found", conditionMessage(cnd))) {
+        err_msg <- conditionMessage(cnd)
+
+        if (grepl("^Multiple files found", err_msg)) {
           bind_hint <- c("i" = "To combine files, set `bind_multiple = TRUE`")
         } else {
           bind_hint <- NULL
         }
 
-        rlang::abort(
-          c(conditionMessage(cnd), bind_hint),
-          call = expr(find_files_in())
-        )
+        rlang::abort(c(err_msg, bind_hint), call = expr(find_files_in()))
       }
     )
 
@@ -502,7 +496,10 @@ shape_file_prep <- function(shape_file,
 
           # If there is a cpg file (encoding information) extract that
           all_files <- utils::unzip(shape_file, list = TRUE)$Name
-          cpg_file <- ".cpg" == tolower(purrr::map_chr(all_files, ipums_file_ext))
+          file_exts <- tolower(purrr::map_chr(all_files, ipums_file_ext))
+
+          cpg_file <- ".cpg" == file_exts
+
           if (any(cpg_file)) {
             utils::unzip(shape_file, all_files[cpg_file], exdir = shape_temp)
           }
@@ -514,9 +511,8 @@ shape_file_prep <- function(shape_file,
       }
     )
 
-  } else {
+  } else if (has_zip) {
 
-    # First layer has zip files of shape files within it
     shape_zips <- tryCatch(
       find_files_in(
         shape_file,
@@ -526,16 +522,15 @@ shape_file_prep <- function(shape_file,
         none_ok = FALSE
       ),
       error = function(cnd) {
-        if (grepl("^Multiple files found", conditionMessage(cnd))) {
+        err_msg <- conditionMessage(cnd)
+
+        if (grepl("^Multiple files found", err_msg)) {
           bind_hint <- c("i" = "To combine files, set `bind_multiple = TRUE`")
         } else {
           bind_hint <- NULL
         }
 
-        rlang::abort(
-          c(conditionMessage(cnd), bind_hint),
-          call = expr(find_files_in())
-        )
+        rlang::abort(c(err_msg, bind_hint), call = expr(find_files_in()))
       }
     )
 
@@ -558,6 +553,8 @@ shape_file_prep <- function(shape_file,
 
     read_shape_files <- dir(shape_temp, "\\.shp$", full.names = TRUE)
 
+  } else {
+    rlang::abort("No .shp or .zip files found in the provided `shape_file`.")
   }
 
   # If no shapefiles or if multiple and bind_multiple = FALSE (this can happen

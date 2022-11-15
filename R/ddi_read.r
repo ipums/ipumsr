@@ -296,27 +296,22 @@ read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
 
   data_layer <- enquo(data_layer)
 
-  if (path_is_zip_or_dir(cb_file)) {
+  custom_check_file_exists(cb_file)
 
-    cb_name <- find_files_in(
-      cb_file,
-      "txt",
-      name_select = data_layer,
-      multiple_ok = FALSE,
-      none_ok = FALSE
-    )
+  cb_name <- find_files_in(
+    cb_file,
+    "txt",
+    name_select = data_layer,
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
 
-    if (file_is_zip(cb_file)) {
-      cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
-    } else {
-      cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
-    }
-
+  if (file_is_zip(cb_file)) {
+    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
+  } else if (file_is_dir(cb_file)) {
+    cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
   } else {
-
-    cb_name <- cb_file
     cb <- readr::read_lines(cb_file, progress = FALSE)
-
   }
 
   # Section markers are a line full of dashes
@@ -480,6 +475,9 @@ read_nhgis_ds_tables <- function(dd, table_rows) {
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   data_layer <- enquo(data_layer)
+
+  custom_check_file_exists(cb_file)
+
   if (path_is_zip_or_dir(cb_file)) {
     cb_name <- find_files_in(cb_file, "txt", multiple_ok = TRUE)
     # There are 2 formats for extracts, so we have to do some work here.

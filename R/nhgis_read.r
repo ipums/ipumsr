@@ -64,40 +64,29 @@ read_nhgis <- function(data_file,
 
   custom_check_file_exists(data_file)
 
-  csv_files <- find_files_in(
+  data_files <- find_files_in(
     data_file,
-    "csv",
+    name_ext = "csv|dat",
     multiple_ok = TRUE,
     none_ok = TRUE
   )
 
-  dat_files <- find_files_in(
-    data_file,
-    "dat",
-    multiple_ok = TRUE,
-    none_ok = TRUE
-  )
+  has_csv <- any(grepl(".csv$", data_files))
+  has_dat <- any(grepl(".dat$", data_files))
 
-  n_csvs <- length(csv_files)
-  n_dats <- length(dat_files)
-
-  if (n_csvs == 0 && n_dats == 0) {
+  if (!has_csv && !has_dat) {
     rlang::abort(
       c(
         "No .csv or .dat files found in the provided `data_file`.",
-        "i" = paste0(
-          "`data_file` should be the path to a specific file or contain ",
-          "either .csv files or .dat files, not both."
-        ),
         "i" = "To read an NHGIS shapefile, see `?read_nhgis_sf()`"
       )
     )
-  } else if (n_csvs > 0 && n_dats > 0) {
+  } else if (has_csv && has_dat) {
     rlang::abort(
       c(
         "Both .csv and .dat files found in the provided `data_file`.",
         "i" = paste0(
-          "`data_file` should be the path to a specific file or contain ",
+          "If `data_file` is a zip archive or directory, it should contain ",
           "either .csv files or .dat files, not both."
         )
       )
@@ -105,20 +94,16 @@ read_nhgis <- function(data_file,
   }
 
   if (file_is_zip(data_file)) {
-    files <- utils::unzip(data_file, list = TRUE)$Name
     cb_ddi_info <- try(
       read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
     )
   } else if (file_is_dir(data_file)) {
-    files <- list.files(data_file)
     cb_ddi_info <- try(
       read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
     )
   } else {
-    files <- data_file
-
     # If direct file provided, look for codebook with analogous name:
     cb <- file.path(
       dirname(data_file),
@@ -146,7 +131,7 @@ read_nhgis <- function(data_file,
 
   extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
 
-  if (n_csvs > 0) {
+  if (has_csv) {
     data <- read_nhgis_csv(
       data_file,
       data_layer = !!data_layer,
@@ -246,10 +231,15 @@ read_nhgis_fwf <- function(data_file,
 
   data_layer <- enquo(data_layer)
 
-  is_zip <- file_is_zip(data_file)
-  is_dir <- file_is_dir(data_file)
+  file <- find_files_in(
+    data_file,
+    name_ext = "dat",
+    name_select = data_layer,
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
 
-  if (is_zip) {
+  if (file_is_zip(data_file)) {
 
     # Cannot use fwf_empty() col_positions on an unz() connection
     # Must unzip file to allow for fwf_empty() specification
@@ -263,17 +253,11 @@ read_nhgis_fwf <- function(data_file,
 
     utils::unzip(data_file, exdir = fwf_dir)
 
-    filename <- find_files_in(data_file, "dat", data_layer, none_ok = FALSE)
-    file <- file.path(fwf_dir, filename)
+    file <- file.path(fwf_dir, file)
 
-  } else if (is_dir) {
+  } else if (file_is_dir(data_file)) {
 
-    filename <- find_files_in(data_file, "dat", data_layer, none_ok = FALSE)
-    file <- file.path(data_file, filename)
-
-  } else {
-
-    file <- data_file
+    file <- file.path(data_file, file)
 
   }
 
@@ -370,19 +354,18 @@ read_nhgis_csv <- function(data_file,
 
   data_layer <- enquo(data_layer)
 
-  is_zip <- file_is_zip(data_file)
-  is_dir <- file_is_dir(data_file)
+  file <- find_files_in(
+    data_file,
+    name_ext = "csv",
+    name_select = data_layer,
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
 
-  if (is_zip || is_dir) {
-    filename <- find_files_in(data_file, "csv", data_layer, none_ok = FALSE)
-  }
-
-  if (is_zip) {
-    file <- unz(data_file, filename)
-  } else if (is_dir) {
-    file <- file.path(data_file, filename)
-  } else {
-    file <- data_file
+  if (file_is_zip(data_file)) {
+    file <- unz(data_file, file)
+  } else if (file_is_dir(data_file)) {
+    file <- file.path(data_file, file)
   }
 
   data <- readr::read_csv(file, na = na, ...)

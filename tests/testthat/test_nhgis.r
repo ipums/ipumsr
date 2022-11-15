@@ -385,14 +385,16 @@ test_that("Can read Terra codebook", {
 
 })
 
-test_that("Unexpected extract structures throw errors", {
+test_that("Can read certain unzipped structures", {
 
   sps_tmpfile <- file.path(tempdir(), "test.sps")
-  csv_tmpfile <- file.path(tempdir(), "test.csv")
+  csv_tmpfile1 <- file.path(tempdir(), "test1.csv")
+  csv_tmpfile2 <- file.path(tempdir(), "test2.csv")
   dat_tmpfile <- file.path(tempdir(), "test.dat")
 
   on.exit(unlink(sps_tmpfile), add = TRUE, after = FALSE)
-  on.exit(unlink(csv_tmpfile), add = TRUE, after = FALSE)
+  on.exit(unlink(csv_tmpfile1), add = TRUE, after = FALSE)
+  on.exit(unlink(csv_tmpfile2), add = TRUE, after = FALSE)
   on.exit(unlink(dat_tmpfile), add = TRUE, after = FALSE)
 
   # Non-csv or dat file should not interfere with reading:
@@ -404,23 +406,42 @@ test_that("Unexpected extract structures throw errors", {
   )
 
   # Single file should read normally:
-  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile)
+  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile1)
 
   expect_message(
-    x <- read_nhgis(tempdir()),
+    x1 <- read_nhgis(tempdir()),
     "Use of data from NHGIS"
   )
 
-  # First row is removed because NHGIS thinks this extract has an
+  expect_message(
+    x2 <- read_nhgis(file.path(tempdir(), "test1.csv")),
+    "Use of data from NHGIS"
+  )
+
+  # NB: First row is removed because read_nhgis thinks this fake extract has an
   # extra header row. Not a concern here.
-  expect_equal(x$a, "b")
+  expect_equal(x1$a, "b")
+  expect_identical(x1, x2)
+
+  # Multiple files should throw same errors even if unzipped:
+  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile2)
+
+  expect_error(
+    read_nhgis(tempdir()),
+    "Multiple files found"
+  )
+
+  expect_identical(
+    read_nhgis(tempdir(), data_layer = 1),
+    x1
+  )
 
   # Both csv and dat is ambiguous:
   readr::write_csv(tibble::tibble(a = "a"), dat_tmpfile)
 
   expect_error(
     read_nhgis(tempdir()),
-    "Both .csv and .dat files found.+`data_file` should be"
+    "Both .csv and .dat files found.+If `data_file` is a zip archive"
   )
 
 })
