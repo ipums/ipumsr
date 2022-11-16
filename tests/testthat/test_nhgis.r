@@ -402,19 +402,20 @@ test_that("Can read certain unzipped structures", {
 
   expect_error(
     read_nhgis(tempdir()),
-    "No .csv or .dat files found.+To read an NHGIS shapefile"
+    "No .csv or .dat files found"
   )
 
-  # Single file should read normally:
+  # Single file should read normally, but should warn
+  # that no codebook is available.
   readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile1)
 
-  expect_message(
+  expect_warning(
     x1 <- read_nhgis(tempdir()),
-    "Use of data from NHGIS"
+    "Unable to read codebook"
   )
 
   expect_message(
-    x2 <- read_nhgis(file.path(tempdir(), "test1.csv")),
+    x2 <- read_nhgis(file.path(tempdir(), "test1.csv"), var_attrs = NULL),
     "Use of data from NHGIS"
   )
 
@@ -432,7 +433,7 @@ test_that("Can read certain unzipped structures", {
   )
 
   expect_identical(
-    read_nhgis(tempdir(), data_layer = 1),
+    read_nhgis(tempdir(), data_layer = 1, var_attrs = NULL),
     x1
   )
 

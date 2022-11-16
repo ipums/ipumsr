@@ -75,12 +75,7 @@ read_nhgis <- function(data_file,
   has_dat <- any(grepl(".dat$", data_files))
 
   if (!has_csv && !has_dat) {
-    rlang::abort(
-      c(
-        "No .csv or .dat files found in the provided `data_file`.",
-        "i" = "To read an NHGIS shapefile, see `?read_nhgis_sf()`"
-      )
-    )
+    rlang::abort("No .csv or .dat files found in the provided `data_file`.")
   } else if (has_csv && has_dat) {
     rlang::abort(
       c(
@@ -116,7 +111,9 @@ read_nhgis <- function(data_file,
     )
   }
 
-  if (inherits(cb_ddi_info, "try-error")) {
+  cb_error <- inherits(cb_ddi_info, "try-error")
+
+  if (cb_error) {
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
@@ -128,7 +125,6 @@ read_nhgis <- function(data_file,
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
   cb_ddi_info$file_encoding <- "ISO-8859-1"
-
   extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
 
   if (has_csv) {
@@ -145,6 +141,19 @@ read_nhgis <- function(data_file,
       do_file = do_file,
       na = na %||% c(".", "", "NA"),
       ...
+    )
+  }
+
+  if (cb_error && !is_null(var_attrs)) {
+    rlang::warn(
+      c(
+        "Unable to read codebook associated with this file.",
+        "i" =  "To load a codebook manually, use `read_nhgis_codebook()`.",
+        "i" = paste0(
+          "To attach codebook information to loaded data, ",
+          "use `set_ipums_var_attributes()`."
+        )
+      )
     )
   }
 
