@@ -111,6 +111,21 @@ read_nhgis <- function(data_file,
     )
   }
 
+  # If user passes exact file name as string to data_layer, codebook read will
+  # fail. Try once more by constructing cb name out of the provided data_layer
+  if (inherits(cb_ddi_info, "try-error")) {
+    cb_name <- fostr_replace(
+      quo_name(data_layer),
+      paste0(ipums_file_ext(quo_name(data_layer)), "$"),
+      "_codebook.txt"
+    )
+    cb_ddi_info <- try(
+      read_nhgis_codebook(data_file, data_layer = cb_name),
+      silent = TRUE
+    )
+  }
+
+  # If still error, use empty var info
   cb_error <- inherits(cb_ddi_info, "try-error")
 
   if (cb_error) {

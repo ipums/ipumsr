@@ -494,9 +494,9 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     }
     if (length(cb_name) == 1) {
       if (file_is_zip(cb_file)) {
-        cb <- readr::read_lines(unz(cb_file, cb_name))
+        cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
       } else {
-        cb <- readr::read_lines(file.path(cb_file, cb_name))
+        cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
       }
     } else {
       cb <- NULL
@@ -504,7 +504,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   } else {
     cb_name <- cb_file
     if (file.exists(cb_name)) {
-      cb <- readr::read_lines(cb_name)
+      cb <- readr::read_lines(cb_name, progress = FALSE)
     }  else {
       cb <- NULL
     }
