@@ -237,7 +237,7 @@ test_that("We get informative errors when reading shapefiles", {
       shape_layer = 1:2,
       bind_multiple = TRUE
     ),
-    "Coercing variables with inconsistent types across files:"
+    "Some variables had inconsistent types across files:"
   )
 
 })
@@ -268,7 +268,7 @@ test_that("Careful rbind handles various data types (sf)", {
   expect_warning(
     sf_bind <- careful_sf_rbind(list(a = sf1, b = sf2, c = sf3)),
     paste0(
-      "Coercing variables .+ ",
+      "Some variables .+ ",
       "\"geometry\" \\(c\\(\"sfc_POINT\", \"sfc\"\\) vs..+",
       "\"layer\" \\(character vs. logical vs. numeric\\).+",
       "\"layer.1\" \\(numeric vs. logical\\)"

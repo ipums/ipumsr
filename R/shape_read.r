@@ -181,7 +181,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 
     rlang::warn(
       c(
-        "Coercing variables with inconsistent types across files: ",
+        "Some variables had inconsistent types across files: ",
         purrr::set_names(
           paste0("\"", bad_vars, "\" (", bad_types, ")"),
           "*"
@@ -212,6 +212,11 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
   )
 
   out <- do.call(rbind, out)
+  out <- dplyr::relocate(
+    out,
+    tidyselect::all_of(attr(out, "sf_column")),
+    .after = everything()
+  )
 
   sf::st_as_sf(tibble::as_tibble(out))
 
