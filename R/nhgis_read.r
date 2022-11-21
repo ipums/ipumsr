@@ -352,7 +352,9 @@ read_nhgis_fwf <- function(data_file,
         col_spec$col_recode$cols,
         col_spec$col_recode$exprs,
         function(.x, .y) {
-          data[[.x]] <<- eval(.y, data)
+          if (!is_null(data[[.x]])) {
+            data[[.x]] <<- eval(.y, data)
+          }
         }
       )
     }
@@ -498,9 +500,9 @@ warn_default_fwf_parsing <- function() {
   rlang::warn(
     c(
       paste0(
-        "Data loaded from NHGIS fixed-width files may not be consistent with the",
-        " information included in the data codebook when parsing column positions ",
-        "manually."
+        "Data loaded from NHGIS fixed-width files may not be consistent with ",
+        "the information included in the data codebook when parsing column ",
+        "positions manually."
       ),
       "i" = paste0(
         "Please consult the .txt and .do files associated with this extract ",
