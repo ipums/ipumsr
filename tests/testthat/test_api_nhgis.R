@@ -513,6 +513,7 @@ if (have_api_access) {
 
 download_dir <- file.path(tempdir(), "ipums-api-downloads")
 if (!dir.exists(download_dir)) dir.create(download_dir)
+on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
 tryCatch(
   vcr::use_cassette("download-nhgis-extract", {

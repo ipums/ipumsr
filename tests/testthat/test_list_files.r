@@ -113,7 +113,8 @@ test_that("Can list files from unzipped folder works (terra micro)", {
   }
 
   temp_dir <- tempdir()
-  unzip(terra_micro, exdir = temp_dir)
+  terra_micro_tmpfile <- unzip(terra_micro, exdir = temp_dir)
+  on.exit(unlink(terra_micro_tmpfile), add = TRUE, after = FALSE)
 
   all_files <- ipums_list_files(temp_dir)
   expect_equal(all_files$type, c("data", "shape"))
