@@ -361,6 +361,8 @@ read_nhgis_fwf <- function(data_file,
         col_spec$col_recode$exprs,
         function(.x, .y) {
           if (!is_null(data[[.x]])) {
+            # Coerce to numeric to guard against user-specified col_types
+            data[[.x]] <<- as.numeric(data[[.x]])
             data[[.x]] <<- eval(.y, data)
           }
         }
