@@ -234,25 +234,23 @@ get_nhgis_metadata <- function(type = NULL,
   tst_req <- !is.null(time_series_table)
 
   if (sum(summary_req, ds_req, tst_req) > 1) {
-    stop(
-      "Only one of `type`, `dataset`, or `time_series_table` may be ",
-      "specified at a time.",
-      call. = FALSE
+    rlang::abort(
+      paste0(
+        "Only one of `type`, `dataset`, or `time_series_table` may be ",
+        "specified at a time."
+      )
     )
   }
 
   if (dt_req && !ds_req) {
-    stop(
-      "`data_table` must be specified with a corresponding `dataset`.",
-      call. = FALSE
+    rlang::abort(
+      "`data_table` must be specified with a corresponding `dataset`."
     )
   }
 
   if (!any(summary_req, ds_req, tst_req)) {
-    stop(
-      "One of `type`, `dataset`, or `time_series_table` must be ",
-      "specified.",
-      call. = FALSE
+    rlang::abort(
+      "One of `type`, `dataset`, or `time_series_table` must be specified."
     )
   }
 
@@ -262,14 +260,15 @@ get_nhgis_metadata <- function(type = NULL,
   )
 
   if (any(is_too_long)) {
-    stop(
-      "Can only retrieve metadata for one `",
+    rlang::abort(
       paste0(
-        c("type", "dataset", "data_table", "time_series_table")[is_too_long],
-        collapse = "`, `"
-      ),
-      "` at a time.",
-      call. = FALSE
+        "Can only retrieve metadata for one `",
+        paste0(
+          c("type", "dataset", "data_table", "time_series_table")[is_too_long],
+          collapse = "`, `"
+        ),
+        "` at a time."
+      )
     )
   }
 
@@ -323,11 +322,12 @@ get_nhgis_summary_metadata <- function(type,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   if (!type %in% c("datasets", "data_tables",
-                        "time_series_tables", "shapefiles")) {
-    stop(
-      "`type` must be one of \"datasets\", ",
-      "\"data_tables\", \"time_series_tables\", or \"shapefiles\"",
-      call. = FALSE
+                   "time_series_tables", "shapefiles")) {
+    rlang::abort(
+      paste0(
+        "`type` must be one of \"datasets\", ",
+        "\"data_tables\", \"time_series_tables\", or \"shapefiles\""
+      )
     )
   }
 
@@ -397,10 +397,10 @@ check_table_metadata <- function(metadata,
   max_print <- 15
 
   if (n_missing > max_print) {
-    trunc_text <- " [... output truncated]"
+    trunc_text <- "... (truncated)"
     missing_datasets <- missing_datasets[1:max_print]
   } else {
-    trunc_text <- ""
+    trunc_text <- NULL
   }
 
   if (n_missing > 0) {
@@ -412,14 +412,18 @@ check_table_metadata <- function(metadata,
         # quiet = quiet
       )
     } else {
-      warning(
-        "The IPUMS NHGIS API does not yet provide data table metadata for ",
-        "the following recently released datasets: \n\n\"",
-        paste0(missing_datasets, collapse = "\"\n\""),
-        "\"", trunc_text,
-        "\n\nTo add table metadata for these datasets and cache for ",
-        "future use, set `update_tables = TRUE`.",
-        call. = FALSE
+      rlang::warn(
+        c(
+          paste0(
+            "The IPUMS NHGIS API does not yet provide data table metadata for ",
+            "the following recently released datasets:"
+          ),
+          set_names(c(missing_datasets, trunc_text), "*"),
+          paste0(
+            "\nTo add table metadata for these datasets and cache for ",
+            "future use, set `update_tables = TRUE`."
+          )
+        )
       )
     }
   }
@@ -469,9 +473,8 @@ update_table_metadata <- function(metadata,
   )
 
   if (!quiet) {
-    message(
-      "Adding metadata for the following datasets: ",
-      "\n\n\"", paste0(datasets, collapse = "\"\n\""), "\""
+    rlang::inform(
+      c("Adding metadata for the following datasets:", set_names(datasets, "*"))
     )
   }
 
@@ -551,22 +554,25 @@ request_metadata <- function(request_url,
       simplifyVector = TRUE
     )},
     error = function(cond) {
-      stop(
-        "Unable to submit metadata request. Received the following error:\n\n",
-        cond,
-        "\nThe metadata value you requested likely produced an invalid ",
-        "request URL.",
-        call. = FALSE
+      rlang::abort(
+        paste0(
+          "Unable to submit metadata request. Received the following error:",
+          "\n\n",
+          cond,
+          "\nThe metadata value you requested likely produced an invalid ",
+          "request URL."
+        )
       )
     }
   )
 
   if (httr::http_error(res)) {
     error_details <- content$detail %||% content$error
-    stop(
-      "Received status code ", res$status_code,
-      " with the following info: ", error_details
-      , call. = FALSE
+    rlang::abort(
+      paste0(
+        "Received status code ", res$status_code,
+        " with the following info: ", error_details
+      )
     )
   }
 
@@ -651,10 +657,11 @@ filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
   dots <- dots[names(dots) %in% colnames(.data)]
 
   if (length(missing_names) > 0) {
-    warning(
-      "Ignoring unrecognized metadata variables: `",
-      paste0(missing_names, collapse = "`, `"), "`",
-      call. = FALSE
+    rlang::warn(
+      c(
+        "Ignoring unrecognized metadata variables:",
+        set_names(paste0("`", missing_names, "`"), "*")
+      )
     )
   }
 
@@ -722,11 +729,8 @@ cache_data <- function(data,
   }
 
   if (fp_exists && !overwrite) {
-    # Remove + force overwrite?
-    warning(
-      "Unable to cache data: file exists and `overwrite = FALSE`.",
-      call. = FALSE
-    )
+    # TODO: remove + force overwrite?
+    rlang::warn("Unable to cache data: file exists and `overwrite = FALSE`.")
     return(invisible(data))
   }
 

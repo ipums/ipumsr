@@ -223,7 +223,7 @@ test_that("We throw errors on bad metadata requests", {
   )
 
   # Missing columns
-  expect_true(grepl("unrecognized metadata variables: `foo`", filt_err))
+  expect_true(grepl("unrecognized metadata variables:.+`foo`", filt_err))
 
 })
 
