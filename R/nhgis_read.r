@@ -234,21 +234,21 @@ read_nhgis_fwf <- function(data_file,
                            data_layer = NULL,
                            do_file = NULL,
                            na = c(".", "", "NA"),
+                           col_positions = NULL,
+                           col_types = NULL,
+                           skip = 0,
+                           n_max = Inf,
+                           guess_max = min(n_max, 1000),
                            ...) {
 
-  dots <- rlang::list2(...)
-
-  user_col_positions <- "col_positions" %in% names(dots)
-  user_do_file <- !is_null(do_file) && !is_FALSE(do_file)
-
-  if (user_col_positions && user_do_file) {
+  if (!is_null(col_positions) && !is_FALSE(do_file)) {
     rlang::warn(
-      c(
-        "Only one of `col_positions` or `do_file` can be provided.",
-        "i" = "Using `col_positions` to determine column positions."
+      paste0(
+        "Only one of `col_positions` or `do_file` can be provided. ",
+        "Setting `do_file = FALSE`"
       )
     )
-    warn_default_fwf_parsing()
+    do_file <- FALSE
   }
 
   col_spec <- NULL
@@ -287,11 +287,13 @@ read_nhgis_fwf <- function(data_file,
 
   do_file <- do_file %||% fostr_replace(file, ".dat$", ".do")
 
-  if (is_FALSE(do_file) || user_col_positions) {
-    col_spec <- NULL
+  if (is_FALSE(do_file)) {
+
     warn_default_fwf_parsing()
+
   } else if (!file.exists(do_file)) {
-    if (user_do_file) {
+
+    if (!is_null(do_file)) {
       rlang::warn(
         c(
           "Could not find the provided `do_file`.",
@@ -316,7 +318,9 @@ read_nhgis_fwf <- function(data_file,
       )
       warn_default_fwf_parsing()
     }
-  } else if (file.exists(do_file) && !user_col_positions) {
+
+  } else if (file.exists(do_file)) {
+
     col_spec <- tryCatch(
       parse_nhgis_do_file(do_file),
       error = function(cnd) {
@@ -333,6 +337,7 @@ read_nhgis_fwf <- function(data_file,
         NULL
       }
     )
+
   }
 
   if (!is_null(col_spec)) {
@@ -341,8 +346,11 @@ read_nhgis_fwf <- function(data_file,
     data <- readr::read_fwf(
       file,
       col_positions = col_spec$col_positions,
-      col_types = col_spec$col_types,
+      col_types = col_types %||% col_spec$col_types,
       na = na,
+      skip = skip,
+      n_max = n_max,
+      guess_max = guess_max,
       ...
     )
 
@@ -365,6 +373,12 @@ read_nhgis_fwf <- function(data_file,
     data <- readr::read_fwf(
       file,
       na = na,
+      col_positions = col_positions %||%
+        readr::fwf_empty(file, skip, n = guess_max),
+      col_types = col_types,
+      skip = skip,
+      n_max = n_max,
+      guess_max = guess_max,
       ...
     )
   }

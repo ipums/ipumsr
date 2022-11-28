@@ -138,8 +138,8 @@ test_that("Can read NHGIS extract: fixed-width files", {
       show_col_types = FALSE
     ),
     paste0(
-      "Only one of `col_positions` or `do_file` can be provided..+",
-      "Using `col_positions`"
+      "Only one of `col_positions` or `do_file` can be provided. ",
+      "Setting `do_file = FALSE`"
     )
   )
 
