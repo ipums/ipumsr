@@ -357,6 +357,12 @@ test_that("Can read NHGIS codebook", {
   expect_equal(cb_fwf$var_info$var_name, colnames(d_fwf))
   expect_equal(cb_fwf_ts$var_info$var_name, colnames(d_fwf_tst))
 
+  # Raw cb lines:
+  expect_equal(
+    length(read_nhgis_codebook(nhgis_single_csv, raw = TRUE)),
+    117
+  )
+
 })
 
 # Difficult to test because Terra is being decommissioned,

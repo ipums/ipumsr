@@ -6,7 +6,7 @@
 \alias{read_ipums_codebook}
 \title{Read metadata from an NHGIS or Terra extract codebook file}
 \usage{
-read_nhgis_codebook(cb_file, data_layer = NULL)
+read_nhgis_codebook(cb_file, data_layer = NULL, raw = FALSE)
 
 read_terra_codebook(cb_file, data_layer = NULL)
 
@@ -20,10 +20,18 @@ a directory containing the codebook, or the codebook .txt file itself.}
 \item{data_layer}{dplyr \code{\link[dplyr]{select}}-style notation for
 uniquely identifying the data layer to load. Required for reading from
 .zip files for extracts with multiple files.}
+
+\item{raw}{If \code{TRUE}, read lines of the provided \code{cb_file} instead of
+summarizing variable information in an \code{ipums_ddi} object. Defaults to
+\code{FALSE}.}
 }
 \value{
-An \code{ipums_ddi} object with information on the variables contained
-in the data for the extract associated with the given \code{cb_file}.
+If \code{raw = FALSE}, an \code{ipums_ddi} object with information on the
+variables contained in the data for the extract associated with the given
+\code{cb_file}.
+
+If \code{raw = TRUE}, a character vector with one element for each
+line of the given \code{cb_file}.
 }
 \description{
 NHGIS and Terra extracts include a .txt codebook file with metadata about

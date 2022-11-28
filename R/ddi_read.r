@@ -277,9 +277,16 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' @param data_layer dplyr \code{\link[dplyr]{select}}-style notation for
 #'   uniquely identifying the data layer to load. Required for reading from
 #'   .zip files for extracts with multiple files.
+#' @param raw If `TRUE`, read lines of the provided `cb_file` instead of
+#'   summarizing variable information in an `ipums_ddi` object. Defaults to
+#'   `FALSE`.
 #'
-#' @return An `ipums_ddi` object with information on the variables contained
-#'   in the data for the extract associated with the given `cb_file`.
+#' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
+#'   variables contained in the data for the extract associated with the given
+#'   `cb_file`.
+#'
+#'   If `raw = TRUE`, a character vector with one element for each
+#'   line of the given `cb_file`.
 #'
 #' @examples
 #' # Example NHGIS extract
@@ -292,7 +299,7 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' @rdname ipums_codebook
 #'
 #' @export
-read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
+read_nhgis_codebook <- function(cb_file, data_layer = NULL, raw = FALSE) {
 
   data_layer <- enquo(data_layer)
 
@@ -312,6 +319,10 @@ read_nhgis_codebook <- function(cb_file, data_layer = NULL) {
     cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
   } else {
     cb <- readr::read_lines(cb_file, progress = FALSE)
+  }
+
+  if (raw) {
+    return(cb)
   }
 
   # Section markers are a line full of dashes
