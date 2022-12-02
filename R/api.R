@@ -334,6 +334,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     collection = extract$collection,
     path = NULL,
     body = extract_to_request_json(extract),
+    api_key = api_key
   )
 
   extract <- extract_list_from_json(
@@ -516,7 +517,7 @@ wait_for_extract <- function(extract,
     }
     extract <- get_extract_info(extract, api_key)
 
-    is_downloadable <- is_extract_ready(extract)
+    is_downloadable <- is_extract_ready(extract, api_key)
 
     is_failed <- !(is_downloadable ||
                      extract$status %in% c("queued", "started", "produced"))
