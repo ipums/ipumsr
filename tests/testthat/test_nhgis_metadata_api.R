@@ -54,28 +54,55 @@ if (have_api_access) {
     )$message
   })
 
-  # Table metadata updates
-  tmp_metadata <- dplyr::filter(
-    table_metadata,
-    !grepl("2016_2020", dataset)
-  )
+  # Create fake table metadata to simulate need for table metadata updates
+  all_ds <- unique(table_metadata$dataset)
+  last_ds <- all_ds[(length(all_ds) - 4):length(all_ds)]
+  tmp_metadata <- table_metadata[!table_metadata$dataset %in% last_ds, ]
 
+  # Use check_pkg_metadata arg to ensure that we do not override `tmp_metadata`
+  # with the package `table_metadata`, which does not need update.
   vcr::use_cassette("nhgis-metadata-table-needs-update", {
-    dt_meta_reg <- suppressWarnings(check_table_metadata(tmp_metadata))
+    dt_meta_reg <- suppressWarnings(
+      check_table_metadata(
+        tmp_metadata,
+        update = FALSE,
+        check_pkg_metadata = FALSE
+      )
+    )
   })
   vcr::use_cassette("nhgis-metadata-table-needs-update", {
-    dt_meta_cnd <- catch_cnd(check_table_metadata(tmp_metadata))$message
+    dt_meta_cnd <- catch_cnd(
+      check_table_metadata(
+        tmp_metadata,
+        update = FALSE,
+        check_pkg_metadata = FALSE
+      )
+    )$message
   })
+
+  # Ensure that we update out-of-date metadata with package
+  # `table_metadata` automatically.
+  meta_auto_update <- check_table_metadata(tmp_metadata)
+
   vcr::use_cassette("nhgis-metadata-table-updated", {
-    dt_meta_updated <- suppressWarnings(
-      check_table_metadata(tmp_metadata, update = TRUE)
+    dt_meta_updated <- suppressMessages(
+      check_table_metadata(
+        tmp_metadata,
+        update = TRUE,
+        check_pkg_metadata = FALSE
+      )
     )
   })
   vcr::use_cassette("nhgis-metadata-table-updated", {
     dt_meta_updated_cnd <- catch_cnd(
-      check_table_metadata(tmp_metadata, update = TRUE)
+      check_table_metadata(
+        tmp_metadata,
+        update = TRUE,
+        check_pkg_metadata = FALSE
+      )
     )$message
   })
+
   vcr::use_cassette("nhgis-metadata-table-no-update", {
     dt_meta_complete_cnd <- catch_cnd(
       check_table_metadata(table_metadata)
@@ -234,7 +261,7 @@ test_that("We catch out-of-date data table metadata", {
   expect_true(is.character(dt_meta_cnd))
   expect_true(
     grepl(
-      "NHGIS API does not yet provide data table metadata for the following",
+      "Tables for the following recently released datasets are not",
       dt_meta_cnd
     )
   )
@@ -247,19 +274,30 @@ test_that("We catch out-of-date data table metadata", {
   expect_true(tibble::is_tibble(dt_meta_reg))
   expect_true(tibble::is_tibble(dt_meta_updated))
 
+  expect_identical(meta_auto_update, dt_meta_updated)
+  expect_identical(meta_auto_update, dt_meta)
+
   expect_true(nrow(dt_meta_reg) < nrow(dt_meta_updated))
   expect_equal(
     length(unique(dt_meta_reg$dataset)),
-    length(unique(dt_meta_updated$dataset)) - 4
+    length(unique(dt_meta_updated$dataset)) - 5
   )
 
   # Cache:
   expect_equal(
-    list.files(ipumsr_cache_dir()),
+    ipumsr_cache_dir(list = TRUE),
     "nhgis_summary_metadata_data_tables.rds"
   )
 
-  unlink(ipumsr_cache_dir(), recursive = TRUE)
-  expect_false(dir.exists(ipumsr_cache_dir()))
+  ipumsr_cache_dir(
+    clear = TRUE,
+    pattern = "nhgis_summary_metadata_data_tables.rds"
+  )
+
+  expect_false(
+    file.exists(
+      file.path(ipumsr_cache_dir(),  "nhgis_summary_metadata_data_tables.rds")
+    )
+  )
 
 })

@@ -12,7 +12,7 @@ get_nhgis_metadata(
   ...,
   match_all = TRUE,
   match_case = FALSE,
-  update_tables = FALSE,
+  update_tables = NULL,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
@@ -54,9 +54,11 @@ provided data table summary metadata to include records for tables
 associated with recently-released datasets that are not yet included by
 default. The updated metadata will be cached for future use.
 
-If the current data table summary
-metadata are already up to date, this does nothing. See \strong{notes} section
-below.}
+By default, updates the table metadata only if fewer than 10 datasets'
+tables are missing from the default metadata.
+
+If the current data table summary metadata are already up to date, this
+does nothing. See \strong{notes} section below.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}.}

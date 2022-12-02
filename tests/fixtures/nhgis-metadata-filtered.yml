@@ -18,22 +18,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:57 GMT
+      date: Fri, 02 Dec 2022 19:25:16 GMT
       etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 26a8a586-8ee7-45c6-bc8f-fb765079d556
-      x-runtime: '0.006483'
+      x-request-id: d717ce18-62ea-42b9-aa0c-11a094f6a8a0
+      x-runtime: '0.007850'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -528,7 +528,7 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2022-09-26 19:51:57 GMT
+  recorded_at: 2022-12-02 19:25:17 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -549,22 +549,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:57 GMT
-      etag: W/"c5630b62c307622b46acd8d8ed37ddcf"
+      date: Fri, 02 Dec 2022 19:25:17 GMT
+      etag: W/"6aee3b2edaa0189130eddbbd6b897d5b"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: a4506735-caf6-4caf-b87a-0312000bd861
-      x-runtime: '0.005921'
+      x-request-id: 17b60e3b-705f-401c-b4b2-6458a62e1602
+      x-runtime: '0.006619'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -908,17 +908,17 @@ http_interactions:
         Community Survey","description":"5-Year Data [2015-2019, Summary by Residence
         1 Year Ago]","sequence":5704},{"name":"2015_2019_ACS5d","group":"2019 American
         Community Survey","description":"5-Year Data [2015-2019, Summary by Place
-        of Work]","sequence":5705},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
-        94-171 Redistricting Data Summary File","sequence":5801},{"name":"2016_2020_ACS5a","group":"2020
-        American Community Survey","description":"5-Year Data [2016-2020, Block Groups
-        & Larger Areas]","sequence":5902},{"name":"2016_2020_ACS5b","group":"2020
-        American Community Survey","description":"5-Year Data [2016-2020, Tracts &
-        Larger Areas]","sequence":5903},{"name":"2016_2020_ACS5c","group":"2020 American
-        Community Survey","description":"5-Year Data [2016-2020, Summary by Residence
-        1 Year Ago]","sequence":5904},{"name":"2016_2020_ACS5d","group":"2020 American
-        Community Survey","description":"5-Year Data [2016-2020, Summary by Place
-        of Work]","sequence":5905}]'
-  recorded_at: 2022-09-26 19:51:57 GMT
+        of Work]","sequence":5705},{"name":"2016_2020_ACS5a","group":"2020 American
+        Community Survey","description":"5-Year Data [2016-2020, Block Groups & Larger
+        Areas]","sequence":5802},{"name":"2016_2020_ACS5b","group":"2020 American
+        Community Survey","description":"5-Year Data [2016-2020, Tracts & Larger Areas]","sequence":5803},{"name":"2016_2020_ACS5c","group":"2020
+        American Community Survey","description":"5-Year Data [2016-2020, Summary
+        by Residence 1 Year Ago]","sequence":5804},{"name":"2016_2020_ACS5d","group":"2020
+        American Community Survey","description":"5-Year Data [2016-2020, Summary
+        by Place of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
+        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
+        American Community Survey","description":"1-Year Data","sequence":6001}]'
+  recorded_at: 2022-12-02 19:25:17 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -939,22 +939,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:57 GMT
-      etag: W/"c5630b62c307622b46acd8d8ed37ddcf"
+      date: Fri, 02 Dec 2022 19:25:17 GMT
+      etag: W/"6aee3b2edaa0189130eddbbd6b897d5b"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 69ce51b8-e98a-4349-a1bb-4f66c9b485a0
-      x-runtime: '0.005855'
+      x-request-id: abcc3d47-269a-446e-9e1b-4cd953a52714
+      x-runtime: '0.006565'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -1298,15 +1298,15 @@ http_interactions:
         Community Survey","description":"5-Year Data [2015-2019, Summary by Residence
         1 Year Ago]","sequence":5704},{"name":"2015_2019_ACS5d","group":"2019 American
         Community Survey","description":"5-Year Data [2015-2019, Summary by Place
-        of Work]","sequence":5705},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
-        94-171 Redistricting Data Summary File","sequence":5801},{"name":"2016_2020_ACS5a","group":"2020
-        American Community Survey","description":"5-Year Data [2016-2020, Block Groups
-        & Larger Areas]","sequence":5902},{"name":"2016_2020_ACS5b","group":"2020
-        American Community Survey","description":"5-Year Data [2016-2020, Tracts &
-        Larger Areas]","sequence":5903},{"name":"2016_2020_ACS5c","group":"2020 American
-        Community Survey","description":"5-Year Data [2016-2020, Summary by Residence
-        1 Year Ago]","sequence":5904},{"name":"2016_2020_ACS5d","group":"2020 American
-        Community Survey","description":"5-Year Data [2016-2020, Summary by Place
-        of Work]","sequence":5905}]'
-  recorded_at: 2022-09-26 19:51:57 GMT
+        of Work]","sequence":5705},{"name":"2016_2020_ACS5a","group":"2020 American
+        Community Survey","description":"5-Year Data [2016-2020, Block Groups & Larger
+        Areas]","sequence":5802},{"name":"2016_2020_ACS5b","group":"2020 American
+        Community Survey","description":"5-Year Data [2016-2020, Tracts & Larger Areas]","sequence":5803},{"name":"2016_2020_ACS5c","group":"2020
+        American Community Survey","description":"5-Year Data [2016-2020, Summary
+        by Residence 1 Year Ago]","sequence":5804},{"name":"2016_2020_ACS5d","group":"2020
+        American Community Survey","description":"5-Year Data [2016-2020, Summary
+        by Place of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
+        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
+        American Community Survey","description":"1-Year Data","sequence":6001}]'
+  recorded_at: 2022-12-02 19:25:17 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

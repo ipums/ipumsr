@@ -182,10 +182,11 @@
 #'   associated with recently-released datasets that are not yet included by
 #'   default. The updated metadata will be cached for future use.
 #'
-#'   If the current data table summary
-#'   metadata are already up to date, this does nothing. See **notes** section
-#'   below.
+#'   By default, updates the table metadata only if fewer than 10 datasets'
+#'   tables are missing from the default metadata.
 #'
+#'   If the current data table summary metadata are already up to date, this
+#'   does nothing. See **notes** section below.
 #' @return If `type` is provided, a [`tibble`][tibble::tbl_df-class] of
 #'   summary metadata for all data sources of the provided `type`.
 #'   Otherwise, a named list of metadata for the specified `dataset`,
@@ -225,7 +226,7 @@ get_nhgis_metadata <- function(type = NULL,
                                ...,
                                match_all = TRUE,
                                match_case = FALSE,
-                               update_tables = FALSE,
+                               update_tables = NULL,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   summary_req <- !is.null(type)
@@ -318,7 +319,7 @@ get_nhgis_metadata <- function(type = NULL,
 #'
 #' @noRd
 get_nhgis_summary_metadata <- function(type,
-                                       update_tables = FALSE,
+                                       update_tables = NULL,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   if (!type %in% c("datasets", "data_tables",
@@ -341,7 +342,8 @@ get_nhgis_summary_metadata <- function(type,
     metadata <- check_table_metadata(
       metadata,
       update = update_tables,
-      api_key = api_key
+      api_key = api_key,
+      check_pkg_metadata = TRUE
     )
 
   } else {
@@ -366,7 +368,16 @@ get_nhgis_summary_metadata <- function(type,
 #' @param metadata Default table metadata as output by `get_nhgis_metadata("data_tables")`
 #' @param update Logical indicating whether out-of-date metadata should
 #'   be updated.
-#' @param api_key API key associated with the user's account.
+#' @param api_key API key associated with the user's
+#' @param check_pkg_metadata Logical indicating whether to override cached
+#'   table metadata with the value of `table_metadata` currently stored
+#'   in the package internally. If the package `table_metadata` is more current
+#'   than the cached table metadata, `table_metadata` will be used to determine
+#'   whether any updates are needed to the provided data table summary metadata.
+#'   Otherwise, the cached version will be used.
+#'
+#'   This is designed to support unit tests of table updating functionality.
+#'   In general, this argument should be set to `TRUE` in user-facing cases.
 #'
 #' @return If `update = FALSE` or if no updates are needed, returns `metadata`.
 #'   Otherwise, returns updated data table summary metadata produced by
@@ -374,8 +385,9 @@ get_nhgis_summary_metadata <- function(type,
 #'
 #' @noRd
 check_table_metadata <- function(metadata,
-                                 update = FALSE,
-                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
+                                 update = NULL,
+                                 api_key = Sys.getenv("IPUMS_API_KEY"),
+                                 check_pkg_metadata = TRUE) {
 
   datasets <- get_nhgis_summary_metadata(
     type = "datasets",
@@ -384,15 +396,23 @@ check_table_metadata <- function(metadata,
 
   missing_datasets <- setdiff(datasets$name, metadata$dataset)
 
+  if (check_pkg_metadata) {
+    missing_datasets_from_pkg <- setdiff(datasets$name, table_metadata$dataset)
+
+    # If these differ, the cached metadata version is behind the pkg version,
+    # so we will use the pkg version
+    if (length(missing_datasets_from_pkg) < length(missing_datasets)) {
+      missing_datasets <- missing_datasets_from_pkg
+      metadata <- table_metadata
+    }
+  }
+
   n_missing <- length(missing_datasets)
 
-  # Automatically update for just a few datasets?
-  # if (n_missing < 5) {
-  #   update <- TRUE
-  #   quiet <- TRUE
-  # } else {
-  #   quiet <- FALSE
-  # }
+  # Automatically update for just a few datasets
+  if (n_missing < 10 && rlang::is_null(update)) {
+    update <- TRUE
+  }
 
   max_print <- 15
 
@@ -405,28 +425,38 @@ check_table_metadata <- function(metadata,
 
   if (n_missing > 0) {
     if (update) {
+
       metadata <- update_table_metadata(
         metadata,
         datasets = missing_datasets,
-        api_key = api_key
-        # quiet = quiet
+        api_key = api_key,
+        quiet = FALSE
       )
+
+      metadata <- dplyr::arrange(
+        metadata,
+        match(.data[["dataset"]], datasets$name)
+      )
+
     } else {
       rlang::warn(
         c(
           paste0(
-            "The IPUMS NHGIS API does not yet provide data table metadata for ",
-            "the following recently released datasets:"
+            "Tables for the following recently released datasets are not ",
+            "yet included in the default summary metadata: "
           ),
           set_names(c(missing_datasets, trunc_text), "*"),
-          paste0(
-            "\nTo add table metadata for these datasets and cache for ",
+          "",
+          "i" = paste0(
+            "To add table metadata for these datasets and cache for ",
             "future use, set `update_tables = TRUE`."
           )
         )
       )
     }
   }
+
+
 
   metadata
 
@@ -457,6 +487,15 @@ update_table_metadata <- function(metadata,
   # 100 requests per minute limit
   sleep <- length(datasets) > 50
 
+  if (!quiet) {
+    rlang::inform(
+      c("Adding metadata for the following recently released datasets:",
+        set_names(datasets, "*"),
+        "i" = "Updated metadata will be cached for future use."
+      )
+    )
+  }
+
   new_tables <- purrr::map_dfr(
     datasets,
     ~{
@@ -471,12 +510,6 @@ update_table_metadata <- function(metadata,
       ds_metadata
     }
   )
-
-  if (!quiet) {
-    rlang::inform(
-      c("Adding metadata for the following datasets:", set_names(datasets, "*"))
-    )
-  }
 
   metadata <- dplyr::bind_rows(metadata, new_tables)
 
@@ -760,7 +793,35 @@ load_cached_data <- function(cache_dir = ipumsr_cache_dir(),
   )
 }
 
-ipumsr_cache_dir <- function() rappdirs::user_cache_dir("ipumsr")
+#' Get information on cache directory for ipumsr files
+#'
+#' Allows for easier access to cache directory and contents when saving
+#' files to user system. Currently used for caching updated data table
+#' metadata for NHGIS.
+#'
+#' @param list If `TRUE`, list files within the cache directory.
+#'   If `FALSE`, return the path to the cache directory itself. Ignored if
+#'   `clear = TRUE`, which will always return the directory path.
+#' @param clear If `TRUE`, recursively remove contents of the cache directory.
+#' @param ... Additional arguments passed to `list.files`
+#'
+#' @return If `list = FALSE`, the cache directory path.
+#'   If `list = TRUE`, a vector of file paths to all files in the directory.
+#'
+#' @noRd
+ipumsr_cache_dir <- function(list = FALSE, clear = FALSE, ...) {
+
+  cache_dir <- rappdirs::user_cache_dir("ipumsr")
+
+  if (clear) {
+    unlink(list.files(cache_dir, full.names = TRUE, ...), recursive = TRUE)
+  } else if (list) {
+    return(list.files(cache_dir, ...))
+  }
+
+  cache_dir
+
+}
 
 #' Convert all data.frames in a nested list/data.frame into tibbles
 #'

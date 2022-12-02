@@ -18,21 +18,21 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:58 GMT
+      date: Fri, 02 Dec 2022 19:25:18 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e5dbbfff-1f2d-4c7d-8fec-bc6209c80bcf
-      x-runtime: '0.015818'
+      x-request-id: f6b5bdf4-bf5f-4fa0-9900-b817af0747b2
+      x-runtime: '0.015833'
       x-xss-protection: 1; mode=block
       content-length: '100'
     body:
@@ -40,7 +40,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_at: 2022-12-02 19:25:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -61,21 +61,21 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:58 GMT
+      date: Fri, 02 Dec 2022 19:25:18 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 2e92362a-126d-4e66-b21b-30775b621199
-      x-runtime: '0.009883'
+      x-request-id: e7760326-7655-4300-9e67-d8803799814f
+      x-runtime: '0.009934'
       x-xss-protection: 1; mode=block
       content-length: '102'
     body:
@@ -83,7 +83,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_at: 2022-12-02 19:25:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -104,21 +104,21 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:58 GMT
+      date: Fri, 02 Dec 2022 19:25:18 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 79f93bc1-55ad-4b72-a6e8-ac1972b0efb8
-      x-runtime: '0.010958'
+      x-request-id: 98a3a426-dc07-4257-9b93-8797f085fb21
+      x-runtime: '0.009178'
       x-xss-protection: 1; mode=block
       content-length: '108'
     body:
@@ -126,7 +126,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_at: 2022-12-02 19:25:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -147,22 +147,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 26 Sep 2022 19:51:58 GMT
+      date: Fri, 02 Dec 2022 19:25:18 GMT
       etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.12
+      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 719aa48f-8f3c-4ea6-8250-1758bab2372b
-      x-runtime: '0.006822'
+      x-request-id: 18ffd551-f5ad-47da-bf30-950b66c23ac2
+      x-runtime: '0.006527'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -657,5 +657,5 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2022-09-26 19:51:58 GMT
+  recorded_at: 2022-12-02 19:25:18 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
