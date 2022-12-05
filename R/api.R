@@ -334,6 +334,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     collection = extract$collection,
     path = NULL,
     body = extract_to_request_json(extract),
+    api_key = api_key
   )
 
   extract <- extract_list_from_json(
@@ -516,7 +517,7 @@ wait_for_extract <- function(extract,
     }
     extract <- get_extract_info(extract, api_key)
 
-    is_downloadable <- is_extract_ready(extract)
+    is_downloadable <- is_extract_ready(extract, api_key)
 
     is_failed <- !(is_downloadable ||
                      extract$status %in% c("queued", "started", "produced"))
@@ -1618,7 +1619,10 @@ ipums_api_json_request <- function(verb,
   )
 
   if (httr::http_status(res)$category != "Success") {
-    if (httr::status_code(res) == 400) {
+
+    status <- httr::status_code(res)
+
+    if (status == 400) {
       tryCatch(
         error_details <- parse_400_error(res),
         error = function(cond) {
@@ -1629,7 +1633,7 @@ ipums_api_json_request <- function(verb,
         }
       )
       stop(error_details, call. = FALSE)
-    } else if (httr::status_code(res) == 404) {
+    } else if (status == 404) {
       if (fostr_detect(path, "^extracts/\\d+$")) {
         extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
         most_recent_extract <- get_recent_extracts_info_list(
@@ -1645,17 +1649,14 @@ ipums_api_json_request <- function(verb,
         }
       }
       stop("URL not found", call. = FALSE)
-    } else if (httr::status_code(res) %in% 500:599) {
+    } else if (status %in% c(401, 403)) {
       stop(
-        sprintf(
-          "Extract API request failed: %s [%s]\n%s",
-          api_url,
-          httr::status_code(res),
-          httr::content(res, "text")
-        ),
+        "The provided API Key is either missing or invalid. ",
+        "Please provide your API key to the `api_key` argument or request ",
+        "a key at https://account.ipums.org/api_keys",
         call. = FALSE
       )
-    } else { # other non-success codes, e.g. 300s
+    } else { # other non-success codes, e.g. 300s or 500s
       stop(
         sprintf(
           "Extract API request failed: %s [%s]\n%s",
