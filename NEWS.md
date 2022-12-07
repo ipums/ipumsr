@@ -1,5 +1,8 @@
 # ipumsr 0.5.2
 
+* Fixed bug preventing users from providing their API key directly to
+  `submit_extract` and `wait_for_extract`.
+
 # ipumsr 0.5.1
 
 * Added the "Rmd for Reproducible Research" template, which sets up a workflow 
