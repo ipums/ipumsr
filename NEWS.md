@@ -1,4 +1,4 @@
-# ipumsr (development version)
+# ipumsr 0.5.2
 
 # ipumsr 0.5.1
 
