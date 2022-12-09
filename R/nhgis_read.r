@@ -19,9 +19,6 @@
 #'   [`set_ipums_var_attributes()`] for more details.
 #' @param show_conditions If `TRUE`, print IPUMS conditions to console when
 #'   loading data. Defaults to `TRUE`.
-#' @param na Character vector of strings to interpret as missing values.
-#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
-#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
 #' @param do_file For fixed-width files, path to the .do file associated with
 #'   the provided `data_file`. The .do file contains the specifications that
 #'   indicate how to parse the fixed-width file to be loaded.
@@ -29,6 +26,14 @@
 #'   file with the same name. If `FALSE` or if the .do file cannot be found,
 #'   the .dat file will be parsed by the
 #'   values provided to `col_positions` (see [`read_fwf()`][readr::read_fwf]).
+#' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
+#'   files) indicating the type of file to search for in the path provided to
+#'   `data_file`. If `NULL`, determines the file type automatically based on
+#'   the files found in `data_file`. Only needed if `data_file` contains both
+#'   .csv and .dat files.
+#' @param na Character vector of strings to interpret as missing values.
+#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
+#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
 #'
 #'   Note that without a corresponding .do file, some columns may
 #'   include implicit decimal values. When working with fixed-width data,
@@ -53,11 +58,16 @@ read_nhgis <- function(data_file,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        show_conditions = TRUE,
                        do_file = NULL,
+                       file_type = NULL,
                        na = NULL,
                        ...) {
 
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
+  }
+
+  if (!is_null(file_type) && !file_type %in% c("csv", "dat")) {
+    rlang::abort("`file_type` must be one of \"csv\", or \"dat\"")
   }
 
   data_layer <- enquo(data_layer)
@@ -66,7 +76,7 @@ read_nhgis <- function(data_file,
 
   data_files <- find_files_in(
     data_file,
-    name_ext = "csv|dat",
+    name_ext = file_type %||% "csv|dat",
     multiple_ok = TRUE,
     none_ok = TRUE
   )
@@ -81,8 +91,7 @@ read_nhgis <- function(data_file,
       c(
         "Both .csv and .dat files found in the provided `data_file`.",
         "i" = paste0(
-          "If `data_file` is a zip archive or directory, it should contain ",
-          "either .csv files or .dat files, not both."
+          "Use the `file_type` argument to specify which file type to load."
         )
       )
     )

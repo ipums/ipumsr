@@ -11,8 +11,9 @@ read_nhgis(
   data_layer = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   show_conditions = TRUE,
-  na = NULL,
   do_file = NULL,
+  file_type = NULL,
+  na = NULL,
   ...
 )
 
@@ -52,17 +53,23 @@ adding all (val_labels, var_label and var_desc). See
 \item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
 loading data. Defaults to \code{TRUE}.}
 
-\item{na}{Character vector of strings to interpret as missing values.
-If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
-for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
-
 \item{do_file}{For fixed-width files, path to the .do file associated with
 the provided \code{data_file}. The .do file contains the specifications that
 indicate how to parse the fixed-width file to be loaded.
 If \code{NULL}, looks in the directory of the .dat file to be loaded for a .do
 file with the same name. If \code{FALSE} or if the .do file cannot be found,
 the .dat file will be parsed by the
-values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).
+values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).}
+
+\item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
+files) indicating the type of file to search for in the path provided to
+\code{data_file}. If \code{NULL}, determines the file type automatically based on
+the files found in \code{data_file}. Only needed if \code{data_file} contains both
+.csv and .dat files.}
+
+\item{na}{Character vector of strings to interpret as missing values.
+If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
+for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.
 
 Note that without a corresponding .do file, some columns may
 include implicit decimal values. When working with fixed-width data,

@@ -448,7 +448,13 @@ test_that("Can read certain unzipped structures", {
 
   expect_error(
     read_nhgis(tempdir()),
-    "Both .csv and .dat files found.+If `data_file` is a zip archive"
+    "Both .csv and .dat files found.+Use the `file_type` argument"
   )
+
+  suppressWarnings(
+    x3 <- read_nhgis(tempdir(), file_type = "csv", data_layer = 1)
+  )
+
+  expect_identical(x3, x1)
 
 })
