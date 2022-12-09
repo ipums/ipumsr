@@ -1341,7 +1341,8 @@ test_that("We can get summary metadata for all data types", {
   tst_meta <- get_nhgis_metadata("time_series_tables")
   shp_meta <- get_nhgis_metadata("shapefiles")
 
-  # Should only warn at start of session
+  # Only warns at start of session.
+  rlang::reset_warning_verbosity("dt_meta")
   expect_warning(
     dt_meta <- get_nhgis_metadata("data_tables"),
     "Table metadata"
