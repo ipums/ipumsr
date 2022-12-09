@@ -1,5 +1,10 @@
+# ipumsr (development version)
+
 # ipumsr 0.5.2
 
+* Add progress bar when downloading extracts
+* Removed validate argument from extract revision functions and improved warning
+  messages for invalid extract field names when used as arguments.
 * Fixed bug preventing users from providing their API key directly to
   `submit_extract` and `wait_for_extract`.
 
