@@ -52,8 +52,8 @@ read_nhgis <- function(data_file,
                        data_layer = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        show_conditions = TRUE,
-                       na = NULL,
                        do_file = NULL,
+                       na = NULL,
                        ...) {
 
   if (length(data_file) != 1) {
@@ -88,12 +88,7 @@ read_nhgis <- function(data_file,
     )
   }
 
-  if (file_is_zip(data_file)) {
-    cb_ddi_info <- try(
-      read_nhgis_codebook(data_file, !!data_layer),
-      silent = TRUE
-    )
-  } else if (file_is_dir(data_file)) {
+  if (file_is_zip(data_file) || file_is_dir(data_file)) {
     cb_ddi_info <- try(
       read_nhgis_codebook(data_file, !!data_layer),
       silent = TRUE
@@ -233,15 +228,11 @@ read_nhgis_sp <- function(shape_file,
 read_nhgis_fwf <- function(data_file,
                            data_layer = NULL,
                            do_file = NULL,
-                           na = c(".", "", "NA"),
-                           col_positions = NULL,
-                           col_types = NULL,
-                           skip = 0,
-                           n_max = Inf,
-                           guess_max = min(n_max, 1000),
                            ...) {
 
-  if (!is_null(col_positions) && !is_FALSE(do_file)) {
+  dots <- rlang::list2(...)
+
+  if (!is_null(dots$col_positions) && !is_FALSE(do_file)) {
     rlang::warn(
       paste0(
         "Only one of `col_positions` or `do_file` can be provided. ",
@@ -266,9 +257,9 @@ read_nhgis_fwf <- function(data_file,
   if (file_is_zip(data_file)) {
 
     # Cannot use fwf_empty() col_positions on an unz() connection
-    # Must unzip file to allow for fwf_empty() specification
+    # Must unzip file to allow for default fwf_empty() specification
     fwf_dir <- tempfile()
-    dir.create(fwf_dir)
+
     on.exit(
       unlink(fwf_dir, recursive = TRUE),
       add = TRUE,
@@ -285,7 +276,7 @@ read_nhgis_fwf <- function(data_file,
 
   }
 
-  do_file <- do_file %||% fostr_replace(file, ".dat$", ".do")
+  do_file <- do_file %||% fostr_replace(file, "\\.dat$", ".do")
 
   if (is_FALSE(do_file)) {
 
@@ -340,48 +331,26 @@ read_nhgis_fwf <- function(data_file,
 
   }
 
-  if (!is_null(col_spec)) {
+  # Update dots with parsing info from .do file before passing to read_fwf()
+  dots$col_positions <- dots$col_positions %||% col_spec$col_positions
+  dots$col_types <- dots$col_types %||% col_spec$col_types
 
-    # If we have succesfully parsed the .do file, use its info to parse cols
-    data <- readr::read_fwf(
-      file,
-      col_positions = col_spec$col_positions,
-      col_types = col_types %||% col_spec$col_types,
-      na = na,
-      skip = skip,
-      n_max = n_max,
-      guess_max = guess_max,
-      ...
-    )
+  data <- rlang::inject(
+    readr::read_fwf(file, !!!dots)
+  )
 
-    if (!is_null(col_spec$col_recode)) {
-      # Rescale column values based on expressions in .do file
-      purrr::walk2(
-        col_spec$col_recode$cols,
-        col_spec$col_recode$exprs,
-        function(.x, .y) {
-          if (!is_null(data[[.x]])) {
-            # Coerce to numeric to guard against user-specified col_types
-            data[[.x]] <<- as.numeric(data[[.x]])
-            data[[.x]] <<- eval(.y, data)
-          }
+  if (!is_null(col_spec$col_recode)) {
+    # Rescale column values based on expressions in .do file
+    purrr::walk2(
+      col_spec$col_recode$cols,
+      col_spec$col_recode$exprs,
+      function(col, expr) {
+        if (!is_null(data[[col]])) {
+          # Coerce to numeric to guard against user-specified col_types
+          data[[col]] <<- as.numeric(data[[col]])
+          data[[col]] <<- eval(expr, data)
         }
-      )
-    }
-
-  } else {
-
-    # Otherwise, use default or user-provided parsing specs
-    data <- readr::read_fwf(
-      file,
-      na = na,
-      col_positions = col_positions %||%
-        readr::fwf_empty(file, skip, n = guess_max),
-      col_types = col_types,
-      skip = skip,
-      n_max = n_max,
-      guess_max = guess_max,
-      ...
+      }
     )
   }
 
@@ -391,7 +360,6 @@ read_nhgis_fwf <- function(data_file,
 
 read_nhgis_csv <- function(data_file,
                            data_layer = NULL,
-                           na = c("", "NA"),
                            ...) {
 
   data_layer <- enquo(data_layer)
@@ -410,7 +378,7 @@ read_nhgis_csv <- function(data_file,
     file <- file.path(data_file, file)
   }
 
-  data <- readr::read_csv(file, na = na, ...)
+  data <- readr::read_csv(file, ...)
 
   # TODO: testing that reformatting this stuff does handle
   # header row correctly
