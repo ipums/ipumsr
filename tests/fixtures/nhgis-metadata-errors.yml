@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:18 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
@@ -31,8 +31,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: f6b5bdf4-bf5f-4fa0-9900-b817af0747b2
-      x-runtime: '0.015833'
+      x-request-id: 57959422-61b7-46dd-8147-31c506a89d79
+      x-runtime: '0.015140'
       x-xss-protection: 1; mode=block
       content-length: '100'
     body:
@@ -40,7 +40,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2022-12-02 19:25:18 GMT
+  recorded_at: 2022-12-13 20:20:28 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -61,7 +61,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:18 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
@@ -74,8 +74,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e7760326-7655-4300-9e67-d8803799814f
-      x-runtime: '0.009934'
+      x-request-id: 9449de8f-d4a2-4fae-a39e-5f4787f8e298
+      x-runtime: '0.008551'
       x-xss-protection: 1; mode=block
       content-length: '102'
     body:
@@ -83,7 +83,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2022-12-02 19:25:18 GMT
+  recorded_at: 2022-12-13 20:20:28 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -104,7 +104,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:18 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 404 Not Found
@@ -117,8 +117,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 98a3a426-dc07-4257-9b93-8797f085fb21
-      x-runtime: '0.009178'
+      x-request-id: 2cc9bd39-4571-4ca8-82a7-e9fa53194960
+      x-runtime: '0.009833'
       x-xss-protection: 1; mode=block
       content-length: '108'
     body:
@@ -126,7 +126,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2022-12-02 19:25:18 GMT
+  recorded_at: 2022-12-13 20:20:28 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -147,7 +147,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:18 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
@@ -161,8 +161,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 18ffd551-f5ad-47da-bf30-950b66c23ac2
-      x-runtime: '0.006527'
+      x-request-id: 10976948-36f3-4111-9e50-96348f926a38
+      x-runtime: '0.005020'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -657,5 +657,5 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2022-12-02 19:25:18 GMT
+  recorded_at: 2022-12-13 20:20:28 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

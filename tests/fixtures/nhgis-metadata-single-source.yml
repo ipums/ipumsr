@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:17 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       etag: W/"225379794386f6e21e8f0e5c6f73f013"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
@@ -32,8 +32,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 16142abd-0b30-402e-9984-c68170c34831
-      x-runtime: '0.006843'
+      x-request-id: 52d2ff29-5807-49bb-b148-9eb56f2c5680
+      x-runtime: '0.006040'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -662,7 +662,7 @@ http_interactions:
         New England city and town area--urban--in urban cluster"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"},{"name":"bs32.geP0","description":"In
         combined New England city and town area"}]}]}'
-  recorded_at: 2022-12-02 19:25:17 GMT
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -683,7 +683,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:17 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       etag: W/"02fcf1290a64f2050f8dd189a6ec85a6"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
@@ -697,8 +697,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 07a5d5d5-4f0f-4d14-8b47-2fa8704f8558
-      x-runtime: '0.006272'
+      x-request-id: 063f54f8-c039-4068-8d24-20cbddd84763
+      x-runtime: '0.005176'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -827,7 +827,7 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgis_code":"H72071"}]}'
-  recorded_at: 2022-12-02 19:25:17 GMT
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -848,7 +848,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:17 GMT
+      date: Tue, 13 Dec 2022 20:20:27 GMT
       etag: W/"f7bf5a96e9dd731790c9b08e7f997ca8"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
@@ -862,8 +862,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: a2686cba-e23b-4d52-84ec-f78d5605902d
-      x-runtime: '0.005836'
+      x-request-id: 51f5b4a4-d820-4850-97b8-bc0bbf2cb15f
+      x-runtime: '0.004702'
       x-xss-protection: 1; mode=block
       content-length: '1216'
     body:
@@ -879,5 +879,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
         Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":363}]}'
-  recorded_at: 2022-12-02 19:25:17 GMT
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

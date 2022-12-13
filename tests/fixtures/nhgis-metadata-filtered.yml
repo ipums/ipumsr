@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:16 GMT
+      date: Tue, 13 Dec 2022 20:20:26 GMT
       etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
@@ -32,8 +32,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: d717ce18-62ea-42b9-aa0c-11a094f6a8a0
-      x-runtime: '0.007850'
+      x-request-id: a9410cb2-1725-4f25-b6c0-1b65cb2a86b5
+      x-runtime: '0.006368'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -528,7 +528,7 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2022-12-02 19:25:17 GMT
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -549,8 +549,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:17 GMT
-      etag: W/"6aee3b2edaa0189130eddbbd6b897d5b"
+      date: Tue, 13 Dec 2022 20:20:27 GMT
+      etag: W/"638287de4300e87b90c2d930eb967651"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
@@ -563,8 +563,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 17b60e3b-705f-401c-b4b2-6458a62e1602
-      x-runtime: '0.006619'
+      x-request-id: ceb2d0b9-d8af-4f10-9d5f-3590f1ee4752
+      x-runtime: '0.005769'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -917,8 +917,16 @@ http_interactions:
         American Community Survey","description":"5-Year Data [2016-2020, Summary
         by Place of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
         94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
-        American Community Survey","description":"1-Year Data","sequence":6001}]'
-  recorded_at: 2022-12-02 19:25:17 GMT
+        American Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
+        American Community Survey","description":"5-Year Data [2017-2021, Block Groups
+        & Larger Areas]","sequence":6002},{"name":"2017_2021_ACS5b","group":"2021
+        American Community Survey","description":"5-Year Data [2017-2021, Tracts &
+        Larger Areas]","sequence":6003},{"name":"2017_2021_ACS5c","group":"2021 American
+        Community Survey","description":"5-Year Data [2017-2021, Summary by Residence
+        1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
+        Community Survey","description":"5-Year Data [2017-2021, Summary by Place
+        of Work]","sequence":6005}]'
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -939,8 +947,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 02 Dec 2022 19:25:17 GMT
-      etag: W/"6aee3b2edaa0189130eddbbd6b897d5b"
+      date: Tue, 13 Dec 2022 20:20:27 GMT
+      etag: W/"638287de4300e87b90c2d930eb967651"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
       status: 200 OK
@@ -953,8 +961,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: abcc3d47-269a-446e-9e1b-4cd953a52714
-      x-runtime: '0.006565'
+      x-request-id: 366da846-53b1-4c86-baba-27131d6a4a22
+      x-runtime: '0.005256'
       x-xss-protection: 1; mode=block
     body:
       encoding: UTF-8
@@ -1307,6 +1315,14 @@ http_interactions:
         American Community Survey","description":"5-Year Data [2016-2020, Summary
         by Place of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
         94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
-        American Community Survey","description":"1-Year Data","sequence":6001}]'
-  recorded_at: 2022-12-02 19:25:17 GMT
+        American Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
+        American Community Survey","description":"5-Year Data [2017-2021, Block Groups
+        & Larger Areas]","sequence":6002},{"name":"2017_2021_ACS5b","group":"2021
+        American Community Survey","description":"5-Year Data [2017-2021, Tracts &
+        Larger Areas]","sequence":6003},{"name":"2017_2021_ACS5c","group":"2021 American
+        Community Survey","description":"5-Year Data [2017-2021, Summary by Residence
+        1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
+        Community Survey","description":"5-Year Data [2017-2021, Summary by Place
+        of Work]","sequence":6005}]'
+  recorded_at: 2022-12-13 20:20:27 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

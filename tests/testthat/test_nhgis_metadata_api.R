@@ -254,6 +254,8 @@ test_that("We throw errors on bad metadata requests", {
 
 })
 
+# NB: some of these may fail if new datasets have been released and
+# ipumsr:::table_metadata has not been updated. See data-raw/table_metadata.R
 test_that("We catch out-of-date data table metadata", {
 
   skip_if_no_api_access(have_api_access)
