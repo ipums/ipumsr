@@ -711,6 +711,9 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   form `"collection:number"`
 #' * The data collection and extract number formatted as a vector of the form
 #'   `c("collection", "number")`
+#' * The extract number for the collection specified by the
+#'   IPUMS_DEFAULT_COLLECTION environment variable. See
+#'   [set_ipums_default_collection()]
 #'
 #' The extract number does not need to be zero-padded (e.g., use `"usa:1"`
 #' or `c("usa", "1")`, not `"usa:00001"` or `c("usa", "00001")`).
@@ -741,6 +744,10 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # Get info by supplying the data collection and extract number, as a vector:
 #' get_extract_info(c("usa", "1"))
+#'
+#' # If you have a default collection, you can use the extract number alone:
+#' set_ipums_default_collection("usa")
+#' get_extract_info(1)
 #' }
 #'
 #' @export
@@ -818,6 +825,10 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # By supplying the data collection and extract number, as a vector:
 #' downloadable_extract <- wait_for_extract(c("usa", "1"))
+#'
+#' # If you have a default collection, you can use the extract number alone:
+#' set_ipums_default_collection("usa")
+#' downloadable_extract <- wait_for_extract(1)
 #' }
 #'
 #' @export
@@ -828,10 +839,11 @@ wait_for_extract <- function(extract,
                              verbose = TRUE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-
   stopifnot(is.numeric(initial_delay_seconds))
   stopifnot(is.numeric(max_delay_seconds))
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds))
+
+  extract <- standardize_extract_identifier(extract)
 
   current_delay <- initial_delay_seconds
   is_timed_out <- FALSE
@@ -862,15 +874,21 @@ wait_for_extract <- function(extract,
     is_timed_out <- !is.null(timeout_seconds) &&
       as.numeric(Sys.time() - wait_start, units = "secs") > timeout_seconds
 
-
     if (is_downloadable) {
       if (verbose) {
-        message("Extract ready to download")
+        message(
+          paste0(
+            format_collection_for_printing(extract$collection),
+            " extract ", extract$number, " ready to download"
+          )
+        )
       }
       is_finished <- TRUE
     } else if (is_failed) {
       err_message <- paste0(
-        "Extract has finished, but is not in a downloadable state, likely ",
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number,
+        " has finished, but is not in a downloadable state, likely ",
         "because the extract files have been removed from IPUMS servers. Try ",
         "resubmitting the extract with `submit_extract()`."
       )
@@ -936,20 +954,16 @@ wait_for_extract <- function(extract,
 #'
 #' # By supplying the data collection and extract number, as a vector:
 #' is_extract_ready(c("usa", "1"))
+#'
+#' # If you have a default collection, you can use the extract number alone:
+#' set_ipums_default_collection("usa")
+#' is_extract_ready(1)
 #' }
 #'
 #' @export
 is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   extract <- standardize_extract_identifier(extract)
-
-  if (is.na(extract$number)) {
-    stop(
-      "extract object has a missing value in the 'number' field. If ",
-      "an extract object is supplied, it must be a submitted extract with a ",
-      "non-missing extract number.", call. = FALSE
-    )
-  }
 
   # First check if extract object already contains download info...
   if (inherits(extract, "ipums_extract") &&
@@ -962,6 +976,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- get_extract_info(extract, api_key)
 
   extract_is_completed_and_has_links(extract)
+
 }
 
 #' Download an IPUMS data extract
@@ -1009,6 +1024,10 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # By supplying the data collection and extract number, as a vector:
 #' path_to_ddi_file <- download_extract(c("usa", "1"))
+#'
+#' # If you have a default collection, you can use the extract number alone:
+#' set_ipums_default_collection("usa")
+#' download_extract(1)
 #' }
 #'
 #' @export
@@ -1016,6 +1035,8 @@ download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  extract <- standardize_extract_identifier(extract)
 
   # Make sure we get latest extract status, but also make sure we don't check
   # the status twice
@@ -1963,7 +1984,7 @@ combine_extracts.usa_extract <- function(...) {
   extract <- purrr::reduce(
     extracts,
     # Warnings are not as relevant when combining extracts.
-    # We can also remove warnings from add to extract...
+    # TODO: we can also remove warnings from add to extract?
     ~suppressWarnings(
       add_to_extract(
         .x,
@@ -2068,9 +2089,14 @@ combine_extracts.nhgis_extract <- function(...) {
 #' but returns an [`ipums_extract`][ipums_extract-class] object rather than
 #' a list of `ipums_extract` objects.
 #'
-#' @param collection The code for an IPUMS data collection. For a list of the
-#'   codes used to refer to the data collections,
-#'   see [ipums_data_collections()].
+#' @param collection The code for an IPUMS data collection.
+#'
+#'   Defaults to the value of the `IPUMS_DEFAULT_COLLECTION` environment
+#'   variable. To set a default collection, use
+#'   [set_ipums_default_collection()].
+#'
+#'   For a list of the codes used to refer to the data collections,
+#'   use [ipums_data_collections()].
 #' @param how_many Number of recent extracts for which to retrieve information.
 #'   Defaults to 10 extracts.
 #' @inheritParams submit_extract
@@ -2086,6 +2112,10 @@ combine_extracts.nhgis_extract <- function(...) {
 #' \dontrun{
 #' # Get list of recent extracts
 #' list_of_last_10_extracts <- get_recent_extracts_info_list("usa")
+#'
+#' # If you have a default collection set, it will be used by default:
+#' set_ipums_default_collection("usa")
+#' list_of_last_10_extracts <- get_recent_extracts_info_list()
 #'
 #' # Print the extract number for extracts that are downloadable:
 #' for (extract in list_of_last_10_extracts) {
@@ -2139,9 +2169,11 @@ NULL
 
 #' @rdname get_recent_extracts_info
 #' @export
-get_recent_extracts_info_list <- function(collection,
+get_recent_extracts_info_list <- function(collection = NULL,
                                           how_many = 10,
                                           api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  collection <- collection %||% get_default_collection()
 
   response <- ipums_api_json_request(
     "GET",
@@ -2157,9 +2189,11 @@ get_recent_extracts_info_list <- function(collection,
 
 #' @rdname get_recent_extracts_info
 #' @export
-get_recent_extracts_info_tbl <- function(collection,
+get_recent_extracts_info_tbl <- function(collection = NULL,
                                          how_many = 10,
                                          api_key = Sys.getenv("IPUMS_API_KEY")) {
+
+  collection <- collection %||% get_default_collection()
 
   extract_list <- get_recent_extracts_info_list(
     collection,
@@ -2168,13 +2202,22 @@ get_recent_extracts_info_tbl <- function(collection,
   )
 
   extract_list_to_tbl(extract_list)
+
 }
 
 #' @rdname get_recent_extracts_info
 #' @export
-get_last_extract_info <- function(collection,
+get_last_extract_info <- function(collection = NULL,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
-  get_recent_extracts_info_list(collection, 1, api_key)[[1]]
+
+  collection <- collection %||% get_default_collection()
+
+  get_recent_extracts_info_list(
+    collection,
+    how_many = 1,
+    api_key = api_key
+  )[[1]]
+
 }
 
 #' Convert a tibble of extract definitions to a list
@@ -2392,58 +2435,114 @@ ipums_data_collections <- function() {
 #' @param overwrite If `TRUE`, overwrite any existing value of
 #'   `IPUMS_API_KEY` in the `.Renviron` file with the provided `api_key`.
 #'   Defaults to `FALSE`.
+#' @param unset if `TRUE`, remove the existing value of `IPUMS_API_KEY`
+#'   from the environment and the `.Renviron` file in your home directory.
 #'
 #' @return The value of `api_key`, invisibly.
 #'
 #' @family ipums_api
 #'
 #' @export
-set_ipums_api_key <- function(api_key, save = FALSE, overwrite = FALSE) {
-  if (save) {
-    home_dir <- Sys.getenv("HOME")
-    renviron_file <- file.path(home_dir, ".Renviron")
-    if (!file.exists(renviron_file)) {
-      file.create(renviron_file)
-      renviron_lines <- character(0)
-    } else {
-      file.copy(renviron_file, to = file.path(home_dir, ".Renviron_backup"))
-      message(
-        "Existing .Renviron file copied to '", home_dir, "/.Renviron_backup' ",
-        "for backup purposes."
-      )
+set_ipums_api_key <- function(api_key,
+                              save = FALSE,
+                              overwrite = FALSE,
+                              unset = FALSE) {
 
-      renviron_lines <- readLines(renviron_file)
-
-      if (isTRUE(overwrite)) {
-        renviron_lines <- renviron_lines[
-          !fostr_detect(renviron_lines, "^IPUMS_API_KEY")
-        ]
-        writeLines(renviron_lines, con = renviron_file)
-      } else {
-        if (any(fostr_detect(renviron_lines, "^IPUMS_API_KEY"))) {
-          stop(
-            "A saved IPUMS_API_KEY already exists. To overwrite it, set ",
-            "argument `overwrite` to TRUE.",
-            call. = FALSE
-          )
-        }
-      }
-    }
-
-    line_to_set_ipums_api_key <- paste0("IPUMS_API_KEY = \"", api_key, "\"")
-    writeLines(
-      c(renviron_lines, line_to_set_ipums_api_key),
-      con = renviron_file
+  if (unset) {
+    api_key <- unset_ipums_envvar("IPUMS_API_KEY")
+  } else {
+    api_key <- set_ipums_envvar(
+      IPUMS_API_KEY = api_key,
+      save = save,
+      overwrite = overwrite
     )
-    Sys.setenv(IPUMS_API_KEY = api_key)
-    message("Your IPUMS API key has been set and saved for future sessions.")
   }
-  Sys.setenv(IPUMS_API_KEY = api_key)
-  message(
-    "Your IPUMS API key has been set. To save your key for future sessions, ",
-    "set argument `save` to TRUE."
-  )
+
   invisible(api_key)
+
+}
+
+#' Set your default IPUMS collection
+#'
+#' @description
+#' Set the default IPUMS collection as the value associated with the
+#' `IPUMS_DEFAULT_COLLECTION` environment variable. If this environment variable
+#' exists, IPUMS API functions that require a collection specification will use
+#' the value of `IPUMS_DEFAULT_COLLECTION`, unless another collection is
+#' indicated.
+#'
+#' The default collection can be stored for the duration of your session or
+#' for future sessions. If saved for future sessions, it is added to the
+#' `.Renviron` file in your home directory. If you choose to save your key
+#' to `.Renviron`, this function will create a backup copy of the file before
+#' modifying.
+#'
+#' This function is modeled after the `census_api_key()` function
+#' from [tidycensus](https://walker-data.com/tidycensus/).
+#'
+#' @param collection Character string of the collection to set as your
+#'   default collection. The collection must currently be supported
+#'   by the IPUMS API.
+#' @param save If `TRUE`, save the key for use in future
+#'   sessions by adding it to the `.Renviron` file in your home directory.
+#'   Defaults to `FALSE`.
+#' @param overwrite If `TRUE`, overwrite any existing value of
+#'   `IPUMS_API_KEY` in the `.Renviron` file with the provided `api_key`.
+#'   Defaults to `FALSE`.
+#' @param unset if `TRUE`, remove the existing value of
+#'  `IPUMS_DEFAULT_COLLECTION` from the environment and the `.Renviron` file in
+#'  your home directory.
+#'
+#' @return The value of `collection`, invisibly.
+#'
+#' @family ipums_api
+#'
+#' @export
+#'
+#' @examples
+#' set_ipums_default_collection("nhgis")
+#'
+#' \dontrun{
+#' # Extract info will now be retrieved for the default collection:
+#' get_last_extract_info()
+#' is_extract_ready(1)
+#' get_extract_info(1)
+#'
+#' # Equivalent to:
+#' get_extract_info("nhgis:1")
+#' get_extract_info(c("nhgis", 1))
+#'
+#' # Other collections can be specified explicitly:
+#' is_extract_ready("usa:2")
+#'
+#' # This does not alter the default collection, though:
+#' get_last_extract_info()
+#' }
+#'
+#' # Remove the variable from the environment and .Renviron, if saved
+#' set_ipums_default_collection(unset = TRUE)
+set_ipums_default_collection <- function(collection = NULL,
+                                         save = FALSE,
+                                         overwrite = FALSE,
+                                         unset = FALSE) {
+
+  if (unset) {
+    collection <- unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
+  } else {
+    collection <- tolower(collection)
+
+    # Error if collection is not currently available for API
+    ipums_api_version(collection)
+
+    collection <- set_ipums_envvar(
+      IPUMS_DEFAULT_COLLECTION = collection,
+      save = save,
+      overwrite = overwrite
+    )
+  }
+
+  invisible(collection)
+
 }
 
 # Non-exported functions ---------------------------------------------------
@@ -2516,30 +2615,262 @@ new_ipums_json <- function(json, collection) {
   )
 }
 
-standardize_extract_identifier <- function(extract) {
-  if (inherits(extract, "ipums_extract")) return(extract)
-  if (length(extract) == 1) {
-    extract <- fostr_split(extract, ":")[[1]]
+standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
+
+  if (inherits(extract, "ipums_extract")) {
+    return(extract)
   }
 
-  if (length(extract) != 2) {
-    stop(
-      paste0(
-        "Expected extract to be an extract object, a ",
-        "length-two vector where the first element is an IPUMS collection ",
-        "and the second is an extract number, or a single string with a ':' ",
-        "separating the collection from the extract number."
-      ),
-      call. = FALSE
+  # If extract is length 1, must be a "collection:number" id
+  # or a single number to be paired with the default collection
+  if (length(extract) == 1) {
+
+    if (fostr_detect(extract, ":")) {
+
+      extract <- fostr_split(extract, ":")[[1]]
+
+    } else {
+
+      # Only use default collection if `extract` can be coerced to numeric.
+      extract_as_num <- suppressWarnings(
+        as.numeric(fostr_replace(extract, "L$", "")) # Handle int specification
+      )
+      extract_is_chr <- is.na(extract_as_num) || length(extract_as_num) == 0
+
+      # If not coercible to numeric, we are dealing with a collection
+      if (extract_is_chr) {
+        if (!collection_ok) {
+          invalid_extract_id_error()
+        } else {
+          ipums_api_version(extract)
+          return(list(collection = extract, number = NA))
+        }
+      }
+
+      extract <- c(get_default_collection(), extract)
+
+    }
+
+  }
+
+  # At this point, should be in `c(collection, number)` format
+  if (length(extract) > 1) {
+    collection <- extract[[1]]
+    number <- suppressWarnings(
+      as.numeric(fostr_replace(extract[[2]], "L$", ""))
     )
   }
-  collection <- extract[[1]]
-  number <- suppressWarnings(as.numeric(extract[[2]]))
-  if (is.na(number)) {
-    stop("Expected extract number to be a number", call. = FALSE)
+
+  if (length(extract) != 2 || is.na(number)) {
+    invalid_extract_id_error()
+  }
+
+  ipums_api_version(collection)
+
+  if (number != round(number)) {
+    rlang::abort(
+      paste0("Unable to interpret extract number ", number, " as integer."))
   }
 
   list(collection = collection, number = number)
+
+}
+
+invalid_extract_id_error <- function() {
+  rlang::abort(
+    c(
+      "Invalid `extract` argument. Expected `extract` to be one of:",
+      "*" = "An `ipums_extract` object",
+      "*" = "A string of the form \"collection:number\"",
+      "*" = "A vector of the form `c(collection, number)`",
+      "*" = paste0(
+        "An integer indicating the extract number for the collection ",
+        "specified by IPUMS_DEFAULT_COLLECTION. ",
+        "See `?set_ipums_default_collection()`."
+      )
+    )
+  )
+}
+
+get_default_collection <- function() {
+
+  collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
+
+  versions <- dplyr::filter(
+    ipums_data_collections(),
+    .data$api_support != "none"
+  )
+
+  if(!collection %in% versions$code_for_api) {
+
+    if (collection == "") {
+      rlang::abort(
+        c(
+          "No default collection set.",
+          "i" = paste0(
+            "Please specify a collection or use ",
+            "`set_ipums_default_collection()` to add a default collection."
+          )
+        )
+      )
+    } else {
+      rlang::abort(
+        c(
+          paste0(
+            "The default collection is set to \"", collection,
+            "\", which is not a supported IPUMS collection."
+          ),
+          "i" = paste0(
+            "The IPUMS API currently supports the following collections: \"",
+            paste0(versions$code_for_api, collapse = "\", \""), "\""
+          ),
+          "i" = paste0(
+            "Please specify a collection or use ",
+            "`set_ipums_default_collection()` to update your default ",
+            "collection."
+          )
+        )
+      )
+    }
+
+  }
+
+  collection
+
+}
+
+# Do we actually need to back this up? If we're *sure* we're not touching any
+# of the variables already in the file, why worry so much about backing up?
+set_ipums_envvar <- function(...,
+                             save = FALSE,
+                             overwrite = FALSE) {
+
+  dots <- rlang::list2(...)
+
+  stopifnot(length(dots) == 1 && is_named(dots))
+
+  var_name <- names(dots)
+  var_value <- dots[[var_name]]
+
+  if (save) {
+
+    home_dir <- Sys.getenv("HOME")
+    renviron_file <- file.path(home_dir, ".Renviron")
+    new_envvar <- paste0(var_name, "=\"", var_value, "\"")
+
+    if (!file.exists(renviron_file)) {
+
+      file.create(renviron_file)
+      writeLines(new_envvar, con = renviron_file)
+
+    } else {
+
+      backup_file <- file.path(home_dir, ".Renviron_backup")
+
+      backed_up_renviron <- file.copy(
+        renviron_file,
+        to = backup_file,
+        overwrite = TRUE
+      )
+
+      if (!backed_up_renviron) {
+        rlang::warn("Failed to back up .Renviron.")
+      } else {
+        message(
+          "Existing .Renviron file copied to ", backup_file,
+          " for backup purposes."
+        )
+      }
+
+      renviron_lines <- readLines(renviron_file)
+      var_match <- paste0("^(\\s?)+", var_name)
+
+      if (isTRUE(overwrite)) {
+
+        renviron_lines[fostr_detect(renviron_lines, var_match)] <- new_envvar
+        writeLines(renviron_lines, con = renviron_file)
+
+      } else {
+
+        if (any(fostr_detect(renviron_lines, var_match))) {
+          stop(
+            var_name, " already exists in .Renviron. To overwrite it, set ",
+            "`overwrite = TRUE`.",
+            call. = FALSE
+          )
+        }
+
+        writeLines(c(renviron_lines, new_envvar), con = renviron_file)
+
+      }
+
+    }
+
+    Sys.setenv(...)
+
+    message(
+      "The environment variable ", var_name,
+      " has been set and saved for future sessions."
+    )
+
+  } else {
+
+    Sys.setenv(...)
+
+    message(
+      "The environment variable ", var_name,
+      " has been set. To save it for future sessions, ",
+      "set `save = TRUE`."
+    )
+
+  }
+
+  invisible(var_value)
+
+}
+
+unset_ipums_envvar <- function(var_name) {
+
+  home_dir <- Sys.getenv("HOME")
+  renviron_file <- file.path(home_dir, ".Renviron")
+
+  if (!file.exists(renviron_file)) {
+    rlang::warn("No .Renviron file to update.")
+  } else {
+
+    backup_file <- file.path(home_dir, ".Renviron_backup")
+
+    backed_up_renviron <- file.copy(
+      renviron_file,
+      to = backup_file,
+      overwrite = TRUE
+    )
+
+    if (!backed_up_renviron) {
+      rlang::warn("Failed to back up .Renviron.")
+    } else {
+      message(
+        "Existing .Renviron file copied to ", backup_file,
+        " for backup purposes."
+      )
+    }
+
+    renviron_lines <- readLines(renviron_file)
+    var_match <- paste0("^(\\s?)+", var_name)
+
+    renviron_lines <- renviron_lines[!fostr_detect(renviron_lines, var_match)]
+    writeLines(renviron_lines, con = renviron_file)
+
+  }
+
+  message(
+    "Unsetting environment variable ", var_name, " and removing from .Renviron."
+  )
+
+  Sys.unsetenv(var_name)
+
+  invisible("")
+
 }
 
 #' Validate the structure of an IPUMS extract object
@@ -4836,7 +5167,7 @@ ipums_api_version <- function(collection) {
       c(
         paste0("No API version found for collection \"", collection, "\""),
         "i" = paste0(
-          "IPUMS API is currently available for the following collections: \"",
+          "The IPUMS API currently supports the following collections: \"",
           paste0(versions$code_for_api, collapse = "\", \""), "\""
         )
       )

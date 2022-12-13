@@ -496,6 +496,96 @@ test_that("extract_list_from_json reproduces extract specs", {
   )
 })
 
+test_that("Can use default collection when getting extract info", {
+
+  withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
+
+    extract_id <- standardize_extract_identifier(1)
+
+    expect_equal(extract_id$collection, "nhgis")
+    expect_equal(length(extract_id), 2)
+    expect_equal(extract_id$number, 1)
+
+    vcr::use_cassette("ready-nhgis-extract", {
+      expect_equal(
+        wait_for_extract(ready_nhgis_extract$number)$status,
+        "completed"
+      )
+    })
+
+    vcr::use_cassette("recent-nhgis-extracts-list", {
+      x <- get_recent_extracts_info_list()
+    })
+
+    expect_equal(length(x), 10)
+    expect_equal(x[[1]]$collection, "nhgis")
+
+    expect_error(
+      standardize_extract_identifier(get_default_collection()),
+      "Invalid `extract` argument"
+    )
+
+    # Can override:
+    expect_equal(
+      standardize_extract_identifier("usa:1"),
+      list(collection = "usa", number = 1)
+    )
+
+  })
+
+  withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "usa"), {
+    extract_id <- standardize_extract_identifier(10)
+    expect_equal(extract_id$collection, "usa")
+    expect_equal(length(extract_id), 2)
+    expect_equal(extract_id$number, 10)
+  })
+
+  withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = NA), {
+    expect_error(
+      standardize_extract_identifier(1),
+      "No default collection set"
+    )
+    expect_error(
+      get_recent_extracts_info_tbl(),
+      "No default collection set"
+    )
+  })
+
+  withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "fake-collection"), {
+    expect_error(
+      get_default_collection(),
+      paste0(
+        "The default collection is set to \"fake-collection\", which is not a ",
+        "supported IPUMS collection"
+      )
+    )
+  })
+
+})
+
+test_that("standardize_extract_identifier handles unusual cases", {
+  expect_equal(
+    standardize_extract_identifier("nhgis:1L"),
+    list(collection = "nhgis", number = 1)
+  )
+  expect_error(
+    standardize_extract_identifier("usa:1.2"),
+    "Unable to interpret extract number 1.2 as integer"
+  )
+  expect_error(
+    standardize_extract_identifier("fake-collection:1"),
+    "No API version found for collection \"fake-collection\""
+  )
+  expect_error(
+    standardize_extract_identifier("fake-collection", collection_ok = TRUE),
+    "No API version found for collection \"fake-collection\""
+  )
+  expect_equal(
+    standardize_extract_identifier("nhgis", collection_ok = TRUE),
+    list(collection = "nhgis", number = NA)
+  )
+})
+
 # > Downloading -----------------------------------
 
 if (have_api_access) {

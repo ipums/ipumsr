@@ -8,23 +8,28 @@
 \title{Get information on recent extracts}
 \usage{
 get_recent_extracts_info_list(
-  collection,
+  collection = NULL,
   how_many = 10,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 
 get_recent_extracts_info_tbl(
-  collection,
+  collection = NULL,
   how_many = 10,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 
-get_last_extract_info(collection, api_key = Sys.getenv("IPUMS_API_KEY"))
+get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{collection}{The code for an IPUMS data collection. For a list of the
-codes used to refer to the data collections,
-see \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
+\item{collection}{The code for an IPUMS data collection.
+
+Defaults to the value of the \code{IPUMS_DEFAULT_COLLECTION} environment
+variable. To set a default collection, use
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.
+
+For a list of the codes used to refer to the data collections,
+use \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{how_many}{Number of recent extracts for which to retrieve information.
 Defaults to 10 extracts.}
@@ -56,6 +61,10 @@ a list of \code{ipums_extract} objects.
 \dontrun{
 # Get list of recent extracts
 list_of_last_10_extracts <- get_recent_extracts_info_list("usa")
+
+# If you have a default collection set, it will be used by default:
+set_ipums_default_collection("usa")
+list_of_last_10_extracts <- get_recent_extracts_info_list()
 
 # Print the extract number for extracts that are downloadable:
 for (extract in list_of_last_10_extracts) {
@@ -126,6 +135,7 @@ Other ipums_api:
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
+\code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

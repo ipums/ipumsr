@@ -58,6 +58,7 @@ Other ipums_api:
 \code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{set_ipums_api_key}()},
+\code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

@@ -4,7 +4,7 @@
 \alias{set_ipums_api_key}
 \title{Set your IPUMS API key}
 \usage{
-set_ipums_api_key(api_key, save = FALSE, overwrite = FALSE)
+set_ipums_api_key(api_key, save = FALSE, overwrite = FALSE, unset = FALSE)
 }
 \arguments{
 \item{api_key}{API key associated with your user account.}
@@ -16,6 +16,9 @@ Defaults to \code{FALSE}.}
 \item{overwrite}{If \code{TRUE}, overwrite any existing value of
 \code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
 Defaults to \code{FALSE}.}
+
+\item{unset}{if \code{TRUE}, remove the existing value of \code{IPUMS_API_KEY}
+from the environment and the \code{.Renviron} file in your home directory.}
 }
 \value{
 The value of \code{api_key}, invisibly.
@@ -53,6 +56,7 @@ Other ipums_api:
 \code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
+\code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }

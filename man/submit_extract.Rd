@@ -68,6 +68,7 @@ Other ipums_api:
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
+\code{\link{set_ipums_default_collection}()},
 \code{\link{wait_for_extract}()}
 }
 \concept{ipums_api}

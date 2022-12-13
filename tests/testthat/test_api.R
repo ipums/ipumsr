@@ -762,17 +762,25 @@ test_that("We can export to and import from JSON, submitted extract", {
 
 
 # > Set IPUMS API key ----
-test_that("set_ipums_api_key sets environment variable", {
+test_that("set_ipums_envvar sets environment variable", {
   skip_if_not_installed("withr")
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
   Sys.setenv(IPUMS_API_KEY = "")
-  set_ipums_api_key("testapikey")
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey")
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
+
+  Sys.setenv("IPUMS_DEFAULT_COLLECTION" = "fake-collection")
+  expect_error(
+    get_default_collection(),
+    paste0(
+      "The default collection is set to \"fake-collection\", which is not a ",
+      "supported IPUMS collection"
+    )
+  )
 })
 
-
-test_that("set_ipums_api_key sets environment variable and saves to .Renviron", {
+test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
   skip_if_not_installed("withr")
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   current_home_dir <- Sys.getenv("HOME")
@@ -783,41 +791,65 @@ test_that("set_ipums_api_key sets environment variable and saves to .Renviron", 
 
   Sys.setenv(IPUMS_API_KEY = "")
   Sys.setenv(HOME = tempdir())
-  set_ipums_api_key("testapikey", save = TRUE)
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
   renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
+  expect_true("IPUMS_API_KEY=\"testapikey\"" %in% renviron_lines)
 })
 
 
-test_that("set_ipums_api_key works with existing .Renviron file", {
+test_that("set_ipums_envvar works with existing .Renviron file", {
   skip_if_not_installed("withr")
-  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
+  current_ipums_default_collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
   current_home_dir <- Sys.getenv("HOME")
   temp_renviron_file <- file.path(tempdir(), ".Renviron")
   temp_renviron_file_backup <- file.path(tempdir(), ".Renviron_backup")
   withr::defer(file.remove(temp_renviron_file_backup))
   withr::defer(file.remove(temp_renviron_file))
   withr::defer(Sys.setenv(HOME = current_home_dir))
-  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
-
-  Sys.setenv(IPUMS_API_KEY = "")
-  Sys.setenv(HOME = tempdir())
-  writeLines("OTHER_ENV_VAR = \"value\"", con = temp_renviron_file)
-  set_ipums_api_key("testapikey", save = TRUE)
-  expect_true(file.exists(temp_renviron_file_backup))
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
-  renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
-
-  expect_error(
-    set_ipums_api_key("newapikey", save = TRUE),
-    regexp = "IPUMS_API_KEY already exists"
+  withr::defer(
+    Sys.setenv(IPUMS_DEFAULT_COLLECTION = current_ipums_default_collection)
   )
 
-  set_ipums_api_key("newapikey", save = TRUE, overwrite = TRUE)
+  Sys.setenv(IPUMS_DEFAULT_COLLECTION = "")
+  Sys.setenv(HOME = tempdir())
+  writeLines("OTHER_ENV_VAR=\"value\"", con = temp_renviron_file)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
+  expect_true(file.exists(temp_renviron_file_backup))
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "usa")
   renviron_lines <- readLines(temp_renviron_file)
-  expect_false("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
-  expect_true("IPUMS_API_KEY = \"newapikey\"" %in% renviron_lines)
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "newapikey")
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+
+  expect_error(
+    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE),
+    "IPUMS_DEFAULT_COLLECTION already exists"
+  )
+
+  expect_message(
+    set_ipums_envvar(
+      IPUMS_DEFAULT_COLLECTION = "nhgis",
+      save = TRUE,
+      overwrite = TRUE
+    ),
+    "Existing \\.Renviron file copied"
+  )
+
+  renviron_lines <- readLines(temp_renviron_file)
+  renviron_backup_lines <- readLines(temp_renviron_file_backup)
+
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_backup_lines)
+
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_lines)
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_backup_lines)
+
+  expect_true("OTHER_ENV_VAR=\"value\"" %in% renviron_backup_lines)
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "nhgis")
+
+  unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
+  expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
+
 })

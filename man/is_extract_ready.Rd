@@ -14,6 +14,9 @@ is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 form \code{"collection:number"}
 \item The data collection and extract number formatted as a vector of the form
 \code{c("collection", "number")}
+\item The extract number for the collection specified by the
+IPUMS_DEFAULT_COLLECTION environment variable. See
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
 The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
@@ -65,6 +68,10 @@ is_extract_ready("usa:1")
 
 # By supplying the data collection and extract number, as a vector:
 is_extract_ready(c("usa", "1"))
+
+# If you have a default collection, you can use the extract number alone:
+set_ipums_default_collection("usa")
+is_extract_ready(1)
 }
 
 }
@@ -89,6 +96,7 @@ Other ipums_api:
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
+\code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}
 }
