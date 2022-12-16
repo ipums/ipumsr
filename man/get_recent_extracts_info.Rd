@@ -4,7 +4,6 @@
 \alias{get_recent_extracts_info}
 \alias{get_recent_extracts_info_list}
 \alias{get_recent_extracts_info_tbl}
-\alias{get_last_extract_info}
 \title{Get information on recent extracts}
 \usage{
 get_recent_extracts_info_list(
@@ -18,8 +17,6 @@ get_recent_extracts_info_tbl(
   how_many = 10,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
-
-get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{collection}{The code for an IPUMS data collection.

@@ -42,19 +42,19 @@ if (have_api_access) {
 
 
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_recent_extracts_info_list("usa")
+    recent_usa_extracts_list <- get_extract_info("usa")
   })
 
   vcr::use_cassette("recent-cps-extracts-list", {
-    recent_cps_extracts_list <- get_recent_extracts_info_list("cps")
+    recent_cps_extracts_list <- get_extract_info("cps")
   })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
   })
 
   vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_recent_extracts_info_tbl("cps")
+    recent_cps_extracts_tbl <- get_extract_info("cps", table = TRUE)
   })
 }
 
@@ -354,7 +354,11 @@ test_that("Tibble of recent CPS extracts contains expected columns", {
 test_that("Can limit number of recent USA extracts to get info on", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_recent_extracts_info_tbl("usa", 2)
+    two_recent_usa_extracts <- get_extract_info(
+      "usa",
+      how_many = 2,
+      table = TRUE
+    )
   })
   expect_equal(nrow(two_recent_usa_extracts), 2)
 })
@@ -363,7 +367,11 @@ test_that("Can limit number of recent USA extracts to get info on", {
 test_that("Can limit number of recent CPS extracts to get info on", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-cps-extracts-tbl-two", {
-    two_recent_cps_extracts <- get_recent_extracts_info_tbl("cps", 2)
+    two_recent_cps_extracts <- get_extract_info(
+      "cps",
+      how_many = 2,
+      table = TRUE
+    )
   })
   expect_equal(nrow(two_recent_cps_extracts), 2)
 })

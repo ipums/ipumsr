@@ -65,11 +65,11 @@ if (have_api_access) {
 
   # Recent extracts
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info_list("nhgis")
+    recent_nhgis_extracts_list <- get_extract_info("nhgis")
   })
 
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
   })
 
 }
@@ -514,11 +514,13 @@ test_that("Can use default collection when getting extract info", {
     })
 
     vcr::use_cassette("recent-nhgis-extracts-list", {
-      x <- get_recent_extracts_info_list()
+      recent_nhgis_extracts_list_default <- get_extract_info()
     })
 
-    expect_equal(length(x), 10)
-    expect_equal(x[[1]]$collection, "nhgis")
+    expect_identical(
+      recent_nhgis_extracts_list_default,
+      recent_nhgis_extracts_list
+    )
 
     expect_error(
       standardize_extract_identifier(get_default_collection()),
@@ -546,7 +548,7 @@ test_that("Can use default collection when getting extract info", {
       "No default collection set"
     )
     expect_error(
-      get_recent_extracts_info_tbl(),
+      get_extract_info(),
       "No default collection set"
     )
   })
@@ -1341,7 +1343,11 @@ test_that("Can limit number of recent extracts to get info on", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_recent_extracts_info_tbl("nhgis", 2)
+    two_recent_nhgis_extracts <- get_extract_info(
+      "nhgis",
+      how_many = 2,
+      table = TRUE
+    )
   })
 
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
@@ -1350,7 +1356,11 @@ test_that("Can limit number of recent extracts to get info on", {
 
 test_that("Shapefile-only can be converted from tbl to list", {
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl("nhgis", 1)
+    nhgis_extract_tbl_shp <- get_extract_info(
+      "nhgis",
+      how_many = 1,
+      table = TRUE
+    )
   })
 
   expect_identical(

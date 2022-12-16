@@ -700,19 +700,22 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
 #' Get information about a submitted extract
 #'
-#' Get information about a submitted extract via the IPUMS API. For an overview
-#' of ipumsr microdata API functionality, see
+#' @description
+#' Get information about previously submitted extracts via the IPUMS API.
+#'
+#' For an overview of ipumsr microdata API functionality, see
 #' `vignette("ipums-api", package = "ipumsr")`.
 #'
 #' @param extract One of:
 #'
 #' * An [`ipums_extract`][ipums_extract-class] object
+#' * An IPUMS collection with API support
 #' * The data collection and extract number formatted as a single string of the
 #'   form `"collection:number"`
 #' * The data collection and extract number formatted as a vector of the form
-#'   `c("collection", "number")`
+#'   `c("collection", number)`
 #' * The extract number for the collection specified by the
-#'   IPUMS_DEFAULT_COLLECTION environment variable. See
+#'   `IPUMS_DEFAULT_COLLECTION` environment variable. See
 #'   [set_ipums_default_collection()]
 #'
 #' The extract number does not need to be zero-padded (e.g., use `"usa:1"`
@@ -721,8 +724,14 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' For a list of codes used to refer to each collection, see
 #' [ipums_data_collections()].
-#' @inheritParams define_extract_usa
-#' @inheritParams download_extract
+#' @param how_many If the provided `extract` is an IPUMS collection, the number
+#'   of recent extracts for which to retrieve information.
+#'   Defaults to 10 extracts.
+#' @param table If the provided `extract` is an IPUMS collection, a logical
+#'   indicating whether to return recent extract information as a
+#'   [`tibble`][tibble::tbl_df-class] (`TRUE`) or a list of
+#'   [`ipums_extract`][ipums_extract-class] objects (`FALSE`). Defaults to
+#'   `FALSE`.
 #' @inheritParams submit_extract
 #'
 #' @family ipums_api
@@ -748,35 +757,55 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("usa")
 #' get_extract_info(1)
+#'
+#' # The default collection will automatically be used even if no extract
+#' # number is supplied:
+#' get_extract_info(how_many = 3, table = TRUE)
 #' }
 #'
 #' @export
-get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
+get_extract_info <- function(extract = NULL,
+                             how_many = NULL,
+                             table = FALSE,
+                             api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  extract <- standardize_extract_identifier(extract)
+  extract <- standardize_extract_identifier(
+    extract %||% get_default_collection(),
+    collection_ok = TRUE
+  )
 
-  stopifnot(length(extract$collection) == 1)
-  stopifnot(length(extract$number) == 1)
+  # Only way standardize_extract_identifier returns a `NA` number is if
+  # `extract` is a collection
+  is_collection <- is.na(extract$number)
 
-  if (is.na(extract$number)) {
-    stop(
-      "Extract number cannot be a missing value; please supply an ",
-      "extract object returned by `submit_extract()`, or the data ",
-      "collection and number of a submitted extract.",
-      call. = FALSE
-    )
+  # If a collection, get recent extracts. Otherwise get a single extract.
+  if (is_collection) {
+    queries <- list(limit = how_many %||% 10)
+    path <- NULL
+  } else {
+    queries <- NULL
+    path <- paste0(api_extracts_path(), "/", extract$number)
   }
-
-  collection <- tolower(extract$collection)
 
   response <- ipums_api_json_request(
     "GET",
-    collection = collection,
-    path = paste0(api_extracts_path(), "/", extract$number),
+    collection = tolower(extract$collection),
+    path = path,
+    queries = queries,
     api_key = api_key
   )
 
-  extract_list_from_json(response)[[1]]
+  extract_info <- extract_list_from_json(response)
+
+  if (table) {
+    extract_info <- extract_list_to_tbl(extract_info)
+  } else if (!is_collection) {
+    # Collection request will always return a list, but a single extract should
+    # return an `ipums_extract` object
+    extract_info <- extract_info[[1]]
+  }
+
+  extract_info
 
 }
 
@@ -791,6 +820,23 @@ get_extract_info <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams download_extract
 #' @inheritParams get_extract_info
 #' @inheritParams submit_extract
+#' @param extract One of:
+#'
+#' * An [`ipums_extract`][ipums_extract-class] object
+#' * The data collection and extract number formatted as a single string of the
+#'   form `"collection:number"`
+#' * The data collection and extract number formatted as a vector of the form
+#'   `c("collection", number)`
+#' * The extract number for the collection specified by the
+#'   `IPUMS_DEFAULT_COLLECTION` environment variable. See
+#'   [set_ipums_default_collection()]
+#'
+#' The extract number does not need to be zero-padded (e.g., use `"usa:1"`
+#' or `c("usa", "1")`, not `"usa:00001"` or `c("usa", "00001")`).
+#' See below for examples of each form.
+#'
+#' For a list of codes used to refer to each collection, see
+#' [ipums_data_collections()].
 #' @param initial_delay_seconds How many seconds to wait before first status
 #'   check.
 #' @param max_delay_seconds Maximum seconds to wait between status checks. The
@@ -865,7 +911,8 @@ wait_for_extract <- function(extract,
     if (verbose) {
       message("Checking extract status...")
     }
-    extract <- get_extract_info(extract, api_key)
+
+    extract <- get_extract_info(extract, api_key = api_key)
 
     is_downloadable <- is_extract_ready(extract)
 
@@ -933,7 +980,7 @@ wait_for_extract <- function(extract,
 #' than 72 hours will still have a "completed" status, but will return `FALSE`
 #' from `is_extract_ready()`, because the extract files are no longer available.
 #'
-#' @inheritParams get_extract_info
+#' @inheritParams wait_for_extract
 #'
 #' @family ipums_api
 #' @return A logical vector of length one.
@@ -973,7 +1020,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   # ... if it doesn't contain download info, make sure we have the latest
   # status by fetching it via the API and checking again
-  extract <- get_extract_info(extract, api_key)
+  extract <- get_extract_info(extract, api_key = api_key)
 
   extract_is_completed_and_has_links(extract)
 
@@ -996,7 +1043,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' will be returned, as it is sufficient for loading the data provided in the
 #' associated .gz data file.
 #'
-#' @inheritParams get_extract_info
+#' @inheritParams wait_for_extract
 #' @inheritParams define_extract_usa
 #' @inheritParams submit_extract
 #' @param download_dir In what folder should the downloaded files be saved?
@@ -1045,7 +1092,7 @@ download_extract <- function(extract,
   if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
     is_downloadable <- TRUE
   } else {
-    extract <- get_extract_info(extract, api_key)
+    extract <- get_extract_info(extract, api_key = api_key)
     is_downloadable <- extract_is_completed_and_has_links(extract)
   }
 
@@ -2205,7 +2252,10 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
 
 }
 
-#' @rdname get_recent_extracts_info
+#' @param collection Character string of the IPUMS collection for which to
+#'   retrieve the most recent extract request.
+#'
+#' @rdname get_extract_info
 #' @export
 get_last_extract_info <- function(collection = NULL,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {

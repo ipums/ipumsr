@@ -13,9 +13,9 @@ is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 \item The data collection and extract number formatted as a single string of the
 form \code{"collection:number"}
 \item The data collection and extract number formatted as a vector of the form
-\code{c("collection", "number")}
+\code{c("collection", number)}
 \item The extract number for the collection specified by the
-IPUMS_DEFAULT_COLLECTION environment variable. See
+\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 

@@ -2,20 +2,29 @@
 % Please edit documentation in R/api.R
 \name{get_extract_info}
 \alias{get_extract_info}
+\alias{get_last_extract_info}
 \title{Get information about a submitted extract}
 \usage{
-get_extract_info(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
+get_extract_info(
+  extract = NULL,
+  how_many = NULL,
+  table = FALSE,
+  api_key = Sys.getenv("IPUMS_API_KEY")
+)
+
+get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
+\item An IPUMS collection with API support
 \item The data collection and extract number formatted as a single string of the
 form \code{"collection:number"}
 \item The data collection and extract number formatted as a vector of the form
-\code{c("collection", "number")}
+\code{c("collection", number)}
 \item The extract number for the collection specified by the
-IPUMS_DEFAULT_COLLECTION environment variable. See
+\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
@@ -26,15 +35,29 @@ See below for examples of each form.
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
+\item{how_many}{If the provided \code{extract} is an IPUMS collection, the number
+of recent extracts for which to retrieve information.
+Defaults to 10 extracts.}
+
+\item{table}{If the provided \code{extract} is an IPUMS collection, a logical
+indicating whether to return recent extract information as a
+\code{\link[tibble:tbl_df-class]{tibble}} (\code{TRUE}) or a list of
+\code{\link[=ipums_extract-class]{ipums_extract}} objects (\code{FALSE}). Defaults to
+\code{FALSE}.}
+
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}.}
+
+\item{collection}{Character string of the IPUMS collection for which to
+retrieve the most recent extract request.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Get information about a submitted extract via the IPUMS API. For an overview
-of ipumsr microdata API functionality, see
+Get information about previously submitted extracts via the IPUMS API.
+
+For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -57,6 +80,10 @@ get_extract_info(c("usa", "1"))
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("usa")
 get_extract_info(1)
+
+# The default collection will automatically be used even if no extract
+# number is supplied:
+get_extract_info(how_many = 3, table = TRUE)
 }
 
 }
