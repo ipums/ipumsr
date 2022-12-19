@@ -7,7 +7,7 @@
 remove_from_extract(extract, ...)
 }
 \arguments{
-\item{extract}{An \code{ipums_extract} object}
+\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{...}{Additional arguments specifying the extract fields and values to
 remove from the extract. The available arguments correspond to the

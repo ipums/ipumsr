@@ -7,7 +7,19 @@
 submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
+\item{extract}{If submitting a new extract request, an
+\code{\link[=ipums_extract-class]{ipums_extract}} object.
+
+If resubmitting an old request, one of:
+\itemize{
+\item The data collection and extract number formatted as a single string of the
+form \code{"collection:number"}
+\item The data collection and extract number formatted as a vector of the form
+\code{c("collection", number)}
+\item The extract number for the collection specified by the
+\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
+}}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}.}

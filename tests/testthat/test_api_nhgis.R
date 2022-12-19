@@ -42,6 +42,12 @@ if (have_api_access) {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
 
+  vcr::use_cassette("resubmitted-nhgis-extract", {
+    resubmitted_nhgis_extract <- submit_extract(
+      c("nhgis", submitted_extract_number)
+    )
+  })
+
   # Shapefile-only extract
   vcr::use_cassette("submitted-nhgis-extract-shp", {
     submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
@@ -439,6 +445,18 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_identical(
     submitted_nhgis_extract_shp$download_links,
     ipumsr:::EMPTY_NAMED_LIST
+  )
+})
+
+test_that("Can resubmit an extract", {
+  expect_s3_class(
+    resubmitted_nhgis_extract,
+    c("nhgis_extract", "ipums_extract")
+  )
+  # Number, download links, etc. won't be same, but core extract will:
+  expect_identical(
+    resubmitted_nhgis_extract[1:14],
+    ready_nhgis_extract[1:14]
   )
 })
 

@@ -596,7 +596,7 @@ define_extract_from_json <- function(extract_json) {
 #' For an overview of ipumsr microdata API functionality, see
 #' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @inheritParams submit_extract
+#' @inheritParams add_to_extract
 #' @param file File path to which to write the JSON-formatted extract
 #'   definition.
 #'
@@ -635,7 +635,17 @@ save_extract_as_json <- function(extract, file) {
 #' with the newly-assigned extract number. For an overview of ipumsr microdata API
 #' functionality, see `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @param extract An [`ipums_extract`][ipums_extract-class] object.
+#' @param extract If submitting a new extract request, an
+#'   [`ipums_extract`][ipums_extract-class] object.
+#'
+#'   If resubmitting an old request, one of:
+#'   * The data collection and extract number formatted as a single string of the
+#'     form `"collection:number"`
+#'   * The data collection and extract number formatted as a vector of the form
+#'     `c("collection", number)`
+#'   * The extract number for the collection specified by the
+#'     `IPUMS_DEFAULT_COLLECTION` environment variable. See
+#'     [set_ipums_default_collection()]
 #' @param api_key API key associated with your user account. Defaults to the
 #'   value of environment variable `"IPUMS_API_KEY"`.
 #'
@@ -669,7 +679,13 @@ save_extract_as_json <- function(extract, file) {
 #' @export
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  extract <- validate_ipums_extract(extract)
+  extract <- standardize_extract_identifier(extract)
+
+  if (!inherits(extract, "ipums_extract")) {
+    extract <- get_extract_info(extract)
+  } else {
+    extract <- validate_ipums_extract(extract)
+  }
 
   response <- ipums_api_json_request(
     "POST",
@@ -694,7 +710,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
     )
   )
 
-  extract
+  invisible(extract)
 
 }
 
@@ -1134,7 +1150,7 @@ download_extract <- function(extract,
 #'
 #' To remove existing values from an extract, see [remove_from_extract()].
 #'
-#' @param extract An `ipums_extract` object
+#' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param ... Additional arguments specifying the extract fields and values to
 #'   add to the extract. Argument names should correspond to the available
 #'   arguments in the extract definition function for the class of the extract
@@ -1170,7 +1186,7 @@ add_to_extract <- function(extract, ...) {
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_usa
-#' @inheritParams submit_extract
+#' @inheritParams add_to_extract
 #' @param samples Character vector of samples to add to the extract.
 #'   Values should correspond to [USA sample ID values]
 #'   (https://usa.ipums.org/usa-action/samples/sample_ids)
@@ -1219,7 +1235,7 @@ add_to_extract.usa_extract <- function(extract,
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_cps
-#' @inheritParams submit_extract
+#' @inheritParams add_to_extract
 #' @param samples Character vector of samples to add to the extract.
 #'   Values should correspond to [CPS sample ID values]
 #'   (https://cps.ipums.org/cps-action/samples/sample_ids)
@@ -1313,7 +1329,7 @@ add_to_extract.cps_extract <- function(extract,
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_nhgis
-#' @inheritParams submit_extract
+#' @inheritParams add_to_extract
 #' @param datasets Character vector of
 #'   [datasets][https://www.nhgis.org/overview-nhgis-datasets] to add to
 #'   the extract. Any specified `datasets` that already exist in the extract
@@ -1535,7 +1551,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #' To add new values to an extract, see [add_to_extract()].
 #'
-#' @param extract An `ipums_extract` object
+#' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param ... Additional arguments specifying the extract fields and values to
 #'   remove from the extract. The available arguments correspond to the
 #'   available arguments in the extract definition function for the class of the
@@ -1569,7 +1585,7 @@ remove_from_extract <- function(extract, ...) {
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_usa
-#' @inheritParams submit_extract
+#' @inheritParams remove_from_extract
 #' @param samples Character vector of samples to remove from the extract.
 #' @param variables Character vector of variables to remove from the extract.
 #' @param ... Ignored
@@ -1624,7 +1640,7 @@ remove_from_extract.usa_extract <- function(extract,
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_cps
-#' @inheritParams submit_extract
+#' @inheritParams remove_from_extract
 #' @param samples Character vector of samples to remove from the extract.
 #' @param variables Character vector of variables to remove from the extract.
 #' @param ... Ignored
@@ -1741,7 +1757,7 @@ remove_from_extract.cps_extract <- function(extract,
 #' unsubmitted state.
 #'
 #' @inheritParams define_extract_nhgis
-#' @inheritParams submit_extract
+#' @inheritParams remove_from_extract
 #' @param datasets Character vector of
 #'   [datasets][https://www.nhgis.org/overview-nhgis-datasets] to remove from
 #'   the extract. All dataset subfields associated with the specified
@@ -2690,7 +2706,19 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
       # If not coercible to numeric, we are dealing with a collection
       if (extract_is_chr) {
         if (!collection_ok) {
-          invalid_extract_id_error()
+          rlang::abort(
+            c(
+              "Invalid `extract` argument. Expected `extract` to be one of:",
+              "*" = "An `ipums_extract` object",
+              "*" = "A string of the form \"collection:number\"",
+              "*" = "A vector of the form `c(collection, number)`",
+              "*" = paste0(
+                "An integer indicating the extract number for the collection ",
+                "specified by IPUMS_DEFAULT_COLLECTION. ",
+                "See `?set_ipums_default_collection()`."
+              )
+            )
+          )
         } else {
           ipums_api_version(extract)
           return(list(collection = extract, number = NA))
@@ -2712,34 +2740,31 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
   }
 
   if (length(extract) != 2 || is.na(number)) {
-    invalid_extract_id_error()
+    rlang::abort(
+      c(
+        "Invalid `extract` argument. Expected `extract` to be one of:",
+        "*" = "An `ipums_extract` object",
+        "*" = "A string of the form \"collection:number\"",
+        "*" = "A vector of the form `c(collection, number)`",
+        "*" = paste0(
+          "An integer indicating the extract number for the collection ",
+          "specified by IPUMS_DEFAULT_COLLECTION. ",
+          "See `?set_ipums_default_collection()`."
+        )
+      )
+    )
   }
 
   ipums_api_version(collection)
 
   if (number != round(number)) {
     rlang::abort(
-      paste0("Unable to interpret extract number ", number, " as integer."))
+      paste0("Unable to interpret extract number ", number, " as integer.")
+    )
   }
 
   list(collection = collection, number = number)
 
-}
-
-invalid_extract_id_error <- function() {
-  rlang::abort(
-    c(
-      "Invalid `extract` argument. Expected `extract` to be one of:",
-      "*" = "An `ipums_extract` object",
-      "*" = "A string of the form \"collection:number\"",
-      "*" = "A vector of the form `c(collection, number)`",
-      "*" = paste0(
-        "An integer indicating the extract number for the collection ",
-        "specified by IPUMS_DEFAULT_COLLECTION. ",
-        "See `?set_ipums_default_collection()`."
-      )
-    )
-  )
 }
 
 get_default_collection <- function() {
