@@ -696,7 +696,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   # extract_list_from_json() always returns a list of extracts, but in
   # this case there is always only one, so pluck it out
-  extract <- extract_list_from_json(response)[[1]]
+  extract <- extract_list_from_json(response, validate = TRUE)[[1]]
 
   # For NHGIS extracts, API does not currently return a status upon submission.
   # extract_list_from_json() will incorrectly populate this with "unsubmitted".
@@ -826,7 +826,7 @@ get_extract_info <- function(extract = NULL,
     api_key = api_key
   )
 
-  extract_info <- extract_list_from_json(response)
+  extract_info <- extract_list_from_json(response, validate = TRUE)
 
   if (table) {
     extract_info <- extract_list_to_tbl(extract_info)
@@ -2261,7 +2261,7 @@ get_recent_extracts_info_list <- function(collection = NULL,
     api_key = api_key
   )
 
-  extract_list_from_json(response)
+  extract_list_from_json(response, validate = TRUE)
 
 }
 
