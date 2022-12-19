@@ -423,7 +423,7 @@ test_that("Can submit an NHGIS extract of multiple types", {
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
   expect_true(submitted_nhgis_extract$submitted)
-  expect_equal(submitted_nhgis_extract$status, "submitted") # Currently fails because API does not return status upon submission
+  expect_equal(submitted_nhgis_extract$status, "queued")
   expect_identical(
     submitted_nhgis_extract$download_links,
     ipumsr:::EMPTY_NAMED_LIST
@@ -441,7 +441,7 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_true(is.null(submitted_nhgis_extract_shp$time_series_table))
   expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
   expect_true(submitted_nhgis_extract_shp$submitted)
-  expect_equal(submitted_nhgis_extract_shp$status, "submitted")
+  expect_equal(submitted_nhgis_extract_shp$status, "queued")
   expect_identical(
     submitted_nhgis_extract_shp$download_links,
     ipumsr:::EMPTY_NAMED_LIST
@@ -468,7 +468,7 @@ test_that("Can check status of an NHGIS extract by supplying extract object", {
     checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
   })
   expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(submitted_nhgis_extract$status, "submitted")
+  expect_equal(submitted_nhgis_extract$status, "queued")
   vcr::use_cassette("is-nhgis-extract-ready", {
     is_ready <- is_extract_ready(submitted_nhgis_extract)
   })

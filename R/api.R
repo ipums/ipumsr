@@ -700,7 +700,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   # For NHGIS extracts, API does not currently return a status upon submission.
   # extract_list_from_json() will incorrectly populate this with "unsubmitted".
-  if (extract$status == "unsubmitted") extract$status <- "submitted"
+  if (extract$status == "unsubmitted") extract$status <- "queued"
 
   message(
     sprintf(
