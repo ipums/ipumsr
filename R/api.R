@@ -3251,9 +3251,6 @@ validate_ipums_extract.cps_extract <- function(x) {
 #' @export
 validate_ipums_extract.ipums_extract <- function(x) {
 
-  # Throw error if no API for collection
-  ipums_api_version(x$collection)
-
   extract_field_spec <- list(
     list(
       field = "collection",
@@ -3306,6 +3303,9 @@ validate_ipums_extract.ipums_extract <- function(x) {
       )
     )
   }
+
+  # Throw error if no API for collection
+  ipums_api_version(x$collection)
 
   x
 

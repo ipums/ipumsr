@@ -501,7 +501,10 @@ tryCatch(
 test_that("An extract request with missing collection returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract()),
-    regex = "No API version found for collection \"NA\""
+    paste0(
+      "`collection` must not contain missing.+",
+      "`description` must not contain missing"
+    )
   )
 })
 
