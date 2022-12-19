@@ -790,9 +790,24 @@ get_extract_info <- function(extract = NULL,
     collection_ok = TRUE
   )
 
-  # Only way standardize_extract_identifier returns a `NA` number is if
-  # `extract` is a collection
-  is_collection <- is.na(extract$number)
+  if (inherits(extract, "ipums_extract")) {
+    extract <- validate_ipums_extract(extract)
+    is_collection <- FALSE
+
+    if (is_empty(extract$number) || is.na(extract$number)) {
+      rlang::abort(
+        c(
+          paste0(
+            "Cannot get info for an `ipums_extract` object with missing ",
+            "extract number."
+          ),
+          "i" = "Use `submit_extract()` to submit this extract request."
+        )
+      )
+    }
+  } else {
+    is_collection <- is.na(extract$number)
+  }
 
   # If a collection, get recent extracts. Otherwise get a single extract.
   if (is_collection) {
@@ -2278,11 +2293,9 @@ get_last_extract_info <- function(collection = NULL,
 
   collection <- collection %||% get_default_collection()
 
-  get_recent_extracts_info_list(
-    collection,
-    how_many = 1,
-    api_key = api_key
-  )[[1]]
+  ipums_api_version(collection)
+
+  get_extract_info(collection, how_many = 1, api_key = api_key)[[1]]
 
 }
 

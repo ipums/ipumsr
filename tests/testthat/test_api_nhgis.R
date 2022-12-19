@@ -499,6 +499,15 @@ test_that("Can check status of an NHGIS extract with collection and number", {
     is_ready <- is_extract_ready(submitted_nhgis_extract)
   })
   expect_true(is_ready)
+
+  expect_error(
+    get_extract_info(
+      define_extract_nhgis(
+        datasets = "a", data_tables = "B", geog_levels = "C"
+      )
+    ),
+    "Cannot get info for an `ipums_extract` object with missing extract number."
+  )
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
