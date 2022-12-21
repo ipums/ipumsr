@@ -842,9 +842,11 @@ get_extract_info <- function(extract = NULL,
 
 #' Wait for extract to finish
 #'
+#' @description
 #' Wait for an extract to finish by periodically checking its status via the
-#' IPUMS API and returning when the extract is ready to download. For an
-#' overview of ipumsr microdata API functionality, see
+#' IPUMS API until it is complete.
+#'
+#' For an overview of ipumsr microdata API functionality, see
 #' `vignette("ipums-api", package = "ipumsr")`.
 #'
 #' @inheritParams define_extract_usa
@@ -868,19 +870,19 @@ get_extract_info <- function(extract = NULL,
 #'
 #' For a list of codes used to refer to each collection, see
 #' [ipums_data_collections()].
-#' @param initial_delay_seconds How many seconds to wait before first status
-#'   check.
-#' @param max_delay_seconds Maximum seconds to wait between status checks. The
-#'   function doubles the wait time after each check, but will cap the wait
-#'   time at this maximum value (300 seconds, or 5 minutes, by default).
+#' @param initial_delay_seconds Seconds to wait before first status check. The
+#'   wait time will automatically increase by 10 seconds between each
+#'   successive check.
+#' @param max_delay_seconds Maximum interval to wait between status checks.
+#'   When the wait interval reaches this value, checks will continue to
+#'   occur at `max_delay_seconds` intervals until the extract is complete or
+#'   `timeout_seconds` is reached. Defaults to 300 seconds (5 minutes).
 #' @param timeout_seconds Maximum total number of seconds to continue waiting
 #'   for the extract before throwing an error. Defaults to 10,800 seconds (three
 #'   hours).
-#' @param verbose If `TRUE`, the default, messages will be printed at the
-#'   beginning of each wait interval with the current wait time, each time the
-#'   status of the extract is checked, and when the extract is ready to
-#'   download. Setting this argument to `FALSE` will silence these
-#'   messages.
+#' @param verbose If `TRUE`, print status updates to the R console at the
+#'   beginning of each wait interval and upon extract completion.
+#'   Defaults to `TRUE`.
 #'
 #' @family ipums_api
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
@@ -916,9 +918,10 @@ wait_for_extract <- function(extract,
                              verbose = TRUE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  stopifnot(is.numeric(initial_delay_seconds))
-  stopifnot(is.numeric(max_delay_seconds))
-  stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds))
+  stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
+  stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
+  stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
+              timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -956,11 +959,7 @@ wait_for_extract <- function(extract,
     is_timed_out <- !is.null(timeout_seconds) &&
       as.numeric(Sys.time() - wait_start, units = "secs") > timeout_seconds
 
-    if (current_delay == 0) {
-      current_delay <- 10
-    } else {
-      current_delay <- min(c(current_delay * 2, max_delay_seconds))
-    }
+    current_delay <- min(c(current_delay + 10, max_delay_seconds))
   }
 
   if (is_error_state) {

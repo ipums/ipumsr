@@ -33,22 +33,22 @@ See below for examples of each form.
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
-\item{initial_delay_seconds}{How many seconds to wait before first status
-check.}
+\item{initial_delay_seconds}{Seconds to wait before first status check. The
+wait time will automatically increase by 10 seconds between each
+successive check.}
 
-\item{max_delay_seconds}{Maximum seconds to wait between status checks. The
-function doubles the wait time after each check, but will cap the wait
-time at this maximum value (300 seconds, or 5 minutes, by default).}
+\item{max_delay_seconds}{Maximum interval to wait between status checks.
+When the wait interval reaches this value, checks will continue to
+occur at \code{max_delay_seconds} intervals until the extract is complete or
+\code{timeout_seconds} is reached. Defaults to 300 seconds (5 minutes).}
 
 \item{timeout_seconds}{Maximum total number of seconds to continue waiting
 for the extract before throwing an error. Defaults to 10,800 seconds (three
 hours).}
 
-\item{verbose}{If \code{TRUE}, the default, messages will be printed at the
-beginning of each wait interval with the current wait time, each time the
-status of the extract is checked, and when the extract is ready to
-download. Setting this argument to \code{FALSE} will silence these
-messages.}
+\item{verbose}{If \code{TRUE}, print status updates to the R console at the
+beginning of each wait interval and upon extract completion.
+Defaults to \code{TRUE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}.}
@@ -59,8 +59,9 @@ extract definition and the URLs from which to download extract files.
 }
 \description{
 Wait for an extract to finish by periodically checking its status via the
-IPUMS API and returning when the extract is ready to download. For an
-overview of ipumsr microdata API functionality, see
+IPUMS API until it is complete.
+
+For an overview of ipumsr microdata API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
