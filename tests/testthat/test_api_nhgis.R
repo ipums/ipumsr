@@ -485,7 +485,7 @@ test_that("Can check status of an NHGIS extract with collection and number", {
   expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(checked_nhgis_extract$status, "completed")
   vcr::use_cassette("is-nhgis-extract-ready", {
-    is_ready <- is_extract_ready(submitted_nhgis_extract)
+    is_ready <- is_extract_ready(c("nhgis", submitted_extract_number))
   })
   expect_true(is_ready)
   vcr::use_cassette("get-nhgis-extract-info", {
@@ -508,6 +508,32 @@ test_that("Can check status of an NHGIS extract with collection and number", {
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number."
   )
+})
+
+test_that("We avoid superflous checks when getting extract status", {
+  skip_if_no_api_access(have_api_access)
+
+  # Set api_key to NULL to force authorization errors if any API request
+  # is made. Otherwise, we know calls returned with no request.
+  expect_message(
+    wait_for_extract(ready_nhgis_extract, api_key = NULL),
+    "IPUMS NHGIS extract.+is ready to download"
+  )
+
+  # Simulate an expired extract:
+  ready_nhgis_extract$status <- "completed"
+  ready_nhgis_extract$download_links <- EMPTY_NAMED_LIST
+
+  expect_warning(
+    ready_extract <- is_extract_ready(ready_nhgis_extract, api_key = NULL),
+    "IPUMS NHGIS extract.+has either expired or failed."
+  )
+  expect_error(
+    wait_for_extract(ready_nhgis_extract, api_key = NULL),
+    "IPUMS NHGIS extract.+has either expired or failed"
+  )
+
+  expect_false(ready_extract)
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
