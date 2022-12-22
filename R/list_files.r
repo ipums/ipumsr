@@ -32,6 +32,10 @@ ipums_list_files <- function(file, types = NULL, data_layer = NULL,
   shape_layer <- enquo(shape_layer)
   raster_layer <- enquo(raster_layer)
 
+  data_files <- NULL
+  shape_files <- NULL
+  raster_files <- NULL
+
   if (is.null(types) | "data" %in% types) {
     data_files <- ipums_list_data(file, !!data_layer)
   }
