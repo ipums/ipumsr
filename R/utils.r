@@ -35,12 +35,27 @@ find_files_in <- function(file,
                           multiple_ok = FALSE,
                           none_ok = TRUE) {
 
+  stopifnot(length(file) == 1)
+
   if (file_is_zip(file)) {
     file_names <- sort(utils::unzip(file, list = TRUE)$Name)
   } else if (file_is_dir(file)) {
     file_names <- sort(dir(file))
   } else {
-    file_names <- file
+    if (!grepl(name_ext, file)) {
+      if (none_ok) {
+        file <- character(0)
+      } else {
+        rlang::abort(
+          paste0(
+            "Expected `file` to match extension \"", name_ext,
+            "\", but got \"", tools::file_ext(file), "\"."
+          )
+        )
+      }
+    }
+
+    return(file)
   }
 
   if (!is.null(name_ext)) {

@@ -457,4 +457,16 @@ test_that("Can read certain unzipped structures", {
 
   expect_identical(x3, x1)
 
+  # Direct data file errors if mismatched extension
+  expect_error(
+    read_nhgis_fwf(csv_tmpfile1),
+    "Expected `file` to match extension"
+  )
+
+  # Reading a direct data file should ignore data layer
+  expect_identical(
+    suppressWarnings(read_nhgis(csv_tmpfile1, data_layer = 3)),
+    x2
+  )
+
 })
