@@ -9,3 +9,70 @@ test_that("can read DDI with labeled string variable", {
   ][[1]]
   expect_type(sample_val_labels$val, "character")
 })
+
+test_that("We ignore layer selection for direct .xml files", {
+  ddi1 <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
+  ddi2 <- read_ipums_ddi(ipums_example("mtus_00002.xml"), data_layer = 4)
+  expect_identical(ddi1, ddi2)
+})
+
+test_that("Can read ddi from zip archives and directories", {
+
+  xml1 <- xml2::read_xml(ipums_example("cps_00006.xml"))
+  xml2 <- xml2::read_xml(ipums_example("cps_00010.xml"))
+
+  tmp <- tempfile()
+
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE, after = FALSE)
+
+  dir.create(tmp)
+
+  xml2::write_xml(xml1, file.path(tmp, "xml1.xml"))
+  xml2::write_xml(xml2, file.path(tmp, "xml2.xml"))
+
+  expect_error(
+    read_ipums_ddi(tmp),
+    "Multiple files found"
+  )
+
+  expect_error(
+    read_ipums_ddi(tmp, data_layer = contains("not-in-file")),
+    "The provided `data_layer` did not select any of the available files"
+  )
+
+  expect_identical(
+    read_ipums_ddi(tmp, data_layer = 1)$var_info,
+    read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
+  )
+  expect_identical(
+    read_ipums_ddi(tmp, data_layer = 2)$var_info,
+    read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
+  )
+
+  zip(
+    file.path(tmp, "test.zip"),
+    c(file.path(tmp, "xml1.xml"), file.path(tmp, "xml2.xml")),
+    flags = "-q"
+  )
+
+  expect_error(
+    read_ipums_ddi(file.path(tmp, "test.zip")),
+    "Multiple files found"
+  )
+
+  expect_identical(
+    read_ipums_ddi(
+      file.path(tmp, "test.zip"),
+      data_layer = contains("xml1")
+    )$var_info,
+    read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
+  )
+  expect_identical(
+    read_ipums_ddi(
+      file.path(tmp, "test.zip"),
+      data_layer = contains("xml2")
+    )$var_info,
+    read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
+  )
+
+})

@@ -28,12 +28,20 @@ read_ipums_ddi <- function(ddi_file, data_layer = NULL, lower_vars = FALSE) {
 
   custom_check_file_exists(ddi_file)
 
-  if (fostr_sub(ddi_file, -4) == ".zip") {
-    ddi_in_zip <- find_files_in(ddi_file, "xml", data_layer)
-    ddi_file_load <- unz(ddi_file, ddi_in_zip)
-  } else {
-    ddi_file_load <- ddi_file
+  ddi_file_load <- find_files_in(
+    ddi_file,
+    "xml",
+    data_layer,
+    none_ok = FALSE,
+    multiple_ok = FALSE
+  )
+
+  if (file_is_zip(ddi_file)) {
+    ddi_file_load <- unz(ddi_file, ddi_file_load)
+  } else if (file_is_dir(ddi_file)) {
+    ddi_file_load <- file.path(ddi_file, ddi_file_load)
   }
+
   ddi_xml <- xml2::read_xml(ddi_file_load, data_layer = NULL)
 
   # Basic information
