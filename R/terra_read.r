@@ -155,9 +155,9 @@ read_terra_area <- function(
 
   # Try to read codebook for var info ----
   if (data_is_zip_or_path & is.null(cb_file)) {
-    cb <- read_terra_codebook(data_file, !!data_layer)
+    cb <- read_ipums_codebook(data_file, !!data_layer)
   } else if (!is.null(cb_file)) {
-    cb <- read_terra_codebook(cb_file)
+    cb <- read_ipums_codebook(cb_file)
   }
 
   # If both were loaded, then the ddi has better citation info, but the

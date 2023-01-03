@@ -385,7 +385,7 @@ test_that("Can read Terra codebook", {
     skip("Couldn't find terra area ipumsexamples likely not installed.")
   }
 
-  cb <- read_terra_codebook(terra_area)
+  cb <- read_ipums_codebook(terra_area)
 
   expect_equal(dim(cb$var_info), c(4, 10))
 

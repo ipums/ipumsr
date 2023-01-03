@@ -2,13 +2,10 @@
 % Please edit documentation in R/ddi_read.r
 \name{read_nhgis_codebook}
 \alias{read_nhgis_codebook}
-\alias{read_terra_codebook}
 \alias{read_ipums_codebook}
-\title{Read metadata from an NHGIS or Terra extract codebook file}
+\title{Read metadata from an NHGIS extract codebook file}
 \usage{
 read_nhgis_codebook(cb_file, data_layer = NULL, raw = FALSE)
-
-read_terra_codebook(cb_file, data_layer = NULL)
 
 read_ipums_codebook(cb_file, data_layer = NULL)
 }
@@ -34,17 +31,15 @@ If \code{raw = TRUE}, a character vector with one element for each
 line of the given \code{cb_file}.
 }
 \description{
-NHGIS and Terra extracts include a .txt codebook file with metadata about
+NHGIS extracts include a .txt codebook file with metadata about
 the contents of the extract. This loads the information contained in this
 file into a structured format.
-
-Note: IPUMS Terra is no longer being actively maintained. For more
-information about decommissioning, click
-\href{https://terra.ipums.org/decommissioning}{here}.
-
-\code{read_ipums_codebook()} has been split into two functions:
-\code{read_nhgis_codebook()} and \code{read_terra_codebook()}. Use of
-\code{read_ipums_codebook()} is now discouraged.
+}
+\details{
+This function includes functionality that previously was contained in
+\code{read_ipums_codebook()}. \code{read_ipums_codebook()} supported codebooks
+for both NHGIS and IPUMS Terra extracts. IPUMS Terra functionality is no
+longer being maintained, and \code{read_ipums_codebook()} has been deprecated.
 }
 \examples{
 # Example NHGIS extract

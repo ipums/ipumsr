@@ -264,20 +264,18 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
   )
 }
 
-#' Read metadata from an NHGIS or Terra extract codebook file
+#' Read metadata from an NHGIS extract codebook file
 #'
 #' @description
-#' NHGIS and Terra extracts include a .txt codebook file with metadata about
+#' NHGIS extracts include a .txt codebook file with metadata about
 #' the contents of the extract. This loads the information contained in this
 #' file into a structured format.
 #'
-#' Note: IPUMS Terra is no longer being actively maintained. For more
-#' information about decommissioning, click
-#' [here](https://terra.ipums.org/decommissioning).
-#'
-#' `read_ipums_codebook()` has been split into two functions:
-#' `read_nhgis_codebook()` and `read_terra_codebook()`. Use of
-#' `read_ipums_codebook()` is now discouraged.
+#' @details
+#' This function includes functionality that previously was contained in
+#' `read_ipums_codebook()`. `read_ipums_codebook()` supported codebooks
+#' for both NHGIS and IPUMS Terra extracts. IPUMS Terra functionality is no
+#' longer being maintained, and `read_ipums_codebook()` has been deprecated.
 #'
 #' @param cb_file Path to the codebook file to be loaded. This can be a .zip
 #'   archive as provided by the extract system or [`download_extract()`],
@@ -390,12 +388,6 @@ read_nhgis_codebook <- function(cb_file, data_layer = NULL, raw = FALSE) {
 
   out
 
-}
-
-#' @rdname ipums_codebook
-#' @export
-read_terra_codebook <- function(cb_file, data_layer = NULL) {
-  read_ipums_codebook(cb_file, !!enquo(data_layer))
 }
 
 #' Helper function to read codebook information for an NHGIS
