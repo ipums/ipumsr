@@ -292,9 +292,10 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #'
 #' @details
 #' This function includes functionality that previously was contained in
-#' `read_ipums_codebook()`. `read_ipums_codebook()` supported codebooks
-#' for both NHGIS and IPUMS Terra extracts. IPUMS Terra functionality is no
-#' longer being maintained, and `read_ipums_codebook()` has been deprecated.
+#' `read_ipums_codebook()`, which supported the loading of codebooks
+#' for both NHGIS and IPUMS Terra extracts. Support for IPUMS Terra has been
+#' discontinued. `read_ipums_codebook()` has been deprecated and will be
+#' removed in a future release.
 #'
 #' @param cb_file Path to the codebook file to be loaded. This can be a .zip
 #'   archive as provided by the extract system or [`download_extract()`],
@@ -517,9 +518,33 @@ read_nhgis_ds_tables <- function(dd, table_rows) {
 
 }
 
-#' @rdname ipums_codebook
+#' Read metadata from an IPUMS Terra extract codebook file
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Support for IPUMS Terra has been discontinued. `read_ipums_codebook()` has
+#' been deprecated and will be removed in a future release.
+#'
+#' To read an NHGIS codebook, use [`read_nhgis_codebook`].
+#'
+#' @keywords internal
+#'
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_ipums_codebook()",
+    details = c(
+      "To read an NHGIS codebook, use `read_nhgis_codebook()`.",
+      paste0(
+        "Support for IPUMS Terra has been discontinued and will be removed",
+        " in a future release."
+      )
+    )
+  )
+
   data_layer <- enquo(data_layer)
 
   custom_check_file_exists(cb_file)

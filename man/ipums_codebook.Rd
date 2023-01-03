@@ -2,7 +2,6 @@
 % Please edit documentation in R/ddi_read.r
 \name{read_nhgis_codebook}
 \alias{read_nhgis_codebook}
-\alias{read_ipums_codebook}
 \title{Read metadata from an NHGIS extract codebook file}
 \usage{
 read_nhgis_codebook(
@@ -11,8 +10,6 @@ read_nhgis_codebook(
   raw = FALSE,
   data_layer = deprecated()
 )
-
-read_ipums_codebook(cb_file, data_layer = NULL)
 }
 \arguments{
 \item{cb_file}{Path to the codebook file to be loaded. This can be a .zip
@@ -47,9 +44,10 @@ file into a structured format.
 }
 \details{
 This function includes functionality that previously was contained in
-\code{read_ipums_codebook()}. \code{read_ipums_codebook()} supported codebooks
-for both NHGIS and IPUMS Terra extracts. IPUMS Terra functionality is no
-longer being maintained, and \code{read_ipums_codebook()} has been deprecated.
+\code{read_ipums_codebook()}, which supported the loading of codebooks
+for both NHGIS and IPUMS Terra extracts. Support for IPUMS Terra has been
+discontinued. \code{read_ipums_codebook()} has been deprecated and will be
+removed in a future release.
 }
 \examples{
 # Example NHGIS extract

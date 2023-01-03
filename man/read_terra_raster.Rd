@@ -25,6 +25,11 @@ For \code{read_terra_raster} A \code{\link[raster]{raster}} object, for
 \code{read_terra_raster_list} A list of raster objects.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Support for IPUMS Terra has been discontinued. These functions will be
+removed in a future release.
+
 Read a single raster datasets downloaded from the IPUMS Terra extract system using
 \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 }
@@ -46,3 +51,4 @@ Other ipums_read:
 \code{\link{read_terra_micro}()}
 }
 \concept{ipums_read}
+\keyword{internal}

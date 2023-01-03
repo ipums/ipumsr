@@ -5,6 +5,12 @@
 
 #' Read data from an IPUMS Terra raster extract
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Support for IPUMS Terra has been discontinued. These functions will be
+#' removed in a future release.
+#'
 #' Read a single raster datasets downloaded from the IPUMS Terra extract system using
 #' \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 #'
@@ -19,6 +25,9 @@
 #' @param verbose Logical, indicating whether to print progress information
 #'   to console.
 #' @export
+#'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' data <- read_terra_raster("2552_bundle.zip", "LCDECIDOPZM2013.tiff")
@@ -30,6 +39,16 @@ read_terra_raster <- function(
   data_layer = NULL,
   verbose = TRUE
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_raster()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   read_terra_raster_internal(data_file, data_layer, verbose, FALSE)
 }
@@ -41,6 +60,16 @@ read_terra_raster_list <- function(
   data_layer = NULL,
   verbose = TRUE
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_raster_list()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   read_terra_raster_internal(data_file, data_layer, verbose, TRUE)
 }
@@ -94,6 +123,12 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 
 #' Read data from an IPUMS Terra area extract
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Support for IPUMS Terra has been discontinued. These functions will be
+#' removed in a future release.
+#'
 #' Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 #'
 #' @return
@@ -129,6 +164,9 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #'   adding all (val_labels, var_label and var_desc). See
 #'   \code{\link{set_ipums_var_attributes}} for more details.
 #' @export
+#'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' data <- read_terra_area("2553_bundle.zip")
@@ -142,6 +180,16 @@ read_terra_area <- function(
   verbose = TRUE,
   var_attrs = c("val_labels", "var_label", "var_desc")
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_area()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
   data_is_zip_or_path <- path_is_zip_or_dir(data_file)
@@ -215,6 +263,16 @@ read_terra_area_sf <- function(
   verbose = TRUE,
   var_attrs = c("val_labels", "var_label", "var_desc")
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_area_sf()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   data <- read_terra_area(data_file, !!data_layer, ddi_file, cb_file, verbose, var_attrs)
 
@@ -251,6 +309,16 @@ read_terra_area_sp <- function(
   verbose = TRUE,
   var_attrs = c("val_labels", "var_label", "var_desc")
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_area_sp()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   data <- read_terra_area(data_file, !!data_layer, ddi_file, cb_file, verbose, var_attrs)
 
@@ -274,6 +342,12 @@ read_terra_area_sp <- function(
 
 #' Read data from an IPUMS Terra microdata extract
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Support for IPUMS Terra has been discontinued. This function will be
+#' removed in a future release.
+#'
 #' Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 #'
 #' @return
@@ -296,6 +370,9 @@ read_terra_area_sp <- function(
 #'   adding all (val_labels, var_label and var_desc). See
 #'   \code{\link{set_ipums_var_attributes}} for more details.
 #' @export
+#'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' data <- read_terra_micro("2553_bundle.zip")
@@ -309,6 +386,16 @@ read_terra_micro <- function(
   verbose = TRUE,
   var_attrs = c("val_labels", "var_label", "var_desc")
 ) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_terra_micro()",
+    details = paste0(
+      "IPUMS Terra functionality is no longer being maintained and will be ",
+      " removed in a future release."
+    )
+  )
+
   data_layer <- enquo(data_layer)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
 
