@@ -32,7 +32,8 @@ Imports:
     xml2,
     zeallot,
     jsonlite,
-    httr
+    httr,
+    lifecycle
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
 Suggests:
