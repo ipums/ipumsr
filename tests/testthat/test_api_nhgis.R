@@ -560,7 +560,7 @@ tryCatch(
 
       data <- read_nhgis(
         table_data_file_path,
-        data_layer = contains("blck_grp"),
+        file_select = contains("blck_grp"),
         show_conditions = FALSE
       )
 
@@ -570,7 +570,7 @@ tryCatch(
       # there is only 1 shapefile in extract? confusing functionality currently.
       data_shp_sf <- read_nhgis_sf(
         gis_data_file_path,
-        shape_layer = contains("blck_grp")
+        file_select = contains("blck_grp")
       )
       expect_s3_class(data_shp_sf, "sf")
 
@@ -699,7 +699,7 @@ tryCatch(
 
       data <- read_nhgis(
         table_data_file_path,
-        data_layer = contains("state"),
+        file_select = contains("state"),
         show_conditions = FALSE
       )
 
@@ -709,7 +709,7 @@ tryCatch(
       # there is only 1 shapefile in extract? confusing functionality currently.
       data_shp_sf <- read_nhgis_sf(
         gis_data_file_path,
-        shape_layer = contains("blck_grp")
+        file_select = contains("blck_grp")
       )
       expect_s3_class(data_shp_sf, "sf")
 

@@ -5,7 +5,12 @@
 \alias{read_ipums_codebook}
 \title{Read metadata from an NHGIS extract codebook file}
 \usage{
-read_nhgis_codebook(cb_file, data_layer = NULL, raw = FALSE)
+read_nhgis_codebook(
+  cb_file,
+  file_select = NULL,
+  raw = FALSE,
+  data_layer = deprecated()
+)
 
 read_ipums_codebook(cb_file, data_layer = NULL)
 }
@@ -14,13 +19,18 @@ read_ipums_codebook(cb_file, data_layer = NULL)
 archive as provided by the extract system or \code{\link[=download_extract]{download_extract()}},
 a directory containing the codebook, or the codebook .txt file itself.}
 
-\item{data_layer}{dplyr \code{\link[dplyr]{select}}-style notation for
-uniquely identifying the data layer to load. Required for reading from
-.zip files for extracts with multiple files.}
+\item{file_select}{If \code{cb_file} is a .zip archive or directory that contains
+multiple codebook files, an expression identifying the file to load.
+Accepts a character string specifying the file name,
+\code{\link{dplyr_select_style}} conventions, or an index position of the file.
+Ignored if \code{ddi_file} is the path to a single codebook file.}
 
 \item{raw}{If \code{TRUE}, read lines of the provided \code{cb_file} instead of
 summarizing variable information in an \code{ipums_ddi} object. Defaults to
 \code{FALSE}.}
+
+\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
+instead.}
 }
 \value{
 If \code{raw = FALSE}, an \code{ipums_ddi} object with information on the

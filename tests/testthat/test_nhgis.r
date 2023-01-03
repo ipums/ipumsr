@@ -42,7 +42,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_silent(
     nhgis_fwf1 <- read_nhgis(
       nhgis_multi_fwf,
-      data_layer = 1,
+      file_select = 1,
       show_conditions = FALSE,
       progress = FALSE
     )
@@ -51,7 +51,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_silent(
     nhgis_csv1 <- read_nhgis(
       nhgis_multi_ds,
-      data_layer = 1,
+      file_select = 1,
       show_conditions = FALSE,
       progress = FALSE,
       show_col_types = FALSE
@@ -86,7 +86,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
 
   expect_equal(
     colnames(nhgis_fwf1),
-    read_nhgis_codebook(nhgis_multi_fwf, data_layer = 1)$var_info$var_name
+    read_nhgis_codebook(nhgis_multi_fwf, file_select = 1)$var_info$var_name
   )
 
   # This has some coltype differences which are to be expected
@@ -106,7 +106,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_warning(
     read_nhgis(
       nhgis_multi_fwf,
-      data_layer = 1,
+      file_select = 1,
       do_file = FALSE,
       show_conditions = FALSE,
       progress = FALSE,
@@ -118,7 +118,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_warning(
     read_nhgis(
       nhgis_multi_fwf,
-      data_layer = 1,
+      file_select = 1,
       do_file = "asdf",
       show_conditions = FALSE,
       progress = FALSE,
@@ -130,7 +130,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_warning(
     nhgis_fwf2 <- read_nhgis(
       nhgis_multi_fwf,
-      data_layer = 1,
+      file_select = 1,
       do_file = "asdf",
       col_positions = readr::fwf_widths(1),
       show_conditions = FALSE,
@@ -156,14 +156,14 @@ test_that("Can read NHGIS extract: single time series table", {
 
   tst <- read_nhgis(
     nhgis_multi_fwf,
-    data_layer = contains("ts"),
+    file_select = contains("ts"),
     progress = FALSE,
     show_conditions = FALSE
   )
 
   tst2 <- read_nhgis(
     nhgis_multi_ds,
-    data_layer = contains("ts"),
+    file_select = contains("ts"),
     progress = FALSE,
     show_conditions = FALSE,
     show_col_types = FALSE
@@ -182,8 +182,8 @@ test_that("Can read NHGIS extract: single time series table", {
 
 test_that("Can select data files by index", {
 
-  nhgis1 <- read_nhgis(nhgis_multi_ds, data_layer = 1, show_conditions = FALSE)
-  nhgis2 <- read_nhgis(nhgis_multi_ds, data_layer = 2, show_conditions = FALSE)
+  nhgis1 <- read_nhgis(nhgis_multi_ds, file_select = 1, show_conditions = FALSE)
+  nhgis2 <- read_nhgis(nhgis_multi_ds, file_select = 2, show_conditions = FALSE)
 
   expect_equal(dim(nhgis1), c(1, 115))
   expect_equal(dim(nhgis2), c(84, 28))
@@ -199,13 +199,13 @@ test_that("Can select data files with tidyselect", {
 
   nhgis1 <- read_nhgis(
     nhgis_multi_ds,
-    data_layer = contains("ds239"),
+    file_select = contains("ds239"),
     show_conditions = FALSE
   )
 
   nhgis2 <- read_nhgis(
     nhgis_multi_ds,
-    data_layer = contains("ts_nominal"),
+    file_select = contains("ts_nominal"),
     show_conditions = FALSE
   )
 
@@ -241,7 +241,7 @@ test_that("We can pass arguments to underlying reader functions", {
   expect_warning(
     nhgis_data_fwf <- read_nhgis(
       nhgis_multi_fwf,
-      data_layer = 1,
+      file_select = 1,
       show_conditions = FALSE,
       col_positions = readr::fwf_widths(c(4, 2, 2, 1)),
       col_types = "ccil"
@@ -281,7 +281,7 @@ test_that("We get informative error messages when reading NHGIS extracts", {
   expect_error(
     nhgis <- read_nhgis(
       nhgis_multi_ds,
-      data_layer = contains("nhgis"),
+      file_select = contains("nhgis"),
       show_conditions = FALSE
     ),
     "Multiple files found"
@@ -289,23 +289,23 @@ test_that("We get informative error messages when reading NHGIS extracts", {
   expect_error(
     nhgis <- read_nhgis(
       nhgis_multi_ds,
-      data_layer = 1:2,
+      file_select = 1:2,
       show_conditions = FALSE
     ),
     "Multiple files found"
   )
 
   expect_error(
-    read_nhgis(nhgis_multi_ds, data_layer = 3, show_conditions = FALSE),
+    read_nhgis(nhgis_multi_ds, file_select = 3, show_conditions = FALSE),
     "Can't subset files past the end.+Available files:"
   )
   expect_error(
     read_nhgis(
       nhgis_multi_ds,
-      data_layer = contains("not-in-file"),
+      file_select = contains("not-in-file"),
       show_conditions = FALSE
     ),
-    "The provided `data_layer` did not select any of the available files:"
+    "The provided `file_select` did not select any of the available files:"
   )
 })
 
@@ -333,25 +333,25 @@ test_that("Can read NHGIS codebook", {
 
   d_fwf <- read_nhgis(
     nhgis_multi_fwf,
-    data_layer = 1,
+    file_select = 1,
     show_conditions = FALSE,
     progress = FALSE,
     show_col_types = FALSE
   )
 
-  cb_fwf <- read_nhgis_codebook(nhgis_multi_fwf, data_layer = 1)
+  cb_fwf <- read_nhgis_codebook(nhgis_multi_fwf, file_select = 1)
 
   # Time series table ----------
 
   d_fwf_tst <- read_nhgis(
     nhgis_multi_fwf,
-    data_layer = 2,
+    file_select = 2,
     show_conditions = FALSE,
     progress = FALSE,
     show_col_types = FALSE
   )
 
-  cb_fwf_ts <- read_nhgis_codebook(nhgis_multi_fwf, data_layer = 2)
+  cb_fwf_ts <- read_nhgis_codebook(nhgis_multi_fwf, file_select = 2)
 
   expect_equal(cb_csv$var_info$var_name, colnames(d_csv))
   expect_equal(cb_fwf$var_info$var_name, colnames(d_fwf))
@@ -439,7 +439,7 @@ test_that("Can read certain unzipped structures", {
   )
 
   expect_identical(
-    read_nhgis(tempdir(), data_layer = 1, var_attrs = NULL),
+    read_nhgis(tempdir(), file_select = 1, var_attrs = NULL),
     x1
   )
 
@@ -452,7 +452,7 @@ test_that("Can read certain unzipped structures", {
   )
 
   suppressWarnings(
-    x3 <- read_nhgis(tempdir(), file_type = "csv", data_layer = 1)
+    x3 <- read_nhgis(tempdir(), file_type = "csv", file_select = 1)
   )
 
   expect_identical(x3, x1)
@@ -465,7 +465,7 @@ test_that("Can read certain unzipped structures", {
 
   # Reading a direct data file should ignore data layer
   expect_identical(
-    suppressWarnings(read_nhgis(csv_tmpfile1, data_layer = 3)),
+    suppressWarnings(read_nhgis(csv_tmpfile1, file_select = 3)),
     x2
   )
 

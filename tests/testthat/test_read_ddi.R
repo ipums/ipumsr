@@ -12,7 +12,7 @@ test_that("can read DDI with labeled string variable", {
 
 test_that("We ignore layer selection for direct .xml files", {
   ddi1 <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
-  ddi2 <- read_ipums_ddi(ipums_example("mtus_00002.xml"), data_layer = 4)
+  ddi2 <- read_ipums_ddi(ipums_example("mtus_00002.xml"), file_select = 4)
   expect_identical(ddi1, ddi2)
 })
 
@@ -36,16 +36,16 @@ test_that("Can read ddi from zip archives and directories", {
   )
 
   expect_error(
-    read_ipums_ddi(tmp, data_layer = contains("not-in-file")),
-    "The provided `data_layer` did not select any of the available files"
+    read_ipums_ddi(tmp, file_select = contains("not-in-file")),
+    "The provided `file_select` did not select any of the available files"
   )
 
   expect_identical(
-    read_ipums_ddi(tmp, data_layer = 1)$var_info,
+    read_ipums_ddi(tmp, file_select = 1)$var_info,
     read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
   )
   expect_identical(
-    read_ipums_ddi(tmp, data_layer = 2)$var_info,
+    read_ipums_ddi(tmp, file_select = 2)$var_info,
     read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
   )
 
@@ -63,14 +63,14 @@ test_that("Can read ddi from zip archives and directories", {
   expect_identical(
     read_ipums_ddi(
       file.path(tmp, "test.zip"),
-      data_layer = contains("xml1")
+      file_select = contains("xml1")
     )$var_info,
     read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
   )
   expect_identical(
     read_ipums_ddi(
       file.path(tmp, "test.zip"),
-      data_layer = contains("xml2")
+      file_select = contains("xml2")
     )$var_info,
     read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
   )

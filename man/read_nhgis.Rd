@@ -2,49 +2,28 @@
 % Please edit documentation in R/nhgis_read.r
 \name{read_nhgis}
 \alias{read_nhgis}
-\alias{read_nhgis_sf}
-\alias{read_nhgis_sp}
 \title{Read data from an NHGIS extract}
 \usage{
 read_nhgis(
   data_file,
-  data_layer = NULL,
+  file_select = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   show_conditions = TRUE,
   do_file = NULL,
   file_type = NULL,
   na = NULL,
-  ...
-)
-
-read_nhgis_sf(
-  shape_file,
-  shape_layer = NULL,
-  vars = NULL,
-  encoding = NULL,
-  bind_multiple = FALSE,
-  add_layer_var = NULL,
-  ...
-)
-
-read_nhgis_sp(
-  shape_file,
-  shape_layer = NULL,
-  vars = NULL,
-  encoding = NULL,
-  bind_multiple = FALSE,
-  add_layer_var = NULL,
-  ...
+  ...,
+  data_layer = deprecated()
 )
 }
 \arguments{
 \item{data_file}{Path to the data file, a .zip archive from an NHGIS
 extract, or a directory containing the data file.}
 
-\item{data_layer}{For .zip extracts with multiple datasets, the name of the
-data to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
-a dataset.}
+\item{file_select}{If \code{data_file} contains multiple files, an expression
+identifying the files to load. Accepts a character vector specifying the
+file name, \code{\link{dplyr_select_style}} conventions, or an index position. This
+must uniquely identify a dataset.}
 
 \item{var_attrs}{Variable attributes to add from the codebook, defaults to
 adding all (val_labels, var_label and var_desc). See
@@ -59,17 +38,7 @@ indicate how to parse the fixed-width file to be loaded.
 If \code{NULL}, looks in the directory of the .dat file to be loaded for a .do
 file with the same name. If \code{FALSE} or if the .do file cannot be found,
 the .dat file will be parsed by the
-values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).}
-
-\item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
-files) indicating the type of file to search for in the path provided to
-\code{data_file}. If \code{NULL}, determines the file type automatically based on
-the files found in \code{data_file}. Only needed if \code{data_file} contains both
-.csv and .dat files.}
-
-\item{na}{Character vector of strings to interpret as missing values.
-If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
-for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.
+values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).
 
 Note that without a corresponding .do file, some columns may
 include implicit decimal values. When working with fixed-width data,
@@ -79,45 +48,29 @@ being parsed and recoded correctly.
 If you no longer have access to the .do file for this \code{data_file}, consider
 resubmitting the extract that produced the data.}
 
+\item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
+files) indicating the type of file to search for in the path provided to
+\code{data_file}. If \code{NULL}, determines the file type automatically based on
+the files found in \code{data_file}. Only needed if \code{data_file} contains both
+.csv and .dat files.}
+
+\item{na}{Character vector of strings to interpret as missing values.
+If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
+for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
+
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}
 
-\item{shape_file}{Path to a single .shp file, a .zip archive from an IPUMS
-extract, or a directory containing at least one .shp file.}
-
-\item{shape_layer}{For .zip extracts with multiple files, the name of the
-shape files to load. Accepts a character vector specifying the file name,
-an integer specifying the index of the file to load, or
-\code{\link{dplyr_select_style}} conventions. If multiple files are
-selected, \code{bind_multiple} must be equal to \code{TRUE}.}
-
-\item{vars}{Names of variables to include in the output data.
-By default, includes all variables found in the provided \code{shape_file}.}
-
-\item{encoding}{The text encoding to use when reading the shape file. Typically
-the defaults should read the data correctly, but for some extracts you may
-need to set them manually.
-If \code{NULL}, will attempt to guess the correct encoding using the associated
-.cpg file. If none is available, it will default to \code{"latin1"}.
-NHGIS files default to \code{"latin1"}. Terra files default to \code{"UTF-8"}.}
-
-\item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
-row-bind the files into a single output. Note that some data sources may
-not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
-\code{SpatialPointsDataFrame}).}
-
-\item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. By default, this column will be
-named \code{"layer"}. If \code{"layer"} already exists in the data, a unique name
-will be created to avoid name conflicts. The column name will always be
-prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
-\code{FALSE} otherwise.}
+\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please
+use \code{file_select} instead.}
 }
 \value{
 A \code{\link[tibble:tbl_df-class]{tibble}} of the data found in \code{data_file}.
 }
 \description{
-Load a dataset downloaded from the NHGIS extract system.
+Load a tabular data source downloaded from the NHGIS extract system.
+
+To load spatial data sources from NHGIS extracts, see \code{\link{read_nhgis_sf}}.
 }
 \examples{
 csv_file <- ipums_example("nhgis0707_csv.zip")
@@ -129,7 +82,8 @@ Other ipums_read:
 \code{\link{read_ipums_micro_chunked}()},
 \code{\link{read_ipums_micro_yield}()},
 \code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
+\code{\link{read_nhgis_sf}()},
+\code{\link{read_nhgis_sp}()},
 \code{\link{read_terra_area}()},
 \code{\link{read_terra_micro}()},
 \code{\link{read_terra_raster}()}

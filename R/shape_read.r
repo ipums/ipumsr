@@ -6,17 +6,18 @@
 #' Read boundary (GIS) files from an IPUMS extract
 #'
 #' @description
-#' Read spatial data from an IPUMS extract into R.
-#' Data can be loaded using [`sf`](https://r-spatial.github.io/sf/) or
-#' [`sp`](https://cran.r-project.org/web/packages/sp/index.html).
+#' Read spatial data from an IPUMS extract into R using the
+#' [`sf`](https://r-spatial.github.io/sf/) package.
+#'
+#' `read_nhgis_sf` is an alias for `read_ipums_sf`, but defaults to using
+#' `bind_multiple = FALSE`. These functions may be combined in a future release.
 #'
 #' @param shape_file Path to a single .shp file, a .zip archive from an IPUMS
 #'   extract, or a directory containing at least one .shp file.
-#' @param shape_layer For .zip extracts with multiple files, the name of the
-#'   shape files to load. Accepts a character vector specifying the file name,
-#'   an integer specifying the index of the file to load, or
-#'   \code{\link{dplyr_select_style}} conventions. If multiple files are
-#'   selected, `bind_multiple` must be equal to `TRUE`.
+#' @param file_select If `shape_file` contains multiple files, an expression
+#'   identifying the files to load. Accepts a character string specifying the
+#'   file name, [`dplyr_select_style`] conventions, or index positions. If
+#'   multiple files are selected, `bind_multiple` must be equal to `TRUE`.
 #' @param vars Names of variables to include in the output data.
 #'   By default, includes all variables found in the provided `shape_file`.
 #' @param encoding The text encoding to use when reading the shape file. Typically
@@ -26,21 +27,18 @@
 #'   .cpg file. If none is available, it will default to `"latin1"`.
 #'   NHGIS files default to `"latin1"`. Terra files default to `"UTF-8"`.
 #' @param bind_multiple If `TRUE` and `shape_file` contains multiple .shp files,
-#'   row-bind the files into a single output. Note that some data sources may
-#'   not be able to be combined (e.g. `SpatialPolygonsDataFrame` and
-#'   `SpatialPointsDataFrame`).
+#'   row-bind the files into a single output.
 #' @param add_layer_var If `TRUE`, add a variable to the output data indicating
 #'   the file that each row originates from. By default, this column will be
 #'   named `"layer"`. If `"layer"` already exists in the data, a unique name
 #'   will be created to avoid name conflicts. The column name will always be
 #'   prefixed with `"layer"`. Defaults to `TRUE` if `bind_multiple = TRUE` and
 #'   `FALSE` otherwise.
-#' @param ... Additional arguments passed to [`sf::read_sf()`][readr::read_sf]
-#'   or [`rgdal::readOGR()`][rgdal::readOGR]. Note that some arguments are
-#'   fixed.
+#' @param ... Additional arguments passed to [`sf::read_sf()`][sf::read_sf].
+#' @param shape_layer `r lifecycle::badge("deprecated")` Please use
+#'   `file_select` instead.
 #'
-#' @return For `read_ipums_sf`, an `sf` object. For `read_ipums_sp`,
-#'   a `SpatialPolygonsDataFrame` or `SpatialPointsDataFrame` object.
+#' @return An `sf` object
 #'
 #' @examples
 #' shape_file <- ipums_example("nhgis0707_shape_small.zip")
@@ -49,26 +47,32 @@
 #'   sf_data <- read_ipums_sf(shape_file)
 #' }
 #'
-#' # If sp package is available, can load as SpatialPolygonsDataFrame
-#' if (require(sp) && require(rgdal)) {
-#'   sp_data <- read_ipums_sp(shape_file)
-#' }
-#'
 #' @family ipums_read
 #' @export
 read_ipums_sf <- function(shape_file,
-                          shape_layer = NULL,
+                          file_select = NULL,
                           vars = NULL,
                           encoding = NULL,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
-                          ...) {
+                          ...,
+                          shape_layer = deprecated()) {
 
   custom_check_file_exists(shape_file)
 
+  if (!missing(shape_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_ipums_sf(shape_layer = )",
+      "read_ipums_sf(file_select = )",
+    )
+    file_select <- enquo(shape_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
+
   dots <- rlang::list2(...)
 
-  shape_layer <- enquo(shape_layer)
   vars <- enquo(vars)
   load_sf_namespace()
 
@@ -83,7 +87,7 @@ read_ipums_sf <- function(shape_file,
 
   read_shape_files <- shape_file_prep(
     shape_file,
-    shape_layer,
+    file_select,
     bind_multiple,
     shape_temp
   )
@@ -223,7 +227,49 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 }
 
 
-#' @rdname read_ipums_sf
+#' Read boundary (GIS) files from an IPUMS extract
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Read spatial data from an IPUMS extract into R using the
+#' [`sp`](https://cran.r-project.org/web/packages/sp/index.html) package.
+#'
+#' This function has been deprecated because of the upcoming retirement
+#' of the `rgdal` package. For more information, click
+#' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
+#'
+#' Please use [`read_ipums_sf()`] to load spatial data from IPUMS. To convert
+#' to a SpatialPolygonsDataFrame, use [`sf::as_Spatial()`][sf::as_Spatial].
+#'
+#' `read_nhgis_sp` is an alias for `read_ipums_sp`, but defaults to using
+#' `bind_multiple = FALSE`.
+#'
+#' @inheritParams read_ipums_sf
+#' @param shape_layer If `shape_file` contains multiple files, an expression
+#'   identifying the files to load. Accepts a character string specifying the
+#'   file name, [`dplyr_select_style`] conventions, or index positions. If
+#'   multiple files are selected, `bind_multiple` must be equal to `TRUE`.
+#' @param bind_multiple If `TRUE` and `shape_file` contains multiple .shp files,
+#'   row-bind the files into a single output. Note that some data sources may
+#'   not be able to be combined (e.g. `SpatialPolygonsDataFrame` and
+#'   `SpatialPointsDataFrame`).
+#' @param ... Additional arguments passed to
+#'   [`rgdal::readOGR()`][rgdal::readOGR]. Note that some arguments are fixed.
+#'
+#' @return A `SpatialPolygonsDataFrame` or `SpatialPointsDataFrame` object.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' shape_file <- ipums_example("nhgis0707_shape_small.zip")
+#'
+#' # If sp package is available, can load as SpatialPolygonsDataFrame
+#' if (require(sp) && require(rgdal)) {
+#'   sp_data <- read_ipums_sp(shape_file)
+#' }
+#'
+#' @family ipums_read
 #' @export
 read_ipums_sp <- function(shape_file,
                           shape_layer = NULL,
@@ -232,6 +278,12 @@ read_ipums_sp <- function(shape_file,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
                           ...) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_ipums_sp()",
+    "read_ipums_sf()",
+  )
 
   shape_layer <- enquo(shape_layer)
   vars <- enquo(vars)
@@ -439,7 +491,7 @@ determine_encoding <- function(shape_file_vector, encoding = NULL) {
 # Gather the programming logic around going from an IPUMS download to
 # an unzipped folder with a shape file in it (possibly in a temp folder)
 shape_file_prep <- function(shape_file,
-                            shape_layer,
+                            file_select,
                             bind_multiple,
                             shape_temp) {
 
@@ -470,7 +522,7 @@ shape_file_prep <- function(shape_file,
       find_files_in(
         shape_file,
         "shp",
-        shape_layer,
+        file_select,
         multiple_ok = bind_multiple,
         none_ok = FALSE
       ),
@@ -522,7 +574,7 @@ shape_file_prep <- function(shape_file,
       find_files_in(
         shape_file,
         "zip",
-        shape_layer,
+        file_select,
         multiple_ok = bind_multiple,
         none_ok = FALSE
       ),
@@ -571,7 +623,7 @@ shape_file_prep <- function(shape_file,
     rlang::abort(
       c(
         "Directory/zip file not formatted as expected. ",
-        "i" = "Please check your `shape_layer` argument or unzip and try again."
+        "i" = "Please check your `file_select` argument or unzip and try again."
       )
     )
   }

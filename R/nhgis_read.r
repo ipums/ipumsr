@@ -6,14 +6,16 @@
 #' Read data from an NHGIS extract
 #'
 #' @description
-#' Load a dataset downloaded from the NHGIS extract system.
+#' Load a tabular data source downloaded from the NHGIS extract system.
+#'
+#' To load spatial data sources from NHGIS extracts, see [`read_nhgis_sf`].
 #'
 #' @param data_file Path to the data file, a .zip archive from an NHGIS
 #'   extract, or a directory containing the data file.
-#' @param data_layer For .zip extracts with multiple datasets, the name of the
-#'   data to load. Accepts a character vector specifying the file name, or
-#'  [`dplyr_select_style`] conventions. Data layer must uniquely identify
-#'  a dataset.
+#' @param file_select If `data_file` contains multiple files, an expression
+#'   identifying the files to load. Accepts a character vector specifying the
+#'   file name, [`dplyr_select_style`] conventions, or an index position. This
+#'   must uniquely identify a dataset.
 #' @param var_attrs Variable attributes to add from the codebook, defaults to
 #'   adding all (val_labels, var_label and var_desc). See
 #'   [`set_ipums_var_attributes()`] for more details.
@@ -26,14 +28,6 @@
 #'   file with the same name. If `FALSE` or if the .do file cannot be found,
 #'   the .dat file will be parsed by the
 #'   values provided to `col_positions` (see [`read_fwf()`][readr::read_fwf]).
-#' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
-#'   files) indicating the type of file to search for in the path provided to
-#'   `data_file`. If `NULL`, determines the file type automatically based on
-#'   the files found in `data_file`. Only needed if `data_file` contains both
-#'   .csv and .dat files.
-#' @param na Character vector of strings to interpret as missing values.
-#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
-#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
 #'
 #'   Note that without a corresponding .do file, some columns may
 #'   include implicit decimal values. When working with fixed-width data,
@@ -42,8 +36,18 @@
 #'
 #'   If you no longer have access to the .do file for this `data_file`, consider
 #'   resubmitting the extract that produced the data.
+#' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
+#'   files) indicating the type of file to search for in the path provided to
+#'   `data_file`. If `NULL`, determines the file type automatically based on
+#'   the files found in `data_file`. Only needed if `data_file` contains both
+#'   .csv and .dat files.
+#' @param na Character vector of strings to interpret as missing values.
+#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
+#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
 #' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
 #'   [`read_fwf()`][readr::read_fwf].
+#' @param data_layer `r lifecycle::badge("deprecated")` Please
+#'   use `file_select` instead.
 #'
 #' @return A [`tibble`][tibble::tbl_df-class] of the data found in `data_file`.
 #'
@@ -54,13 +58,14 @@
 #' @family ipums_read
 #' @export
 read_nhgis <- function(data_file,
-                       data_layer = NULL,
+                       file_select = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        show_conditions = TRUE,
                        do_file = NULL,
                        file_type = NULL,
                        na = NULL,
-                       ...) {
+                       ...,
+                       data_layer = deprecated()) {
 
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
@@ -70,7 +75,16 @@ read_nhgis <- function(data_file,
     rlang::abort("`file_type` must be one of \"csv\", or \"dat\"")
   }
 
-  data_layer <- enquo(data_layer)
+  if (!missing(data_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis(data_layer = )",
+      "read_nhgis(file_select = )",
+    )
+    file_select <- enquo(data_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
 
   custom_check_file_exists(data_file)
 
@@ -99,7 +113,7 @@ read_nhgis <- function(data_file,
 
   if (file_is_zip(data_file) || file_is_dir(data_file)) {
     cb_ddi_info <- try(
-      read_nhgis_codebook(data_file, !!data_layer),
+      read_nhgis_codebook(data_file, !!file_select),
       silent = TRUE
     )
   } else {
@@ -115,16 +129,16 @@ read_nhgis <- function(data_file,
     )
   }
 
-  # If user passes exact file name as string to data_layer, codebook read will
-  # fail. Try once more by constructing cb name out of the provided data_layer
+  # If user passes exact file name as string to file_select, codebook read will
+  # fail. Try once more by constructing cb name out of the provided file_select
   if (inherits(cb_ddi_info, "try-error")) {
     cb_name <- fostr_replace(
-      quo_name(data_layer),
-      paste0(ipums_file_ext(quo_name(data_layer)), "$"),
+      quo_name(file_select),
+      paste0(ipums_file_ext(quo_name(file_select)), "$"),
       "_codebook.txt"
     )
     cb_ddi_info <- try(
-      read_nhgis_codebook(data_file, data_layer = cb_name),
+      read_nhgis_codebook(data_file, file_select = cb_name),
       silent = TRUE
     )
   }
@@ -149,14 +163,14 @@ read_nhgis <- function(data_file,
   if (has_csv) {
     data <- read_nhgis_csv(
       data_file,
-      data_layer = !!data_layer,
+      file_select = !!file_select,
       na = na %||% c("", "NA"),
       ...
     )
   } else {
     data <- read_nhgis_fwf(
       data_file,
-      data_layer = !!data_layer,
+      file_select = !!file_select,
       do_file = do_file,
       na = na %||% c(".", "", "NA"),
       ...
@@ -182,22 +196,32 @@ read_nhgis <- function(data_file,
 
 }
 
-#' @inheritParams read_ipums_sf
-#'
-#' @rdname read_nhgis
+#' @rdname read_ipums_sf
 #'
 #' @export
 read_nhgis_sf <- function(shape_file,
-                          shape_layer = NULL,
+                          file_select = NULL,
                           vars = NULL,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
-                          ...) {
+                          ...,
+                          shape_layer = deprecated()) {
+
+  if (!missing(shape_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis_sf(shape_layer = )",
+      "read_nhgis_sf(file_select = )",
+    )
+    file_select <- enquo(shape_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
 
   read_ipums_sf(
     shape_file,
-    shape_layer = !!enquo(shape_layer),
+    file_select = !!enquo(file_select),
     vars = !!enquo(vars),
     encoding = encoding,
     bind_multiple = bind_multiple,
@@ -207,9 +231,7 @@ read_nhgis_sf <- function(shape_file,
 
 }
 
-#' @inheritParams read_ipums_sf
-#'
-#' @rdname read_nhgis
+#' @rdname read_ipums_sp
 #'
 #' @export
 read_nhgis_sp <- function(shape_file,
@@ -219,6 +241,13 @@ read_nhgis_sp <- function(shape_file,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
                           ...) {
+
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_nhgis_sp()",
+    "read_nhgis_sf()",
+  )
 
   read_ipums_sp(
     shape_file,
@@ -235,7 +264,7 @@ read_nhgis_sp <- function(shape_file,
 # Internal ---------------------
 
 read_nhgis_fwf <- function(data_file,
-                           data_layer = NULL,
+                           file_select = NULL,
                            do_file = NULL,
                            ...) {
 
@@ -253,12 +282,12 @@ read_nhgis_fwf <- function(data_file,
 
   col_spec <- NULL
 
-  data_layer <- enquo(data_layer)
+  file_select <- enquo(file_select)
 
   file <- find_files_in(
     data_file,
     name_ext = "dat",
-    name_select = data_layer,
+    name_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )
@@ -368,15 +397,15 @@ read_nhgis_fwf <- function(data_file,
 }
 
 read_nhgis_csv <- function(data_file,
-                           data_layer = NULL,
+                           file_select = NULL,
                            ...) {
 
-  data_layer <- enquo(data_layer)
+  file_select <- enquo(file_select)
 
   file <- find_files_in(
     data_file,
     name_ext = "csv",
-    name_select = data_layer,
+    name_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )

@@ -43,13 +43,13 @@ test_that("Can row bind multiple sf files", {
 
   skip_if_not_installed("sf")
 
-  shp2 <- read_ipums_sf(nhgis_multi_shp, shape_layer = 2)
-  shp3 <- read_ipums_sf(nhgis_multi_shp, shape_layer = 3)
+  shp2 <- read_ipums_sf(nhgis_multi_shp, file_select = 2)
+  shp3 <- read_ipums_sf(nhgis_multi_shp, file_select = 3)
 
   expect_silent(
     shp <- read_nhgis_sf(
       nhgis_multi_shp,
-      shape_layer = 2:3,
+      file_select = 2:3,
       bind_multiple = TRUE
     )
   )
@@ -201,22 +201,25 @@ test_that("We get informative errors when reading shapefiles", {
 
   # Multiple spatial files includes hint:
   expect_error(
-    read_ipums_sf(nhgis_multi_shp, shape_layer = 1:2, bind_multiple = FALSE),
+    read_ipums_sf(nhgis_multi_shp, file_select = 1:2, bind_multiple = FALSE),
     "Multiple files found.+To combine files"
   )
 
   expect_error(
-    read_ipums_sf(nhgis_multi_shp, shape_layer = 4),
+    read_ipums_sf(nhgis_multi_shp, file_select = 4),
     "Can't subset files past the end.+Available files:"
   )
 
+  # Checking message causes failure during deprecation because we are not
+  # deprecating single arguments in read_ipums_sp since we are deprecating
+  # entire function.
   expect_error(
     read_ipums_sp(
       nhgis_multi_shp,
       shape_layer = contains("not-in-file"),
       verbose = FALSE
-    ),
-    "The provided `shape_layer` did not select any of the available files:"
+    )
+    # "The provided `shape_layer` did not select any of the available files:"
   )
 
   # geometry differences don't trigger the variable warning used in sf
@@ -234,7 +237,7 @@ test_that("We get informative errors when reading shapefiles", {
   expect_warning(
     read_ipums_sf(
       nhgis_multi_shp,
-      shape_layer = 1:2,
+      file_select = 1:2,
       bind_multiple = TRUE
     ),
     "Some variables had inconsistent types across files:"

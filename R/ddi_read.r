@@ -10,12 +10,18 @@
 #' Includes information about variable and value labels, terms of
 #' usage for the data and positions for the fixed-width file.
 #'
-#' @param ddi_file Filepath to DDI xml file
-#' @param data_layer If ddi_file is an extract with multiple DDIs, dplyr
-#'   \code{\link[dplyr]{select}}-style notation indicating which .xml data
-#'   layer to load.
+#' @param ddi_file Path to the DDI file to be loaded. This can be a .zip
+#'   archive, a directory containing the DDI file, or the .xml file itself.
+#' @param file_select If `ddi_file` is a .zip archive or directory that contains
+#'   multiple DDI files, an expression identifying the .xml file to load.
+#'   Accepts a character string specifying the file name,
+#'   [`dplyr_select_style`] conventions, or an index position of the file.
+#'   Ignored if `ddi_file` is the path to a single .xml file.
 #' @param lower_vars Logical indicating whether to convert variable names
 #'   to lowercase (default is FALSE, in line with IPUMS conventions)
+#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
+#'   instead.
+#'
 #' @return An \code{ipums_ddi} object with metadata information.
 #' @examples
 #' # Example extract DDI
@@ -23,15 +29,28 @@
 #' ddi <- read_ipums_ddi(ddi_file)
 #' @family ipums_metadata
 #' @export
-read_ipums_ddi <- function(ddi_file, data_layer = NULL, lower_vars = FALSE) {
-  data_layer <- enquo(data_layer)
+read_ipums_ddi <- function(ddi_file,
+                           file_select = NULL,
+                           lower_vars = FALSE,
+                           data_layer = deprecated()) {
+
+  if (!missing(data_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_ipums_ddi(data_layer = )",
+      "read_ipums_ddi(file_select = )",
+    )
+    file_select <- enquo(data_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
 
   custom_check_file_exists(ddi_file)
 
   ddi_file_load <- find_files_in(
     ddi_file,
     "xml",
-    data_layer,
+    file_select,
     none_ok = FALSE,
     multiple_ok = FALSE
   )
@@ -42,7 +61,7 @@ read_ipums_ddi <- function(ddi_file, data_layer = NULL, lower_vars = FALSE) {
     ddi_file_load <- file.path(ddi_file, ddi_file_load)
   }
 
-  ddi_xml <- xml2::read_xml(ddi_file_load, data_layer = NULL)
+  ddi_xml <- xml2::read_xml(ddi_file_load, file_select = NULL)
 
   # Basic information
   conditions <- xml_text_from_path_first(
@@ -280,12 +299,16 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' @param cb_file Path to the codebook file to be loaded. This can be a .zip
 #'   archive as provided by the extract system or [`download_extract()`],
 #'   a directory containing the codebook, or the codebook .txt file itself.
-#' @param data_layer dplyr \code{\link[dplyr]{select}}-style notation for
-#'   uniquely identifying the data layer to load. Required for reading from
-#'   .zip files for extracts with multiple files.
+#' @param file_select If `cb_file` is a .zip archive or directory that contains
+#'   multiple codebook files, an expression identifying the file to load.
+#'   Accepts a character string specifying the file name,
+#'   [`dplyr_select_style`] conventions, or an index position of the file.
+#'   Ignored if `ddi_file` is the path to a single codebook file.
 #' @param raw If `TRUE`, read lines of the provided `cb_file` instead of
 #'   summarizing variable information in an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
+#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
+#'   instead.
 #'
 #' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
 #'   variables contained in the data for the extract associated with the given
@@ -305,16 +328,28 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' @rdname ipums_codebook
 #'
 #' @export
-read_nhgis_codebook <- function(cb_file, data_layer = NULL, raw = FALSE) {
+read_nhgis_codebook <- function(cb_file,
+                                file_select = NULL,
+                                raw = FALSE,
+                                data_layer = deprecated()) {
 
-  data_layer <- enquo(data_layer)
+  if (!missing(data_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis_codebook(data_layer = )",
+      "read_nhgis_codebook(file_select = )",
+    )
+    file_select <- enquo(data_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
 
   custom_check_file_exists(cb_file)
 
   cb_name <- find_files_in(
     cb_file,
     "txt",
-    name_select = data_layer,
+    name_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )

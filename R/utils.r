@@ -593,12 +593,12 @@ simplify_nhgis_gis_file <- function(file) {
     1:n_files,
     ~tryCatch(
       rmapshaper::ms_simplify(
-        read_ipums_sf(file, shape_layer = !!.x),
+        read_ipums_sf(file, file_select = !!.x),
         keep = 0.01
       ),
       error = function(cnd) {
         rlang::warn(paste0("Some files could not be simplified."))
-        read_ipums_sf(file, shape_layer = !!.x)
+        read_ipums_sf(file, file_select = !!.x)
       }
     )
   )

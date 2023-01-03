@@ -4,17 +4,28 @@
 \alias{read_ipums_ddi}
 \title{Read metadata about an IPUMS extract from a DDI (.xml) file}
 \usage{
-read_ipums_ddi(ddi_file, data_layer = NULL, lower_vars = FALSE)
+read_ipums_ddi(
+  ddi_file,
+  file_select = NULL,
+  lower_vars = FALSE,
+  data_layer = deprecated()
+)
 }
 \arguments{
-\item{ddi_file}{Filepath to DDI xml file}
+\item{ddi_file}{Path to the DDI file to be loaded. This can be a .zip
+archive, a directory containing the DDI file, or the .xml file itself.}
 
-\item{data_layer}{If ddi_file is an extract with multiple DDIs, dplyr
-\code{\link[dplyr]{select}}-style notation indicating which .xml data
-layer to load.}
+\item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
+multiple DDI files, an expression identifying the .xml file to load.
+Accepts a character string specifying the file name,
+\code{\link{dplyr_select_style}} conventions, or an index position of the file.
+Ignored if \code{ddi_file} is the path to a single .xml file.}
 
 \item{lower_vars}{Logical indicating whether to convert variable names
 to lowercase (default is FALSE, in line with IPUMS conventions)}
+
+\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
+instead.}
 }
 \value{
 An \code{ipums_ddi} object with metadata information.
