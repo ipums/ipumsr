@@ -1,4 +1,3 @@
-context("NHGIS")
 
 # Manually set these constants...
 rows <- 71

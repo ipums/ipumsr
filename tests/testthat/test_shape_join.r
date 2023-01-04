@@ -1,4 +1,3 @@
-context("ipums_shape_*_join work")
 
 test_that("Basic join works (sf)", {
   skip_if_not_installed("sf")

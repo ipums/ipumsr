@@ -1,4 +1,3 @@
-context("Listing files")
 
 # This function helps find the data from the ipumsexamples package for us
 ex_file <- function(x) {

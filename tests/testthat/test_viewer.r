@@ -1,4 +1,3 @@
-context("ipums_view is fault tolerant")
 
 test_that("normal ddi doesn't error", {
   skip_if_not_installed("htmltools")

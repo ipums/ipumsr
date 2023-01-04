@@ -1,4 +1,4 @@
-context("select-style functions")
+
 test_that(
   "select_var_rows respects dplyr-select style syntax",
   {

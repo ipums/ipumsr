@@ -1,4 +1,4 @@
-context("Microdata - Chunked")
+
 # B & list
 # csv chunk reading is equivalent
 # biglm is equivalent to lm

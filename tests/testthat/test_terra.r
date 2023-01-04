@@ -1,5 +1,4 @@
 # Very basic tests for now
-context("IPUMS Terra")
 
 # This function helps find the data from the ipumsexamples package for us
 ex_file <- function(x) {

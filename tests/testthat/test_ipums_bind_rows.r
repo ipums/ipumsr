@@ -1,4 +1,3 @@
-context("ipums_bind_rows")
 
 test_that(
   "simple bind rows example", {

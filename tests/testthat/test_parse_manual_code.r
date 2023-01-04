@@ -1,4 +1,3 @@
-context("Parsing manualcodes to labels")
 
 test_that("Numeric parsing works on examples", {
   x <- c("1 = x", "2  y", "3 - z", "-4 = a", "abcd", "1962-1975 xyz")

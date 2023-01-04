@@ -1,4 +1,3 @@
-context("Read IPUMS DDI file")
 
 test_that("can read DDI with labeled string variable", {
   ddi <- read_ipums_ddi(ipums_example("mtus_00002.xml"))

@@ -1,4 +1,4 @@
-context("Lower variable names")
+
 test_that(
   "Reading variables in lowercase is okay - DDI", {
     ddi_regular <- read_ipums_ddi(ipums_example("cps_00006.xml"))

@@ -1,4 +1,3 @@
-context("label helpers")
 
 x <- haven::labelled(
   c(10, 10, 11, 20, 30, 99, 30, 10),
