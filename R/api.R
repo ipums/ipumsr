@@ -1101,6 +1101,11 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   Defaults to current working directory.
 #' @param overwrite Logical indicating whether to overwrite files that already
 #'   exist. Defaults to `FALSE`.
+#' @param wait Logical value indicating whether to wait for the completion of
+#'   the specified `extract` if it is not yet ready for download. Defaults to
+#'   `FALSE`. See [`wait_for_extract()`].
+#' @param ... Further arguments passed to [`wait_for_extract()`]. Only used if
+#'   `wait = TRUE`.
 #'
 #' @family ipums_api
 #' @return Invisibly returns the path(s) to the files required to read the data
@@ -1132,7 +1137,9 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
-                             api_key = Sys.getenv("IPUMS_API_KEY")) {
+                             wait = FALSE,
+                             api_key = Sys.getenv("IPUMS_API_KEY"),
+                             ...) {
 
   extract <- standardize_extract_identifier(extract)
 
@@ -1141,20 +1148,49 @@ download_extract <- function(extract,
   is_ipums_extract_object <- inherits(extract, "ipums_extract")
 
   if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
+
+    extract <- validate_ipums_extract(extract)
     is_downloadable <- TRUE
+
   } else {
+
     extract <- get_extract_info(extract, api_key = api_key)
     is_downloadable <- extract_is_completed_and_has_links(extract)
-  }
+    is_expired <- !extract$status %in% c("queued", "started", "produced")
 
-  if (!is_downloadable) {
-    stop(
-      paste0(
-        format_collection_for_printing(extract$collection), " extract number ",
-        extract$number, " is not ready to download"
-      ),
-      call. = FALSE
+    err_msg <- paste0(
+      format_collection_for_printing(extract$collection),
+      " extract ", extract$number,
+      ifelse(is_expired, " has expired.", " is not ready to download.")
     )
+
+    if (!is_downloadable) {
+      if (is_expired) {
+        rlang::abort(
+          c(
+            err_msg,
+            "i" = "Use `submit_extract()` to resubmit this extract definition."
+          )
+        )
+      }
+
+      if (!wait) {
+        rlang::abort(
+          c(
+            err_msg,
+            "i" = paste0(
+              "Set `wait = TRUE` to wait for extract ",
+              "completion and reattempt download."
+            )
+          )
+        )
+      } else {
+        message(err_msg)
+        extract <- wait_for_extract(extract, ...)
+        is_downloadable <- extract_is_completed_and_has_links(extract)
+      }
+    }
+
   }
 
   download_dir <- normalizePath(download_dir, winslash = "/", mustWork = FALSE)

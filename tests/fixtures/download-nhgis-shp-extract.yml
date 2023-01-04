@@ -1,7 +1,93 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1889220/nhgis0673_shape.zip
+    uri: https://api.ipums.org/extracts/843?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 04 Jan 2023 16:47:40 GMT
+      etag: W/"0aaf7ad5380c124e2cedd0228ffcc8bb"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.15
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 8686dae9-8c9c-41e1-a0fc-5e5988aa00df
+      x-runtime: '0.859640'
+      x-xss-protection: 1; mode=block
+      content-length: '271'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"number":843,"data_format":null,"description":"","status":"started","download_links":null,"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}'
+  recorded_at: 2023-01-04 16:47:45 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/843?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 04 Jan 2023 16:47:43 GMT
+      etag: W/"e4a875c2bd95abc494fa15bc37e533fc"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
+      status: 200 OK
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-powered-by: Phusion Passenger(R) 6.0.15
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: d14252a1-df24-4aba-83c0-d767806aa1c9
+      x-runtime: '0.954112'
+      x-xss-protection: 1; mode=block
+      content-length: '365'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"number":843,"data_format":null,"description":"","status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1938156/nhgis0843_shape.zip"},"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}'
+  recorded_at: 2023-01-04 16:47:45 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1938156/nhgis0843_shape.zip
     body:
       encoding: ''
       string: ''
@@ -17,13 +103,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis0673_shape.zip"; filename*=UTF-8''nhgis0673_shape.zip
+      content-disposition: attachment; filename="nhgis0843_shape.zip"; filename*=UTF-8''nhgis0843_shape.zip
       content-type: application/zip
-      date: Fri, 14 Oct 2022 21:39:54 GMT
-      etag: '"6349d719-7ca95"'
-      last-modified: Fri, 14 Oct 2022 21:39:37 GMT
+      date: Wed, 04 Jan 2023 16:47:44 GMT
+      etag: '"63b5adad-7ca95"'
+      last-modified: Wed, 04 Jan 2023 16:47:41 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=HhybMq%2BGhSX9P%2B6%2BKdfbeEbTjgqKyQm9SptTNgRMzclhLTiZM7nNhBXzEIaO0UoAZ%2BSO1aQUyOZgwyirXcK4IbDdbj4l%2Bpcn3TIM8065FiBV2ihJSBM1t2hzbB3OxS9Lhzltb61Xq1fmIQ59RdL1PcOySDxEMi3pKAX7SkASUlZdzCcQUkwxGLmAdoBiIaPUGdyDf%2FFGIpewLOG7KtMvPHqQvsaXwVaj%2Ba0M0%2BLUbe3cQj6zJyr7vNMq%2FcRl0l8%3D--M81S8qeH59C2FFTe--QSvZvM30rHBm1M2kKt%2F0qg%3D%3D;
+      set-cookie: _session_id=NNA8DIkf%2BZgS66haJor%2BX2PrHCiw7RDPUjMc4i%2BxqxE8it8yuq5xlzUDJjgqXDn4ZQQWi0u2iFWkFa2UVX6HOFWC2HT1ZgVjtFnTdRXvJ1qifOTS6BJKIj%2F0oUJgGvVXKTKESRjnP2W2kUBSpFYwrScpV87HKkbev5T3njnDqe7aiS09VSD8o%2B%2FRiW4O4OJalmr6sXrwpD2qFSpS%2FhIjRt6XdBJVO8lczuvFssXVWzpHs5DEIbHGhjAnFRBbLl4%3D--%2BdFG3sE89bErpGV3--46vTSnHeG%2BdZiW%2BFNtw%2FkQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -32,6 +118,6 @@ http_interactions:
     body:
       encoding: UTF-8
       file: yes
-      string: ../fixtures/nhgis0673_shape.zip
-  recorded_at: 2022-10-14 21:39:55 GMT
+      string: /Users/robe2037/Documents/projects/ipumsr/tests/fixtures/nhgis0843_shape.zip
+  recorded_at: 2023-01-04 16:47:45 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

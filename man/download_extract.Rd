@@ -8,7 +8,9 @@ download_extract(
   extract,
   download_dir = getwd(),
   overwrite = FALSE,
-  api_key = Sys.getenv("IPUMS_API_KEY")
+  wait = FALSE,
+  api_key = Sys.getenv("IPUMS_API_KEY"),
+  ...
 )
 }
 \arguments{
@@ -37,8 +39,15 @@ Defaults to current working directory.}
 \item{overwrite}{Logical indicating whether to overwrite files that already
 exist. Defaults to \code{FALSE}.}
 
+\item{wait}{Logical value indicating whether to wait for the completion of
+the specified \code{extract} if it is not yet ready for download. Defaults to
+\code{FALSE}. See \code{\link[=wait_for_extract]{wait_for_extract()}}.}
+
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}.}
+
+\item{...}{Further arguments passed to \code{\link[=wait_for_extract]{wait_for_extract()}}. Only used if
+\code{wait = TRUE}.}
 }
 \value{
 Invisibly returns the path(s) to the files required to read the data

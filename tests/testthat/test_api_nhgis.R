@@ -29,6 +29,9 @@ usa_extract <- define_extract_usa(
 nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
 usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
 
+download_dir <- file.path(tempdir(), "ipums-api-downloads")
+if (!dir.exists(download_dir)) dir.create(download_dir)
+
 if (have_api_access) {
 
   # Full extract
@@ -53,15 +56,63 @@ if (have_api_access) {
     submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
   })
 
+  tryCatch({
+    vcr::use_cassette("download-nhgis-shp-extract", {
+      test_that("Can wait during download", {
+        expect_message(
+          file_paths <- download_extract(
+            submitted_nhgis_extract_shp,
+            wait = TRUE,
+            initial_delay_seconds = 1,
+            max_delay_seconds = 2,
+            download_dir = download_dir,
+            overwrite = TRUE
+          ),
+          "GIS file saved to"
+        )
+
+        expect_equal(length(file_paths), 1)
+
+        gis_data_file_path <- file.path(
+          vcr::vcr_test_path("fixtures"),
+          basename(file_paths)
+        )
+
+        expect_match(gis_data_file_path, "_shape\\.zip$")
+
+        expect_true(file.exists(gis_data_file_path))
+
+        data_shp_sf <- read_ipums_sf(gis_data_file_path, verbose = FALSE)
+        expect_s3_class(data_shp_sf, "sf")
+
+        data_shp_sp <-  read_ipums_sp(gis_data_file_path, verbose = FALSE)
+        expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
+      })
+    })
+  },
+  warning = function(w) {
+    if (!grepl("Empty cassette", w$message)) {
+      return(warning(w$message, call. = FALSE))
+    }
+  })
+
   vcr::use_cassette("ready-nhgis-extract-shp", {
-    ready_nhgis_extract_shp <- wait_for_extract(submitted_nhgis_extract_shp)
+    ready_nhgis_extract_shp <- get_extract_info(
+      c("nhgis", submitted_nhgis_extract_shp$number)
+    )
   })
 
   # Modify ready-<collection>-extract.yml files to only include the final http
   # request, so that they return the ready-to-download extract immediately on
   # subsequent runs.
   modify_ready_extract_cassette_file("ready-nhgis-extract.yml")
-  modify_ready_extract_cassette_file("ready-nhgis-extract-shp.yml")
+
+  # Retain last 3 requests for this download casette to ensure we test
+  # that download_extract(wait = TRUE) does submit multiple GET requests
+  modify_ready_extract_cassette_file(
+    "download-nhgis-shp-extract.yml",
+    n_requests = 3
+  )
 
   # USA extract
   # TODO: move tests that use this to test_api.R
@@ -656,9 +707,6 @@ if (have_api_access) {
   already_existed_shp <- file.exists(download_nhgis_extract_cassette_file_shp)
 }
 
-download_dir <- file.path(tempdir(), "ipums-api-downloads")
-if (!dir.exists(download_dir)) dir.create(download_dir)
-
 tryCatch(
   vcr::use_cassette("download-nhgis-extract", {
     test_that("Can download an NHGIS extract by supplying extract object", {
@@ -721,55 +769,6 @@ tryCatch(
                                    data_layer = contains("blck_grp"),
                                    shape_layer = contains("blck_grp"),
                                    verbose = FALSE)
-      expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
-    })
-  }),
-  warning = function(w) {
-    if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
-    }
-  }
-)
-
-tryCatch(
-  vcr::use_cassette("download-nhgis-shp-extract", {
-    test_that("Can download an NHGIS shp extract by supplying extract object", {
-      skip_if_no_api_access(have_api_access)
-
-      expect_message(
-        file_paths <- download_extract(
-          ready_nhgis_extract_shp,
-          download_dir = download_dir,
-          overwrite = TRUE
-        ),
-        regexp = "GIS file saved to "
-      )
-
-      expect_error(
-        download_extract(
-          ready_nhgis_extract_shp,
-          download_dir = vcr::vcr_test_path("fixtures"),
-          overwrite = FALSE
-        ),
-        regexp = "The following files already exist: "
-      )
-
-      expect_equal(length(file_paths), 1)
-
-      gis_data_file_path <- file.path(
-        vcr::vcr_test_path("fixtures"),
-        basename(file_paths)
-      )
-      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
-
-      expect_match(gis_data_file_path, "_shape\\.zip$")
-
-      expect_true(file.exists(gis_data_file_path))
-
-      data_shp_sf <- read_ipums_sf(gis_data_file_path, verbose = FALSE)
-      expect_s3_class(data_shp_sf, "sf")
-
-      data_shp_sp <-  read_ipums_sp(gis_data_file_path, verbose = FALSE)
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
