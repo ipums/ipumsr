@@ -19,16 +19,6 @@ nhgis_extract_shp <- define_extract_nhgis(
   shapefiles = "110_blck_grp_2019_tl2019"
 )
 
-usa_extract <- define_extract_usa(
-  samples = "us2017b",
-  variables = "YEAR",
-  description = "Test extract",
-  data_format = "fixed_width"
-)
-
-nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
-usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
-
 download_dir <- file.path(tempdir(), "ipums-api-downloads")
 if (!dir.exists(download_dir)) dir.create(download_dir)
 
@@ -113,12 +103,6 @@ if (have_api_access) {
     "download-nhgis-shp-extract.yml",
     n_requests = 3
   )
-
-  # USA extract
-  # TODO: move tests that use this to test_api.R
-  vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(usa_extract)
-  })
 
   # Recent extracts
   vcr::use_cassette("recent-nhgis-extracts-list", {
@@ -588,15 +572,11 @@ test_that("We avoid superflous checks when getting extract status", {
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
+  nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
-  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
   expect_identical(
     extract_list_from_json(nhgis_json)[[1]],
     nhgis_extract
-  )
-  expect_identical(
-    extract_list_from_json(usa_json)[[1]],
-    usa_extract
   )
 })
 
@@ -1431,7 +1411,12 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
 
   expect_error(
-    extract_list_to_tbl(list(submitted_nhgis_extract, submitted_usa_extract)),
+    extract_list_to_tbl(
+      list(
+        submitted_nhgis_extract,
+        define_extract_usa("test", "test", "test")
+      )
+    ),
     "All extracts in `extract_list` must belong to same collection"
   )
 

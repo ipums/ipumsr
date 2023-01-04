@@ -331,6 +331,23 @@ test_that("Can check the status of a CPS extract by supplying collection and num
   expect_true(is_ready)
 })
 
+test_that("extract_list_from_json reproduces extract specs", {
+
+  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
+  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
+
+  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
+  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
+  expect_identical(
+    extract_list_from_json(usa_json)[[1]],
+    usa_extract
+  )
+  expect_identical(
+    extract_list_from_json(cps_json)[[1]],
+    cps_extract
+  )
+
+})
 
 # > Get recent extracts info ----
 test_that("Tibble of recent USA extracts contains expected columns", {
