@@ -84,15 +84,48 @@ ipums_list_files <- function(file,
   raster_files <- NULL
 
   if (is.null(types) | "data" %in% types) {
-    data_files <- ipums_list_data(file, data_layer = !!data_layer)
+
+    data_layer <- enquo(data_layer)
+
+    data_files <- tibble::tibble(
+      file = find_files_in(
+        file,
+        "(dat|csv)(\\.gz)?",
+        data_layer,
+        multiple_ok = TRUE
+      )
+    )
+
   }
 
   if (is.null(types) | "shape" %in% types) {
-    shape_files <- ipums_list_shape(file, shape_layer = !!shape_layer)
+
+    shape_layer <- enquo(shape_layer)
+
+    shape_files <- tibble::tibble(
+      file = find_files_in(
+        file,
+        "(zip|shp)",
+        shape_layer,
+        multiple_ok = TRUE
+      )
+    )
+
   }
 
   if (is.null(types) | "raster" %in% types) {
-    raster_files <- ipums_list_raster(file, raster_layer = !!raster_layer)
+
+    raster_layer <- enquo(raster_layer)
+
+    raster_files <- tibble::tibble(
+      file = find_files_in(
+        file,
+        "tiff",
+        raster_layer,
+        multiple_ok = TRUE
+      )
+    )
+
   }
 
   dplyr::bind_rows(
