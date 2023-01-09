@@ -385,18 +385,86 @@ read_nhgis_codebook <- function(cb_file,
   context_vars$var_desc <- ""
   context_vars <- context_vars[!is.na(context_vars$var_name), ]
 
-  table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)"))
+  data_type_rows <- which(fostr_detect(dd, "(Data Type|Breakdown)"))
+  blank_rows <- which(fostr_detect(dd, "^[[:blank:]]+$"))
 
-  table_sections <- purrr::map2(
-    table_name_rows,
-    c(table_name_rows[-1], length(dd)),
-    ~seq(.x, .y - 1)
-  )
+  data_types <- dd[data_type_rows]
+  # data_types <- ifelse(fostr_detect(data_types, "(E)"), "Estimate", "MOE")
 
-  if (any(fostr_detect(cb, "^Time series layout:"))) {
-    table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+  # If multiple data types, process variable info for each data
+  # type separately.
+  if (length(data_type_rows) > 0) {
+
+    data_type_sections <- purrr::map(
+      data_type_rows,
+      ~seq(.x, blank_rows[which(.x <= blank_rows)[1]] - 1)
+    )
+
+    # Combine multiple lines of data type/breakdown value info into single
+    # string to attach to var info
+    data_types <- purrr::map(
+      data_type_sections,
+      ~parse_breakdown(
+        dd[.x][length(.x):2] # Go in reverse so data types come before brkdowns
+      )
+    )
+
+    data_type_rows <- purrr::map2(
+      data_type_rows,
+      c(data_type_rows[-1], length(dd) + 1),
+      ~seq(.x, .y - 1)
+    )
+
+    table_name_rows <- purrr::map(
+      data_type_rows,
+      ~.x[fostr_detect(dd[.x], "^[[:blank:]]*(Table)|(Data Type)")]
+    )
+
+    table_sections <- purrr::map2(
+      data_type_rows,
+      table_name_rows,
+      function(dt, tn) {
+        purrr::map2(
+          tn,
+          c(tn[-1], max(dt) + 1),
+          ~seq(.x, .y - 1)
+        )
+      }
+    )
+
+    table_sections <- purrr::flatten(
+      purrr::map2(table_sections, data_types, ~set_names(.x, .y))
+    )
+
+    if (any(fostr_detect(cb, "^Time series layout:"))) {
+      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+    } else {
+      table_vars <- purrr::map2_dfr(
+        table_sections,
+        names(table_sections),
+        ~read_nhgis_ds_tables(dd, .x, data_type = .y)
+      )
+    }
+
   } else {
-    table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_ds_tables(dd, .x))
+
+    table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)"))
+
+    table_sections <- purrr::map2(
+      table_name_rows,
+      c(table_name_rows[-1], length(dd)),
+      ~seq(.x, .y - 1)
+    )
+
+    if (any(fostr_detect(cb, "^Time series layout:"))) {
+      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+    } else {
+      table_vars <- purrr::map_dfr(
+        table_sections,
+        ~read_nhgis_ds_tables(dd, .x)
+      )
+    }
+
   }
 
   var_info <- make_var_info_from_scratch(
@@ -423,6 +491,42 @@ read_nhgis_codebook <- function(cb_file,
   )
 
   out
+
+}
+
+#' Parse NHGIS codebook lines with data type or breakdown info
+#'
+#' @description
+#' Extracts the apporpriate name for data types and breakdown values from an
+#' NHGIS codebook for maximal similarity to the content of NHGIS enhanced
+#' header rows.
+#'
+#' Lines with a double colon ("::") have titles following the double colon.
+#' Lines with single colons have titles following the first single colon.
+#' Lines with no colons are typically data types and should have the entire
+#' line extracted.
+#'
+#' @param bkdown_lines Lines corresponding to a single data type or breakdown
+#'   section of the codebook. Typically start with "Breakdown" or "Data Type"
+#'
+#' @return Character vector of length `bkdown_lines` with the extracted
+#'   data type or breakdown titles
+#'
+#' @noRd
+parse_breakdown <- function(bkdown_lines) {
+
+  dt_bkdwn <- purrr::map(
+    bkdown_lines,
+    ~if (fostr_detect(.x, "::")) {
+      fostr_named_capture(.x, "::(?<x>[^\\(]+)")$x
+    } else if (fostr_detect(.x, ":")) {
+      fostr_named_capture(.x, ":(?<x>[^\\(]+)")$x
+    } else {
+      .x
+    }
+  )
+
+  paste0(trimws(dt_bkdwn), collapse = ": ")
 
 }
 
@@ -463,7 +567,7 @@ read_nhgis_tst_tables <- function(dd, table_rows) {
     only_matches = TRUE
   )
 
-  vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+  vars$var_desc <- paste0("Table ", nhgis_table_code, ": ", table_name)
 
   vars
 
@@ -480,12 +584,21 @@ read_nhgis_tst_tables <- function(dd, table_rows) {
 #' @return tibble of variable information
 #'
 #' @noRd
-read_nhgis_ds_tables <- function(dd, table_rows) {
+read_nhgis_ds_tables <- function(dd, table_rows, data_type = NULL) {
 
   if (fostr_detect(dd[table_rows[1]], "Data Type")) {
 
+    rows <- dd[table_rows]
+
+    # Start at first blank row. Rows before this are part of the
+    # Data type or breakdown value, not variables.
+    rows <- rows[seq(
+      min(which(fostr_detect(rows, "^[[:blank:]]+$"))),
+      length(rows)
+    )]
+
     vars <- fostr_named_capture(
-      dd[table_rows],
+      rows,
       "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
       only_matches = TRUE
     )
@@ -499,6 +612,11 @@ read_nhgis_ds_tables <- function(dd, table_rows) {
       "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
     )
 
+    universe <- fostr_named_capture_single(
+      dd[table_rows[2]],
+      "^[[:blank:]]*Universe:[[:blank:]]+(?<universe>.+)$"
+    )
+
     nhgis_table_code <- fostr_named_capture_single(
       dd[table_rows[4]],
       "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
@@ -510,7 +628,14 @@ read_nhgis_ds_tables <- function(dd, table_rows) {
       only_matches = TRUE
     )
 
-    vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+    if (!is_null(data_type)) {
+      vars$var_label <- paste0(data_type, ": ", vars$var_label)
+    }
+
+    vars$var_desc <- paste0(
+      "Table ", nhgis_table_code, ": ", table_name,
+      " (Universe: ", universe, ")"
+    )
 
   }
 

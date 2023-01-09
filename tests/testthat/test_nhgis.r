@@ -22,8 +22,14 @@ test_that("Can read NHGIS extract: single dataset", {
 
   expect_equal(nrow(nhgis_csv), rows)
   expect_equal(ncol(nhgis_csv), vars_data)
-  expect_equal(attr(nhgis_csv$D6Z001, "label"), "1989 to March 1990")
-  expect_equal(attr(nhgis_csv$D6Z001, "var_desc"), "Year Structure Built (D6Z)")
+  expect_equal(
+    attr(nhgis_csv$D6Z001, "label"),
+    "Total area: 1989 to March 1990"
+  )
+  expect_equal(
+    attr(nhgis_csv$D6Z001, "var_desc"),
+    "Table D6Z: Year Structure Built (Universe: Housing Units)"
+  )
   expect_equal(
     nhgis_csv$PMSA[1:2],
     c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
@@ -361,6 +367,16 @@ test_that("Can read NHGIS codebook", {
   expect_equal(
     length(read_nhgis_codebook(nhgis_single_csv, raw = TRUE)),
     117
+  )
+
+  # Confirm that data types and universe are added to labels
+  expect_equal(
+    attr(d_fwf$AJWBE009, "label"),
+    "Estimates: Male: 21 years",
+  )
+  expect_equal(
+    attr(d_fwf$AJWBE009, "var_desc"),
+    "Table AJWB: Sex by Age (Universe: Total population)"
   )
 
 })
