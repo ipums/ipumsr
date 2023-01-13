@@ -2802,7 +2802,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
 
   # At this point, should be in `c(collection, number)` format
   if (length(extract) > 1) {
-    collection <- extract[[1]]
+    collection <- trimws(extract[[1]])
     number <- suppressWarnings(
       as.numeric(fostr_replace(extract[[2]], "L$", ""))
     )
