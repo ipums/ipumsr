@@ -2,6 +2,7 @@
 % Please edit documentation in R/api.R
 \name{ipums_extract-class}
 \alias{ipums_extract-class}
+\alias{ipums_extract}
 \title{\code{ipums_extract} class}
 \description{
 The \code{ipums_extract} class provides a data structure for storing the

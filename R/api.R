@@ -97,6 +97,7 @@ NULL
 #' * Save an extract to a JSON-formatted file with [save_extract_as_json()]
 #'
 #' @name ipums_extract-class
+#' @aliases ipums_extract
 NULL
 
 # > Define extract ----
