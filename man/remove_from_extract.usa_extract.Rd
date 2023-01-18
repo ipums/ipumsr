@@ -55,3 +55,4 @@ remove_from_extract(
 revised_extract <- add_to_extract(usa_extract, samples = "us2015a")
 remove_from_extract(revised_extract, samples = c("us2013a", "us2014a"))
 }
+\keyword{internal}

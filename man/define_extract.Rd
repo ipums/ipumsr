@@ -31,3 +31,4 @@ For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 
+\keyword{internal}

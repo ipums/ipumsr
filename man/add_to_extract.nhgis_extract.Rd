@@ -255,3 +255,4 @@ add_to_extract(extract, data_format = "fixed_width")$data_format
 # You can also combine two extract requests together
 combine_extracts(extract, extract2)
 }
+\keyword{internal}

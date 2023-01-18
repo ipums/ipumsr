@@ -70,3 +70,4 @@ add_to_extract(extract, description = "New description")$description
 # You can also combine two separate extract requests together
 combine_extracts(extract, extract2)
 }
+\keyword{internal}

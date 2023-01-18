@@ -174,3 +174,4 @@ remove_from_extract(
 revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
 remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
 }
+\keyword{internal}

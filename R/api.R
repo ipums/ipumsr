@@ -99,6 +99,8 @@ NULL
 #' For an overview of ipumsr API functionality, see
 #' `vignette("ipums-api", package = "ipumsr")`.
 #'
+#' @keywords internal
+#'
 #' @name define_extract
 NULL
 
@@ -1344,6 +1346,8 @@ add_to_extract <- function(extract, ...) {
 #'
 #' @return A modified `usa_extract` object
 #'
+#' @keywords internal
+#'
 #' @export
 #'
 #' @examples
@@ -1412,6 +1416,8 @@ add_to_extract.usa_extract <- function(extract,
 #' @param ... Ignored
 #'
 #' @return A modified `cps_extract` object
+#'
+#' @keywords internal
 #'
 #' @export
 #'
@@ -1566,6 +1572,8 @@ add_to_extract.cps_extract <- function(extract,
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
+#'
+#' @keywords internal
 #'
 #' @export
 #'
@@ -1799,6 +1807,8 @@ remove_from_extract <- function(extract, ...) {
 #'
 #' @return A modified `usa_extract` object
 #'
+#' @keywords internal
+#'
 #' @export
 #'
 #' @examples
@@ -1856,6 +1866,8 @@ remove_from_extract.usa_extract <- function(extract,
 #' @inheritParams remove_from_extract.usa_extract
 #'
 #' @return A modified `cps_extract` object
+#'
+#' @keywords internal
 #'
 #' @export
 #'
@@ -2002,6 +2014,8 @@ remove_from_extract.cps_extract <- function(extract,
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
+#'
+#' @keywords internal
 #'
 #' @export
 #'

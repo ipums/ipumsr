@@ -1,0 +1,390 @@
+---
+title: "Reading IPUMS Data"
+author: "Minnesota Population Center"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reading IPUMS Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Once you have downloaded an IPUMS extract, the next step is to load its
+data into R for analysis.
+
+For more information about IPUMS data and how to generate and download a
+data extract, see the [introduction](ipums.html) to IPUMS data.
+
+## IPUMS Extract Structure
+
+IPUMS extracts will be organized slightly differently for different
+[IPUMS projects](https://www.ipums.org/overview). In general, all
+projects will provide multiple files in a data extract. The files most
+relevant to ipumsr are:
+
+-   The metadata file containing information about the variables
+    included in the extract data
+
+-   One or more data files, depending on the project and specifications
+    in the extract
+
+Both of these files are necessary to properly load data into R.
+Obviously, the data files contain the actual data values to be loaded.
+But because these are often in fixed-width format, the metadata files
+are required to correctly parse the data on load.
+
+Even for .csv files, the metadata file allows for the addition of
+contextual variable information to the loaded data. This makes it much
+easier to interpret the values in the data variables and effectively use
+them in your data processing pipeline. See the vignette about [value
+labels](value-labels.html) for more information on working with these
+labels.
+
+## Reading Microdata Extracts
+
+Microdata extracts typically provide their metadata in a DDI (.xml) file
+separate from the compressed data (.dat.gz) files.
+
+Provide the path to the DDI file to `read_ipums_micro()` to directly
+load its associated data file into R.
+
+```{r, message=FALSE}
+library(ipumsr)
+library(dplyr)
+
+# Example data
+cps_ddi_file <- ipums_example("cps_00006.xml")
+
+cps_data <- read_ipums_micro(cps_ddi_file)
+
+head(cps_data)
+```
+
+The loaded data have been parsed correctly and include variable metadata
+in each column. For a summary of the column contents, use
+`ipums_var_info()`:
+
+```{r}
+ipums_var_info(cps_data)
+```
+
+This information is also attached to specific columns. You can obtain it
+with `attributes()` or by using ipumsr helpers:
+
+```{r}
+attributes(cps_data$MONTH)
+
+ipums_val_labels(cps_data$MONTH)
+```
+
+While this is the most straightforward way to load microdata, it's often
+advantageous to independently load the DDI file into an `ipums_ddi`
+object containing the metadata:
+
+```{r}
+cps_ddi <- read_ipums_ddi(cps_ddi_file)
+
+cps_ddi
+```
+
+This is because many common data processing functions have the
+side-effect of removing these attributes:
+
+```{r}
+# This doesn't actually change the data...
+cps_data2 <- cps_data %>%
+  mutate(MONTH = ifelse(TRUE, MONTH, MONTH))
+
+# but removes attributes!
+ipums_val_labels(cps_data2$MONTH)
+```
+
+In this case, you can always use the separate DDI as a metadata
+reference:
+
+```{r}
+ipums_val_labels(cps_ddi, var = MONTH)
+```
+
+Or even reattach the metadata, assuming the variable names still match
+those in the DDI:
+
+```{r}
+cps_data2 <- set_ipums_var_attributes(cps_data2, cps_ddi)
+
+ipums_val_labels(cps_data2$MONTH)
+```
+
+### Hierarchical Extracts
+
+IPUMS microdata can come in either "rectangular" or "hierarchical"
+format.
+
+Rectangular data are transformed such that each row of data represents
+only one type of record. For instance, each row will represent a person
+record, and all household-level information for that person will be
+included in the same row. (This is the case for the CPS example above.)
+
+Hierarchical data have records of different types interspersed in a
+single file. For instance, a household record will be included in its
+own row followed by the person records associated with that household.
+
+Hierarchical data can be loaded in list format or long format.
+`read_ipums_micro()` will read in long format:
+
+```{r}
+cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+
+read_ipums_micro(cps_hier_ddi)
+```
+
+This structure contains a single row for each record, regardless of
+record type. Variables that do not apply to a particular record type
+will be filled with `NA` in rows of that record type.
+
+To read data in list format, use `read_ipums_micro_list()`. This splits
+the record types into a list where each element contains all the records
+for a given type:
+
+```{r}
+read_ipums_micro_list(cps_hier_ddi)
+```
+
+`read_ipums_micro()` and `read_ipums_micro_list()` also support partial
+loading by selecting only a subset of columns or a limited number of
+rows. See the documentation for more details about other options.
+
+## Reading Aggregate Data Extracts
+
+Unlike microdata projects, NHGIS extracts provide their data and
+metadata files bundled into a single .zip archive. `read_nhgis()`
+anticipates this structure and can read data files directly from this
+file without the need to manually extract the files:
+
+```{r}
+nhgis_ex1 <- ipums_example("nhgis0972_csv.zip")
+
+nhgis_data <- read_nhgis(nhgis_ex1)
+
+nhgis_data
+```
+
+Like microdata extracts, the data include variable-level metadata, where
+available:
+
+```{r}
+attributes(nhgis_data$D6Z001)
+```
+
+Variable metadata for NHGIS data are slightly different than those
+provided by microdata products. First, they come from a .txt codebook
+file rather than an .xml DDI file. Codebooks can still be loaded into an
+`ipums_ddi` object, but many fields that do not apply to aggregate data
+will be empty. In general, NHGIS codebooks provide only variable labels
+and descriptions along with citation information.
+
+```{r}
+nhgis_cb <- read_nhgis_codebook(nhgis_ex1)
+
+# Most useful metadata for NHGIS is for variable labels:
+ipums_var_info(nhgis_cb) %>%
+  select(var_name, var_label, var_desc)
+```
+
+By design, NHGIS codebooks are human-readable. To view the codebook
+contents themselves without converting to an `ipums_ddi` object, set
+`raw = TRUE`.
+
+```{r}
+read_nhgis_codebook(nhgis_ex1, raw = TRUE)[1:20]
+```
+
+### Handling multiple files
+
+In the above example, `read_nhgis_codebook()` was able to identify and
+load the codebook file, even though the provided file path is the same
+that was provided to `read_nhgis()` earlier. However, for more
+complicated NHGIS extracts that include data from multiple data sources,
+the provided .zip archive will contain multiple codebook and data files.
+
+You can view the files contained in an extract to determine if this is
+the case:
+
+```{r}
+nhgis_ex2 <- ipums_example("nhgis0731_csv.zip")
+
+ipums_list_files(nhgis_ex2)
+```
+
+In these cases, you can use the `file_select` argument to indicate which
+file to load. `file_select` accepts a tidyselect selection helper when
+identifying the file to load:
+
+```{r, error=TRUE, message=FALSE}
+nhgis_data2 <- read_nhgis(nhgis_ex2, file_select = contains("nation"))
+
+nhgis_data3 <- read_nhgis(nhgis_ex2, file_select = contains("ts_nominal_state"))
+```
+
+The matching codebook should automatically be loaded and attached to the
+data:
+
+```{r}
+attributes(nhgis_data2$AJWBE001)
+
+attributes(nhgis_data3$A00AA1790)
+```
+
+(If for some reason the codebook is not loaded correctly, you can load
+it separately with `read_nhgis_codebook()`, which also accepts a
+`file_select` specification.)
+
+While generally less useful, `file_select` also accepts a precise string
+of the file name to load or an index position:
+
+```{r, eval=FALSE}
+# Match first file in extract
+read_nhgis(nhgis_ex2, file_select = 1)
+
+# Match by file name
+read_nhgis(nhgis_ex2, file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv")
+```
+
+### NHGIS data formats
+
+#### CSV data
+
+NHGIS data are most easily handled when in .csv format. `read_nhgis()`
+uses `readr::read_csv()` to handle the generation of column type
+specifications. If the guessed specifications are incorrect, you can use
+`read_csv()` arguments to adjust. This is most likely to occur for
+columns that contain geographic codes that are stored as numeric values:
+
+```{r}
+# Convert MSA codes to character format
+read_nhgis(
+  nhgis_ex1,
+  col_types = c(MSA_CMSAA = "c")
+)
+```
+
+Note that some readr options may conflict with ipumsr data loading
+conventions. For instance, codebook metadata are attached by matching on
+column name. Altering names on load will prevent the addition of
+metadata for these columns (though the metadata can still be viewed in
+the codebook itself).
+
+#### Fixed-width data
+
+`read_nhgis()` also handles NHGIS files provided in fixed-width format:
+
+```{r}
+nhgis_fwf <- ipums_example("nhgis0730_fixed.zip")
+
+read_nhgis(nhgis_fwf, file_select = matches("ts_nominal"))
+```
+
+Note that in this case numeric geographic codes are correctly loaded as
+character variables. The correct parsing of NHGIS fixed-width files is
+driven by the column parsing information contained in the .do file
+provided in the .zip archive. This contains information not only about
+column positions and data types, but also implicit decimals in the data.
+
+It is possible to load fixed-width data manually using arguments passed
+to `readr::read_fwf()` but this will not include handling of implicit
+decimals, and you may end up with confusing or incorrect values. In
+general, if you no longer have access to the .do file, it is best to
+resubmit and/or re-download the extract (you can also consider
+converting to .csv format in the process). If you have moved the .do
+file, provide its file path to the `do_file` argument to use its column
+parsing information.
+
+Note that unlike `read_ipums_micro()`, fixed-width files for NHGIS are
+still handled by providing the path to the *data file*, not the
+*metadata file* (i.e. you cannot provide an `ipums_ddi` object to the
+`data_file` argument of `read_nhgis()`). This is for syntactical
+consistency with the loading of NHGIS .csv files.
+
+## Reading Spatial Data
+
+IPUMS distributes spatial data for several projects.
+
+-   For microdata projects, spatial data are distributed in shapefile
+    format on dedicated geography pages separate from the standard
+    extract system. Look for a "Geography and GIS" link in the
+    "Supplemental Data" section of the project's website to find spatial
+    data files and information.
+
+-   For NHGIS, spatial data can be obtained within the extract system.
+    Shapefiles will be distributed in their own .zip archive alongside
+    the .zip archive containing the extract's tabular data (if any
+    tabular data are requested).
+
+Whether harmonized or not, use `read_ipums_sf()` to load spatial data
+from any of these sources (ipumsr is phasing out support for objects
+from the `sp` package. If you prefer to work with these objects, use
+`sf::as_Spatial()` to convert from `sf` to `sp`).
+
+`read_ipums_sf()` also supports the loading of spatial files within .zip
+archives and the `file_select` syntax for file selection.
+
+```{r}
+nhgis_shp_file <- ipums_example("nhgis0972_shape_small.zip")
+
+shp_data <- read_ipums_sf(nhgis_shp_file)
+
+head(shp_data)
+```
+
+These data can then be joined on associated tabular data. To preserve
+ipums attributes from the tabular data used in the join, use
+an`ipums_shape_*_join` function:
+
+```{r}
+joined_data <- ipums_shape_left_join(
+  nhgis_data,
+  shp_data,
+  by = "GISJOIN"
+)
+
+attributes(joined_data$MSA_CMSAA)
+```
+
+For NHGIS data, the join code typically corresponds to the "GISJOIN"
+variable. However, for microdata projects, the variable name used for a
+geographic level in the tabular data may differ from that in the spatial
+data. Consult the documentation and metadata for these files to identify
+the correct join columns and use the `by` argument to join on these
+columns.
+
+Once joined, data include both statistical and spatial information along
+with the variable metadata.
+
+#### Harmonized vs. non-harmonized data
+
+Longitudinal analysis of geographic data is complicated by the fact that
+geographic boundaries shift over time. IPUMS therefore provides multiple
+types of spatial data:
+
+-   Harmonized (also called "integrated" or "consistent") files have
+    been made consistent over time by combining geographies that share
+    area for different time periods.
+
+-   Non-harmonized, or year-specific, files represent geographies at a
+    specific point in time.
+
+Furthermore, some NHGIS time series tables have been standardized such
+that the statistics have been adjusted to apply to a year-specific
+geographical boundary.
+
+When using spatial data, it is important to consult the project-specific
+documentation to ensure you are using the most appropriate boundaries
+for your research question and the data included in your analysis. As
+always, documentation for the IPUMS project you're working with should
+explain the different options available.

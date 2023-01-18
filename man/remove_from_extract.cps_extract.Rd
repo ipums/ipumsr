@@ -55,3 +55,4 @@ remove_from_extract(
 revised_extract <- add_to_extract(cps_extract, variables = "MARST")
 remove_from_extract(revised_extract, variables = c("AGE", "SEX", "YEAR"))
 }
+\keyword{internal}

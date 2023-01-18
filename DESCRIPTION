@@ -59,5 +59,6 @@ Suggests:
     vcr (>= 0.6.0),
     withr,
     crayon,
-    rmapshaper
+    rmapshaper,
+    ipumsexamples
 VignetteBuilder: knitr
