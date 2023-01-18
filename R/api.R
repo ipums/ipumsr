@@ -4358,8 +4358,8 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
 
   urls <- purrr::compact(
     list(
-      table_url,
-      gis_url
+      data = table_url,
+      shape = gis_url
     )
   )
 
@@ -4397,7 +4397,7 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
     message(
       paste0(
         "Data file saved to ", file_paths[1],
-        "\nGIS file saved to ", file_paths[2]
+        "\nShapefile saved to ", file_paths[2]
       )
     )
   } else if (!is.null(table_url)) {
@@ -4406,7 +4406,7 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
     )
   } else if (!is.null(gis_url)) {
     message(
-      paste0("GIS file saved to ", file_paths)
+      paste0("Shapefile saved to ", file_paths)
     )
   }
 

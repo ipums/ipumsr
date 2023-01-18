@@ -58,10 +58,11 @@ if (have_api_access) {
             download_dir = download_dir,
             overwrite = TRUE
           ),
-          "GIS file saved to"
+          "Shapefile saved to"
         )
 
         expect_equal(length(file_paths), 1)
+        expect_equal(names(file_paths), "shape")
 
         gis_data_file_path <- file.path(
           vcr::vcr_test_path("fixtures"),
@@ -711,6 +712,7 @@ tryCatch(
       )
 
       expect_equal(length(file_paths), 2)
+      expect_equal(names(file_paths), c("data", "shape"))
 
       table_data_file_path <- file.path(
         vcr::vcr_test_path("fixtures"),
