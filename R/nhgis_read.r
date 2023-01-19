@@ -205,7 +205,9 @@ read_nhgis_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
+                          quiet = TRUE,
                           ...,
+                          verbose = deprecated(),
                           shape_layer = deprecated()) {
 
   if (!missing(shape_layer)) {
@@ -219,6 +221,16 @@ read_nhgis_sf <- function(shape_file,
     file_select <- enquo(file_select)
   }
 
+  # TODO: When `verbose` is removed, `quiet` can be included in `...`
+  if (!missing(verbose)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis_sf(verbose = )",
+      "read_nhgis_sf(quiet = )",
+    )
+    quiet <- !verbose
+  }
+
   read_ipums_sf(
     shape_file,
     file_select = !!enquo(file_select),
@@ -226,6 +238,7 @@ read_nhgis_sf <- function(shape_file,
     encoding = encoding,
     bind_multiple = bind_multiple,
     add_layer_var = add_layer_var,
+    quiet = quiet,
     ...
   )
 

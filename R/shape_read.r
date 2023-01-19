@@ -34,7 +34,10 @@
 #'   will be created to avoid name conflicts. The column name will always be
 #'   prefixed with `"layer"`. Defaults to `TRUE` if `bind_multiple = TRUE` and
 #'   `FALSE` otherwise.
+#' @param quiet If `TRUE`, suppress output of name, driver, size, and spatial
+#'   reference, and don't signal if `shape_file` has 0 or multiple layers.
 #' @param ... Additional arguments passed to [`sf::read_sf()`][sf::read_sf].
+#' @param verbose `r lifecycle::badge("deprecated")` Please use `quiet` instead.
 #' @param shape_layer `r lifecycle::badge("deprecated")` Please use
 #'   `file_select` instead.
 #'
@@ -55,7 +58,9 @@ read_ipums_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
+                          quiet = TRUE,
                           ...,
+                          verbose = deprecated(),
                           shape_layer = deprecated()) {
 
   custom_check_file_exists(shape_file)
@@ -69,6 +74,16 @@ read_ipums_sf <- function(shape_file,
     file_select <- enquo(shape_layer)
   } else {
     file_select <- enquo(file_select)
+  }
+
+  # TODO: When `verbose` is removed, `quiet` can be included in `...`
+  if (!missing(verbose)) {
+    lifecycle::deprecate_soft(
+      "0.6.0",
+      "read_ipums_sf(verbose = )",
+      "read_ipums_sf(quiet = )"
+    )
+    quiet <- !verbose
   }
 
   dots <- rlang::list2(...)
@@ -111,7 +126,7 @@ read_ipums_sf <- function(shape_file,
     function(.x, .y) {
       args <- c(list(.x), dots)
 
-      this_sf <- rlang::exec(sf::read_sf, !!!args)
+      this_sf <- rlang::exec(sf::read_sf, !!!args, quiet = quiet)
 
       if (!rlang::quo_is_null(vars)) {
         this_sf <- dplyr::select(this_sf, !!vars)

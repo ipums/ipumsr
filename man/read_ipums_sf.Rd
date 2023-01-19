@@ -12,7 +12,9 @@ read_nhgis_sf(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
+  quiet = TRUE,
   ...,
+  verbose = deprecated(),
   shape_layer = deprecated()
 )
 
@@ -23,7 +25,9 @@ read_ipums_sf(
   encoding = NULL,
   bind_multiple = TRUE,
   add_layer_var = NULL,
+  quiet = TRUE,
   ...,
+  verbose = deprecated(),
   shape_layer = deprecated()
 )
 }
@@ -56,7 +60,12 @@ will be created to avoid name conflicts. The column name will always be
 prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
 \code{FALSE} otherwise.}
 
+\item{quiet}{If \code{TRUE}, suppress output of name, driver, size, and spatial
+reference, and don't signal if \code{shape_file} has 0 or multiple layers.}
+
 \item{...}{Additional arguments passed to \code{\link[sf:st_read]{sf::read_sf()}}.}
+
+\item{verbose}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{quiet} instead.}
 
 \item{shape_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{file_select} instead.}

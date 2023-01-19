@@ -73,7 +73,7 @@ if (have_api_access) {
 
         expect_true(file.exists(gis_data_file_path))
 
-        data_shp_sf <- read_ipums_sf(gis_data_file_path, verbose = FALSE)
+        data_shp_sf <- read_ipums_sf(gis_data_file_path)
         expect_s3_class(data_shp_sf, "sf")
 
         data_shp_sp <-  read_ipums_sp(gis_data_file_path, verbose = FALSE)
