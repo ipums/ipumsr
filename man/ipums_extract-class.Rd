@@ -40,7 +40,7 @@ underlying list
 \verb{define_extract_\{collection\}} (e.g. \code{\link[=define_extract_usa]{define_extract_usa()}})
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve a previously-submitted
 extract. Previous extract definitions can be
-viewed with \link{get_recent_extracts_info}
+viewed with \code{\link[=get_extract_info]{get_extract_info()}}
 \item Create an \code{ipums_extract} object from a JSON-formatted definition with
 \code{\link[=define_extract_from_json]{define_extract_from_json()}}
 }

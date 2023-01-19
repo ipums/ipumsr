@@ -22,9 +22,9 @@ A list of length equal to the number of extracts represented in
 number, which is contained in the \code{number} column of \code{extract_tbl}.
 }
 \description{
-Convert a \code{\link[tibble:tbl_df-class]{tibble}} (or
-\code{\link[base:data.frame]{data.frame}}) of extract definitions, such as that
-returned by \code{\link[=get_recent_extracts_info_tbl]{get_recent_extracts_info_tbl()}}, to a list of
+Convert a \code{\link[tibble:tbl_df-class]{tibble}} containing the specifications for
+one or more extract definitions (obtained by setting \code{table = TRUE} in
+\code{\link[=get_extract_info]{get_extract_info()}}) to a list of
 \code{\link[=ipums_extract-class]{ipums_extract}} objects.
 
 For an overview of ipumsr microdata API
@@ -33,7 +33,7 @@ functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 \examples{
 \dontrun{
 # Get tibble of recent extracts
-tbl_of_last_10_extracts <- get_recent_extracts_info_tbl("usa")
+tbl_of_last_10_extracts <- get_extract_info("usa", table = TRUE)
 
 # Filter down to extracts with "income" in the description
 description_mentions_income <- grepl(
@@ -68,7 +68,6 @@ Other ipums_api:
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract.cps_extract}()},

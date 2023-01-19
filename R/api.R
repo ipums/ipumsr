@@ -71,7 +71,7 @@ NULL
 #'   `define_extract_{collection}` (e.g. [define_extract_usa()])
 #' * Use [get_extract_info()] to retrieve a previously-submitted
 #'   extract. Previous extract definitions can be
-#'   viewed with [get_recent_extracts_info]
+#'   viewed with [`get_extract_info()`]
 #' * Create an `ipums_extract` object from a JSON-formatted definition with
 #'   [define_extract_from_json()]
 #'
@@ -714,7 +714,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
 }
 
-#' Get information about a submitted extract
+#' Get information about previous extract requests
 #'
 #' @description
 #' Get information about previously submitted extracts via the IPUMS API.
@@ -2209,95 +2209,13 @@ combine_extracts.nhgis_extract <- function(...) {
 #' Get information on recent extracts
 #'
 #' @description
-#' Get information on recent extracts for a given IPUMS collection
-#' via the IPUMS API.
+#' `r lifecycle::badge("deprecated")`
 #'
-#' For an overview of ipumsr microdata API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Functionality for accessing recent extract information has been moved to
+#' [`get_extract_info()`].
 #'
-#' @md
+#' Please use that function instead.
 #'
-#' @details
-#' `get_last_extract_info` is a convenience function that is
-#' similar to `get_recent_extracts_info_list(..., how_many = 1)`,
-#' but returns an [`ipums_extract`][ipums_extract-class] object rather than
-#' a list of `ipums_extract` objects.
-#'
-#' @param collection The code for an IPUMS data collection.
-#'
-#'   Defaults to the value of the `IPUMS_DEFAULT_COLLECTION` environment
-#'   variable. To set a default collection, use
-#'   [set_ipums_default_collection()].
-#'
-#'   For a list of the codes used to refer to the data collections,
-#'   use [ipums_data_collections()].
-#' @param how_many Number of recent extracts for which to retrieve information.
-#'   Defaults to 10 extracts.
-#' @inheritParams submit_extract
-#'
-#' @family ipums_api
-#' @return For `get_recent_extracts_info_list()`, a list of extract objects.
-#'
-#'   For `get_recent_extracts_info_tbl()`, a [`tibble`][tibble::tbl_df-class]
-#'   representing extract specifications. Each column corresponds to an extract
-#'   field.
-#'
-#' @examples
-#' \dontrun{
-#' # Get list of recent extracts
-#' list_of_last_10_extracts <- get_recent_extracts_info_list("usa")
-#'
-#' # If you have a default collection set, it will be used by default:
-#' set_ipums_default_collection("usa")
-#' list_of_last_10_extracts <- get_recent_extracts_info_list()
-#'
-#' # Print the extract number for extracts that are downloadable:
-#' for (extract in list_of_last_10_extracts) {
-#'   if (is_extract_ready(extract)) print(extract$number)
-#' }
-#'
-#' # Get tibble of recent extracts
-#' tbl_of_last_10_extracts <- get_recent_extracts_info_tbl("usa")
-#'
-#' # Filter down to extracts with "income" in the description
-#' description_mentions_income <- grepl(
-#'   "[Ii]ncome",
-#'   tbl_of_last_10_extracts$description
-#' )
-#' income_extracts <- tbl_of_last_10_extracts[description_mentions_income, ]
-#'
-#' # Convert tibble of extracts to list of extracts
-#' income_extracts <- extract_tbl_to_list(income_extracts)
-#'
-#' # Now it's easier to operate on those elements as extract objects:
-#' revised_income_extract <- add_to_extract(
-#'   income_extracts[[1]],
-#'   samples = "us2018a"
-#' )
-#'
-#' submitted_revised_income_extract <- submit_extract(revised_income_extract)
-#' }
-#'
-#' # get_last_extract_info() can be used for convenience in the extract
-#' # submission workflow as shown below:
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
-#'
-#' \dontrun{
-#' submit_extract(my_extract)
-#'
-#' # Oops, forgot to capture the return object from submit_extract.
-#' # Grab it with:
-#' submitted_extract <- get_last_extract_info("usa")
-#'
-#' # View the extract number
-#' submitted_extract$number
-#'
-#' # Check if submitted extract is ready
-#' is_extract_ready(submitted_extract) # returns TRUE or FALSE
-#'
-#' # Or have R check periodically until the extract is ready
-#' downloadable_extract <- wait_for_extract(submitted_extract)
-#' }
 #' @name get_recent_extracts_info
 NULL
 
@@ -2307,17 +2225,18 @@ get_recent_extracts_info_list <- function(collection = NULL,
                                           how_many = 10,
                                           api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  collection <- collection %||% get_default_collection()
 
-  response <- ipums_api_json_request(
-    "GET",
-    collection = collection,
-    path = NULL,
-    queries = list(limit = how_many),
-    api_key = api_key
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "get_recent_extracts_info_list()",
+    "get_extract_info()"
   )
 
-  extract_list_from_json(response, validate = TRUE)
+  get_extract_info(
+    extract = collection,
+    how_many = how_many,
+    api_key = api_key
+  )
 
 }
 
@@ -2327,15 +2246,18 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
                                          how_many = 10,
                                          api_key = Sys.getenv("IPUMS_API_KEY")) {
 
-  collection <- collection %||% get_default_collection()
-
-  extract_list <- get_recent_extracts_info_list(
-    collection,
-    how_many,
-    api_key
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "get_recent_extracts_info_tbl()",
+    details = "Please use `get_extract_info()` with `table = TRUE` instead."
   )
 
-  extract_list_to_tbl(extract_list)
+  get_extract_info(
+    extract = collection,
+    how_many = how_many,
+    table = TRUE,
+    api_key = api_key
+  )
 
 }
 
@@ -2358,9 +2280,9 @@ get_last_extract_info <- function(collection = NULL,
 #' Convert a tibble of extract definitions to a list
 #'
 #' @description
-#' Convert a [`tibble`][tibble::tbl_df-class] (or
-#' [`data.frame`][base::data.frame()]) of extract definitions, such as that
-#' returned by [get_recent_extracts_info_tbl()], to a list of
+#' Convert a [`tibble`][tibble::tbl_df-class] containing the specifications for
+#' one or more extract definitions (obtained by setting `table = TRUE` in
+#' [`get_extract_info()`]) to a list of
 #' [`ipums_extract`][ipums_extract-class] objects.
 #'
 #' For an overview of ipumsr microdata API
@@ -2382,7 +2304,7 @@ get_last_extract_info <- function(collection = NULL,
 #' @examples
 #' \dontrun{
 #' # Get tibble of recent extracts
-#' tbl_of_last_10_extracts <- get_recent_extracts_info_tbl("usa")
+#' tbl_of_last_10_extracts <- get_extract_info("usa", table = TRUE)
 #'
 #' # Filter down to extracts with "income" in the description
 #' description_mentions_income <- grepl(
@@ -2473,7 +2395,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #' @examples
 #' \dontrun{
 #' # Get list of recent extracts
-#' list_of_last_10_extracts <- get_recent_extracts_info_list("usa")
+#' list_of_last_10_extracts <- get_extract_info("usa")
 #'
 #' # Print the extract number for extracts that are downloadable:
 #' for (extract in list_of_last_10_extracts) {
@@ -4483,7 +4405,7 @@ ipums_api_json_request <- function(verb,
     } else if (httr::status_code(res) == 404) {
       if (fostr_detect(path, "^extracts/\\d+$")) {
         extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract <- get_recent_extracts_info_list(
+        most_recent_extract <- get_extract_info(
           collection,
           how_many = 1
         )
@@ -5129,7 +5051,7 @@ extract_to_tbl.nhgis_extract <- function(x) {
 #' layout.
 #'
 #' @param extract_tbl Tibble of NHGIS extract specifications as provided by
-#'   `get_recent_extracts_info_tbl("nhgis")`
+#'   `get_extract_info("nhgis", table = TRUE)`
 #'
 #' @return A tibble where each row represents a single NHGIS extract. Fields
 #'   with multiple values are collapsed as list-columns.

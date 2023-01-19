@@ -44,7 +44,6 @@ Other ipums_api:
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract.cps_extract}()},

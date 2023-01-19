@@ -3,7 +3,7 @@
 \name{get_extract_info}
 \alias{get_extract_info}
 \alias{get_last_extract_info}
-\title{Get information about a submitted extract}
+\title{Get information about previous extract requests}
 \usage{
 get_extract_info(
   extract = NULL,
@@ -100,7 +100,6 @@ Other ipums_api:
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
-\code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract.cps_extract}()},

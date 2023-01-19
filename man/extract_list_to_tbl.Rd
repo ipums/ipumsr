@@ -24,7 +24,7 @@ those extracts. For an overview of ipumsr microdata API functionality, see
 \examples{
 \dontrun{
 # Get list of recent extracts
-list_of_last_10_extracts <- get_recent_extracts_info_list("usa")
+list_of_last_10_extracts <- get_extract_info("usa")
 
 # Print the extract number for extracts that are downloadable:
 for (extract in list_of_last_10_extracts) {
@@ -49,7 +49,6 @@ Other ipums_api:
 \code{\link{download_extract}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
-\code{\link{get_recent_extracts_info}},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract.cps_extract}()},
