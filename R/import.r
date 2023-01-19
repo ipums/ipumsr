@@ -24,6 +24,15 @@ haven::is.labelled
 #' @export
 zeallot::`%<-%`
 
+# Import readr import helpers
+#' @importFrom readr problems
+#' @export
+readr::problems
+
+#' @importFrom readr spec
+#' @export
+readr::spec
+
 # ---- Select Helpers ----
 
 #' Select-style helpers from dplyr
@@ -54,48 +63,49 @@ zeallot::`%<-%`
 #' # Use bare names and helper function to load YEAR, MONTH and all variables with 'INC' in name
 #' data <- read_ipums_micro(cps_file, vars = c(YEAR, MONTH, contains("INC")))
 #'
-#' # For geographic extracts, `data_layer` and `shape_layer` arguments use the same conventions
+#' # For geographic extracts, `file_select` argument uses the same conventions
 #' # to select file names from within zip files.
 #' # (This extract only contains 1 type of file, but some have multiple)
-#' csv_file <- ipums_example("nhgis0008_csv.zip")
+#' csv_file <- ipums_example("nhgis0707_csv.zip")
 #' data <- read_nhgis(
 #'   csv_file,
-#'   data_layer = contains("pmsa")
+#'   file_select = contains("pmsa")
 #' )
 #'
 #' @name dplyr_select_style
 NULL
 
-#' @importFrom dplyr starts_with
+#' @importFrom tidyselect starts_with
 #' @export
-dplyr::starts_with
+tidyselect::starts_with
 
-#' @importFrom dplyr ends_with
+#' @importFrom tidyselect ends_with
 #' @export
-dplyr::ends_with
+tidyselect::ends_with
 
-#' @importFrom dplyr contains
+#' @importFrom tidyselect contains
 #' @export
-dplyr::contains
+tidyselect::contains
 
-#' @importFrom dplyr matches
+#' @importFrom tidyselect matches
 #' @export
-dplyr::matches
+tidyselect::matches
 
-#' @importFrom dplyr num_range
+#' @importFrom tidyselect num_range
 #' @export
-dplyr::num_range
+tidyselect::num_range
 
-#' @importFrom dplyr starts_with
+#' @importFrom tidyselect starts_with
 #' @export
-dplyr::starts_with
+tidyselect::starts_with
 
-#' @importFrom dplyr one_of
+#' @importFrom tidyselect one_of
 #' @export
-dplyr::one_of
+tidyselect::one_of
 
-#' @importFrom dplyr everything
+#' @importFrom tidyselect everything
 #' @export
-dplyr::everything
+tidyselect::everything
 
-
+#' @importFrom lifecycle deprecated
+lifecycle::deprecated

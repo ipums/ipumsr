@@ -7,6 +7,8 @@
 \alias{zap_labels}
 \alias{is.labelled}
 \alias{\%<-\%}
+\alias{problems}
+\alias{spec}
 \alias{starts_with}
 \alias{ends_with}
 \alias{contains}
@@ -14,6 +16,7 @@
 \alias{num_range}
 \alias{one_of}
 \alias{everything}
+\alias{deprecated}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -21,9 +24,13 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr:reexports]{contains}}, \code{\link[dplyr:reexports]{ends_with}}, \code{\link[dplyr:reexports]{everything}}, \code{\link[dplyr:reexports]{matches}}, \code{\link[dplyr:reexports]{num_range}}, \code{\link[dplyr:reexports]{one_of}}, \code{\link[dplyr:reexports]{starts_with}}, \code{\link[dplyr:reexports]{starts_with}}}
-
   \item{haven}{\code{\link[haven]{as_factor}}, \code{\link[haven:labelled]{is.labelled}}, \code{\link[haven]{zap_labels}}}
+
+  \item{lifecycle}{\code{\link[lifecycle]{deprecated}}}
+
+  \item{readr}{\code{\link[readr]{problems}}, \code{\link[readr]{spec}}}
+
+  \item{tidyselect}{\code{\link[tidyselect:starts_with]{contains}}, \code{\link[tidyselect:starts_with]{ends_with}}, \code{\link[tidyselect]{everything}}, \code{\link[tidyselect:starts_with]{matches}}, \code{\link[tidyselect:starts_with]{num_range}}, \code{\link[tidyselect]{one_of}}, \code{\link[tidyselect]{starts_with}}, \code{\link[tidyselect]{starts_with}}}
 
   \item{zeallot}{\code{\link[zeallot:operator]{\%<-\%}}}
 }}

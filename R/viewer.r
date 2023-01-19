@@ -51,6 +51,18 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
 
   htmltools::save_html(html_page, out_file)
 
+  on.exit(
+    unlink(list.files(tempdir(), ".html", full.names = TRUE)),
+    add = TRUE,
+    after = FALSE
+  )
+
+  on.exit(
+    unlink(file.path(tempdir(), "lib"), recursive = TRUE),
+    add = TRUE,
+    after = FALSE
+  )
+
   if (launch) {
     if (requireNamespace("rstudioapi", quietly = TRUE)) {
       rstudioapi::viewer(out_file)

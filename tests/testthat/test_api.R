@@ -406,6 +406,7 @@ if (have_api_access) {
 
 download_dir <- file.path(tempdir(), "ipums-api-downloads")
 if (!dir.exists(download_dir)) dir.create(download_dir)
+on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
 tryCatch(
   vcr::use_cassette("download-usa-extract-ipums-extract", {
@@ -769,7 +770,7 @@ test_that("tbl to list and list to tbl conversion works", {
 # > Save as / define from JSON ----
 test_that("We can export to and import from JSON", {
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(usa_extract, json_tmpfile)
   copy_of_usa_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(usa_extract, copy_of_usa_extract)
@@ -779,7 +780,7 @@ test_that("We can export to and import from JSON", {
 test_that("We can export to and import from JSON, submitted extract", {
   skip_if_no_api_access(have_api_access)
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(submitted_usa_extract, json_tmpfile)
   copy_of_submitted_usa_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(

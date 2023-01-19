@@ -732,25 +732,27 @@ tryCatch(
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
 
-      data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("blck_grp"),
-                         verbose = FALSE)
+      data <- read_nhgis(
+        table_data_file_path,
+        file_select = contains("blck_grp"),
+        show_conditions = FALSE
+      )
+
       expect_equal(nrow(data), 10190)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
-      data_shp_sf <- read_nhgis_sf(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sf <- read_nhgis_sf(
+        gis_data_file_path,
+        file_select = contains("blck_grp")
+      )
       expect_s3_class(data_shp_sf, "sf")
 
-      data_shp_sp <- read_nhgis_sp(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sp <- read_nhgis_sp(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp"),
+        verbose = FALSE
+      )
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
@@ -820,25 +822,27 @@ tryCatch(
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
 
-      data <- read_nhgis(table_data_file_path,
-                         data_layer = contains("state"),
-                         verbose = FALSE)
+      data <- read_nhgis(
+        table_data_file_path,
+        file_select = contains("state"),
+        show_conditions = FALSE
+      )
+
       expect_equal(nrow(data), 153)
 
       # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
       # there is only 1 shapefile in extract? confusing functionality currently.
-      data_shp_sf <- read_nhgis_sf(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sf <- read_nhgis_sf(
+        gis_data_file_path,
+        file_select = contains("blck_grp")
+      )
       expect_s3_class(data_shp_sf, "sf")
 
-      data_shp_sp <- read_nhgis_sp(table_data_file_path,
-                                   gis_data_file_path,
-                                   data_layer = contains("blck_grp"),
-                                   shape_layer = contains("blck_grp"),
-                                   verbose = FALSE)
+      data_shp_sp <- read_nhgis_sp(
+        gis_data_file_path,
+        shape_layer = contains("blck_grp"),
+        verbose = FALSE
+      )
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
@@ -1441,7 +1445,7 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
 
 test_that("We can export to and import from JSON for NHGIS", {
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(nhgis_extract, json_tmpfile)
   copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
@@ -1450,7 +1454,7 @@ test_that("We can export to and import from JSON for NHGIS", {
 test_that("We can export to and import from JSON, submitted NHGIS extract", {
   skip_if_no_api_access(have_api_access)
   json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
   copy_of_submitted_nhgis_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(

@@ -17,6 +17,7 @@ print.ipums_ddi <- function(x, ...) {
     "User notes:\n"
   )
   custom_cat(fnotes, indent = 2, exdent = 2)
+  cat("\n")
 }
 
 

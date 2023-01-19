@@ -2,51 +2,46 @@
 % Please edit documentation in R/list_files.r
 \name{ipums_list_files}
 \alias{ipums_list_files}
-\alias{ipums_list_data}
-\alias{ipums_list_shape}
-\alias{ipums_list_raster}
 \title{List files available for analysis in an IPUMS extract}
 \usage{
 ipums_list_files(
   file,
+  file_select = NULL,
   types = NULL,
-  data_layer = NULL,
-  shape_layer = NULL,
-  raster_layer = NULL
+  data_layer = deprecated(),
+  shape_layer = deprecated(),
+  raster_layer = deprecated()
 )
-
-ipums_list_data(file, data_layer = NULL)
-
-ipums_list_shape(file, shape_layer = NULL)
-
-ipums_list_raster(file, raster_layer = NULL)
 }
 \arguments{
-\item{file}{An IPUMS extract zip file or directory}
+\item{file}{Path to a .zip archive or directory containing the IPUMS extract
+to be examined.}
 
-\item{types}{One or more of "data", "shape", or "raster" indicating
-what type of files to look for.}
+\item{file_select}{If \code{file} contains multiple files, an expression
+indicating the file names to be included in the output. Files can be
+selected by providing a character vector specifying the file name,
+\code{\link{dplyr_select_style}} conventions, or by index position. Only files
+that match the provided expression will be displayed.}
 
-\item{data_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the data
-files to look for}
+\item{types}{One or more of \code{"data"}, \code{"shape"}, or \code{"raster"} indicating
+the type of files to include in the output. The use of \code{"raster"} has been
+deprecated and will be removed in a future release.}
 
-\item{shape_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the
-shape files to look for}
-
-\item{raster_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the
-raster files to look for}
+\item{data_layer, shape_layer, raster_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Please use \code{file_select} instead.}
 }
 \value{
-A \code{tbl_df} data.frame containing the files available
+A \code{\link[tibble:tbl_df-class]{tibble}} showing the types and names of the
+available files.
 }
 \description{
-Find which files can be loaded from an IPUMS extract. On Windows,
+Identify the files that can be loaded from an IPUMS extract. On Windows,
 this is generally a zip file (which you can optionally unzip). On
 macOS, they are generally unzipped for you, so there will be a
 directory.
 }
 \examples{
-nhgis_file <- ipums_example("nhgis0008_csv.zip")
+nhgis_file <- ipums_example("nhgis0707_csv.zip")
 ipums_list_files(nhgis_file) # Only one extract available
 
 }

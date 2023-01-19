@@ -19,49 +19,119 @@ ipums_locale <- function(encoding = NULL) {
 # rows based on values in a column of a data.frame.
 select_var_rows <- function(df, vars, filter_var = "var_name") {
   if (!quo_is_null(vars)) {
-    vars <- tidyselect::vars_select(df[[filter_var]], !!vars)
+    varnames <- df[[filter_var]]
+    names(varnames) <- varnames
+    vars <- names(tidyselect::eval_select(vars, varnames))
+
     df <- dplyr::filter(df, .data[[!!filter_var]] %in% vars)
   }
   df
 }
 
 
-find_files_in <- function(
-  file,
-  name_ext = NULL,
-  name_select = quo(NULL),
-  multiple_ok = FALSE
-) {
+find_files_in <- function(file,
+                          name_ext = NULL,
+                          name_select = quo(NULL),
+                          multiple_ok = FALSE,
+                          none_ok = TRUE) {
+
+  stopifnot(length(file) == 1)
+
   if (file_is_zip(file)) {
-    file_names <- utils::unzip(file, list = TRUE)$Name
+    file_names <- sort(utils::unzip(file, list = TRUE)$Name)
   } else if (file_is_dir(file)) {
-    file_names <- dir(file)
+    file_names <- sort(dir(file))
   } else {
-    stop(paste0(
-      "Expected a folder or a zip file to look for files in, but got:\n",
-      file
-    ))
+    if (!grepl(name_ext, file)) {
+      if (none_ok) {
+        file <- character(0)
+      } else {
+        rlang::abort(
+          paste0(
+            "Expected `file` to match extension \"", name_ext,
+            "\", but got \"", tools::file_ext(file), "\"."
+          )
+        )
+      }
+    }
+
+    return(file)
   }
 
-
-  if (!is.null(name_ext)) file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
-  if (!quo_is_null(name_select)) file_names <- tidyselect::vars_select(file_names, !!name_select)
-
-  if (!multiple_ok && length(file_names) > 1) {
-    arg_name <- deparse(substitute(name_select))
-    stop(paste(
-      custom_format_text(
-        "Multiple files found, please use the `", arg_name, "` argument to ",
-        "specify which you want to load.", indent = 2, exdent = 2
-      ),
-      custom_format_text(
-        paste(file_names, collapse = ", "), indent = 4, exdent = 4
-      ),
-      sep = "\n"
-    ), call. = FALSE)
+  if (!is.null(name_ext)) {
+    file_names <- fostr_subset(file_names, paste0("\\.", name_ext, "$"))
   }
 
-  unname(file_names)
+  if (!none_ok && length(file_names) == 0) {
+    rlang::abort(
+      paste0(
+        "Did not find any files matching extension \"",
+        name_ext, "\" in the provided file path.")
+    )
+  }
+
+  if (!quo_is_null(name_select)) {
+
+    names(file_names) <- file_names
+
+    selection <- tryCatch(
+      tidyselect::eval_select(name_select, file_names),
+      error = function(cnd) {
+        if (none_ok) {
+          return(character(0))
+        }
+
+        # Rename tidyselect errors for increased clarity in our context
+        cnd <- fostr_replace_all(
+          fostr_replace_all(conditionMessage(cnd), "column", "file"),
+          "Column",
+          "File"
+        )
+
+        # Add available file names to error message
+        rlang::abort(
+          c(
+            cnd,
+            "Available files:", purrr::set_names(file_names, "*")
+          ),
+          call = expr(find_files_in())
+        )
+      }
+    )
+
+    file_names_sel <- file_names[selection]
+
+  } else {
+    file_names_sel <- file_names
+  }
+
+  arg_name <- deparse(substitute(name_select))
+
+  if (!none_ok && length(file_names_sel) == 0) {
+    rlang::abort(
+      c(
+        paste0(
+          "The provided `", arg_name,
+          "` did not select any of the available files:"
+        ),
+        purrr::set_names(file_names, "*")
+      )
+    )
+  }
+
+  if (!multiple_ok && length(file_names_sel) > 1) {
+    rlang::abort(
+      c(
+        paste0(
+          "Multiple files found, please use the `", arg_name, "` argument to ",
+          "specify which you want to load:"
+        ),
+        purrr::set_names(file_names_sel, "*")
+      )
+    )
+  }
+
+  unname(file_names_sel)
 }
 
 #' Add IPUMS variable attributes to a data.frame
@@ -328,8 +398,8 @@ custom_check_file_exists <- function(file, extra_ext = NULL) {
     file <- file[1]
     if (dirname(file) == ".") {
       stop(paste0(
-        "Could not find file named '", file, "' in current working directory:\n  ",
-        getwd(), "\nDo you need to change the directory with `setwd()`?"
+        "Could not find file named '", file, "' in current working directory (",
+        getwd(), ")"
       ))
     } else {
       stop(paste0(
@@ -373,6 +443,7 @@ release_questions <- function() {
   }
   out
 }
+
 
 
 readr_to_hipread_specs <- function(positions, types) {
@@ -472,4 +543,115 @@ fostr_named_capture_single <- function(string, pattern, only_matches = FALSE) {
   out <- fostr_named_capture(string, pattern, only_matches)
   if (ncol(out) > 1) stop("Found multiple capture groups when expected only one")
   out[[1]]
+}
+
+#' Simplify GIS files in downloaded NHGIS extract data
+#'
+#' @description
+#' Reads GIS files found in a .zip archive as downloaded from NHGIS,
+#' simplifies them to reduce file size, and repackages into the same compressed
+#' structure as provided when downloaded directly.
+#'
+#' This is used primarily to prepare data that will be used in tests,
+#' particularly in data-reading tests.
+#'
+#' @param file Path to zip archive containing the GIS files to simplify. This
+#'   is consistent with the file name provided by `download_extract()`
+#'
+#' @return `file`, invisibly
+#'
+#' @noRd
+simplify_nhgis_gis_file <- function(file) {
+
+  if (!rlang::is_installed("rmapshaper")) {
+    rlang::abort("`rmapshaper` is required to simplify an NHGIS GIS extract")
+  }
+
+  orig_wd <- getwd()
+
+  path <- fostr_split(file, "/")[[1]]
+  dirname <- fostr_replace(path[length(path)], ".zip$", "")
+
+  if (path[length(path) - 1] == "ipumsr") {
+    filepath <- getwd()
+    shp_dir <- dirname
+  } else {
+    filepath <- paste0(
+      path[(which(path == "ipumsr") + 1):(length(path) - 1)],
+      collapse = "/"
+    )
+    shp_dir <- file.path(filepath, dirname)
+  }
+
+  utils::unzip(zipfile = file, exdir = filepath)
+
+  n_files <- length(list.files(shp_dir))
+
+  message("Simplifying files...")
+
+  shp_data <- purrr::map(
+    1:n_files,
+    ~tryCatch(
+      rmapshaper::ms_simplify(
+        read_ipums_sf(file, file_select = !!.x),
+        keep = 0.01
+      ),
+      error = function(cnd) {
+        rlang::warn(paste0("Some files could not be simplified."))
+        read_ipums_sf(file, file_select = !!.x)
+      }
+    )
+  )
+
+  setwd(shp_dir)
+
+  inner_files_zip_name <- dir()
+
+  inner_files <- purrr::map_chr(
+    inner_files_zip_name,
+    ~fostr_replace(
+      fostr_subset(utils::unzip(.x, list = TRUE)$Name, ".shp$"),
+      ".shp$",
+      ""
+    )
+  )
+
+  unlink(inner_files_zip_name)
+
+  purrr::walk2(
+    shp_data,
+    inner_files,
+    ~suppressWarnings(
+      sf::st_write(
+        .x,
+        dsn = getwd(),
+        layer = .y,
+        driver = "ESRI Shapefile"
+      )
+    )
+  )
+
+  purrr::walk2(
+    inner_files,
+    inner_files_zip_name,
+    ~{
+      files <- dir(pattern = .x)
+      utils::zip(.y, files)
+      unlink(files)
+    }
+  )
+
+  setwd("..")
+
+  utils::zip(
+    paste0(dirname, ".zip"),
+    file.path(dirname, dir(dirname))
+  )
+
+  unlink(dirname, recursive = TRUE)
+
+  setwd(orig_wd)
+
+  invisible(file)
+
 }

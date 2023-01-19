@@ -33,7 +33,8 @@ Imports:
     xml2,
     zeallot,
     jsonlite,
-    httr
+    httr,
+    lifecycle
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
 Suggests:
@@ -57,5 +58,6 @@ Suggests:
     dbplyr,
     vcr (>= 0.6.0),
     withr,
-    crayon
+    crayon,
+    rmapshaper
 VignetteBuilder: knitr

@@ -83,6 +83,11 @@ and \code{read_terra_area_sp} returns a \code{SpatialPolygonsDataFrame} with
 data and shapes.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Support for IPUMS Terra has been discontinued. These functions will be
+removed in a future release.
+
 Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 }
 \examples{
@@ -95,9 +100,11 @@ Other ipums_read:
 \code{\link{read_ipums_micro_chunked}()},
 \code{\link{read_ipums_micro_yield}()},
 \code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
+\code{\link{read_nhgis_sf}()},
+\code{\link{read_nhgis_sp}()},
 \code{\link{read_nhgis}()},
 \code{\link{read_terra_micro}()},
 \code{\link{read_terra_raster}()}
 }
 \concept{ipums_read}
+\keyword{internal}

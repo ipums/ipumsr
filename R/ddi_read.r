@@ -10,12 +10,18 @@
 #' Includes information about variable and value labels, terms of
 #' usage for the data and positions for the fixed-width file.
 #'
-#' @param ddi_file Filepath to DDI xml file
-#' @param data_layer If ddi_file is an extract with multiple DDIs, dplyr
-#'   \code{\link[dplyr]{select}}-style notation indicating which .xml data
-#'   layer to load.
+#' @param ddi_file Path to the DDI file to be loaded. This can be a .zip
+#'   archive, a directory containing the DDI file, or the .xml file itself.
+#' @param file_select If `ddi_file` is a .zip archive or directory that contains
+#'   multiple DDI files, an expression identifying the .xml file to load.
+#'   Accepts a character string specifying the file name,
+#'   [`dplyr_select_style`] conventions, or an index position of the file.
+#'   Ignored if `ddi_file` is the path to a single .xml file.
 #' @param lower_vars Logical indicating whether to convert variable names
 #'   to lowercase (default is FALSE, in line with IPUMS conventions)
+#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
+#'   instead.
+#'
 #' @return An \code{ipums_ddi} object with metadata information.
 #' @examples
 #' # Example extract DDI
@@ -23,18 +29,39 @@
 #' ddi <- read_ipums_ddi(ddi_file)
 #' @family ipums_metadata
 #' @export
-read_ipums_ddi <- function(ddi_file, data_layer = NULL, lower_vars = FALSE) {
-  data_layer <- enquo(data_layer)
+read_ipums_ddi <- function(ddi_file,
+                           file_select = NULL,
+                           lower_vars = FALSE,
+                           data_layer = deprecated()) {
+
+  if (!missing(data_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_ipums_ddi(data_layer = )",
+      "read_ipums_ddi(file_select = )",
+    )
+    file_select <- enquo(data_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
 
   custom_check_file_exists(ddi_file)
 
-  if (fostr_sub(ddi_file, -4) == ".zip") {
-    ddi_in_zip <- find_files_in(ddi_file, "xml", data_layer)
-    ddi_file_load <- unz(ddi_file, ddi_in_zip)
-  } else {
-    ddi_file_load <- ddi_file
+  ddi_file_load <- find_files_in(
+    ddi_file,
+    "xml",
+    file_select,
+    none_ok = FALSE,
+    multiple_ok = FALSE
+  )
+
+  if (file_is_zip(ddi_file)) {
+    ddi_file_load <- unz(ddi_file, ddi_file_load)
+  } else if (file_is_dir(ddi_file)) {
+    ddi_file_load <- file.path(ddi_file, ddi_file_load)
   }
-  ddi_xml <- xml2::read_xml(ddi_file_load, data_layer = NULL)
+
+  ddi_xml <- xml2::read_xml(ddi_file_load, file_select = NULL)
 
   # Basic information
   conditions <- xml_text_from_path_first(
@@ -256,29 +283,397 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
   )
 }
 
-
-#' Read metadata from a text codebook in a NHGIS or Terra area-level extract
+#' Read metadata from an NHGIS extract codebook file
 #'
-#' Read text formatted codebooks provided by some IPUMS extract systems such as
-#' NHGIS and Terra Area-level extracts in a format analogous to the DDIs
-#' available for other projects.
+#' @description
+#' NHGIS extracts include a .txt codebook file with metadata about
+#' the contents of the extract. This loads the information contained in this
+#' file into a structured format.
 #'
-#' @return
-#'   A \code{ipums_ddi} object with information on the variables included in the
-#'   csv file of a NHGIS extract.
-#' @param cb_file Filepath to the codebook (either the .zip file directly downloaded
-#'   from the website, or the path to the unzipped .txt file).
-#' @param data_layer dplyr \code{\link[dplyr]{select}}-style notation for uniquely
-#'   identifying the data layer to load. Required for reading from .zip files
-#'    for extracts with multiple files.
+#' @details
+#' This function includes functionality that previously was contained in
+#' `read_ipums_codebook()`, which supported the loading of codebooks
+#' for both NHGIS and IPUMS Terra extracts. Support for IPUMS Terra has been
+#' discontinued. `read_ipums_codebook()` has been deprecated and will be
+#' removed in a future release.
+#'
+#' @param cb_file Path to the codebook file to be loaded. This can be a .zip
+#'   archive as provided by the extract system or [`download_extract()`],
+#'   a directory containing the codebook, or the codebook .txt file itself.
+#' @param file_select If `cb_file` is a .zip archive or directory that contains
+#'   multiple codebook files, an expression identifying the file to load.
+#'   Accepts a character string specifying the file name,
+#'   [`dplyr_select_style`] conventions, or an index position of the file.
+#'   Ignored if `ddi_file` is the path to a single codebook file.
+#' @param raw If `TRUE`, read lines of the provided `cb_file` instead of
+#'   summarizing variable information in an `ipums_ddi` object. Defaults to
+#'   `FALSE`.
+#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
+#'   instead.
+#'
+#' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
+#'   variables contained in the data for the extract associated with the given
+#'   `cb_file`.
+#'
+#'   If `raw = TRUE`, a character vector with one element for each
+#'   line of the given `cb_file`.
+#'
 #' @examples
 #' # Example NHGIS extract
-#' nhgis_file <- ipums_example("nhgis0008_csv.zip")
-#' ddi <- read_ipums_codebook(nhgis_file)
-#' @family ipums_metadata
+#' nhgis_file <- ipums_example("nhgis0707_csv.zip")
+#' codebook <- read_nhgis_codebook(nhgis_file)
+#'
+#' # Summary of variables included in the extract:
+#' codebook$var_info
+#'
+#' @rdname ipums_codebook
+#'
+#' @export
+read_nhgis_codebook <- function(cb_file,
+                                file_select = NULL,
+                                raw = FALSE,
+                                data_layer = deprecated()) {
+
+  if (!missing(data_layer)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis_codebook(data_layer = )",
+      "read_nhgis_codebook(file_select = )",
+    )
+    file_select <- enquo(data_layer)
+  } else {
+    file_select <- enquo(file_select)
+  }
+
+  custom_check_file_exists(cb_file)
+
+  cb_name <- find_files_in(
+    cb_file,
+    "txt",
+    name_select = file_select,
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
+
+  if (file_is_zip(cb_file)) {
+    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
+  } else if (file_is_dir(cb_file)) {
+    cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
+  } else {
+    cb <- readr::read_lines(cb_file, progress = FALSE)
+  }
+
+  if (raw) {
+    return(cb)
+  }
+
+  # Section markers are a line full of dashes
+  # (setting to 5+ to eliminate false positives)
+  section_markers <- which(fostr_detect(cb, "^[-]{5,}$"))
+
+  dd <- find_cb_section(cb, "^Data Dictionary$", section_markers)
+
+  context_start <- which(dd == "Context Fields ") + 1
+  context_end <- which(fostr_detect(dd, "^[[:blank:]]$")) - 1
+  context_end <- min(context_end[context_end > context_start])
+  context_rows <- seq(context_start, context_end)
+
+  context_vars <- fostr_named_capture(
+    dd[context_rows],
+    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$"
+  )
+  context_vars$var_desc <- ""
+  context_vars <- context_vars[!is.na(context_vars$var_name), ]
+
+  data_type_rows <- which(fostr_detect(dd, "(Data Type|Breakdown)"))
+  blank_rows <- which(fostr_detect(dd, "^[[:blank:]]+$"))
+
+  data_types <- dd[data_type_rows]
+  # data_types <- ifelse(fostr_detect(data_types, "(E)"), "Estimate", "MOE")
+
+  # If multiple data types, process variable info for each data
+  # type separately.
+  if (length(data_type_rows) > 0) {
+
+    data_type_sections <- purrr::map(
+      data_type_rows,
+      ~seq(.x, blank_rows[which(.x <= blank_rows)[1]] - 1)
+    )
+
+    # Combine multiple lines of data type/breakdown value info into single
+    # string to attach to var info
+    data_types <- purrr::map(
+      data_type_sections,
+      ~parse_breakdown(
+        dd[.x][length(.x):2] # Go in reverse so data types come before brkdowns
+      )
+    )
+
+    data_type_rows <- purrr::map2(
+      data_type_rows,
+      c(data_type_rows[-1], length(dd) + 1),
+      ~seq(.x, .y - 1)
+    )
+
+    table_name_rows <- purrr::map(
+      data_type_rows,
+      ~.x[fostr_detect(dd[.x], "^[[:blank:]]*(Table)|(Data Type)")]
+    )
+
+    table_sections <- purrr::map2(
+      data_type_rows,
+      table_name_rows,
+      function(dt, tn) {
+        purrr::map2(
+          tn,
+          c(tn[-1], max(dt) + 1),
+          ~seq(.x, .y - 1)
+        )
+      }
+    )
+
+    table_sections <- purrr::flatten(
+      purrr::map2(table_sections, data_types, ~set_names(.x, .y))
+    )
+
+    if (any(fostr_detect(cb, "^Time series layout:"))) {
+      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+    } else {
+      table_vars <- purrr::map2_dfr(
+        table_sections,
+        names(table_sections),
+        ~read_nhgis_ds_tables(dd, .x, data_type = .y)
+      )
+    }
+
+  } else {
+
+    table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)"))
+
+    table_sections <- purrr::map2(
+      table_name_rows,
+      c(table_name_rows[-1], length(dd)),
+      ~seq(.x, .y - 1)
+    )
+
+    if (any(fostr_detect(cb, "^Time series layout:"))) {
+      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+    } else {
+      table_vars <- purrr::map_dfr(
+        table_sections,
+        ~read_nhgis_ds_tables(dd, .x)
+      )
+    }
+
+  }
+
+  var_info <- make_var_info_from_scratch(
+    var_name = c(context_vars$var_name, table_vars$var_name),
+    var_label = c(context_vars$var_label, table_vars$var_label),
+    var_desc = c(context_vars$var_desc, table_vars$var_desc)
+  )
+
+  # Get License and Condition section
+  conditions_text <- find_cb_section(
+    cb,
+    "^Citation and Use of .+ Data",
+    section_markers
+  )
+
+  conditions_text <- paste(conditions_text, collapse = "\n")
+
+  out <- make_ddi_from_scratch(
+    file_name = cb_name,
+    file_type = "rectangular",
+    ipums_project = "NHGIS",
+    var_info = var_info,
+    conditions = conditions_text
+  )
+
+  out
+
+}
+
+#' Parse NHGIS codebook lines with data type or breakdown info
+#'
+#' @description
+#' Extracts the apporpriate name for data types and breakdown values from an
+#' NHGIS codebook for maximal similarity to the content of NHGIS enhanced
+#' header rows.
+#'
+#' Lines with a double colon ("::") have titles following the double colon.
+#' Lines with single colons have titles following the first single colon.
+#' Lines with no colons are typically data types and should have the entire
+#' line extracted.
+#'
+#' @param bkdown_lines Lines corresponding to a single data type or breakdown
+#'   section of the codebook. Typically start with "Breakdown" or "Data Type"
+#'
+#' @return Character vector of length `bkdown_lines` with the extracted
+#'   data type or breakdown titles
+#'
+#' @noRd
+parse_breakdown <- function(bkdown_lines) {
+
+  dt_bkdwn <- purrr::map(
+    bkdown_lines,
+    ~if (fostr_detect(.x, "::")) {
+      fostr_named_capture(.x, "::(?<x>[^\\(]+)")$x
+    } else if (fostr_detect(.x, ":")) {
+      fostr_named_capture(.x, ":(?<x>[^\\(]+)")$x
+    } else {
+      .x
+    }
+  )
+
+  paste0(trimws(dt_bkdwn), collapse = ": ")
+
+}
+
+#' Helper function to read codebook information for an NHGIS
+#' extract that contains time series tables.
+#'
+#' @param dd Character vector of lines contained in the codebook's
+#'   "Data Dictionary" section.
+#' @param table_rows Indices of rows that include table variable information
+#'   within the provided `dd`.
+#'
+#' @return tibble of variable information
+#'
+#' @noRd
+read_nhgis_tst_tables <- function(dd, table_rows) {
+
+  table_name_and_code <- fostr_named_capture(
+    dd[table_rows[1]],
+    paste0(
+      "^[[:blank:]]*Table .+?:[[:blank:]]+\\((?<table_code>.+?)\\)",
+      "[[:blank:]]+(?<table_name>.+)$"
+    )
+  )
+
+  nhgis_table_code <- table_name_and_code$table_code
+  table_name <- table_name_and_code$table_name
+
+  time_series_headers <- fostr_detect(
+    dd[table_rows],
+    "^[[:blank:]]+Time series"
+  )
+
+  vars <- dd[table_rows][!time_series_headers]
+  vars <- vars[-1] # First row was table name/code
+  vars <- fostr_named_capture(
+    vars,
+    "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+    only_matches = TRUE
+  )
+
+  vars$var_desc <- paste0("Table ", nhgis_table_code, ": ", table_name)
+
+  vars
+
+}
+
+#' Helper function to read codebook information for an NHGIS
+#' extract that contains datasets.
+#'
+#' @param dd Character vector of lines contained in the codebook's
+#'   "Data Dictionary" section.
+#' @param table_rows Indices of rows that include table variable information
+#'   within the provided `dd`.
+#'
+#' @return tibble of variable information
+#'
+#' @noRd
+read_nhgis_ds_tables <- function(dd, table_rows, data_type = NULL) {
+
+  if (fostr_detect(dd[table_rows[1]], "Data Type")) {
+
+    rows <- dd[table_rows]
+
+    # Start at first blank row. Rows before this are part of the
+    # Data type or breakdown value, not variables.
+    rows <- rows[seq(
+      min(which(fostr_detect(rows, "^[[:blank:]]+$"))),
+      length(rows)
+    )]
+
+    vars <- fostr_named_capture(
+      rows,
+      "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+      only_matches = TRUE
+    )
+
+    vars$var_desc <- ""
+
+  } else {
+
+    table_name <- fostr_named_capture_single(
+      dd[table_rows[1]],
+      "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
+    )
+
+    universe <- fostr_named_capture_single(
+      dd[table_rows[2]],
+      "^[[:blank:]]*Universe:[[:blank:]]+(?<universe>.+)$"
+    )
+
+    nhgis_table_code <- fostr_named_capture_single(
+      dd[table_rows[4]],
+      "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
+    )
+
+    vars <- fostr_named_capture(
+      dd[table_rows[-1:-4]],
+      "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+      only_matches = TRUE
+    )
+
+    if (!is_null(data_type)) {
+      vars$var_label <- paste0(data_type, ": ", vars$var_label)
+    }
+
+    vars$var_desc <- paste0(
+      "Table ", nhgis_table_code, ": ", table_name,
+      " (Universe: ", universe, ")"
+    )
+
+  }
+
+  vars
+
+}
+
+#' Read metadata from an IPUMS Terra extract codebook file
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Support for IPUMS Terra has been discontinued. `read_ipums_codebook()` has
+#' been deprecated and will be removed in a future release.
+#'
+#' To read an NHGIS codebook, use [`read_nhgis_codebook`].
+#'
+#' @keywords internal
+#'
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_ipums_codebook()",
+    details = c(
+      "To read an NHGIS codebook, use `read_nhgis_codebook()`.",
+      paste0(
+        "Support for IPUMS Terra has been discontinued and will be removed",
+        " in a future release."
+      )
+    )
+  )
+
   data_layer <- enquo(data_layer)
+
+  custom_check_file_exists(cb_file)
+
   if (path_is_zip_or_dir(cb_file)) {
     cb_name <- find_files_in(cb_file, "txt", multiple_ok = TRUE)
     # There are 2 formats for extracts, so we have to do some work here.
@@ -295,9 +690,9 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     }
     if (length(cb_name) == 1) {
       if (file_is_zip(cb_file)) {
-        cb <- readr::read_lines(unz(cb_file, cb_name))
+        cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
       } else {
-        cb <- readr::read_lines(file.path(cb_file, cb_name))
+        cb <- readr::read_lines(file.path(cb_file, cb_name), progress = FALSE)
       }
     } else {
       cb <- NULL
@@ -305,7 +700,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   } else {
     cb_name <- cb_file
     if (file.exists(cb_name)) {
-      cb <- readr::read_lines(cb_name)
+      cb <- readr::read_lines(cb_name, progress = FALSE)
     }  else {
       cb <- NULL
     }

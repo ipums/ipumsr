@@ -316,10 +316,10 @@ geographic levels, you will need to load the data separately and then combine.
 
 So in our example, we run the following to load the data:
 ```{r}
-nhgis_ddi <- read_ipums_codebook(ex_file("nhgis0024_csv.zip")) 
+nhgis_ddi <- read_ipums_codebook(ex_file("nhgis0706_csv.zip")) 
 nhgis <- read_nhgis_sf(
-  data_file = ex_file("nhgis0024_csv.zip"),
-  shape_file = ex_file("nhgis0024_shape_small.zip"),
+  data_file = ex_file("nhgis0706_csv.zip"),
+  shape_file = ex_file("nhgis0706_shape_small.zip"),
   verbose = FALSE
 )
 ```
