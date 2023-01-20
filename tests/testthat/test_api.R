@@ -793,20 +793,13 @@ test_that("We can export to and import from JSON, submitted extract", {
 # > Set IPUMS API key ----
 test_that("set_ipums_envvar sets environment variable", {
   skip_if_not_installed("withr")
+
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
   Sys.setenv(IPUMS_API_KEY = "")
+
   set_ipums_envvar(IPUMS_API_KEY = "testapikey")
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
-
-  Sys.setenv("IPUMS_DEFAULT_COLLECTION" = "fake-collection")
-  expect_error(
-    get_default_collection(),
-    paste0(
-      "The default collection is set to \"fake-collection\", which is not a ",
-      "supported IPUMS collection"
-    )
-  )
 })
 
 test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
@@ -821,9 +814,15 @@ test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
   Sys.setenv(IPUMS_API_KEY = "")
   Sys.setenv(HOME = tempdir())
   set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
+
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
   renviron_lines <- readLines(temp_renviron_file)
   expect_true("IPUMS_API_KEY=\"testapikey\"" %in% renviron_lines)
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "testcollect")
+  renviron_lines <- readLines(temp_renviron_file)
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"testcollect\"" %in% renviron_lines)
 })
 
 
@@ -857,7 +856,6 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
   expect_message(
     set_ipums_envvar(
       IPUMS_DEFAULT_COLLECTION = "nhgis",
-      save = TRUE,
       overwrite = TRUE
     ),
     "Existing \\.Renviron file copied"
@@ -882,3 +880,4 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
   expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
 
 })
+

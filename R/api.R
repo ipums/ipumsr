@@ -2488,7 +2488,7 @@ ipums_data_collections <- function() {
 #' @param api_key API key associated with your user account.
 #' @param save If `TRUE`, save the key for use in future
 #'   sessions by adding it to the `.Renviron` file in your home directory.
-#'   Defaults to `FALSE`.
+#'   Defaults to `FALSE`, unless `overwrite = TRUE`.
 #' @param overwrite If `TRUE`, overwrite any existing value of
 #'   `IPUMS_API_KEY` in the `.Renviron` file with the provided `api_key`.
 #'   Defaults to `FALSE`.
@@ -2501,7 +2501,7 @@ ipums_data_collections <- function() {
 #'
 #' @export
 set_ipums_api_key <- function(api_key,
-                              save = FALSE,
+                              save = overwrite,
                               overwrite = FALSE,
                               unset = FALSE) {
 
@@ -2542,7 +2542,7 @@ set_ipums_api_key <- function(api_key,
 #'   by the IPUMS API.
 #' @param save If `TRUE`, save the key for use in future
 #'   sessions by adding it to the `.Renviron` file in your home directory.
-#'   Defaults to `FALSE`.
+#'   Defaults to `FALSE`, unless `overwrite = TRUE`.
 #' @param overwrite If `TRUE`, overwrite any existing value of
 #'   `IPUMS_API_KEY` in the `.Renviron` file with the provided `api_key`.
 #'   Defaults to `FALSE`.
@@ -2579,7 +2579,7 @@ set_ipums_api_key <- function(api_key,
 #' # Remove the variable from the environment and .Renviron, if saved
 #' set_ipums_default_collection(unset = TRUE)
 set_ipums_default_collection <- function(collection = NULL,
-                                         save = FALSE,
+                                         save = overwrite,
                                          overwrite = FALSE,
                                          unset = FALSE) {
 
@@ -2808,7 +2808,7 @@ get_default_collection <- function() {
 # Do we actually need to back this up? If we're *sure* we're not touching any
 # of the variables already in the file, why worry so much about backing up?
 set_ipums_envvar <- function(...,
-                             save = FALSE,
+                             save = overwrite,
                              overwrite = FALSE) {
 
   dots <- rlang::list2(...)
@@ -2851,18 +2851,22 @@ set_ipums_envvar <- function(...,
       renviron_lines <- readLines(renviron_file)
       var_match <- paste0("^(\\s?)+", var_name)
 
-      if (isTRUE(overwrite)) {
+      has_existing_envvar <- any(fostr_detect(renviron_lines, var_match))
+
+      if (isTRUE(overwrite) && has_existing_envvar) {
 
         renviron_lines[fostr_detect(renviron_lines, var_match)] <- new_envvar
         writeLines(renviron_lines, con = renviron_file)
 
       } else {
 
-        if (any(fostr_detect(renviron_lines, var_match))) {
-          stop(
-            var_name, " already exists in .Renviron. To overwrite it, set ",
-            "`overwrite = TRUE`.",
-            call. = FALSE
+        if (has_existing_envvar) {
+          rlang::abort(
+            paste0(
+              var_name,
+              " already exists in .Renviron. To overwrite it, set ",
+              "`overwrite = TRUE`."
+            )
           )
         }
 
@@ -2900,37 +2904,47 @@ unset_ipums_envvar <- function(var_name) {
   home_dir <- Sys.getenv("HOME")
   renviron_file <- file.path(home_dir, ".Renviron")
 
+  msg <- NULL
+
   if (!file.exists(renviron_file)) {
     rlang::warn("No .Renviron file to update.")
   } else {
 
-    backup_file <- file.path(home_dir, ".Renviron_backup")
-
-    backed_up_renviron <- file.copy(
-      renviron_file,
-      to = backup_file,
-      overwrite = TRUE
-    )
-
-    if (!backed_up_renviron) {
-      rlang::warn("Failed to back up .Renviron.")
-    } else {
-      message(
-        "Existing .Renviron file copied to ", backup_file,
-        " for backup purposes."
-      )
-    }
-
     renviron_lines <- readLines(renviron_file)
     var_match <- paste0("^(\\s?)+", var_name)
 
-    renviron_lines <- renviron_lines[!fostr_detect(renviron_lines, var_match)]
-    writeLines(renviron_lines, con = renviron_file)
+    line_is_envvar <- fostr_detect(renviron_lines, var_match)
+
+    if (any(line_is_envvar)) {
+
+      backup_file <- file.path(home_dir, ".Renviron_backup")
+
+      backed_up_renviron <- file.copy(
+        renviron_file,
+        to = backup_file,
+        overwrite = TRUE
+      )
+
+      if (!backed_up_renviron) {
+        rlang::warn("Failed to back up .Renviron.")
+      } else {
+        message(
+          "Existing .Renviron file copied to ", backup_file,
+          " for backup purposes."
+        )
+      }
+
+      msg <- " and removing from .Renviron"
+
+      renviron_lines <- renviron_lines[!line_is_envvar]
+      writeLines(renviron_lines, con = renviron_file)
+
+    }
 
   }
 
   message(
-    "Unsetting environment variable ", var_name, " and removing from .Renviron."
+    "Unsetting environment variable ", var_name, msg, "."
   )
 
   Sys.unsetenv(var_name)

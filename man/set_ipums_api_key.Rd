@@ -4,14 +4,14 @@
 \alias{set_ipums_api_key}
 \title{Set your IPUMS API key}
 \usage{
-set_ipums_api_key(api_key, save = FALSE, overwrite = FALSE, unset = FALSE)
+set_ipums_api_key(api_key, save = overwrite, overwrite = FALSE, unset = FALSE)
 }
 \arguments{
 \item{api_key}{API key associated with your user account.}
 
 \item{save}{If \code{TRUE}, save the key for use in future
 sessions by adding it to the \code{.Renviron} file in your home directory.
-Defaults to \code{FALSE}.}
+Defaults to \code{FALSE}, unless \code{overwrite = TRUE}.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing value of
 \code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.

@@ -6,7 +6,7 @@
 \usage{
 set_ipums_default_collection(
   collection = NULL,
-  save = FALSE,
+  save = overwrite,
   overwrite = FALSE,
   unset = FALSE
 )
@@ -18,7 +18,7 @@ by the IPUMS API.}
 
 \item{save}{If \code{TRUE}, save the key for use in future
 sessions by adding it to the \code{.Renviron} file in your home directory.
-Defaults to \code{FALSE}.}
+Defaults to \code{FALSE}, unless \code{overwrite = TRUE}.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing value of
 \code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
