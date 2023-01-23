@@ -504,7 +504,6 @@ test_that("Can check status of an NHGIS extract by supplying extract object", {
     checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
   })
   expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(submitted_nhgis_extract$status, "queued")
   vcr::use_cassette("is-nhgis-extract-ready", {
     is_ready <- is_extract_ready(submitted_nhgis_extract)
   })
