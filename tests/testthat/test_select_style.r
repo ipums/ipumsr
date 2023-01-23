@@ -27,7 +27,10 @@ test_that(
     # variable from environment
     my_vars <- c("RECTYPE", "SEX")
     expect_equal(
-      ipumsr:::select_var_rows(test_df, rlang::quo(my_vars)),
+      ipumsr:::select_var_rows(
+        test_df,
+        rlang::quo(tidyselect::all_of(my_vars))
+      ),
       dplyr::filter(test_df, var_name %in% c("RECTYPE", "SEX"))
     )
 
@@ -145,7 +148,7 @@ test_that(
     expect_equal(
       ipumsr:::find_files_in(
         zip_file,
-        name_select = rlang::quo(my_vars),
+        name_select = rlang::quo(tidyselect::all_of(my_vars)),
         multiple_ok = TRUE
       ),
       c("test1.txt", "test2.txt")

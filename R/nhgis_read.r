@@ -138,7 +138,7 @@ read_nhgis <- function(data_file,
       "_codebook.txt"
     )
     cb_ddi_info <- try(
-      read_nhgis_codebook(data_file, file_select = cb_name),
+      read_nhgis_codebook(data_file, file_select = tidyselect::all_of(cb_name)),
       silent = TRUE
     )
   }
