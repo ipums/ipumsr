@@ -1837,21 +1837,15 @@ remove_from_extract.cps_extract <- function(extract,
 #'   [time series tables](https://www.nhgis.org/time-series-tables)
 #'   to remove from the extract. All time series table subfields associated
 #'   with the specified `time_series_tables` will also be removed. See details.
-#' @param geog_levels Geographic levels to remove from the specified
-#'   `datasets` and `time_series_tables`. If no
-#'   `datasets` or `time_series_tables` are specified, values apply to the
-#'   `datasets` and `time_series_tables` that already exist in the extract.
+#' @param geog_levels Geographic levels to remove from the extract.
 #'
 #'   Can be provided as a vector or list; see details for syntax options.
-#' @param years Years to remove from the specified `datasets`. If no
-#'   `datasets` are specified, values apply to the `datasets` that already
-#'   exist in the extract.
+#' @param years Years to remove from the extract.
 #'
 #'   Can be provided as a vector or list; see details for syntax options.
 #' @param breakdown_values [breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to remove from the specified `datasets`. If no `datasets` are specified,
-#'   values apply to the `datasets` that already exist in the extract.
+#'   to remove from the extract.
 #'
 #'   Can be provided as a vector or a list; see details for syntax options.
 #' @param geographic_extents Geographic extents to remove from the extract.
@@ -1909,11 +1903,11 @@ remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               data_tables = NULL,
                                               time_series_tables = NULL,
-                                              shapefiles = NULL,
                                               geog_levels = NULL,
                                               years = NULL,
                                               breakdown_values = NULL,
                                               geographic_extents = NULL,
+                                              shapefiles = NULL,
                                               ...) {
 
   dots <- rlang::list2(...)
@@ -1935,31 +1929,6 @@ remove_from_extract.nhgis_extract <- function(extract,
       "applies to all datasets in an NHGIS extract. The provided values will ",
       "be removed from all datasets.",
       call. = FALSE
-    )
-  }
-
-  if (any(!datasets %in% extract$datasets)) {
-    rlang::warn(
-      paste0(
-        "Some `datasets` (\"",
-        paste0(setdiff(datasets, extract$datasets), collapse = "\", \""),
-        "\") could not be removed because they were not found among this ",
-        "extract\'s `datasets`"
-      )
-    )
-  }
-
-  if (any(!time_series_tables %in% extract$time_series_tables)) {
-    rlang::warn(
-      paste0(
-        "Some `time_series_tables` (\"",
-        paste0(
-          setdiff(time_series_tables, extract$time_series_tables),
-          collapse = "\", \""
-        ),
-        "\") could not be removed because they were not found among this ",
-        "extract\'s `time_series_tables`"
-      )
     )
   }
 
@@ -2114,18 +2083,14 @@ combine_extracts.usa_extract <- function(...) {
 
   extract <- purrr::reduce(
     extracts,
-    # Warnings are not as relevant when combining extracts.
-    # TODO: we can also remove warnings from add to extract?
-    ~suppressWarnings(
-      add_to_extract(
-        .x,
-        description = .x$description,
-        samples = .y$samples,
-        variables = .y$variables,
-        data_format = .x$data_format %||% .y$data_format,
-        data_structure = .x$data_structure %||% .y$data_structure,
-        rectangular_on = .x$rectangular_on %||% .y$rectangular_on
-      )
+    ~add_to_extract(
+      .x,
+      description = .x$description,
+      samples = .y$samples,
+      variables = .y$variables,
+      data_format = .x$data_format %||% .y$data_format,
+      data_structure = .x$data_structure %||% .y$data_structure,
+      rectangular_on = .x$rectangular_on %||% .y$rectangular_on
     )
   )
 
@@ -2146,18 +2111,14 @@ combine_extracts.cps_extract <- function(...) {
 
   extract <- purrr::reduce(
     extracts,
-    # Warnings are not as relevant when combining extracts.
-    # We can also remove warnings from add to extract...
-    ~suppressWarnings(
-      add_to_extract(
-        .x,
-        description = .x$description,
-        samples = .y$samples,
-        variables = .y$variables,
-        data_format = .x$data_format %||% .y$data_format,
-        data_structure = .x$data_structure %||% .y$data_structure,
-        rectangular_on = .x$rectangular_on %||% .y$rectangular_on
-      )
+    ~add_to_extract(
+      .x,
+      description = .x$description,
+      samples = .y$samples,
+      variables = .y$variables,
+      data_format = .x$data_format %||% .y$data_format,
+      data_structure = .x$data_structure %||% .y$data_structure,
+      rectangular_on = .x$rectangular_on %||% .y$rectangular_on
     )
   )
 
@@ -4752,28 +4713,6 @@ add_to_extract_micro <- function(extract,
     )
   }
 
-  if (any(samples %in% extract$samples)) {
-    rlang::warn(
-      paste0(
-        "The following samples are already included in the ",
-        "supplied extract definition, and thus will not be added: \"",
-        paste0(intersect(samples, extract$samples), collapse = "\", \""),
-        "\""
-      )
-    )
-  }
-
-  if (any(variables %in% extract$variables)) {
-    rlang::warn(
-      paste0(
-        "The following variables are already included in the ",
-        "supplied extract definition, and thus will not be added: \"",
-        paste0(intersect(variables, extract$variables), collapse = "\", \""),
-        "\""
-      )
-    )
-  }
-
   extract <- new_ipums_extract(
     collection = extract$collection,
     description = description %||% extract$description,
@@ -4809,28 +4748,6 @@ remove_from_extract_micro <- function(extract,
       "See `add_to_extract()` to replace existing values in applicable extract ",
       "fields.",
       call. = FALSE
-    )
-  }
-
-  if (any(!samples %in% extract$samples)) {
-    rlang::warn(
-      paste0(
-        "The following samples are not included in the ",
-        "supplied extract definition, and thus will not be removed: \"",
-        paste0(setdiff(samples, extract$samples), collapse = "\", \""),
-        "\""
-      )
-    )
-  }
-
-  if (any(!variables %in% extract$variables)) {
-    rlang::warn(
-      paste0(
-        "The following variables are not included in the ",
-        "supplied extract definition, and thus will not be removed: \"",
-        paste0(setdiff(variables, extract$variables), collapse = "\", \""),
-        "\""
-      )
     )
   }
 

@@ -698,13 +698,11 @@ test_that("Unused revisions do not alter CPS extract", {
 
 
 test_that("Improper extract revisions throw warnings or errors", {
-  expect_warning(
-    add_to_extract(usa_extract, samples = "us2017b"),
-    regexp = "already included"
+  expect_silent(
+    add_to_extract(usa_extract, samples = "us2017b")
   )
-  expect_warning(
-    remove_from_extract(cps_extract, variables = "RELATE"),
-    regexp = "are not included"
+  expect_silent(
+    remove_from_extract(cps_extract, variables = "RELATE")
   )
   expect_warning(
     remove_from_extract(usa_extract,

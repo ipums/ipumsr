@@ -1178,24 +1178,11 @@ test_that("Improper extract revisions throw warnings or errors", {
     ),
     "`geographic_extents` was provided as a list, but this parameter"
   )
-  expect_warning(
+  expect_silent(
     remove_from_extract(
       nhgis_extract,
+      datasets = "DS",
       time_series_tables = "TST"
-    ),
-    paste0(
-      "Some `time_series_tables` \\(\"TST\"\\) could not be removed because ",
-      "they were not found among this extract's `time_series_tables`"
-    )
-  )
-  expect_warning(
-    remove_from_extract(
-      nhgis_extract,
-      datasets = "DS"
-    ),
-    paste0(
-      "Some `datasets` \\(\"DS\"\\) could not be removed because ",
-      "they were not found among this extract's `datasets`"
     )
   )
   expect_error(

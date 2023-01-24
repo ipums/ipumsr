@@ -9,11 +9,11 @@
   datasets = NULL,
   data_tables = NULL,
   time_series_tables = NULL,
-  shapefiles = NULL,
   geog_levels = NULL,
   years = NULL,
   breakdown_values = NULL,
   geographic_extents = NULL,
+  shapefiles = NULL,
   ...
 )
 }
@@ -34,29 +34,23 @@ Can be provided as a vector or list; see details for syntax options.}
 to remove from the extract. All time series table subfields associated
 with the specified \code{time_series_tables} will also be removed. See details.}
 
-\item{shapefiles}{Character vector of
-\href{https://www.nhgis.org/gis-files}{shapefiles} to remove from the extract.}
-
-\item{geog_levels}{Geographic levels to remove from the specified
-\code{datasets} and \code{time_series_tables}. If no
-\code{datasets} or \code{time_series_tables} are specified, values apply to the
-\code{datasets} and \code{time_series_tables} that already exist in the extract.
+\item{geog_levels}{Geographic levels to remove from the extract.
 
 Can be provided as a vector or list; see details for syntax options.}
 
-\item{years}{Years to remove from the specified \code{datasets}. If no
-\code{datasets} are specified, values apply to the \code{datasets} that already
-exist in the extract.
+\item{years}{Years to remove from the extract.
 
 Can be provided as a vector or list; see details for syntax options.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{breakdown values}
-to remove from the specified \code{datasets}. If no \code{datasets} are specified,
-values apply to the \code{datasets} that already exist in the extract.
+to remove from the extract.
 
 Can be provided as a vector or a list; see details for syntax options.}
 
 \item{geographic_extents}{Geographic extents to remove from the extract.}
+
+\item{shapefiles}{Character vector of
+\href{https://www.nhgis.org/gis-files}{shapefiles} to remove from the extract.}
 
 \item{...}{Ignored}
 }
