@@ -196,82 +196,184 @@ read_nhgis <- function(data_file,
 
 }
 
-#' @rdname read_ipums_sf
+
+#' Read data from an NHGIS extract with both spatial and tabular data
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Please load spatial and tabular data separately using [`read_ipums_sf()`] and
+#' [`read_nhgis()`], respectively. Splitting the use of these functions allows
+#' for more control over the data loading and joining process.
+#'
+#' To join spatial and tabular data, use an
+#' [ipums_shape_*_join][ipums_shape_left_join] function.
+#'
+#' To convert a `SpatialPolygonsDataFrame` or other `sp` object to an `sf`
+#' object, use [`sf::as_Spatial()`].
+#'
+#' @rdname read_nhgis_sf
+#'
+#' @keywords internal
 #'
 #' @export
-read_nhgis_sf <- function(shape_file,
-                          file_select = NULL,
-                          vars = NULL,
-                          encoding = NULL,
-                          bind_multiple = FALSE,
-                          add_layer_var = NULL,
-                          quiet = TRUE,
-                          ...,
-                          verbose = deprecated(),
-                          shape_layer = deprecated()) {
+read_nhgis_sf <- function(data_file,
+                          shape_file,
+                          data_layer = NULL,
+                          shape_layer = data_layer,
+                          shape_encoding = "latin1",
+                          verbose = TRUE,
+                          var_attrs = c("val_labels", "var_label", "var_desc")) {
 
-  if (!missing(shape_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis_sf(shape_layer = )",
-      "read_nhgis_sf(file_select = )",
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "read_nhgis_sf()",
+    details = c(
+      "i" = paste0(
+        "Please use `read_ipums_sf()` and `read_nhgis()` to load spatial and ",
+        "tabular data separately. Join with `ipums_shape_left_join()`."
+      )
     )
-    file_select <- enquo(shape_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
-
-  # TODO: When `verbose` is removed, `quiet` can be included in `...`
-  if (!missing(verbose)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis_sf(verbose = )",
-      "read_nhgis_sf(quiet = )",
-    )
-    quiet <- !verbose
-  }
-
-  read_ipums_sf(
-    shape_file,
-    file_select = !!enquo(file_select),
-    vars = !!enquo(vars),
-    encoding = encoding,
-    bind_multiple = bind_multiple,
-    add_layer_var = add_layer_var,
-    quiet = quiet,
-    ...
   )
 
+  data <- read_nhgis(
+    data_file,
+    file_select = !!enquo(data_layer),
+    show_conditions = verbose,
+    progress = verbose,
+    show_col_types = verbose
+  )
+
+  shape_layer <- enquo(shape_layer)
+  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
+  if (verbose) cat("Reading geography...\n")
+
+  sf_data <- read_ipums_sf(
+    shape_file,
+    file_select = !!shape_layer,
+    quiet = !verbose,
+    encoding = shape_encoding,
+    bind_multiple = TRUE
+  )
+
+  # Only join on vars that are in both and are called "GISJOIN*"
+  join_vars <- intersect(names(data), names(sf_data))
+  join_vars <- fostr_subset(join_vars, "GISJOIN.*")
+
+  # Drop overlapping vars besides join var from shape file
+  drop_vars <- dplyr::intersect(names(data), names(sf_data))
+  drop_vars <- dplyr::setdiff(drop_vars, join_vars)
+  sf_data <- dplyr::select(sf_data, -one_of(drop_vars))
+
+  # Avoid a warning by adding attributes from the join_vars in data to
+  # join_vars in sf_data
+  purrr::walk(join_vars, function(vvv) {
+    attributes(sf_data[[vvv]]) <<- attributes(data[[vvv]])
+  })
+
+  # Coerce to data.frame to avoid sf#414 (fixed in development version of sf)
+  data <- dplyr::full_join(as.data.frame(sf_data), as.data.frame(data), by = join_vars)
+  data <- sf::st_as_sf(tibble::as_tibble(data))
+
+  # Check if any data rows are missing (merge failures where not in shape file)
+  if (verbose) {
+    missing_in_shape <- purrr::map_lgl(data$geometry, is.null)
+    if (any(missing_in_shape)) {
+      gis_join_failures <- data$GISJOIN[missing_in_shape]
+      cat(paste(
+        custom_format_text(
+          "There are ", sum(missing_in_shape), " rows of data that ",
+          "have data but no geography. This can happen because:"
+        ),
+        custom_format_text(
+          "Shape files do not include some census geographies such ",
+          "as 'Crews of Vessels' tracts that do not have a defined area",
+          indent = 2, exdent = 2
+        ),
+        custom_format_text(
+          "Shape files have been simplified which sometimes drops ",
+          "entire geographies (especially small ones)."
+        ),
+        sep = "\n"
+      ))
+    }
+  }
+  data
 }
 
-#' @rdname read_ipums_sp
+#' @rdname read_nhgis_sf
 #'
 #' @export
-read_nhgis_sp <- function(shape_file,
-                          shape_layer = NULL,
-                          vars = NULL,
-                          encoding = NULL,
-                          bind_multiple = FALSE,
-                          add_layer_var = NULL,
-                          ...) {
-
+read_nhgis_sp <- function(data_file,
+                          shape_file,
+                          data_layer = NULL,
+                          shape_layer = data_layer,
+                          shape_encoding = "latin1",
+                          verbose = TRUE,
+                          var_attrs = c("val_labels", "var_label", "var_desc")) {
 
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_nhgis_sp()",
-    "read_nhgis_sf()",
+    details = c(
+      "i" = paste0(
+        "Please use `read_ipums_sf()` and `read_nhgis()` to load spatial and ",
+        "tabular data separately. Join with `ipums_shape_left_join()`."
+      ),
+      "i" = "To convert from an `sf` to an `sp` format, use `sf::as_Spatial()`."
+    )
   )
 
-  read_ipums_sp(
+  data <- read_nhgis(
+    data_file,
+    file_select = !!enquo(data_layer),
+    show_conditions = verbose,
+    progress = verbose,
+    show_col_types = verbose
+  )
+
+  shape_layer <- enquo(shape_layer)
+  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
+  if (verbose) cat("Reading geography...\n")
+
+  sp_data <- read_ipums_sp(
     shape_file,
-    shape_layer = !!enquo(shape_layer),
-    vars = !!enquo(vars),
-    encoding = encoding,
-    bind_multiple = bind_multiple,
-    add_layer_var = add_layer_var,
-    ...
+    !!shape_layer,
+    verbose = verbose,
+    encoding = shape_encoding,
+    bind_multiple = TRUE
   )
 
+  # Only join on vars that are in both and are called "GISJOIN*"
+  join_vars <- intersect(names(data), names(sp_data@data))
+  join_vars <- fostr_subset(join_vars, "GISJOIN.*")
+
+  # Drop overlapping vars besides join var from shape file
+  drop_vars <- dplyr::intersect(names(data), names(sp_data@data))
+  drop_vars <- dplyr::setdiff(drop_vars, join_vars)
+  sp_data@data <- dplyr::select(sp_data@data, -one_of(drop_vars))
+
+  out <- sp::merge(sp_data, data, by = join_vars, all.x = TRUE)
+
+  # Check if any data rows are missing (merge failures where not in shape file)
+  if (verbose) {
+    missing_in_shape <- dplyr::anti_join(
+      dplyr::select(data, one_of(join_vars)),
+      dplyr::select(out@data, one_of(join_vars)),
+      by = join_vars
+    )
+    if (nrow(missing_in_shape) > 0) {
+      gis_join_failures <- purrr::pmap_chr(missing_in_shape, function(...) paste(..., sep = "-"))
+      message(paste0(
+        "There are ", nrow(missing_in_shape), " rows of data that ",
+        "have data but no geography. This can happen because:\n  Shape files ",
+        "do not include some census geographies such as 'Crews of Vessels' ",
+        "tracts that do not have a defined area\n  Shape files have been simplified ",
+        "which sometimes drops entire geographies (especially small ones)."
+      ))
+    }
+  }
+  out
 }
 
 # Internal ---------------------

@@ -28,7 +28,7 @@ test_that("Can read NHGIS extract: single shapefile (sp)", {
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
-  expect_silent(
+  lifecycle::expect_deprecated(
     shp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
   )
 
@@ -47,7 +47,7 @@ test_that("Can row bind multiple sf files", {
   shp3 <- read_ipums_sf(nhgis_multi_shp, file_select = 3)
 
   expect_silent(
-    shp <- read_nhgis_sf(
+    shp <- read_ipums_sf(
       nhgis_multi_shp,
       file_select = 2:3,
       bind_multiple = TRUE
@@ -141,8 +141,8 @@ test_that("sf and sp geometries are consistent with each other", {
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
-  nhgis_sf <- read_nhgis_sf(nhgis_single_shp)
-  nhgis_sp <- read_nhgis_sp(nhgis_single_shp, verbose = FALSE)
+  nhgis_sf <- read_ipums_sf(nhgis_single_shp)
+  nhgis_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
 
   check_geo <- nhgis_sf$GISJOIN
 

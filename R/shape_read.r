@@ -9,9 +9,6 @@
 #' Read spatial data from an IPUMS extract into R using the
 #' [`sf`](https://r-spatial.github.io/sf/) package.
 #'
-#' `read_nhgis_sf` is an alias for `read_ipums_sf`, but defaults to using
-#' `bind_multiple = FALSE`. These functions may be combined in a future release.
-#'
 #' @param shape_file Path to a single .shp file, a .zip archive from an IPUMS
 #'   extract, or a directory containing at least one .shp file.
 #' @param file_select If `shape_file` contains multiple files, an expression
@@ -34,10 +31,9 @@
 #'   will be created to avoid name conflicts. The column name will always be
 #'   prefixed with `"layer"`. Defaults to `TRUE` if `bind_multiple = TRUE` and
 #'   `FALSE` otherwise.
-#' @param quiet If `TRUE`, suppress output of name, driver, size, and spatial
-#'   reference, and don't signal if `shape_file` has 0 or multiple layers.
 #' @param ... Additional arguments passed to [`sf::read_sf()`][sf::read_sf].
-#' @param verbose `r lifecycle::badge("deprecated")` Please use `quiet` instead.
+#' @param verbose `r lifecycle::badge("deprecated")` Please use `quiet`
+#'   (passed to `sf::read_sf`) instead.
 #' @param shape_layer `r lifecycle::badge("deprecated")` Please use
 #'   `file_select` instead.
 #'
@@ -58,7 +54,6 @@ read_ipums_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
-                          quiet = TRUE,
                           ...,
                           verbose = deprecated(),
                           shape_layer = deprecated()) {
@@ -76,7 +71,6 @@ read_ipums_sf <- function(shape_file,
     file_select <- enquo(file_select)
   }
 
-  # TODO: When `verbose` is removed, `quiet` can be included in `...`
   if (!missing(verbose)) {
     lifecycle::deprecate_soft(
       "0.6.0",
@@ -126,7 +120,7 @@ read_ipums_sf <- function(shape_file,
     function(.x, .y) {
       args <- c(list(.x), dots)
 
-      this_sf <- rlang::exec(sf::read_sf, !!!args, quiet = quiet)
+      this_sf <- rlang::exec(sf::read_sf, !!!args)
 
       if (!rlang::quo_is_null(vars)) {
         this_sf <- dplyr::select(this_sf, !!vars)
@@ -255,10 +249,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
 #'
 #' Please use [`read_ipums_sf()`] to load spatial data from IPUMS. To convert
-#' to a SpatialPolygonsDataFrame, use [`sf::as_Spatial()`][sf::as_Spatial].
-#'
-#' `read_nhgis_sp` is an alias for `read_ipums_sp`, but defaults to using
-#' `bind_multiple = FALSE`.
+#' to a `SpatialPolygonsDataFrame`, use [`sf::as_Spatial()`][sf::as_Spatial].
 #'
 #' @inheritParams read_ipums_sf
 #' @param shape_layer If `shape_file` contains multiple files, an expression
@@ -269,8 +260,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #'   row-bind the files into a single output. Note that some data sources may
 #'   not be able to be combined (e.g. `SpatialPolygonsDataFrame` and
 #'   `SpatialPointsDataFrame`).
-#' @param ... Additional arguments passed to
-#'   [`rgdal::readOGR()`][rgdal::readOGR]. Note that some arguments are fixed.
+#' @param verbose If `TRUE`, report progress information.
 #'
 #' @return A `SpatialPolygonsDataFrame` or `SpatialPointsDataFrame` object.
 #'
@@ -292,7 +282,7 @@ read_ipums_sp <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
-                          ...) {
+                          verbose = TRUE) {
 
   lifecycle::deprecate_warn(
     "0.6.0",
@@ -329,10 +319,10 @@ read_ipums_sp <- function(shape_file,
       this_sp <- rgdal::readOGR(
         dsn = dirname(.x),
         layer = fostr_sub(basename(.x), 1, -5),
+        verbose = verbose,
         stringsAsFactors = FALSE,
         encoding = .y,
-        use_iconv = TRUE,
-        ...
+        use_iconv = TRUE
       )
 
       if (!rlang::quo_is_null(vars)) {
