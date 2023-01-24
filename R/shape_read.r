@@ -9,8 +9,20 @@
 #' Read spatial data from an IPUMS extract into R using the
 #' [`sf`](https://r-spatial.github.io/sf/) package.
 #'
-#' @param shape_file Path to a single .shp file, a .zip archive from an IPUMS
-#'   extract, or a directory containing at least one .shp file.
+#' @details
+#' Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
+#' each shapefile (including a .shp as well as accompanying files) is
+#' compressed in its own archive, and the collection of all
+#' shapefiles provided in an extract are also compressed into a single .zip
+#' archive.
+#'
+#' `read_ipums_sf()` is designed to handle this structure. However, if an
+#' internal .zip archive happens to contain *multiple* shapefiles, this function
+#' will throw an error. If this is the case, you may need to manually unzip the
+#' downloaded file before loading it into R.
+#'
+#' @param shape_file Path to a single .shp file, or a .zip archive or
+#'   directory containing at least one .shp file. See details.
 #' @param file_select If `shape_file` contains multiple files, an expression
 #'   identifying the files to load. Accepts a character string specifying the
 #'   file name, [`dplyr_select_style`] conventions, or index positions. If
@@ -250,6 +262,18 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #'
 #' Please use [`read_ipums_sf()`] to load spatial data from IPUMS. To convert
 #' to a `SpatialPolygonsDataFrame`, use [`sf::as_Spatial()`][sf::as_Spatial].
+#'
+#' @details
+#' Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
+#' each shapefile (including a .shp as well as accompanying files) is
+#' compressed in its own archive, and the collection of all
+#' shapefiles provided in an extract are also compressed into a single .zip
+#' archive.
+#'
+#' `read_ipums_sp()` is designed to handle this structure. However, if an
+#' internal .zip archive happens to contain *multiple* shapefiles, this function
+#' will throw an error. If this is the case, you may need to manually unzip the
+#' downloaded file before loading it into R.
 #'
 #' @inheritParams read_ipums_sf
 #' @param shape_layer If `shape_file` contains multiple files, an expression
@@ -622,13 +646,12 @@ shape_file_prep <- function(shape_file,
   # If no shapefiles or if multiple and bind_multiple = FALSE (this can happen
   # if someone tries to read a zip of a zip/dir where there are 2 shps in the
   # inner zip) something was not as expected.
-  # TODO: improve to inform users the expected structure
   if (length(read_shape_files) == 0 ||
       (length(read_shape_files) > 1 && !bind_multiple)) {
     rlang::abort(
       c(
-        "Directory/zip file not formatted as expected. ",
-        "i" = "Please check your `file_select` argument or unzip and try again."
+        "Files in `shape_file` not formatted as expected. ",
+        "i" = "See `?read_ipums_sf` for details on expected file structures."
       )
     )
   }

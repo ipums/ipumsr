@@ -17,8 +17,8 @@ read_ipums_sf(
 )
 }
 \arguments{
-\item{shape_file}{Path to a single .shp file, a .zip archive from an IPUMS
-extract, or a directory containing at least one .shp file.}
+\item{shape_file}{Path to a single .shp file, or a .zip archive or
+directory containing at least one .shp file. See details.}
 
 \item{file_select}{If \code{shape_file} contains multiple files, an expression
 identifying the files to load. Accepts a character string specifying the
@@ -59,6 +59,18 @@ An \code{sf} object
 \description{
 Read spatial data from an IPUMS extract into R using the
 \href{https://r-spatial.github.io/sf/}{\code{sf}} package.
+}
+\details{
+Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
+each shapefile (including a .shp as well as accompanying files) is
+compressed in its own archive, and the collection of all
+shapefiles provided in an extract are also compressed into a single .zip
+archive.
+
+\code{read_ipums_sf()} is designed to handle this structure. However, if an
+internal .zip archive happens to contain \emph{multiple} shapefiles, this function
+will throw an error. If this is the case, you may need to manually unzip the
+downloaded file before loading it into R.
 }
 \examples{
 shape_file <- ipums_example("nhgis0707_shape_small.zip")
