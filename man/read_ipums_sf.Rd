@@ -9,7 +9,7 @@ read_ipums_sf(
   file_select = NULL,
   vars = NULL,
   encoding = NULL,
-  bind_multiple = TRUE,
+  bind_multiple = FALSE,
   add_layer_var = NULL,
   ...,
   verbose = deprecated(),

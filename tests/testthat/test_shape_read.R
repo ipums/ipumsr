@@ -201,7 +201,7 @@ test_that("We get informative errors when reading shapefiles", {
 
   # Multiple spatial files includes hint:
   expect_error(
-    read_ipums_sf(nhgis_multi_shp, file_select = 1:2, bind_multiple = FALSE),
+    read_ipums_sf(nhgis_multi_shp, file_select = 1:2),
     "Multiple files found.+To combine files"
   )
 
