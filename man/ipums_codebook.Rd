@@ -51,7 +51,7 @@ removed in a future release.
 }
 \examples{
 # Example NHGIS extract
-nhgis_file <- ipums_example("nhgis0707_csv.zip")
+nhgis_file <- ipums_example("nhgis0972_csv.zip")
 codebook <- read_nhgis_codebook(nhgis_file)
 
 # Summary of variables included in the extract:

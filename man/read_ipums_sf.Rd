@@ -73,7 +73,7 @@ will throw an error. If this is the case, you may need to manually unzip the
 downloaded file before loading it into R.
 }
 \examples{
-shape_file <- ipums_example("nhgis0707_shape_small.zip")
+shape_file <- ipums_example("nhgis0972_shape_small.zip")
 # If sf package is availble, can load as sf object
 if (require(sf)) {
   sf_data <- read_ipums_sf(shape_file)

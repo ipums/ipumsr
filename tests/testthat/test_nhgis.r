@@ -1,6 +1,6 @@
 
-nhgis_single_csv <- ipums_example("nhgis0707_csv.zip")
-nhgis_single_shp <- ipums_example("nhgis0707_shape_small.zip")
+nhgis_single_csv <- ipums_example("nhgis0972_csv.zip")
+nhgis_single_shp <- ipums_example("nhgis0972_shape_small.zip")
 
 nhgis_multi_ds <-  ipums_example("nhgis0731_csv.zip")
 nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")

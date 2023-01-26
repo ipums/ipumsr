@@ -41,7 +41,7 @@ test_that("nhgis codebook doesn't error", {
   skip_if_not_installed("htmltools")
   skip_if_not_installed("shiny")
   skip_if_not_installed("DT")
-  cb <- read_nhgis_codebook(ipums_example("nhgis0707_csv.zip"))
+  cb <- read_nhgis_codebook(ipums_example("nhgis0972_csv.zip"))
   ipums_view(cb, launch = FALSE)
   expect_true(TRUE)
 })

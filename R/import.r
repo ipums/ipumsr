@@ -66,7 +66,7 @@ readr::spec
 #' # For geographic extracts, `file_select` argument uses the same conventions
 #' # to select file names from within zip files.
 #' # (This extract only contains 1 type of file, but some have multiple)
-#' csv_file <- ipums_example("nhgis0707_csv.zip")
+#' csv_file <- ipums_example("nhgis0972_csv.zip")
 #' data <- read_nhgis(
 #'   csv_file,
 #'   file_select = contains("pmsa")

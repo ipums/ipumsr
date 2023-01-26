@@ -52,7 +52,7 @@
 #' @return A [`tibble`][tibble::tbl_df-class] of the data found in `data_file`.
 #'
 #' @examples
-#' csv_file <- ipums_example("nhgis0707_csv.zip")
+#' csv_file <- ipums_example("nhgis0972_csv.zip")
 #' data_only <- read_nhgis(csv_file)
 #'
 #' @family ipums_read

@@ -76,7 +76,7 @@ will throw an error. If this is the case, you may need to manually unzip the
 downloaded file before loading it into R.
 }
 \examples{
-shape_file <- ipums_example("nhgis0707_shape_small.zip")
+shape_file <- ipums_example("nhgis0972_shape_small.zip")
 
 # If sp package is available, can load as SpatialPolygonsDataFrame
 if (require(sp) && require(rgdal)) {

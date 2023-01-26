@@ -10,8 +10,8 @@
 # This pipeline has been updated to improve reproducibility of example data.
 #
 # This script produces:
-#   * inst/extdata/nhgis0707_shape.zip
-#   * inst/extdata/nhgis0707_csv.zip
+#   * inst/extdata/nhgis0972_shape.zip
+#   * inst/extdata/nhgis0972_csv.zip
 #
 # Which are updated versions of:
 #   * inst/extdata/nhgis0008_shape.zip
@@ -32,11 +32,12 @@
 # Used in ipumsr example data
 
 files <- define_extract_nhgis(
-  description = "Reproducing nhgis0008 example data",
+  description = "Reproducing nhgis0972 example data",
   datasets = "1990_SSTF09",
   data_tables = "NH004",
   geog_levels = "pmsa",
-  shapefiles = "us_pmsa_1990_tl2000"
+  shapefiles = "us_pmsa_1990_tl2000",
+  data_format = "csv_header",
 ) %>%
   submit_extract() %>%
   wait_for_extract() %>%

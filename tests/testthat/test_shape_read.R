@@ -1,5 +1,5 @@
 
-nhgis_single_shp <- ipums_example("nhgis0707_shape_small.zip")
+nhgis_single_shp <- ipums_example("nhgis0972_shape_small.zip")
 nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
 rows <- 71
@@ -107,7 +107,7 @@ test_that("Can read extract at multiple file levels", {
 
   # Read dir of zip of shp ------------
 
-  shp_unzip_dir <- read_ipums_sf(file.path(temp_dir, "nhgis0707_shape"))
+  shp_unzip_dir <- read_ipums_sf(file.path(temp_dir, "nhgis0972_shape"))
 
   expect_identical(shp_unzip, shp_unzip_dir)
 

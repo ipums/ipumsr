@@ -28,7 +28,7 @@
 #'   available files.
 #'
 #' @examples
-#' nhgis_file <- ipums_example("nhgis0707_csv.zip")
+#' nhgis_file <- ipums_example("nhgis0972_csv.zip")
 #' ipums_list_files(nhgis_file) # Only one extract available
 #'
 #' @export

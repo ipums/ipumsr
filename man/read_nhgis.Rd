@@ -73,7 +73,7 @@ Load a tabular data source downloaded from the NHGIS extract system.
 To load spatial data sources from NHGIS extracts, see \code{\link{read_nhgis_sf}}.
 }
 \examples{
-csv_file <- ipums_example("nhgis0707_csv.zip")
+csv_file <- ipums_example("nhgis0972_csv.zip")
 data_only <- read_nhgis(csv_file)
 
 }

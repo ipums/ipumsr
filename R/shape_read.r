@@ -52,7 +52,7 @@
 #' @return An `sf` object
 #'
 #' @examples
-#' shape_file <- ipums_example("nhgis0707_shape_small.zip")
+#' shape_file <- ipums_example("nhgis0972_shape_small.zip")
 #' # If sf package is availble, can load as sf object
 #' if (require(sf)) {
 #'   sf_data <- read_ipums_sf(shape_file)
@@ -291,7 +291,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #' @keywords internal
 #'
 #' @examples
-#' shape_file <- ipums_example("nhgis0707_shape_small.zip")
+#' shape_file <- ipums_example("nhgis0972_shape_small.zip")
 #'
 #' # If sp package is available, can load as SpatialPolygonsDataFrame
 #' if (require(sp) && require(rgdal)) {

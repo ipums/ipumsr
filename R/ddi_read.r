@@ -320,7 +320,7 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #'
 #' @examples
 #' # Example NHGIS extract
-#' nhgis_file <- ipums_example("nhgis0707_csv.zip")
+#' nhgis_file <- ipums_example("nhgis0972_csv.zip")
 #' codebook <- read_nhgis_codebook(nhgis_file)
 #'
 #' # Summary of variables included in the extract:
