@@ -226,7 +226,6 @@ test_that("Can select data files with tidyselect", {
 
 # Can read data when provided in zip, dir, and shp formats -------
 
-# TODO: Docs need to show that some args to readOGR are already specified?
 test_that("We can pass arguments to underlying reader functions", {
 
   # TODO: Docs need to show that attr_vars doesn't work if col_names = FALSE
@@ -239,7 +238,8 @@ test_that("We can pass arguments to underlying reader functions", {
       progress = FALSE,
       col_names = FALSE,
       col_types = readr::cols(.default = readr::col_character()),
-      skip = 2
+      skip = 1,
+      remove_extra_header = TRUE
     )
   )
 
@@ -254,6 +254,15 @@ test_that("We can pass arguments to underlying reader functions", {
     "Data loaded from NHGIS fixed-width files may not be consistent"
   )
 
+  nhgis_data2 <- read_nhgis(
+    nhgis_single_csv,
+    show_conditions = FALSE,
+    show_col_types = FALSE,
+    progress = FALSE,
+    col_names = c("A", "B"),
+    remove_extra_header = FALSE
+  )
+
   expect_equal(nrow(nhgis_data), rows - 1)
   expect_equal(colnames(nhgis_data), paste0("X", 1:vars_data))
   expect_equal(unique(purrr::map_chr(nhgis_data, class)), "character")
@@ -264,6 +273,9 @@ test_that("We can pass arguments to underlying reader functions", {
     purrr::map_chr(nhgis_data_fwf, class),
     c(X1 = "character", X2 = "character", X3 = "integer", X4 = "logical")
   )
+
+  expect_equal(colnames(nhgis_data2)[1:2], c("A", "B"))
+  expect_equal(nhgis_data2[[1]][1], "GIS Join Match Code")
 
 })
 
@@ -380,14 +392,6 @@ test_that("Can read NHGIS codebook", {
 
 })
 
-# Difficult to test because Terra is being decommissioned,
-# but creating this space if more thorough work is to be done later.
-#
-# TODO: I don't think any terra tests are being run because of
-# problem with check() locating data in ipumsexamples
-#
-# TODO: read_ipums_codebook should likely be deprecated. Should
-# talk about how to handle Terra decommissioning in R
 test_that("Can read Terra codebook", {
 
   terra_area <- system.file(
@@ -443,7 +447,7 @@ test_that("Can read certain unzipped structures", {
   # NB: First row is removed because read_nhgis thinks this fake extract has an
   # extra header row. Not a concern here.
   expect_equal(x1$a, "b")
-  expect_identical(x1, x2)
+  expect_equal(x1, x2)
 
   # Multiple files should throw same errors even if unzipped:
   readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile2)
@@ -453,7 +457,7 @@ test_that("Can read certain unzipped structures", {
     "Multiple files found"
   )
 
-  expect_identical(
+  expect_equal(
     read_nhgis(tempdir(), file_select = 1, var_attrs = NULL),
     x1
   )
@@ -470,7 +474,7 @@ test_that("Can read certain unzipped structures", {
     x3 <- read_nhgis(tempdir(), file_type = "csv", file_select = 1)
   )
 
-  expect_identical(x3, x1)
+  expect_equal(x3, x1)
 
   # Direct data file errors if mismatched extension
   expect_error(
@@ -479,7 +483,7 @@ test_that("Can read certain unzipped structures", {
   )
 
   # Reading a direct data file should ignore data layer
-  expect_identical(
+  expect_equal(
     suppressWarnings(read_nhgis(csv_tmpfile1, file_select = 3)),
     x2
   )

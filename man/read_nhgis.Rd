@@ -8,10 +8,13 @@ read_nhgis(
   data_file,
   file_select = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
-  show_conditions = TRUE,
   do_file = NULL,
   file_type = NULL,
   na = NULL,
+  remove_extra_header = TRUE,
+  show_conditions = TRUE,
+  col_names = TRUE,
+  locale = NULL,
   ...,
   data_layer = deprecated()
 )
@@ -28,9 +31,6 @@ must uniquely identify a dataset.}
 \item{var_attrs}{Variable attributes to add from the codebook, defaults to
 adding all (val_labels, var_label and var_desc). See
 \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
-
-\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
-loading data. Defaults to \code{TRUE}.}
 
 \item{do_file}{For fixed-width files, path to the .do file associated with
 the provided \code{data_file}. The .do file contains the specifications that
@@ -57,6 +57,32 @@ the files found in \code{data_file}. Only needed if \code{data_file} contains bo
 \item{na}{Character vector of strings to interpret as missing values.
 If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
 for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
+
+\item{remove_extra_header}{If \code{TRUE}, remove the additional descriptive
+header row that is included in some NHGIS .csv files. Otherwise, the
+additional header will appear in the first row of the output data frame.
+
+The header contains the same information that is
+included in the \code{"label"} attribute of each data column (if \code{var_attrs}
+includes \code{"var_label"}), and is therefore not usually needed.}
+
+\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
+loading data.}
+
+\item{col_names}{Either \code{TRUE}, \code{FALSE} or a character vector of column
+names. This argument behaves similarly to the \code{col_names}
+argument of \code{\link[readr:read_delim]{readr::read_csv()}}. However, unlike
+\code{readr}, the first row of of the input will always be removed from the
+data, even if \code{col_names} is \code{FALSE} or a character vector.}
+
+\item{locale}{Controls defaults that vary from place to place. If \code{NULL},
+uses a locale designed to provide appropriate defaults for NHGIS files;
+altering the locale may cause problems with data parsing.
+
+If needed, you can use \code{\link[readr:locale]{readr::locale()}} to
+specify a different locale to control things like default time zone,
+decimal mark, big mark, and day/month names. If you do so, specify
+\code{encoding = "latin1"} to ensure files are encoded properly.}
 
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}

@@ -19,8 +19,6 @@
 #' @param var_attrs Variable attributes to add from the codebook, defaults to
 #'   adding all (val_labels, var_label and var_desc). See
 #'   [`set_ipums_var_attributes()`] for more details.
-#' @param show_conditions If `TRUE`, print IPUMS conditions to console when
-#'   loading data. Defaults to `TRUE`.
 #' @param do_file For fixed-width files, path to the .do file associated with
 #'   the provided `data_file`. The .do file contains the specifications that
 #'   indicate how to parse the fixed-width file to be loaded.
@@ -44,6 +42,28 @@
 #' @param na Character vector of strings to interpret as missing values.
 #'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
 #'   for fixed-width files. See [`read_csv()`][readr::read_csv].
+#' @param show_conditions If `TRUE`, print IPUMS conditions to console when
+#'   loading data.
+#' @param remove_extra_header If `TRUE`, remove the additional descriptive
+#'   header row that is included in some NHGIS .csv files. Otherwise, the
+#'   additional header will appear in the first row of the output data frame.
+#'
+#'   The header contains the same information that is
+#'   included in the `"label"` attribute of each data column (if `var_attrs`
+#'   includes `"var_label"`), and is therefore not usually needed.
+#' @param col_names Either `TRUE`, `FALSE` or a character vector of column
+#'   names. This argument behaves similarly to the `col_names`
+#'   argument of [`readr::read_csv()`][readr::read_csv]. However, unlike
+#'   `readr`, the first row of of the input will always be removed from the
+#'   data, even if `col_names` is `FALSE` or a character vector.
+#' @param locale Controls defaults that vary from place to place. If `NULL`,
+#'   uses a locale designed to provide appropriate defaults for NHGIS files;
+#'   altering the locale may cause problems with data parsing.
+#'
+#'   If needed, you can use [`readr::locale()`][readr::locale] to
+#'   specify a different locale to control things like default time zone,
+#'   decimal mark, big mark, and day/month names. If you do so, specify
+#'   `encoding = "latin1"` to ensure files are encoded properly.
 #' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
 #'   [`read_fwf()`][readr::read_fwf].
 #' @param data_layer `r lifecycle::badge("deprecated")` Please
@@ -60,10 +80,13 @@
 read_nhgis <- function(data_file,
                        file_select = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
-                       show_conditions = TRUE,
                        do_file = NULL,
                        file_type = NULL,
                        na = NULL,
+                       remove_extra_header = TRUE,
+                       show_conditions = TRUE,
+                       col_names = TRUE,
+                       locale = NULL,
                        ...,
                        data_layer = deprecated()) {
 
@@ -158,13 +181,16 @@ read_nhgis <- function(data_file,
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
   cb_ddi_info$file_encoding <- "ISO-8859-1"
-  extract_locale <- ipums_locale(cb_ddi_info$file_encoding)
+  locale <- locale %||% ipums_locale(cb_ddi_info$file_encoding)
 
   if (has_csv) {
     data <- read_nhgis_csv(
       data_file,
       file_select = !!file_select,
+      remove_extra_header = remove_extra_header,
       na = na %||% c("", "NA"),
+      locale = locale,
+      col_names = col_names,
       ...
     )
   } else {
@@ -173,6 +199,7 @@ read_nhgis <- function(data_file,
       file_select = !!file_select,
       do_file = do_file,
       na = na %||% c(".", "", "NA"),
+      locale = locale,
       ...
     )
   }
@@ -513,6 +540,9 @@ read_nhgis_fwf <- function(data_file,
 
 read_nhgis_csv <- function(data_file,
                            file_select = NULL,
+                           remove_extra_header = TRUE,
+                           skip = 0,
+                           col_names = TRUE,
                            ...) {
 
   file_select <- enquo(file_select)
@@ -531,27 +561,67 @@ read_nhgis_csv <- function(data_file,
     file <- file.path(data_file, file)
   }
 
-  data <- readr::read_csv(file, ...)
+  header_info <- check_header_row(data_file, file_select = !!file_select)
 
-  # TODO: testing that reformatting this stuff does handle
-  # header row correctly
-
-  # If extract is NHGIS's "enhanced" csvs with an extra header row,
-  # then remove the first row.
-  # (determine by checking if the first row is entirely character
-  # values that can't be converted to numeric)
-  first_row_char <- all(
-    purrr::map_lgl(
-      readr::type_convert(data[1, ], col_types = readr::cols()),
-      rlang::is_character
-    )
-  )
-
-  if (first_row_char) {
-    data <- readr::type_convert(data[-1, ], col_types = readr::cols())
+  if (header_info$has_extra_header && remove_extra_header) {
+    skip <- 2 + skip
+  } else {
+    skip <- 1 + skip
   }
 
+  if (is_null(col_names) || isTRUE(col_names)) {
+    col_names <- header_info$col_names
+  }
+
+  data <- readr::read_csv(
+    file,
+    skip = skip,
+    col_names = col_names,
+    ...
+  )
+
   data
+
+
+}
+
+check_header_row <- function(data_file, file_select = NULL) {
+
+  file_select <- enquo(file_select)
+
+  file <- find_files_in(
+    data_file,
+    name_ext = "csv",
+    name_select = file_select,
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
+
+  if (file_is_zip(data_file)) {
+    file <- unz(data_file, file)
+  } else if (file_is_dir(data_file)) {
+    file <- file.path(data_file, file)
+  }
+
+  # Read first row to determine if this data contains the NHGIS
+  # "expanded" header row
+  header_row <- readr::read_csv(
+    file,
+    n_max = 1,
+    col_types = readr::cols(.default = readr::col_guess()),
+    progress = FALSE,
+    show_col_types = FALSE,
+    na = c("", "NA")
+  )
+
+  has_extra_header <- all(purrr::map_lgl(header_row, is.character))
+  header_vals <- unname(unlist(header_row))
+
+  list(
+    has_extra_header = has_extra_header,
+    header_vals = header_vals,
+    col_names = colnames(header_row)
+  )
 
 }
 
