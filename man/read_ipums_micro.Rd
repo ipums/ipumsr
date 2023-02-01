@@ -3,7 +3,7 @@
 \name{read_ipums_micro}
 \alias{read_ipums_micro}
 \alias{read_ipums_micro_list}
-\title{Read data from an IPUMS extract}
+\title{Read data from an IPUMS microdata extract}
 \usage{
 read_ipums_micro(
   ddi,
@@ -26,104 +26,131 @@ read_ipums_micro_list(
 )
 }
 \arguments{
-\item{ddi}{Either a filepath to a DDI xml file downloaded from
-the website, or a \code{ipums_ddi} object parsed by \code{\link{read_ipums_ddi}}}
+\item{ddi}{Either a path to a DDI .xml file downloaded from
+\href{https://www.ipums.org/}{IPUMS}, or an
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
 
-\item{vars}{Names of variables to load. Accepts a character vector of names, or
-\code{\link{dplyr_select_style}} conventions. For hierarchical data, the
-rectype id variable will be added even if it is not specified.}
+\item{vars}{Names of variables to include in the output. Accepts a
+vector of names or a \link[tidyselect:language]{selection helper}.
+If \code{NULL}, includes all variables in the file.
 
-\item{n_max}{The maximum number of records to load.}
+For hierarchical data, the \code{RECTYPE} variable is always included even if
+unspecified.}
 
-\item{data_file}{Specify a directory to look for the data file.
-If left empty, it will look in the same directory as the DDI file.}
+\item{n_max}{The maximum number of lines to read. For
+\code{read_ipums_micro_list()}, this applies before splitting records into
+list components.}
 
-\item{verbose}{Logical, indicating whether to print progress information
-to console.}
+\item{data_file}{Path to the data (.gz) file associated with
+the provided \code{ddi} file. By default, looks for the data file in the same
+directory as the DDI file. If the data file has been moved, specify
+its location here.}
 
-\item{var_attrs}{Variable attributes to add from the DDI, defaults to
-adding all (val_labels, var_label and var_desc). See
-\code{\link{set_ipums_var_attributes}} for more details.}
+\item{verbose}{Logical indicating whether to print progress information
+to the console.}
 
-\item{lower_vars}{Only if reading a DDI from a file, a logical indicating
-whether to convert variable names to lowercase (default is FALSE, in line
-with IPUMS conventions). Note that this argument will be ignored if
-argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
-See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
-when reading in the DDI.}
+\item{var_attrs}{Variable attributes from the DDI to add to the columns of
+the output data. Defaults to all available attributes (\code{"val_labels"},
+\code{"var_label"}, and \code{"var_desc"}). See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}}
+for more details.}
+
+\item{lower_vars}{If reading a DDI from a file,
+a logical indicating whether to convert variable names to lowercase.
+Defaults to \code{FALSE} for consistency with IPUMS conventions.
+
+This argument will be ignored if argument \code{ddi} is
+an \link{ipums_ddi} object. Use \code{\link[=read_ipums_ddi]{read_ipums_ddi()}} to convert variable
+names to lowercase when reading a DDI file.
+
+If \code{lower_vars = TRUE} and \code{vars} is specified, \code{vars} should reference the
+converted column names.}
 }
 \value{
-\code{read_ipums_micro} returns a single tbl_df data frame, and
-\code{read_ipums_micro_list} returns a list of data frames, named by
-the Record Type. See 'Details' for more
-information.
+\code{read_ipums_micro()} returns a single
+\code{\link[tibble:tbl_df-class]{tibble}} object.
+
+\code{read_ipums_micro_list()} returns a list of \code{tibble} objects with one
+entry for each record type.
 }
 \description{
-Reads a dataset downloaded from the IPUMS extract system.
-For IPUMS projects with microdata, it relies on a downloaded
-DDI codebook and a fixed-width file. Loads the data with
-value labels (using \code{\link[haven]{labelled}} format)
-and variable labels. See 'Details' for more information on
-how record types are handled by the ipumsr package.
+Read a microdata dataset downloaded from the IPUMS extract system using
+the information in its associated DDI codebook (.xml) file.
+
+\code{read_ipums_micro()} and \code{read_ipums_micro_list()} differ in their handling
+of extracts that contain multiple record types. See details.
 }
 \details{
-Some IPUMS projects have data for multiple types of records
-(eg Household and Person). When downloading data from many of these
-projects you have the option for the IPUMS extract system
-to "rectangularize" the data, meaning that the data is
-transformed so that each row of data represents only one
-type of record.
+IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
+file and a fixed-width data file. The DDI file contains metadata about the
+associated data file which are used to parse its data correctly upon load.
 
-There also is the option to download "hierarchical" extracts,
-which are a single file with record types mixed in the rows.
-The ipumsr package offers two methods for importing this data.
+Data are loaded with value label and variable label information
+attached to each column, where appropriate. See
+\code{\link[haven:labelled]{haven::labelled()}}.
+\subsection{Data structures}{
 
-\code{read_ipums_micro} loads this data into a "long" format
-where the record types are mixed in the rows, but the variables
-are \code{NA} for the record types that they do not apply to.
+Files from IPUMS projects that contain data for multiple types of records
+(e.g. household records and person records) may be either rectangular
+or hierarchical.
 
-\code{read_ipums_micro_list} loads the data into a list of
-data frames objects, where each data frame contains only
-one record type. The names of the data frames in the list
-are the text from the record type labels without 'Record'
-(often 'HOUSEHOLD' for Household and 'PERSON' for Person).
+Rectangular data are transformed such that each row of data
+represents only one type of record. For instance, each row will represent
+a person record, and all household-level information for that person will
+be included in the same row.
+
+Hierarchical data have records of
+different types interspersed in a single file. For instance, a household
+record will be included in its own row followed by the person records
+associated with that household.
+
+Hierarchical data can be read in two different formats:
+\itemize{
+\item \code{read_ipums_micro()} reads data into a \code{\link[tibble:tbl_df-class]{tibble}}
+where each row represents a single record, regardless of record type.
+Variables that do not apply to a particular record type will be filled with
+\code{NA} in rows of that record type. For instance, a person-specific variable
+will be missing in all rows associated with household records.
+\item \code{read_ipums_micro_list()} reads data into a list of
+\code{tibble} objects, where each list element contains
+only one record type. Each list element is named with its corresponding
+record type.
+}
+}
 }
 \examples{
-  # Rectangular example file
-  cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+# Rectangular example file
+cps_rect_ddi_file <- ipums_example("cps_00006.xml")
 
-  cps <- read_ipums_micro(cps_rect_ddi_file)
-  # Or load DDI separately to keep the metadata
-  ddi <- read_ipums_ddi(cps_rect_ddi_file)
-  cps <- read_ipums_micro(ddi)
+cps <- read_ipums_micro(cps_rect_ddi_file)
+# Or read DDI separately to keep the metadata
+ddi <- read_ipums_ddi(cps_rect_ddi_file)
+cps <- read_ipums_micro(ddi)
 
-  # Hierarchical example file
-  cps_hier_ddi_file <- ipums_example("cps_00010.xml")
+# Hierarchical example file
+cps_hier_ddi_file <- ipums_example("cps_00010.xml")
 
-  # Read in "long" format and you get 1 data frame
-  cps_long <- read_ipums_micro(cps_hier_ddi_file)
-  head(cps_long)
+# Read in "long" format and you get 1 data frame
+cps_long <- read_ipums_micro(cps_hier_ddi_file)
+head(cps_long)
 
-  # Read in "list" format and you get a list of multiple data frames
-  cps_list <- read_ipums_micro_list(cps_hier_ddi_file)
-  head(cps_list$PERSON)
-  head(cps_list$HOUSEHOLD)
+# Read in "list" format and you get a list of multiple data frames
+cps_list <- read_ipums_micro_list(cps_hier_ddi_file)
+head(cps_list$PERSON)
+head(cps_list$HOUSEHOLD)
 
-  # Or you can use the \code{\%<-\%} operator from zeallot to unpack
-  c(household, person) \%<-\% read_ipums_micro_list(cps_hier_ddi_file)
-  head(person)
-  head(household)
-
+# Or you can use the \code{\%<-\%} operator from zeallot to unpack
+c(household, person) \%<-\% read_ipums_micro_list(cps_hier_ddi_file)
+head(person)
+head(household)
 }
 \seealso{
 Other ipums_read: 
+\code{\link{ipums_list_files}()},
+\code{\link{read_ipums_ddi}()},
 \code{\link{read_ipums_micro_chunked}()},
 \code{\link{read_ipums_micro_yield}()},
 \code{\link{read_ipums_sf}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
+\code{\link{read_nhgis_codebook}()},
+\code{\link{read_nhgis}()}
 }
 \concept{ipums_read}

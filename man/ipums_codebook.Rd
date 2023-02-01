@@ -2,7 +2,7 @@
 % Please edit documentation in R/ddi_read.r
 \name{read_nhgis_codebook}
 \alias{read_nhgis_codebook}
-\title{Read metadata from an NHGIS extract codebook file}
+\title{Read metadata from an NHGIS codebook (.txt) file}
 \usage{
 read_nhgis_codebook(
   cb_file,
@@ -12,18 +12,17 @@ read_nhgis_codebook(
 )
 }
 \arguments{
-\item{cb_file}{Path to the codebook file to be loaded. This can be a .zip
-archive as provided by the extract system or \code{\link[=download_extract]{download_extract()}},
-a directory containing the codebook, or the codebook .txt file itself.}
+\item{cb_file}{Path to a codebook (.txt) file, a .zip
+archive from an NHGIS extract, or a directory containing the codebook file.}
 
 \item{file_select}{If \code{cb_file} is a .zip archive or directory that contains
-multiple codebook files, an expression identifying the file to load.
-Accepts a character string specifying the file name,
-\code{\link{dplyr_select_style}} conventions, or an index position of the file.
-Ignored if \code{ddi_file} is the path to a single codebook file.}
+multiple codebook files, an expression identifying the file to read.
+Accepts a character string specifying the file name, a
+\link[=selection_language]{tidyselect selection}, or an index position of the
+file. Ignored if \code{cb_file} is the path to a single codebook file.}
 
-\item{raw}{If \code{TRUE}, read lines of the provided \code{cb_file} instead of
-summarizing variable information in an \code{ipums_ddi} object. Defaults to
+\item{raw}{If \code{TRUE}, return a character vector containing the lines
+of \code{cb_file} rather than an \code{ipums_ddi} object. Defaults to
 \code{FALSE}.}
 
 \item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
@@ -38,16 +37,12 @@ If \code{raw = TRUE}, a character vector with one element for each
 line of the given \code{cb_file}.
 }
 \description{
-NHGIS extracts include a .txt codebook file with metadata about
-the contents of the extract. This loads the information contained in this
-file into a structured format.
-}
-\details{
-This function includes functionality that previously was contained in
-\code{read_ipums_codebook()}, which supported the loading of codebooks
-for both NHGIS and IPUMS Terra extracts. Support for IPUMS Terra has been
-discontinued. \code{read_ipums_codebook()} has been deprecated and will be
-removed in a future release.
+Read the variable metadata contained in the .txt codebook file included with
+NHGIS extracts into an \link{ipums_ddi} object.
+
+Because NHGIS variable metadata do not
+adhere to all the standards of microdata DDI files, some of the \code{ipums_ddi}
+fields will not be populated.
 }
 \examples{
 # Example NHGIS extract
@@ -56,5 +51,15 @@ codebook <- read_nhgis_codebook(nhgis_file)
 
 # Summary of variables included in the extract:
 codebook$var_info
-
 }
+\seealso{
+Other ipums_read: 
+\code{\link{ipums_list_files}()},
+\code{\link{read_ipums_ddi}()},
+\code{\link{read_ipums_micro_chunked}()},
+\code{\link{read_ipums_micro_yield}()},
+\code{\link{read_ipums_micro}()},
+\code{\link{read_ipums_sf}()},
+\code{\link{read_nhgis}()}
+}
+\concept{ipums_read}

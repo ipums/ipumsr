@@ -21,7 +21,7 @@
 #'   from the website, or the path to the unzipped .tiff file(s)).
 #' @param data_layer For .zip extracts with multiple raster datasets, the name of the
 #'   data to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions.
+#'   a [tidyselect selection][selection_language].
 #' @param verbose Logical, indicating whether to print progress information
 #'   to console.
 #' @export
@@ -33,7 +33,6 @@
 #' data <- read_terra_raster("2552_bundle.zip", "LCDECIDOPZM2013.tiff")
 #' data <- read_terra_raster_list("2552_bundle.zip", "ZM")
 #' }
-#' @family ipums_read
 read_terra_raster <- function(
   data_file,
   data_layer = NULL,
@@ -145,8 +144,8 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #'   file.
 #' @param data_layer For .zip extracts with multiple datasets, the name of the
 #'   data to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
-#'  a dataset.
+#'   a [tidyselect selection][selection_language]. Data layer must uniquely
+#'   identify a dataset.
 #' @param shape_layer (Defaults to using the same value as data_layer) Specification
 #'   of which shape files to load using the same semantics as \code{data_layer}. Can
 #'   load multiple shape files, which will be combined.
@@ -171,7 +170,6 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #' \dontrun{
 #' data <- read_terra_area("2553_bundle.zip")
 #' }
-#' @family ipums_read
 read_terra_area <- function(
   data_file,
   data_layer = NULL,
@@ -360,9 +358,9 @@ read_terra_area_sp <- function(
 #' @param ddi_file (Optional) If the download is unzipped, path to the .xml file which
 #'   provides usage and citation information for extract.
 #' @param data_layer For .zip extracts with multiple datasets, the name of the
-#'   data to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
-#'  a dataset.
+#'   data to load. Accepts a character vector specifying the file name, or a
+#'   [tidyselect selection][selection_language]. Data layer must uniquely
+#'   identify a dataset.
 #' @param n_max Maximum number of observations to read from the data
 #' @param verbose Logical, indicating whether to print progress information
 #'   to console.
@@ -377,7 +375,6 @@ read_terra_area_sp <- function(
 #' \dontrun{
 #' data <- read_terra_micro("2553_bundle.zip")
 #' }
-#' @family ipums_read
 read_terra_micro <- function(
   data_file,
   ddi_file = NULL,

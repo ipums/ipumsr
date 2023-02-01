@@ -12,8 +12,8 @@ full collection name, the corresponding code used by the IPUMS API, and the
 status of API support for the collection.
 }
 \description{
-List IPUMS data collections with corresponding codes used by the IPUMS API.
-Note that some data collections do not yet have API support.
+List IPUMS data collections with their corresponding codes used by the
+IPUMS API. Note that some data collections do not yet have API support.
 }
 \details{
 Currently, ipumsr supports extract definitions for the following collections:
@@ -28,21 +28,16 @@ For an overview of ipumsr API functionality, see
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

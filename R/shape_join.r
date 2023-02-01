@@ -4,38 +4,48 @@
 #   https://github.com/ipums/ipumsr
 
 
-#' Join data to geographic boundaries
+#' Join tabular data to geographic boundaries
 #'
-#' Helpers for joining shape files downloaded from the IPUMS website to data from extracts.
-#' Because of historical reasons, the attributes of (like variable type) of variables
-#' in the shape files does not always match those in the data files.
+#' @description
+#' These functions are analogous to dplyr's [joins][dplyr::left_join()], except
+#' that:
 #'
-#' @param data A dataset, usually one that has been aggregated to a geographic level.
-#' @param shape_data A shape file (loaded with \code{\link{read_ipums_sf}} or \code{read_ipums_sp})
-#' @param by A vector of variable names to join on. Like the dplyr join functions, named vectors
-#'   indicate that the names are different between the data and shape file.
-#'   shape files to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-#'    which will be combined.
-#' @param suffix For variables that are found in both, but aren't joined on, a suffix
-#'   to put on the variables. Defaults to nothing for data variables and "_SHAPE" for
-#'   variables from the shape file.
-#' @param verbose I \code{TRUE}, will report information about geometries dropped in the merge.
-#' @return returns a sf or a SpatialPolygonsDataFrame depending on what was passed in.
+#' - They operate on a data frame and an [`sf`][sf::sf] object
+#' - They retain the variable attributes provided in IPUMS files and loaded
+#'   by ipumsr data-reading functions
+#' - They handle minor incompatibilities between attributes in spatial and
+#'   tabular data that emerge in some IPUMS files
+#'
+#' `r lifecycle::badge("deprecated")` Support for objects from the sp package
+#' has been deprecated because of the upcoming retirement of the rgdal
+#' package. Functionality for `sf` objects will be maintained. For more
+#' information, click
+#' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
+#'
+#' @param data A tibble or data frame. Typically, this will contain data that
+#'   has been aggregated to a specific geographic level.
+#' @param shape_data An [`sf`][sf::sf] object loaded with [read_ipums_sf()].
+#' @param by Character vector of variables to join by. See [dplyr::left_join()]
+#'   for syntax.
+#' @param suffix If there are non-joined duplicate variables in the two
+#'   data sources, these suffixes will be added to the output to disambiguate
+#'   them. Should be a character vector of length 2.
+#'
+#'   Defaults to adding the `"SHAPE"` suffix to unmatched variables in
+#'   `shape_file`.
+#' @param verbose If `TRUE`, display information about any geometries that were
+#'   unmatched during the join.
+#'
+#' @return An `sf` object containing the joined data
+#'
+#' @export
+#'
 #' @examples
-#' # Note that these examples use NHGIS data so that they use the example data provided,
-#' # but the functions read_nhgis_sf/read_nhgis_sp perform this merge for you.
-#'
 #' data <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
 #'
 #' if (require(sf)) {
 #'   sf <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 #'   data_sf <- ipums_shape_inner_join(data, sf, by = "GISJOIN")
-#' }
-#'
-#' if (require(sp) && require(rgdal)) {
-#'   sp <- read_ipums_sp(ipums_example("nhgis0972_shape_small.zip"))
-#'   data_sp <- ipums_shape_inner_join(data, sp, by = "GISJOIN")
 #' }
 #'
 #' \dontrun{
@@ -44,8 +54,6 @@
 #'   shape <- read_ipums_sf("geo2_br1980_2010.zip")
 #'   data_sf <- ipums_shape_inner_join(data, shape, by = c("GEO2" = "GEOLEVEL2"))
 #' }
-#'
-#' @export
 ipums_shape_left_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "left", suffix, verbose)
 }
@@ -322,16 +330,21 @@ check_for_join_failures <- function(merged, by, shape_data, data) {
 }
 
 
-#' Report on observations dropped by a join
+#' Report on observations dropped during a join
 #'
-#' Helper for learning which observations were dropped from a dataset because
-#' they were not joined on.
+#' Helper to display observations that were not matched when joining tabular
+#' and spatial data.
 #'
-#' @param join_results A dataset that has just been created by a shape join
-#'   (like \code{\link{ipums_shape_left_join}})
-#' @return returns a list of data.frames, where the first item (shape) is the observations
-#'   dropped from the shape file and the second (data) is the observations dropped from the
-#'   data.
+#' @param join_results A data frame that has just been created by an
+#'   [ipums shape join][ipums_shape_left_join()].
+#'
+#' @return A list of data frames, where the first element (`shape`) includes
+#'   the observations dropped from the shapefile and the second (`data`)
+#'   includes the
+#'   observations dropped from the data file.
+#'
+#' @keywords internal
+#'
 #' @export
 join_failures <- function(join_results) {
   out <- attr(join_results, "join_failures")

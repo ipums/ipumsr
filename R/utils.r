@@ -134,44 +134,56 @@ find_files_in <- function(file,
   unname(file_names_sel)
 }
 
-#' Add IPUMS variable attributes to a data.frame
+#' Add IPUMS variable attributes to a data frame
 #'
-#' Add variable attributes from an IPUMS DDI to the variables in a data.frame.
-#' This function is usually called automatically for you inside of the read_*
-#' functions (such as read_ipums_micro or read_nhgis), but they can
-#' be useful other times as well. For example, if you store the data in
-#' a database, you can store the data without attributes in the database
-#' and add them on after loading a subset into a data.frame.
+#' @description
+#' Add variable attributes from an IPUMS DDI or codebook to the variables
+#' in a data frame. These provide contextual information about the variables
+#' and values contained in the data.
 #'
-#' Attribute \code{val_labels} adds the haven::labelled class attributes and
-#' the corresponding value labels for variables that have value labels.
+#' Most ipumsr data-reading functions automatically add these attributes.
+#' However, some data processing operations may remove attributes, or you
+#' may wish to store data in an external database without attributes attached.
 #'
-#' Attribute \code{var_label} Adds a short summary of the variable's
-#' contents that to the attribute "label". This label is viewable in the
+#' @details
+#' Attribute `val_labels` adds the [`haven_labelled`][haven::labelled] class
+#' and the corresponding value labels for applicable variables. For more
+#' about the `haven_labelled` class, see
+#' `vignette("semantics", package = "haven")`.
+#'
+#' Attribute `var_label` adds a short summary of the variable's
+#' contents to the `"label"` attribute. This label is viewable in the
 #' RStudio Viewer.
 #'
-#' Attribute \code{var_desc} Adds a longer summary of the variable's
-#' contents to the attribute "var_desc" when available.
+#' Attribute `var_desc` adds a longer description of the variable's
+#' contents to the `"var_desc"` attribute, when available.
 #'
-#' @param data A data.frame
-#' @param var_info An \code{ipums_ddi} object or a data.frame with the
-#'   variable information (equivalent to getting ipums_var_info on a DDI).
-#' @param var_attrs One or more of \code{val_labels}, \code{var_label} and
-#'   \code{var_desc} describing what kinds of attributes you want to add.
-#'   If NULL, will not add any attributes.
-#' @return A \code{tbl_df} data.frame with data and IPUMS attributes
-#' @examples
-#'   ddi_file <- ipums_example("cps_00006.xml")
-#'   ddi <- read_ipums_ddi(ddi_file)
-#'   cps <- read_ipums_micro(ddi, var_attrs = NULL) # Don't load with attributes
+#' Variable information is attached to the data by column name. If column
+#' names in `data` do not match those found in `var_info`, attributes
+#' will not be added.
 #'
-#'   ipums_var_desc(cps$YEAR) # Not available
+#' @param data [`tibble`][tibble::tbl_df-class] or data frame
+#' @param var_info An `ipums_ddi` object or a data frame containing
+#'   variable information. Variable information can be obtained by calling
+#'   `ipums_var_info()` on an [ipums_ddi] object.
+#' @param var_attrs Variable attributes from the DDI to add to the columns of
+#'   the output data. Defaults to all available attributes (`"val_labels"`,
+#'   `"var_label"`, and `"var_desc"`).
 #'
-#'   # But, we can add on attributes after loading
-#'   cps_with_attr <- set_ipums_var_attributes(cps, ddi)
-#'   ipums_var_desc(cps_with_attr$YEAR)
+#' @return `data`, with variable attributes attached
 #'
 #' @export
+#'
+#' @examples
+#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi <- read_ipums_ddi(ddi_file)
+#' cps <- read_ipums_micro(ddi, var_attrs = NULL) # Don't load with attributes
+#'
+#' ipums_var_desc(cps$YEAR) # Not available
+#'
+#' # But, we can add on attributes after loading
+#' cps_with_attr <- set_ipums_var_attributes(cps, ddi)
+#' ipums_var_desc(cps_with_attr$YEAR)
 set_ipums_var_attributes <- function(
   data,
   var_info,
@@ -271,17 +283,19 @@ set_single_var_attributes <- function(x, val_labels, var_label, var_desc) {
 
 #' Collect data into R session with IPUMS attributes
 #'
-#' Convenience wrapper around dplyr \code{\link[dplyr]{collect}} and
-#' \code{\link{set_ipums_var_attributes}}.
+#' Convenience wrapper around dplyr's [`collect()`][dplyr::collect] and
+#' [set_ipums_var_attributes()].
 #'
-#' @param data A dplyr \code{tbl} object (generally a \code{tbl_lazy}
+#' @param data A dplyr `tbl` object (generally a `tbl_lazy`
 #'   object stored in a database.
-#' @param ddi A DDI object, read with \code{\link{read_ipums_ddi}}.
-#' @param var_attrs One or more of \code{val_labels}, \code{var_label} and
-#'   \code{var_desc} describing what kinds of attributes you want to add.
-#'   If NULL, will not add any attributes.
+#' @param ddi A DDI object created with [read_ipums_ddi()].
+#' @param var_attrs  Variable attributes to add to the output. Defaults to
+#'   all available attributes (`"val_labels"`, `"var_label"` and `"var_desc"`).
+#'   See [set_ipums_var_attributes()] for more details.
 #'
-#' @return A local \code{tbl_df} data.frame with IPUMS attributes attached
+#' @return A local [`tibble`][tibble::tbl_df-class] with the requested
+#'   attributes attached.
+#'
 #' @export
 ipums_collect <- function(data, ddi, var_attrs = c("val_labels", "var_label", "var_desc")) {
   var_attrs <- match.arg(var_attrs, several.ok = TRUE)

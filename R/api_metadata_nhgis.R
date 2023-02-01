@@ -1,4 +1,3 @@
-
 # This file is part of the ipumsr R package created by IPUMS.
 # For copyright and licensing information, see the NOTICE and LICENSE files
 # in this project's top-level directory, and also on-line at:
@@ -19,6 +18,11 @@
 #'
 #' See the **metadata availability** section below for more information on the
 #' metadata provided for each data type.
+#'
+#' More information about NHGIS can be found at the following links:
+#' - [NHGIS data](https://www.nhgis.org/data-availability)
+#' - [NHGIS FAQ](https://www.nhgis.org/frequently-asked-questions-faq)
+#' - [NHGIS API](https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/)
 #'
 #' @section Metadata availability:
 #' The following sections summarize the metadata fields provided for each data
@@ -365,19 +369,20 @@ get_nhgis_summary_metadata <- function(type,
 #' Check whether data table summary metadata is up to date with latest NHGIS
 #' datasets
 #'
-#' @param metadata Default table metadata as output by `get_nhgis_metadata("data_tables")`
+#' @param metadata Default table metadata as output by
+#'   `get_nhgis_metadata("data_tables")`
 #' @param update Logical indicating whether out-of-date metadata should
 #'   be updated.
 #' @param api_key API key associated with the user's
 #' @param check_pkg_metadata Logical indicating whether to override cached
 #'   table metadata with the value of `table_metadata` currently stored
 #'   in the package internally. If the package `table_metadata` is more current
-#'   than the cached table metadata, `table_metadata` will be used to determine
+#'   than the cached table metadata, it will be used to determine
 #'   whether any updates are needed to the provided data table summary metadata.
 #'   Otherwise, the cached version will be used.
 #'
 #'   This is designed to support unit tests of table updating functionality.
-#'   In general, this argument should be set to `TRUE` in user-facing cases.
+#'   This argument should be set to `TRUE` in all user-facing cases.
 #'
 #' @return If `update = FALSE` or if no updates are needed, returns `metadata`.
 #'   Otherwise, returns updated data table summary metadata produced by
@@ -467,15 +472,15 @@ check_table_metadata <- function(metadata,
 #'
 #' @param metadata The existing table metadata. Typically should correspond to
 #'   the internal data source `table_metadata`, which stores data table
-#'   metadata for currently available datasets.
+#'   metadata for currently available datasets
 #' @param datasets The datasets whose tables should be added to the existing
 #'   data table metadata
-#' @param api_key API Key associated with the user's IPUMS account.
+#' @param api_key API Key associated with the user's IPUMS account
 #' @param quiet Logical indicating whether user should be alerted when updating
 #' tables. Not currently used
 #'
 #' @return If no updates are needed, returns `metadata`. Otherwise, returns
-#'   a tbl of the same format as `metadata` with additional records.
+#'   a `tibble` of the same format as `metadata` with additional records.
 #'
 #' @noRd
 update_table_metadata <- function(metadata,
@@ -828,6 +833,7 @@ ipumsr_cache_dir <- function(list = FALSE, clear = FALSE, ...) {
 #' Single-dataset metadata breakdowns field returns a
 #' data.frame that includes a column of data.frames. We want to convert
 #' all levels of such a hierarchy to tibbles for consistent formatting.
+#'
 #' @noRd
 nested_df_to_tbl <- function(l) {
 

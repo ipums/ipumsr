@@ -22,9 +22,9 @@ folder, or to the csv unzipped from the download.}
 provides usage and citation information for extract.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
-data to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
-a dataset.}
+data to load. Accepts a character vector specifying the file name, or a
+\link[=selection_language]{tidyselect selection}. Data layer must uniquely
+identify a dataset.}
 
 \item{n_max}{Maximum number of observations to read from the data}
 
@@ -53,16 +53,4 @@ Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 data <- read_terra_micro("2553_bundle.zip")
 }
 }
-\seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_raster}()}
-}
-\concept{ipums_read}
 \keyword{internal}

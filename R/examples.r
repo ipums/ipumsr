@@ -3,17 +3,28 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Get path to ipums example datasets
+#' Get path to IPUMS example datasets
 #'
-#' Get access to example extracts.
+#' Construct file path to example extracts included with ipumsr. These data
+#' are used in package examples and can be used to experiment with ipumsr
+#' functionality.
 #'
-#' @param path Name of file. If `NULL`, the example files will be listed.
-#' @return The filepath to an example file, or if path is empty, a vector of all
+#' @param path Name of file. If `NULL`, all available example files will be
+#'   listed.
+#'
+#' @return The path to a specific example file or a vector of all
 #'   available files.
+#'
 #' @export
+#'
 #' @examples
-#' ipums_example() # Lists all available examples
-#' ipums_example("cps_00006.xml") # Gives filepath for a cps DDI
+#' # List all available example files
+#' ipums_example()
+#'
+#' # Get path to a specific example file
+#' file <- ipums_example("cps_00006.xml")
+#'
+#' read_ipums_ddi(file)
 ipums_example <- function(path = NULL) {
   if (is.null(path)) {
     file <- dir(system.file("extdata", package = "ipumsr"))

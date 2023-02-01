@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{define_extract_from_json}
 \alias{define_extract_from_json}
-\title{Define an IPUMS extract from a JSON-formatted definition}
+\title{Define an IPUMS extract request from a JSON-formatted definition}
 \usage{
 define_extract_from_json(extract_json)
 }
@@ -15,8 +15,11 @@ An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
 Create an \code{\link[=ipums_extract-class]{ipums_extract}} object based on an extract
-definition formatted as JSON. For an overview of ipumsr microdata API
+definition formatted as JSON. For an overview of ipumsr API
 functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+
+To create a JSON file from an existing extract definition, use
+\code{\link[=save_extract_as_json]{save_extract_as_json()}}.
 }
 \examples{
 my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
@@ -27,25 +30,19 @@ save_extract_as_json(my_extract, file = extract_json_path)
 copy_of_my_extract <- define_extract_from_json(extract_json_path)
 
 identical(my_extract, copy_of_my_extract)
-
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

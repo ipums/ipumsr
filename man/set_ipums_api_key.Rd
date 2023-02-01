@@ -17,7 +17,7 @@ Defaults to \code{FALSE}, unless \code{overwrite = TRUE}.}
 \code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
 Defaults to \code{FALSE}.}
 
-\item{unset}{if \code{TRUE}, remove the existing value of \code{IPUMS_API_KEY}
+\item{unset}{If \code{TRUE}, remove the existing value of \code{IPUMS_API_KEY}
 from the environment and the \code{.Renviron} file in your home directory.}
 }
 \value{
@@ -37,22 +37,17 @@ from \href{https://walker-data.com/tidycensus/}{tidycensus}.
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_default_collection}()},

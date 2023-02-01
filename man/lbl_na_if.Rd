@@ -2,25 +2,30 @@
 % Please edit documentation in R/lbl_helpers.r
 \name{lbl_na_if}
 \alias{lbl_na_if}
-\title{Set labelled values to missing}
+\title{Convert labelled data values to NA}
 \usage{
 lbl_na_if(x, .predicate)
 }
 \arguments{
-\item{x}{A \code{\link[haven]{labelled}} vector}
+\item{x}{A \code{\link[haven:labelled]{labelled}} vector}
 
-\item{.predicate}{A function that takes .val and .lbl (the values and
-labels) and returns TRUE or FALSE. It is passed to a function similar
-to \code{\link[rlang]{as_function}}, so also accepts quosure-style lambda
-functions (that use values .val and .lbl). See examples for more information.}
+\item{.predicate}{A function taking \code{.val} and \code{.lbl} arguments that
+returns a logical value. Can be provided as an anonymous function or
+formula. See examples.}
 }
 \value{
-A haven::labelled vector
+A \code{\link[haven:labelled]{labelled}} vector
 }
 \description{
-Convert values to NA based on their label and value in a
-\code{\link[haven]{labelled}} vector. Ignores any value that does not have a
-label.
+Convert data values in a \code{\link[haven:labelled]{labelled}} vector
+to \code{NA} based on the value labels associated with that vector. Ignores
+values that do not have a label.
+}
+\details{
+The predicate function uses the terms \code{.val} and \code{.lbl} to refer to the
+values and labels, respectively. Use \code{.val} when you want to convert to
+\code{NA} conditional on the \emph{values} in the data. Use \code{.lbl} when you want
+to convert to \code{NA} conditional on the \emph{labels} used to refer to those values.
 }
 \examples{
 x <- haven::labelled(
@@ -28,25 +33,22 @@ x <- haven::labelled(
   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
 )
 
-lbl_na_if(x, ~.val >= 90)
-lbl_na_if(x, ~.lbl \%in\% c("Maybe"))
-lbl_na_if(x, ~.val >= 90 | .lbl \%in\% c("Maybe"))
-
-# You can also use the more explicit function notation
+# Anonymous function notation
 lbl_na_if(x, function(.val, .lbl) .val >= 90)
+lbl_na_if(x, \(.val, .lbl) .val >= 90 | .lbl \%in\% c("Maybe"))
 
-# Or even the name of a function
+# purrr-style notation
+lbl_na_if(x, ~.lbl \%in\% c("Maybe"))
+
+# Referring to function by name
 na_function <- function(.val, .lbl) .val >= 90
-lbl_na_if(x, "na_function")
-
+lbl_na_if(x, na_function)
 }
 \seealso{
 Other lbl_helpers: 
 \code{\link{lbl_add}()},
 \code{\link{lbl_clean}()},
-\code{\link{lbl_collapse}()},
 \code{\link{lbl_define}()},
-\code{\link{lbl_relabel}()},
 \code{\link{lbl}()},
 \code{\link{zap_ipums_attributes}()}
 }

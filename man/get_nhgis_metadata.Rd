@@ -80,6 +80,13 @@ arguments.
 
 See the \strong{metadata availability} section below for more information on the
 metadata provided for each data type.
+
+More information about NHGIS can be found at the following links:
+\itemize{
+\item \href{https://www.nhgis.org/data-availability}{NHGIS data}
+\item \href{https://www.nhgis.org/frequently-asked-questions-faq}{NHGIS FAQ}
+\item \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{NHGIS API}
+}
 }
 \section{Metadata availability}{
 

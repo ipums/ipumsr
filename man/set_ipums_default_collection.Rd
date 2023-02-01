@@ -14,15 +14,16 @@ set_ipums_default_collection(
 \arguments{
 \item{collection}{Character string of the collection to set as your
 default collection. The collection must currently be supported
-by the IPUMS API.}
+by the IPUMS API. Use \code{\link[=ipums_data_collections]{ipums_data_collections()}} to determine if a
+collection has API support.}
 
-\item{save}{If \code{TRUE}, save the key for use in future
+\item{save}{If \code{TRUE}, save the default collection for use in future
 sessions by adding it to the \code{.Renviron} file in your home directory.
 Defaults to \code{FALSE}, unless \code{overwrite = TRUE}.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing value of
-\code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
-Defaults to \code{FALSE}.}
+\code{IPUMS_DEFAULT_COLLECTION} in the \code{.Renviron} file with the provided
+\code{collection}. Defaults to \code{FALSE}.}
 
 \item{unset}{if \code{TRUE}, remove the existing value of
 \code{IPUMS_DEFAULT_COLLECTION} from the environment and the \code{.Renviron} file in
@@ -72,22 +73,17 @@ set_ipums_default_collection(unset = TRUE)
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

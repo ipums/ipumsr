@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{combine_extracts}
 \alias{combine_extracts}
-\title{Combine IPUMS extracts into a single extract definition}
+\title{Combine multiple IPUMS extract definitions into one}
 \usage{
 combine_extracts(...)
 }
@@ -15,21 +15,23 @@ An \code{ipums_extract} object of the same collection as the extracts
 provided in \code{...} containing the combined extract definition.
 }
 \description{
-Creates a single extract that includes all of the specifications included in
-a set of \code{ipums_extract} objects.
+Creates a single extract definition that includes all of the
+specifications included in a set of \code{ipums_extract} objects of the same
+collection.
 }
 \details{
-Values that exist in more than one of the provided extracts will be
-de-duplicated such that only one entry for the duplicated specification is
+Values that exist in more than one of the provided extract definitions will
+be de-duplicated such that only one entry for the duplicated specification is
 included in the final extract.
 
 Some extract fields can only take a single value. In the event that the
-extracts being combined each have different values for such a field, the
-value found in the first extract provided to \code{...} is retained in the final
-extract.
+definitions being combined each have different values for such a field, the
+value found in the first extract definition provided to \code{...} is retained in
+the final extract.
 
-To add or remove values in extract fields, see \link{add_to_extract} or
-\link{remove_from_extract}.
+To modify values in a single extract definition, see
+\code{\link[=add_to_extract]{add_to_extract()}} or
+\code{\link[=remove_from_extract]{remove_from_extract()}}.
 }
 \examples{
 ext1 <- define_extract_nhgis(

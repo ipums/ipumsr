@@ -2,21 +2,29 @@
 % Please edit documentation in R/examples.r
 \name{ipums_example}
 \alias{ipums_example}
-\title{Get path to ipums example datasets}
+\title{Get path to IPUMS example datasets}
 \usage{
 ipums_example(path = NULL)
 }
 \arguments{
-\item{path}{Name of file. If \code{NULL}, the example files will be listed.}
+\item{path}{Name of file. If \code{NULL}, all available example files will be
+listed.}
 }
 \value{
-The filepath to an example file, or if path is empty, a vector of all
+The path to a specific example file or a vector of all
 available files.
 }
 \description{
-Get access to example extracts.
+Construct file path to example extracts included with ipumsr. These data
+are used in package examples and can be used to experiment with ipumsr
+functionality.
 }
 \examples{
-ipums_example() # Lists all available examples
-ipums_example("cps_00006.xml") # Gives filepath for a cps DDI
+# List all available example files
+ipums_example()
+
+# Get path to a specific example file
+file <- ipums_example("cps_00006.xml")
+
+read_ipums_ddi(file)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{add_to_extract.nhgis_extract}
 \alias{add_to_extract.nhgis_extract}
-\title{Add values to an existing IPUMS NHGIS extract}
+\title{Add values to an existing IPUMS NHGIS extract definition}
 \usage{
 \method{add_to_extract}{nhgis_extract}(
   extract,
@@ -26,82 +26,99 @@
 
 \item{description}{Description of the extract.}
 
-\item{datasets}{Character vector of
-\link[=https://www.nhgis.org/overview-nhgis-datasets]{datasets} to add to
-the extract. Any specified \code{datasets} that already exist in the extract
-will be modified by the values provided to dataset subfields.
-See details.}
+\item{datasets}{Vector of
+\link[=https://www.nhgis.org/overview-nhgis-datasets]{datasets}
+to add to the extract definition.
 
-\item{data_tables}{Summary tables to retrieve from the specified
-\code{datasets}. If no \code{datasets} are specified, values apply to the \code{datasets}
-that already exist in the extract.
+Any specified \code{datasets} that
+already exist in the extract definition will be modified by the values
+provided to dataset subfields. See details.}
 
-Can be provided as a vector or list; see details for syntax options.
+\item{data_tables}{Summary tables to add for the \code{datasets} in the
+extract definition.
+
+If a vector, values are added to all of the specified \code{datasets}.
+If no new \code{datasets} are specified, values are added to all of the
+\code{datasets} that already exist in the extract definition.
+
+If a named list, values are added to the \code{datasets} indicated by
+name in the list. See details.
 
 Required if any new \code{datasets} are specified.}
 
 \item{time_series_tables}{Character vector of
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
-to add to the extract. Any specified \code{time_series_tables} that already
-exist in the extract will be modified by the values provided to
+to add to the extract.
+
+Any specified \code{time_series_tables} that already
+exist in the extract definition will be modified by the values provided to
 time series table subfields. See details.}
 
 \item{geog_levels}{Geographic levels (for example, \code{"county"} or \code{"state"})
-to add for the specified \code{datasets} or \code{time_series_tables}. If no
-\code{datasets} or \code{time_series_tables} are specified, values apply to the
-\code{datasets} and \code{time_series_tables} that already exist in the extract.
+to add for the \code{datasets} and \code{time_series_tables} in the extract
+definition.
 
-Can be provided as a vector or a list; see details for syntax options.
+If a vector, values are added to all of the specified \code{datasets} and
+\code{time_series_tables}.
+If neither \code{datasets} nor \code{time_series_tables} is specified, values are
+added to all of the \code{datasets} and \code{time_series_tables} that already exist
+in the extract definition.
+
+If a named list, values are added to the \code{datasets} and/or
+\code{time_series_tables} indicated by name in the list. See details.
 
 Required if any \code{datasets} or \code{time_series_tables} are specified.}
 
-\item{years}{Years to add for the specified \code{datasets}. If no \code{datasets} are
-specified, values apply to the \code{datasets} that already exist in the
-extract. Use \code{"*"} to select all available years for a given dataset.
+\item{years}{Years to add for the \code{datasets} in the extract definition.
+Use \code{"*"} to select all available years for a given dataset.
 
-Can be provided as a vector or a list; see details for syntax options.
+Uses the same logic as \code{data_tables} when determining which \code{datasets}
+to modify. See details.
 
 See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{breakdown values}
-to add for the specified \code{datasets}. If no \code{datasets} are specified, values
-apply to the \code{datasets} that already exist in the extract.
+to add for the \code{datasets} in the extract definition
 
-Can be provided as a vector or a list; see details for syntax options.
+Uses the same logic as \code{data_tables} when determining which \code{datasets}
+to modify. See details.
 
 If more than one breakdown value is requested,
 \code{breakdown_and_data_type_layout} must also be specified.}
 
 \item{geographic_extents}{Character vector of geographic extents to use for
-all of the extract's \code{datasets}. Use \code{"*"} to select all available extents.
+all \code{datasets} in the extract definition (for instance, to obtain data
+within a particular state). Use \code{"*"} to select all available extents.
 
 Required when the extract includes any \code{geog_levels} that require extent
 selection. See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a geographic level
-requires extent selection. (Currently, NHGIS supports extent selection only
-for blocks and block groups.)}
+requires extent selection.
+
+Currently, NHGIS supports extent selection only for blocks and block
+groups.}
 
 \item{shapefiles}{Character vector of
-\href{https://www.nhgis.org/gis-files}{shapefiles} to add to the extract.}
+\href{https://www.nhgis.org/gis-files}{shapefiles} to add to the extract
+definition.}
 
 \item{breakdown_and_data_type_layout}{The desired layout
 of any \code{datasets} that have multiple data types or breakdown values.
 \itemize{
-\item \code{"single_file"} keeps all data types and breakdown values in one file.
+\item \code{"single_file"} (default) keeps all data types and breakdown values in
+one file.
 \item \code{"separate_files"} splits each data type or breakdown value into its
 own file.
 }
 
-Defaults to \code{"single_file"}.
-
-Required if any \code{datasets} included in the extract consist of
+Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
 multiple breakdown values specified. See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
-the extract. One of:
+the extract definition. One of:
 \itemize{
-\item \code{"time_by_column_layout"} (wide format): rows correspond to geographic
+\item \code{"time_by_column_layout"} (wide format, default): rows correspond to geographic
 units, columns correspond to different times in the time series
 \item \code{"time_by_row_layout"} (long format): rows correspond to a single
 geographic unit at a single point in time
@@ -109,18 +126,19 @@ geographic unit at a single point in time
 separate files
 }
 
-Defaults to \verb{"time_by_column_layout}.
-
-Required when an extract includes any \code{time_series_tables}.}
+Required when an extract definition includes any \code{time_series_tables}.}
 
 \item{data_format}{The desired format of the extract data file. One of:
 \itemize{
-\item \code{"csv_no_header"} includes only a minimal header in the first row.
-\item \code{"csv_header"} includes a second, more descriptive header row.
+\item \code{"csv_no_header"} (default) includes only a minimal header in the first
+row.
+\item \code{"csv_header"} includes a second, more descriptive header row. Note that
+this header is removed by default when reading data with \code{\link[=read_nhgis]{read_nhgis()}}.
 \item \code{"fixed_width"} provides data in a fixed width format.
 }
 
-Required when an extract includes any \code{datasets} or \code{time_series_tables}.}
+Required when an extract definition includes any \code{datasets} or
+\code{time_series_tables}.}
 
 \item{...}{Ignored}
 }
@@ -128,73 +146,65 @@ Required when an extract includes any \code{datasets} or \code{time_series_table
 A modified \code{nhgis_extract} object
 }
 \description{
-Add new values or replace existing values in an IPUMS NHGIS extract. All
-fields are optional, and if omitted, will be unchanged. Supplying a value
-for fields that take a single value, such as \code{description} and \code{data_format},
-will replace the existing value with the supplied value.
+Add new values or replace existing values in an IPUMS NHGIS extract
+definition. All fields are optional, and if omitted, will be unchanged.
+Supplying a value for fields that take a single value, such as
+\code{description} and \code{data_format}, will replace the existing value with
+the supplied value.
 
-To remove existing values from an IPUMS NHGIS extract, see
+To remove existing values from an IPUMS NHGIS extract definition, see
 \code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}}.
 
 In general, adding to an extract follows the same syntax conventions as used
 in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See details for more
 information on how values passed to dataset and time series table subfields
 are interpreted.
+
+To combine multiple extract definitions, use \code{\link[=combine_extracts]{combine_extracts()}}.
 }
 \details{
-NHGIS extracts may contain multiple datasets or time series tables. Each
-dataset or time series table is associated with several subfields that apply
-only to that particular dataset or time series table.
+NHGIS extract definitions may contain multiple \code{datasets} or
+\code{time_series_tables.} Each dataset or time series table is associated with
+several subfields that apply only to that particular dataset or time series
+table.
 
-The following arguments are applied to an extract's \code{datasets}:
+The following arguments are added to the requested \code{datasets}:
 \itemize{
 \item \code{data_tables}
 \item \code{years}
 \item \code{breakdown_values}
 }
 
-The following arguments are applied to an extract's \code{datasets} and
+The following arguments are added to the requested \code{datasets} \emph{and}
 \code{time_series_tables}:
 \itemize{
 \item \code{geog_levels}
 }
 
-There are three ways the values passed to these arguments can be provided:
-\itemize{
-\item If values are passed as a \strong{vector}, they will be
-applied to all of the \code{datasets} and/or \code{time_series_tables}
-included in the call to \code{add_to_extract()}. If no \code{datasets} or
-\code{time_series_tables} are specified, the values will be applied to all
-\code{datasets} and/or \code{time_series_tables} that exist in the extract.
-\item If values are passed as an \strong{unnamed list}, they will be
-matched to the \code{datasets} and/or \code{time_series_table} included in the call
-to \code{add_to_extract()} by index. For instance, the first element will be
-associated with the first value provided to the \code{datasets} argument,
-the second element with the second value in \code{datasets}, etc. If no
-\code{datasets} or \code{time_series_tables} are specified, the values will be
-matched to all \code{datasets} and/or \code{time_series_tables} that exist in the
-extract.
-\itemize{
-\item \code{geog_levels} applies to both \code{datasets} and \code{time_series_tables}.
-If values are passed to both the \code{datasets} and \code{time_series_tables}
-arguments, the provided \code{geog_levels} will be matched first to the
-provided \code{datasets}, then to the provided \code{time_series_tables}.
-}
-\item If values are passed as a \strong{named list} or \strong{named vector}, they
-will be matched to the \code{datasets} and/or \code{time_series_tables} by name.
-Names can correspond to any \code{datasets} or \code{time_series_tables} that exist
-in the extract definition, regardless of whether they are currently being
-added to the extract or already exist in the extract.
-}
+To add the values of these arguments to \emph{all} of the \code{datasets} and/or
+\code{time_series_tables} provided to \code{add_to_extract()} (ignoring those that
+already exist in the extract definition), pass the values as a vector.
+
+To add the values of these arguments to \emph{specific} \code{datasets} and/or
+\code{time_series_tables} in the extract definition (whether newly-added or
+preexisting), pass the values as a named
+list. In this case, names should correspond to the \code{datasets} and/or
+\code{time_series_tables} and their associated values will only be added to
+the indicated dataset or time series table.
+
+Note that while it is possible to match elements to \code{datasets} and/or
+\code{time_series_tables} by index by providing an unnamed list, we recommend
+using names to explicitly specify the values that should be added to each
+of the request's \code{datasets} and \code{time_series_tables}.
 
 For extract fields that take a single value, \code{add_to_extract()} will
 replace the existing value with the new value provided for that field.
 It is not necessary to first remove this value using
-\code{remove_from_extract}.
+\code{remove_from_extract()}.
 
 If the supplied extract definition comes from
-a previously submitted extract, this function will reset the definition to an
-unsubmitted state.
+a previously submitted extract request, this function will reset the
+definition to an unsubmitted state.
 }
 \examples{
 extract <- define_extract_nhgis(
@@ -225,5 +235,4 @@ add_to_extract(
   data_tables = list("1990_STF1" = "NP4", "1980_STF1" = "NT1B"),
   geog_levels = "nation"
 )
-
 }

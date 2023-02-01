@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{download_extract}
 \alias{download_extract}
-\title{Download an IPUMS data extract}
+\title{Download a completed IPUMS data extract}
 \usage{
 download_extract(
   extract,
@@ -17,27 +17,24 @@ download_extract(
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for the collection specified by the
-\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
+\item The extract number for your default IPUMS collection. See
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See below for examples of each form.
+Extract numbers do not need to be zero-padded. That is, use \code{1}, not
+\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
-\item{download_dir}{In what folder should the downloaded files be saved?
+\item{download_dir}{Path to the directory where the files should be written.
 Defaults to current working directory.}
 
-\item{overwrite}{Logical indicating whether to overwrite files that already
-exist. Defaults to \code{FALSE}.}
+\item{overwrite}{Logical indicating whether to overwrite any files that
+already exist in \code{download_dir}. Defaults to \code{FALSE}.}
 
 \item{wait}{Logical value indicating whether to wait for the completion of
 the specified \code{extract} if it is not yet ready for download. Defaults to
@@ -50,22 +47,26 @@ value of environment variable \code{"IPUMS_API_KEY"}.}
 \code{wait = TRUE}.}
 }
 \value{
-Invisibly returns the path(s) to the files required to read the data
-requested in the extract.
+The path(s) to the files required to read the data
+requested in the extract, invisibly.
+
+For NHGIS, paths will be named with either \code{"data"} (for tabular data
+files) or \code{"shape"} (for spatial data files) to
+indicate the type of data the file contains.
 }
 \description{
-Download an IPUMS data extract via the IPUMS API.
+Download an IPUMS data extract via the IPUMS API and write to disk.
 
-For an overview of ipumsr
-microdata API functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+For an overview of ipumsr API functionality, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 For NHGIS extracts, data files and GIS files (shapefiles) will be saved in
-separate zip archives. \code{download_extract()} will return a character vector
+separate .zip archives. \code{download_extract()} will return a character vector
 including the file paths to all downloaded files.
 
 For microdata extracts, only the file path to the downloaded .xml DDI file
-will be returned, as it is sufficient for loading the data provided in the
+will be returned, as it is sufficient for reading the data provided in the
 associated .gz data file.
 }
 \examples{
@@ -89,25 +90,19 @@ path_to_ddi_file <- download_extract(c("usa", "1"))
 set_ipums_default_collection("usa")
 download_extract(1)
 }
-
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

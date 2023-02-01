@@ -3,53 +3,61 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read boundary (GIS) files from an IPUMS extract
+#' Read spatial data from an IPUMS extract
 #'
 #' @description
-#' Read spatial data from an IPUMS extract into R using the
+#' Read a spatial data file (also referred to as a GIS file or shapefile) from
+#' an IPUMS extract into an `sf` object from the
 #' [`sf`](https://r-spatial.github.io/sf/) package.
 #'
 #' @details
 #' Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
 #' each shapefile (including a .shp as well as accompanying files) is
 #' compressed in its own archive, and the collection of all
-#' shapefiles provided in an extract are also compressed into a single .zip
+#' shapefiles provided in an extract is also compressed into a single .zip
 #' archive.
 #'
-#' `read_ipums_sf()` is designed to handle this structure. However, if an
-#' internal .zip archive happens to contain *multiple* shapefiles, this function
-#' will throw an error. If this is the case, you may need to manually unzip the
-#' downloaded file before loading it into R.
+#' `read_ipums_sf()` is designed to handle this structure. However, if any files
+#' are altered such that an internal .zip archive contains *multiple*
+#' shapefiles, this function will throw an error. If this is the case, you may
+#' need to manually unzip the downloaded file before loading it into R.
 #'
 #' @param shape_file Path to a single .shp file, or a .zip archive or
 #'   directory containing at least one .shp file. See details.
-#' @param file_select If `shape_file` contains multiple files, an expression
-#'   identifying the files to load. Accepts a character string specifying the
-#'   file name, [`dplyr_select_style`] conventions, or index positions. If
-#'   multiple files are selected, `bind_multiple` must be equal to `TRUE`.
-#' @param vars Names of variables to include in the output data.
-#'   By default, includes all variables found in the provided `shape_file`.
-#' @param encoding The text encoding to use when reading the shape file. Typically
-#'   the defaults should read the data correctly, but for some extracts you may
-#'   need to set them manually.
-#'   If `NULL`, will attempt to guess the correct encoding using the associated
-#'   .cpg file. If none is available, it will default to `"latin1"`.
-#'   NHGIS files default to `"latin1"`. Terra files default to `"UTF-8"`.
+#' @param file_select If `shape_file` is a .zip archive or directory that
+#'   contains multiple files, an expression identifying the files to load.
+#'   Accepts a character string specifying the
+#'   file name, a [tidyselect selection][selection_language], or index
+#'   position. If multiple files are selected, `bind_multiple` must be
+#'   equal to `TRUE`.
+#' @param vars Names of variables to include in the output. Accepts a
+#'   character vector of names or a [tidyselect selection][selection_language].
+#'   If `NULL`, includes all variables in the file.
+#' @param encoding Encoding to use when reading the shape file. If `NULL`,
+#'   defaults to `"latin1"` unless the file includes a .cpg metadata file
+#'   with encoding information. The default value should generally be
+#'   appropriate.
 #' @param bind_multiple If `TRUE` and `shape_file` contains multiple .shp files,
-#'   row-bind the files into a single output.
+#'   row-bind the files into a single `sf` object. Useful when `shape_file`
+#'   contains multiple files that represent the same geographic units for
+#'   different extents (e.g. block-level data for multiple states).
 #' @param add_layer_var If `TRUE`, add a variable to the output data indicating
-#'   the file that each row originates from. By default, this column will be
-#'   named `"layer"`. If `"layer"` already exists in the data, a unique name
-#'   will be created to avoid name conflicts. The column name will always be
-#'   prefixed with `"layer"`. Defaults to `TRUE` if `bind_multiple = TRUE` and
-#'   `FALSE` otherwise.
+#'   the file that each row originates from. Defaults to `TRUE` if
+#'   `bind_multiple = TRUE` and `FALSE` otherwise.
+#'
+#'   The column name will always be prefixed with `"layer"`, but will be
+#'   adjusted to avoid name conflicts if another column named `"layer"` already
+#'   exists in the data.
 #' @param ... Additional arguments passed to [`sf::read_sf()`][sf::read_sf].
 #' @param verbose `r lifecycle::badge("deprecated")` Please use `quiet`
 #'   (passed to `sf::read_sf`) instead.
 #' @param shape_layer `r lifecycle::badge("deprecated")` Please use
 #'   `file_select` instead.
 #'
-#' @return An `sf` object
+#' @return An [sf][sf::sf()] object
+#'
+#' @family ipums_read
+#' @export
 #'
 #' @examples
 #' shape_file <- ipums_example("nhgis0972_shape_small.zip")
@@ -57,9 +65,6 @@
 #' if (require(sf)) {
 #'   sf_data <- read_ipums_sf(shape_file)
 #' }
-#'
-#' @family ipums_read
-#' @export
 read_ipums_sf <- function(shape_file,
                           file_select = NULL,
                           vars = NULL,
@@ -257,7 +262,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #' [`sp`](https://cran.r-project.org/web/packages/sp/index.html) package.
 #'
 #' This function has been deprecated because of the upcoming retirement
-#' of the `rgdal` package. For more information, click
+#' of the rgdal package. For more information, click
 #' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
 #'
 #' Please use [`read_ipums_sf()`] to load spatial data from IPUMS. To convert
@@ -278,8 +283,9 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #' @inheritParams read_ipums_sf
 #' @param shape_layer If `shape_file` contains multiple files, an expression
 #'   identifying the files to load. Accepts a character string specifying the
-#'   file name, [`dplyr_select_style`] conventions, or index positions. If
-#'   multiple files are selected, `bind_multiple` must be equal to `TRUE`.
+#'   file name, a [tidyselect selection][selection_language], or index
+#'   position. If multiple files are selected, `bind_multiple` must be equal
+#'   to `TRUE`.
 #' @param bind_multiple If `TRUE` and `shape_file` contains multiple .shp files,
 #'   row-bind the files into a single output. Note that some data sources may
 #'   not be able to be combined (e.g. `SpatialPolygonsDataFrame` and
@@ -290,6 +296,8 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #'
 #' @keywords internal
 #'
+#' @export
+#'
 #' @examples
 #' shape_file <- ipums_example("nhgis0972_shape_small.zip")
 #'
@@ -297,9 +305,6 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 #' if (require(sp) && require(rgdal)) {
 #'   sp_data <- read_ipums_sp(shape_file)
 #' }
-#'
-#' @family ipums_read
-#' @export
 read_ipums_sp <- function(shape_file,
                           shape_layer = NULL,
                           vars = NULL,

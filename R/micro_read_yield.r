@@ -3,35 +3,41 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read data from an IPUMS extract (in yields)
+#' Read data from an IPUMS extract in yields
 #'
-#' Reads a dataset downloaded from the IPUMS extract system, but does
-#' so by returning an object that can read a group of lines at a time.
-#' This is a more flexible way to read data in chunks than
-#' the functions like \code{\link{read_ipums_micro_chunked}}, allowing
-#' you to do things like reading parts of multiple files at the same time
-#' and resetting from the beginning more easily than with the chunked
-#' functions. \strong{Note that while other \code{read_ipums_micro*} functions
+#' @description
+#' Read a microdata dataset downloaded from the IPUMS extract system into an
+#' object that can read and operate on a group of lines at a time.
+#'
+#' Use these functions to read a file that is too large to store in memory at
+#' a single time. They represent a more flexible implementation of
+#' [read_ipums_micro_chunked()] that makes certain operations easier, like
+#' reading parts of multiple files at the same time, resetting to the
+#' beginning of the file, etc.
+#'
+#' Note that while other `read_ipums_micro_*` functions
 #' can read from .csv(.gz) or .dat(.gz) files, these functions can only read
-#' from .dat(.gz) files.}
+#' from .dat(.gz) files.
 #'
-#' These functions return an IpumsYield R6 object which have the following
-#' methods:
-#' \itemize{
-#' \item \code{yield(n = 10000)} A function to read the next 'yield' from the data,
-#'   returns a `tbl_df` (or list of `tbl_df` for `hipread_list_yield()`)
-#'   with up to n rows (it will return NULL if no rows are left, or all
-#'   available ones if less than n are available).
-#' \item \code{reset()} A function to reset the data so that the next yield will
-#'   read data from the start.
-#' \item \code{is_done()} A function that returns whether the file has been completely
-#'   read yet or not.
-#' \item \code{cur_pos} A property that contains the next row number that will be
-#'    read (1-indexed).
-#' }
+#' @details
+#' These functions return a HipYield R6 object with the following methods:
+#' - `yield(n = 10000)` reads the next "yield" from the
+#'   data. Returns a [`tibble`][tibble::tbl_df-class] (for
+#'   `read_ipums_micro_yield()`) or list of tibbles (for
+#'   `read_ipums_micro_list_yield()`) with up to n rows.
+#'
+#'   If fewer than n rows are left in the data, returns all remaining rows.
+#'   If no rows are left in the data, returns `NULL`.
+#' - `reset()` resets the data so that the next yield will read data from the
+#'   start.
+#' - `is_done()` returns a logical indicating whether all rows in the file
+#'   have been read.
+#' - `cur_pos` contains the next row number that will be read (1-indexed).
+#'
 #' @inheritParams read_ipums_micro
 #'
-#' @return A HipYield R6 object (See 'Details' for more information)
+#' @return A HipYield R6 object (see details)
+#'
 #' @export
 #' @family ipums_read
 #' @examples
@@ -54,9 +60,8 @@
 #' total_mn
 #'
 #' # Can also read hierarchical data as list:
-#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00006.xml"))
+#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
 #' list_yield$yield(10)
-#'
 read_ipums_micro_yield <- function(
   ddi,
   vars = NULL,

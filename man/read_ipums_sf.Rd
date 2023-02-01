@@ -2,7 +2,7 @@
 % Please edit documentation in R/shape_read.r
 \name{read_ipums_sf}
 \alias{read_ipums_sf}
-\title{Read boundary (GIS) files from an IPUMS extract}
+\title{Read spatial data from an IPUMS extract}
 \usage{
 read_ipums_sf(
   shape_file,
@@ -20,30 +20,34 @@ read_ipums_sf(
 \item{shape_file}{Path to a single .shp file, or a .zip archive or
 directory containing at least one .shp file. See details.}
 
-\item{file_select}{If \code{shape_file} contains multiple files, an expression
-identifying the files to load. Accepts a character string specifying the
-file name, \code{\link{dplyr_select_style}} conventions, or index positions. If
-multiple files are selected, \code{bind_multiple} must be equal to \code{TRUE}.}
+\item{file_select}{If \code{shape_file} is a .zip archive or directory that
+contains multiple files, an expression identifying the files to load.
+Accepts a character string specifying the
+file name, a \link[=selection_language]{tidyselect selection}, or index
+position. If multiple files are selected, \code{bind_multiple} must be
+equal to \code{TRUE}.}
 
-\item{vars}{Names of variables to include in the output data.
-By default, includes all variables found in the provided \code{shape_file}.}
+\item{vars}{Names of variables to include in the output. Accepts a
+character vector of names or a \link[=selection_language]{tidyselect selection}.
+If \code{NULL}, includes all variables in the file.}
 
-\item{encoding}{The text encoding to use when reading the shape file. Typically
-the defaults should read the data correctly, but for some extracts you may
-need to set them manually.
-If \code{NULL}, will attempt to guess the correct encoding using the associated
-.cpg file. If none is available, it will default to \code{"latin1"}.
-NHGIS files default to \code{"latin1"}. Terra files default to \code{"UTF-8"}.}
+\item{encoding}{Encoding to use when reading the shape file. If \code{NULL},
+defaults to \code{"latin1"} unless the file includes a .cpg metadata file
+with encoding information. The default value should generally be
+appropriate.}
 
 \item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
-row-bind the files into a single output.}
+row-bind the files into a single \code{sf} object. Useful when \code{shape_file}
+contains multiple files that represent the same geographic units for
+different extents (e.g. block-level data for multiple states).}
 
 \item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. By default, this column will be
-named \code{"layer"}. If \code{"layer"} already exists in the data, a unique name
-will be created to avoid name conflicts. The column name will always be
-prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
-\code{FALSE} otherwise.}
+the file that each row originates from. Defaults to \code{TRUE} if
+\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
+
+The column name will always be prefixed with \code{"layer"}, but will be
+adjusted to avoid name conflicts if another column named \code{"layer"} already
+exists in the data.}
 
 \item{...}{Additional arguments passed to \code{\link[sf:st_read]{sf::read_sf()}}.}
 
@@ -54,23 +58,24 @@ prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = T
 \code{file_select} instead.}
 }
 \value{
-An \code{sf} object
+An \link[sf:sf]{sf} object
 }
 \description{
-Read spatial data from an IPUMS extract into R using the
+Read a spatial data file (also referred to as a GIS file or shapefile) from
+an IPUMS extract into an \code{sf} object from the
 \href{https://r-spatial.github.io/sf/}{\code{sf}} package.
 }
 \details{
 Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
 each shapefile (including a .shp as well as accompanying files) is
 compressed in its own archive, and the collection of all
-shapefiles provided in an extract are also compressed into a single .zip
+shapefiles provided in an extract is also compressed into a single .zip
 archive.
 
-\code{read_ipums_sf()} is designed to handle this structure. However, if an
-internal .zip archive happens to contain \emph{multiple} shapefiles, this function
-will throw an error. If this is the case, you may need to manually unzip the
-downloaded file before loading it into R.
+\code{read_ipums_sf()} is designed to handle this structure. However, if any files
+are altered such that an internal .zip archive contains \emph{multiple}
+shapefiles, this function will throw an error. If this is the case, you may
+need to manually unzip the downloaded file before loading it into R.
 }
 \examples{
 shape_file <- ipums_example("nhgis0972_shape_small.zip")
@@ -78,17 +83,15 @@ shape_file <- ipums_example("nhgis0972_shape_small.zip")
 if (require(sf)) {
   sf_data <- read_ipums_sf(shape_file)
 }
-
 }
 \seealso{
 Other ipums_read: 
+\code{\link{ipums_list_files}()},
+\code{\link{read_ipums_ddi}()},
 \code{\link{read_ipums_micro_chunked}()},
 \code{\link{read_ipums_micro_yield}()},
 \code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
+\code{\link{read_nhgis_codebook}()},
+\code{\link{read_nhgis}()}
 }
 \concept{ipums_read}

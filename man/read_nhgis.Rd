@@ -2,7 +2,7 @@
 % Please edit documentation in R/nhgis_read.r
 \name{read_nhgis}
 \alias{read_nhgis}
-\title{Read data from an NHGIS extract}
+\title{Read tabular data from an NHGIS extract}
 \usage{
 read_nhgis(
   data_file,
@@ -12,41 +12,35 @@ read_nhgis(
   file_type = NULL,
   na = NULL,
   remove_extra_header = TRUE,
-  show_conditions = TRUE,
   col_names = TRUE,
   locale = NULL,
+  show_conditions = TRUE,
   ...,
   data_layer = deprecated()
 )
 }
 \arguments{
-\item{data_file}{Path to the data file, a .zip archive from an NHGIS
+\item{data_file}{Path to a data file, a .zip archive from an NHGIS
 extract, or a directory containing the data file.}
 
-\item{file_select}{If \code{data_file} contains multiple files, an expression
-identifying the files to load. Accepts a character vector specifying the
-file name, \code{\link{dplyr_select_style}} conventions, or an index position. This
-must uniquely identify a dataset.}
+\item{file_select}{If \code{data_file} is a .zip archive or directory that
+contains multiple files, an expression identifying the file to load.
+Accepts a character vector specifying the
+file name, a \link[=selection_language]{tidyselect selection}, or an index
+position. This must uniquely identify a file.}
 
-\item{var_attrs}{Variable attributes to add from the codebook, defaults to
-adding all (val_labels, var_label and var_desc). See
+\item{var_attrs}{Variable attributes to add from the codebook. Defaults to
+all available attributes (\code{val_labels}, \code{var_label} and \code{var_desc}). See
 \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 
 \item{do_file}{For fixed-width files, path to the .do file associated with
 the provided \code{data_file}. The .do file contains the specifications that
-indicate how to parse the fixed-width file to be loaded.
-If \code{NULL}, looks in the directory of the .dat file to be loaded for a .do
+indicate how to parse the data file.
+
+By default, looks in the same directory as \code{data_file} for a .do
 file with the same name. If \code{FALSE} or if the .do file cannot be found,
-the .dat file will be parsed by the
-values provided to \code{col_positions} (see \code{\link[readr:read_fwf]{read_fwf()}}).
-
-Note that without a corresponding .do file, some columns may
-include implicit decimal values. When working with fixed-width data,
-consult the provided .do file if you are concerned that columns are not
-being parsed and recoded correctly.
-
-If you no longer have access to the .do file for this \code{data_file}, consider
-resubmitting the extract that produced the data.}
+the .dat file will be parsed by the values provided to \code{col_positions}
+in \code{\link[readr:read_fwf]{read_fwf()}}. See details.}
 
 \item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
 files) indicating the type of file to search for in the path provided to
@@ -66,14 +60,16 @@ The header contains the same information that is
 included in the \code{"label"} attribute of each data column (if \code{var_attrs}
 includes \code{"var_label"}), and is therefore not usually needed.}
 
-\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
-loading data.}
-
 \item{col_names}{Either \code{TRUE}, \code{FALSE} or a character vector of column
-names. This argument behaves similarly to the \code{col_names}
-argument of \code{\link[readr:read_delim]{readr::read_csv()}}. However, unlike
-\code{readr}, the first row of of the input will always be removed from the
-data, even if \code{col_names} is \code{FALSE} or a character vector.}
+names.
+
+If \code{TRUE}, use the default column names included in NHGIS csv files. If
+\code{FALSE} or a character vector, replace the default column names with the
+provided names or default placeholders.
+
+Note that unlike \code{\link[readr:read_delim]{readr::read_csv()}}, the first row
+of the input (which contains NHGIS default headers) will always be removed
+from the data.}
 
 \item{locale}{Controls defaults that vary from place to place. If \code{NULL},
 uses a locale designed to provide appropriate defaults for NHGIS files;
@@ -84,6 +80,9 @@ specify a different locale to control things like default time zone,
 decimal mark, big mark, and day/month names. If you do so, specify
 \code{encoding = "latin1"} to ensure files are encoded properly.}
 
+\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
+loading data.}
+
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}
 
@@ -91,27 +90,38 @@ decimal mark, big mark, and day/month names. If you do so, specify
 use \code{file_select} instead.}
 }
 \value{
-A \code{\link[tibble:tbl_df-class]{tibble}} of the data found in \code{data_file}.
+A \code{\link[tibble:tbl_df-class]{tibble}} containing the data found in
+\code{data_file}
 }
 \description{
-Load a tabular data source downloaded from the NHGIS extract system.
+Read a csv or fixed-width (.dat) file downloaded from the NHGIS extract
+system.
 
-To load spatial data sources from NHGIS extracts, see \code{\link{read_nhgis_sf}}.
+To read spatial data from an NHGIS extract, use \code{\link[=read_ipums_sf]{read_ipums_sf()}}.
+}
+\details{
+The .do file that is included when downloading an NHGIS fixed-width
+extract contains important metadata about the data file's column
+positions and implicit decimals. \code{read_nhgis()} uses this information to
+parse and recode the fixed-width data appropriately. Therefore,
+while possible, it is not recommended to read fixed-width files without a
+corresponding .do file.
+
+If you no longer have access to the .do file, consider resubmitting the
+extract that produced the data.
 }
 \examples{
 csv_file <- ipums_example("nhgis0972_csv.zip")
 data_only <- read_nhgis(csv_file)
-
 }
 \seealso{
 Other ipums_read: 
+\code{\link{ipums_list_files}()},
+\code{\link{read_ipums_ddi}()},
 \code{\link{read_ipums_micro_chunked}()},
 \code{\link{read_ipums_micro_yield}()},
 \code{\link{read_ipums_micro}()},
 \code{\link{read_ipums_sf}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
+\code{\link{read_nhgis_codebook}()}
 }
 \concept{ipums_read}

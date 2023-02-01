@@ -10,22 +10,24 @@ lbl_add(x, ...)
 lbl_add_vals(x, labeller = as.character, vals = NULL)
 }
 \arguments{
-\item{x}{A \code{\link[haven]{labelled}} vector}
+\item{x}{A \code{\link[haven:labelled]{labelled}} vector}
 
-\item{...}{Labels formed by \code{\link{lbl}} indicating the value and label to be added.}
+\item{...}{Arbitrary number of label placeholders created with \code{\link[=lbl]{lbl()}}
+indicating the value/label pairs to add.}
 
-\item{labeller}{A function that takes a single argument of the values and returns the
-labels. Defaults to \code{as.character}. \code{\link[rlang]{as_function}}, so
-also accepts quosure-style lambda functions. See examples for more details.}
+\item{labeller}{A function that takes values being added as an argument and
+returns the labels to associate with those values. By default, uses the
+values themselves after converting to character.}
 
-\item{vals}{Vector of values to be labelled. NULL, the default labels all values
-that are in the data, but aren't already labelled.}
+\item{vals}{Vector of values to be labelled. If \code{NULL}, labels all unlabelled
+values that exist in the data.}
 }
 \value{
-A haven::labelled vector
+A \code{\link[haven:labelled]{labelled}} vector
 }
 \description{
-Add labels for values that don't already have them.
+Add labels for values that don't already have them in a
+\code{\link[haven:labelled]{labelled}} vector.
 }
 \examples{
 x <- haven::labelled(
@@ -33,20 +35,29 @@ x <- haven::labelled(
   c(`Unknown` = 990, NIU = 999)
 )
 
-lbl_add(x, lbl(100, "$100"), lbl(105, "$105"), lbl(200, "$200"), lbl(230, "$230"))
+# Add new labels manually
+lbl_add(
+  x,
+  lbl(100, "$100"),
+  lbl(105, "$105"),
+  lbl(200, "$200"),
+  lbl(230, "$230")
+)
 
+# Add labels for all unlabelled values
 lbl_add_vals(x)
-lbl_add_vals(x, ~paste0("$", .))
-lbl_add_vals(x, vals = c(100, 200))
 
+# Update label names while adding
+lbl_add_vals(x, labeller = ~ paste0("$", .))
+
+# Add labels for select values
+lbl_add_vals(x, vals = c(100, 200))
 }
 \seealso{
 Other lbl_helpers: 
 \code{\link{lbl_clean}()},
-\code{\link{lbl_collapse}()},
 \code{\link{lbl_define}()},
 \code{\link{lbl_na_if}()},
-\code{\link{lbl_relabel}()},
 \code{\link{lbl}()},
 \code{\link{zap_ipums_attributes}()}
 }

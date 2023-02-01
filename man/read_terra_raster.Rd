@@ -15,7 +15,7 @@ from the website, or the path to the unzipped .tiff file(s)).}
 
 \item{data_layer}{For .zip extracts with multiple raster datasets, the name of the
 data to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions.}
+a \link[=selection_language]{tidyselect selection}.}
 
 \item{verbose}{Logical, indicating whether to print progress information
 to console.}
@@ -39,16 +39,4 @@ data <- read_terra_raster("2552_bundle.zip", "LCDECIDOPZM2013.tiff")
 data <- read_terra_raster_list("2552_bundle.zip", "ZM")
 }
 }
-\seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()}
-}
-\concept{ipums_read}
 \keyword{internal}

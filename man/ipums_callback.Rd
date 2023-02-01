@@ -9,40 +9,55 @@
 \alias{IpumsBiglmCallback}
 \title{Callback classes}
 \description{
-These classes are used to define callback behaviors that have been adapted
-for use on IPUMS microdata extracts. Though the callbacks from the
-readr package will work, they will not handle implicit decimals
-or add value/variable labels to the data.
+These classes are used to define callback behaviors for use with
+\code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}}. They are based on the
+\code{\link[readr:callback]{callback}} classes from readr, but
+have been adapted to include handling of implicit decimal values and
+variable/value labeling for use with IPUMS microdata extracts.
 }
 \details{
 \describe{
 \item{IpumsSideEffectCallback}{
-Callback function that is used only for side effects, no results are returned.
-Initialize with a function that takes 2 arguments x (which will be the data chunk)
-and an integer that indicates the position of the first observation in the chunk.
+Callback function that is used only for side effects, no results are
+returned.
+
+Initialize with a function that takes 2 arguments. The first argument
+should correspond to the data chunk and the second should correspond
+to the position of the first observation in the chunk.
+
 If the function returns \code{FALSE}, no more chunks will be read.
 }
 \item{IpumsDataFrameCallback}{
-Callback function that combines each result together into a data.frame at the end.
-Initialize the same was as IpumsSideEffectCallback, and the results from the
-function will be fed into a data.frame.
+Callback function that combines the results from each chunk into a
+single output \code{data.frame} (or similar) object.
+
+Initialize the same was as \code{IpumsSideEffectCallback}. The provided
+function should return an object that inherits from \code{data.frame}.
+
+The results from each application of the callback function will be
+added to the output \code{data.frame}.
 }
 \item{IpumsListCallback}{
-Callback function that returns a list, where each item is the result from a chunk.
-Initalize the same was as IpumsSideEffectCallback.
+Callback function that returns a list, where each element contains the
+result from a single chunk.
+
+Initialize the same was as \code{IpumsSideEffectCallback}.
 }
 \item{IpumsBiglmCallback}{
-Callback function that performs a regression on the full dataset, one chunk
-at a time using the biglm package. Initialize with arguments \code{model} (A
-formula of your model and \code{prep} a function like the other callback arguments
-that prepares the data before running the regression. Other arguments are
-passed to biglm.
+Callback function that performs a linear regression on a dataaset chunk
+by chunk using the biglm package.
+
+Initialize with a function that takes 2 arguments. The first argument
+should correspond to a \link[stats:formula]{formula} specifying the regression
+model. The second should correspond to a function resembling arguments to
+other callback functions that prepares the data before running the
+regression analysis. Other arguments are passed to biglm.
 }
 \item{IpumsChunkCallback}{
-(Only needed for advanced usage) Callback interface definition, all
-callback functions for IPUMS data should inherit from this class, and should
-use private method \code{ipumsify} on the data to handle implicit decimals
-and value labels.
+(Advanced) Callback interface definition. All
+callback functions for IPUMS data should inherit from this class, and
+should use private method \code{ipumsify} on the data to handle implicit
+decimals and value labels.
 }
 }
 }

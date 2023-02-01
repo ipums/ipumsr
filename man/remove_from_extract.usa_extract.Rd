@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{remove_from_extract.usa_extract}
 \alias{remove_from_extract.usa_extract}
-\title{Remove values from an existing IPUMS USA extract}
+\title{Remove values from an existing IPUMS USA extract definition}
 \usage{
 \method{remove_from_extract}{usa_extract}(extract, samples = NULL, variables = NULL, ...)
 }
@@ -19,19 +19,23 @@
 A modified \code{usa_extract} object
 }
 \description{
-Remove existing values from an IPUMS USA extract. All
+Remove existing values from an IPUMS USA extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
-To add new values to an IPUMS USA extract, see
-\code{\link[=add_to_extract.usa_extract]{add_to_extract()}}.
+To add new values to an IPUMS USA extract definition, see
+\code{\link[=add_to_extract.usa_extract]{add_to_extract()}}. When replacing values,
+it is best to first add new values using
+\code{add_to_extract()} before removing values with
+\code{remove_from_extract()}. This limits the possibility of producing a
+temporarily invalid extract specification.
 
-For an overview of ipumsr microdata API functionality, see
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
 If the supplied extract definition comes from
-a previously submitted extract, this function will reset the definition to an
-unsubmitted state.
+a previously submitted extract request, this function will reset the
+definition to an unsubmitted state.
 }
 \examples{
 usa_extract <- define_extract_usa(
@@ -46,30 +50,4 @@ revised_usa_extract <- remove_from_extract(
 )
 
 revised_usa_extract
-
 }
-\seealso{
-Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
-}
-\concept{ipums_api}

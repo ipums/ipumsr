@@ -46,8 +46,8 @@ csv unzipped from the download.}
 
 \item{data_layer}{For .zip extracts with multiple datasets, the name of the
 data to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Data layer must uniquely identify
-a dataset.}
+a \link[=selection_language]{tidyselect selection}. Data layer must uniquely
+identify a dataset.}
 
 \item{ddi_file}{(Optional) If the download is unzipped, path to the .xml file which
 provides usage and citation information for extract.}
@@ -95,16 +95,4 @@ Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 data <- read_terra_area("2553_bundle.zip")
 }
 }
-\seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_ipums_sp}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
-}
-\concept{ipums_read}
 \keyword{internal}

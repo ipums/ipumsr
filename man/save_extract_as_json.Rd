@@ -13,18 +13,17 @@ save_extract_as_json(extract, file)
 definition.}
 }
 \value{
-Invisibly returns the file path where the extract definition was
-written.
+The file path where the extract definition was written, invisibly
 }
 \description{
 Save an \code{\link[=ipums_extract-class]{ipums_extract}} to a JSON-formatted file.
-For an overview of ipumsr microdata API functionality, see
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \details{
-Note that this function only saves out the properties of an extract
-that are required to submit a new extract request, namely, the description,
-data structure, data format, samples, variables, and collection.
+Note that the output JSON file will only contain the extract
+parameters required to submit a new extract request. Ancillary fields,
+like \code{number}, \code{status}, etc. will not be included.
 }
 \examples{
 my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
@@ -35,26 +34,20 @@ save_extract_as_json(my_extract, file = extract_json_path)
 copy_of_my_extract <- define_extract_from_json(extract_json_path)
 
 identical(my_extract, copy_of_my_extract)
-
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},

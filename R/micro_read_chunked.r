@@ -3,33 +3,89 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-
-#' Read data from an IPUMS extract (in chunks)
+#' Read data from an IPUMS extract by chunk
 #'
-#' Reads a dataset downloaded from the IPUMS extract system, but does
-#' so by reading a chunk, then applying your code to that chunk and
-#' then continuing, which can allow you to deal with data that is
-#' too large to store in your computer's RAM all at once.
+#' @description
+#' Read a microdata dataset downloaded from the IPUMS extract system in chunks.
+#'
+#' Use these functions to read a file that is too large to store in memory
+#' at a single time. The file is processed in chunks of a given size, with a
+#' provided callback function applied to each chunk.
+#'
+#' See [read_ipums_micro_yield()] for an alternate approach to reading large
+#' files.
+#'
+#' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
+#' in their handling of extracts that contain multiple record types.
+#' See details.
+#'
+#' @details
+#' IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
+#' file and a fixed-width data file. The DDI file contains metadata about the
+#' associated data file which are used to parse its data correctly upon load.
+#'
+#' Data are loaded with value label and variable label information
+#' attached to each column, where appropriate. See
+#' [`haven::labelled()`][haven::labelled()].
+#'
+#' ## Data structures
+#'
+#' Files from IPUMS projects that contain data for multiple types of records
+#' (e.g. household records and person records) may be either rectangular
+#' or hierarchical.
+#'
+#' Rectangular data are transformed such that each row of data
+#' represents only one type of record. For instance, each row will represent
+#' a person record, and all household-level information for that person will
+#' be included in the same row.
+#'
+#' Hierarchical data have records of
+#' different types interspersed in a single file. For instance, a household
+#' record will be included in its own row followed by the person records
+#' associated with that household.
+#'
+#' Hierarchical data can be read in two different formats:
+#' - `read_ipums_micro_chunked()` reads each chunk of data into a
+#'   [`tibble`][tibble::tbl_df-class] where each row represents a single record,
+#'   regardless of record type. Variables that do not apply to a particular
+#'   record type will be filled with `NA` in rows of that record type. For
+#'   instance, a person-specific variable will be missing in all rows
+#'   associated with household records. The provided `callback` function should
+#'   therefore operate on a `tibble` object.
+#' - `read_ipums_micro_list_chunked()` reads each chunk of data into a list of
+#'   `tibble` objects, where each list element contains
+#'   only one record type. Each list element is named with its corresponding
+#'   record type. The provided `callback` function should therefore operate
+#'   on a list object.
+#'
+#' Callback functions should include both a data and position argument. See
+#' examples.
 #'
 #' @inheritParams read_ipums_micro
-#' @param callback An \code{\link{ipums_callback}} object, or a function
-#'   that will be converted to an IpumsSideEffectCallback object.
-#' @param chunk_size An integer indicating how many observations to
-#'   read in per chunk (defaults to 10,000). Setting this higher
-#'   uses more RAM, but will usually be faster.
-#' @param lower_vars Only if reading a DDI from a file, a logical indicating
-#'   whether to convert variable names to lowercase (default is FALSE, in line
-#'   with IPUMS conventions). Note that this argument will be ignored if
-#'   argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
-#'   See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
-#'   when reading in the DDI. Also note that if reading in chunks from a .csv or
+#' @param callback An [ipums_callback] object, or a function
+#'   that will be converted to an `IpumsSideEffectCallback` object.
+#' @param chunk_size Integer number of observations to
+#'   read per chunk. Higher values use more RAM, but
+#'   typically result in faster processing. Defaults to 10,000.
+#' @param lower_vars If reading a DDI from a file,
+#'   a logical indicating whether to convert variable names to lowercase.
+#'   Defaults to `FALSE` for consistency with IPUMS conventions.
+#'
+#'   This argument will be ignored if argument `ddi` is
+#'   an [ipums_ddi] object. Use [read_ipums_ddi()] to convert variable
+#'   names to lowercase when reading a DDI file.
+#'
+#'   Note that if reading in chunks from a .csv or
 #'   .csv.gz file, the callback function will be called *before* variable names
 #'   are converted to lowercase, and thus should reference uppercase variable
 #'   names.
 #'
-#' @return Depends on the callback object
+#' @return Depends on the provided callback object. See [ipums_callback].
+#'
 #' @export
+#'
 #' @family ipums_read
+#'
 #' @examples
 #' # Select Minnesotan cases from CPS example (Note you can also accomplish
 #' # this and avoid having to even download a huge file using the "Select Cases"

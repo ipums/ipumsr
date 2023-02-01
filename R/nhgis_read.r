@@ -3,37 +3,43 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read data from an NHGIS extract
+#' Read tabular data from an NHGIS extract
 #'
 #' @description
-#' Load a tabular data source downloaded from the NHGIS extract system.
+#' Read a csv or fixed-width (.dat) file downloaded from the NHGIS extract
+#' system.
 #'
-#' To load spatial data sources from NHGIS extracts, see [`read_nhgis_sf`].
+#' To read spatial data from an NHGIS extract, use [read_ipums_sf()].
 #'
-#' @param data_file Path to the data file, a .zip archive from an NHGIS
+#' @details
+#' The .do file that is included when downloading an NHGIS fixed-width
+#' extract contains important metadata about the data file's column
+#' positions and implicit decimals. `read_nhgis()` uses this information to
+#' parse and recode the fixed-width data appropriately. Therefore,
+#' while possible, it is not recommended to read fixed-width files without a
+#' corresponding .do file.
+#'
+#' If you no longer have access to the .do file, consider resubmitting the
+#' extract that produced the data.
+#'
+#' @param data_file Path to a data file, a .zip archive from an NHGIS
 #'   extract, or a directory containing the data file.
-#' @param file_select If `data_file` contains multiple files, an expression
-#'   identifying the files to load. Accepts a character vector specifying the
-#'   file name, [`dplyr_select_style`] conventions, or an index position. This
-#'   must uniquely identify a dataset.
-#' @param var_attrs Variable attributes to add from the codebook, defaults to
-#'   adding all (val_labels, var_label and var_desc). See
+#' @param file_select If `data_file` is a .zip archive or directory that
+#'   contains multiple files, an expression identifying the file to load.
+#'   Accepts a character vector specifying the
+#'   file name, a [tidyselect selection][selection_language], or an index
+#'   position. This must uniquely identify a file.
+#' @param var_attrs Variable attributes to add from the codebook. Defaults to
+#'   all available attributes (`val_labels`, `var_label` and `var_desc`). See
 #'   [`set_ipums_var_attributes()`] for more details.
 #' @param do_file For fixed-width files, path to the .do file associated with
 #'   the provided `data_file`. The .do file contains the specifications that
-#'   indicate how to parse the fixed-width file to be loaded.
-#'   If `NULL`, looks in the directory of the .dat file to be loaded for a .do
+#'   indicate how to parse the data file.
+#'
+#'   By default, looks in the same directory as `data_file` for a .do
 #'   file with the same name. If `FALSE` or if the .do file cannot be found,
-#'   the .dat file will be parsed by the
-#'   values provided to `col_positions` (see [`read_fwf()`][readr::read_fwf]).
-#'
-#'   Note that without a corresponding .do file, some columns may
-#'   include implicit decimal values. When working with fixed-width data,
-#'   consult the provided .do file if you are concerned that columns are not
-#'   being parsed and recoded correctly.
-#'
-#'   If you no longer have access to the .do file for this `data_file`, consider
-#'   resubmitting the extract that produced the data.
+#'   the .dat file will be parsed by the values provided to `col_positions`
+#'   in [`read_fwf()`][readr::read_fwf]. See details.
 #' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
 #'   files) indicating the type of file to search for in the path provided to
 #'   `data_file`. If `NULL`, determines the file type automatically based on
@@ -52,10 +58,15 @@
 #'   included in the `"label"` attribute of each data column (if `var_attrs`
 #'   includes `"var_label"`), and is therefore not usually needed.
 #' @param col_names Either `TRUE`, `FALSE` or a character vector of column
-#'   names. This argument behaves similarly to the `col_names`
-#'   argument of [`readr::read_csv()`][readr::read_csv]. However, unlike
-#'   `readr`, the first row of of the input will always be removed from the
-#'   data, even if `col_names` is `FALSE` or a character vector.
+#'   names.
+#'
+#'   If `TRUE`, use the default column names included in NHGIS csv files. If
+#'   `FALSE` or a character vector, replace the default column names with the
+#'   provided names or default placeholders.
+#'
+#'   Note that unlike [`readr::read_csv()`][readr::read_csv], the first row
+#'   of the input (which contains NHGIS default headers) will always be removed
+#'   from the data.
 #' @param locale Controls defaults that vary from place to place. If `NULL`,
 #'   uses a locale designed to provide appropriate defaults for NHGIS files;
 #'   altering the locale may cause problems with data parsing.
@@ -69,14 +80,15 @@
 #' @param data_layer `r lifecycle::badge("deprecated")` Please
 #'   use `file_select` instead.
 #'
-#' @return A [`tibble`][tibble::tbl_df-class] of the data found in `data_file`.
+#' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
+#'   `data_file`
+#'
+#' @family ipums_read
+#' @export
 #'
 #' @examples
 #' csv_file <- ipums_example("nhgis0972_csv.zip")
 #' data_only <- read_nhgis(csv_file)
-#'
-#' @family ipums_read
-#' @export
 read_nhgis <- function(data_file,
                        file_select = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
@@ -84,9 +96,9 @@ read_nhgis <- function(data_file,
                        file_type = NULL,
                        na = NULL,
                        remove_extra_header = TRUE,
-                       show_conditions = TRUE,
                        col_names = TRUE,
                        locale = NULL,
+                       show_conditions = TRUE,
                        ...,
                        data_layer = deprecated()) {
 
@@ -224,20 +236,43 @@ read_nhgis <- function(data_file,
 }
 
 
-#' Read data from an NHGIS extract with both spatial and tabular data
+#' Read and combine tabular and spatial data from an NHGIS extract
 #'
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Please load spatial and tabular data separately using [`read_ipums_sf()`] and
-#' [`read_nhgis()`], respectively. Splitting the use of these functions allows
-#' for more control over the data loading and joining process.
+#' The simultaneous loading of tabular and spatial data has been deprecated.
+#' Splitting this functionality allows for more control over the data reading
+#' and joining process.
 #'
-#' To join spatial and tabular data, use an
+#' Please read spatial and tabular data separately using [`read_ipums_sf()`] and
+#' [`read_nhgis()`]. To join spatial and tabular data, use an
 #' [ipums_shape_*_join][ipums_shape_left_join] function.
 #'
 #' To convert a `SpatialPolygonsDataFrame` or other `sp` object to an `sf`
 #' object, use [`sf::as_Spatial()`].
+#'
+#' @param data_file  Path to a data file, a .zip archive from an NHGIS
+#'   extract, or a directory containing the data file.
+#' @param shape_file Path to a .shp file, a .zip archive from an NHGIS
+#'   extract, or a directory containing the .shp file.
+#' @param data_layer If `data_file` is a .zip archive or directory that
+#'   contains multiple files, an expression identifying the file to load.
+#'   Accepts a character vector specifying the
+#'   file name, a [tidyselect selection][selection_language], or an index
+#'   position.
+#' @param shape_layer If `shape_file` is a .zip archive or directory that
+#'   contains multiple files, an expression identifying the file to load.
+#'   Accepts a character vector specifying the
+#'   file name, a [tidyselect selection][selection_language], or an index
+#'   position.
+#' @param shape_encoding The text encoding to use when reading the shape file.
+#'   Defaults to `"latin1"`, which should be appropriate for most files.
+#' @param verbose Logical indicating whether to print progress information to
+#'   the console.
+#' @param var_attrs Variable attributes to add from the codebook. Defaults to
+#'   all available attributes (`val_labels`, `var_label` and `var_desc`). See
+#'   [`set_ipums_var_attributes()`] for more details.
 #'
 #' @rdname read_nhgis_sf
 #'

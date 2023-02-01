@@ -12,27 +12,27 @@ read_ipums_ddi(
 )
 }
 \arguments{
-\item{ddi_file}{Path to the DDI file to be loaded. This can be a .zip
+\item{ddi_file}{Path to the DDI file to be read. This can be a .zip
 archive, a directory containing the DDI file, or the .xml file itself.}
 
 \item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
-multiple DDI files, an expression identifying the .xml file to load.
-Accepts a character string specifying the file name,
-\code{\link{dplyr_select_style}} conventions, or an index position of the file.
+multiple DDI files, an expression identifying the .xml file to read.
+Accepts a character string specifying the file name, a
+\link[=selection_language]{tidyselect selection}, or an index position.
 Ignored if \code{ddi_file} is the path to a single .xml file.}
 
-\item{lower_vars}{Logical indicating whether to convert variable names
-to lowercase (default is FALSE, in line with IPUMS conventions)}
+\item{lower_vars}{Logical indicating whether to convert variable names to
+lowercase. Defaults to \code{FALSE} for consistency with IPUMS conventions.}
 
 \item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
 instead.}
 }
 \value{
-An \code{ipums_ddi} object with metadata information.
+An \link{ipums_ddi} object with metadata information.
 }
 \description{
-Reads the metadata about an IPUMS extract from a DDI file into R.
-Includes information about variable and value labels, terms of
+Reads the metadata about an IPUMS extract from a DDI file into an \link{ipums_ddi}
+object which includes information about variable and value labels, terms of
 usage for the data and positions for the fixed-width file.
 }
 \examples{
@@ -40,4 +40,14 @@ usage for the data and positions for the fixed-width file.
 ddi_file <- ipums_example("cps_00006.xml")
 ddi <- read_ipums_ddi(ddi_file)
 }
-\concept{ipums_metadata}
+\seealso{
+Other ipums_read: 
+\code{\link{ipums_list_files}()},
+\code{\link{read_ipums_micro_chunked}()},
+\code{\link{read_ipums_micro_yield}()},
+\code{\link{read_ipums_micro}()},
+\code{\link{read_ipums_sf}()},
+\code{\link{read_nhgis_codebook}()},
+\code{\link{read_nhgis}()}
+}
+\concept{ipums_read}

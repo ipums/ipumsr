@@ -26,3 +26,4 @@ Functionality for accessing recent extract information has been moved to
 
 Please use that function instead.
 }
+\keyword{internal}

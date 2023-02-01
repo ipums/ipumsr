@@ -3,7 +3,7 @@
 \name{read_nhgis_sf}
 \alias{read_nhgis_sf}
 \alias{read_nhgis_sp}
-\title{Read data from an NHGIS extract with both spatial and tabular data}
+\title{Read and combine tabular and spatial data from an NHGIS extract}
 \usage{
 read_nhgis_sf(
   data_file,
@@ -25,14 +25,44 @@ read_nhgis_sp(
   var_attrs = c("val_labels", "var_label", "var_desc")
 )
 }
+\arguments{
+\item{data_file}{Path to a data file, a .zip archive from an NHGIS
+extract, or a directory containing the data file.}
+
+\item{shape_file}{Path to a .shp file, a .zip archive from an NHGIS
+extract, or a directory containing the .shp file.}
+
+\item{data_layer}{If \code{data_file} is a .zip archive or directory that
+contains multiple files, an expression identifying the file to load.
+Accepts a character vector specifying the
+file name, a \link[=selection_language]{tidyselect selection}, or an index
+position.}
+
+\item{shape_layer}{If \code{shape_file} is a .zip archive or directory that
+contains multiple files, an expression identifying the file to load.
+Accepts a character vector specifying the
+file name, a \link[=selection_language]{tidyselect selection}, or an index
+position.}
+
+\item{shape_encoding}{The text encoding to use when reading the shape file.
+Defaults to \code{"latin1"}, which should be appropriate for most files.}
+
+\item{verbose}{Logical indicating whether to print progress information to
+the console.}
+
+\item{var_attrs}{Variable attributes to add from the codebook. Defaults to
+all available attributes (\code{val_labels}, \code{var_label} and \code{var_desc}). See
+\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Please load spatial and tabular data separately using \code{\link[=read_ipums_sf]{read_ipums_sf()}} and
-\code{\link[=read_nhgis]{read_nhgis()}}, respectively. Splitting the use of these functions allows
-for more control over the data loading and joining process.
+The simultaneous loading of tabular and spatial data has been deprecated.
+Splitting this functionality allows for more control over the data reading
+and joining process.
 
-To join spatial and tabular data, use an
+Please read spatial and tabular data separately using \code{\link[=read_ipums_sf]{read_ipums_sf()}} and
+\code{\link[=read_nhgis]{read_nhgis()}}. To join spatial and tabular data, use an
 \link[=ipums_shape_left_join]{ipums_shape_*_join} function.
 
 To convert a \code{SpatialPolygonsDataFrame} or other \code{sp} object to an \code{sf}

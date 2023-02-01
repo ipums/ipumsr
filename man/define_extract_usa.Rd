@@ -17,52 +17,58 @@ define_extract_usa(
 \item{description}{Description of the extract.}
 
 \item{samples}{Character vector of samples to include in the extract. Samples
-should be specified using the
+should be specified using IPUMS USA
 \href{https://usa.ipums.org/usa-action/samples/sample_ids}{sample ID values}.}
 
 \item{variables}{Character vector of variables to include in the extract.}
 
-\item{data_format}{The desired format of the extract data file (one of
-\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}).}
+\item{data_format}{The desired format of the extract data file. One of
+\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
 
-\item{data_structure}{Currently, this must be \code{"rectangular"}, which is also
-the default. In the future, the API will also support \code{"hierarchical"}
-extracts.}
+\item{data_structure}{The desired structure of the extract data.
 
-\item{rectangular_on}{Currently, this must be \code{"P"}, indicating that the
-extract will be rectangularized on person records. In the future, the API
-will also support household-only extracts (\code{rectangular_on = "H"}).}
+\code{"rectangular"} provides person records with all requested household
+information attached to respective household members.
+
+\code{"hierarchical"} provides household records followed by person records.
+
+Currently, only \code{"rectangular"} extracts are supported.}
+
+\item{rectangular_on}{Records on which to rectangularize. \code{"P"}
+rectangularizes on person records. \code{"H"} provides household-only records.
+
+Currently, only \code{"P"} is supported.}
 }
 \value{
 An object of class \code{\link[=ipums_extract-class]{usa_extract}}
 containing the extract definition.
 }
 \description{
-Define an IPUMS USA extract request to be submitted via the IPUMS microdata
-extract API. For an overview of ipumsr microdata API functionality, see
+Define an IPUMS USA extract request to be submitted via the IPUMS
+extract API. For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013 ACS Data",
+  samples = "us2013a",
+  variables = "YEAR"
+)
 
+my_extract
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

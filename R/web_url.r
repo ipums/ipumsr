@@ -8,7 +8,7 @@
 #' Takes a DDI (or you can specify a project directly) and
 #' a variable name, and makes a best guess at the URL for
 #' the variable's page on the IPUMS website. Note that
-#' NHGIS and TerraPop do not have accessible pages for
+#' NHGIS does not have accessible pages for
 #' variables.
 #'
 #' Because some variables are constructed during the extract
@@ -19,8 +19,7 @@
 #'@param project If not using a DDI (or object with a project attribute)
 #' A name of an IPUMS project, one of:
 #'   "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
-#'   "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
-#'   or "IPUMS Terra"
+#'   "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS"
 #' @param launch If \code{TRUE}, launch the website.
 #' @param verbose If \code{TRUE}, message user if no variable specific websites are available
 #' @param var_label Sometimes the variable label is useful for finding the correct URL. Only needed

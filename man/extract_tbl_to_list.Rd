@@ -13,7 +13,8 @@ the specifications for one or more \code{\link[=ipums_extract-class]{ipums_extra
 objects.}
 
 \item{validate}{Logical value indicating whether to
-check that each row of \code{extract_tbl} contains a valid and complete extract
+check that each of the output \code{ipums_extract}
+objects contains a valid and complete extract
 definition. Defaults to \code{TRUE}.}
 }
 \value{
@@ -23,11 +24,13 @@ number, which is contained in the \code{number} column of \code{extract_tbl}.
 }
 \description{
 Convert a \code{\link[tibble:tbl_df-class]{tibble}} containing the specifications for
-one or more extract definitions (obtained by setting \code{table = TRUE} in
-\code{\link[=get_extract_info]{get_extract_info()}}) to a list of
+one or more extract definitions to a list of
 \code{\link[=ipums_extract-class]{ipums_extract}} objects.
 
-For an overview of ipumsr microdata API
+Use \code{\link[=get_extract_info]{get_extract_info()}} with \code{table = TRUE} to obtain extract
+information in \code{tibble} format.
+
+For an overview of ipumsr API
 functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -57,21 +60,16 @@ submitted_revised_income_extract <- submit_extract(revised_income_extract)
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

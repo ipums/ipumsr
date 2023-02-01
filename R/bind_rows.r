@@ -3,15 +3,39 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Bind rows together, but preserve labelled class attributes
+#' Bind multiple data frames by row, preserving labelled attributes
 #'
-#' @param ... Either data.frames or list of data.frames
-#' @param .id Data frame identifier, when arguments are named (or are named lists
-#'   of data.frames), will make a new column with this name that has the original
-#'   names.
+#' @description
+#' Analogous to [`dplyr::bind_rows()`][dplyr::bind_rows], but preserves the
+#' labelled attributes provided with IPUMS data.
 #'
-#' @return A data.frame
+#' @inheritParams dplyr::bind_rows
+#' @param ... Data frames or [`tibbles`][tibble::tbl_df-class] to combine.
+#'   Each argument can be a data frame or a
+#'   list of data frames. When binding, columns are matched by name. Missing
+#'   columns will be filled with `NA`.
+#'
+#' @return Returns the same type as the first input. Either a `data.frame`,
+#'   `tbl_df`, or `grouped_df`
+#'
 #' @export
+#'
+#' @examples
+#' file <- ipums_example("nhgis0712_csv.zip")
+#'
+#' d1 <- read_nhgis(file, file_select = 1)
+#' d2 <- read_nhgis(file, file_select = 2)
+#'
+#' # Variables have associated label attributes:
+#' attributes(d1$PMSAA)
+#'
+#' # Data sources are combined and labels are preserved
+#' d <- ipums_bind_rows(d1, d2)
+#' attributes(d$PMSAA)
+#'
+#' # dplyr bind_rows drops labels:
+#' d <- dplyr::bind_rows(d1, d2)
+#' attributes(d$PMSAA)
 ipums_bind_rows <- function(..., .id = NULL) {
   # TODO: Rewrite in C++?
   # Definitely not exactly the same logic as dplyr, but should cover most cases

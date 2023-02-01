@@ -22,8 +22,7 @@ ipums_website(
 \item{project}{If not using a DDI (or object with a project attribute)
 A name of an IPUMS project, one of:
 "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
-"ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
-or "IPUMS Terra"}
+"ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS"}
 
 \item{launch}{If \code{TRUE}, launch the website.}
 
@@ -42,7 +41,7 @@ The url to the page on ipums.org (silently if launch is \code{TRUE})
 Takes a DDI (or you can specify a project directly) and
 a variable name, and makes a best guess at the URL for
 the variable's page on the IPUMS website. Note that
-NHGIS and TerraPop do not have accessible pages for
+NHGIS does not have accessible pages for
 variables.
 }
 \details{

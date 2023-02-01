@@ -12,12 +12,10 @@ submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 
 If resubmitting an old request, one of:
 \itemize{
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for the collection specified by the
-\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
+\item The extract number for your default IPUMS collection. See
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }}
 
@@ -31,8 +29,10 @@ extract.
 }
 \description{
 Given an \code{\link[=ipums_extract-class]{ipums_extract}} object, submit an extract
-request via the IPUMS API, and return a modified copy of the extract object
-with the newly-assigned extract number. For an overview of ipumsr microdata API
+request via the IPUMS API and return a modified copy of the extract object
+with the newly-assigned extract request number.
+
+For an overview of ipumsr API
 functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -56,26 +56,20 @@ is_extract_ready(submitted_extract) # returns TRUE or FALSE
 # Or have R check periodically until the extract is ready
 downloadable_extract <- wait_for_extract(submitted_extract)
 }
-
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},

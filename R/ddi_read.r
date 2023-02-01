@@ -3,32 +3,81 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
+#' `ipums_ddi` class
+#'
+#' @description
+#' The `ipums_ddi` class provides a data structure for storing the information
+#' contained in the DDI (.xml) files provided with IPUMS microdata extracts.
+#' This is primarily used when loading IPUMS data, but can also be used
+#' to explore metadata for the data in an extract.
+#'
+#' The DDI contains metadata about the extract files themselves, including
+#' file name, file path, and extract date as well as information about variables
+#' present in the data, including variable names, descriptions, data types,
+#' implied decimals, and positions in the fixed-width files.
+#'
+#' This information is used when loading IPUMS data to correctly parse the
+#' fixed width file format and attach additional variable metadata to the
+#' data object once loaded into R.
+#'
+#' Variable metadata for NHGIS extracts can also be stored in
+#' `ipums_ddi` objects, even though these metadata are stored in "codebook"
+#' (.txt) files, not .xml files.
+#'
+#' ## Creating an `ipums_ddi` object
+#'
+#' - To create an `ipums_ddi` object from an IPUMS microdata extract, use
+#' [read_ipums_ddi()].
+#' - To create an `ipums_ddi` object from an IPUMS NHGIS extract, use
+#' [read_nhgis_codebook()]
+#'
+#' ## Loading data
+#'
+#' - To load the data associated with an `ipums_ddi` object, use
+#' [read_ipums_micro()], [read_ipums_micro_chunked()], or
+#' [read_ipums_micro_yield()]
+#'
+#' ## View metadata
+#'
+#' - Use [ipums_var_info()] to explore variable-level metadata for the variables
+#' included in a dataset.
+#' - Use [ipums_file_info()] to explore file-level metadata for an extract.
+#'
+#' @name ipums_ddi-class
+#'
+#' @keywords internal
+#'
+#' @aliases ipums_ddi
+NULL
 
 #' Read metadata about an IPUMS extract from a DDI (.xml) file
 #'
-#' Reads the metadata about an IPUMS extract from a DDI file into R.
-#' Includes information about variable and value labels, terms of
+#' Reads the metadata about an IPUMS extract from a DDI file into an [ipums_ddi]
+#' object which includes information about variable and value labels, terms of
 #' usage for the data and positions for the fixed-width file.
 #'
-#' @param ddi_file Path to the DDI file to be loaded. This can be a .zip
+#' @param ddi_file Path to the DDI file to be read. This can be a .zip
 #'   archive, a directory containing the DDI file, or the .xml file itself.
 #' @param file_select If `ddi_file` is a .zip archive or directory that contains
-#'   multiple DDI files, an expression identifying the .xml file to load.
-#'   Accepts a character string specifying the file name,
-#'   [`dplyr_select_style`] conventions, or an index position of the file.
+#'   multiple DDI files, an expression identifying the .xml file to read.
+#'   Accepts a character string specifying the file name, a
+#'   [tidyselect selection][selection_language], or an index position.
 #'   Ignored if `ddi_file` is the path to a single .xml file.
-#' @param lower_vars Logical indicating whether to convert variable names
-#'   to lowercase (default is FALSE, in line with IPUMS conventions)
+#' @param lower_vars Logical indicating whether to convert variable names to
+#'   lowercase. Defaults to `FALSE` for consistency with IPUMS conventions.
 #' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
 #'   instead.
 #'
-#' @return An \code{ipums_ddi} object with metadata information.
+#' @return An [ipums_ddi] object with metadata information.
+#'
+#' @family ipums_read
+#'
+#' @export
+#'
 #' @examples
 #' # Example extract DDI
 #' ddi_file <- ipums_example("cps_00006.xml")
 #' ddi <- read_ipums_ddi(ddi_file)
-#' @family ipums_metadata
-#' @export
 read_ipums_ddi <- function(ddi_file,
                            file_select = NULL,
                            lower_vars = FALSE,
@@ -283,30 +332,25 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
   )
 }
 
-#' Read metadata from an NHGIS extract codebook file
+#' Read metadata from an NHGIS codebook (.txt) file
 #'
 #' @description
-#' NHGIS extracts include a .txt codebook file with metadata about
-#' the contents of the extract. This loads the information contained in this
-#' file into a structured format.
+#' Read the variable metadata contained in the .txt codebook file included with
+#' NHGIS extracts into an [ipums_ddi] object.
 #'
-#' @details
-#' This function includes functionality that previously was contained in
-#' `read_ipums_codebook()`, which supported the loading of codebooks
-#' for both NHGIS and IPUMS Terra extracts. Support for IPUMS Terra has been
-#' discontinued. `read_ipums_codebook()` has been deprecated and will be
-#' removed in a future release.
+#' Because NHGIS variable metadata do not
+#' adhere to all the standards of microdata DDI files, some of the `ipums_ddi`
+#' fields will not be populated.
 #'
-#' @param cb_file Path to the codebook file to be loaded. This can be a .zip
-#'   archive as provided by the extract system or [`download_extract()`],
-#'   a directory containing the codebook, or the codebook .txt file itself.
+#' @param cb_file Path to a codebook (.txt) file, a .zip
+#'   archive from an NHGIS extract, or a directory containing the codebook file.
 #' @param file_select If `cb_file` is a .zip archive or directory that contains
-#'   multiple codebook files, an expression identifying the file to load.
-#'   Accepts a character string specifying the file name,
-#'   [`dplyr_select_style`] conventions, or an index position of the file.
-#'   Ignored if `ddi_file` is the path to a single codebook file.
-#' @param raw If `TRUE`, read lines of the provided `cb_file` instead of
-#'   summarizing variable information in an `ipums_ddi` object. Defaults to
+#'   multiple codebook files, an expression identifying the file to read.
+#'   Accepts a character string specifying the file name, a
+#'   [tidyselect selection][selection_language], or an index position of the
+#'   file. Ignored if `cb_file` is the path to a single codebook file.
+#' @param raw If `TRUE`, return a character vector containing the lines
+#'   of `cb_file` rather than an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
 #' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
 #'   instead.
@@ -318,6 +362,11 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #'   If `raw = TRUE`, a character vector with one element for each
 #'   line of the given `cb_file`.
 #'
+#' @rdname ipums_codebook
+#'
+#' @export
+#' @family ipums_read
+#'
 #' @examples
 #' # Example NHGIS extract
 #' nhgis_file <- ipums_example("nhgis0972_csv.zip")
@@ -325,10 +374,6 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #'
 #' # Summary of variables included in the extract:
 #' codebook$var_info
-#'
-#' @rdname ipums_codebook
-#'
-#' @export
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE,

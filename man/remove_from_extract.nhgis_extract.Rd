@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{remove_from_extract.nhgis_extract}
 \alias{remove_from_extract.nhgis_extract}
-\title{Remove values from an existing NHGIS extract}
+\title{Remove values from an existing NHGIS extract definition}
 \usage{
 \method{remove_from_extract}{nhgis_extract}(
   extract,
@@ -22,35 +22,47 @@
 
 \item{datasets}{Character vector of
 \link[=https://www.nhgis.org/overview-nhgis-datasets]{datasets} to remove from
-the extract. All dataset subfields associated with the specified
-\code{datasets} will also be removed. See details.}
+the extract definition. All \code{data_tables}, \code{geog_levels}, \code{years}, and
+\code{breakdown_values} associated with the specified
+\code{datasets} will also be removed.}
 
-\item{data_tables}{Summary tables to remove from the specified \code{datasets}.
+\item{data_tables}{Summary tables to remove from the \code{datasets} in the
+extract definition.
 
-Can be provided as a vector or list; see details for syntax options.}
+If a vector, values are removed from all \code{datasets} in the extract
+definition. If a named list, values are removed from the \code{datasets}
+indicated by name in the list. See details.}
 
 \item{time_series_tables}{Character vector of
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
-to remove from the extract. All time series table subfields associated
-with the specified \code{time_series_tables} will also be removed. See details.}
+to remove from the extract definition. All \code{geog_levels}
+associated  with the specified \code{time_series_tables} will also be removed.}
 
-\item{geog_levels}{Geographic levels to remove from the extract.
+\item{geog_levels}{Geographic levels to remove from the \code{datasets} and/or
+\code{time_series_tables} in the extract definition
 
-Can be provided as a vector or list; see details for syntax options.}
+If a vector, values are removed from all \code{datasets} and
+\code{time_series_tables} in the extract
+definition. If a named list, values are removed from the \code{datasets} and/or
+\code{time_series_tables} indicated by name in the list. See details.}
 
-\item{years}{Years to remove from the extract.
+\item{years}{Years to remove from the \code{datasets} in the extract definition.
 
-Can be provided as a vector or list; see details for syntax options.}
+Uses the same logic as \code{data_tables} when determining which \code{datasets} to
+modify. See details.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{breakdown values}
-to remove from the extract.
+to remove from the \code{datasets} in the extract definition.
 
-Can be provided as a vector or a list; see details for syntax options.}
+Uses the same logic as \code{data_tables} when determining which datasets to
+modify. See details.}
 
-\item{geographic_extents}{Geographic extents to remove from the extract.}
+\item{geographic_extents}{Geographic extents to remove from the extract
+definition.}
 
 \item{shapefiles}{Character vector of
-\href{https://www.nhgis.org/gis-files}{shapefiles} to remove from the extract.}
+\href{https://www.nhgis.org/gis-files}{shapefiles} to remove from the extract
+definition.}
 
 \item{...}{Ignored}
 }
@@ -58,10 +70,10 @@ Can be provided as a vector or a list; see details for syntax options.}
 A modified \code{nhgis_extract} object
 }
 \description{
-Remove existing values from an IPUMS NHGIS extract. All
+Remove existing values from an IPUMS NHGIS extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
-To add new values to an IPUMS NHGIS extract, see
+To add new values to an IPUMS NHGIS extract definition, see
 \code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}. When replacing values,
 it is best to first add new values using
 \code{add_to_extract()} before removing values with
@@ -74,59 +86,47 @@ more information on how values passed to dataset and time series table
 subfields are interpreted.
 }
 \details{
-NHGIS extracts may contain multiple datasets or time series tables. Each
-dataset or time series table is associated with several subfields that apply
-only to that particular dataset or time series table.
+NHGIS extract definitions may contain multiple \code{datasets} or
+\code{time_series_tables.} Each dataset or time series table is associated with
+several subfields that apply only to that particular dataset or time series
+table.
 
-The following arguments are applied to an extract's \code{datasets}:
+The following arguments are removed from the extract definition's \code{datasets}:
 \itemize{
 \item \code{data_tables}
 \item \code{years}
 \item \code{breakdown_values}
 }
 
-The following arguments are applied to an extract's \code{datasets} and
-\code{time_series_tables}:
+The following arguments are removed from the extract definition's \code{datasets}
+\emph{and} \code{time_series_tables}:
 \itemize{
 \item \code{geog_levels}
 }
 
-There are three ways the values passed to these arguments can be provided:
-\itemize{
-\item If values are passed as a \strong{vector}, they will be
-removed from all of the \code{datasets} and/or \code{time_series_tables}
-that exist in the extract.
-\item If values are passed as an \strong{unnamed list}, they will be
-matched by index to the \code{datasets} and/or \code{time_series_table} that
-exist in the extract and removed from those \code{datasets} and/or
-\code{time_series_tables}. For instance, the first element will be associated
-with the first dataset in the extract, the second element with the second
-dataset, etc.
-\itemize{
-\item \code{geog_levels} applies to both \code{datasets} and \code{time_series_tables}.
-When matching by index, the provided \code{geog_levels} will be matched
-first to the extract's \code{datasets}, then to the extract's
-\code{time_series_tables}.
-}
-\item If values are passed as a \strong{named list} or \strong{named vector}, they
-will be matched to (and removed from) the \code{datasets} and/or
-\code{time_series_tables} by name.
-}
+To remove the values of these arguments from \emph{all} of the \code{datasets} and/or
+\code{time_series_tables} in the extract definition, pass the values as a vector.
 
-Importantly, subfields are modified \emph{after} the removal of any \code{datasets}
+To remove the values of these arguments to \emph{specific} \code{datasets} and/or
+\code{time_series_tables} in the extract definition, pass the values as a named
+list. In this case, names should correspond to the \code{datasets} and/or
+\code{time_series_tables} and their associated values will only be removed from
+the indicated dataset or time series table.
+
+Note that subfields are modified \emph{after} the removal of any \code{datasets}
 and \code{time_series_tables} specified in \code{datasets} or
-\code{time_series_tables} arguments. This can cause confusion if providing
-unnamed lists to subfield arguments, as the index position of each dataset
-and/or time series table in the extract may shift after removing the
-provided \code{datasets} and \code{time_series_tables}. It is safest to use the named
-list syntax for subfields to avoid this ambiguity.
+\code{time_series_tables} arguments.
+
+Thus, while while it is possible to match
+elements to \code{datasets} and/or
+\code{time_series_tables} by index by providing an unnamed list, we recommend
+using names to explicitly specify the values that should be removed from each
+of the request's \code{datasets} and \code{time_series_tables}.
 
 Any extract fields that are rendered irrelevant after modifying the extract
 will be automatically removed. (For instance, if all \code{time_series_tables}
 are removed from an extract, \code{tst_layout} will also be
-removed.) Thus, it is not necessary to explicitly remove these values. To
-replace the existing values for these fields, see
-\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}
+removed.) Thus, it is not necessary to explicitly remove these values.
 
 Note that it is possible to produce invalid extracts using
 \code{remove_from_extract()} (for instance, an extract that includes a
@@ -138,11 +138,10 @@ then \code{remove_from_extract()}, as this will avoid the possibility
 of temporarily producing an invalid extract.
 
 If the supplied extract definition comes from
-a previously submitted extract, this function will reset the definition to an
-unsubmitted state.
+a previously submitted extract request, this function will reset the
+definition to an unsubmitted state.
 }
 \examples{
-
 library(dplyr)
 
 extract <- define_extract_nhgis(
@@ -183,5 +182,4 @@ extract2 \%>\%
   remove_from_extract(
     geog_levels = list(CW3 = c("county", "state"))
   )
-
 }

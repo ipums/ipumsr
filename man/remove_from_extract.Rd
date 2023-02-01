@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{remove_from_extract}
 \alias{remove_from_extract}
-\title{Remove values from an existing IPUMS extract}
+\title{Remove values from an existing IPUMS extract definition}
 \usage{
 remove_from_extract(extract, ...)
 }
@@ -10,9 +10,10 @@ remove_from_extract(extract, ...)
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{...}{Additional arguments specifying the extract fields and values to
-remove from the extract. The available arguments correspond to the
-available arguments in the extract definition function for the class of the
-extract specified in \code{extract}.}
+remove from the extract definition.
+
+All arguments available in a collection's \link{define_extract} function can be
+passed to \code{add_to_extract()}.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
@@ -23,12 +24,12 @@ Remove values for specific fields in an existing \code{ipums_extract}
 object. This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To remove from an \strong{NHGIS} extract, click
-\link[=remove_from_extract.nhgis_extract]{here}
-\item To remove from a \strong{USA} extract, click '
+\item To remove from an \strong{IPUMS USA} extract definition, click '
 \link[=remove_from_extract.usa_extract]{here}
-\item To remove from a \strong{CPS} extract, click
+\item To remove from an \strong{IPUMS CPS} extract definition, click
 \link[=remove_from_extract.cps_extract]{here}
+\item To remove from an \strong{IPUMS NHGIS} extract definition, click
+\link[=remove_from_extract.nhgis_extract]{here}
 }
 
 In general, for a given collection, the arguments to
@@ -40,22 +41,17 @@ To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},

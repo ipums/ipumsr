@@ -7,17 +7,22 @@
 \description{
 The \code{ipums_extract} class provides a data structure for storing the
 definition and status of a submitted or unsubmitted IPUMS data extract
-for the purpose of interacting with the IPUMS extract API.
+request for the purpose of interacting with the IPUMS extract API.
 
 \code{ipums_extract} is a superclass encompassing all of the collection-specific
-extract classes.
+extract classes. Currently supported collections are:
+\itemize{
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS NHGIS
+}
 
 All objects with class \code{ipums_extract} will also have a collection-specific
 subclass (e.g. \code{usa_extract}, \code{cps_extract}) to accommodate
 collection-specific differences in extract options and content. All
-collection-specific subclasses share the similarities described below.
+of these classes share the similarities described below.
 
-For an overview of ipumsr microdata API functionality, see
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \section{Properties}{
@@ -25,8 +30,8 @@ For an overview of ipumsr microdata API functionality, see
 Objects of class \code{ipums_extract} have:
 \itemize{
 \item A \code{class} attribute of the form
-\code{c("{collection}_extract", "ipums_extract")}
-(e.g. \code{c("cps_extract", "ipums_extract")})
+\code{c("{collection}_extract", "ipums_extract")}. For instance,
+\code{c("cps_extract", "ipums_extract")}
 \item A base type of \code{"list"}
 \item A \code{names} attribute that is a character vector the same length as the
 underlying list
@@ -38,10 +43,9 @@ underlying list
 \itemize{
 \item Create an \code{ipums_extract} object from scratch with the appropriate
 \link{define_extract} function. These functions take the form
-\verb{define_extract_\{collection\}} (e.g. \code{\link[=define_extract_usa]{define_extract_usa()}})
-\item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve a previously-submitted
-extract. Previous extract definitions can be
-viewed with \code{\link[=get_extract_info]{get_extract_info()}}
+\verb{define_extract_\{collection\}}
+\item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve information about previously-submitted
+extract requests
 \item Create an \code{ipums_extract} object from a JSON-formatted definition with
 \code{\link[=define_extract_from_json]{define_extract_from_json()}}
 }
@@ -50,12 +54,12 @@ viewed with \code{\link[=get_extract_info]{get_extract_info()}}
 \section{Submitting an extract}{
 
 \itemize{
-\item Use \code{\link[=submit_extract]{submit_extract()}} to submit an extract for processing through the
-IPUMS extract API.
+\item Use \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing through
+the IPUMS extract API
 \item \code{\link[=wait_for_extract]{wait_for_extract()}} will periodically check the status of a submitted
-extract until it is ready to download.
+extract request until it is ready to download
 \item Use \code{\link[=is_extract_ready]{is_extract_ready()}} to manually check whether a submitted extract
-is ready to download
+request is ready to download
 }
 }
 
@@ -67,10 +71,10 @@ is ready to download
 }
 }
 
-\section{Revising an extract}{
+\section{Revising an extract definition}{
 
 \itemize{
-\item Modify values in an existing extract defiition with \code{\link[=add_to_extract]{add_to_extract()}} and
+\item Modify values in an existing extract definition with \code{\link[=add_to_extract]{add_to_extract()}} and
 \code{\link[=remove_from_extract]{remove_from_extract()}}
 \item Combine definitions from multiple extracts into a single extract with
 \code{\link[=combine_extracts]{combine_extracts()}}

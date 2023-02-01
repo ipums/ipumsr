@@ -20,18 +20,18 @@ directory containing at least one .shp file. See details.}
 
 \item{shape_layer}{If \code{shape_file} contains multiple files, an expression
 identifying the files to load. Accepts a character string specifying the
-file name, \code{\link{dplyr_select_style}} conventions, or index positions. If
-multiple files are selected, \code{bind_multiple} must be equal to \code{TRUE}.}
+file name, a \link[=selection_language]{tidyselect selection}, or index
+position. If multiple files are selected, \code{bind_multiple} must be equal
+to \code{TRUE}.}
 
-\item{vars}{Names of variables to include in the output data.
-By default, includes all variables found in the provided \code{shape_file}.}
+\item{vars}{Names of variables to include in the output. Accepts a
+character vector of names or a \link[=selection_language]{tidyselect selection}.
+If \code{NULL}, includes all variables in the file.}
 
-\item{encoding}{The text encoding to use when reading the shape file. Typically
-the defaults should read the data correctly, but for some extracts you may
-need to set them manually.
-If \code{NULL}, will attempt to guess the correct encoding using the associated
-.cpg file. If none is available, it will default to \code{"latin1"}.
-NHGIS files default to \code{"latin1"}. Terra files default to \code{"UTF-8"}.}
+\item{encoding}{Encoding to use when reading the shape file. If \code{NULL},
+defaults to \code{"latin1"} unless the file includes a .cpg metadata file
+with encoding information. The default value should generally be
+appropriate.}
 
 \item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
 row-bind the files into a single output. Note that some data sources may
@@ -39,11 +39,12 @@ not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
 \code{SpatialPointsDataFrame}).}
 
 \item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. By default, this column will be
-named \code{"layer"}. If \code{"layer"} already exists in the data, a unique name
-will be created to avoid name conflicts. The column name will always be
-prefixed with \code{"layer"}. Defaults to \code{TRUE} if \code{bind_multiple = TRUE} and
-\code{FALSE} otherwise.}
+the file that each row originates from. Defaults to \code{TRUE} if
+\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
+
+The column name will always be prefixed with \code{"layer"}, but will be
+adjusted to avoid name conflicts if another column named \code{"layer"} already
+exists in the data.}
 
 \item{verbose}{If \code{TRUE}, report progress information.}
 }
@@ -57,7 +58,7 @@ Read spatial data from an IPUMS extract into R using the
 \href{https://cran.r-project.org/web/packages/sp/index.html}{\code{sp}} package.
 
 This function has been deprecated because of the upcoming retirement
-of the \code{rgdal} package. For more information, click
+of the rgdal package. For more information, click
 \href{https://r-spatial.org/r/2022/04/12/evolution.html}{here}.
 
 Please use \code{\link[=read_ipums_sf]{read_ipums_sf()}} to load spatial data from IPUMS. To convert
@@ -82,18 +83,5 @@ shape_file <- ipums_example("nhgis0972_shape_small.zip")
 if (require(sp) && require(rgdal)) {
   sp_data <- read_ipums_sp(shape_file)
 }
-
 }
-\seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
-}
-\concept{ipums_read}
 \keyword{internal}

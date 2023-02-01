@@ -7,29 +7,33 @@
 lbl_define(x, ...)
 }
 \arguments{
-\item{x}{An unlabelled atomic vector}
+\item{x}{An unlabelled vector}
 
-\item{...}{Two-sided formulas where the left hand side is a label placeholder
-(created with the \code{\link{lbl}} function) and the right hand side is a
-function that returns a logical vector that indicates which existing values
-should be assigned that labeled value. The right hand side is passed to a
-function similar to \code{\link[rlang]{as_function}}, so also accepts
-quosure-style lambda functions (that use values .val and .lbl). See
-examples for more information.}
+\item{...}{Arbitrary number of two-sided formulas.
+
+The left hand side should be a label placeholder created with \code{\link[=lbl]{lbl()}} or a
+value that already exists in the data.
+
+The right hand side should be a function taking \code{.val} and \code{.lbl}
+arguments that evaluates to \code{TRUE} for all
+cases that should receive the label specified on the left hand side.
+Can be provided as an anonymous function or formula.
+
+See examples.}
 }
 \value{
-A haven::labelled vector
+A \code{\link[haven:labelled]{labelled}} vector
 }
 \description{
-Creates a \code{\link[haven]{labelled}} vector from an unlabelled atomic
-vector using \code{\link{lbl_relabel}} syntax, which allows grouping multiple
-values into a single labelled value. Values not assigned a label will remain
-unlabelled.
+Create a \code{\link[haven:labelled]{labelled}} vector from an unlabelled
+vector using \code{\link[=lbl_relabel]{lbl_relabel()}} syntax, allowing for the grouping of multiple
+values into a single label. Values not assigned a label remain unlabelled.
 }
 \examples{
 age <- c(10, 12, 16, 18, 20, 22, 25, 27)
 
-# Note that values not assigned a new labelled value remain unchanged
+# Group age values into two label groups.
+# Values not captured by the right hand side functions remain unlabelled
 lbl_define(
   age,
   lbl(1, "Pre-college age") ~ .val < 18,
@@ -40,9 +44,7 @@ lbl_define(
 Other lbl_helpers: 
 \code{\link{lbl_add}()},
 \code{\link{lbl_clean}()},
-\code{\link{lbl_collapse}()},
 \code{\link{lbl_na_if}()},
-\code{\link{lbl_relabel}()},
 \code{\link{lbl}()},
 \code{\link{zap_ipums_attributes}()}
 }

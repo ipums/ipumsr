@@ -5,7 +5,7 @@
 \alias{ipums_shape_right_join}
 \alias{ipums_shape_inner_join}
 \alias{ipums_shape_full_join}
-\title{Join data to geographic boundaries}
+\title{Join tabular data to geographic boundaries}
 \usage{
 ipums_shape_left_join(
   data,
@@ -40,44 +40,50 @@ ipums_shape_full_join(
 )
 }
 \arguments{
-\item{data}{A dataset, usually one that has been aggregated to a geographic level.}
+\item{data}{A tibble or data frame. Typically, this will contain data that
+has been aggregated to a specific geographic level.}
 
-\item{shape_data}{A shape file (loaded with \code{\link{read_ipums_sf}} or \code{read_ipums_sp})}
+\item{shape_data}{An \code{\link[sf:sf]{sf}} object loaded with \code{\link[=read_ipums_sf]{read_ipums_sf()}}.}
 
-\item{by}{A vector of variable names to join on. Like the dplyr join functions, named vectors
-indicate that the names are different between the data and shape file.
-shape files to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-which will be combined.}
+\item{by}{Character vector of variables to join by. See \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}
+for syntax.}
 
-\item{suffix}{For variables that are found in both, but aren't joined on, a suffix
-to put on the variables. Defaults to nothing for data variables and "_SHAPE" for
-variables from the shape file.}
+\item{suffix}{If there are non-joined duplicate variables in the two
+data sources, these suffixes will be added to the output to disambiguate
+them. Should be a character vector of length 2.
 
-\item{verbose}{I \code{TRUE}, will report information about geometries dropped in the merge.}
+Defaults to adding the \code{"SHAPE"} suffix to unmatched variables in
+\code{shape_file}.}
+
+\item{verbose}{If \code{TRUE}, display information about any geometries that were
+unmatched during the join.}
 }
 \value{
-returns a sf or a SpatialPolygonsDataFrame depending on what was passed in.
+An \code{sf} object containing the joined data
 }
 \description{
-Helpers for joining shape files downloaded from the IPUMS website to data from extracts.
-Because of historical reasons, the attributes of (like variable type) of variables
-in the shape files does not always match those in the data files.
+These functions are analogous to dplyr's \link[dplyr:mutate-joins]{joins}, except
+that:
+\itemize{
+\item They operate on a data frame and an \code{\link[sf:sf]{sf}} object
+\item They retain the variable attributes provided in IPUMS files and loaded
+by ipumsr data-reading functions
+\item They handle minor incompatibilities between attributes in spatial and
+tabular data that emerge in some IPUMS files
+}
+
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Support for objects from the sp package
+has been deprecated because of the upcoming retirement of the rgdal
+package. Functionality for \code{sf} objects will be maintained. For more
+information, click
+\href{https://r-spatial.org/r/2022/04/12/evolution.html}{here}.
 }
 \examples{
-# Note that these examples use NHGIS data so that they use the example data provided,
-# but the functions read_nhgis_sf/read_nhgis_sp perform this merge for you.
-
 data <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
 
 if (require(sf)) {
   sf <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
   data_sf <- ipums_shape_inner_join(data, sf, by = "GISJOIN")
-}
-
-if (require(sp) && require(rgdal)) {
-  sp <- read_ipums_sp(ipums_example("nhgis0972_shape_small.zip"))
-  data_sp <- ipums_shape_inner_join(data, sp, by = "GISJOIN")
 }
 
 \dontrun{
@@ -86,5 +92,4 @@ if (require(sp) && require(rgdal)) {
   shape <- read_ipums_sf("geo2_br1980_2010.zip")
   data_sf <- ipums_shape_inner_join(data, shape, by = c("GEO2" = "GEOLEVEL2"))
 }
-
 }

@@ -19,25 +19,22 @@ get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
 \item An IPUMS collection with API support
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for the collection specified by the
-\code{IPUMS_DEFAULT_COLLECTION} environment variable. See
+\item The extract number for your default IPUMS collection. See
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See below for examples of each form.
+Extract numbers do not need to be zero-padded. That is, use \code{1}, not
+\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{how_many}{If the provided \code{extract} is an IPUMS collection, the number
-of recent extracts for which to retrieve information.
-Defaults to 10 extracts.}
+of recent extract requests for which to retrieve information. Defaults to
+10.}
 
 \item{table}{If the provided \code{extract} is an IPUMS collection, a logical
 indicating whether to return recent extract information as a
@@ -52,12 +49,24 @@ value of environment variable \code{"IPUMS_API_KEY"}.}
 retrieve the most recent extract request.}
 }
 \value{
-An \code{\link[=ipums_extract-class]{ipums_extract}} object.
+If obtaining information about a single extract, an
+\code{\link[=ipums_extract-class]{ipums_extract}} object.
+
+If obtaining information for a collection, a list of
+\code{\link[=ipums_extract-class]{ipums_extract}} objects (if \code{table = FALSE}) or
+a \code{\link[tibble:tbl_df-class]{tibble}} (if \code{table = TRUE}).
 }
 \description{
-Get information about previously submitted extracts via the IPUMS API.
+Retrieve the specifications of your previously submitted extract requests.
 
-For an overview of ipumsr microdata API functionality, see
+If a specific extract number is indicated, retrieve the most recent
+status of that extract request. If a collection is indicated, retrieve the
+information for the most recent extract requests for that collection.
+
+\code{get_last_extract_info()} is a convenience function to retrieve the
+information for the most recent extract of a given collection.
+
+For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
@@ -84,26 +93,21 @@ get_extract_info(1)
 # The default collection will automatically be used even if no extract
 # number is supplied:
 get_extract_info(how_many = 3, table = TRUE)
+get_last_extract_info()
 }
-
 }
 \seealso{
 Other ipums_api: 
-\code{\link{add_to_extract.cps_extract}()},
-\code{\link{add_to_extract.usa_extract}()},
 \code{\link{add_to_extract}()},
 \code{\link{define_extract_cps}()},
 \code{\link{define_extract_from_json}()},
 \code{\link{define_extract_nhgis}()},
 \code{\link{define_extract_usa}()},
-\code{\link{define_extract}},
 \code{\link{download_extract}()},
 \code{\link{extract_list_to_tbl}()},
 \code{\link{extract_tbl_to_list}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract.cps_extract}()},
-\code{\link{remove_from_extract.usa_extract}()},
 \code{\link{remove_from_extract}()},
 \code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
