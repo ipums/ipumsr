@@ -8,9 +8,6 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Support for IPUMS Terra has been discontinued. These functions will be
-#' removed in a future release.
-#'
 #' Read a single raster datasets downloaded from the IPUMS Terra extract system using
 #' \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 #'
@@ -45,11 +42,12 @@ read_terra_raster <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_raster()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)
@@ -66,11 +64,12 @@ read_terra_raster_list <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_raster_list()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)
@@ -129,11 +128,11 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
+#' Reads a area-level dataset downloaded from the IPUMS Terra extract system.
+#'
 #' Support for IPUMS Terra has been discontinued. These functions will be
 #' removed in a future release. For general handling of raster data in R, see the
 #' [terra][terra::terra] package.
-#'
-#' Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 #'
 #' @return
 #'   \code{read_terra_area} returns a \code{tbl_df} with the tabular data,
@@ -186,11 +185,12 @@ read_terra_area <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_area()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)
@@ -269,11 +269,12 @@ read_terra_area_sf <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_area_sf()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)
@@ -315,11 +316,12 @@ read_terra_area_sp <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_area_sp()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)
@@ -348,11 +350,11 @@ read_terra_area_sp <- function(
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
+#' Reads a microdata dataset downloaded from the IPUMS Terra extract system.
+#'
 #' Support for IPUMS Terra has been discontinued. This function will be
 #' removed in a future release. For general handling of raster data in R, see the
 #' [terra][terra::terra] package.
-#'
-#' Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 #'
 #' @return
 #'   \code{read_terra_micro} returns a \code{tbl_df} with the tabular data. Use
@@ -392,11 +394,12 @@ read_terra_micro <- function(
 
   lifecycle::deprecate_warn(
     "0.6.0",
-    "read_terra_micro()",
+    I("All `read_terra_*()` functionality"),
     details = paste0(
-      "IPUMS Terra functionality is no longer being maintained and will be ",
-      " removed in a future release."
-    )
+      "IPUMS Terra is no longer being maintained. ",
+      "See https://terra.ipums.org/decommissioning"
+    ),
+    id = "ipums_terra"
   )
 
   data_layer <- enquo(data_layer)

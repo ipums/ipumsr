@@ -16,6 +16,7 @@ read_nhgis(
   locale = NULL,
   show_conditions = TRUE,
   ...,
+  verbose = deprecated(),
   data_layer = deprecated()
 )
 }
@@ -90,6 +91,10 @@ loading data.}
 
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}
+
+\item{verbose}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{show_conditions} to
+control display of IPUMS conditions. Use \code{progress} and/or \code{show_col_types}
+to suppress \code{readr} output.}
 
 \item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please
 use \code{file_select} instead.}

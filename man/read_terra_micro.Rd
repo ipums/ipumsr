@@ -43,11 +43,11 @@ data out of a microdata Terra extract.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
+Reads a microdata dataset downloaded from the IPUMS Terra extract system.
+
 Support for IPUMS Terra has been discontinued. This function will be
 removed in a future release. For general handling of raster data in R, see the
 \link[terra:terra-package]{terra} package.
-
-Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 }
 \examples{
 \dontrun{

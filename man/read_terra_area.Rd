@@ -85,11 +85,11 @@ data and shapes.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
+Reads a area-level dataset downloaded from the IPUMS Terra extract system.
+
 Support for IPUMS Terra has been discontinued. These functions will be
 removed in a future release. For general handling of raster data in R, see the
 \link[terra:terra-package]{terra} package.
-
-Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 }
 \examples{
 \dontrun{

@@ -82,6 +82,9 @@
 #'   loading data.
 #' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
 #'   [`read_fwf()`][readr::read_fwf].
+#' @param verbose `r lifecycle::badge("deprecated")` Use `show_conditions` to
+#'   control display of IPUMS conditions. Use `progress` and/or `show_col_types`
+#'   to suppress `readr` output.
 #' @param data_layer `r lifecycle::badge("deprecated")` Please
 #'   use `file_select` instead.
 #'
@@ -105,6 +108,7 @@ read_nhgis <- function(data_file,
                        locale = NULL,
                        show_conditions = TRUE,
                        ...,
+                       verbose = deprecated(),
                        data_layer = deprecated()) {
 
   if (length(data_file) != 1) {
@@ -124,6 +128,18 @@ read_nhgis <- function(data_file,
     file_select <- enquo(data_layer)
   } else {
     file_select <- enquo(file_select)
+  }
+
+  if (!missing(verbose)) {
+    lifecycle::deprecate_warn(
+      "0.6.0",
+      "read_nhgis(verbose = )",
+      details = paste0(
+        "Please use the `show_conditions` argument or arguments ",
+        "passed to `readr::read_csv` instead."
+      )
+    )
+    show_conditions <- show_conditions %||% verbose
   }
 
   custom_check_file_exists(data_file)
