@@ -152,6 +152,14 @@ test_that("Can read NHGIS extract: fixed-width files", {
   expect_equal(ncol(nhgis_fwf2), 1)
   expect_equal(colnames(nhgis_fwf2), "X1")
 
+  expect_equal(
+    attributes(nhgis_fwf1$AJWBE001),
+    list(
+      label = "Estimates: Total",
+      var_desc = "Table AJWB: Sex by Age (Universe: Total population)"
+    )
+  )
+
   expect_equal(attr(nhgis_fwf1$YEAR, "label"), "Data File Year")
   expect_s3_class(nhgis_fwf1, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 
@@ -181,6 +189,14 @@ test_that("Can read NHGIS extract: single time series table", {
   expect_equal(tst$STATE[[1]], "Alabama")
   expect_equal(tst$A00AA1820[[1]], 127901)
 
+  expect_equal(
+    attributes(tst$A00AA2020),
+    list(
+      label = "2020: Persons: Total",
+      var_desc = "Table A00: Total Population"
+    )
+  )
+
 })
 
 # Select files when multiple exist -------------------------------
@@ -197,6 +213,16 @@ test_that("Can select data files by index", {
 
   expect_true("AJWBE001" %in% colnames(nhgis1))
   expect_true("A00AA1790" %in% colnames(nhgis2))
+
+  expect_equal(
+    attributes(nhgis1$GISJOIN),
+    list(label = "GIS Join Match Code", var_desc = "")
+  )
+
+  expect_equal(
+    attributes(nhgis2$GISJOIN),
+    list(label = "GIS Join Match Code", var_desc = "")
+  )
 
 })
 
@@ -221,6 +247,39 @@ test_that("Can select data files with tidyselect", {
 
   expect_true("AJWBE001" %in% colnames(nhgis1))
   expect_true("A00AA1790" %in% colnames(nhgis2))
+
+  expect_equal(
+    attributes(nhgis1$GISJOIN),
+    list(label = "GIS Join Match Code", var_desc = "")
+  )
+
+  expect_equal(
+    attributes(nhgis2$GISJOIN),
+    list(label = "GIS Join Match Code", var_desc = "")
+  )
+
+})
+
+test_that("Can still find codebook if file_select matches data file only", {
+
+  nhgis <- read_nhgis(
+    nhgis_multi_ds,
+    file_select = matches("nation.csv"),
+    show_conditions = FALSE
+  )
+
+  nhgis2 <-  read_nhgis(
+    nhgis_multi_ds,
+    file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv",
+    show_conditions = FALSE
+  )
+
+  expect_true(all.equal(nhgis, nhgis2))
+
+  expect_equal(
+    attributes(nhgis$GISJOIN),
+    list(label = "GIS Join Match Code", var_desc = "")
+  )
 
 })
 

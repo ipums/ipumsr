@@ -8,10 +8,10 @@ read_nhgis(
   data_file,
   file_select = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
+  remove_extra_header = TRUE,
   do_file = NULL,
   file_type = NULL,
   na = NULL,
-  remove_extra_header = TRUE,
   col_names = TRUE,
   locale = NULL,
   show_conditions = TRUE,
@@ -29,9 +29,22 @@ Accepts a character vector specifying the
 file name, a \link[=selection_language]{tidyselect selection}, or an index
 position. This must uniquely identify a file.}
 
-\item{var_attrs}{Variable attributes to add from the codebook. Defaults to
-all available attributes (\code{val_labels}, \code{var_label} and \code{var_desc}). See
-\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
+\item{var_attrs}{Variable attributes to add from the codebook (.txt) file
+included in the extract. Defaults to
+all available attributes (\code{"val_labels"}, \code{"var_label"}, and \code{"var_desc"}).
+
+If the codebook is not found, data will be loaded with no variable
+attributes.
+
+See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
+
+\item{remove_extra_header}{If \code{TRUE}, remove the additional descriptive
+header row that is included in some NHGIS .csv files. Otherwise, the
+additional header will appear in the first row of the output data frame.
+
+The header contains the same information that is
+included in the \code{"label"} attribute of each data column (if \code{var_attrs}
+includes \code{"var_label"}), and is therefore not usually needed.}
 
 \item{do_file}{For fixed-width files, path to the .do file associated with
 the provided \code{data_file}. The .do file contains the specifications that
@@ -52,18 +65,10 @@ the files found in \code{data_file}. Only needed if \code{data_file} contains bo
 If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
 for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
 
-\item{remove_extra_header}{If \code{TRUE}, remove the additional descriptive
-header row that is included in some NHGIS .csv files. Otherwise, the
-additional header will appear in the first row of the output data frame.
+\item{col_names}{If reading a .csv file, either \code{TRUE}, \code{FALSE} or a
+character vector of column names.
 
-The header contains the same information that is
-included in the \code{"label"} attribute of each data column (if \code{var_attrs}
-includes \code{"var_label"}), and is therefore not usually needed.}
-
-\item{col_names}{Either \code{TRUE}, \code{FALSE} or a character vector of column
-names.
-
-If \code{TRUE}, use the default column names included in NHGIS csv files. If
+If \code{TRUE}, use the default column names included in NHGIS .csv files. If
 \code{FALSE} or a character vector, replace the default column names with the
 provided names or default placeholders.
 

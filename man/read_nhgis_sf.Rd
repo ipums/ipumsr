@@ -51,8 +51,8 @@ Defaults to \code{"latin1"}, which should be appropriate for most files.}
 the console.}
 
 \item{var_attrs}{Variable attributes to add from the codebook. Defaults to
-all available attributes (\code{val_labels}, \code{var_label} and \code{var_desc}). See
-\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
+all available attributes (\code{"val_labels"}, \code{"var_label"} and \code{"var_desc"}).
+See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
