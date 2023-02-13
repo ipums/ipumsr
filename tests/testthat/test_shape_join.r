@@ -15,7 +15,13 @@ test_that("Basic join works (sf)", {
 test_that("Basic join works (sp)", {
   skip_if_not_installed("sp")
   skip_if_not_installed("rgdal")
-  shape <- read_ipums_sp(ipums_example("nhgis0972_shape_small.zip"), verbose = FALSE)
+
+  lifecycle::expect_deprecated(
+    shape <- read_ipums_sp(
+      ipums_example("nhgis0972_shape_small.zip"),
+      verbose = FALSE
+    )
+  )
 
   joined <- ipums_shape_inner_join(data, shape, by = "GISJOIN")
 

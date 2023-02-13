@@ -463,7 +463,9 @@ test_that("Can read Terra codebook", {
     skip("Couldn't find terra area ipumsexamples likely not installed.")
   }
 
-  cb <- read_ipums_codebook(terra_area)
+  lifecycle::expect_deprecated(
+    cb <- read_ipums_codebook(terra_area)
+  )
 
   expect_equal(dim(cb$var_info), c(4, 10))
 

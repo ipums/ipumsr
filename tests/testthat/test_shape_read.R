@@ -68,15 +68,17 @@ test_that("Can row bind multiple sp files", {
 
   skip_if_not_installed("sp")
 
-  shp1 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 2, verbose = FALSE)
-  shp2 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 3, verbose = FALSE)
+  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+    shp1 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 2, verbose = FALSE)
+    shp2 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 3, verbose = FALSE)
 
-  shp <- read_ipums_sp(
-    nhgis_multi_shp,
-    shape_layer = 2:3,
-    bind_multiple = TRUE,
-    verbose = FALSE
-  )
+    shp <- read_ipums_sp(
+      nhgis_multi_shp,
+      shape_layer = 2:3,
+      bind_multiple = TRUE,
+      verbose = FALSE
+    )
+  })
 
   expect_identical(
     rbind(shp1@data, shp2@data),
@@ -142,7 +144,10 @@ test_that("sf and sp geometries are consistent with each other", {
   skip_if_not_installed("sp")
 
   nhgis_sf <- read_ipums_sf(nhgis_single_shp)
-  nhgis_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
+
+  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+    nhgis_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
+  })
 
   check_geo <- nhgis_sf$GISJOIN
 
@@ -184,12 +189,14 @@ test_that("We can pass arguments to underlying reader functions", {
 
   expect_true(any(sf::st_geometry_type(shp_sf) == "POLYGON"))
 
-  expect_silent(
-    shp_sp <- read_ipums_sp(
-      nhgis_single_shp,
-      verbose = FALSE
+  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+    expect_silent(
+      shp_sp <- read_ipums_sp(
+        nhgis_single_shp,
+        verbose = FALSE
+      )
     )
-  )
+  })
 
 })
 
@@ -210,29 +217,20 @@ test_that("We get informative errors when reading shapefiles", {
     "Can't subset files past the end.+Available files:"
   )
 
-  # Checking message causes failure during deprecation because we are not
-  # deprecating single arguments in read_ipums_sp since we are deprecating
-  # entire function.
-  expect_error(
-    read_ipums_sp(
-      nhgis_multi_shp,
-      shape_layer = contains("not-in-file"),
-      verbose = FALSE
-    )
-    # "The provided `shape_layer` did not select any of the available files:"
-  )
-
   # geometry differences don't trigger the variable warning used in sf
   # implementation, but lower level error will still catch incompatibilities
-  expect_error(
-    read_ipums_sp(
-      nhgis_multi_shp,
-      shape_layer = 1:2,
-      bind_multiple = TRUE,
-      verbose = FALSE
-    ),
-    "no method or default for coercing.+SpatialPointsDataFrame"
-  )
+
+  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+    expect_error(
+      read_ipums_sp(
+        nhgis_multi_shp,
+        shape_layer = 1:2,
+        bind_multiple = TRUE,
+        verbose = FALSE
+      ),
+      "no method or default for coercing.+SpatialPointsDataFrame"
+    )
+  })
 
   expect_warning(
     read_ipums_sf(

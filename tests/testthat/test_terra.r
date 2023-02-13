@@ -12,7 +12,10 @@ test_that("Terra raster works", {
   }
   skip_if_not_installed("raster")
   skip_if_not_installed("rgdal")
-  raster <- read_terra_raster_list(raster_file, verbose = FALSE)
+
+  lifecycle::expect_deprecated(
+    raster <- read_terra_raster_list(raster_file, verbose = FALSE)
+  )
 
   expect_equal(length(raster), 22)
   expect_s4_class(raster[[1]], "RasterLayer")
@@ -25,7 +28,9 @@ test_that("Terra micro works", {
   }
   skip_if_not_installed("sf")
 
-  micro <- read_terra_micro(micro_file, verbose = FALSE)
+  lifecycle::expect_deprecated(
+    micro <- read_terra_micro(micro_file, verbose = FALSE)
+  )
 
   expect_true(
     inherits(micro$COUNTRY, "haven_labelled") | # haven v2 compatibility
@@ -40,7 +45,10 @@ test_that("Terra area works (sf)", {
   }
   skip_if_not_installed("sf")
 
-  area <- read_terra_area_sf(area_file, verbose = FALSE)
+  lifecycle::expect_deprecated(
+    area <- read_terra_area_sf(area_file, verbose = FALSE)
+  )
+
   expect_equal(attr(area$GEOG_CODE_LABEL, "label"), "Name of geographic instances")
   expect_s3_class(area, "sf")
   expect_equal(attr(area, "sf_column"), "geometry")
@@ -54,6 +62,9 @@ test_that("Terra area works (sp)", {
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
-  area <- read_terra_area_sp(area_file, verbose = FALSE)
+  lifecycle::expect_deprecated(
+    area <- read_terra_area_sp(area_file, verbose = FALSE)
+  )
+
   expect_equal(class(area), structure("SpatialPolygonsDataFrame", package = "sp"))
 })
