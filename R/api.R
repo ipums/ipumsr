@@ -4163,7 +4163,7 @@ format_nhgis_field_for_json <- function(...) {
     ~purrr::map(subfields, .x)
   )
 
-  subfields_formatted <- setNames(
+  subfields_formatted <- purrr::set_names(
     purrr::map(subfields_grp, purrr::compact),
     supfields
   )
@@ -4853,7 +4853,7 @@ reduce_list_by_name <- function(l, f = ~union(.x, .y), name_order = NULL) {
     ~purrr::reduce(l[.x == names(l)], f)
   )
 
-  l <- setNames(l, labs)
+  l <- purrr::set_names(l, labs)
 
   if (!is_null(name_order)) {
     missing_idx <- which(!names(l) %in% name_order)
@@ -5248,7 +5248,7 @@ api_version_from_json <- function(extract_json) {
   extract$api_version
 }
 
-EMPTY_NAMED_LIST <- setNames(list(), character(0))
+EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))
 
 #' Convert an absolute path to be relative to the working directory
 #'
@@ -5383,12 +5383,12 @@ recycle_extract_subfield <- function(l, names) {
   }
 
   # Add NULL entries for any names that are not present in l
-  null_list <- setNames(
+  null_list <- purrr::set_names(
     rep(list(NULL), length(names)),
     names
   )
 
-  l_sub <- setNames(
+  l_sub <- purrr::set_names(
     purrr::map(
       names,
       ~union(null_list[[.x]], l[[.x]])
