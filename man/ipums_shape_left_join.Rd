@@ -71,6 +71,8 @@ by ipumsr data-reading functions
 \item They handle minor incompatibilities between attributes in spatial and
 tabular data that emerge in some IPUMS files
 }
+}
+\section{Deprecation note}{
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Support for objects from the sp package
 has been deprecated because of the upcoming retirement of the rgdal
@@ -78,6 +80,7 @@ package. Functionality for \code{sf} objects will be maintained. For more
 information, click
 \href{https://r-spatial.org/r/2022/04/12/evolution.html}{here}.
 }
+
 \examples{
 data <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
 

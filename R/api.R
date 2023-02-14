@@ -2221,63 +2221,6 @@ combine_extracts.nhgis_extract <- function(...) {
 
 # > Get info on recent extracts ----
 
-#' Get information on recent extracts
-#'
-#' @description
-#' `r lifecycle::badge("deprecated")`
-#'
-#' Functionality for accessing recent extract information has been moved to
-#' [`get_extract_info()`].
-#'
-#' Please use that function instead.
-#'
-#' @keywords internal
-#'
-#' @name get_recent_extracts_info
-NULL
-
-#' @rdname get_recent_extracts_info
-#' @export
-get_recent_extracts_info_list <- function(collection = NULL,
-                                          how_many = 10,
-                                          api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-
-  lifecycle::deprecate_warn(
-    "0.6.0",
-    "get_recent_extracts_info_list()",
-    "get_extract_info()"
-  )
-
-  get_extract_info(
-    extract = collection,
-    how_many = how_many,
-    api_key = api_key
-  )
-
-}
-
-#' @rdname get_recent_extracts_info
-#' @export
-get_recent_extracts_info_tbl <- function(collection = NULL,
-                                         how_many = 10,
-                                         api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  lifecycle::deprecate_warn(
-    "0.6.0",
-    "get_recent_extracts_info_tbl()",
-    details = "Please use `get_extract_info()` with `table = TRUE` instead."
-  )
-
-  get_extract_info(
-    extract = collection,
-    how_many = how_many,
-    table = TRUE,
-    api_key = api_key
-  )
-
-}
-
 #' @param collection Character string of the IPUMS collection for which to
 #'   retrieve the most recent extract request.
 #'

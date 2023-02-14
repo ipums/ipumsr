@@ -16,12 +16,6 @@
 #' - They handle minor incompatibilities between attributes in spatial and
 #'   tabular data that emerge in some IPUMS files
 #'
-#' `r lifecycle::badge("deprecated")` Support for objects from the sp package
-#' has been deprecated because of the upcoming retirement of the rgdal
-#' package. Functionality for `sf` objects will be maintained. For more
-#' information, click
-#' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
-#'
 #' @param data A tibble or data frame. Typically, this will contain data that
 #'   has been aggregated to a specific geographic level.
 #' @param shape_data An [`sf`][sf::sf] object loaded with [read_ipums_sf()].
@@ -37,6 +31,13 @@
 #'   unmatched during the join.
 #'
 #' @return An `sf` object containing the joined data
+#'
+#' @section Deprecation note:
+#' `r lifecycle::badge("deprecated")` Support for objects from the sp package
+#' has been deprecated because of the upcoming retirement of the rgdal
+#' package. Functionality for `sf` objects will be maintained. For more
+#' information, click
+#' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
 #'
 #' @export
 #'
