@@ -1295,8 +1295,8 @@ add_to_extract <- function(extract, ...) {
 #' @inheritParams define_extract_usa
 #' @inheritParams add_to_extract
 #' @param samples Character vector of samples to add to the extract.
-#'   Values should correspond to IPUMS USA [sample ID values]
-#'   (https://usa.ipums.org/usa-action/samples/sample_ids)
+#'   Values should correspond to IPUMS USA
+#'   [sample ID values](https://usa.ipums.org/usa-action/samples/sample_ids)
 #' @param variables Character vector of variables to add to the extract.
 #' @param ... Ignored
 #'
@@ -1343,8 +1343,8 @@ add_to_extract.usa_extract <- function(extract,
 #' @inheritParams define_extract_cps
 #' @inheritParams add_to_extract
 #' @param samples Character vector of samples to add to the extract.
-#'   Values should correspond to IPUMS CPS [sample ID values]
-#'   (https://cps.ipums.org/cps-action/samples/sample_ids)
+#'   Values should correspond to IPUMS CPS
+#'   [sample ID values](https://cps.ipums.org/cps-action/samples/sample_ids)
 #' @param variables Character vector of variables to add to the extract.
 #' @param ... Ignored
 #'
@@ -1431,7 +1431,7 @@ add_to_extract.cps_extract <- function(extract,
 #' @inheritParams define_extract_nhgis
 #' @inheritParams add_to_extract
 #' @param datasets Vector of
-#'   [datasets][https://www.nhgis.org/overview-nhgis-datasets]
+#'   [datasets](https://www.nhgis.org/overview-nhgis-datasets)
 #'   to add to the extract definition.
 #'
 #'   Any specified `datasets` that
@@ -1871,7 +1871,7 @@ remove_from_extract.cps_extract <- function(extract,
 #' @inheritParams define_extract_nhgis
 #' @inheritParams remove_from_extract
 #' @param datasets Character vector of
-#'   [datasets][https://www.nhgis.org/overview-nhgis-datasets] to remove from
+#'   [datasets](https://www.nhgis.org/overview-nhgis-datasets) to remove from
 #'   the extract definition. All `data_tables`, `geog_levels`, `years`, and
 #'   `breakdown_values` associated with the specified
 #'   `datasets` will also be removed.

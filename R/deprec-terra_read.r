@@ -14,6 +14,10 @@
 #' Read a single raster datasets downloaded from the IPUMS Terra extract system using
 #' \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 #'
+#' Support for IPUMS Terra has been discontinued. These functions will be
+#' removed in a future release. For general handling of raster data in R, see the
+#' [terra][terra::terra] package.
+#'
 #' @return
 #'   For \code{read_terra_raster} A \code{\link[raster]{raster}} object, for
 #'   \code{read_terra_raster_list} A list of raster objects.
@@ -126,7 +130,8 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #' `r lifecycle::badge("deprecated")`
 #'
 #' Support for IPUMS Terra has been discontinued. These functions will be
-#' removed in a future release.
+#' removed in a future release. For general handling of raster data in R, see the
+#' [terra][terra::terra] package.
 #'
 #' Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 #'
@@ -344,7 +349,8 @@ read_terra_area_sp <- function(
 #' `r lifecycle::badge("deprecated")`
 #'
 #' Support for IPUMS Terra has been discontinued. This function will be
-#' removed in a future release.
+#' removed in a future release. For general handling of raster data in R, see the
+#' [terra][terra::terra] package.
 #'
 #' Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 #'

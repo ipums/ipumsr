@@ -19,8 +19,8 @@
 \item{description}{Description of the extract.}
 
 \item{samples}{Character vector of samples to add to the extract.
-Values should correspond to IPUMS CPS \link{sample ID values}
-(https://cps.ipums.org/cps-action/samples/sample_ids)}
+Values should correspond to IPUMS CPS
+\href{https://cps.ipums.org/cps-action/samples/sample_ids}{sample ID values}}
 
 \item{variables}{Character vector of variables to add to the extract.}
 

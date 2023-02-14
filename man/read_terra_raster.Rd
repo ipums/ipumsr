@@ -32,6 +32,10 @@ removed in a future release.
 
 Read a single raster datasets downloaded from the IPUMS Terra extract system using
 \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
+
+Support for IPUMS Terra has been discontinued. These functions will be
+removed in a future release. For general handling of raster data in R, see the
+\link[terra:terra-package]{terra} package.
 }
 \examples{
 \dontrun{

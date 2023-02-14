@@ -21,7 +21,7 @@
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{datasets}{Character vector of
-\link[=https://www.nhgis.org/overview-nhgis-datasets]{datasets} to remove from
+\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets} to remove from
 the extract definition. All \code{data_tables}, \code{geog_levels}, \code{years}, and
 \code{breakdown_values} associated with the specified
 \code{datasets} will also be removed.}

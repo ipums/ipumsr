@@ -27,7 +27,7 @@
 \item{description}{Description of the extract.}
 
 \item{datasets}{Vector of
-\link[=https://www.nhgis.org/overview-nhgis-datasets]{datasets}
+\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
 to add to the extract definition.
 
 Any specified \code{datasets} that
