@@ -901,12 +901,11 @@ path_is_zip_or_dir <- function(file) {
   ext == "zip" || ext == ""
 }
 
-#' Create DDI structure (for internal use)
+#' Create an `ipums_ddi` object
 #'
-#' Helper to make a new DDI structure (not very useful for end-users).
+#' Constructor to make a new [`ipums_ddi`] object.
 #'
-#' @keywords internal
-#' @export
+#' @noRd
 make_ddi_from_scratch <- function(
   file_name = NULL,
   file_path = NULL,
@@ -922,6 +921,7 @@ make_ddi_from_scratch <- function(
   citation = NULL,
   file_encoding = NULL
 ) {
+
   out <- list(
     file_name = file_name,
     file_path = file_path,
