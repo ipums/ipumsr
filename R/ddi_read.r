@@ -214,7 +214,7 @@ read_ipums_ddi <- function(ddi_file,
     }
   }
 
-  make_ddi_from_scratch(
+  new_ipums_ddi(
     file_name = file_name,
     file_path = dirname(ddi_file),
     file_type = file_type,
@@ -527,7 +527,7 @@ read_nhgis_codebook <- function(cb_file,
 
   conditions_text <- paste(conditions_text, collapse = "\n")
 
-  out <- make_ddi_from_scratch(
+  out <- new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
     ipums_project = "NHGIS",
@@ -696,28 +696,21 @@ find_cb_section <- function(cb_text, section, section_markers) {
   cb_text[seq(start, end)]
 }
 
-#' Create an `ipums_ddi` object
-#'
-#' Constructor to make a new [`ipums_ddi`] object.
-#'
-#' @noRd
-make_ddi_from_scratch <- function(
-  file_name = NULL,
-  file_path = NULL,
-  file_type = NULL,
-  ipums_project = NULL,
-  extract_date = NULL,
-  extract_notes = NULL,
-  rectypes = NULL,
-  rectype_idvar = NULL,
-  rectypes_keyvars = NULL,
-  var_info = NULL,
-  conditions = NULL,
-  citation = NULL,
-  file_encoding = NULL
-) {
+new_ipums_ddi <- function(file_name = NULL,
+                          file_path = NULL,
+                          file_type = NULL,
+                          ipums_project = NULL,
+                          extract_date = NULL,
+                          extract_notes = NULL,
+                          rectypes = NULL,
+                          rectype_idvar = NULL,
+                          rectypes_keyvars = NULL,
+                          var_info = NULL,
+                          conditions = NULL,
+                          citation = NULL,
+                          file_encoding = NULL) {
 
-  out <- list(
+  ddi <- list(
     file_name = file_name,
     file_path = file_path,
     file_type = file_type,
@@ -733,8 +726,8 @@ make_ddi_from_scratch <- function(
     file_encoding = file_encoding
   )
 
-  class(out) <- "ipums_ddi"
-  out
+  structure(ddi, class = "ipums_ddi")
+
 }
 
 make_var_info_from_scratch <- function(

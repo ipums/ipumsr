@@ -624,7 +624,7 @@ warn_default_fwf_parsing <- function() {
 }
 
 # Fills in a default condition if we can't find codebook for nhgis
-NHGIS_EMPTY_DDI <- make_ddi_from_scratch(
+NHGIS_EMPTY_DDI <- new_ipums_ddi(
   ipums_project = "NHGIS",
   file_type = "rectangular",
   conditions = paste0(

@@ -269,7 +269,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   conditions_text <- paste(conditions_text, collapse = "\n")
 
 
-  out <- make_ddi_from_scratch(
+  out <- new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
     ipums_project = type,
@@ -698,4 +698,60 @@ read_nhgis_sp <- function(data_file,
     }
   }
   out
+}
+
+#' Create an `ipums_ddi` object
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Constructor to make a new [`ipums_ddi`] object.
+#'
+#' This function has been deprecated because it is a low-level function that is
+#' unlikely to be useful externally. Use [`read_ipums_ddi()`] (for microdata
+#' projects) or [`read_nhgis_codebook()`] (for NHGIS) to create an
+#' `ipums_ddi` object.
+#'
+#' @keywords internal
+#'
+#' @export
+make_ddi_from_scratch <- function(file_name = NULL,
+                                  file_path = NULL,
+                                  file_type = NULL,
+                                  ipums_project = NULL,
+                                  extract_date = NULL,
+                                  extract_notes = NULL,
+                                  rectypes = NULL,
+                                  rectype_idvar = NULL,
+                                  rectypes_keyvars = NULL,
+                                  var_info = NULL,
+                                  conditions = NULL,
+                                  citation = NULL,
+                                  file_encoding = NULL) {
+
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "make_ddi_from_scratch()",
+    details = paste0(
+      "Use `read_ipums_ddi()` or `read_nhgis_codebook()` to ",
+      "create an `ipums_ddi` object."
+    )
+  )
+
+  new_ipums_ddi(
+    file_name = file_name,
+    file_path = file_path,
+    file_type = file_type,
+    ipums_project = ipums_project,
+    extract_date = extract_date,
+    extract_notes = extract_notes,
+    rectypes = rectypes,
+    rectype_idvar = rectype_idvar,
+    rectypes_keyvars = rectypes_keyvars,
+    var_info = var_info,
+    conditions = conditions,
+    citation = citation,
+    file_encoding = file_encoding
+  )
+
 }

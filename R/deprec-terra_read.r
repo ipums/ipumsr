@@ -480,7 +480,7 @@ read_terra_micro <- function(
 
 
 # Fills in a default condition if we can't find ddi for terra
-terra_empty_ddi <- make_ddi_from_scratch(
+terra_empty_ddi <- new_ipums_ddi(
   ipums_project = "IPUMS Terra",
   file_type = "rectangular",
   conditions = paste0(
