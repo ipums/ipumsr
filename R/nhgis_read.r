@@ -235,7 +235,7 @@ read_nhgis_fwf <- function(data_file,
   file <- find_files_in(
     data_file,
     name_ext = "dat",
-    name_select = file_select,
+    file_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )
@@ -400,7 +400,7 @@ read_nhgis_csv <- function(data_file,
   file <- find_files_in(
     data_file,
     name_ext = "csv",
-    name_select = file_select,
+    file_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )
@@ -496,7 +496,7 @@ check_header_row <- function(data_file, file_select = NULL) {
   file <- find_files_in(
     data_file,
     name_ext = "csv",
-    name_select = file_select,
+    file_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )

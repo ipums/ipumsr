@@ -32,6 +32,15 @@ test_that("Can read NHGIS extract: single shapefile (sp)", {
     shp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
   )
 
+  expect_error(
+    read_ipums_sp(
+      nhgis_single_shp,
+      shape_layer = matches("fake-layer"),
+      verbose = FALSE
+    ),
+    "`shape_layer`"
+  )
+
   expect_equal(nrow(shp@data), rows)
   expect_equal(ncol(shp@data), vars_data_shape_sp)
   expect_equal(sort(shp$PMSA)[1:2], pmsa_first2_codes)

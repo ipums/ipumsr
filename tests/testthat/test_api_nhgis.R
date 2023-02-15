@@ -758,6 +758,26 @@ tryCatch(
         )
       )
 
+      expect_error(
+        read_nhgis_sf(
+          table_data_file_path,
+          gis_data_file_path,
+          verbose = FALSE
+        ),
+        "`data_layer`"
+      )
+
+      expect_error(
+        read_nhgis_sf(
+          table_data_file_path,
+          gis_data_file_path,
+          data_layer = contains("blck_grp"),
+          shape_layer = contains("fake-layer"),
+          verbose = FALSE
+        ),
+        "`shape_layer`"
+      )
+
       expect_s3_class(data_shp_sf, "sf")
       expect_equal(nrow(data_shp_sf), nrow(data)) # sf keeps unmatched geoms
       expect_equal(
@@ -774,6 +794,26 @@ tryCatch(
           shape_layer = contains("blck_grp"),
           verbose = FALSE
         )
+      )
+
+      expect_error(
+        read_nhgis_sp(
+          table_data_file_path,
+          gis_data_file_path,
+          verbose = FALSE
+        ),
+        "`data_layer`"
+      )
+
+      expect_error(
+        read_nhgis_sp(
+          table_data_file_path,
+          gis_data_file_path,
+          data_layer = contains("blck_grp"),
+          shape_layer = contains("fake-layer"),
+          verbose = FALSE
+        ),
+        "`shape_layer`"
       )
 
       expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")

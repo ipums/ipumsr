@@ -127,7 +127,7 @@ test_that(
     expect_equal(
       ipumsr:::find_files_in(
         zip_file,
-        name_select = rlang::quo(c(test1.txt, test2.txt)),
+        file_select = rlang::quo(c(test1.txt, test2.txt)),
         multiple_ok = TRUE
       ),
       c("test1.txt", "test2.txt")
@@ -137,7 +137,7 @@ test_that(
     expect_equal(
       ipumsr:::find_files_in(
         zip_file,
-        name_select = rlang::quo(c("test1.txt", "test2.txt")),
+        file_select = rlang::quo(c("test1.txt", "test2.txt")),
         multiple_ok = TRUE
       ),
       c("test1.txt", "test2.txt")
@@ -148,7 +148,7 @@ test_that(
     expect_equal(
       ipumsr:::find_files_in(
         zip_file,
-        name_select = rlang::quo(tidyselect::all_of(my_vars)),
+        file_select = rlang::quo(tidyselect::all_of(my_vars)),
         multiple_ok = TRUE
       ),
       c("test1.txt", "test2.txt")
@@ -159,7 +159,7 @@ test_that(
     expect_equal(
       ipumsr:::find_files_in(
         zip_file,
-        name_select = rlang::quo(starts_with("test")),
+        file_select = rlang::quo(starts_with("test")),
         multiple_ok = TRUE
       ),
       c("test.csv", "test1.txt", "test2.txt")

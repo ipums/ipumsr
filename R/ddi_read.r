@@ -395,7 +395,7 @@ read_nhgis_codebook <- function(cb_file,
   cb_name <- find_files_in(
     cb_file,
     "txt",
-    name_select = file_select,
+    file_select = file_select,
     multiple_ok = FALSE,
     none_ok = FALSE
   )

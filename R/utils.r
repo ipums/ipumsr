@@ -31,7 +31,7 @@ select_var_rows <- function(df, vars, filter_var = "var_name") {
 
 find_files_in <- function(file,
                           name_ext = NULL,
-                          name_select = quo(NULL),
+                          file_select = quo(NULL),
                           multiple_ok = FALSE,
                           none_ok = TRUE) {
 
@@ -70,12 +70,12 @@ find_files_in <- function(file,
     )
   }
 
-  if (!quo_is_null(name_select)) {
+  if (!quo_is_null(file_select)) {
 
     names(file_names) <- file_names
 
     selection <- tryCatch(
-      tidyselect::eval_select(name_select, file_names),
+      tidyselect::eval_select(file_select, file_names),
       error = function(cnd) {
         if (none_ok) {
           return(character(0))
@@ -105,7 +105,7 @@ find_files_in <- function(file,
     file_names_sel <- file_names
   }
 
-  arg_name <- deparse(substitute(name_select))
+  arg_name <- deparse(substitute(file_select))
 
   if (!none_ok && length(file_names_sel) == 0) {
     rlang::abort(

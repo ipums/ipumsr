@@ -360,11 +360,19 @@ read_ipums_sp <- function(shape_file,
     after = FALSE
   )
 
-  read_shape_files <- shape_file_prep(
-    shape_file,
-    shape_layer,
-    bind_multiple,
-    shape_temp
+  tryCatch(
+    read_shape_files <- shape_file_prep(
+      shape_file,
+      shape_layer,
+      bind_multiple,
+      shape_temp
+    ),
+    error = function(cnd) {
+      rlang::abort(
+        fostr_replace_all(conditionMessage(cnd), "file_select", "shape_layer"),
+        call = NULL
+      )
+    }
   )
 
   encoding <- determine_encoding(read_shape_files, encoding)
@@ -560,24 +568,40 @@ read_nhgis_sf <- function(data_file,
     )
   )
 
-  data <- read_nhgis(
-    data_file,
-    file_select = !!enquo(data_layer),
-    show_conditions = verbose,
-    progress = verbose,
-    show_col_types = verbose
+  tryCatch(
+    data <- read_nhgis(
+      data_file,
+      file_select = !!enquo(data_layer),
+      show_conditions = verbose,
+      progress = verbose,
+      show_col_types = verbose
+    ),
+    error = function(cnd) {
+      rlang::abort(
+        fostr_replace_all(conditionMessage(cnd), "file_select", "data_layer"),
+        call = NULL
+      )
+    }
   )
 
   shape_layer <- enquo(shape_layer)
   if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
   if (verbose) cat("Reading geography...\n")
 
-  sf_data <- read_ipums_sf(
-    shape_file,
-    file_select = !!shape_layer,
-    quiet = !verbose,
-    encoding = shape_encoding,
-    bind_multiple = TRUE
+  tryCatch(
+    sf_data <- read_ipums_sf(
+      shape_file,
+      file_select = !!shape_layer,
+      quiet = !verbose,
+      encoding = shape_encoding,
+      bind_multiple = TRUE
+    ),
+    error = function(cnd) {
+      rlang::abort(
+        fostr_replace_all(conditionMessage(cnd), "file_select", "shape_layer"),
+        call = NULL
+      )
+    }
   )
 
   # Only join on vars that are in both and are called "GISJOIN*"
@@ -648,24 +672,40 @@ read_nhgis_sp <- function(data_file,
     )
   )
 
-  data <- read_nhgis(
-    data_file,
-    file_select = !!enquo(data_layer),
-    show_conditions = verbose,
-    progress = verbose,
-    show_col_types = verbose
+  tryCatch(
+    data <- read_nhgis(
+      data_file,
+      file_select = !!enquo(data_layer),
+      show_conditions = verbose,
+      progress = verbose,
+      show_col_types = verbose
+    ),
+    error = function(cnd) {
+      rlang::abort(
+        fostr_replace_all(conditionMessage(cnd), "file_select", "data_layer"),
+        call = NULL
+      )
+    }
   )
 
   shape_layer <- enquo(shape_layer)
   if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
   if (verbose) cat("Reading geography...\n")
 
-  sp_data <- read_ipums_sp(
-    shape_file,
-    !!shape_layer,
-    verbose = verbose,
-    encoding = shape_encoding,
-    bind_multiple = TRUE
+  tryCatch(
+    sp_data <- read_ipums_sp(
+      shape_file,
+      !!shape_layer,
+      verbose = verbose,
+      encoding = shape_encoding,
+      bind_multiple = TRUE
+    ),
+    error = function(cnd) {
+      rlang::abort(
+        fostr_replace_all(conditionMessage(cnd), "file_select", "shape_layer"),
+        call = NULL
+      )
+    }
   )
 
   # Only join on vars that are in both and are called "GISJOIN*"

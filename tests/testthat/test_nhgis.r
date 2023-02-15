@@ -352,7 +352,7 @@ test_that("We get informative error messages when reading NHGIS extracts", {
 
   expect_error(
     nhgis <- read_nhgis(nhgis_multi_ds, show_conditions = FALSE),
-    "Multiple files found"
+    "Multiple files found, please use the `file_select`"
   )
   expect_error(
     nhgis <- read_nhgis(
@@ -360,7 +360,7 @@ test_that("We get informative error messages when reading NHGIS extracts", {
       file_select = contains("nhgis"),
       show_conditions = FALSE
     ),
-    "Multiple files found"
+    "Multiple files found, please use the `file_select`"
   )
   expect_error(
     nhgis <- read_nhgis(
@@ -368,7 +368,7 @@ test_that("We get informative error messages when reading NHGIS extracts", {
       file_select = 1:2,
       show_conditions = FALSE
     ),
-    "Multiple files found"
+    "Multiple files found, please use the `file_select`"
   )
 
   expect_error(
@@ -465,6 +465,13 @@ test_that("Can read Terra codebook", {
 
   lifecycle::expect_deprecated(
     cb <- read_ipums_codebook(terra_area)
+  )
+
+  expect_error(
+    read_ipums_codebook(
+      system.file("extdata", "2552_bundle.zip", package = "ipumsexamples")
+    ),
+    "`data_layer` argument"
   )
 
   expect_equal(dim(cb$var_info), c(4, 10))
