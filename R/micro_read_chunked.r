@@ -160,7 +160,7 @@ read_ipums_micro_chunked <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
@@ -185,7 +185,9 @@ read_ipums_micro_chunked <- function(
   }
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv_chunked(
       data_file,
@@ -229,7 +231,7 @@ read_ipums_micro_list_chunked <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
@@ -251,7 +253,9 @@ read_ipums_micro_list_chunked <- function(
   }
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv_chunked(
       data_file,
@@ -295,7 +299,9 @@ ipumsify_data <- function(
     }
     names(out) <- rectype_label_names(names(out), rt_ddi)
   } else {
-    stop("Don't know what to do with data structure: ", data_structure)
+    rlang::abort(
+      paste0("Don't know what to do with data structure: ", data_structure)
+    )
   }
   out
 }

@@ -432,7 +432,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message, call. = FALSE))
     }
   }
 )
@@ -474,7 +474,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -509,7 +509,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -710,7 +710,7 @@ test_that("Improper extract revisions throw warnings or errors", {
                         invalid = "invalid"),
     paste0(
       "The following fields were either not found in the provided extract ",
-      "or cannot be removed: `description`, `invalid`\nSee ",
+      "or cannot be removed:.+`description`, `invalid`.+Use ",
       "`add_to_extract\\(\\)`"
     )
   )
@@ -720,7 +720,7 @@ test_that("Improper extract revisions throw warnings or errors", {
                    invalid = "invalid"),
     paste0(
       "The following fields were either not found in the provided extract ",
-      "or cannot be modified: `invalid`"
+      "or cannot be modified:.+`invalid`"
     )
   )
   expect_silent(

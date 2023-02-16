@@ -189,6 +189,7 @@ set_ipums_var_attributes <- function(
   var_info,
   var_attrs = c("val_labels", "var_label", "var_desc")
 ) {
+
   if (inherits(var_info, "ipums_ddi")) var_info <- var_info$var_info
   if (is.null(var_info) || is.null(var_attrs)) return(data)
 
@@ -232,10 +233,12 @@ set_ipums_var_attributes <- function(
   )
   class_join <- dplyr::filter(class_join, !.data$coercible)
   if (nrow(class_join) > 0) {
-    stop(paste0(
-      custom_format_text("Data and labels are not of the same type for variables: "),
-      "\n",
-      custom_format_text(paste(class_join$var_name, collapse = ", "), indent = 4, exdent = 4)
+    rlang::abort(c(
+      "Data types in `val_labels` are inconsistent with those found in data.",
+      purrr::set_names(
+        paste0("Problem with: `", class_join$var_name, "`"), "x"
+      ),
+      "i" = "Remove `\"val_labels\"` from `var_attrs` to avoid this error."
     ))
   }
 
@@ -304,20 +307,18 @@ ipums_collect <- function(data, ddi, var_attrs = c("val_labels", "var_label", "v
 
 load_sf_namespace <- function() {
   if (!requireNamespace("sf", quietly = TRUE)) {
-    stop(custom_format_text(
-      "Package 'sf' must be installed to read boundary files as spacial objects.",
-      " Please run command `install.packages('sf')` to continue.",
-      indent = 2, exdent = 2
+    rlang::abort(c(
+      "The `sf` package is required to read IPUMS boundary files.",
+      "i" = "Install it with `install.packages(\"sf\")`"
     ))
   }
 }
 
 load_rgdal_namespace <- function() {
   if (!requireNamespace("rgdal", quietly = TRUE)) {
-    stop(custom_format_text(
-      "Package 'rgdal' must be installed to read boundary files as spacial objects.",
-      " Please run command `install.packages('rgdal')` to continue.",
-      indent = 2, exdent = 2
+    rlang::abort(c(
+      "The `rgdal` package is required to read IPUMS boundary files.",
+      "i" = "Install it with `install.packages(\"rgdal\")`"
     ))
   }
 }
@@ -368,7 +369,9 @@ custom_parse_double <- function(x, var_msg_info = "variable") {
   if (all(is.na(converted) == is.na(x))) {
     return(converted)
   } else {
-    stop("Could not convert ", var_msg_info, " from text to numeric.")
+    rlang::abort(
+      paste0("Could not convert ", var_msg_info, " from text to numeric.")
+    )
   }
 }
 
@@ -377,7 +380,9 @@ custom_parse_integer <- function(x, var_msg_info = "variable") {
   if (all(is.na(converted) == is.na(x))) {
     return(converted)
   } else {
-    stop("Could not convert ", var_msg_info, " from text to integer.")
+    rlang::abort(
+      paste0("Could not convert ", var_msg_info, " from text to integer.")
+    )
   }
 }
 
@@ -395,8 +400,12 @@ custom_cat <- function(..., indent = 0, exdent = 0) {
 }
 
 custom_check_file_exists <- function(file, extra_ext = NULL) {
-  if (length(file) == 0) stop("Expected filepath but got empty.")
-  if (length(file) != 1 && !is.null(extra_ext)) stop("Bad filename argument.")
+  if (length(file) == 0) {
+    rlang::abort("Expected a file path but got an empty value.")
+  }
+  if (length(file) != 1 && !is.null(extra_ext)) {
+    rlang::abort("Bad file path argument.")
+  }
 
   # If a path is passed with a trailing "/", file.exists returns FALSE, so
   # this is a way to remove that trailing /
@@ -411,14 +420,12 @@ custom_check_file_exists <- function(file, extra_ext = NULL) {
   if (!any(exists_check)) {
     file <- file[1]
     if (dirname(file) == ".") {
-      stop(paste0(
-        "Could not find file named '", file, "' in current working directory (",
-        getwd(), ")"
+      rlang::abort(paste0(
+        "Could not find file `", file.path(getwd(), basename(file)), "`."
       ))
     } else {
-      stop(paste0(
-        "Could not find file, check the path in argument 'file':\n  ",
-        file
+      rlang::abort(paste0(
+        "Could not find file `", file, "`"
       ))
     }
   } else {
@@ -533,7 +540,7 @@ fostr_split <- function(string, pattern) {
 fostr_named_capture <- function(string, pattern, only_matches = FALSE) {
   matches <- regexpr(pattern, string, perl = TRUE)
   if (is.null(attr(matches, "capture.start"))) {
-    stop("No named capture items in regex")
+    rlang::abort("No named capture items in regex")
   }
   capture_names <- colnames(attr(matches, "capture.start"))
   capture_names <- capture_names[capture_names != ""]
@@ -555,7 +562,9 @@ fostr_named_capture <- function(string, pattern, only_matches = FALSE) {
 
 fostr_named_capture_single <- function(string, pattern, only_matches = FALSE) {
   out <- fostr_named_capture(string, pattern, only_matches)
-  if (ncol(out) > 1) stop("Found multiple capture groups when expected only one")
+  if (ncol(out) > 1) {
+    rlang::abort("Found multiple capture groups when expected only one")
+  }
   out[[1]]
 }
 

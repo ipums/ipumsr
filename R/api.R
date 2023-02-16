@@ -482,12 +482,11 @@ define_extract_nhgis <- function(description = "",
   }
 
   if (is.list(geographic_extents)) {
-    warning(
+    rlang::warn(paste0(
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be applied to all datasets.",
-      call. = FALSE
-    )
+      "be applied to all datasets."
+    ))
   }
 
   extract <- new_ipums_extract(
@@ -559,12 +558,18 @@ define_extract_from_json <- function(extract_json) {
   collection <- jsonlite::fromJSON(extract_json)$collection
 
   if (is.null(collection)) {
-    stop(
-      "Could not determine the collection associated with this extract ",
-      "definition. Ensure that the JSON file includes an element containing ",
-      "the IPUMS collection associated with the extract. ",
-      "(For example, `\"collection\": \"usa\"`)",
-      call. = FALSE
+    rlang::abort(
+      c(
+        paste0(
+          "Could not determine the collection associated with this extract ",
+          "definition."
+        ),
+        paste0(
+          "Ensure that the JSON file includes an element containing ",
+          "the IPUMS collection associated with the extract. ",
+          "(For example, `\"collection\": \"usa\"`)"
+        )
+      )
     )
   }
 
@@ -577,29 +582,23 @@ define_extract_from_json <- function(extract_json) {
   )
 
   if (length(list_of_extracts) != 1) {
-    stop(
-      paste0(
-        "`extract_json` should contain the definition of one and only one ",
-        "extract"
-      ),
-      call. = FALSE
+    rlang::abort(
+      "`extract_json` should only contain the definition for a single extract"
     )
   }
 
   if (is.null(json_api_version)) {
-    warning(
+    rlang::warn(paste0(
       "Could not determine the API version corresponding to the provided ",
       "extract definition. ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(collection), ".",
-      call. = FALSE
-    )
+      "requests using API version ", ipums_api_version(collection), "."
+    ))
   } else if (ipums_api_version(collection) != json_api_version){
-    warning(
+    rlang::warn(paste0(
       "The extract provided in `extract_json` was made using API version ",
       json_api_version, ". ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(collection), ".",
-      call. = FALSE
-    )
+      "requests using API version ", ipums_api_version(collection), "."
+    ))
   }
 
   list_of_extracts[[1]]
@@ -1229,7 +1228,9 @@ download_extract <- function(extract,
   download_dir_doesnt_exist <- !dir.exists(download_dir)
 
   if (download_dir_doesnt_exist) {
-    stop("The directory ", download_dir, " does not exist.", call. = FALSE)
+    rlang::abort(
+      paste0("The directory `", download_dir, "` does not exist.")
+    )
   }
 
   ipums_extract_specific_download(extract, download_dir, overwrite, api_key)
@@ -1549,23 +1550,23 @@ add_to_extract.nhgis_extract <- function(extract,
                                          ...) {
 
   if (is.list(geographic_extents)) {
-    warning(
+    rlang::warn(paste0(
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be applied to all datasets.",
-      call. = FALSE
-    )
+      "be applied to all datasets."
+    ))
   }
 
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
-    warning(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be modified: `",
-      paste0(names(dots), collapse = "`, `"), "`",
-      call. = FALSE
-    )
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be modified: "
+      ),
+      paste0(paste0("`", names(dots), "`"), collapse = ", ")
+    ))
   }
 
   # We will only recycle the child fields for the newly-specified parent fields
@@ -1968,23 +1969,25 @@ remove_from_extract.nhgis_extract <- function(extract,
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
-    warning(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be removed: `",
-      paste0(names(dots), collapse = "`, `"), "`\n",
-      "See `add_to_extract()` to replace existing values in applicable extract ",
-      "fields.",
-      call. = FALSE
-    )
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be removed: "
+      ),
+      "*" = paste0(paste0("`", names(dots), "`"), collapse = ", "),
+      "i" = paste0(
+        "Use `add_to_extract()` to replace existing values in valid extract ",
+        "fields."
+      )
+    ))
   }
 
   if (is.list(geographic_extents)) {
-    warning(
+    rlang::warn(paste0(
       "`geographic_extents` was provided as a list, but this parameter ",
       "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be removed from all datasets.",
-      call. = FALSE
-    )
+      "be removed from all datasets."
+    ))
   }
 
   new_ds <- setdiff_null(extract$datasets, datasets)
@@ -2294,9 +2297,8 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   collection <- unique(extract_tbl$collection)
 
   if (length(collection) > 1) {
-    stop(
-      "All extracts in `extract_tbl` must belong to same collection.",
-      call. = FALSE
+    rlang::abort(
+      "All extracts in `extract_tbl` must belong to same collection."
     )
   }
 
@@ -2307,20 +2309,22 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   unexpected_names <- setdiff(names(extract_tbl), expected_names)
 
   if (length(unexpected_names) > 0) {
-    stop(
-      "Unexpected names in `extract_tbl`: ",
-      paste0('"', unexpected_names, '"', collapse = ", "),
-      call. = FALSE
+    rlang::abort(
+      c(
+        "Unexpected names in `extract_tbl`: ",
+        paste0("\"", unexpected_names, "\"", collapse = ", ")
+      )
     )
   }
 
   if (collection == "nhgis") {
 
     if (!requireNamespace("tidyr", quietly = TRUE)) {
-      stop(
-        "Package \"tidyr\" must be installed to convert NHGIS extracts from ",
-        "tbl to list format.",
-        call. = FALSE
+      rlang::abort(
+        paste0(
+          "The `tidyr` package must be installed to convert NHGIS extracts ",
+          "from tbl to list format."
+        )
       )
     }
 
@@ -2387,9 +2391,8 @@ extract_list_to_tbl <- function(extract_list) {
   )
 
   if(length(extract_types) != 1) {
-    stop(
-      "All extracts in `extract_list` must belong to same collection.",
-      call. = FALSE
+    rlang::abort(
+      "All extracts in `extract_list` must belong to same collection."
     )
   }
 
@@ -4184,8 +4187,12 @@ ipums_api_download_request <- function(url,
   file_already_exists <- file.exists(file_path)
 
   if (file.exists(file_path) && !overwrite) {
-    stop("File ", file_path, " already exists. If you want to overwrite, set ",
-         "`overwrite` to TRUE.", call. = FALSE)
+    rlang::abort(
+      c(
+        paste0("File `", file_path, "` already exists."),
+        "To overwrite, set `overwrite = TRUE`"
+      )
+    )
   }
 
   response <- httr::GET(
@@ -4328,11 +4335,14 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   # Currently, if any of the files to be downloaded (table or gis) exist,
   # no files are downloaded.
   if (length(existing_files) > 0 && !overwrite) {
-    stop(
-      "The following files already exist: ",
-      paste0(existing_files, collapse = ", "),
-      "\nIf you want to overwrite, set `overwrite` to TRUE.",
-      call. = FALSE
+    rlang::abort(
+      c(
+        paste0(
+          "The following files already exist: ",
+          paste0("\"", existing_files, "\"", collapse = ", ")
+        ),
+        "i" = "To overwrite, set `overwrite = TRUE`."
+      )
     )
   }
 
@@ -4390,7 +4400,7 @@ ipums_api_json_request <- function(verb,
     is.list(queries) && !is.null(names(queries)) && !any(names(queries) == "")
 
   if (!queries_is_null_or_named_list) {
-    stop("`queries` argument must be NULL or a named list")
+    rlang::abort("`queries` argument must be `NULL` or a named list")
   }
 
   api_url <- httr::modify_url(
@@ -4421,13 +4431,15 @@ ipums_api_json_request <- function(verb,
       tryCatch(
         error_details <- parse_400_error(res),
         error = function(cond) {
-          stop(
-            "Received error from server (status code 400), but could not ",
-            "parse response for more details."
+          rlang::abort(
+            paste0(
+              "Received error from server (status code 400), but could not ",
+              "parse response for more details."
+            )
           )
         }
       )
-      stop(error_details, call. = FALSE)
+      rlang::abort(error_details)
     } else if (httr::status_code(res) == 404) {
       if (fostr_detect(path, "^extracts/\\d+$")) {
         extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
@@ -4438,37 +4450,30 @@ ipums_api_json_request <- function(verb,
         most_recent_extract_number <- most_recent_extract[[1]]$number
         if (extract_number > most_recent_extract_number) {
           coll <- format_collection_for_printing(collection)
-          stop(coll, " extract number ", extract_number, " does not exist; ",
-               "most recent extract number is ", most_recent_extract_number,
-               call. = FALSE)
+          rlang::abort(
+            c(
+              paste0(
+                coll, " extract number ",
+                extract_number, " does not exist."
+              ),
+              paste0("Most recent extract number: ",
+                     most_recent_extract_number)
+            )
+          )
         }
       }
-      stop("URL not found", call. = FALSE)
-    } else if (httr::status_code(res) %in% 500:599) {
-      stop(
-        sprintf(
-          "Extract API request failed: %s [%s]\n%s",
-          api_url,
-          httr::status_code(res),
-          httr::content(res, "text")
-        ),
-        call. = FALSE
-      )
-    } else { # other non-success codes, e.g. 300s
-      stop(
-        sprintf(
-          "Extract API request failed: %s [%s]\n%s",
-          api_url,
-          httr::status_code(res),
-          httr::content(res, "text")
-        ),
-        call. = FALSE
-      )
+      rlang::abort("URL not found")
+    } else { # other non-success codes, e.g. 300s + 500s
+      rlang::abort(c(
+        paste0("Extract API request failed with status ", httr::status_code(res)),
+        paste0("URL: ", api_url),
+        paste0("Content: ", httr::content(res, "text"))
+      ))
     }
   }
 
   if (httr::http_type(res) != "application/json") {
-    stop("Extract API did not return json", call. = FALSE)
+    rlang::abort("Extract API did not return json")
   }
 
   new_ipums_json(
@@ -4663,10 +4668,13 @@ parse_400_error <- function(res) {
   )
   response_detail <- response_content$detail
   response_detail <- unlist(response_detail)
-  error_message <- paste0(
-    "Received status code ", res$status_code,
-    " with the following details:\n\n",
-    paste0(response_detail, collapse = "\n\n")
+  error_message <- c(
+    paste0(
+      "Received status code ",
+      res$status_code,
+      " with the following details:"
+    ),
+    response_detail
   )
   return(error_message)
 }
@@ -4738,12 +4746,13 @@ add_to_extract_micro <- function(extract,
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
-    warning(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be modified: `",
-      paste0(names(dots), collapse = "`, `"), "`",
-      call. = FALSE
-    )
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be modified: "
+      ),
+      paste0(paste0("`", names(dots), "`"), collapse = ", ")
+    ))
   }
 
   # Remove these once we allow for hierarchical and rectangular on H extracts
@@ -4794,14 +4803,17 @@ remove_from_extract_micro <- function(extract,
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
-    warning(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be removed: `",
-      paste0(names(dots), collapse = "`, `"), "`\n",
-      "See `add_to_extract()` to replace existing values in applicable extract ",
-      "fields.",
-      call. = FALSE
-    )
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be removed: "
+      ),
+      "*" = paste0(paste0("`", names(dots), "`"), collapse = ", "),
+      "i" = paste0(
+        "Use `add_to_extract()` to replace existing values in valid extract ",
+        "fields."
+      )
+    ))
   }
 
   extract <- new_ipums_extract(
@@ -5041,10 +5053,11 @@ extract_to_tbl.nhgis_extract <- function(x) {
 collapse_nhgis_extract_tbl <- function(extract_tbl) {
 
   if (!requireNamespace("tidyr", quietly = TRUE)) {
-    stop(
-      "Package \"tidyr\" must be installed to convert NHGIS extracts from tbl ",
-      "to list format.",
-      call. = FALSE
+    rlang::abort(
+      paste0(
+        "Package `tidyr` must be installed to convert NHGIS extracts from tbl ",
+        "to list format."
+      )
     )
   }
 
@@ -5259,10 +5272,7 @@ convert_to_relative_path <- function(path) {
   path_components <- strsplit(path, "/|\\\\", perl = TRUE)[[1]]
   wd_components <- strsplit(getwd(), "/|\\\\", perl = TRUE)[[1]]
   if (identical(path_components, wd_components)) {
-    stop(
-      "Supplied path cannot be the path to the working directory",
-      call. = FALSE
-    )
+    rlang::abort("Supplied path cannot be the path to the working directory")
   }
   path_length <- length(path_components)
   wd_length <- length(wd_components)
@@ -5271,7 +5281,7 @@ convert_to_relative_path <- function(path) {
   wd_components_min_length <- wd_components[1:min_length]
   components_match <- path_components_min_length == wd_components_min_length
   if (!any(components_match)) {
-    stop("Supplied path must be an absolute path", call. = FALSE)
+    rlang::abort("Supplied path must be an absolute path")
   }
   on_same_branch <- all(components_match)
   if (on_same_branch) {

@@ -1,6 +1,6 @@
 
 test_that(
-  "select_var_rows respects dplyr-select style syntax",
+  "select_var_rows respects tidyselect syntax",
   {
     # Note that select_var_rows takes the quosure as an argument
     # Seems okay because this is an internal function, but possibly
@@ -49,7 +49,7 @@ test_that(
 )
 
 test_that(
-  "find_files_in respects dplyr-select style syntax",
+  "find_files_in respects tidyselect syntax",
   {
     # mpcstats doesn't have zip installed correctly...
     # So check and skip this test if zip doesn't run

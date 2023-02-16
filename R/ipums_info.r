@@ -126,7 +126,10 @@ ipums_var_label <- function(object, var = NULL) {
 ipums_var_label.default <- function(object, var = NULL) {
   out <- ipums_var_info(object, !!enquo(var))
 
-  if (nrow(out) > 1) warning("Found multiple variables. Giving variable label from first.")
+  if (nrow(out) > 1) {
+    rlang::warn("Found multiple variables. Giving variable label from first.")
+  }
+
   out$var_label[1]
 }
 
@@ -140,7 +143,12 @@ ipums_var_desc <- function(object, var = NULL) {
 ipums_var_desc.default <- function(object, var = NULL) {
   out <- ipums_var_info(object, !!enquo(var))
 
-  if (nrow(out) > 1) warning("Found multiple variables. Giving variable description from first.")
+  if (nrow(out) > 1) {
+    rlang::warn(
+      "Found multiple variables. Giving variable description from first."
+    )
+  }
+
   out$var_desc[1]
 }
 
@@ -154,7 +162,10 @@ ipums_val_labels <- function(object, var = NULL) {
 ipums_val_labels.default <- function(object, var = NULL) {
   out <- ipums_var_info(object, !!enquo(var))
 
-  if (nrow(out) > 1) warning("Found multiple variables. Giving value labels from first.")
+  if (nrow(out) > 1) {
+    rlang::warn("Found multiple variables. Giving value labels from first.")
+  }
+
   out$val_labels[[1]]
 }
 
@@ -218,7 +229,7 @@ ipums_conditions <- function(object = NULL) {
     out <- paste0(object$conditions, "\n\n")
     if (!is.null(object$citation)) out <- paste0(out, object$citation, "\n\n")
   } else {
-    stop("Could not find ipums condition for object.")
+    rlang::abort("Could not find ipums condition for object.")
   }
   class(out) <- "ipums_formatted_print"
   out

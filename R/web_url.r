@@ -85,30 +85,23 @@ ipums_website.default <- function(
 }
 
 get_ipums_url <- function(var, project, verbose = TRUE, homepage_if_missing = FALSE) {
+
   if (is.null(project)) {
-    stop(paste(
-      custom_format_text(
-        "Project not found. Please specify the project name using ",
-        "'project' argument. Options include: ", indent = 2, exdent = 2
-      ),
-      custom_format_text(
-        paste(all_proj_names(), collapse = ", "), indent = 4, exdent = 4
-      ),
-      sep = "\n"
+    rlang::abort(c(
+      "No project found. Use `project` to specify a project. Available projects:",
+      paste0("\"", all_proj_names(), "\"")
     ))
   }
+
   config <- get_proj_config(project)
 
+  # TODO: This does not actually error on missing projects, because
+  # get_proj_config() returns a default config for invalid projects.
+  # Better check would just be that the project name is in all_proj_names()
   if (is.null(config)) {
-    stop(paste(
-      custom_format_text(
-        "Unexpected project '", project, "'. ",
-        "Options include: ", indent = 2, exdent = 2
-      ),
-      custom_format_text(
-        paste(all_proj_names(), collapse = ", "), indent = 4, exdent = 4
-      ),
-      sep = "\n"
+    rlang::abort(c(
+      "Unexpected project. Available projects:",
+      paste0("\"", all_proj_names(), "\"")
     ))
   }
 

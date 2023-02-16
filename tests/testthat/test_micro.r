@@ -149,8 +149,14 @@ test_that(
 
 test_that(
   "Informative error when no ddi file", {
-    expect_error(read_ipums_micro("FAKE_FILE.xml"), "working directory")
-    expect_error(read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"), "check the path")
+    expect_error(
+      read_ipums_micro("FAKE_FILE.xml"),
+      "Could not find file `/.+/FAKE_FILE.xml`"
+    )
+    expect_error(
+      read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"),
+      "Could not find file `C:/FAKE_FOLDER/FAKE_FILE.xml`"
+    )
   })
 
 test_that("keyvar is loaded regardless of selection in hierarchical", {

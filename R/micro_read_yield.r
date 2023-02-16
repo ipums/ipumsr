@@ -124,15 +124,15 @@ IpumsLongYield <- R6::R6Class(
     ) {
       lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
       if (lower_vars_was_ignored) {
-        warning(lower_vars_ignored_warning())
+        rlang::warn(lower_vars_ignored_warning())
       }
       if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
       if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
       if (fostr_detect(data_file, "\\.csv$|\\.csv\\.gz$")) {
-        stop(
-          "read_ipums_micro_yield does not support reading from .csv ",
-          "formatted data files, only from .dat (or .dat.gz) files"
-        )
+        rlang::abort(paste0(
+          "`read_ipums_micro_yield()` does not support .csv ",
+          "files, only .dat (or .dat.gz) files"
+        ))
       }
 
       data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
@@ -183,15 +183,15 @@ IpumsListYield <- R6::R6Class(
     ) {
       lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
       if (lower_vars_was_ignored) {
-        warning(lower_vars_ignored_warning())
+        rlang::warn(lower_vars_ignored_warning())
       }
       if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
       if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
       if (fostr_detect(data_file, "\\.csv$|\\.csv\\.gz$")) {
-        stop(
-          "read_ipums_micro_yield does not support reading from .csv ",
-          "formatted data files, only from .dat (or .dat.gz) files"
-        )
+        rlang::abort(paste0(
+          "`read_ipums_micro_yield()` does not support .csv ",
+          "files, only .dat (or .dat.gz) files"
+        ))
       }
 
       data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))

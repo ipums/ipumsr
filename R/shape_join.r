@@ -79,23 +79,23 @@ ipums_shape_full_join <- function(data, shape_data, by, suffix = c("", "SHAPE"),
 
 
 ipums_shape_join <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   UseMethod("ipums_shape_join", shape_data)
 }
 
 ipums_shape_join.sf <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   if (is.null(names(by))) {
     by_shape <- by
@@ -109,8 +109,8 @@ ipums_shape_join.sf <- function(
   }
   direction <- match.arg(direction)
 
-  check_shape_join_names(by_shape, names(shape_data), "shape data")
-  check_shape_join_names(by_data, names(data), "data")
+  check_shape_join_names(by_shape, names(shape_data), "`shape_data`")
+  check_shape_join_names(by_data, names(data), "`data`")
 
   # We're pretending like the x in the join is the data, but
   # because of the join functions dispatch, we will actually be
@@ -147,12 +147,12 @@ ipums_shape_join.sf <- function(
 }
 
 ipums_shape_join.SpatialPolygonsDataFrame <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   if (is.null(names(by))) {
     by_shape <- by
@@ -166,15 +166,15 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
   }
   direction <- match.arg(direction)
   if (direction %in% c("left", "full")) { # Note that directions are reversed because of dispatch
-    stop(paste0(
-      "Only inner and right joins are supported for SpatialPolygonsDataFrame (sp) data ",
-      "because non-matched observations from the data would create NULL geometries which ",
-      "are not allowed in the sp package."
+    rlang::abort(paste0(
+      "Only inner and right joins are supported for ",
+      "`SpatialPolygonsDataFrame` objects to avoid the creation of `NULL` ",
+      "geomtries."
     ))
   }
 
-  check_shape_join_names(by_shape, names(shape_data@data), "shape data")
-  check_shape_join_names(by_data, names(data), "data")
+  check_shape_join_names(by_shape, names(shape_data@data), "`shape_data`")
+  check_shape_join_names(by_data, names(data), "`data`")
 
   # We're pretending like the x in the join is the data, but
   # because of the join functions dispatch, we will actually be
@@ -198,7 +198,7 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
   if (verbose) {
     join_fail_attributes <- try(check_for_join_failures(out, by, alligned$shape_data, alligned$data))
     if (inherits(join_fail_attributes, "try-error")) {
-      warning("Join failures not available.")
+      rlang::warn("Join failures not available.")
       join_fail_attributes <- NULL
     }
   } else {
@@ -220,9 +220,9 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
 check_shape_join_names <- function(by_names, data_names, display) {
   not_avail <- dplyr::setdiff(by_names, data_names)
   if (length(not_avail) > 0) {
-    stop(custom_format_text(
-      "Variables ", paste(not_avail, collapse = ", "), " are not in ", display, ".",
-      indent = 2, exdent = 2
+    rlang::abort(c(
+      paste0("Join columns must be present in ", display, "."),
+      purrr::set_names(paste0("Problem with: `", not_avail, "`"), "x")
     ))
   }
 }
@@ -270,14 +270,14 @@ allign_id_vars <- function(shape_data, data, by) {
           data[[by[iii]]] <- as.character(data[[by[iii]]])
           shape_data[[by[iii]]] <- as.character(shape_data[[by[iii]]])
         },
-        "double" = {stop("Shape data has factor id var, but data has numeric id var")},
-        "integer" = {stop("Shape data has factor id var, but data has integer id var")}
+        "double" = {rlang::abort("Shape data has factor id var, but data has numeric id var")},
+        "integer" = {rlang::abort("Shape data has factor id var, but data has integer id var")}
       )
     } else if (shape_type[iii] == "double") {
       switch(
         data_type[iii],
         "character" = {data <- custom_parse_double(data[[by[iii]]])},
-        "factor" = {stop("Shape data has numeric id var, but data has factor id var")},
+        "factor" = {rlang::abort("Shape data has numeric id var, but data has factor id var")},
         "double" = NULL,
         "integer" = {data[[by[iii]]] <- as.double(data[[by[iii]]])}
       )
@@ -285,7 +285,7 @@ allign_id_vars <- function(shape_data, data, by) {
       switch(
         data_type[iii],
         "character" = {data <- custom_parse_integer(data[[by[iii]]])},
-        "factor" = {stop("Shape data has integer id var, but data has factor id var")},
+        "factor" = {rlang::abort("Shape data has integer id var, but data has factor id var")},
         "double" = {shape_data[[by[iii]]] <- as.double(shape_data[[by[iii]]])},
         "integer" = NULL
       )

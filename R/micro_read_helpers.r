@@ -52,10 +52,12 @@ ddi_to_rtinfo <- function(ddi) {
     out <- hipread::hip_rt(1, 0)
   } else if (ddi$file_type == "hierarchical") {
     rec_vinfo <- dplyr::filter(ddi$var_info, .data$var_name == ddi$rectype_idvar)
-    if (nrow(rec_vinfo) > 1) stop("Cannot support multiple rectype id variables.", call. = FALSE)
+    if (nrow(rec_vinfo) > 1) {
+      rlang::abort("Cannot support multiple rectype id variables.")
+    }
     out <- hipread::hip_rt(rec_vinfo$start, rec_vinfo$end - rec_vinfo$start + 1)
   } else {
-    stop(paste0("Unexpected file type: ", ddi$file_type))
+    rlang::abort(paste0("Unexpected file type: \"", ddi$file_type, "\""))
   }
   out
 }
@@ -84,7 +86,7 @@ ddi_to_colspec <- function(ddi, out_type, verbose) {
     } else if (is.numeric(col_info_rts[[1]][1])){
       col_info$rectypes <- purrr::flatten_dbl(col_info_rts)
     } else {
-      stop("Unexpected rectype variable type.")
+      rlang::abort("Unexpected rectype variable type.")
     }
 
     rts <- unique(col_info$rectypes)
@@ -100,7 +102,7 @@ ddi_to_colspec <- function(ddi, out_type, verbose) {
     })
     names(out) <- rts
   } else {
-    stop(paste0("Unexpected file type: ", ddi$file_type))
+    rlang::abort(paste0("Unexpected file type: \"", ddi$file_type, "\""))
   }
   out
 }

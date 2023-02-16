@@ -31,14 +31,11 @@ ipums_example <- function(path = NULL) {
   } else {
     file <- system.file("extdata", path, package = "ipumsr")
     if (!file.exists(file)) {
-      all_files <- paste(dir(system.file("extdata", package = "ipumsr")), collapse = ", ")
-      stop(paste(
-        custom_format_text(
-          "Could not find file '", path, "' in examples. Available files are:",
-          indent = 2, exdent = 2
-        ),
-        custom_format_text(all_files, indent = 4, exdent = 4),
-        sep = "\n"
+      all_files <- dir(system.file("extdata", package = "ipumsr"))
+      rlang::abort(c(
+        paste0("Could not find file \"", path,
+               "\" in examples. Available files:"),
+        all_files
       ))
     }
   }

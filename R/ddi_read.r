@@ -142,7 +142,7 @@ read_ipums_ddi <- function(ddi_file,
   # File information
   files <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:fileDscr")
   if (length(files) > 1) {
-    warning("Extracts with multiple files not supported, using first file.", call. = FALSE)
+    rlang::warn("Extracts with multiple files not supported, using first file.")
   }
 
   file_name <- xml_text_from_path_first(

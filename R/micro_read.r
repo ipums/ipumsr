@@ -125,7 +125,7 @@ read_ipums_micro <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
@@ -140,7 +140,9 @@ read_ipums_micro <- function(
   ddi <- ddi_filter_vars(ddi, vars, "long", verbose)
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv(
       data_file,
@@ -183,7 +185,7 @@ read_ipums_micro_list <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
@@ -200,7 +202,9 @@ read_ipums_micro_list <- function(
   ddi <- ddi_filter_vars(ddi, vars, "list", verbose)
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv(
       data_file,
@@ -242,11 +246,14 @@ check_if_lower_vars_ignored <- function(ddi, lower_vars) {
   inherits(ddi, "ipums_ddi") & lower_vars
 }
 
+# TODO: Why is this? Should we add a way to alter the ipums_ddi object
+# to be consistent with lower_vars = TRUE on load?
 lower_vars_ignored_warning <- function() {
-  paste0(
-    "Argument lower_vars was set to TRUE but has been ignored because ",
-    "argument ddi is an ipums_ddi object. To obtain lowercase names in both ",
-    "the ipums_ddi object and the data, set lower_vars to TRUE in your call ",
-    "to function `read_ipums_ddi`."
+  c(
+    "Setting `lower_vars = FALSE` because `ddi` is an `ipums_ddi` object.",
+    "i" = paste0(
+      "To obtain an `ipums_ddi` with lowercase variables, set ",
+      "`lower_vars = TRUE` in `read_ipums_ddi()`."
+    )
   )
 }

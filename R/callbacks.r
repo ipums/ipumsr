@@ -179,9 +179,9 @@ IpumsBiglmCallback <-  R6::R6Class(
   public = list(
     initialize = function(model, prep = function(x, pos) x, ...) {
       if (!requireNamespace("biglm")) {
-        stop(paste0(
-          "'biglm' package required for IpumsBiglmCallback, ",
-          "install using command `install.packages('biglm')`"
+        rlang::abort(c(
+          "The `biglm` package is required for `IpumsBiglmCallback`.",
+          "i" = "Install it with `install.packages(\"biglm\")`"
         ))
       }
       private$prep <- prep

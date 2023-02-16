@@ -85,7 +85,7 @@ if (have_api_access) {
   },
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   })
 
@@ -828,7 +828,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -930,7 +930,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -970,7 +970,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -1221,7 +1221,7 @@ test_that("Improper extract revisions throw warnings or errors", {
     ),
     regexp = paste0(
       "The following fields were either not found in the provided extract ",
-      "or cannot be removed: `description`, `bad_field`"
+      "or cannot be removed:.+`description`, `bad_field`"
     )
   )
   expect_warning(
@@ -1265,7 +1265,7 @@ test_that("Improper extract revisions throw warnings or errors", {
     add_to_extract(nhgis_extract, vars = "var", number = 45),
     paste0(
       "The following fields were either not found in the ",
-      "provided extract or cannot be modified: `vars`, `number`"
+      "provided extract or cannot be modified:.+`vars`, `number`"
     )
   )
   expect_identical(

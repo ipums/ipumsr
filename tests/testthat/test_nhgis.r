@@ -346,8 +346,8 @@ test_that("We get informative error messages when reading NHGIS extracts", {
   )
 
   expect_error(
-    read_nhgis("C:/FAKE_FOLDER/FAKE_FILE.zip", show_conditions = FALSE),
-    "Could not find file, check the path"
+    read_nhgis("~/Desktop/FAKE_FILE.zip", show_conditions = FALSE),
+    "Could not find file `/.+/Desktop/FAKE_FILE.zip"
   )
 
   expect_error(

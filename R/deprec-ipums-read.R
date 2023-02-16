@@ -146,7 +146,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   }
 
   if (is.null(cb)) {
-    stop("Could not find text codebook.")
+    rlang::abort("Could not find text codebook.")
   }
   # Section markers are a line full of dashes (setting to 5+ to eliminate false positives)
   section_markers <- which(fostr_detect(cb, "^[-]{5,}$"))
@@ -154,7 +154,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   # Second line tells if it is NHGIS or IPUMS Terra codebook
   if (fostr_detect(cb[2], "IPUMS Terra")) type <- "IPUMS Terra"
   else if (fostr_detect(cb[2], "NHGIS")) type <- "NHGIS"
-  else stop("Unknown codebook format.")
+  else rlang::abort("Unknown codebook format.")
 
   # Get table names (var_desc) and variable labels (var_label)
   # from data dictionary section using messy string parsing code
@@ -175,9 +175,9 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
       this_file <- which(data_file_names == tidyselect::vars_select(data_file_names, !!data_layer))
     }
     if (length(this_file) > 1) {
-      stop(custom_format_text(
+      rlang::abort(paste0(
         "Multiple codebooks found, please specify which to use with the",
-        "`data_layer` argument", indent = 2, exdent = 2
+        "`data_layer` argument"
       ))
     }
     var_info <- dd[data_file_sections[[this_file]]]

@@ -180,7 +180,7 @@ test_that("lbl_relabel: error when x has no labels", {
       lbl(1, "Pre-college age") ~ .val < 18,
       lbl(2, "College age") ~ .val >= 18 & .val <= 22
     ),
-    regexp = "Vector must be labelled"
+    regexp = "`x` must be labelled.+To add labels.+`lbl_define\\(\\)`"
   )
 })
 
@@ -209,7 +209,7 @@ test_that("lbl_define: error when x is already labelled", {
       college_age,
       lbl(3, "Post-college age") ~ .val > 22
     ),
-    regexp = "Vector should not have labels"
+    regexp = "`x` should be unlabelled.+To relabel.+use `lbl_relabel\\(\\)`"
   )
 })
 

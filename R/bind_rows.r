@@ -62,11 +62,13 @@ ipums_bind_rows <- function(..., .id = NULL) {
 
   vars_w_incompat_attrs <- unique_var_names[purrr::map_lgl(attrs_by_var, ~ is_FALSE(.))]
   if (length(vars_w_incompat_attrs) > 0) {
-    warning(
-      "IPUMS attributes have been removed from the following columns, which ",
-      "had incompatible attributes across the data.frames to be combined: ",
-      paste0(vars_w_incompat_attrs, collapse = ",")
-    )
+    rlang::warn(c(
+      paste0(
+        "IPUMS attributes have been removed from the following columns, which ",
+        "had incompatible attributes across the data frames to be combined: "
+      ),
+      paste0(paste0("`", vars_w_incompat_attrs, "`"), collapse = ", ")
+    ))
   }
 
   out <- dplyr::bind_rows(d_list, .id = .id)

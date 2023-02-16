@@ -83,6 +83,9 @@ get_proj_config <- function(proj) {
   out
 }
 
+# TODO: These project names are somewhat out of date and should be reconciled
+# with language in rest of package. Also we should probably support the lowercase
+# collection names used in API here.
 all_proj_names <- function() {
   names(proj_config)
 }

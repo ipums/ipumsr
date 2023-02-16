@@ -77,7 +77,7 @@ test_that("lower_vars = TRUE warning on rectangular .dat.gz", {
 
   expect_warning(
     data <- read_ipums_micro(ddi, verbose = FALSE, lower_vars = TRUE),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   expect_equal(names(data), toupper(names(data)))
 })
@@ -88,7 +88,7 @@ test_that("lower_vars = TRUE warning on hierarchical .dat.gz", {
 
   expect_warning(
     data <- read_ipums_micro_list(ddi, verbose = FALSE, lower_vars = TRUE),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   expect_equal(names(data$PERSON), toupper(names(data$PERSON)))
 })
@@ -124,7 +124,7 @@ test_that("lower_vars arg works on chunked rectangular .dat.gz", {
       verbose = FALSE,
       lower_vars = TRUE
     ),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   expect_equal(names(data), toupper(names(data)))
 
@@ -159,7 +159,7 @@ test_that("lower_vars arg works on chunked hierarchical .dat.gz", {
       verbose = FALSE,
       lower_vars = TRUE
     ),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   data_combined <- list(
     HOUSEHOLD = ipums_bind_rows(
@@ -238,7 +238,7 @@ test_that("lower_vars arg works with _yield on rectangular .dat.gz", {
       verbose = FALSE,
       lower_vars = TRUE
     ),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   cps_yield <- list()
   while(!cps_yield_source$is_done()) {
@@ -288,7 +288,7 @@ test_that("lower_vars arg works with _yield on hierarchical .dat.gz", {
       verbose = FALSE,
       lower_vars = TRUE
     ),
-    regexp = "has been ignored"
+    regexp = "Setting `lower_vars = FALSE`"
   )
   cps_yield <- list()
   while(!cps_yield_source$is_done()) {

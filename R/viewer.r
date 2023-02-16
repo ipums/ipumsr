@@ -27,10 +27,12 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
     !requireNamespace("shiny", quietly = TRUE) ||
     !requireNamespace("DT", quietly = TRUE)
   ) {
-    stop(custom_format_text(
-      "Please install htmltools, shiny, and DT using ",
-      "`install.packages(c('htmltools', 'shiny', 'DT')",
-      indent = 2, exdent = 2
+    rlang::abort(c(
+      "Packages htmltools, shiny, and DT are required to run `ipums_view()`.",
+      "i" = paste0(
+        "Install them with `install.packages(c(\"htmltools\", ",
+        "\"shiny\", \"DT\"))`"
+      )
     ))
   }
   if (is.null(out_file)) out_file <- paste0(tempfile(), ".html")
@@ -234,4 +236,3 @@ empty_var_info_df <- function() {
     code_instr = character(0)
   )
 }
-
