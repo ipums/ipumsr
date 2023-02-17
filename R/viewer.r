@@ -29,7 +29,7 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
   ) {
     stop(custom_format_text(
       "Please install htmltools, shiny, and DT using ",
-      "`install.packages(c('htmltools', 'shiny', 'DT')",
+      "`install.packages(c('htmltools', 'shiny', 'DT'))`",
       indent = 2, exdent = 2
     ))
   }
