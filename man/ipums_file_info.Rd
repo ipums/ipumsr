@@ -28,7 +28,7 @@ Get information about the IPUMS project, date, notes,
 conditions, and citation requirements for an extract based on an
 \link{ipums_ddi} object.
 
-\code{ipums_conditions()} is a convenience function that can obtain conditions and
+\code{ipums_conditions()} is a convenience function that provides conditions and
 citation information for a recently loaded dataset.
 }
 \examples{

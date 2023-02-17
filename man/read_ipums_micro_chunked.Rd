@@ -30,10 +30,14 @@ read_ipums_micro_list_chunked(
 \arguments{
 \item{ddi}{Either a path to a DDI .xml file downloaded from
 \href{https://www.ipums.org/}{IPUMS}, or an
-\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
+
+See \emph{Downloading IPUMS files} below.}
 
 \item{callback}{An \link{ipums_callback} object, or a function
-that will be converted to an \code{IpumsSideEffectCallback} object.}
+that will be converted to an \code{IpumsSideEffectCallback} object. Callback
+functions should include both data (\code{x}) and position (\code{pos}) arguments.
+See examples.}
 
 \item{chunk_size}{Integer number of observations to
 read per chunk. Higher values use more RAM, but
@@ -82,22 +86,21 @@ Use these functions to read a file that is too large to store in memory
 at a single time. The file is processed in chunks of a given size, with a
 provided callback function applied to each chunk.
 
-See \code{\link[=read_ipums_micro_yield]{read_ipums_micro_yield()}} for an alternate approach to reading large
-files.
+Two files are required to load IPUMS microdata extracts:
+\itemize{
+\item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
+(.xml) used to parse the extract's data file
+\item A data file (generally .dat.gz)
+}
+
+See \emph{Downloading IPUMS files} below for more information about downloading
+these files.
 
 \code{read_ipums_micro_chunked()} and \code{read_ipums_micro_list_chunked()} differ
 in their handling of extracts that contain multiple record types.
-See details.
+See \emph{Data structrures} below.
 }
-\details{
-IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
-file and a fixed-width data file. The DDI file contains metadata about the
-associated data file which are used to parse its data correctly upon load.
-
-Data are loaded with value label and variable label information
-attached to each column, where appropriate. See
-\code{\link[haven:labelled]{haven::labelled()}}.
-\subsection{Data structures}{
+\section{Data structures}{
 
 Files from IPUMS projects that contain data for multiple types of records
 (e.g. household records and person records) may be either rectangular
@@ -126,13 +129,40 @@ therefore operate on a \code{tibble} object.
 \code{tibble} objects, where each list element contains
 only one record type. Each list element is named with its corresponding
 record type. The provided \code{callback} function should therefore operate
-on a list object.
+on a list object. In this case, the chunk size references the total
+number of rows \emph{across} record types, rather than in each
+record type.
+}
 }
 
-Callback functions should include both a data and position argument. See
-examples.
+\section{Downloading IPUMS files}{
+
+
+You must download both the DDI codebook and the data file from the IPUMS
+extract system to load the data into R. \verb{read_ipums_micro_*()} functions
+assume that the data file and codebook share a common base file name and
+are present in the same directory. If this is not the case, provide a
+separate path to the data file with the \code{data_file} argument.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
+column of the interface.
+\item Download the DDI codebook by right clicking on the "DDI" link in the
+"CODEBOOK" column of the extract interface and selecting "Save as..."
+(on Safari, you may have to select "Download Linked File"). Be sure that
+the codebook is downloaded in .xml format.
+}
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
 }
 }
+
 \examples{
 # Select Minnesotan cases from CPS example (Note you can also accomplish
 # this and avoid having to even download a huge file using the "Select Cases"

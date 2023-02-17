@@ -13,9 +13,9 @@ set_ipums_var_attributes(
 \arguments{
 \item{data}{\code{\link[tibble:tbl_df-class]{tibble}} or data frame}
 
-\item{var_info}{An \code{ipums_ddi} object or a data frame containing
+\item{var_info}{An \link{ipums_ddi} object or a data frame containing
 variable information. Variable information can be obtained by calling
-\code{ipums_var_info()} on an \link{ipums_ddi} object.}
+\code{ipums_var_info()} on an \code{ipums_ddi} object.}
 
 \item{var_attrs}{Variable attributes from the DDI to add to the columns of
 the output data. Defaults to all available attributes (\code{"val_labels"},
@@ -25,13 +25,15 @@ the output data. Defaults to all available attributes (\code{"val_labels"},
 \code{data}, with variable attributes attached
 }
 \description{
-Add variable attributes from an IPUMS DDI or codebook to the variables
-in a data frame. These provide contextual information about the variables
-and values contained in the data.
+Add variable attributes from an \link{ipums_ddi} object to a data frame.
+These provide contextual information about the variables
+and values contained in the data columns.
 
 Most ipumsr data-reading functions automatically add these attributes.
 However, some data processing operations may remove attributes, or you
-may wish to store data in an external database without attributes attached.
+may wish to store data in an external database that does not support
+these attributes. In these cases, use this function to manually attach
+this information.
 }
 \details{
 Attribute \code{val_labels} adds the \code{\link[haven:labelled]{haven_labelled}} class

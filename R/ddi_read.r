@@ -6,23 +6,29 @@
 #' `ipums_ddi` class
 #'
 #' @description
-#' The `ipums_ddi` class provides a data structure for storing the information
-#' contained in the DDI (.xml) files provided with IPUMS microdata extracts.
-#' This is primarily used when loading IPUMS data, but can also be used
-#' to explore metadata for the data in an extract.
+#' The `ipums_ddi` class provides a data structure for storing the metadata
+#' information contained in IPUMS codebook files. These objects are primarily
+#' used when loading IPUMS data, but can also be
+#' used to explore metadata for an IPUMS extract.
 #'
-#' The DDI contains metadata about the extract files themselves, including
-#' file name, file path, and extract date as well as information about variables
-#' present in the data, including variable names, descriptions, data types,
-#' implied decimals, and positions in the fixed-width files.
+#' - For microdata projects, this information is provided in
+#' [DDI codebook](https://ddialliance.org/learn/what-is-ddi)
+#' (.xml) files.
+#' - For NHGIS, this information is provided in .txt codebook files.
 #'
-#' This information is used when loading IPUMS data to correctly parse the
-#' fixed width file format and attach additional variable metadata to the
-#' data object once loaded into R.
+#' The codebook file contains metadata about the extract files themselves,
+#' including file name, file path, and extract date as well as information about
+#' variables present in the data, including variable names, descriptions, data
+#' types, implied decimals, and positions in the fixed-width files.
 #'
-#' Variable metadata for NHGIS extracts can also be stored in
-#' `ipums_ddi` objects, even though these metadata are stored in "codebook"
-#' (.txt) files, not .xml files.
+#' This information is used to correctly parse IPUMS
+#' fixed-width files and attach additional variable metadata to data upon load.
+#'
+#' Note that codebook metadata for NHGIS extracts can also be stored in
+#' an `ipums_ddi` object, even though these codebooks are distributed as .txt
+#' files, not .xml files. These files do not adhere to the same standards as
+#' the DDI codebook files, so some `ipums_ddi` fields will be left blank when
+#' reading NHGIS codebooks.
 #'
 #' ## Creating an `ipums_ddi` object
 #'
@@ -50,16 +56,44 @@
 #' @aliases ipums_ddi
 NULL
 
-#' Read metadata about an IPUMS extract from a DDI (.xml) file
+#' Read metadata about an IPUMS extract from a DDI codebook (.xml) file
 #'
-#' Reads the metadata about an IPUMS extract from a DDI file into an [ipums_ddi]
-#' object which includes information about variable and value labels, terms of
-#' usage for the data and positions for the fixed-width file.
+#' @description
+#' Reads the metadata about an IPUMS extract from a
+#' [DDI codebook](https://ddialliance.org/learn/what-is-ddi) into an
+#' [ipums_ddi] object.
 #'
-#' @param ddi_file Path to the DDI file to be read. This can be a .zip
-#'   archive, a directory containing the DDI file, or the .xml file itself.
+#' These metadata contains parsing instructions for the associated fixed-width
+#' data file, contextual labels for variables and values in the data, and
+#' general extract information.
+#'
+#' See *Downloading IPUMS files* below for information about downloading
+#' IPUMS DDI codebook files.
+#'
+#' # Downloading IPUMS files
+#' The DDI codebook (.xml) file provided with IPUMS microdata extracts can be
+#' downloaded through the IPUMS extract interface or (for some collections)
+#' within R using the IPUMS extract API.
+#'
+#' If using the IPUMS extract interface:
+#' - Download the DDI codebook by right clicking on the "DDI" link in the
+#'   "CODEBOOK" column of the extract interface and selecting "Save as..."
+#'   (on Safari, you may have to select "Download Linked File"). Be sure that
+#'   the codebook is downloaded in .xml format.
+#'
+#' If using the IPUMS API:
+#' - For supported collections, use [download_extract()] to download a completed
+#'   extract via the IPUMS API. This automatically downloads both the DDI
+#'   codebook and the data file from the extract and
+#'   returns the path to the codebook file.
+#'
+#' @param ddi_file Path to a DDI .xml file downloaded from
+#'   [IPUMS](https://www.ipums.org/) or a .zip archive or directory containing
+#'   the .xml file.
+#'
+#'   See *Downloading IPUMS files* below.
 #' @param file_select If `ddi_file` is a .zip archive or directory that contains
-#'   multiple DDI files, an expression identifying the .xml file to read.
+#'   multiple .xml files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a
 #'   [tidyselect selection][selection_language], or an index position.
 #'   Ignored if `ddi_file` is the path to a single .xml file.

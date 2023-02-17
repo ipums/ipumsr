@@ -2,7 +2,7 @@
 % Please edit documentation in R/ddi_read.r
 \name{read_ipums_ddi}
 \alias{read_ipums_ddi}
-\title{Read metadata about an IPUMS extract from a DDI (.xml) file}
+\title{Read metadata about an IPUMS extract from a DDI codebook (.xml) file}
 \usage{
 read_ipums_ddi(
   ddi_file,
@@ -12,11 +12,14 @@ read_ipums_ddi(
 )
 }
 \arguments{
-\item{ddi_file}{Path to the DDI file to be read. This can be a .zip
-archive, a directory containing the DDI file, or the .xml file itself.}
+\item{ddi_file}{Path to a DDI .xml file downloaded from
+\href{https://www.ipums.org/}{IPUMS} or a .zip archive or directory containing
+the .xml file.
+
+See \emph{Downloading IPUMS files} below.}
 
 \item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
-multiple DDI files, an expression identifying the .xml file to read.
+multiple .xml files, an expression identifying the file to read.
 Accepts a character string specifying the file name, a
 \link[=selection_language]{tidyselect selection}, or an index position.
 Ignored if \code{ddi_file} is the path to a single .xml file.}
@@ -31,10 +34,39 @@ instead.}
 An \link{ipums_ddi} object with metadata information.
 }
 \description{
-Reads the metadata about an IPUMS extract from a DDI file into an \link{ipums_ddi}
-object which includes information about variable and value labels, terms of
-usage for the data and positions for the fixed-width file.
+Reads the metadata about an IPUMS extract from a
+\href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} into an
+\link{ipums_ddi} object.
+
+These metadata contains parsing instructions for the associated fixed-width
+data file, contextual labels for variables and values in the data, and
+general extract information.
+
+See \emph{Downloading IPUMS files} below for information about downloading
+IPUMS DDI codebook files.
 }
+\section{Downloading IPUMS files}{
+The DDI codebook (.xml) file provided with IPUMS microdata extracts can be
+downloaded through the IPUMS extract interface or (for some collections)
+within R using the IPUMS extract API.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the DDI codebook by right clicking on the "DDI" link in the
+"CODEBOOK" column of the extract interface and selecting "Save as..."
+(on Safari, you may have to select "Download Linked File"). Be sure that
+the codebook is downloaded in .xml format.
+}
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
+}
+}
+
 \examples{
 # Example extract DDI
 ddi_file <- ipums_example("cps_00006.xml")

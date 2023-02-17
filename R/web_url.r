@@ -5,28 +5,33 @@
 
 #' Launch a browser window to the ipums website
 #'
-#' Takes a DDI (or you can specify a project directly) and
-#' a variable name, and makes a best guess at the URL for
-#' the variable's page on the IPUMS website. Note that
-#' NHGIS does not have accessible pages for
-#' variables.
+#' Using an [ipums_ddi] object or IPUMS project
+#' along with a variable name, guesses the most appropriate URL for
+#' the variable's page on the IPUMS website.
 #'
-#' Because some variables are constructed during the extract
-#' creation process, the URL may not always work unfortunately.
+#' Note that some IPUMS projects (e.g. NHGIS) do not have variable-specific
+#' pages.
 #'
-#'@param x A DDI or empty (if specifying project)
-#'@param var A single variable name in a character vector
-#'@param project If not using a DDI (or object with a project attribute)
-#' A name of an IPUMS project, one of:
-#'   "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
-#'   "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS"
-#' @param launch If \code{TRUE}, launch the website.
-#' @param verbose If \code{TRUE}, message user if no variable specific websites are available
-#' @param var_label Sometimes the variable label is useful for finding the correct URL. Only needed
-#'   if not passing in the ddi object.
-#' @param homepage_if_missing If \code{TRUE}, Return homepage if project does not provide variable
-#'   specific web pages.
-#' @return The url to the page on ipums.org (silently if launch is \code{TRUE})
+#' The generated URL may not work for variables that are constructed during the
+#' extract creation process.
+#'
+#'
+#'@param x An [`ipums_ddi`] object. If left empty, `project` must be specified.
+#'@param var Name of the variable to load
+#'@param project Name of an IPUMS project. Must be one of:
+#'   `"IPUMS-USA"`, `"IPUMS-CPS"`, `"IPUMS-International"`, `"IPUMS-DHS"`,
+#'   `"ATUS-X"`, `"AHTUS-X"`, `"MTUS-X"`, `"NHIS"`, `"Higher Ed"`, `"NHGIS"`
+#' @param launch If `TRUE`, launch the website.
+#' @param verbose If `TRUE`, produces message if no variable-specific websites
+#'   are found.
+#' @param var_label Variable label for the provided `var`.
+#'
+#'   This may be useful if the URL produced by `var` alone is incorrect.
+#'
+#'   Only used if specifying `project`, not `x`.
+#' @param homepage_if_missing If `TRUE`, return the project homepage if the
+#'   project does not provide variable-specific web pages.
+#' @return The URL to the page on ipums.org (silently if launch is `TRUE`)
 #' @examples
 #' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
 #' ipums_website(ddi, "MONTH", launch = FALSE)

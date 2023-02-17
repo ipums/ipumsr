@@ -7,26 +7,38 @@
 #'
 #' @description
 #' Read a microdata dataset downloaded from the IPUMS extract system into an
-#' object that can read and operate on a group of lines at a time.
+#' object that can read and operate on a group ("yield") of lines at a time.
 #'
 #' Use these functions to read a file that is too large to store in memory at
 #' a single time. They represent a more flexible implementation of
-#' [read_ipums_micro_chunked()] that makes certain operations easier, like
-#' reading parts of multiple files at the same time, resetting to the
-#' beginning of the file, etc.
+#' [read_ipums_micro_chunked()] using R6.
 #'
-#' Note that while other `read_ipums_micro_*` functions
-#' can read from .csv(.gz) or .dat(.gz) files, these functions can only read
-#' from .dat(.gz) files.
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
 #'
-#' @details
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
+#'
+#' `read_ipums_micro_yield()` and `read_ipums_micro_list_yield()` differ
+#' in their handling of extracts that contain multiple record types.
+#' See *Data structrures* below.
+#'
+#' Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+#'
+#' # Methods summary:
 #' These functions return a HipYield R6 object with the following methods:
 #' - `yield(n = 10000)` reads the next "yield" from the
-#'   data. Returns a [`tibble`][tibble::tbl_df-class] (for
-#'   `read_ipums_micro_yield()`) or list of tibbles (for
-#'   `read_ipums_micro_list_yield()`) with up to n rows.
+#'   data.
 #'
-#'   If fewer than n rows are left in the data, returns all remaining rows.
+#'   For `read_ipums_micro_yield()`, returns a [`tibble`][tibble::tbl_df-class]
+#'   with up to `n` rows.
+#'
+#'   For `read_ipums_micro_list_yield()`, returns a list of tibbles with a
+#'   total of up to `n` rows across list elements.
+#'
+#'   If fewer than `n` rows are left in the data, returns all remaining rows.
 #'   If no rows are left in the data, returns `NULL`.
 #' - `reset()` resets the data so that the next yield will read data from the
 #'   start.
@@ -34,9 +46,41 @@
 #'   have been read.
 #' - `cur_pos` contains the next row number that will be read (1-indexed).
 #'
-#' @inheritParams read_ipums_micro
+#' @section Data structures:
+#'
+#' Files from IPUMS projects that contain data for multiple types of records
+#' (e.g. household records and person records) may be either rectangular
+#' or hierarchical.
+#'
+#' Rectangular data are transformed such that each row of data
+#' represents only one type of record. For instance, each row will represent
+#' a person record, and all household-level information for that person will
+#' be included in the same row.
+#'
+#' Hierarchical data have records of
+#' different types interspersed in a single file. For instance, a household
+#' record will be included in its own row followed by the person records
+#' associated with that household.
+#'
+#' Hierarchical data can be read in two different formats:
+#' - `read_ipums_micro_yield()` produces an object that yields data as a
+#'   [`tibble`][tibble::tbl_df-class] whose rows
+#'   represent single records, regardless of record type. Variables that do
+#'   not apply to a particular record type will be filled with `NA` in rows of
+#'   that record type. For instance, a person-specific variable will be missing
+#'   in all rows associated with household records.
+#' - `read_ipums_micro_list_yield()` produces an object that yields data as a
+#'   list of `tibble` objects, where each list element contains
+#'   only one record type. Each list element is named with its corresponding
+#'   record type. In this case, when using `yield()`, `n` refers to
+#'   the total number of rows *across* record types, rather than in each
+#'   record type.
+#'
+#' @inheritSection read_ipums_micro Downloading IPUMS files
 #'
 #' @return A HipYield R6 object (see details)
+#'
+#' @inheritParams read_ipums_micro
 #'
 #' @export
 #' @family ipums_read

@@ -6,22 +6,21 @@
 #' Read data from an IPUMS microdata extract
 #'
 #' @description
-#' Read a microdata dataset downloaded from the IPUMS extract system using
-#' the information in its associated DDI codebook (.xml) file.
+#' Read a microdata dataset downloaded from the IPUMS extract system.
+#'
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
+#'
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
 #'
 #' `read_ipums_micro()` and `read_ipums_micro_list()` differ in their handling
-#' of extracts that contain multiple record types. See details.
+#' of extracts that contain multiple record types. See *Data structrures*
+#' below.
 #'
-#' @details
-#' IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
-#' file and a fixed-width data file. The DDI file contains metadata about the
-#' associated data file which are used to parse its data correctly upon load.
-#'
-#' Data are loaded with value label and variable label information
-#' attached to each column, where appropriate. See
-#' [`haven::labelled()`][haven::labelled()].
-#'
-#' ## Data structures
+#' @section Data structures:
 #'
 #' Files from IPUMS projects that contain data for multiple types of records
 #' (e.g. household records and person records) may be either rectangular
@@ -48,9 +47,33 @@
 #'   only one record type. Each list element is named with its corresponding
 #'   record type.
 #'
+#' @section Downloading IPUMS files:
+#'
+#' You must download both the DDI codebook and the data file from the IPUMS
+#' extract system to load the data into R. `read_ipums_micro_*()` functions
+#' assume that the data file and codebook share a common base file name and
+#' are present in the same directory. If this is not the case, provide a
+#' separate path to the data file with the `data_file` argument.
+#'
+#' If using the IPUMS extract interface:
+#' - Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
+#'   column of the interface.
+#' - Download the DDI codebook by right clicking on the "DDI" link in the
+#'   "CODEBOOK" column of the extract interface and selecting "Save as..."
+#'   (on Safari, you may have to select "Download Linked File"). Be sure that
+#'   the codebook is downloaded in .xml format.
+#'
+#' If using the IPUMS API:
+#' - For supported collections, use [download_extract()] to download a completed
+#'   extract via the IPUMS API. This automatically downloads both the DDI
+#'   codebook and the data file from the extract and
+#'   returns the path to the codebook file.
+#'
 #' @param ddi Either a path to a DDI .xml file downloaded from
 #'   [IPUMS](https://www.ipums.org/), or an
 #'   [ipums_ddi] object parsed by [read_ipums_ddi()].
+#'
+#'   See *Downloading IPUMS files* below.
 #' @param vars Names of variables to include in the output. Accepts a
 #'   vector of names or a [selection helper][tidyselect::language].
 #'   If `NULL`, includes all variables in the file.
@@ -130,7 +153,24 @@ read_ipums_micro <- function(
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
-  data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
+  tryCatch(
+    data_file <- custom_check_file_exists(
+      data_file,
+      c(".dat.gz", ".csv", ".csv.gz")
+    ),
+    error = function(cnd) {
+      # Append hint to error message
+      rlang::abort(c(
+        conditionMessage(cnd),
+        "i" = paste0(
+          "Use `data_file` to specify the path to the data file associated ",
+          "with the provided `ddi`."
+        )),
+        call = expr(custom_check_file_exists())
+      )
+    }
+  )
+
 
   if (verbose) message(short_conditions_text(ddi))
 

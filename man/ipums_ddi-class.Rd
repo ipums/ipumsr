@@ -5,23 +5,30 @@
 \alias{ipums_ddi}
 \title{\code{ipums_ddi} class}
 \description{
-The \code{ipums_ddi} class provides a data structure for storing the information
-contained in the DDI (.xml) files provided with IPUMS microdata extracts.
-This is primarily used when loading IPUMS data, but can also be used
-to explore metadata for the data in an extract.
+The \code{ipums_ddi} class provides a data structure for storing the metadata
+information contained in IPUMS codebook files. These objects are primarily
+used when loading IPUMS data, but can also be
+used to explore metadata for an IPUMS extract.
+\itemize{
+\item For microdata projects, this information is provided in
+\href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook}
+(.xml) files.
+\item For NHGIS, this information is provided in .txt codebook files.
+}
 
-The DDI contains metadata about the extract files themselves, including
-file name, file path, and extract date as well as information about variables
-present in the data, including variable names, descriptions, data types,
-implied decimals, and positions in the fixed-width files.
+The codebook file contains metadata about the extract files themselves,
+including file name, file path, and extract date as well as information about
+variables present in the data, including variable names, descriptions, data
+types, implied decimals, and positions in the fixed-width files.
 
-This information is used when loading IPUMS data to correctly parse the
-fixed width file format and attach additional variable metadata to the
-data object once loaded into R.
+This information is used to correctly parse IPUMS
+fixed-width files and attach additional variable metadata to data upon load.
 
-Variable metadata for NHGIS extracts can also be stored in
-\code{ipums_ddi} objects, even though these metadata are stored in "codebook"
-(.txt) files, not .xml files.
+Note that codebook metadata for NHGIS extracts can also be stored in
+an \code{ipums_ddi} object, even though these codebooks are distributed as .txt
+files, not .xml files. These files do not adhere to the same standards as
+the DDI codebook files, so some \code{ipums_ddi} fields will be left blank when
+reading NHGIS codebooks.
 \subsection{Creating an \code{ipums_ddi} object}{
 \itemize{
 \item To create an \code{ipums_ddi} object from an IPUMS microdata extract, use

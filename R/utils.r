@@ -137,13 +137,15 @@ find_files_in <- function(file,
 #' Add IPUMS variable attributes to a data frame
 #'
 #' @description
-#' Add variable attributes from an IPUMS DDI or codebook to the variables
-#' in a data frame. These provide contextual information about the variables
-#' and values contained in the data.
+#' Add variable attributes from an [ipums_ddi] object to a data frame.
+#' These provide contextual information about the variables
+#' and values contained in the data columns.
 #'
 #' Most ipumsr data-reading functions automatically add these attributes.
 #' However, some data processing operations may remove attributes, or you
-#' may wish to store data in an external database without attributes attached.
+#' may wish to store data in an external database that does not support
+#' these attributes. In these cases, use this function to manually attach
+#' this information.
 #'
 #' @details
 #' Attribute `val_labels` adds the [`haven_labelled`][haven::labelled] class
@@ -163,9 +165,9 @@ find_files_in <- function(file,
 #' will not be added.
 #'
 #' @param data [`tibble`][tibble::tbl_df-class] or data frame
-#' @param var_info An `ipums_ddi` object or a data frame containing
+#' @param var_info An [ipums_ddi] object or a data frame containing
 #'   variable information. Variable information can be obtained by calling
-#'   `ipums_var_info()` on an [ipums_ddi] object.
+#'   `ipums_var_info()` on an `ipums_ddi` object.
 #' @param var_attrs Variable attributes from the DDI to add to the columns of
 #'   the output data. Defaults to all available attributes (`"val_labels"`,
 #'   `"var_label"`, and `"var_desc"`).

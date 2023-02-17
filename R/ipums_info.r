@@ -181,7 +181,7 @@ print.ipums_formatted_print <- function(x, ...) {
 #' conditions, and citation requirements for an extract based on an
 #' [ipums_ddi] object.
 #'
-#' `ipums_conditions()` is a convenience function that can obtain conditions and
+#' `ipums_conditions()` is a convenience function that provides conditions and
 #' citation information for a recently loaded dataset.
 #'
 #' @param object An `ipums_ddi` object.

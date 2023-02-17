@@ -22,8 +22,8 @@ Callback function that is used only for side effects, no results are
 returned.
 
 Initialize with a function that takes 2 arguments. The first argument
-should correspond to the data chunk and the second should correspond
-to the position of the first observation in the chunk.
+(\code{x}) should correspond to the data chunk and the second (\code{pos})
+should correspond to the position of the first observation in the chunk.
 
 If the function returns \code{FALSE}, no more chunks will be read.
 }
@@ -31,8 +31,8 @@ If the function returns \code{FALSE}, no more chunks will be read.
 Callback function that combines the results from each chunk into a
 single output \code{data.frame} (or similar) object.
 
-Initialize the same was as \code{IpumsSideEffectCallback}. The provided
-function should return an object that inherits from \code{data.frame}.
+Initialize the same way as you would \code{IpumsSideEffectCallback}. The
+provided function should return an object that inherits from \code{data.frame}.
 
 The results from each application of the callback function will be
 added to the output \code{data.frame}.
@@ -41,17 +41,18 @@ added to the output \code{data.frame}.
 Callback function that returns a list, where each element contains the
 result from a single chunk.
 
-Initialize the same was as \code{IpumsSideEffectCallback}.
+Initialize the same was as you would \code{IpumsSideEffectCallback}.
 }
 \item{IpumsBiglmCallback}{
-Callback function that performs a linear regression on a dataaset chunk
-by chunk using the biglm package.
+Callback function that performs a linear regression on a dataset by chunks
+using the biglm package.
 
-Initialize with a function that takes 2 arguments. The first argument
+Initialize with a function that takes 2 arguments: The first argument
 should correspond to a \link[stats:formula]{formula} specifying the regression
-model. The second should correspond to a function resembling arguments to
-other callback functions that prepares the data before running the
-regression analysis. Other arguments are passed to biglm.
+model. The second should correspond to a function that prepares the data before
+running the regression analsis. This function follows the conventions
+of the functions used in other callbacks. Any additional arguments passed
+to this function are passed to biglm.
 }
 \item{IpumsChunkCallback}{
 (Advanced) Callback interface definition. All

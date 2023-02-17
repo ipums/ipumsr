@@ -28,7 +28,9 @@ read_ipums_micro_list(
 \arguments{
 \item{ddi}{Either a path to a DDI .xml file downloaded from
 \href{https://www.ipums.org/}{IPUMS}, or an
-\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
+
+See \emph{Downloading IPUMS files} below.}
 
 \item{vars}{Names of variables to include in the output. Accepts a
 vector of names or a \link[tidyselect:language]{selection helper}.
@@ -73,21 +75,24 @@ converted column names.}
 entry for each record type.
 }
 \description{
-Read a microdata dataset downloaded from the IPUMS extract system using
-the information in its associated DDI codebook (.xml) file.
+Read a microdata dataset downloaded from the IPUMS extract system.
+
+Two files are required to load IPUMS microdata extracts:
+\itemize{
+\item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
+(.xml) used to parse the extract's data file
+\item A data file (generally .dat.gz)
+}
+
+See \emph{Downloading IPUMS files} below for more information about downloading
+these files.
 
 \code{read_ipums_micro()} and \code{read_ipums_micro_list()} differ in their handling
-of extracts that contain multiple record types. See details.
+of extracts that contain multiple record types. See \emph{Data structrures}
+below.
 }
-\details{
-IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
-file and a fixed-width data file. The DDI file contains metadata about the
-associated data file which are used to parse its data correctly upon load.
+\section{Data structures}{
 
-Data are loaded with value label and variable label information
-attached to each column, where appropriate. See
-\code{\link[haven:labelled]{haven::labelled()}}.
-\subsection{Data structures}{
 
 Files from IPUMS projects that contain data for multiple types of records
 (e.g. household records and person records) may be either rectangular
@@ -116,7 +121,35 @@ only one record type. Each list element is named with its corresponding
 record type.
 }
 }
+
+\section{Downloading IPUMS files}{
+
+
+You must download both the DDI codebook and the data file from the IPUMS
+extract system to load the data into R. \verb{read_ipums_micro_*()} functions
+assume that the data file and codebook share a common base file name and
+are present in the same directory. If this is not the case, provide a
+separate path to the data file with the \code{data_file} argument.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
+column of the interface.
+\item Download the DDI codebook by right clicking on the "DDI" link in the
+"CODEBOOK" column of the extract interface and selecting "Save as..."
+(on Safari, you may have to select "Download Linked File"). Be sure that
+the codebook is downloaded in .xml format.
 }
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
+}
+}
+
 \examples{
 # Rectangular example file
 cps_rect_ddi_file <- ipums_example("cps_00006.xml")

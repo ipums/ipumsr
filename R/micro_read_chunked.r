@@ -12,24 +12,21 @@
 #' at a single time. The file is processed in chunks of a given size, with a
 #' provided callback function applied to each chunk.
 #'
-#' See [read_ipums_micro_yield()] for an alternate approach to reading large
-#' files.
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
+#'
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
 #'
 #' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
 #' in their handling of extracts that contain multiple record types.
-#' See details.
+#' See *Data structrures* below.
 #'
-#' @details
-#' IPUMS microdata extracts use two associated files: a DDI codebook (.xml)
-#' file and a fixed-width data file. The DDI file contains metadata about the
-#' associated data file which are used to parse its data correctly upon load.
+#' @inheritSection read_ipums_micro Downloading IPUMS files
 #'
-#' Data are loaded with value label and variable label information
-#' attached to each column, where appropriate. See
-#' [`haven::labelled()`][haven::labelled()].
-#'
-#' ## Data structures
-#'
+#' @section Data structures:
 #' Files from IPUMS projects that contain data for multiple types of records
 #' (e.g. household records and person records) may be either rectangular
 #' or hierarchical.
@@ -56,14 +53,15 @@
 #'   `tibble` objects, where each list element contains
 #'   only one record type. Each list element is named with its corresponding
 #'   record type. The provided `callback` function should therefore operate
-#'   on a list object.
-#'
-#' Callback functions should include both a data and position argument. See
-#' examples.
+#'   on a list object. In this case, the chunk size references the total
+#'   number of rows *across* record types, rather than in each
+#'   record type.
 #'
 #' @inheritParams read_ipums_micro
 #' @param callback An [ipums_callback] object, or a function
-#'   that will be converted to an `IpumsSideEffectCallback` object.
+#'   that will be converted to an `IpumsSideEffectCallback` object. Callback
+#'   functions should include both data (`x`) and position (`pos`) arguments.
+#'   See examples.
 #' @param chunk_size Integer number of observations to
 #'   read per chunk. Higher values use more RAM, but
 #'   typically result in faster processing. Defaults to 10,000.

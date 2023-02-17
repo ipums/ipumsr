@@ -28,7 +28,9 @@ read_ipums_micro_list_yield(
 \arguments{
 \item{ddi}{Either a path to a DDI .xml file downloaded from
 \href{https://www.ipums.org/}{IPUMS}, or an
-\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
+
+See \emph{Downloading IPUMS files} below.}
 
 \item{vars}{Names of variables to include in the output. Accepts a
 vector of names or a \link[tidyselect:language]{selection helper}.
@@ -66,27 +68,41 @@ A HipYield R6 object (see details)
 }
 \description{
 Read a microdata dataset downloaded from the IPUMS extract system into an
-object that can read and operate on a group of lines at a time.
+object that can read and operate on a group ("yield") of lines at a time.
 
 Use these functions to read a file that is too large to store in memory at
 a single time. They represent a more flexible implementation of
-\code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} that makes certain operations easier, like
-reading parts of multiple files at the same time, resetting to the
-beginning of the file, etc.
+\code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} using R6.
 
-Note that while other \verb{read_ipums_micro_*} functions
-can read from .csv(.gz) or .dat(.gz) files, these functions can only read
-from .dat(.gz) files.
+Two files are required to load IPUMS microdata extracts:
+\itemize{
+\item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
+(.xml) used to parse the extract's data file
+\item A data file (generally .dat.gz)
 }
-\details{
+
+See \emph{Downloading IPUMS files} below for more information about downloading
+these files.
+
+\code{read_ipums_micro_yield()} and \code{read_ipums_micro_list_yield()} differ
+in their handling of extracts that contain multiple record types.
+See \emph{Data structrures} below.
+
+Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+}
+\section{Methods summary:}{
 These functions return a HipYield R6 object with the following methods:
 \itemize{
 \item \code{yield(n = 10000)} reads the next "yield" from the
-data. Returns a \code{\link[tibble:tbl_df-class]{tibble}} (for
-\code{read_ipums_micro_yield()}) or list of tibbles (for
-\code{read_ipums_micro_list_yield()}) with up to n rows.
+data.
 
-If fewer than n rows are left in the data, returns all remaining rows.
+For \code{read_ipums_micro_yield()}, returns a \code{\link[tibble:tbl_df-class]{tibble}}
+with up to \code{n} rows.
+
+For \code{read_ipums_micro_list_yield()}, returns a list of tibbles with a
+total of up to \code{n} rows across list elements.
+
+If fewer than \code{n} rows are left in the data, returns all remaining rows.
 If no rows are left in the data, returns \code{NULL}.
 \item \code{reset()} resets the data so that the next yield will read data from the
 start.
@@ -95,6 +111,69 @@ have been read.
 \item \code{cur_pos} contains the next row number that will be read (1-indexed).
 }
 }
+
+\section{Data structures}{
+
+
+Files from IPUMS projects that contain data for multiple types of records
+(e.g. household records and person records) may be either rectangular
+or hierarchical.
+
+Rectangular data are transformed such that each row of data
+represents only one type of record. For instance, each row will represent
+a person record, and all household-level information for that person will
+be included in the same row.
+
+Hierarchical data have records of
+different types interspersed in a single file. For instance, a household
+record will be included in its own row followed by the person records
+associated with that household.
+
+Hierarchical data can be read in two different formats:
+\itemize{
+\item \code{read_ipums_micro_yield()} produces an object that yields data as a
+\code{\link[tibble:tbl_df-class]{tibble}} whose rows
+represent single records, regardless of record type. Variables that do
+not apply to a particular record type will be filled with \code{NA} in rows of
+that record type. For instance, a person-specific variable will be missing
+in all rows associated with household records.
+\item \code{read_ipums_micro_list_yield()} produces an object that yields data as a
+list of \code{tibble} objects, where each list element contains
+only one record type. Each list element is named with its corresponding
+record type. In this case, when using \code{yield()}, \code{n} refers to
+the total number of rows \emph{across} record types, rather than in each
+record type.
+}
+}
+
+\section{Downloading IPUMS files}{
+
+
+You must download both the DDI codebook and the data file from the IPUMS
+extract system to load the data into R. \verb{read_ipums_micro_*()} functions
+assume that the data file and codebook share a common base file name and
+are present in the same directory. If this is not the case, provide a
+separate path to the data file with the \code{data_file} argument.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
+column of the interface.
+\item Download the DDI codebook by right clicking on the "DDI" link in the
+"CODEBOOK" column of the extract interface and selecting "Save as..."
+(on Safari, you may have to select "Download Linked File"). Be sure that
+the codebook is downloaded in .xml format.
+}
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
+}
+}
+
 \examples{
 # An example using "long" data
 long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))

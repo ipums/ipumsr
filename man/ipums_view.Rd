@@ -7,17 +7,19 @@
 ipums_view(x, out_file = NULL, launch = TRUE)
 }
 \arguments{
-\item{x}{A DDI or other object with ipums attributes (such as data loaded from an extract).
-Note that the file level information (like extract notes) are only available from
-the DDI.}
+\item{x}{An \link{ipums_ddi} object or a data frame with IPUMS attributes
+attached.
 
-\item{out_file}{Optionally specify a location to save HTML file. NULL the default
+Note that the file-level information (e.g. extract notes) are only
+available when providing an \code{ipums_ddi} object.}
+
+\item{out_file}{Optional location to save produced HTML file. If \code{NULL},
 makes a temporary file.}
 
 \item{launch}{Logical indicating whether to launch the website.}
 }
 \value{
-The filepath to the html (silently if launch is \code{TRUE})
+The filepath to the html (silently if \code{launch = TRUE})
 }
 \description{
 Requires that htmltools, shiny and DT are installed.
