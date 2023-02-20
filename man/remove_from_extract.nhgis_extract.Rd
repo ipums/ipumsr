@@ -142,44 +142,35 @@ a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
 }
 \examples{
-library(dplyr)
-
 extract <- define_extract_nhgis(
   datasets = "1990_STF1",
   data_tables = c("NP1", "NP2", "NP3"),
-  geog_levels = "county",
+  geog_levels = "county"
 )
 
-# Remove tables from existing datasets in extract:
-remove_from_extract(
-  extract,
-  data_tables = "NP3"
-)
+# Remove a table from existing datasets:
+remove_from_extract(extract, data_tables = "NP3")
 
 extract2 <- define_extract_nhgis(
   time_series_tables = c("CW3", "CW5"),
   geog_levels = c("state", "county")
 )
 
-# Remove an entire time series table:
+# Remove an entire time series table
 remove_from_extract(
   extract2,
   time_series_tables = "CW3"
 )
 
-# Use a list to remove subfield values from specific datasets or time
-# series tables.
+# Use a named list to remove values from specific datasets or time
+# series tables:
 remove_from_extract(
   extract2,
   geog_levels = list(CW5 = "state", CW3 = "county")
 )
 
-# Replace values by using `add_to_extract()` first:
-extract2 \%>\%
-  add_to_extract(
-    geog_levels = list(CW3 = "tract")
-  ) \%>\%
-  remove_from_extract(
-    geog_levels = list(CW3 = c("county", "state"))
-  )
+# Replace values by using `add_to_extract()` first to avoid invalid
+# extract definitions
+revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
+remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
 }

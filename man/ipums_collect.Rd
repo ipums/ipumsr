@@ -8,9 +8,9 @@ ipums_collect(data, ddi, var_attrs = c("val_labels", "var_label", "var_desc"))
 }
 \arguments{
 \item{data}{A dplyr \code{tbl} object (generally a \code{tbl_lazy}
-object stored in a database.}
+object stored in a database).}
 
-\item{ddi}{A DDI object created with \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
+\item{ddi}{An \link{ipums_ddi} object created with \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
 
 \item{var_attrs}{Variable attributes to add to the output. Defaults to
 all available attributes (\code{"val_labels"}, \code{"var_label"} and \code{"var_desc"}).
@@ -22,5 +22,6 @@ attributes attached.
 }
 \description{
 Convenience wrapper around dplyr's \code{\link[dplyr:compute]{collect()}} and
-\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}}.
+\code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}}. Use this to attach variable labels when
+collecting data from a database.
 }

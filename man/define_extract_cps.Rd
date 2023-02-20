@@ -40,17 +40,27 @@ rectangularizes on person records. \code{"H"} provides household-only records.
 Currently, only \code{"P"} is supported.}
 }
 \value{
-An object of class \code{\link[=ipums_extract-class]{cps_extract}}
-containing the extract definition.
+An object of class \code{\link[=ipums_extract-class]{cps_extract}} containing
+the extract definition.
 }
 \description{
 Define an IPUMS CPS extract request to be submitted via the IPUMS
-extract API. For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+extract API. An extract request contains the specifications required
+to identify and obtain a particular set of data from the IPUMS CPS system.
 }
 \examples{
-my_extract <- define_extract_cps("Example", "cps2020_03s", "YEAR")
+my_extract <- define_extract_cps(
+  description = "Example CPS extract definition",
+  samples = c("cps2020_02s", "cps2020_03s"),
+  variables = c("AGE", "SEX", "YEAR")
+)
+
 my_extract
+
+\dontrun{
+# Use the extract definition to submit an extract request to the API
+submit_extract(my_extract)
+}
 }
 \seealso{
 Other ipums_api: 
@@ -65,7 +75,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

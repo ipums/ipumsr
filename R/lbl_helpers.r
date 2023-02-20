@@ -10,15 +10,20 @@
 #' values that do not have a label.
 #'
 #' @details
-#' The predicate function uses the terms `.val` and `.lbl` to refer to the
-#' values and labels, respectively. Use `.val` when you want to convert to
-#' `NA` conditional on the *values* in the data. Use `.lbl` when you want
-#' to convert to `NA` conditional on the *labels* used to refer to those values.
+#' Several `lbl_*()` functions include arguments that can be passed a function
+#' of `.val` and/or `.lbl`. These refer to the existing values and
+#' labels in the input vector, respectively.
+#'
+#' Use `.val` to refer to the *values* in the vector's value labels.
+#' Use `.lbl` to refer to the *label names* in the vector's value labels.
+#'
+#' Note that not all `lbl_*()` functions support both of these arguments.
 #'
 #' @param x A [`labelled`][haven::labelled()] vector
 #' @param .predicate A function taking `.val` and `.lbl` arguments that
-#'   returns a logical value. Can be provided as an anonymous function or
-#'   formula. See examples.
+#'   returns `TRUE` for all values that should be converted to `NA`.
+#'
+#'   Can be provided as an anonymous function or formula. See details.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'
@@ -32,14 +37,16 @@
 #'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
 #' )
 #'
-#' # Anonymous function notation
+#' # Convert labelled values greater than 90 to `NA`
 #' lbl_na_if(x, function(.val, .lbl) .val >= 90)
+#'
+#' # Convert values over 90 or with label "Maybe" to `NA` (R >= 4.1 syntax)
 #' lbl_na_if(x, \(.val, .lbl) .val >= 90 | .lbl %in% c("Maybe"))
 #'
-#' # purrr-style notation
-#' lbl_na_if(x, ~.lbl %in% c("Maybe"))
+#' # Can use purrr-style notation
+#' lbl_na_if(x, ~ .lbl %in% c("Maybe"))
 #'
-#' # Referring to function by name
+#' # Or refer to named function
 #' na_function <- function(.val, .lbl) .val >= 90
 #' lbl_na_if(x, na_function)
 lbl_na_if <- function(x, .predicate) {
@@ -82,6 +89,8 @@ lbl_na_if <- function(x, .predicate) {
 #'
 #' Unlabelled values will be converted to `NA`.
 #'
+#' @inherit lbl_na_if details
+#'
 #' @param x A [`labelled`][haven::labelled()] vector
 #' @param ... Arbitrary number of two-sided formulas.
 #'
@@ -91,13 +100,14 @@ lbl_na_if <- function(x, .predicate) {
 #'   The right hand side should be a function taking `.val` and `.lbl`
 #'   arguments that evaluates to `TRUE` for all
 #'   cases that should receive the label specified on the left hand side.
-#'   Can be provided as an anonymous function or formula.
 #'
-#'   See examples.
+#'   Can be provided as an anonymous function or formula. See details.
 #' @param .fun A function taking `.val` and `.lbl` arguments that returns
 #'   the value associated with an existing label in the vector. Input values to
 #'   this function will be relabeled with the label of the function's output
-#'   value. Can be provided as an anonymous function or formula. See examples.
+#'   value.
+#'
+#'   Can be provided as an anonymous function or formula. See details.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'
@@ -105,29 +115,30 @@ lbl_na_if <- function(x, .predicate) {
 #'
 #' @examples
 #' x <- haven::labelled(
-#'   c(10, 10, 11, 20, 30, 99, 30, 10),
-#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
+#'   c(10, 10, 11, 20, 21, 30, 99, 30, 10),
+#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
 #' )
 #'
-#' # Add new value/label pairs that collect multiple existing labels
+#' # Convert cases with value 11 to value 10 and associate with 10's label
+#' lbl_relabel(x, 10 ~ .val == 11)
+#'
+#' # To relabel using new value/label pairs, use `lbl()` to define a new pair
 #' lbl_relabel(
 #'   x,
 #'   lbl(10, "Yes/Yes-ish") ~ .val %in% c(10, 11),
 #'   lbl(90, "???") ~ .val == 99 | .lbl == "Maybe"
 #' )
 #'
-#'
-#' # For values that already exist, you can specify the value directly.
-#' # Convert all cases with value 11 to value 10 and associate with 10's label:
-#' lbl_relabel(x, 10 ~ .val == 11)
-#'
-#' # Use single argument in `lbl` to update the label while leaving values
+#' # Use single argument in `lbl()` to update the label while leaving values
 #' # unchanged
 #' lbl_relabel(x, lbl("Yes") ~ .val == 11)
 #'
-#' # Collapse labels to regroup:
-#' lbl_collapse(x, ~(.val %/% 10) * 10)
+#' # Collapse labels to create new label groups
+#' lbl_collapse(x, ~ (.val %/% 10) * 10)
+#'
+#' # These are equivalent
 #' lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+#' lbl_relabel(x, 11 ~ .val == 10)
 lbl_relabel <- function(x, ...) {
   if (is.null(attr(x, "labels", exact = TRUE))) {
     rlang::abort(c(
@@ -218,8 +229,18 @@ lbl_collapse <- function(x, .fun) {
 #' vector using [lbl_relabel()] syntax, allowing for the grouping of multiple
 #' values into a single label. Values not assigned a label remain unlabelled.
 #'
+#' @inherit lbl_na_if details
+#'
 #' @param x An unlabelled vector
-#' @inheritParams lbl_relabel
+#' @param ... Arbitrary number of two-sided formulas.
+#'
+#'   The left hand side should be a label placeholder created with [lbl()].
+#'
+#'   The right hand side should be a function taking `.val` that
+#'   evaluates to `TRUE` for all cases that should receive the label specified
+#'   on the left hand side.
+#'
+#'   Can be provided as an anonymous function or formula. See details.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'
@@ -380,13 +401,14 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
 #' @examples
 #' x <- haven::labelled(
 #'   c(1, 2, 3, 1, 2, 3, 1, 2, 3),
-#'   c(Q1 = 1, Q2 = 2, Q3 = 3, Q4= 4)
+#'   c(Q1 = 1, Q2 = 2, Q3 = 3, Q4 = 4)
 #' )
 #'
 #' lbl_clean(x)
 #'
 #' # Compare the factor levels of the normal and cleaned labels after coercion
 #' as_factor(lbl_clean(x))
+#'
 #' as_factor(x)
 lbl_clean <-function(x) {
   old_labels <- attr(x, "labels")
@@ -437,11 +459,14 @@ abort_coercion_function <- function(x) {
 #' Define a new label/value pair. For use in functions like [lbl_relabel()]
 #' and [lbl_add()].
 #'
+#' @inherit lbl_na_if details
+#'
 #' @param ... Either one or two arguments specifying the label (`.lbl`) and
 #'   value (`.val`) to use in the new label pair.
 #'
-#'   If named, must be named `.val` and/or `.lbl`. If a single unnamed value
-#'   is passed, it is used as the `.lbl` for the new
+#'   If arguments are named, they must be named `.val` and/or `.lbl`.
+#'
+#'   If a single unnamed value is passed, it is used as the `.lbl` for the new
 #'   label. If two unnamed values are passed, they are used as the `.val` and
 #'   `.lbl`, respectively.
 #'
@@ -537,8 +562,8 @@ fill_in_lbl <- function(lblval, orig_labels) {
 #' Remove all label attributes (value labels, variable labels, and variable
 #' descriptions) from a data frame or vector.
 #'
-#' @param x A data frame or labelled vector (for instance, from a data frame
-#'   column)
+#' @param x A data frame or [labelled][haven::labelled()] vector
+#'   (for instance, from a data frame column)
 #'
 #' @return An object of the same type as `x` without `"val_labels"`,
 #' `"var_label`", and `"var_desc"` attributes.
@@ -555,6 +580,7 @@ fill_in_lbl <- function(lblval, orig_labels) {
 #'
 #' cps <- zap_ipums_attributes(cps)
 #' attributes(cps$YEAR)
+#' attributes(cps$INCTOT)
 zap_ipums_attributes <- function(x) {
   UseMethod("zap_ipums_attributes")
 }

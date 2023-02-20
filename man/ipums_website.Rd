@@ -54,15 +54,15 @@ extract creation process.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+
+# Get URL for information about a particular variable
 ipums_website(ddi, "MONTH", launch = FALSE)
 
 \dontrun{
-# Launches website
+# Launch webpage for particular variable
 ipums_website(ddi, "MONTH")
 }
 
-# Can also specify project instead of using DDI
+# Can specify an IPUMS project instead of using an `ipums_ddi` object
 ipums_website(var = "RECTYPE", project = "IPUMS-CPS", launch = FALSE)
-
-
 }

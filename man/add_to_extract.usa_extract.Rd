@@ -49,3 +49,24 @@ If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
 }
+\examples{
+extract <- define_extract_usa(
+  description = "2013 ACS Data",
+  samples = "us2013a",
+  variables = c("SEX", "AGE", "YEAR")
+)
+
+add_to_extract(extract, samples = "us2014a")
+
+extract2 <- add_to_extract(
+  extract,
+  samples = "us2014a",
+  variables = c("MARST", "BIRTHYR")
+)
+
+# Values that only take a single value are replaced
+add_to_extract(extract, description = "New description")$description
+
+# You can also combine two separate extract requests together
+combine_extracts(extract, extract2)
+}

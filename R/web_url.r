@@ -15,7 +15,6 @@
 #' The generated URL may not work for variables that are constructed during the
 #' extract creation process.
 #'
-#'
 #'@param x An [`ipums_ddi`] object. If left empty, `project` must be specified.
 #'@param var Name of the variable to load
 #'@param project Name of an IPUMS project. Must be one of:
@@ -31,21 +30,24 @@
 #'   Only used if specifying `project`, not `x`.
 #' @param homepage_if_missing If `TRUE`, return the project homepage if the
 #'   project does not provide variable-specific web pages.
+#'
 #' @return The URL to the page on ipums.org (silently if launch is `TRUE`)
+#'
+#' @export
+#'
 #' @examples
 #' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#'
+#' # Get URL for information about a particular variable
 #' ipums_website(ddi, "MONTH", launch = FALSE)
 #'
 #' \dontrun{
-#' # Launches website
+#' # Launch webpage for particular variable
 #' ipums_website(ddi, "MONTH")
 #' }
 #'
-#' # Can also specify project instead of using DDI
+#' # Can specify an IPUMS project instead of using an `ipums_ddi` object
 #' ipums_website(var = "RECTYPE", project = "IPUMS-CPS", launch = FALSE)
-#'
-#'
-#'@export
 ipums_website <- function(
   x, var, project = NULL, launch = TRUE, verbose = TRUE, var_label = NULL, homepage_if_missing = TRUE
 ) {
@@ -103,6 +105,7 @@ get_ipums_url <- function(var, project, verbose = TRUE, homepage_if_missing = FA
   # TODO: This does not actually error on missing projects, because
   # get_proj_config() returns a default config for invalid projects.
   # Better check would just be that the project name is in all_proj_names()
+  # Do when updating ipums_website()
   if (is.null(config)) {
     rlang::abort(c(
       "Unexpected project. Available projects:",

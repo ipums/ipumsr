@@ -61,11 +61,9 @@ get_extract_info(1)
 get_extract_info("nhgis:1")
 get_extract_info(c("nhgis", 1))
 
-# Other collections can be specified explicitly:
+# Other collections can be specified explicitly
+# Doing so does not alter the default collection
 is_extract_ready("usa:2")
-
-# This does not alter the default collection, though:
-get_last_extract_info()
 }
 
 # Remove the variable from the environment and .Renviron, if saved
@@ -85,7 +83,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}

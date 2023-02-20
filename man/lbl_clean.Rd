@@ -19,13 +19,14 @@ values to a factor, this avoids the creation of additional factor levels.
 \examples{
 x <- haven::labelled(
   c(1, 2, 3, 1, 2, 3, 1, 2, 3),
-  c(Q1 = 1, Q2 = 2, Q3 = 3, Q4= 4)
+  c(Q1 = 1, Q2 = 2, Q3 = 3, Q4 = 4)
 )
 
 lbl_clean(x)
 
 # Compare the factor levels of the normal and cleaned labels after coercion
 as_factor(lbl_clean(x))
+
 as_factor(x)
 }
 \seealso{

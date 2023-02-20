@@ -52,20 +52,20 @@ no longer available), this function will warn that the extract request
 must be resubmitted.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Check if extract is ready by supplying an ipums_extract object:
+# Check the extract request associated with a given `ipums_extract` object
 is_extract_ready(submitted_extract)
 
-# By supplying the data collection and extract number, as a string:
+# Or by supplying the collection and extract number
 is_extract_ready("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
-
-# By supplying the data collection and extract number, as a vector:
 is_extract_ready(c("usa", "1"))
 
 # If you have a default collection, you can use the extract number alone:
@@ -86,7 +86,6 @@ Other ipums_api:
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

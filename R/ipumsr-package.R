@@ -101,19 +101,42 @@ readr::spec
 #' cps_file <- ipums_example("cps_00006.xml")
 #'
 #' # Load 3 variables by name
-#' read_ipums_micro(cps_file, vars = c("YEAR", "MONTH", "PERNUM"))
-#' read_ipums_micro(cps_file, vars = c(YEAR, MONTH, PERNUM))
+#' read_ipums_micro(
+#'   cps_file,
+#'   vars = c("YEAR", "MONTH", "PERNUM"),
+#'   verbose = FALSE
+#' )
 #'
-#' # Use helper function to load all variables that start with "WT"
-#' read_ipums_micro(cps_file, vars = starts_with("WT"))
+#' # "Bare" variables are supported
+#' read_ipums_micro(
+#'   cps_file,
+#'   vars = c(YEAR, MONTH, PERNUM),
+#'   verbose = FALSE
+#' )
 #'
-#' # Selection methods can be combined:
-#' read_ipums_micro(cps_file, vars = c(YEAR, MONTH, contains("INC")))
-#' read_ipums_micro(cps_file, vars = starts_with("S") & ends_with("P"))
+#' # Standard tidyselect selectors are also supported
+#' read_ipums_micro(cps_file, vars = starts_with("WT"), verbose = FALSE)
 #'
-#' # Other selection arguments also support this syntax:
-#' nhgis_file <- ipums_example("nhgis0731_csv.zip")
-#' read_nhgis(nhgis_file, file_select = contains("nominal_state"))
+#' # Selection methods can be combined
+#' read_ipums_micro(
+#'   cps_file,
+#'   vars = c(YEAR, MONTH, contains("INC")),
+#'   verbose = FALSE
+#' )
+#'
+#' read_ipums_micro(
+#'   cps_file,
+#'   vars = starts_with("S") & ends_with("P"),
+#'   verbose = FALSE
+#' )
+#'
+#' # Other selection arguments also support this syntax.
+#' # For instance, load a particular file based on a tidyselect match:
+#' read_nhgis(
+#'   ipums_example("nhgis0731_csv.zip"),
+#'   file_select = contains("nominal_state"),
+#'   show_col_types = FALSE
+#' )
 NULL
 
 #' @importFrom tidyselect starts_with

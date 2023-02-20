@@ -41,13 +41,17 @@ definition to an unsubmitted state.
 usa_extract <- define_extract_usa(
   description = "USA example",
   samples = c("us2013a", "us2014a"),
-  variables = "YEAR"
+  variables = c("AGE", "SEX", "YEAR")
 )
 
-revised_usa_extract <- remove_from_extract(
+remove_from_extract(
   usa_extract,
-  samples = "us2014a"
+  samples = "us2014a",
+  variables = c("AGE", "SEX")
 )
 
-revised_usa_extract
+# To replace values, use add_to_extract() first to avoid invalid
+# extract definitions:
+revised_extract <- add_to_extract(usa_extract, samples = "us2015a")
+remove_from_extract(revised_extract, samples = c("us2013a", "us2014a"))
 }

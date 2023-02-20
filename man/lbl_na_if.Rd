@@ -10,8 +10,9 @@ lbl_na_if(x, .predicate)
 \item{x}{A \code{\link[haven:labelled]{labelled}} vector}
 
 \item{.predicate}{A function taking \code{.val} and \code{.lbl} arguments that
-returns a logical value. Can be provided as an anonymous function or
-formula. See examples.}
+returns \code{TRUE} for all values that should be converted to \code{NA}.
+
+Can be provided as an anonymous function or formula. See details.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector
@@ -22,10 +23,14 @@ to \code{NA} based on the value labels associated with that vector. Ignores
 values that do not have a label.
 }
 \details{
-The predicate function uses the terms \code{.val} and \code{.lbl} to refer to the
-values and labels, respectively. Use \code{.val} when you want to convert to
-\code{NA} conditional on the \emph{values} in the data. Use \code{.lbl} when you want
-to convert to \code{NA} conditional on the \emph{labels} used to refer to those values.
+Several \verb{lbl_*()} functions include arguments that can be passed a function
+of \code{.val} and/or \code{.lbl}. These refer to the existing values and
+labels in the input vector, respectively.
+
+Use \code{.val} to refer to the \emph{values} in the vector's value labels.
+Use \code{.lbl} to refer to the \emph{label names} in the vector's value labels.
+
+Note that not all \verb{lbl_*()} functions support both of these arguments.
 }
 \examples{
 x <- haven::labelled(
@@ -33,14 +38,16 @@ x <- haven::labelled(
   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
 )
 
-# Anonymous function notation
+# Convert labelled values greater than 90 to `NA`
 lbl_na_if(x, function(.val, .lbl) .val >= 90)
+
+# Convert values over 90 or with label "Maybe" to `NA` (R >= 4.1 syntax)
 lbl_na_if(x, \(.val, .lbl) .val >= 90 | .lbl \%in\% c("Maybe"))
 
-# purrr-style notation
-lbl_na_if(x, ~.lbl \%in\% c("Maybe"))
+# Can use purrr-style notation
+lbl_na_if(x, ~ .lbl \%in\% c("Maybe"))
 
-# Referring to function by name
+# Or refer to named function
 na_function <- function(.val, .lbl) .val >= 90
 lbl_na_if(x, na_function)
 }

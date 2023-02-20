@@ -71,7 +71,8 @@ character vector of column names.
 
 If \code{TRUE}, use the default column names included in NHGIS .csv files. If
 \code{FALSE} or a character vector, replace the default column names with the
-provided names or default placeholders.
+provided names or default placeholders. Note that any columns that have
+altered names will not be attached to the requested \code{var_attrs}.
 
 Note that unlike \code{\link[readr:read_delim]{readr::read_csv()}}, the first row
 of the input (which contains NHGIS default headers) will always be removed
@@ -121,8 +122,39 @@ If you no longer have access to the .do file, consider resubmitting the
 extract that produced the data.
 }
 \examples{
+# Example files
 csv_file <- ipums_example("nhgis0972_csv.zip")
-data_only <- read_nhgis(csv_file)
+fw_file <- ipums_example("nhgis0730_fixed.zip")
+
+# Provide the .zip archive directly to load the data inside:
+read_nhgis(csv_file)
+
+# For extracts that contain multiple files, use `file_select` to specify
+# a single file to load.
+
+# This accepts a tidyselect expression
+read_nhgis(fw_file, file_select = matches("ds239"), show_conditions = FALSE)
+
+# Or an index position
+read_nhgis(fw_file, file_select = 2, show_conditions = FALSE)
+
+# NHGIS fixed-width files use the information contained in the extract's
+# .do file to parse the data correctly. If it does not exist, the parsing
+# will be incorrect. If you have moved the .do file, be sure to provide
+# its new file path to the `do_file` argument.
+bad_parse <- read_nhgis(
+  fw_file,
+  file_select = 2,
+  do_file = FALSE,
+  show_conditions = FALSE,
+  show_col_types = FALSE
+)
+
+bad_parse$X1[1:10]
+
+# `readr::read_csv()` arguments are accepted, though most defaults should
+# be appropriate.
+read_nhgis(csv_file, col_types = readr::cols(.default = "c"))
 }
 \seealso{
 Other ipums_read: 

@@ -11,15 +11,13 @@ lbl_define(x, ...)
 
 \item{...}{Arbitrary number of two-sided formulas.
 
-The left hand side should be a label placeholder created with \code{\link[=lbl]{lbl()}} or a
-value that already exists in the data.
+The left hand side should be a label placeholder created with \code{\link[=lbl]{lbl()}}.
 
-The right hand side should be a function taking \code{.val} and \code{.lbl}
-arguments that evaluates to \code{TRUE} for all
-cases that should receive the label specified on the left hand side.
-Can be provided as an anonymous function or formula.
+The right hand side should be a function taking \code{.val} that
+evaluates to \code{TRUE} for all cases that should receive the label specified
+on the left hand side.
 
-See examples.}
+Can be provided as an anonymous function or formula. See details.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector
@@ -28,6 +26,16 @@ A \code{\link[haven:labelled]{labelled}} vector
 Create a \code{\link[haven:labelled]{labelled}} vector from an unlabelled
 vector using \code{\link[=lbl_relabel]{lbl_relabel()}} syntax, allowing for the grouping of multiple
 values into a single label. Values not assigned a label remain unlabelled.
+}
+\details{
+Several \verb{lbl_*()} functions include arguments that can be passed a function
+of \code{.val} and/or \code{.lbl}. These refer to the existing values and
+labels in the input vector, respectively.
+
+Use \code{.val} to refer to the \emph{values} in the vector's value labels.
+Use \code{.lbl} to refer to the \emph{label names} in the vector's value labels.
+
+Note that not all \verb{lbl_*()} functions support both of these arguments.
 }
 \examples{
 age <- c(10, 12, 16, 18, 20, 22, 25, 27)

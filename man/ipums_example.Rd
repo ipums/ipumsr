@@ -26,5 +26,5 @@ ipums_example()
 # Get path to a specific example file
 file <- ipums_example("cps_00006.xml")
 
-read_ipums_ddi(file)
+read_ipums_micro(file)
 }

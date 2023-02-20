@@ -52,7 +52,6 @@ Other ipums_api:
 \code{\link{get_extract_info}()},
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

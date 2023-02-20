@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{define_extract_nhgis}
 \alias{define_extract_nhgis}
-\title{Define an NHGIS extract request}
+\title{Define an IPUMS NHGIS extract request}
 \usage{
 define_extract_nhgis(
   description = "",
@@ -125,28 +125,19 @@ Required when an extract definition includes any \code{datasets} or
 \code{time_series_tables}.}
 }
 \value{
-An object of class \code{\link[=ipums_extract-class]{nhgis_extract}}
-containing the extract definition.
+An object of class \code{\link[=ipums_extract-class]{nhgis_extract}} containing
+the extract definition.
 }
 \description{
-Define an extract request to be submitted via the IPUMS
+Define an IPUMS NHGIS request to be submitted via the IPUMS
 extract API. An extract request contains the specifications required
-to identify and obtain a particular set of data from the NHGIS system.
+to identify and obtain a particular set of data from the IPUMS NHGIS system.
 
-An NHGIS extract definition must include at least one dataset, time series
-table, or shapefile. For extract definitions that include any datasets,
-corresponding data tables and geographic levels must be specified. For
-extract definitions that include any time series tables, corresponding
-geographic levels must be specified.
+See details for more information about creating valid IPUMS NHGIS extract
+definitions. Codes for particular data sources can be found using
+\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}}.
 
-An extract definition can contain multiple datasets and/or time series
-tables. See details for information about the syntax for defining such an
-extract request.
-
-Codes for particular datasets, data tables, time series tables, and
-shapefiles can be found by using \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}}.
-
-More information about NHGIS can be found at the following links:
+More information about IPUMS NHGIS can be found at the following links:
 \itemize{
 \item \href{https://www.nhgis.org/data-availability}{NHGIS data}
 \item \href{https://www.nhgis.org/frequently-asked-questions-faq}{NHGIS FAQ}
@@ -154,6 +145,12 @@ More information about NHGIS can be found at the following links:
 }
 }
 \details{
+An NHGIS extract definition must include at least one dataset, time series
+table, or shapefile. For extract definitions that include any \code{datasets},
+corresponding \code{data_tables} and \code{geog_levels} must be specified. For
+extract definitions that include any \code{time_series_tables}, corresponding
+\code{geog_levels} must be specified.
+
 NHGIS extract definitions may contain multiple \code{datasets} or
 \code{time_series_tables.} Each dataset or time series table is associated with
 several subfields that apply only to that particular dataset or time series
@@ -190,25 +187,39 @@ Alternatively, extract definitions for individual datasets and
 time series tables can be combined using \code{\link[=combine_extracts]{combine_extracts()}}.
 }
 \examples{
-define_extract_nhgis(
-  description = "Test NHGIS extract",
+# Extract definition for tables from an NHGIS dataset
+my_extract <- define_extract_nhgis(
+  description = "Example NHGIS extract",
   datasets = "1990_STF3",
   data_tables = "NP57",
-  geog_levels = c("county", "tract"),
-
+  geog_levels = c("county", "tract")
 )
 
-# For extracts with multiple datasets or time series tables, subfield
-# arguments are recycled to all datasets:
+my_extract
+
+# Extract definition for an NHGIS time series table
 define_extract_nhgis(
-  description = "Extract with multiple datasets",
+  description = "Example NHGIS extract",
+  time_series_tables = "CL8",
+  geog_levels = "county"
+)
+
+# Use get_nhgis_metadata() to identify data source names
+\dontrun{
+get_nhgis_metadata("time_series_tables")
+}
+
+# Fields that are attached to specific datasets/time series tables
+# are recycled to all datasets/time series tables in an extract by default
+define_extract_nhgis(
+  description = "Extract definition with multiple datasets",
   datasets = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
   data_tables = "B01001",
   geog_levels = c("state", "county")
 )
 
-# To attach specific subfield values to each dataset or time series table,
-# pass a named list to the subfield argument
+# To instead attach specific values to each dataset or time series table,
+# use a named list instead of a vector:
 define_extract_nhgis(
   description = "Extract with multiple time series tables",
   time_series_tables = c("CW3", "CW5"),
@@ -232,6 +243,11 @@ define_extract_nhgis(
   time_series_tables = "CL6",
   geog_levels = list("1990_STF1" = "county", "CL6" = "state")
 )
+
+\dontrun{
+# Use the extract definition to submit an extract request to the API
+submit_extract(my_extract)
+}
 }
 \seealso{
 Other ipums_api: 
@@ -246,7 +262,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

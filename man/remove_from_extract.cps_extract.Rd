@@ -41,13 +41,17 @@ definition to an unsubmitted state.
 cps_extract <- define_extract_cps(
   description = "CPS example",
   samples = c("cps2019_03s", "cps2020_03s"),
-  variables = "YEAR"
+  variables = c("AGE", "SEX", "YEAR")
 )
 
-revised_cps_extract <- remove_from_extract(
+remove_from_extract(
   cps_extract,
-  samples = "cps2020_03s"
+  samples = "cps2020_03s",
+  variables = c("AGE", "SEX")
 )
 
-revised_cps_extract
+# To replace values, use add_to_extract() first to avoid invalid
+# extract definitions:
+revised_extract <- add_to_extract(cps_extract, variables = "MARST")
+remove_from_extract(revised_extract, variables = c("AGE", "SEX", "YEAR"))
 }

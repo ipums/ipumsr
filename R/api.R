@@ -105,8 +105,8 @@ NULL
 #' Define an IPUMS USA extract request
 #'
 #' Define an IPUMS USA extract request to be submitted via the IPUMS
-#' extract API. For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' extract API. An extract request contains the specifications required
+#' to identify and obtain a particular set of data from the IPUMS USA system.
 #'
 #' @param description Description of the extract.
 #' @param samples Character vector of samples to include in the extract. Samples
@@ -128,20 +128,25 @@ NULL
 #'
 #'   Currently, only `"P"` is supported.
 #'
-#' @return An object of class [`usa_extract`][ipums_extract-class]
-#'   containing the extract definition.
+#' @return An object of class [`usa_extract`][ipums_extract-class] containing
+#'   the extract definition.
 #'
 #' @family ipums_api
 #' @export
 #'
 #' @examples
 #' my_extract <- define_extract_usa(
-#'   description = "2013 ACS Data",
-#'   samples = "us2013a",
-#'   variables = "YEAR"
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
 #' my_extract
+#'
+#' \dontrun{
+#' # Use the extract definition to submit an extract request to the API
+#' submit_extract(my_extract)
+#' }
 define_extract_usa <- function(description,
                                samples,
                                variables,
@@ -192,23 +197,33 @@ define_extract_usa <- function(description,
 #' Define an IPUMS CPS extract request
 #'
 #' Define an IPUMS CPS extract request to be submitted via the IPUMS
-#' extract API. For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' extract API. An extract request contains the specifications required
+#' to identify and obtain a particular set of data from the IPUMS CPS system.
 #'
 #' @inheritParams define_extract_usa
 #' @param samples Character vector of samples to include in the extract. Samples
 #'   should be specified using IPUMS CPS
 #'   [sample ID values](https://cps.ipums.org/cps-action/samples/sample_ids).
 #'
-#' @return An object of class [`cps_extract`][ipums_extract-class]
-#'   containing the extract definition.
+#' @return An object of class [`cps_extract`][ipums_extract-class] containing
+#'   the extract definition.
 #'
 #' @family ipums_api
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_cps("Example", "cps2020_03s", "YEAR")
+#' my_extract <- define_extract_cps(
+#'   description = "Example CPS extract definition",
+#'   samples = c("cps2020_02s", "cps2020_03s"),
+#'   variables = c("AGE", "SEX", "YEAR")
+#' )
+#'
 #' my_extract
+#'
+#' \dontrun{
+#' # Use the extract definition to submit an extract request to the API
+#' submit_extract(my_extract)
+#' }
 define_extract_cps <- function(description,
                                samples,
                                variables,
@@ -256,32 +271,29 @@ define_extract_cps <- function(description,
   extract
 }
 
-#' Define an NHGIS extract request
+#' Define an IPUMS NHGIS extract request
 #'
 #' @description
-#' Define an extract request to be submitted via the IPUMS
+#' Define an IPUMS NHGIS request to be submitted via the IPUMS
 #' extract API. An extract request contains the specifications required
-#' to identify and obtain a particular set of data from the NHGIS system.
+#' to identify and obtain a particular set of data from the IPUMS NHGIS system.
 #'
-#' An NHGIS extract definition must include at least one dataset, time series
-#' table, or shapefile. For extract definitions that include any datasets,
-#' corresponding data tables and geographic levels must be specified. For
-#' extract definitions that include any time series tables, corresponding
-#' geographic levels must be specified.
+#' See details for more information about creating valid IPUMS NHGIS extract
+#' definitions. Codes for particular data sources can be found using
+#' [get_nhgis_metadata()].
 #'
-#' An extract definition can contain multiple datasets and/or time series
-#' tables. See details for information about the syntax for defining such an
-#' extract request.
-#'
-#' Codes for particular datasets, data tables, time series tables, and
-#' shapefiles can be found by using [get_nhgis_metadata()].
-#'
-#' More information about NHGIS can be found at the following links:
+#' More information about IPUMS NHGIS can be found at the following links:
 #' - [NHGIS data](https://www.nhgis.org/data-availability)
 #' - [NHGIS FAQ](https://www.nhgis.org/frequently-asked-questions-faq)
 #' - [NHGIS API](https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/)
 #'
 #' @details
+#' An NHGIS extract definition must include at least one dataset, time series
+#' table, or shapefile. For extract definitions that include any `datasets`,
+#' corresponding `data_tables` and `geog_levels` must be specified. For
+#' extract definitions that include any `time_series_tables`, corresponding
+#' `geog_levels` must be specified.
+#'
 #' NHGIS extract definitions may contain multiple `datasets` or
 #' `time_series_tables.` Each dataset or time series table is associated with
 #' several subfields that apply only to that particular dataset or time series
@@ -404,32 +416,46 @@ define_extract_cps <- function(description,
 #'   Required when an extract definition includes any `datasets` or
 #'   `time_series_tables`.
 #'
-#' @return An object of class [`nhgis_extract`][ipums_extract-class]
-#'   containing the extract definition.
+#' @return An object of class [`nhgis_extract`][ipums_extract-class] containing
+#'   the extract definition.
 #'
 #' @family ipums_api
 #' @export
 #'
 #' @examples
-#' define_extract_nhgis(
-#'   description = "Test NHGIS extract",
+#' # Extract definition for tables from an NHGIS dataset
+#' my_extract <- define_extract_nhgis(
+#'   description = "Example NHGIS extract",
 #'   datasets = "1990_STF3",
 #'   data_tables = "NP57",
-#'   geog_levels = c("county", "tract"),
-#'
+#'   geog_levels = c("county", "tract")
 #' )
 #'
-#' # For extracts with multiple datasets or time series tables, subfield
-#' # arguments are recycled to all datasets:
+#' my_extract
+#'
+#' # Extract definition for an NHGIS time series table
 #' define_extract_nhgis(
-#'   description = "Extract with multiple datasets",
+#'   description = "Example NHGIS extract",
+#'   time_series_tables = "CL8",
+#'   geog_levels = "county"
+#' )
+#'
+#' # Use get_nhgis_metadata() to identify data source names
+#' \dontrun{
+#' get_nhgis_metadata("time_series_tables")
+#' }
+#'
+#' # Fields that are attached to specific datasets/time series tables
+#' # are recycled to all datasets/time series tables in an extract by default
+#' define_extract_nhgis(
+#'   description = "Extract definition with multiple datasets",
 #'   datasets = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
 #'   data_tables = "B01001",
 #'   geog_levels = c("state", "county")
 #' )
 #'
-#' # To attach specific subfield values to each dataset or time series table,
-#' # pass a named list to the subfield argument
+#' # To instead attach specific values to each dataset or time series table,
+#' # use a named list instead of a vector:
 #' define_extract_nhgis(
 #'   description = "Extract with multiple time series tables",
 #'   time_series_tables = c("CW3", "CW5"),
@@ -453,6 +479,11 @@ define_extract_cps <- function(description,
 #'   time_series_tables = "CL6",
 #'   geog_levels = list("1990_STF1" = "county", "CL6" = "state")
 #' )
+#'
+#' \dontrun{
+#' # Use the extract definition to submit an extract request to the API
+#' submit_extract(my_extract)
+#' }
 define_extract_nhgis <- function(description = "",
                                  datasets = NULL,
                                  data_tables = NULL,
@@ -526,18 +557,23 @@ define_extract_nhgis <- function(description = "",
 
 }
 
-#' Define an IPUMS extract request from a JSON-formatted definition
+# > Save extract as json ----
+
+#' Store an extract definition in JSON format
 #'
 #' @description
-#' Create an [`ipums_extract`][ipums_extract-class] object based on an extract
-#' definition formatted as JSON. For an overview of ipumsr API
-#' functionality, see `vignette("ipums-api", package = "ipumsr")`.
+#' Read and write an [`ipums_extract`][ipums_extract-class] object to a JSON
+#' file that contains the extract definition specifications.
 #'
-#' To create a JSON file from an existing extract definition, use
-#' [save_extract_as_json()].
+#' Use these functions to store a copy of an extract definition outside of your
+#' R environment and/or share an extract definition with another registered
+#' IPUMS user.
 #'
-#' @param extract_json Path to a file containing the JSON definition or a
-#'   JSON string.
+#' @inheritParams add_to_extract
+#' @param extract_json Path to a file containing a JSON-formatted
+#'   extract definition.
+#' @param file File path to which to write the JSON-formatted extract
+#'   definition.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
@@ -545,7 +581,11 @@ define_extract_nhgis <- function(description = "",
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
 #'
 #' extract_json_path <- file.path(tempdir(), "usa_extract.json")
 #' save_extract_as_json(my_extract, file = extract_json_path)
@@ -605,38 +645,8 @@ define_extract_from_json <- function(extract_json) {
 
 }
 
-# > Save extract as json ----
-
-#' Save an [`ipums_extract`][ipums_extract-class] to disk as JSON
-#'
-#' @description
-#' Save an [`ipums_extract`][ipums_extract-class] to a JSON-formatted file.
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
-#'
-#' @details
-#' Note that the output JSON file will only contain the extract
-#' parameters required to submit a new extract request. Ancillary fields,
-#' like `number`, `status`, etc. will not be included.
-#'
-#' @inheritParams add_to_extract
-#' @param file File path to which to write the JSON-formatted extract
-#'   definition.
-#'
-#' @return The file path where the extract definition was written, invisibly
-#'
-#' @family ipums_api
+#' @rdname define_extract_from_json
 #' @export
-#'
-#' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
-#'
-#' extract_json_path <- file.path(tempdir(), "usa_extract.json")
-#' save_extract_as_json(my_extract, file = extract_json_path)
-#'
-#' copy_of_my_extract <- define_extract_from_json(extract_json_path)
-#'
-#' identical(my_extract, copy_of_my_extract)
 save_extract_as_json <- function(extract, file) {
   extract_as_json <- extract_to_request_json(
     extract,
@@ -676,25 +686,30 @@ save_extract_as_json <- function(extract, file) {
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
 #'
 #' \dontrun{
-#' # `submit_extract()` returns an ipums_extract object updated to include the
-#' # extract number, so it is often useful to name the return object:
+#' # Store your submitted extract request to obtain the extract number
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # If you didn't capture the return object of submit_extract for your most
-#' # recent extract, you can recover that information with:
-#' submitted_extract <- get_last_extract_info("usa")
-#'
-#' # View the extract number
 #' submitted_extract$number
 #'
-#' # Check if submitted extract is ready
-#' is_extract_ready(submitted_extract) # returns TRUE or FALSE
+#' # This is useful for checking the extract request status
+#' get_extract_info(submitted_extract)
 #'
-#' # Or have R check periodically until the extract is ready
-#' downloadable_extract <- wait_for_extract(submitted_extract)
+#' # You can always get the latest status, even if you forget to store the
+#' # submitted extract request object
+#' submitted_extract <- get_last_extract_info("usa")
+#'
+#' # You can also check if submitted extract is ready
+#' is_extract_ready(submitted_extract)
+#'
+#' # Or have R check periodically and download when ready
+#' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
@@ -780,28 +795,32 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Get info by supplying an ipums_extract object:
+#' # Get latest info for the request associated with a given `ipums_extract`
+#' # object:
 #' get_extract_info(submitted_extract)
 #'
-#' # Get info by supplying the data collection and extract number, as a string:
+#' # Or specify the extract collection and number:
 #' get_extract_info("usa:1")
-#' # Note that there is no space before or after the colon, and no zero-padding
-#' # of the extract number.
-#'
-#' # Get info by supplying the data collection and extract number, as a vector:
 #' get_extract_info(c("usa", "1"))
 #'
+#' # Get information for multiple recent requests by specifying a collection
+#' # with no number:
+#' get_extract_info("usa")
+#'
 #' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
+#' set_ipums_default_collection("nhgis")
 #' get_extract_info(1)
 #'
-#' # The default collection will automatically be used even if no extract
-#' # number is supplied:
+#' # Or omit the number to get information about recent extracts
 #' get_extract_info(how_many = 3, table = TRUE)
 #' get_last_extract_info()
 #' }
@@ -916,25 +935,29 @@ get_extract_info <- function(extract = NULL,
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Wait for extract by supplying ipums_extract object:
+#' # Wait for a particular extract request to complete by providing its
+#' # associated `ipums_extract` object:
 #' downloadable_extract <- wait_for_extract(submitted_extract)
 #'
-#' # By supplying the data collection and extract number, as a string:
+#' # Or by specifying the collection and number for the extract request:
 #' downloadable_extract <- wait_for_extract("usa:1")
-#' # Note that there is no space before or after the colon, and no zero-padding
-#' # of the extract number.
-#'
-#' # By supplying the data collection and extract number, as a vector:
-#' downloadable_extract <- wait_for_extract(c("usa", "1"))
 #'
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("usa")
 #' downloadable_extract <- wait_for_extract(1)
+#'
+#' # If you want to subsequently download your completed extract, you can
+#' # use `download_extract()` directly:
+#' download_extract(1, wait = TRUE)
 #' }
 wait_for_extract <- function(extract,
                              initial_delay_seconds = 0,
@@ -1049,20 +1072,20 @@ wait_for_extract <- function(extract,
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' my_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
 #'
 #' \dontrun{
 #' submitted_extract <- submit_extract(my_extract)
 #'
-#' # Check if extract is ready by supplying an ipums_extract object:
+#' # Check the extract request associated with a given `ipums_extract` object
 #' is_extract_ready(submitted_extract)
 #'
-#' # By supplying the data collection and extract number, as a string:
+#' # Or by supplying the collection and extract number
 #' is_extract_ready("usa:1")
-#' # Note that there is no space before or after the colon, and no zero-padding
-#' # of the extract number.
-#'
-#' # By supplying the data collection and extract number, as a vector:
 #' is_extract_ready(c("usa", "1"))
 #'
 #' # If you have a default collection, you can use the extract number alone:
@@ -1145,21 +1168,39 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+#' usa_extract <- define_extract_usa(
+#'   description = "2013-2014 ACS Data",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
+#'
+#' nhgis_extract <- define_extract_nhgis(
+#'   description = "Example NHGIS extract",
+#'   datasets = "1990_STF3",
+#'   data_tables = "NP57",
+#'   geog_levels = c("county", "tract")
+#' )
 #'
 #' \dontrun{
-#' submitted_extract <- submit_extract(my_extract)
+#' submitted_extract <- submit_extract(usa_extract)
 #'
-#' # Download extract by supplying an ipums_extract object:
-#' path_to_ddi_file <- download_extract(submitted_extract)
+#' # For microdata, the path to the DDI .xml codebook file is provided.
+#' usa_xml_file <- download_extract(submitted_extract)
 #'
-#' # By supplying the data collection and extract number, as a string:
-#' path_to_ddi_file <- download_extract("usa:1")
-#' # Note that there is no space before or after the colon, and no zero-padding
-#' # of the extract number.
+#' # Load with a `read_ipums_micro_*()` function
+#' usa_data <- read_ipums_micro(usa_xml_file)
 #'
-#' # By supplying the data collection and extract number, as a vector:
-#' path_to_ddi_file <- download_extract(c("usa", "1"))
+#' # You can also download previous extracts with their collection and number:
+#' nhgis_files <- download_extract("nhgis:1")
+#'
+#' # NHGIS extracts return a path to both the tabular and spatial data files,
+#' # as applicable.
+#' #
+#' # Load NHGIS tabular data
+#' nhgis_data <- read_nhgis(data = nhgis_files["data"])
+#'
+#' # Load NHGIS spatial data
+#' nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
 #'
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("usa")
@@ -1304,6 +1345,27 @@ add_to_extract <- function(extract, ...) {
 #' @return A modified `usa_extract` object
 #'
 #' @export
+#'
+#' @examples
+#' extract <- define_extract_usa(
+#'   description = "2013 ACS Data",
+#'   samples = "us2013a",
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
+#'
+#' add_to_extract(extract, samples = "us2014a")
+#'
+#' extract2 <- add_to_extract(
+#'   extract,
+#'   samples = "us2014a",
+#'   variables = c("MARST", "BIRTHYR")
+#' )
+#'
+#' # Values that only take a single value are replaced
+#' add_to_extract(extract, description = "New description")$description
+#'
+#' # You can also combine two separate extract requests together
+#' combine_extracts(extract, extract2)
 add_to_extract.usa_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -1352,6 +1414,8 @@ add_to_extract.usa_extract <- function(extract,
 #' @return A modified `cps_extract` object
 #'
 #' @export
+#'
+#' @inherit add_to_extract.usa_extract examples
 add_to_extract.cps_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -1513,13 +1577,16 @@ add_to_extract.cps_extract <- function(extract,
 #' )
 #'
 #' # Modify existing datasets in extract:
-#' extract <- add_to_extract(
+#' extract2 <- add_to_extract(
 #'   extract,
 #'   data_tables = "NP3"
 #' )
 #'
-#' # Add new dataset. New subfields will only be attached to datasets specified
-#' # in the datasets argument:
+#' extract2
+#'
+#' # Add a new dataset or time series table. Fields that apply to each dataset
+#' # or time series table are only applied to the newly added dataset or
+#' # time series table:
 #' extract <- add_to_extract(
 #'   extract,
 #'   datasets = "1980_STF1",
@@ -1527,13 +1594,29 @@ add_to_extract.cps_extract <- function(extract,
 #'   geog_levels = c("county", "state")
 #' )
 #'
-#' # Modify existing datasets.
-#' # Vectors recycle to all datasets, lists match by index or name.
 #' add_to_extract(
 #'   extract,
-#'   data_tables = list("1990_STF1" = "NP4", "1980_STF1" = "NT1B"),
+#'   time_series_tables = "A00",
+#'   geog_levels = "state"
+#' )
+#'
+#' # To modify existing datasets, use a named list to specify which datasets
+#' # should be attached to which `data_tables` or `geog_levels`.
+#' # Vector arguments are attached to all datasets.
+#' add_to_extract(
+#'   extract,
+#'   data_tables = list(
+#'     "1990_STF1" = "NP4",
+#'     "1980_STF1" = "NT1B"
+#'   ),
 #'   geog_levels = "nation"
 #' )
+#'
+#' # Values that can only take a single value are replaced
+#' add_to_extract(extract, data_format = "fixed_width")$data_format
+#'
+#' # You can also combine two extract requests together
+#' combine_extracts(extract, extract2)
 add_to_extract.nhgis_extract <- function(extract,
                                          description = NULL,
                                          datasets = NULL,
@@ -1722,15 +1805,19 @@ remove_from_extract <- function(extract, ...) {
 #' usa_extract <- define_extract_usa(
 #'   description = "USA example",
 #'   samples = c("us2013a", "us2014a"),
-#'   variables = "YEAR"
+#'   variables = c("AGE", "SEX", "YEAR")
 #' )
 #'
-#' revised_usa_extract <- remove_from_extract(
+#' remove_from_extract(
 #'   usa_extract,
-#'   samples = "us2014a"
+#'   samples = "us2014a",
+#'   variables = c("AGE", "SEX")
 #' )
 #'
-#' revised_usa_extract
+#' # To replace values, use add_to_extract() first to avoid invalid
+#' # extract definitions:
+#' revised_extract <- add_to_extract(usa_extract, samples = "us2015a")
+#' remove_from_extract(revised_extract, samples = c("us2013a", "us2014a"))
 remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
@@ -1776,15 +1863,19 @@ remove_from_extract.usa_extract <- function(extract,
 #' cps_extract <- define_extract_cps(
 #'   description = "CPS example",
 #'   samples = c("cps2019_03s", "cps2020_03s"),
-#'   variables = "YEAR"
+#'   variables = c("AGE", "SEX", "YEAR")
 #' )
 #'
-#' revised_cps_extract <- remove_from_extract(
+#' remove_from_extract(
 #'   cps_extract,
-#'   samples = "cps2020_03s"
+#'   samples = "cps2020_03s",
+#'   variables = c("AGE", "SEX")
 #' )
 #'
-#' revised_cps_extract
+#' # To replace values, use add_to_extract() first to avoid invalid
+#' # extract definitions:
+#' revised_extract <- add_to_extract(cps_extract, variables = "MARST")
+#' remove_from_extract(revised_extract, variables = c("AGE", "SEX", "YEAR"))
 remove_from_extract.cps_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
@@ -1915,46 +2006,37 @@ remove_from_extract.cps_extract <- function(extract,
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' extract <- define_extract_nhgis(
 #'   datasets = "1990_STF1",
 #'   data_tables = c("NP1", "NP2", "NP3"),
-#'   geog_levels = "county",
+#'   geog_levels = "county"
 #' )
 #'
-#' # Remove tables from existing datasets in extract:
-#' remove_from_extract(
-#'   extract,
-#'   data_tables = "NP3"
-#' )
+#' # Remove a table from existing datasets:
+#' remove_from_extract(extract, data_tables = "NP3")
 #'
 #' extract2 <- define_extract_nhgis(
 #'   time_series_tables = c("CW3", "CW5"),
 #'   geog_levels = c("state", "county")
 #' )
 #'
-#' # Remove an entire time series table:
+#' # Remove an entire time series table
 #' remove_from_extract(
 #'   extract2,
 #'   time_series_tables = "CW3"
 #' )
 #'
-#' # Use a list to remove subfield values from specific datasets or time
-#' # series tables.
+#' # Use a named list to remove values from specific datasets or time
+#' # series tables:
 #' remove_from_extract(
 #'   extract2,
 #'   geog_levels = list(CW5 = "state", CW3 = "county")
 #' )
 #'
-#' # Replace values by using `add_to_extract()` first:
-#' extract2 %>%
-#'   add_to_extract(
-#'     geog_levels = list(CW3 = "tract")
-#'   ) %>%
-#'   remove_from_extract(
-#'     geog_levels = list(CW3 = c("county", "state"))
-#'   )
+#' # Replace values by using `add_to_extract()` first to avoid invalid
+#' # extract definitions
+#' revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
+#' remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
                                               data_tables = NULL,
@@ -2267,6 +2349,8 @@ get_last_extract_info <- function(collection = NULL,
 #'   `extract_tbl`. Unique extracts can be identified by their extract
 #'   number, which is contained in the `number` column of `extract_tbl`.
 #'
+#' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Get tibble of recent extracts
@@ -2277,6 +2361,7 @@ get_last_extract_info <- function(collection = NULL,
 #'   "[Ii]ncome",
 #'   tbl_of_last_10_extracts$description
 #' )
+#'
 #' income_extracts <- tbl_of_last_10_extracts[description_mentions_income, ]
 #'
 #' # Convert tibble of extracts to list of extracts
@@ -2290,8 +2375,6 @@ get_last_extract_info <- function(collection = NULL,
 #'
 #' submitted_revised_income_extract <- submit_extract(revised_income_extract)
 #' }
-#'
-#' @export
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
   collection <- unique(extract_tbl$collection)
@@ -2362,6 +2445,8 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #'   for each of the extract requests represented in `extract_list`. Each column
 #'   corresponds to an extract field.
 #'
+#' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Get list of recent extracts
@@ -2375,8 +2460,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #' # Convert list of extracts to tibble of extracts to view in a tabular format
 #' extract_list_to_tbl(list_of_last_10_extracts)
 #' }
-#'
-#' @export
 extract_list_to_tbl <- function(extract_list) {
 
   if ("ipums_extract" %in% class(extract_list)) {
@@ -2539,11 +2622,9 @@ set_ipums_api_key <- function(api_key,
 #' get_extract_info("nhgis:1")
 #' get_extract_info(c("nhgis", 1))
 #'
-#' # Other collections can be specified explicitly:
+#' # Other collections can be specified explicitly
+#' # Doing so does not alter the default collection
 #' is_extract_ready("usa:2")
-#'
-#' # This does not alter the default collection, though:
-#' get_last_extract_info()
 #' }
 #'
 #' # Remove the variable from the environment and .Renviron, if saved

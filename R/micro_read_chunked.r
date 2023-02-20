@@ -85,67 +85,95 @@
 #' @family ipums_read
 #'
 #' @examples
-#' # Select Minnesotan cases from CPS example (Note you can also accomplish
-#' # this and avoid having to even download a huge file using the "Select Cases"
-#' # functionality of the IPUMS extract system)
-#' mn_only <- read_ipums_micro_chunked(
-#'   ipums_example("cps_00006.xml"),
-#'   IpumsDataFrameCallback$new(function(x, pos) {
-#'     x[x$STATEFIP == 27, ]
-#'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#' suppressMessages(library(dplyr))
+#'
+#' # Example codebook file
+#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#'
+#' # Function to extract Minnesota cases from CPS example
+#' # (This can also be accomplished using "Select Cases" in the IPUMS
+#' # extract system)
+#' #
+#' # Function must take `x` and `pos` to refer to data and row position,
+#' # respectively.
+#' filter_mn <- function(x, pos) {
+#'   x[x$STATEFIP == 27, ]
+#' }
+#'
+#' # Initialize callback
+#' filter_mn_callback <- IpumsDataFrameCallback$new(filter_mn)
+#'
+#' # Process data in chunks, filtering to MN cases in each chunk
+#' read_ipums_micro_chunked(
+#'   cps_rect_ddi_file,
+#'   filter_mn_callback,
+#'   chunk_size = 1000,
+#'   verbose = FALSE
 #' )
 #'
 #' # Tabulate INCTOT average by state without storing full dataset in memory
-#' library(dplyr)
-#' inc_by_state <- read_ipums_micro_chunked(
-#'   ipums_example("cps_00006.xml"),
-#'   IpumsDataFrameCallback$new(function(x, pos) {
-#'     x %>%
-#'       mutate(
-#'         INCTOT = lbl_na_if(
-#'           INCTOT, ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe)."))
+#' read_ipums_micro_chunked(
+#'   cps_rect_ddi_file,
+#'   IpumsDataFrameCallback$new(
+#'     function(x, pos) {
+#'       x %>%
+#'         mutate(
+#'           INCTOT = lbl_na_if(
+#'             INCTOT,
+#'             ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'           )
 #'         ) %>%
-#'       filter(!is.na(INCTOT)) %>%
-#'       group_by(STATEFIP = as_factor(STATEFIP)) %>%
-#'       summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
-#'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#'         filter(!is.na(INCTOT)) %>%
+#'         group_by(STATEFIP = as_factor(STATEFIP)) %>%
+#'         summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
+#'     }
+#'   ),
+#'   chunk_size = 1000
 #' ) %>%
 #' group_by(STATEFIP) %>%
 #' summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 #'
-#' # x will be a list when using `read_ipums_micro_list_chunked()`
+#' # `x` will be a list when using `read_ipums_micro_list_chunked()`
 #' read_ipums_micro_list_chunked(
 #'   ipums_example("cps_00010.xml"),
 #'   IpumsSideEffectCallback$new(function(x, pos) {
-#'     print(paste0(nrow(x$PERSON), " persons and ", nrow(x$HOUSEHOLD), " households in this chunk."))
+#'     print(
+#'       paste0(
+#'         nrow(x$PERSON), " persons and ",
+#'         nrow(x$HOUSEHOLD), " households in this chunk."
+#'       )
+#'     )
 #'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#'   chunk_size = 1000,
+#'   verbose = FALSE
 #' )
 #'
 #' # Using the biglm package, you can even run a regression without storing
 #' # the full dataset in memory
-#' library(dplyr)
 #' if (require(biglm)) {
+#'
 #'   lm_results <- read_ipums_micro_chunked(
 #'     ipums_example("cps_00015.xml"),
 #'     IpumsBiglmCallback$new(
-#'       INCTOT ~ AGE + HEALTH, # Simple regression (may not be very useful)
+#'       INCTOT ~ AGE + HEALTH, # Model formula
 #'       function(x, pos) {
 #'         x %>%
 #'         mutate(
 #'           INCTOT = lbl_na_if(
-#'             INCTOT, ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'             INCTOT,
+#'             ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
 #'           ),
 #'           HEALTH = as_factor(HEALTH)
 #'         )
-#'     }),
-#'     chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#'       }
+#'     ),
+#'     chunk_size = 1000,
+#'     verbose = FALSE
 #'   )
-#'   summary(lm_results)
-#' }
 #'
+#'   summary(lm_results)
+#'
+#' }
 read_ipums_micro_chunked <- function(
   ddi,
   callback,

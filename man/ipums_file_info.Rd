@@ -33,5 +33,6 @@ citation information for a recently loaded dataset.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+
 ipums_file_info(ddi)
 }

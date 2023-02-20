@@ -49,7 +49,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},
 \code{\link{wait_for_extract}()}

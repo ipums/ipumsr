@@ -25,53 +25,48 @@
 #'   data sources, these suffixes will be added to the output to disambiguate
 #'   them. Should be a character vector of length 2.
 #'
-#'   Defaults to adding the `"SHAPE"` suffix to unmatched variables in
+#'   Defaults to adding the `"SHAPE"` suffix to duplicated variables in
 #'   `shape_file`.
 #' @param verbose If `TRUE`, display information about any geometries that were
 #'   unmatched during the join.
 #'
 #' @return An `sf` object containing the joined data
 #'
-#' @section Deprecation note:
-#' `r lifecycle::badge("deprecated")` Support for objects from the sp package
-#' has been deprecated because of the upcoming retirement of the rgdal
-#' package. Functionality for `sf` objects will be maintained. For more
-#' information, click
-#' [here](https://r-spatial.org/r/2022/04/12/evolution.html).
-#'
-#' @export
+#' @name ipums_shape_join
 #'
 #' @examples
-#' data <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
+#' data <- read_nhgis(
+#'   ipums_example("nhgis0972_csv.zip"),
+#'   show_col_types = FALSE
+#' )
 #'
 #' if (require(sf)) {
-#'   sf <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
-#'   data_sf <- ipums_shape_inner_join(data, sf, by = "GISJOIN")
-#' }
+#'   sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
+#'   joined_data <- ipums_shape_inner_join(data, sf_data, by = "GISJOIN")
 #'
-#' \dontrun{
-#'   # Sometimes variable names won't match between datasets (for example in IPUMS international)
-#'   data <- read_ipums_micro("ipumsi_00004.xml")
-#'   shape <- read_ipums_sf("geo2_br1980_2010.zip")
-#'   data_sf <- ipums_shape_inner_join(data, shape, by = c("GEO2" = "GEOLEVEL2"))
+#'   colnames(joined_data)
 #' }
+NULL
+
+#' @rdname ipums_shape_join
+#' @export
 ipums_shape_left_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "left", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_right_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "right", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_inner_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "inner", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_full_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "full", suffix, verbose)

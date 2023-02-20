@@ -70,28 +70,32 @@ For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Get info by supplying an ipums_extract object:
+# Get latest info for the request associated with a given `ipums_extract`
+# object:
 get_extract_info(submitted_extract)
 
-# Get info by supplying the data collection and extract number, as a string:
+# Or specify the extract collection and number:
 get_extract_info("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
-
-# Get info by supplying the data collection and extract number, as a vector:
 get_extract_info(c("usa", "1"))
 
+# Get information for multiple recent requests by specifying a collection
+# with no number:
+get_extract_info("usa")
+
 # If you have a default collection, you can use the extract number alone:
-set_ipums_default_collection("usa")
+set_ipums_default_collection("nhgis")
 get_extract_info(1)
 
-# The default collection will automatically be used even if no extract
-# number is supplied:
+# Or omit the number to get information about recent extracts
 get_extract_info(how_many = 3, table = TRUE)
 get_last_extract_info()
 }
@@ -109,7 +113,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

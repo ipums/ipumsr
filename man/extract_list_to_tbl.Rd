@@ -36,7 +36,6 @@ for (extract in list_of_last_10_extracts) {
 # Convert list of extracts to tibble of extracts to view in a tabular format
 extract_list_to_tbl(list_of_last_10_extracts)
 }
-
 }
 \seealso{
 Other ipums_api: 
@@ -51,7 +50,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

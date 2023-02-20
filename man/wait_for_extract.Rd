@@ -65,25 +65,29 @@ For an overview of ipumsr API functionality, see
 \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Wait for extract by supplying ipums_extract object:
+# Wait for a particular extract request to complete by providing its
+# associated `ipums_extract` object:
 downloadable_extract <- wait_for_extract(submitted_extract)
 
-# By supplying the data collection and extract number, as a string:
+# Or by specifying the collection and number for the extract request:
 downloadable_extract <- wait_for_extract("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
-
-# By supplying the data collection and extract number, as a vector:
-downloadable_extract <- wait_for_extract(c("usa", "1"))
 
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("usa")
 downloadable_extract <- wait_for_extract(1)
+
+# If you want to subsequently download your completed extract, you can
+# use `download_extract()` directly:
+download_extract(1, wait = TRUE)
 }
 }
 \seealso{
@@ -100,7 +104,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()}

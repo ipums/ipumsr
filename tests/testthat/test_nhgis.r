@@ -287,8 +287,6 @@ test_that("Can still find codebook if file_select matches data file only", {
 
 test_that("We can pass arguments to underlying reader functions", {
 
-  # TODO: Docs need to show that attr_vars doesn't work if col_names = FALSE
-  # Worth checking if there are other ipums things that break with ... args
   expect_silent(
     nhgis_data <- read_nhgis(
       nhgis_single_csv,

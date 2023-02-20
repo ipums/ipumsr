@@ -57,9 +57,14 @@
 #' @examples
 #' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
 #'
+#' # Info for all variables in a data source
 #' ipums_var_info(ddi)
+#'
+#' # Metadata for individual variables
 #' ipums_var_desc(ddi, MONTH)
+#'
 #' ipums_var_label(ddi, MONTH)
+#'
 #' ipums_val_labels(ddi, MONTH)
 ipums_var_info <- function(object, vars = NULL) {
   UseMethod("ipums_var_info")
@@ -199,6 +204,7 @@ print.ipums_formatted_print <- function(x, ...) {
 #'
 #' @examples
 #' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#'
 #' ipums_file_info(ddi)
 ipums_file_info <- function(object, type = NULL) {
   UseMethod("ipums_file_info")

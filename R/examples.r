@@ -24,7 +24,7 @@
 #' # Get path to a specific example file
 #' file <- ipums_example("cps_00006.xml")
 #'
-#' read_ipums_ddi(file)
+#' read_ipums_micro(file)
 ipums_example <- function(path = NULL) {
   if (is.null(path)) {
     file <- dir(system.file("extdata", package = "ipumsr"))

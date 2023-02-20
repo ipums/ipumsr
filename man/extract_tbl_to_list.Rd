@@ -43,6 +43,7 @@ description_mentions_income <- grepl(
   "[Ii]ncome",
   tbl_of_last_10_extracts$description
 )
+
 income_extracts <- tbl_of_last_10_extracts[description_mentions_income, ]
 
 # Convert tibble of extracts to list of extracts
@@ -56,7 +57,6 @@ revised_income_extract <- add_to_extract(
 
 submitted_revised_income_extract <- submit_extract(revised_income_extract)
 }
-
 }
 \seealso{
 Other ipums_api: 
@@ -71,7 +71,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

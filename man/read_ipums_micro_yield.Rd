@@ -175,26 +175,35 @@ returns the path to the codebook file.
 }
 
 \examples{
-# An example using "long" data
+# Create an IpumsLongYield object
 long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))
-# Get first 10 rows
+
+# Yield the first 10 rows of the data
 long_yield$yield(10)
-# Get 20 more rows now
+
+# Yield the next 20 rows of the data
 long_yield$yield(20)
-# See what row we're on now
+
+# Check the current position after yielding 30 rows
 long_yield$cur_pos
-# Reset to beginning
+
+# Reset to the beginning of the file
 long_yield$reset()
-# Read the whole thing in chunks and count Minnesotans
+
+# Use a loop to flexibly process the data in pieces. Count all Minnesotans:
 total_mn <- 0
+
 while (!long_yield$is_done()) {
   cur_data <- long_yield$yield(1000)
   total_mn <- total_mn + sum(as_factor(cur_data$STATEFIP) == "Minnesota")
 }
+
 total_mn
 
 # Can also read hierarchical data as list:
 list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
+
+# Yield size is based on total rows for all list elements
 list_yield$yield(10)
 }
 \seealso{

@@ -10,8 +10,9 @@ lbl(...)
 \item{...}{Either one or two arguments specifying the label (\code{.lbl}) and
 value (\code{.val}) to use in the new label pair.
 
-If named, must be named \code{.val} and/or \code{.lbl}. If a single unnamed value
-is passed, it is used as the \code{.lbl} for the new
+If arguments are named, they must be named \code{.val} and/or \code{.lbl}.
+
+If a single unnamed value is passed, it is used as the \code{.lbl} for the new
 label. If two unnamed values are passed, they are used as the \code{.val} and
 \code{.lbl}, respectively.}
 }
@@ -21,6 +22,16 @@ A \code{label_placeholder} object
 \description{
 Define a new label/value pair. For use in functions like \code{\link[=lbl_relabel]{lbl_relabel()}}
 and \code{\link[=lbl_add]{lbl_add()}}.
+}
+\details{
+Several \verb{lbl_*()} functions include arguments that can be passed a function
+of \code{.val} and/or \code{.lbl}. These refer to the existing values and
+labels in the input vector, respectively.
+
+Use \code{.val} to refer to the \emph{values} in the vector's value labels.
+Use \code{.lbl} to refer to the \emph{label names} in the vector's value labels.
+
+Note that not all \verb{lbl_*()} functions support both of these arguments.
 }
 \examples{
 # Label placeholder with no associated value

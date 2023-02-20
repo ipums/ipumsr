@@ -36,25 +36,30 @@ For an overview of ipumsr API
 functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
-# `submit_extract()` returns an ipums_extract object updated to include the
-# extract number, so it is often useful to name the return object:
+# Store your submitted extract request to obtain the extract number
 submitted_extract <- submit_extract(my_extract)
 
-# If you didn't capture the return object of submit_extract for your most
-# recent extract, you can recover that information with:
-submitted_extract <- get_last_extract_info("usa")
-
-# View the extract number
 submitted_extract$number
 
-# Check if submitted extract is ready
-is_extract_ready(submitted_extract) # returns TRUE or FALSE
+# This is useful for checking the extract request status
+get_extract_info(submitted_extract)
 
-# Or have R check periodically until the extract is ready
-downloadable_extract <- wait_for_extract(submitted_extract)
+# You can always get the latest status, even if you forget to store the
+# submitted extract request object
+submitted_extract <- get_last_extract_info("usa")
+
+# You can also check if submitted extract is ready
+is_extract_ready(submitted_extract)
+
+# Or have R check periodically and download when ready
+downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
 }
 }
 \seealso{
@@ -71,7 +76,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{wait_for_extract}()}

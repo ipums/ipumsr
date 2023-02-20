@@ -7,8 +7,8 @@
 zap_ipums_attributes(x)
 }
 \arguments{
-\item{x}{A data frame or labelled vector (for instance, from a data frame
-column)}
+\item{x}{A data frame or \link[haven:labelled]{labelled} vector
+(for instance, from a data frame column)}
 }
 \value{
 An object of the same type as \code{x} without \code{"val_labels"},
@@ -26,6 +26,7 @@ attributes(zap_ipums_attributes(cps$YEAR))
 
 cps <- zap_ipums_attributes(cps)
 attributes(cps$YEAR)
+attributes(cps$INCTOT)
 }
 \seealso{
 Other lbl_helpers: 

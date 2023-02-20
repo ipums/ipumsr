@@ -68,9 +68,31 @@ returns the path to the codebook file.
 }
 
 \examples{
-# Example extract DDI
+# Example codebook file
 ddi_file <- ipums_example("cps_00006.xml")
+
+# Load data into an `ipums_ddi` obj
 ddi <- read_ipums_ddi(ddi_file)
+
+# Use the object to load its associated data
+cps <- read_ipums_micro(ddi)
+
+head(cps)
+
+# Or get metadata information directly
+ipums_var_info(ddi)
+
+ipums_file_info(ddi)[1:2]
+
+# If variable metadata have been lost from a data source, reattach from
+# its corresponding `ipums_ddi` object:
+cps <- zap_ipums_attributes(cps)
+
+ipums_var_label(cps$STATEFIP)
+
+cps <- set_ipums_var_attributes(cps, ddi$var_info)
+
+ipums_var_label(cps$STATEFIP)
 }
 \seealso{
 Other ipums_read: 

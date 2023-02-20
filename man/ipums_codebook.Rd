@@ -45,12 +45,37 @@ adhere to all the standards of microdata DDI files, some of the \code{ipums_ddi}
 fields will not be populated.
 }
 \examples{
-# Example NHGIS extract
+# Example file
 nhgis_file <- ipums_example("nhgis0972_csv.zip")
+
+# Read codebook as an `ipums_ddi` object:
 codebook <- read_nhgis_codebook(nhgis_file)
 
-# Summary of variables included in the extract:
-codebook$var_info
+# Variable-level metadata about the contents of the data file:
+ipums_var_info(codebook)
+
+ipums_var_label(codebook, "PMSA")
+
+# If variable metadata have been lost from a data source, reattach from
+# the corresponding `ipums_ddi` object:
+nhgis_data <- read_nhgis(
+  nhgis_file,
+  show_conditions = FALSE,
+  show_col_types = FALSE
+)
+
+nhgis_data <- zap_ipums_attributes(nhgis_data)
+
+ipums_var_label(nhgis_data$PMSA)
+
+nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
+
+ipums_var_label(nhgis_data$PMSA)
+
+# You can also load the codebook in raw format to display in the console
+codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
+
+codebook_raw[1:20]
 }
 \seealso{
 Other ipums_read: 

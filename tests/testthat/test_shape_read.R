@@ -171,7 +171,6 @@ test_that("sf and sp geometries are consistent with each other", {
 
 })
 
-# TODO: Docs need to show that some args to readOGR are already specified
 test_that("We can pass arguments to underlying reader functions", {
 
   skip_if_not_installed("sf")

@@ -20,14 +20,15 @@ value that already exists in the data.
 The right hand side should be a function taking \code{.val} and \code{.lbl}
 arguments that evaluates to \code{TRUE} for all
 cases that should receive the label specified on the left hand side.
-Can be provided as an anonymous function or formula.
 
-See examples.}
+Can be provided as an anonymous function or formula. See details.}
 
 \item{.fun}{A function taking \code{.val} and \code{.lbl} arguments that returns
 the value associated with an existing label in the vector. Input values to
 this function will be relabeled with the label of the function's output
-value. Can be provided as an anonymous function or formula. See examples.}
+value.
+
+Can be provided as an anonymous function or formula. See details.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector
@@ -47,29 +48,40 @@ labels that already exist in the \code{labelled} vector.
 
 Unlabelled values will be converted to \code{NA}.
 }
+\details{
+Several \verb{lbl_*()} functions include arguments that can be passed a function
+of \code{.val} and/or \code{.lbl}. These refer to the existing values and
+labels in the input vector, respectively.
+
+Use \code{.val} to refer to the \emph{values} in the vector's value labels.
+Use \code{.lbl} to refer to the \emph{label names} in the vector's value labels.
+
+Note that not all \verb{lbl_*()} functions support both of these arguments.
+}
 \examples{
 x <- haven::labelled(
-  c(10, 10, 11, 20, 30, 99, 30, 10),
-  c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
+  c(10, 10, 11, 20, 21, 30, 99, 30, 10),
+  c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
 )
 
-# Add new value/label pairs that collect multiple existing labels
+# Convert cases with value 11 to value 10 and associate with 10's label
+lbl_relabel(x, 10 ~ .val == 11)
+
+# To relabel using new value/label pairs, use `lbl()` to define a new pair
 lbl_relabel(
   x,
   lbl(10, "Yes/Yes-ish") ~ .val \%in\% c(10, 11),
   lbl(90, "???") ~ .val == 99 | .lbl == "Maybe"
 )
 
-
-# For values that already exist, you can specify the value directly.
-# Convert all cases with value 11 to value 10 and associate with 10's label:
-lbl_relabel(x, 10 ~ .val == 11)
-
-# Use single argument in `lbl` to update the label while leaving values
+# Use single argument in `lbl()` to update the label while leaving values
 # unchanged
 lbl_relabel(x, lbl("Yes") ~ .val == 11)
 
-# Collapse labels to regroup:
-lbl_collapse(x, ~(.val \%/\% 10) * 10)
+# Collapse labels to create new label groups
+lbl_collapse(x, ~ (.val \%/\% 10) * 10)
+
+# These are equivalent
 lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+lbl_relabel(x, 11 ~ .val == 10)
 }

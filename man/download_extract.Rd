@@ -70,21 +70,39 @@ will be returned, as it is sufficient for reading the data provided in the
 associated .gz data file.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+usa_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
+
+nhgis_extract <- define_extract_nhgis(
+  description = "Example NHGIS extract",
+  datasets = "1990_STF3",
+  data_tables = "NP57",
+  geog_levels = c("county", "tract")
+)
 
 \dontrun{
-submitted_extract <- submit_extract(my_extract)
+submitted_extract <- submit_extract(usa_extract)
 
-# Download extract by supplying an ipums_extract object:
-path_to_ddi_file <- download_extract(submitted_extract)
+# For microdata, the path to the DDI .xml codebook file is provided.
+usa_xml_file <- download_extract(submitted_extract)
 
-# By supplying the data collection and extract number, as a string:
-path_to_ddi_file <- download_extract("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
+# Load with a `read_ipums_micro_*()` function
+usa_data <- read_ipums_micro(usa_xml_file)
 
-# By supplying the data collection and extract number, as a vector:
-path_to_ddi_file <- download_extract(c("usa", "1"))
+# You can also download previous extracts with their collection and number:
+nhgis_files <- download_extract("nhgis:1")
+
+# NHGIS extracts return a path to both the tabular and spatial data files,
+# as applicable.
+#
+# Load NHGIS tabular data
+nhgis_data <- read_nhgis(data = nhgis_files["data"])
+
+# Load NHGIS spatial data
+nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
 
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("usa")
@@ -104,7 +122,6 @@ Other ipums_api:
 \code{\link{ipums_data_collections}()},
 \code{\link{is_extract_ready}()},
 \code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
 \code{\link{set_ipums_api_key}()},
 \code{\link{set_ipums_default_collection}()},
 \code{\link{submit_extract}()},

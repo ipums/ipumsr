@@ -178,14 +178,23 @@ find_files_in <- function(file,
 #'
 #' @examples
 #' ddi_file <- ipums_example("cps_00006.xml")
+#'
+#' # Load metadata into `ipums_ddi` object
 #' ddi <- read_ipums_ddi(ddi_file)
-#' cps <- read_ipums_micro(ddi, var_attrs = NULL) # Don't load with attributes
 #'
-#' ipums_var_desc(cps$YEAR) # Not available
+#' # Load data
+#' cps <- read_ipums_micro(ddi)
 #'
-#' # But, we can add on attributes after loading
-#' cps_with_attr <- set_ipums_var_attributes(cps, ddi)
-#' ipums_var_desc(cps_with_attr$YEAR)
+#' # Data includes variable metadata:
+#' ipums_var_desc(cps$INCTOT)
+#'
+#' # Some operations remove attributes, even if they do not alter the data:
+#' cps$INCTOT <- ifelse(TRUE, cps$INCTOT, NA)
+#' ipums_var_desc(cps$INCTOT)
+#'
+#' # We can reattach metadata from the separate `ipums_ddi` object:
+#' cps <- set_ipums_var_attributes(cps, ddi)
+#' ipums_var_desc(cps$INCTOT)
 set_ipums_var_attributes <- function(
   data,
   var_info,
@@ -289,11 +298,12 @@ set_single_var_attributes <- function(x, val_labels, var_label, var_desc) {
 #' Collect data into R session with IPUMS attributes
 #'
 #' Convenience wrapper around dplyr's [`collect()`][dplyr::collect] and
-#' [set_ipums_var_attributes()].
+#' [set_ipums_var_attributes()]. Use this to attach variable labels when
+#' collecting data from a database.
 #'
 #' @param data A dplyr `tbl` object (generally a `tbl_lazy`
-#'   object stored in a database.
-#' @param ddi A DDI object created with [read_ipums_ddi()].
+#'   object stored in a database).
+#' @param ddi An [ipums_ddi] object created with [read_ipums_ddi()].
 #' @param var_attrs  Variable attributes to add to the output. Defaults to
 #'   all available attributes (`"val_labels"`, `"var_label"` and `"var_desc"`).
 #'   See [set_ipums_var_attributes()] for more details.

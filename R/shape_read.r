@@ -8,7 +8,7 @@
 #' @description
 #' Read a spatial data file (also referred to as a GIS file or shapefile) from
 #' an IPUMS extract into an `sf` object from the
-#' [`sf`](https://r-spatial.github.io/sf/) package.
+#' [sf](https://r-spatial.github.io/sf/) package.
 #'
 #' @details
 #' Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
@@ -60,10 +60,39 @@
 #' @export
 #'
 #' @examples
-#' shape_file <- ipums_example("nhgis0972_shape_small.zip")
-#' # If sf package is availble, can load as sf object
+#' # Example shapefile from NHGIS
+#' shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
+#' data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
+#'
+#' shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
+#'
 #' if (require(sf)) {
-#'   sf_data <- read_ipums_sf(shape_file)
+#'
+#'   sf_data <- read_ipums_sf(shape_ex1)
+#'
+#'   sf_data
+#'
+#'   # Shapefiles are provided in .zip archives that may contain multiple
+#'   # files. Select a single file with `file_select`:
+#'   read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
+#'
+#'   # Or row-bind files with `bind_multiple`
+#'   # (Useful for files of the same geographic level that cover different
+#'   # extents)
+#'   read_ipums_sf(
+#'     shape_ex2,
+#'     file_select = matches("us_pmsa"),
+#'     bind_multiple = TRUE
+#'   )
+#'
+#'   # To combine spatial data with tabular data without losing the attributes
+#'   # included in the tabular data, use an ipums shape join:
+#'   ipums_shape_full_join(
+#'     data_ex1,
+#'     sf_data,
+#'     by = "GISJOIN"
+#'   )
+#'
 #' }
 read_ipums_sf <- function(shape_file,
                           file_select = NULL,

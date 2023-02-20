@@ -32,17 +32,28 @@ labelled attributes provided with IPUMS data.
 \examples{
 file <- ipums_example("nhgis0712_csv.zip")
 
-d1 <- read_nhgis(file, file_select = 1)
-d2 <- read_nhgis(file, file_select = 2)
+d1 <- read_nhgis(
+  file,
+  file_select = 1,
+  show_conditions = FALSE,
+  show_col_types = FALSE
+)
+
+d2 <- read_nhgis(
+  file,
+  file_select = 2,
+  show_conditions = FALSE,
+  show_col_types = FALSE
+)
 
 # Variables have associated label attributes:
-attributes(d1$PMSAA)
+ipums_var_label(d1$PMSAA)
 
-# Data sources are combined and labels are preserved
+# Preserve labels when binding data sources:
 d <- ipums_bind_rows(d1, d2)
-attributes(d$PMSAA)
+ipums_var_label(d$PMSAA)
 
-# dplyr bind_rows drops labels:
+# dplyr `bind_rows()` drops labels:
 d <- dplyr::bind_rows(d1, d2)
-attributes(d$PMSAA)
+ipums_var_label(d$PMSAA)
 }

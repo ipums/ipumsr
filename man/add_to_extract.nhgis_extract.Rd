@@ -214,13 +214,16 @@ extract <- define_extract_nhgis(
 )
 
 # Modify existing datasets in extract:
-extract <- add_to_extract(
+extract2 <- add_to_extract(
   extract,
   data_tables = "NP3"
 )
 
-# Add new dataset. New subfields will only be attached to datasets specified
-# in the datasets argument:
+extract2
+
+# Add a new dataset or time series table. Fields that apply to each dataset
+# or time series table are only applied to the newly added dataset or
+# time series table:
 extract <- add_to_extract(
   extract,
   datasets = "1980_STF1",
@@ -228,11 +231,27 @@ extract <- add_to_extract(
   geog_levels = c("county", "state")
 )
 
-# Modify existing datasets.
-# Vectors recycle to all datasets, lists match by index or name.
 add_to_extract(
   extract,
-  data_tables = list("1990_STF1" = "NP4", "1980_STF1" = "NT1B"),
+  time_series_tables = "A00",
+  geog_levels = "state"
+)
+
+# To modify existing datasets, use a named list to specify which datasets
+# should be attached to which `data_tables` or `geog_levels`.
+# Vector arguments are attached to all datasets.
+add_to_extract(
+  extract,
+  data_tables = list(
+    "1990_STF1" = "NP4",
+    "1980_STF1" = "NT1B"
+  ),
   geog_levels = "nation"
 )
+
+# Values that can only take a single value are replaced
+add_to_extract(extract, data_format = "fixed_width")$data_format
+
+# You can also combine two extract requests together
+combine_extracts(extract, extract2)
 }

@@ -746,8 +746,6 @@ tryCatch(
       )
       expect_equal(nrow(data), 10190)
 
-      # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
-      # there is only 1 shapefile in extract? confusing functionality currently.
       lifecycle::expect_deprecated(
         data_shp_sf <- read_nhgis_sf(
           table_data_file_path,
@@ -899,9 +897,6 @@ tryCatch(
       )
 
       expect_equal(nrow(data), 153)
-
-      # TODO: fix read_nhgis_sf so you don't have to supply a shape_layer if
-      # there is only 1 shapefile in extract? confusing functionality currently.
 
       lifecycle::expect_deprecated(
         data_shp_sf <- read_nhgis_sf(

@@ -54,12 +54,21 @@ will not be added.
 }
 \examples{
 ddi_file <- ipums_example("cps_00006.xml")
+
+# Load metadata into `ipums_ddi` object
 ddi <- read_ipums_ddi(ddi_file)
-cps <- read_ipums_micro(ddi, var_attrs = NULL) # Don't load with attributes
 
-ipums_var_desc(cps$YEAR) # Not available
+# Load data
+cps <- read_ipums_micro(ddi)
 
-# But, we can add on attributes after loading
-cps_with_attr <- set_ipums_var_attributes(cps, ddi)
-ipums_var_desc(cps_with_attr$YEAR)
+# Data includes variable metadata:
+ipums_var_desc(cps$INCTOT)
+
+# Some operations remove attributes, even if they do not alter the data:
+cps$INCTOT <- ifelse(TRUE, cps$INCTOT, NA)
+ipums_var_desc(cps$INCTOT)
+
+# We can reattach metadata from the separate `ipums_ddi` object:
+cps <- set_ipums_var_attributes(cps, ddi)
+ipums_var_desc(cps$INCTOT)
 }

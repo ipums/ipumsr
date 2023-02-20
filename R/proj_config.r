@@ -85,7 +85,8 @@ get_proj_config <- function(proj) {
 
 # TODO: These project names are somewhat out of date and should be reconciled
 # with language in rest of package. Also we should probably support the lowercase
-# collection names used in API here.
+# collection names used in API here. This can be included when we fix
+# ipums_website() to be platform agnostic and include tests
 all_proj_names <- function() {
   names(proj_config)
 }

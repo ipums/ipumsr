@@ -113,29 +113,38 @@
 #' @export
 #'
 #' @examples
-#' # Rectangular example file
+#' # Codebook for rectangular example file
 #' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
 #'
+#' # Load data based on codebook file info
 #' cps <- read_ipums_micro(cps_rect_ddi_file)
-#' # Or read DDI separately to keep the metadata
-#' ddi <- read_ipums_ddi(cps_rect_ddi_file)
-#' cps <- read_ipums_micro(ddi)
 #'
-#' # Hierarchical example file
+#' head(cps)
+#'
+#' # Can also load data from a pre-existing `ipums_ddi` object
+#' # (This may be useful to retain codebook metadata even if lost from data
+#' # during processing)
+#' ddi <- read_ipums_ddi(cps_rect_ddi_file)
+#' cps <- read_ipums_micro(ddi, verbose = FALSE)
+#'
+#' # Codebook for hierarchical example file
 #' cps_hier_ddi_file <- ipums_example("cps_00010.xml")
 #'
-#' # Read in "long" format and you get 1 data frame
-#' cps_long <- read_ipums_micro(cps_hier_ddi_file)
-#' head(cps_long)
+#' # Read in "long" format to get a single data frame
+#' read_ipums_micro(cps_hier_ddi_file, verbose = FALSE)
 #'
 #' # Read in "list" format and you get a list of multiple data frames
 #' cps_list <- read_ipums_micro_list(cps_hier_ddi_file)
+#'
 #' head(cps_list$PERSON)
+#'
 #' head(cps_list$HOUSEHOLD)
 #'
-#' # Or you can use the \code{%<-%} operator from zeallot to unpack
+#' # Use the `%<-%` operator from zeallot to unpack into separate objects
 #' c(household, person) %<-% read_ipums_micro_list(cps_hier_ddi_file)
+#'
 #' head(person)
+#'
 #' head(household)
 read_ipums_micro <- function(
   ddi,
