@@ -109,7 +109,17 @@
 #'   `read_ipums_micro_list()` returns a list of `tibble` objects with one
 #'   entry for each record type.
 #'
-#' @family ipums_read
+#' @seealso [read_ipums_micro_chunked()] and
+#'   [read_ipums_micro_yield()] to read data from large IPUMS
+#'   microdata extracts in chunks.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @export
 #'
 #' @examples

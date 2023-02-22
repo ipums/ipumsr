@@ -61,7 +61,7 @@ If the current data table summary metadata are already up to date, this
 does nothing. See \strong{notes} section below.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}.}
+value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 If \code{type} is provided, a \code{\link[tibble:tbl_df-class]{tibble}} of
@@ -254,4 +254,7 @@ get_nhgis_metadata(
 # Get metadata for single data source
 get_nhgis_metadata(dataset = "1990_STF1")
 get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
+}
+\seealso{
+\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create an IPUMS NHGIS extract definition.
 }

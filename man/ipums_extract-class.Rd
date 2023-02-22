@@ -22,8 +22,7 @@ subclass (e.g. \code{usa_extract}, \code{cps_extract}) to accommodate
 collection-specific differences in extract options and content. All
 of these classes share the similarities described below.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \section{Properties}{
 

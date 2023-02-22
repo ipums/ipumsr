@@ -77,3 +77,6 @@ ipums_var_label(ddi, MONTH)
 
 ipums_val_labels(ddi, MONTH)
 }
+\seealso{
+\code{\link[=read_ipums_ddi]{read_ipums_ddi()}} or \code{\link[=read_nhgis_codebook]{read_nhgis_codebook()}} to read IPUMS metadata files.
+}

@@ -24,7 +24,7 @@ For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}.}
+value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 A logical vector of length one.
@@ -33,8 +33,7 @@ A logical vector of length one.
 Get the latest status of an in-progress extract request and determine if
 it has finished processing and is ready for download.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 The "status" of a submitted extract is one of \code{"queued"}, \code{"started"},
@@ -74,21 +73,9 @@ is_extract_ready(1)
 }
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=download_extract]{download_extract()}} to download an extract.
+
+\code{\link[=get_extract_info]{get_extract_info()}} to check the status of an extract request.
+
+\code{\link[=submit_extract]{submit_extract()}} to resubmit an expired extract request.
 }
-\concept{ipums_api}

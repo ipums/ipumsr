@@ -84,6 +84,8 @@ In general, removing from an extract follows the same syntax conventions as
 used in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See details for
 more information on how values passed to dataset and time series table
 subfields are interpreted.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 NHGIS extract definitions may contain multiple \code{datasets} or
@@ -173,5 +175,16 @@ remove_from_extract(
 # extract definitions
 revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
 remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
+}
+\seealso{
+\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} to add values
+to an extract definition.
+
+\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create a new extract definition.
 }
 \keyword{internal}

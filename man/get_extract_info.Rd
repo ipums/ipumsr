@@ -43,7 +43,7 @@ indicating whether to return recent extract information as a
 \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}.}
+value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 
 \item{collection}{Character string of the IPUMS collection for which to
 retrieve the most recent extract request.}
@@ -66,8 +66,7 @@ information for the most recent extract requests for that collection.
 \code{get_last_extract_info()} is a convenience function to retrieve the
 information for the most recent extract of a given collection.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 my_extract <- define_extract_usa(
@@ -101,21 +100,17 @@ get_last_extract_info()
 }
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
+process and manage an extract request.
+
+\code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
+extract definition.
+
+\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
+
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
+
+\code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information
+about recent extract requests.
 }
-\concept{ipums_api}

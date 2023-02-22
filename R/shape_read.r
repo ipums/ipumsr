@@ -56,7 +56,11 @@
 #'
 #' @return An [sf][sf::sf()] object
 #'
-#' @family ipums_read
+#' @seealso [read_ipums_micro()] or [read_nhgis()] to read tabular data from
+#'   an IPUMS extract.
+#'
+#'  [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @export
 #'
 #' @examples

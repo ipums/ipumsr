@@ -207,16 +207,18 @@ list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
 list_yield$yield(10)
 }
 \seealso{
-Other ipums_read: 
-\code{\link{ipums_list_files}()},
-\code{\link{read_ipums_ddi}()},
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis_codebook}()},
-\code{\link{read_nhgis}()}
+\code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} to read data from large IPUMS
+microdata extracts in chunks.
+
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} to read data from an IPUMS microdata extract.
+
+\code{\link[=read_ipums_ddi]{read_ipums_ddi()}} to read metadata associated with an IPUMS microdata
+extract.
+
+\code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}
 \section{Super classes}{
 \code{\link[hipread:HipYield]{hipread::HipYield}} -> \code{\link[hipread:HipLongYield]{hipread::HipLongYield}} -> \code{IpumsLongYield}
 }

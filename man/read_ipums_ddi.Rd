@@ -95,13 +95,11 @@ cps <- set_ipums_var_attributes(cps, ddi$var_info)
 ipums_var_label(cps$STATEFIP)
 }
 \seealso{
-Other ipums_read: 
-\code{\link{ipums_list_files}()},
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis_codebook}()},
-\code{\link{read_nhgis}()}
+\code{\link[=read_ipums_micro]{read_ipums_micro()}}, \code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} and
+\code{\link[=read_ipums_micro_yield]{read_ipums_micro_yield()}} to read data from IPUMS microdata extracts.
+
+\code{\link[=ipums_var_info]{ipums_var_info()}} and \code{\link[=ipums_file_info]{ipums_file_info()}} to view metadata about an
+\link{ipums_ddi} object.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}

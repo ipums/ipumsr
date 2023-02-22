@@ -82,7 +82,17 @@
 #'
 #' @export
 #'
-#' @family ipums_read
+#' @seealso [read_ipums_micro_yield()] for more flexible handling of large
+#'   IPUMS microdata files.
+#'
+#'   [read_ipums_micro()] to read data from an IPUMS microdata extract.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
 #'
 #' @examples
 #' suppressMessages(library(dplyr))

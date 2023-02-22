@@ -29,8 +29,7 @@ it is best to first add new values using
 \code{remove_from_extract()}. This limits the possibility of producing a
 temporarily invalid extract specification.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 If the supplied extract definition comes from
@@ -54,5 +53,16 @@ remove_from_extract(
 # extract definitions:
 revised_extract <- add_to_extract(usa_extract, samples = "us2015a")
 remove_from_extract(revised_extract, samples = c("us2013a", "us2014a"))
+}
+\seealso{
+\code{\link[=add_to_extract.usa_extract]{add_to_extract()}} to add values
+to an extract definition.
+
+\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_usa]{define_extract_usa()}} to create a new extract definition.
 }
 \keyword{internal}

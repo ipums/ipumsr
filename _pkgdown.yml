@@ -87,7 +87,6 @@ reference:
       - ipums_extract
       - ipums_data_collections
       - extract_tbl_to_list
-      - extract_list_to_tbl
   - title: "Explore IPUMS variable metadata"
     contents:
       - ipums_view

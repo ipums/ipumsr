@@ -41,8 +41,7 @@ will replace the existing value with the supplied value.
 To remove existing values from an IPUMS CPS extract definition, see
 \code{\link[=remove_from_extract.cps_extract]{remove_from_extract()}}.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 If the supplied extract definition comes from
@@ -69,5 +68,16 @@ add_to_extract(extract, description = "New description")$description
 
 # You can also combine two separate extract requests together
 combine_extracts(extract, extract2)
+}
+\seealso{
+\code{\link[=remove_from_extract.cps_extract]{remove_from_extract()}} to remove values
+from an extract definition.
+
+\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_cps]{define_extract_cps()}} to create a new extract definition.
 }
 \keyword{internal}

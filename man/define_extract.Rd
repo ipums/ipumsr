@@ -6,6 +6,8 @@
 \description{
 Specify the parameters for a new IPUMS extract request object to be
 submitted via the IPUMS extract API.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \section{Supported collections}{
 
@@ -26,9 +28,6 @@ For instance, an IPUMS NHGIS extract created with
 \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} will return an object of classes
 \code{nhgis_extract} and \code{ipums_extract}. These objects are compatible
 with the rest of the API functionality provided by ipumsr.
-
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
 }
 
 \keyword{internal}

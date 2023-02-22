@@ -114,13 +114,8 @@ if (require(sf)) {
 }
 }
 \seealso{
-Other ipums_read: 
-\code{\link{ipums_list_files}()},
-\code{\link{read_ipums_ddi}()},
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_nhgis_codebook}()},
-\code{\link{read_nhgis}()}
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from
+an IPUMS extract.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}

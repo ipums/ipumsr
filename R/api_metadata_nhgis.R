@@ -195,9 +195,11 @@
 #'   summary metadata for all data sources of the provided `type`.
 #'   Otherwise, a named list of metadata for the specified `dataset`,
 #'   `data_table`, or `time_series_table`.
-#' @export
 #'
-#' @md
+#' @seealso
+#' [define_extract_nhgis()] to create an IPUMS NHGIS extract definition.
+#'
+#' @export
 #'
 #' @examples
 #' # Get summary metadata for all available sources of a given data type
@@ -373,7 +375,7 @@ get_nhgis_summary_metadata <- function(type,
 #'   `get_nhgis_metadata("data_tables")`
 #' @param update Logical indicating whether out-of-date metadata should
 #'   be updated.
-#' @param api_key API key associated with the user's
+#' @param api_key API key associated with the user's IPUMS account.
 #' @param check_pkg_metadata Logical indicating whether to override cached
 #'   table metadata with the value of `table_metadata` currently stored
 #'   in the package internally. If the package `table_metadata` is more current

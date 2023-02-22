@@ -137,6 +137,8 @@ See details for more information about creating valid IPUMS NHGIS extract
 definitions. Codes for particular data sources can be found using
 \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}}.
 
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+
 More information about IPUMS NHGIS can be found at the following links:
 \itemize{
 \item \href{https://www.nhgis.org/data-availability}{NHGIS data}
@@ -250,21 +252,12 @@ submit_extract(my_extract)
 }
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
+process and manage an extract request.
+
+\code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
+extract definition.
+
+\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
 }
-\concept{ipums_api}

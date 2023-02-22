@@ -47,6 +47,9 @@
 #'
 #' @export
 #'
+#' @seealso
+#' [read_ipums_ddi()] or [read_nhgis_codebook()] to read IPUMS metadata files.
+#'
 #' @return
 #' For `ipums_var_info()`, a [`tibble`][tibble::tbl_df-class] containing
 #' variable information.

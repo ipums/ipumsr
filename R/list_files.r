@@ -29,8 +29,12 @@
 #' @return A [`tibble`][tibble::tbl_df-class] containing the types and names of
 #'   the available files.
 #'
-#' @family ipums_read
 #' @export
+#'
+#' @seealso [read_ipums_micro()] or [read_nhgis()] to read tabular data
+#'   from an IPUMS extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
 #'
 #' @examples
 #' nhgis_file <- ipums_example("nhgis0712_csv.zip")

@@ -28,6 +28,8 @@ file that contains the extract definition specifications.
 Use these functions to store a copy of an extract definition outside of your
 R environment and/or share an extract definition with another registered
 IPUMS user.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 my_extract <- define_extract_usa(
@@ -44,21 +46,12 @@ copy_of_my_extract <- define_extract_from_json(extract_json_path)
 identical(my_extract, copy_of_my_extract)
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+to define an extract request to save.
+
+\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
+
+\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
+process and manage an extract request.
 }
-\concept{ipums_api}

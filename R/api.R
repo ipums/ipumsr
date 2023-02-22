@@ -26,8 +26,7 @@
 #' collection-specific differences in extract options and content. All
 #' of these classes share the similarities described below.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @section Properties:
 #' Objects of class `ipums_extract` have:
@@ -80,6 +79,8 @@ NULL
 #' Specify the parameters for a new IPUMS extract request object to be
 #' submitted via the IPUMS extract API.
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @section Supported collections:
 #' Currently, ipumsr supports extract definitions for the following
 #' collections:
@@ -96,9 +97,6 @@ NULL
 #' `nhgis_extract` and `ipums_extract`. These objects are compatible
 #' with the rest of the API functionality provided by ipumsr.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
-#'
 #' @keywords internal
 #'
 #' @name define_extract
@@ -106,9 +104,12 @@ NULL
 
 #' Define an IPUMS USA extract request
 #'
+#' @description
 #' Define an IPUMS USA extract request to be submitted via the IPUMS
 #' extract API. An extract request contains the specifications required
 #' to identify and obtain a particular set of data from the IPUMS USA system.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @param description Description of the extract.
 #' @param samples Character vector of samples to include in the extract. Samples
@@ -133,7 +134,16 @@ NULL
 #' @return An object of class [`usa_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
-#' @family ipums_api
+#' @seealso
+#' [submit_extract()], [download_extract()], and [get_extract_info()] to
+#'   process and manage an extract request.
+#'
+#' [save_extract_as_json()] and [define_extract_from_json()] to share an
+#'   extract definition.
+#'
+#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#'   revise an extract definition.
+#'
 #' @export
 #'
 #' @examples
@@ -198,9 +208,12 @@ define_extract_usa <- function(description,
 
 #' Define an IPUMS CPS extract request
 #'
+#' @description
 #' Define an IPUMS CPS extract request to be submitted via the IPUMS
 #' extract API. An extract request contains the specifications required
 #' to identify and obtain a particular set of data from the IPUMS CPS system.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @inheritParams define_extract_usa
 #' @param samples Character vector of samples to include in the extract. Samples
@@ -210,7 +223,8 @@ define_extract_usa <- function(description,
 #' @return An object of class [`cps_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
-#' @family ipums_api
+#' @inherit define_extract_usa seealso
+#'
 #' @export
 #'
 #' @examples
@@ -283,6 +297,8 @@ define_extract_cps <- function(description,
 #' See details for more information about creating valid IPUMS NHGIS extract
 #' definitions. Codes for particular data sources can be found using
 #' [get_nhgis_metadata()].
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' More information about IPUMS NHGIS can be found at the following links:
 #' - [NHGIS data](https://www.nhgis.org/data-availability)
@@ -421,7 +437,8 @@ define_extract_cps <- function(description,
 #' @return An object of class [`nhgis_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
-#' @family ipums_api
+#' @inherit define_extract_usa seealso
+#'
 #' @export
 #'
 #' @examples
@@ -571,6 +588,8 @@ define_extract_nhgis <- function(description = "",
 #' R environment and/or share an extract definition with another registered
 #' IPUMS user.
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @inheritParams add_to_extract
 #' @param extract_json Path to a file containing a JSON-formatted
 #'   extract definition.
@@ -579,7 +598,16 @@ define_extract_nhgis <- function(description = "",
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
-#' @family ipums_api
+#' @seealso
+#' [define_extract_usa()], [define_extract_cps()], or [define_extract_nhgis()]
+#'   to define an extract request to save.
+#'
+#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#'   revise an extract definition.
+#'
+#' [submit_extract()], [download_extract()], and [get_extract_info()] to
+#'   process and manage an extract request.
+#'
 #' @export
 #'
 #' @examples
@@ -665,8 +693,7 @@ save_extract_as_json <- function(extract, file) {
 #' request via the IPUMS API and return a modified copy of the extract object
 #' with the newly-assigned extract request number.
 #'
-#' For an overview of ipumsr API
-#' functionality, see `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @param extract If submitting a new extract request, an
 #'   [`ipums_extract`][ipums_extract-class] object.
@@ -678,9 +705,14 @@ save_extract_as_json <- function(extract, file) {
 #'   * The extract number for your default IPUMS collection. See
 #'     [set_ipums_default_collection()]
 #' @param api_key API key associated with your user account. Defaults to the
-#'   value of environment variable `"IPUMS_API_KEY"`.
+#'   value of environment variable `"IPUMS_API_KEY"`. See [set_ipums_api_key()].
 #'
-#' @family ipums_api
+#' @seealso
+#' [download_extract()] to download an extract.
+#'
+#' [get_extract_info()] and [is_extract_ready()] to check the status of an
+#'   extract request.
+#'
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
 #'   extract definition and newly-assigned extract number of the submitted
 #'   extract.
@@ -758,8 +790,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' `get_last_extract_info()` is a convenience function to retrieve the
 #' information for the most recent extract of a given collection.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @param extract One of:
 #'   * An [`ipums_extract`][ipums_extract-class] object
@@ -793,7 +824,21 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' [`ipums_extract`][ipums_extract-class] objects (if `table = FALSE`) or
 #' a [`tibble`][tibble::tbl_df-class] (if `table = TRUE`).
 #'
-#' @family ipums_api
+#' @seealso
+#' [submit_extract()] and [download_extract()] to
+#'   process and manage an extract request.
+#'
+#' [save_extract_as_json()] and [define_extract_from_json()] to share an
+#'   extract definition.
+#'
+#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#'   revise an extract definition.
+#'
+#' [set_ipums_default_collection()] to set a default collection.
+#'
+#' [extract_tbl_to_list()] and [extract_list_to_tbl()] to manipulate information
+#' about recent extract requests.
+#'
 #' @export
 #'
 #' @examples
@@ -895,8 +940,7 @@ get_extract_info <- function(extract = NULL,
 #' Completed extracts will have a value of `"completed"` in their `status`
 #' field.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @inheritParams define_extract_usa
 #' @inheritParams download_extract
@@ -933,7 +977,12 @@ get_extract_info <- function(extract = NULL,
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
 #'   extract definition and the URLs from which to download extract files.
 #'
-#' @family ipums_api
+#' @seealso
+#' [download_extract()] to download an extract.
+#'
+#' [get_extract_info()] and [is_extract_ready()] to check the status of an
+#'   extract request.
+#'
 #' @export
 #'
 #' @examples
@@ -1048,8 +1097,7 @@ wait_for_extract <- function(extract,
 #' Get the latest status of an in-progress extract request and determine if
 #' it has finished processing and is ready for download.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' The "status" of a submitted extract is one of `"queued"`, `"started"`,
@@ -1070,7 +1118,13 @@ wait_for_extract <- function(extract,
 #'
 #' @return A logical vector of length one.
 #'
-#' @family ipums_api
+#' @seealso
+#' [download_extract()] to download an extract.
+#'
+#' [get_extract_info()] to check the status of an extract request.
+#'
+#' [submit_extract()] to resubmit an expired extract request.
+#'
 #' @export
 #'
 #' @examples
@@ -1134,8 +1188,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @description
 #' Download an IPUMS data extract via the IPUMS API and write to disk.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' For NHGIS extracts, data files and GIS files (shapefiles) will be saved in
@@ -1166,7 +1219,14 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   files) or `"shape"` (for spatial data files) to
 #'   indicate the type of data the file contains.
 #'
-#' @family ipums_api
+#' @seealso
+#' [read_ipums_micro()] or [read_nhgis()] to read tabular
+#'   data from an IPUMS extract.
+#'
+#' [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#' [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @export
 #'
 #' @examples
@@ -1301,6 +1361,8 @@ download_extract <- function(extract,
 #' To remove existing values from an extract definition, see
 #' [remove_from_extract()].
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param ... Additional arguments specifying the extract fields and values to
 #'   add to the extract definition.
@@ -1311,8 +1373,48 @@ download_extract <- function(extract,
 #' @return An object of the same class as `extract` containing the modified
 #'   extract definition
 #'
-#' @family ipums_api
+#' @seealso
+#' [remove_from_extract()] to remove values from an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_usa()], [define_extract_cps()], or [define_extract_nhgis()]
+#'   to create a new extract definition.
+#'
 #' @export
+#'
+#' @examples
+#' usa_extract <- define_extract_usa(
+#'   description = "2013 ACS Data",
+#'   samples = "us2013a",
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
+#'
+#' add_to_extract(usa_extract, samples = "us2014a")
+#' add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
+#'
+#' nhgis_extract <- define_extract_nhgis(
+#'   datasets = "1990_STF1",
+#'   data_tables = c("NP1", "NP2"),
+#'   geog_levels = "county"
+#' )
+#'
+#' # Add a new dataset/time series table
+#' add_to_extract(
+#'   nhgis_extract,
+#'   datasets = "1980_STF1",
+#'   data_tables = "NT1A",
+#'   geog_levels = c("county", "state")
+#' )
+#'
+#' # Add to existing datasets/time series tables
+#' add_to_extract(nhgis_extract, geog_levels = "state")
+#'
+#' # Values that can only take a single value are replaced
+#' add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
@@ -1328,8 +1430,7 @@ add_to_extract <- function(extract, ...) {
 #' To remove existing values from an IPUMS USA extract definition, see
 #' [`remove_from_extract()`][remove_from_extract.usa_extract].
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' If the supplied extract definition comes from
@@ -1347,6 +1448,17 @@ add_to_extract <- function(extract, ...) {
 #' @return A modified `usa_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`remove_from_extract()`][remove_from_extract.usa_extract()] to remove values
+#' from an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_usa()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -1399,8 +1511,7 @@ add_to_extract.usa_extract <- function(extract,
 #' To remove existing values from an IPUMS CPS extract definition, see
 #' [`remove_from_extract()`][remove_from_extract.cps_extract].
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' If the supplied extract definition comes from
@@ -1418,6 +1529,17 @@ add_to_extract.usa_extract <- function(extract,
 #' @return A modified `cps_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`remove_from_extract()`][remove_from_extract.cps_extract()] to remove values
+#' from an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_cps()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -1458,6 +1580,8 @@ add_to_extract.cps_extract <- function(extract,
 #' are interpreted.
 #'
 #' To combine multiple extract definitions, use [combine_extracts()].
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' NHGIS extract definitions may contain multiple `datasets` or
@@ -1574,6 +1698,17 @@ add_to_extract.cps_extract <- function(extract,
 #' @return A modified `nhgis_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] to remove values
+#' from an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_nhgis()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -1761,6 +1896,8 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #' To add new values to an extract, see [add_to_extract()].
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param ... Additional arguments specifying the extract fields and values to
 #'   remove from the extract definition.
@@ -1771,9 +1908,43 @@ add_to_extract.nhgis_extract <- function(extract,
 #' @return An object of the same class as `extract` containing the modified
 #'   extract definition
 #'
-#' @family ipums_api
+#' @seealso
+#' [add_to_extract()] or [combine_extracts()] to add values to an extract
+#'   definition.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_usa()], [define_extract_cps()], or [define_extract_nhgis()]
+#'   to create a new extract definition.
 #'
 #' @export
+#'
+#' @examples
+#' usa_extract <- define_extract_usa(
+#'   description = "USA example",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = c("AGE", "SEX", "YEAR")
+#' )
+#'
+#' remove_from_extract(
+#'   usa_extract,
+#'   samples = "us2014a",
+#'   variables = c("AGE", "SEX")
+#' )
+#'
+#' nhgis_extract <- define_extract_nhgis(
+#'   datasets = "1990_STF1",
+#'   data_tables = c("NP1", "NP2", "NP3"),
+#'   time_series_tables = "A00",
+#'   geog_levels = "county"
+#' )
+#'
+#' # Remove a table from existing datasets:
+#' remove_from_extract(nhgis_extract, data_tables = "NP3")
+#'
+#' # Remove an entire dataset/time series table
+#' remove_from_extract(nhgis_extract, time_series_tables = "A00")
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
 }
@@ -1791,8 +1962,7 @@ remove_from_extract <- function(extract, ...) {
 #' `remove_from_extract()`. This limits the possibility of producing a
 #' temporarily invalid extract specification.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' If the supplied extract definition comes from
@@ -1808,6 +1978,17 @@ remove_from_extract <- function(extract, ...) {
 #' @return A modified `usa_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`add_to_extract()`][add_to_extract.usa_extract()] to add values
+#' to an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_usa()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -1855,8 +2036,7 @@ remove_from_extract.usa_extract <- function(extract,
 #' `remove_from_extract()`. This limits the possibility of producing a
 #' temporarily invalid extract specification.
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' If the supplied extract definition comes from
@@ -1868,6 +2048,17 @@ remove_from_extract.usa_extract <- function(extract,
 #' @return A modified `cps_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`add_to_extract()`][add_to_extract.cps_extract()] to add values
+#' to an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_cps()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -1919,6 +2110,8 @@ remove_from_extract.cps_extract <- function(extract,
 #' used in [`define_extract_nhgis()`][define_extract_nhgis]. See details for
 #' more information on how values passed to dataset and time series table
 #' subfields are interpreted.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' NHGIS extract definitions may contain multiple `datasets` or
@@ -2016,6 +2209,17 @@ remove_from_extract.cps_extract <- function(extract,
 #' @return A modified `nhgis_extract` object
 #'
 #' @keywords internal
+#'
+#' @seealso
+#' [`add_to_extract()`][add_to_extract.nhgis_extract()] to add values
+#' to an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_nhgis()] to create a new extract definition.
 #'
 #' @export
 #'
@@ -2182,9 +2386,12 @@ remove_from_extract.nhgis_extract <- function(extract,
 
 #' Combine multiple IPUMS extract definitions into one
 #'
+#' @description
 #' Creates a single extract definition that includes all of the
 #' specifications included in a set of `ipums_extract` objects of the same
 #' collection.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
 #' Values that exist in more than one of the provided extract definitions will
@@ -2205,6 +2412,16 @@ remove_from_extract.nhgis_extract <- function(extract,
 #'
 #' @return An `ipums_extract` object of the same collection as the extracts
 #'   provided in `...` containing the combined extract definition.
+#'
+#' @seealso
+#' [add_to_extract()] and [remove_from_extract()] to revise an extract
+#'   definition.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [define_extract_usa()], [define_extract_cps()], or [define_extract_nhgis()]
+#'   to create a new extract definition.
 #'
 #' @export
 #'
@@ -2336,32 +2553,33 @@ get_last_extract_info <- function(collection = NULL,
 
 }
 
-#' Convert a tibble of extract definitions to a list
+#' Convert recent extract definitions from tibble to list format
 #'
 #' @description
-#' Convert a [`tibble`][tibble::tbl_df-class] containing the specifications for
-#' one or more extract definitions to a list of
-#' [`ipums_extract`][ipums_extract-class] objects.
+#' Convert a [`tibble`][tibble::tbl_df-class] of extract definition
+#' specifications to a list of [`ipums_extract`][ipums_extract-class] objects
+#' or vice versa.
 #'
-#' Use [`get_extract_info()`] with `table = TRUE` to obtain extract
-#' information in `tibble` format.
+#' Use [`get_extract_info()`] to obtain information on recent extracts.
 #'
-#' For an overview of ipumsr API
-#' functionality, see `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @param extract_tbl A [`tibble`][tibble::tbl_df-class] (or
-#'   [`data.frame`][base::data.frame()]) that contains
-#'   the specifications for one or more [`ipums_extract`][ipums_extract-class]
-#'   objects.
+#'   [`data.frame`][base::data.frame()]) containing the specifications for one
+#'   or more [`ipums_extract`][ipums_extract-class] objects.
+#'
+#'   Use [get_extract_info()] with `table = TRUE` to produce such an object.
 #' @param validate Logical value indicating whether to
 #'   check that each of the output `ipums_extract`
 #'   objects contains a valid and complete extract
 #'   definition. Defaults to `TRUE`.
 #'
-#' @family ipums_api
-#' @return A list of length equal to the number of extracts represented in
-#'   `extract_tbl`. Unique extracts can be identified by their extract
-#'   number, which is contained in the `number` column of `extract_tbl`.
+#' @return For [extract_tbl_to_list()], a list of length equal to the number of
+#'   extracts represented in `extract_tbl`.
+#'
+#'   For [extract_list_to_tbl()], a [`tibble`][tibble::tbl_df-class]
+#'   representing the specifications for each of the extract requests
+#'   represented in `extract_list`. Each column corresponds to an extract field.
 #'
 #' @export
 #'
@@ -2388,6 +2606,17 @@ get_last_extract_info <- function(collection = NULL,
 #' )
 #'
 #' submitted_revised_income_extract <- submit_extract(revised_income_extract)
+#'
+#' # Get list of recent extracts
+#' list_of_last_10_extracts <- get_extract_info("usa")
+#'
+#' # Print the extract number for extracts that are downloadable:
+#' for (extract in list_of_last_10_extracts) {
+#'   if (is_extract_ready(extract)) print(extract$number)
+#' }
+#'
+#' # Convert list of extracts to tibble of extracts to view in a tabular format
+#' extract_list_to_tbl(list_of_last_10_extracts)
 #' }
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
@@ -2441,39 +2670,12 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 
 }
 
-#' Convert a list of extract definitions to a tibble
-#'
-#' @description
-#' Convert a list of [`ipums_extract`][ipums_extract-class] objects to a
-#' [`tibble`][tibble::tbl_df-class] containing the specifications for
-#' those extract requests.
-#'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' @rdname extract_tbl_to_list
 #'
 #' @param extract_list A list of [`ipums_extract`][ipums_extract-class] objects
 #'   or a single `ipums_extract` object.
 #'
-#' @family ipums_api
-#' @return A [`tibble`][tibble::tbl_df-class] representing the specifications
-#'   for each of the extract requests represented in `extract_list`. Each column
-#'   corresponds to an extract field.
-#'
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' # Get list of recent extracts
-#' list_of_last_10_extracts <- get_extract_info("usa")
-#'
-#' # Print the extract number for extracts that are downloadable:
-#' for (extract in list_of_last_10_extracts) {
-#'   if (is_extract_ready(extract)) print(extract$number)
-#' }
-#'
-#' # Convert list of extracts to tibble of extracts to view in a tabular format
-#' extract_list_to_tbl(list_of_last_10_extracts)
-#' }
 extract_list_to_tbl <- function(extract_list) {
 
   if ("ipums_extract" %in% class(extract_list)) {
@@ -2508,10 +2710,8 @@ extract_list_to_tbl <- function(extract_list) {
 #' * IPUMS CPS
 #' * IPUMS NHGIS
 #'
-#' For an overview of ipumsr API functionality, see
-#' `vignette("ipums-api", package = "ipumsr")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @family ipums_api
 #' @return A [`tibble`][tibble::tbl_df-class] with three columns containing the
 #'   full collection name, the corresponding code used by the IPUMS API, and the
 #'   status of API support for the collection.
@@ -2551,6 +2751,8 @@ ipums_data_collections <- function() {
 #' This function is modeled after the `census_api_key()` function
 #' from [tidycensus](https://walker-data.com/tidycensus/).
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @param api_key API key associated with your user account.
 #' @param save If `TRUE`, save the key for use in future
 #'   sessions by adding it to the `.Renviron` file in your home directory.
@@ -2563,7 +2765,8 @@ ipums_data_collections <- function() {
 #'
 #' @return The value of `api_key`, invisibly.
 #'
-#' @family ipums_api
+#' @seealso
+#' [set_ipums_default_collection()] to set a default collection.
 #'
 #' @export
 set_ipums_api_key <- function(api_key,
@@ -2603,6 +2806,8 @@ set_ipums_api_key <- function(api_key,
 #' This function is modeled after the `census_api_key()` function
 #' from [tidycensus](https://walker-data.com/tidycensus/).
 #'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
 #' @param collection Character string of the collection to set as your
 #'   default collection. The collection must currently be supported
 #'   by the IPUMS API. Use [ipums_data_collections()] to determine if a
@@ -2619,7 +2824,8 @@ set_ipums_api_key <- function(api_key,
 #'
 #' @return The value of `collection`, invisibly.
 #'
-#' @family ipums_api
+#' @seealso
+#' [set_ipums_api_key()] to set an API key.
 #'
 #' @export
 #'

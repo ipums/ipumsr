@@ -104,7 +104,13 @@ NULL
 #'
 #' @return An [ipums_ddi] object with metadata information.
 #'
-#' @family ipums_read
+#' @seealso [read_ipums_micro()], [read_ipums_micro_chunked()] and
+#'   [read_ipums_micro_yield()] to read data from IPUMS microdata extracts.
+#'
+#'   [ipums_var_info()] and [ipums_file_info()] to view metadata about an
+#'   [ipums_ddi] object.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
 #'
 #' @export
 #'
@@ -421,7 +427,12 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' @rdname ipums_codebook
 #'
 #' @export
-#' @family ipums_read
+#'
+#' @seealso [read_nhgis()] to read tabular data from an IPUMS NHGIS extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
 #'
 #' @examples
 #' # Example file

@@ -38,23 +38,42 @@ extract for that collection. For more about defining an extract, click
 \link[=define_extract]{here}.
 
 To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract()}}.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+}
+\examples{
+usa_extract <- define_extract_usa(
+  description = "USA example",
+  samples = c("us2013a", "us2014a"),
+  variables = c("AGE", "SEX", "YEAR")
+)
+
+remove_from_extract(
+  usa_extract,
+  samples = "us2014a",
+  variables = c("AGE", "SEX")
+)
+
+nhgis_extract <- define_extract_nhgis(
+  datasets = "1990_STF1",
+  data_tables = c("NP1", "NP2", "NP3"),
+  time_series_tables = "A00",
+  geog_levels = "county"
+)
+
+# Remove a table from existing datasets:
+remove_from_extract(nhgis_extract, data_tables = "NP3")
+
+# Remove an entire dataset/time series table
+remove_from_extract(nhgis_extract, time_series_tables = "A00")
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=add_to_extract]{add_to_extract()}} or \code{\link[=combine_extracts]{combine_extracts()}} to add values to an extract
+definition.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+to create a new extract definition.
 }
-\concept{ipums_api}

@@ -34,6 +34,7 @@ Other lbl_helpers:
 \code{\link{lbl_add}()},
 \code{\link{lbl_define}()},
 \code{\link{lbl_na_if}()},
+\code{\link{lbl_relabel}()},
 \code{\link{lbl}()},
 \code{\link{zap_ipums_attributes}()}
 }

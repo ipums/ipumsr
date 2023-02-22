@@ -113,6 +113,8 @@ lbl_na_if <- function(x, .predicate) {
 #'
 #' @export
 #'
+#' @family lbl_helpers
+#'
 #' @examples
 #' x <- haven::labelled(
 #'   c(10, 10, 11, 20, 21, 30, 99, 30, 10),

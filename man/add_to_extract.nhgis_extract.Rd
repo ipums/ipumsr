@@ -161,6 +161,8 @@ information on how values passed to dataset and time series table subfields
 are interpreted.
 
 To combine multiple extract definitions, use \code{\link[=combine_extracts]{combine_extracts()}}.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 NHGIS extract definitions may contain multiple \code{datasets} or
@@ -254,5 +256,16 @@ add_to_extract(extract, data_format = "fixed_width")$data_format
 
 # You can also combine two extract requests together
 combine_extracts(extract, extract2)
+}
+\seealso{
+\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}} to remove values
+from an extract definition.
+
+\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create a new extract definition.
 }
 \keyword{internal}

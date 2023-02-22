@@ -18,6 +18,8 @@ provided in \code{...} containing the combined extract definition.
 Creates a single extract definition that includes all of the
 specifications included in a set of \code{ipums_extract} objects of the same
 collection.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
 Values that exist in more than one of the provided extract definitions will
@@ -47,4 +49,14 @@ ext2 <- define_extract_nhgis(
 )
 
 combine_extracts(ext1, ext2)
+}
+\seealso{
+\code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to revise an extract
+definition.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+to create a new extract definition.
 }

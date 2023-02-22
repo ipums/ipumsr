@@ -78,13 +78,9 @@ codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
 codebook_raw[1:20]
 }
 \seealso{
-Other ipums_read: 
-\code{\link{ipums_list_files}()},
-\code{\link{read_ipums_ddi}()},
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis}()}
+\code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from an IPUMS NHGIS extract.
+
+\code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}

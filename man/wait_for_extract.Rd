@@ -48,7 +48,7 @@ beginning of each wait interval and upon extract completion.
 Defaults to \code{TRUE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}.}
+value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
@@ -61,8 +61,7 @@ via the IPUMS API until it is complete.
 Completed extracts will have a value of \code{"completed"} in their \code{status}
 field.
 
-For an overview of ipumsr API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 my_extract <- define_extract_usa(
@@ -91,21 +90,8 @@ download_extract(1, wait = TRUE)
 }
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()}
+\code{\link[=download_extract]{download_extract()}} to download an extract.
+
+\code{\link[=get_extract_info]{get_extract_info()}} and \code{\link[=is_extract_ready]{is_extract_ready()}} to check the status of an
+extract request.
 }
-\concept{ipums_api}

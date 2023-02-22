@@ -83,7 +83,19 @@
 #' @inheritParams read_ipums_micro
 #'
 #' @export
-#' @family ipums_read
+#'
+#' @seealso [read_ipums_micro_chunked()] to read data from large IPUMS
+#'   microdata extracts in chunks.
+#'
+#'   [read_ipums_micro()] to read data from an IPUMS microdata extract.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @examples
 #' # Create an IpumsLongYield object
 #' long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))

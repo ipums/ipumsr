@@ -2,36 +2,44 @@
 % Please edit documentation in R/api.R
 \name{extract_tbl_to_list}
 \alias{extract_tbl_to_list}
-\title{Convert a tibble of extract definitions to a list}
+\alias{extract_list_to_tbl}
+\title{Convert recent extract definitions from tibble to list format}
 \usage{
 extract_tbl_to_list(extract_tbl, validate = TRUE)
+
+extract_list_to_tbl(extract_list)
 }
 \arguments{
 \item{extract_tbl}{A \code{\link[tibble:tbl_df-class]{tibble}} (or
-\code{\link[base:data.frame]{data.frame}}) that contains
-the specifications for one or more \code{\link[=ipums_extract-class]{ipums_extract}}
-objects.}
+\code{\link[base:data.frame]{data.frame}}) containing the specifications for one
+or more \code{\link[=ipums_extract-class]{ipums_extract}} objects.
+
+Use \code{\link[=get_extract_info]{get_extract_info()}} with \code{table = TRUE} to produce such an object.}
 
 \item{validate}{Logical value indicating whether to
 check that each of the output \code{ipums_extract}
 objects contains a valid and complete extract
 definition. Defaults to \code{TRUE}.}
+
+\item{extract_list}{A list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
+or a single \code{ipums_extract} object.}
 }
 \value{
-A list of length equal to the number of extracts represented in
-\code{extract_tbl}. Unique extracts can be identified by their extract
-number, which is contained in the \code{number} column of \code{extract_tbl}.
+For \code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}}, a list of length equal to the number of
+extracts represented in \code{extract_tbl}.
+
+For \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}}, a \code{\link[tibble:tbl_df-class]{tibble}}
+representing the specifications for each of the extract requests
+represented in \code{extract_list}. Each column corresponds to an extract field.
 }
 \description{
-Convert a \code{\link[tibble:tbl_df-class]{tibble}} containing the specifications for
-one or more extract definitions to a list of
-\code{\link[=ipums_extract-class]{ipums_extract}} objects.
+Convert a \code{\link[tibble:tbl_df-class]{tibble}} of extract definition
+specifications to a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
+or vice versa.
 
-Use \code{\link[=get_extract_info]{get_extract_info()}} with \code{table = TRUE} to obtain extract
-information in \code{tibble} format.
+Use \code{\link[=get_extract_info]{get_extract_info()}} to obtain information on recent extracts.
 
-For an overview of ipumsr API
-functionality, see \code{vignette("ipums-api", package = "ipumsr")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 \dontrun{
@@ -56,24 +64,16 @@ revised_income_extract <- add_to_extract(
 )
 
 submitted_revised_income_extract <- submit_extract(revised_income_extract)
+
+# Get list of recent extracts
+list_of_last_10_extracts <- get_extract_info("usa")
+
+# Print the extract number for extracts that are downloadable:
+for (extract in list_of_last_10_extracts) {
+  if (is_extract_ready(extract)) print(extract$number)
+}
+
+# Convert list of extracts to tibble of extracts to view in a tabular format
+extract_list_to_tbl(list_of_last_10_extracts)
 }
 }
-\seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{set_ipums_default_collection}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
-}
-\concept{ipums_api}

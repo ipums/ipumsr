@@ -47,6 +47,8 @@ modifying.
 
 This function is modeled after the \code{census_api_key()} function
 from \href{https://walker-data.com/tidycensus/}{tidycensus}.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 set_ipums_default_collection("nhgis")
@@ -70,21 +72,5 @@ is_extract_ready("usa:2")
 set_ipums_default_collection(unset = TRUE)
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_nhgis}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}} to set an API key.
 }
-\concept{ipums_api}

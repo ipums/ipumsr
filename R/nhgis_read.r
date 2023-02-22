@@ -92,7 +92,12 @@
 #' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
 #'   `data_file`
 #'
-#' @family ipums_read
+#' @seealso [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [read_nhgis_codebook()] to read metadata about an IPUMS NHGIS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @export
 #'
 #' @examples

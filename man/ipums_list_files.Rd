@@ -53,13 +53,8 @@ ipums_list_files(nhgis_file)
 ipums_list_files(nhgis_file, file_select = matches("ds136"))
 }
 \seealso{
-Other ipums_read: 
-\code{\link{read_ipums_ddi}()},
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis_codebook}()},
-\code{\link{read_nhgis}()}
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data
+from an IPUMS extract.
+
+\code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
 }
-\concept{ipums_read}
