@@ -6,7 +6,6 @@ if (have_api_access) {
   # Summary metadata
   vcr::use_cassette("nhgis-metadata-summary", {
     ds_meta <- get_nhgis_metadata("datasets")
-    dt_meta <- get_nhgis_metadata("data_tables")
     shp_meta <- get_nhgis_metadata("shapefiles")
   })
 
@@ -26,7 +25,6 @@ if (have_api_access) {
       name = c("1790_cPop", "1800_cPop"),
       match_all = FALSE
     )
-    dt_meta_filt <- get_nhgis_metadata("data_tables", dataset = "1790_cPop")
   })
 
   # Single-source metadata
@@ -59,56 +57,6 @@ if (have_api_access) {
   last_ds <- all_ds[(length(all_ds) - 4):length(all_ds)]
   tmp_metadata <- table_metadata[!table_metadata$dataset %in% last_ds, ]
 
-  # Use check_pkg_metadata arg to ensure that we do not override `tmp_metadata`
-  # with the package `table_metadata`, which does not need update.
-  vcr::use_cassette("nhgis-metadata-table-needs-update", {
-    dt_meta_reg <- suppressWarnings(
-      check_table_metadata(
-        tmp_metadata,
-        update = FALSE,
-        check_pkg_metadata = FALSE
-      )
-    )
-  })
-  vcr::use_cassette("nhgis-metadata-table-needs-update", {
-    dt_meta_cnd <- catch_cnd(
-      check_table_metadata(
-        tmp_metadata,
-        update = FALSE,
-        check_pkg_metadata = FALSE
-      )
-    )$message
-  })
-
-  # Ensure that we update out-of-date metadata with package
-  # `table_metadata` automatically.
-  meta_auto_update <- check_table_metadata(tmp_metadata)
-
-  vcr::use_cassette("nhgis-metadata-table-updated", {
-    dt_meta_updated <- suppressMessages(
-      check_table_metadata(
-        tmp_metadata,
-        update = TRUE,
-        check_pkg_metadata = FALSE
-      )
-    )
-  })
-  vcr::use_cassette("nhgis-metadata-table-updated", {
-    dt_meta_updated_cnd <- catch_cnd(
-      check_table_metadata(
-        tmp_metadata,
-        update = TRUE,
-        check_pkg_metadata = FALSE
-      )
-    )$message
-  })
-
-  vcr::use_cassette("nhgis-metadata-table-no-update", {
-    dt_meta_complete_cnd <- catch_cnd(
-      check_table_metadata(table_metadata)
-    )$message
-  })
-
   vcr::use_cassette("nhgis-metadata-missing-api-key", {
     err_no_key <- catch_cnd(withr::with_envvar(
       new = c("IPUMS_API_KEY" = NA),
@@ -131,9 +79,6 @@ test_that("We can get summary metadata", {
   expect_true(tibble::is_tibble(ds_meta))
   expect_true(!is_empty(ds_meta))
 
-  expect_true(tibble::is_tibble(dt_meta))
-  expect_true(!is_empty(dt_meta))
-
   expect_true(tibble::is_tibble(tst_meta_filt))
   expect_true(!is_empty(tst_meta_filt))
 
@@ -154,8 +99,6 @@ test_that("We can filter summary metadata", {
   expect_true(all(grepl("[Ss]tandard", tst_meta_filt$geographic_integration)))
 
   expect_equal(nrow(ds_meta_filt), 2)
-
-  expect_equal(unique(dt_meta_filt$dataset), "1790_cPop")
 
 })
 
@@ -251,55 +194,5 @@ test_that("We throw errors on bad metadata requests", {
 
   # Missing columns
   expect_true(grepl("unrecognized metadata variables:.+`foo`", filt_err))
-
-})
-
-# NB: some of these may fail if new datasets have been released and
-# ipumsr:::table_metadata has not been updated. See data-raw/table_metadata.R
-test_that("We catch out-of-date data table metadata", {
-
-  skip_if_no_api_access(have_api_access)
-
-  expect_true(is.character(dt_meta_cnd))
-  expect_true(
-    grepl(
-      "Tables for the following recently released datasets are not",
-      dt_meta_cnd
-    )
-  )
-
-  expect_true(is.character(dt_meta_updated_cnd))
-  expect_true(grepl("Adding metadata for the following", dt_meta_updated_cnd))
-
-  expect_null(dt_meta_complete_cnd)
-
-  expect_true(tibble::is_tibble(dt_meta_reg))
-  expect_true(tibble::is_tibble(dt_meta_updated))
-
-  expect_identical(meta_auto_update, dt_meta_updated)
-  expect_identical(meta_auto_update, dt_meta)
-
-  expect_true(nrow(dt_meta_reg) < nrow(dt_meta_updated))
-  expect_equal(
-    length(unique(dt_meta_reg$dataset)),
-    length(unique(dt_meta_updated$dataset)) - 5
-  )
-
-  # Cache:
-  expect_equal(
-    ipumsr_cache_dir(list = TRUE),
-    "nhgis_summary_metadata_data_tables.rds"
-  )
-
-  ipumsr_cache_dir(
-    clear = TRUE,
-    pattern = "nhgis_summary_metadata_data_tables.rds"
-  )
-
-  expect_false(
-    file.exists(
-      file.path(ipumsr_cache_dir(),  "nhgis_summary_metadata_data_tables.rds")
-    )
-  )
 
 })

@@ -18,28 +18,27 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
-      etag: W/"225379794386f6e21e8f0e5c6f73f013"
+      date: Wed, 22 Feb 2023 21:17:43 GMT
+      etag: W/"58242b357bf8d158b14a63b56053fad7"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 52d2ff29-5807-49bb-b148-9eb56f2c5680
-      x-runtime: '0.006040'
-      x-xss-protection: 1; mode=block
+      x-request-id: e6802b7a-abd1-44b2-8da2-a159fc8062fd
+      x-runtime: '3.579366'
+      x-xss-protection: '0'
+      content-length: '73801'
     body:
       encoding: UTF-8
       file: no
       string: '{"name":"2010_SF1a","nhgis_id":"ds172","group":"2010 Census","description":"SF
-        1a - P & H Tables [Blocks & Larger Areas]","sequence":4802,"has_multiple_data_types":false,"data_tables":[{"name":"P1","nhgis_code":"H7V","description":"Total
+        1a - P \u0026 H Tables [Blocks \u0026 Larger Areas]","sequence":4802,"has_multiple_data_types":false,"data_tables":[{"name":"P1","nhgis_code":"H7V","description":"Total
         Population","sequence":1},{"name":"P2","nhgis_code":"H7W","description":"Urban
         and Rural","sequence":2},{"name":"P3","nhgis_code":"H7X","description":"Race","sequence":3},{"name":"P4","nhgis_code":"H7Y","description":"Hispanic
         or Latino Origin","sequence":4},{"name":"P5","nhgis_code":"H7Z","description":"Hispanic
@@ -343,10 +342,10 @@ http_interactions:
         Legislative District (Upper Chamber)--County--Census Tract","has_geog_extent_selection":false,"sequence":77},{"name":"tract_636","description":"State--State
         Legislative District (Lower Chamber)--County--Census Tract","has_geog_extent_selection":false,"sequence":78},{"name":"blck_grp","description":"State--County--Census
         Tract--Block Group","has_geog_extent_selection":true,"sequence":83},{"name":"blck_grp_091","description":"State--County--County
-        Subdivision--Place/Remainder--Census Tract--Block Group [2000 & 2010 partition,
-        pre-Urban/Rural]","has_geog_extent_selection":true,"sequence":84},{"name":"blck_grp_090","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract--Block Group [2000 \u0026 2010
+        partition, pre-Urban/Rural]","has_geog_extent_selection":true,"sequence":84},{"name":"blck_grp_090","description":"State--County--County
         Subdivision--Place/Remainder--Census Tract--Urban/Rural--Block Group [2000
-        & 2010 partition]","has_geog_extent_selection":true,"sequence":89},{"name":"block","description":"State--County--Census
+        \u0026 2010 partition]","has_geog_extent_selection":true,"sequence":89},{"name":"block","description":"State--County--Census
         Tract--Block","has_geog_extent_selection":true,"sequence":93},{"name":"cty_sub","description":"State--County--County
         Subdivision","has_geog_extent_selection":false,"sequence":100},{"name":"cty_sub_521_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--County--County Subdivision","has_geog_extent_selection":false,"sequence":106},{"name":"cty_sub_613","description":"State--State
@@ -559,9 +558,7 @@ http_interactions:
         of 2,500 or more population"},{"name":"bs32.ge46","description":"Rural--place
         of 1,000 to 2,499 population"},{"name":"bs32.ge47","description":"Rural--place
         of less than 1,000 population"},{"name":"bs32.ge48","description":"Rural--not
-        in place"},{"name":"bs32.ge49","description":"Rural--farm"},{"name":"bs32.ge50","description":"Urban
-        portion of extended place"},{"name":"bs32.ge51","description":"Rural portion
-        of extended place"},{"name":"bs32.ge89","description":"American Indian Reservation
+        in place"},{"name":"bs32.ge89","description":"American Indian Reservation
         and Trust Land--Federal"},{"name":"bs32.ge90","description":"American Indian
         Reservation and Trust Land--State"},{"name":"bs32.ge91","description":"Oklahoma
         Tribal Statistical Area"},{"name":"bs32.ge92","description":"Tribal Designated
@@ -574,16 +571,7 @@ http_interactions:
         metropolitan or micropolitan statistical area--urban"},{"name":"bs32.geA4","description":"In
         metropolitan or micropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geA5","description":"In
         metropolitan or micropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geA6","description":"In
-        metropolitan or micropolitan statistical area--rural"},{"name":"bs32.geA7","description":"In
-        metropolitan or micropolitan statistical area of 5,000,000 or more population"},{"name":"bs32.geA8","description":"In
-        metropolitan or micropolitan statistical area of 2,500,000 to 4,999,999 population"},{"name":"bs32.geA9","description":"In
-        metropolitan or micropolitan statistical area of 1,000,000 to 2,499,999 population"},{"name":"bs32.geAA","description":"In
-        metropolitan or micropolitan statistical area of 500,000 to 999,999 population"},{"name":"bs32.geAB","description":"In
-        metropolitan or micropolitan statistical area of 250,000 to 499,999 population"},{"name":"bs32.geAC","description":"In
-        metropolitan or micropolitan statistical area of 100,000 to 249,999 population"},{"name":"bs32.geAD","description":"In
-        metropolitan or micropolitan statistical area of 50,000 to 99,999 population"},{"name":"bs32.geAE","description":"In
-        metropolitan or micropolitan statistical area of 25,000 to 49,999 population"},{"name":"bs32.geAF","description":"In
-        metropolitan or micropolitan statistical area of less than 25,000 population"},{"name":"bs32.geC0","description":"In
+        metropolitan or micropolitan statistical area--rural"},{"name":"bs32.geC0","description":"In
         metropolitan statistical area"},{"name":"bs32.geC1","description":"In metropolitan
         statistical area--in principal city"},{"name":"bs32.geC2","description":"In
         metropolitan statistical area--not in principal city"},{"name":"bs32.geC3","description":"In
@@ -651,18 +639,12 @@ http_interactions:
         in metropolitan statistical area--urban"},{"name":"bs32.geH2","description":"Not
         in metropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geH3","description":"Not
         in metropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geH4","description":"Not
-        in metropolitan statistical area--rural"},{"name":"bs32.geJ0","description":"In
-        combined statistical area"},{"name":"bs32.geL0","description":"Not in combined
-        statistical area"},{"name":"bs32.geM0","description":"In New England city
-        and town area"},{"name":"bs32.geM1","description":"In New England city and
-        town area--in principal city"},{"name":"bs32.geM2","description":"In New England
-        city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
-        New England city and town area--urban"},{"name":"bs32.geM4","description":"In
-        New England city and town area--urban--in urbanized area"},{"name":"bs32.geM5","description":"In
-        New England city and town area--urban--in urban cluster"},{"name":"bs32.geM6","description":"In
-        New England city and town area--rural"},{"name":"bs32.geP0","description":"In
-        combined New England city and town area"}]}]}'
-  recorded_at: 2022-12-13 20:20:27 GMT
+        in metropolitan statistical area--rural"},{"name":"bs32.geM1","description":"In
+        New England city and town area--in principal city"},{"name":"bs32.geM2","description":"In
+        New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
+        New England city and town area--urban"},{"name":"bs32.geM6","description":"In
+        New England city and town area--rural"}]}]}'
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -683,23 +665,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
+      date: Wed, 22 Feb 2023 21:17:44 GMT
       etag: W/"02fcf1290a64f2050f8dd189a6ec85a6"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 063f54f8-c039-4068-8d24-20cbddd84763
-      x-runtime: '0.005176'
-      x-xss-protection: 1; mode=block
+      x-request-id: 112c758d-50f0-4ad5-8f9b-885536dab138
+      x-runtime: '0.017168'
+      x-xss-protection: '0'
+      content-length: '10286'
     body:
       encoding: UTF-8
       file: no
@@ -827,7 +808,7 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgis_code":"H72071"}]}'
-  recorded_at: 2022-12-13 20:20:27 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -848,23 +829,21 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
+      date: Wed, 22 Feb 2023 21:17:44 GMT
       etag: W/"f7bf5a96e9dd731790c9b08e7f997ca8"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 51f5b4a4-d820-4850-97b8-bc0bbf2cb15f
-      x-runtime: '0.004702'
-      x-xss-protection: 1; mode=block
+      x-request-id: 72e8b23b-93e5-422c-b820-1990dabc3bbe
+      x-runtime: '0.025076'
+      x-xss-protection: '0'
       content-length: '1216'
     body:
       encoding: UTF-8
@@ -879,5 +858,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
         Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":363}]}'
-  recorded_at: 2022-12-13 20:20:27 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0

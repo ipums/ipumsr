@@ -2,7 +2,7 @@
 % Please edit documentation in R/api_metadata_nhgis.R
 \name{get_nhgis_metadata}
 \alias{get_nhgis_metadata}
-\title{Get NHGIS Metadata}
+\title{List available data sources from IPUMS NHGIS}
 \usage{
 get_nhgis_metadata(
   type = NULL,
@@ -12,14 +12,14 @@ get_nhgis_metadata(
   ...,
   match_all = TRUE,
   match_case = FALSE,
-  update_tables = NULL,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
 \arguments{
-\item{type}{One of \code{"datasets"}, \code{"data_tables"},
-\code{"time_series_tables"}, or \code{"shapefiles"} indicating the type of summary
-metadata to retrieve.}
+\item{type}{One of \code{"datasets"}, \code{"time_series_tables"}, or \code{"shapefiles"}
+indicating the type of summary metadata to retrieve. Leave \code{NULL} to
+request metadata for a single \code{dataset}, \code{data_table}, or
+\code{time_series_table}.}
 
 \item{dataset}{Name of an individual dataset for which to retrieve metadata.}
 
@@ -38,27 +38,15 @@ a regular expression that is matched to the values in the metadata column
 with the same name as the argument name. Only metadata records
 whose values match the provided expressions will be included in the output.
 
-Only used when \code{type} is provided. See \strong{metadata availability} section
-below.}
+Only used when \code{type} is provided. See examples.}
 
-\item{match_all}{If \code{TRUE}, only metadata records that match \emph{all} of the
+\item{match_all}{If \code{TRUE}, only metadata records that match all of the
 expressions provided in \code{...} will be included in the output. If \code{FALSE},
-metadata records that match \emph{any} of the expressions will be included.
+metadata records that match any of the expressions will be included.
 Defaults to \code{TRUE}.}
 
 \item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
 the expressions provided in \code{...}. Defaults to \code{FALSE}.}
-
-\item{update_tables}{If \code{TRUE} and \code{type = "data_tables"}, update the
-provided data table summary metadata to include records for tables
-associated with recently-released datasets that are not yet included by
-default. The updated metadata will be cached for future use.
-
-By default, updates the table metadata only if fewer than 10 datasets'
-tables are missing from the default metadata.
-
-If the current data table summary metadata are already up to date, this
-does nothing. See \strong{notes} section below.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
@@ -78,7 +66,7 @@ type, use the \code{type} argument. To retrieve detailed metadata for a
 single data source, use the \code{dataset}, \code{data_table}, or \code{time_series_table}
 arguments.
 
-See the \strong{metadata availability} section below for more information on the
+See the \emph{metadata availability} section below for more information on the
 metadata provided for each data type.
 
 More information about NHGIS can be found at the following links:
@@ -87,31 +75,29 @@ More information about NHGIS can be found at the following links:
 \item \href{https://www.nhgis.org/frequently-asked-questions-faq}{NHGIS FAQ}
 \item \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{NHGIS API}
 }
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \section{Metadata availability}{
 
 The following sections summarize the metadata fields provided for each data
 type. Summary metadata include a subset of the fields provided for individual
 data sources.
-
-The names of the arguments that can be passed to \code{...} for each \code{type} are
-indicated with an asterisk.
 \subsection{Datasets:}{
 \itemize{
-\item *\strong{\code{name}:} The unique identifier for the dataset. This is the code that is
-used to refer to the dataset when interacting with the NHGIS extract API.
-\item *\strong{\verb{group:}} The group of datasets to which the dataset belongs.
+\item \strong{\code{name}:} The unique identifier for the dataset. This is the code that is
+used to refer to the dataset when interacting with the IPUMS API.
+\item \strong{\verb{group:}} The group of datasets to which the dataset belongs.
 For instance, 5 separate datasets are part of the
 \code{"2015 American Community Survey"} group.
-\item *\strong{\verb{description:}} A short description of the dataset.
-\item *\strong{\verb{sequence:}} Order in which the dataset will appear in the metadata API
+\item \strong{\verb{description:}} A short description of the dataset.
+\item \strong{\verb{sequence:}} Order in which the dataset will appear in the metadata API
 and extracts.
 \item \strong{\verb{has_multiple_data_types:}} Logical value indicating whether multiple
 data types exist for this dataset. For example, ACS
 datasets include both estimates and margins of error.
 \item \strong{\verb{data_tables:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 codes, and descriptions for all data tables available for the dataset.
-See \strong{data tables} section below.
 \item \strong{\verb{geog_levels:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 descriptions, and extent information for the geographic levels available
 for the dataset. The \code{has_geog_extent_selection} field contains logical
@@ -132,17 +118,15 @@ dataset. This field is only present if at least one of the dataset's
 
 \subsection{Data tables:}{
 \itemize{
-\item *\strong{\code{name}:} The unique identifier for the data table. This is the code that
-is used to refer to the data table when interacting with the NHGIS extract
-API.
-\item *\strong{\code{dataset}:} The dataset with which the data table is associated.
-\item *\strong{\code{description}:} A short description of the data table.
+\item \strong{\code{name}:} The unique identifier for the data table. This is the code that
+is used to refer to the data table when interacting with the IPUMS API.
+\item \strong{\code{description}:} A short description of the data table.
 \item \strong{\code{universe}:} The statistical population measured by this data table
 (e.g. persons, families, occupied housing units, etc.)
-\item *\strong{\code{nhgis_code}:} The code identifying the data table in the extract.
+\item \strong{\code{nhgis_code}:} The code identifying the data table in the extract.
 Variables in the extract data will include column names prefixed with this
 code.
-\item *\strong{\code{sequence}:} Order in which the data table will appear in the metadata
+\item \strong{\code{sequence}:} Order in which the data table will appear in the metadata
 API and extracts.
 \item \strong{\code{variables}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing variable
 descriptions and codes for the data table
@@ -151,26 +135,26 @@ descriptions and codes for the data table
 
 \subsection{Time series tables:}{
 \itemize{
-\item *\strong{\code{name}:} The unique identifier for the time series table. This is the
+\item \strong{\code{name}:} The unique identifier for the time series table. This is the
 code that is used to refer to the time series table when interacting with
-the NHGIS extract API.
-\item *\strong{\code{description}:} A short description of the time series table.
-\item *\strong{\code{geographic_integration}:} The method by which the time series table
+the IPUMS API.
+\item \strong{\code{description}:} A short description of the time series table.
+\item \strong{\code{geographic_integration}:} The method by which the time series table
 aligns geographic units across time. \code{"Nominal"} integration indicates
 that geographic units are aligned by name (disregarding changes in unit
 boundaries). \code{"Standardized"} integration indicates that data from multiple
 time points are standardized to the indicated year's census units. For
 more information, click
 \href{https://www.nhgis.org/time-series-tables#geographic-integration}{here}.
-\item *\strong{\code{sequence}:} Order in which the time series table will appear in the
+\item \strong{\code{sequence}:} Order in which the time series table will appear in the
 metadata API and extracts.
 \item \strong{\code{time_series}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names
 and descriptions for the individual time series available for the
 time series table.
-\item *\strong{\code{years}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing
+\item \strong{\code{years}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing
 information on the available data years for the
 time series table.
-\item *\strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names
+\item \strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names
 and descriptions for the geographic levels available
 for the time series table.
 }
@@ -178,59 +162,24 @@ for the time series table.
 
 \subsection{Shapefiles:}{
 \itemize{
-\item *\strong{\code{name}:} The unique identifier for the shapefile. This is the
+\item \strong{\code{name}:} The unique identifier for the shapefile. This is the
 code that is used to refer to the shapefile when interacting with
-the NHGIS extract API.
-\item *\strong{\code{year}:} The survey year in which the shapefile's represented areas
+the IPUMS API.
+\item \strong{\code{year}:} The survey year in which the shapefile's represented areas
 were used for tabulations, which may be different than the vintage of the
 represented areas. For more information, click
 \href{https://www.nhgis.org/gis-files#years}{here}.
-\item *\strong{\code{geographic_level}:} The geographic level of the shapefile.
-\item *\strong{\code{extent}:} The geographic extent covered by the shapefile.
-\item *\strong{\code{basis}:} The derivation source of the shapefile.
-\item *\strong{\code{sequence}:} Order in which the shapefile will appear in the
+\item \strong{\code{geographic_level}:} The geographic level of the shapefile.
+\item \strong{\code{extent}:} The geographic extent covered by the shapefile.
+\item \strong{\code{basis}:} The derivation source of the shapefile.
+\item \strong{\code{sequence}:} Order in which the shapefile will appear in the
 metadata API and extracts.
 }
 }
 }
 
-\section{Notes}{
-
-If \code{type} is not specified, then a \code{dataset}, \code{time_series_table},
-or both a \code{dataset} and a \code{data_table} must be provided. Metadata is only
-provided for a single \code{type} or data source at a time.
-
-The expressions in \code{...} are interpreted as regular expressions, which
-allows for partial matching. This is
-typically the desired behavior when searching for keywords in data source
-descriptions, but an exact match may be useful for certain fields,
-like data table names. Any terms can be wrapped in \code{"^"} and \code{"$"}
-to enforce an exact match. For instance,
-\code{get_nhgis_metadata("data_tables", name = "^NT1$")} will match tables whose
-name is \code{"NT1"} exactly, rather than all tables that have \code{"NT1"} somewhere
-in their name.
-\subsection{Data table summary metadata}{
-
-The IPUMS NHGIS API does not currently provide updated summary metadata
-for data tables by default. Therefore, the metadata provided for data tables
-may be incomplete if new datasets have recently been added.
-
-\code{get_nhgis_metadata("data_tables")} will automatically produce
-a warning if it detects any datasets whose tables are not included in the
-data table summary metadata. The metadata for the data tables
-associated with these datasets can be included by setting
-\code{update_tables = TRUE}. Note that updating these metadata will result in an
-API request for each missing dataset (the IPUMS API is rate limited to 100
-API requests per minute).
-
-The updated data will automatically
-be cached across R sessions in the directory given by
-\code{rappdirs::user_cache_dir("ipumsr")}. If you get unexpected results from
-\code{get_nhgis_metadata("data_tables")}, consider clearing the cache directory.
-}
-}
-
 \examples{
+\dontrun{
 # Get summary metadata for all available sources of a given data type
 get_nhgis_metadata("datasets")
 
@@ -254,6 +203,7 @@ get_nhgis_metadata(
 # Get metadata for single data source
 get_nhgis_metadata(dataset = "1990_STF1")
 get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
+}
 }
 \seealso{
 \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create an IPUMS NHGIS extract definition.

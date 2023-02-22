@@ -18,29 +18,27 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
+      date: Wed, 22 Feb 2023 21:17:44 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 404 Not Found
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 57959422-61b7-46dd-8147-31c506a89d79
-      x-runtime: '0.015140'
-      x-xss-protection: 1; mode=block
+      x-request-id: 00f9407e-aae3-4f64-b7af-8201aed698ab
+      x-runtime: '0.009461'
+      x-xss-protection: '0'
       content-length: '100'
     body:
       encoding: UTF-8
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2022-12-13 20:20:28 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -61,29 +59,27 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
+      date: Wed, 22 Feb 2023 21:17:44 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 404 Not Found
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 9449de8f-d4a2-4fae-a39e-5f4787f8e298
-      x-runtime: '0.008551'
-      x-xss-protection: 1; mode=block
+      x-request-id: c0aa6e72-b96c-41ce-b240-cae9ae366131
+      x-runtime: '0.008621'
+      x-xss-protection: '0'
       content-length: '102'
     body:
       encoding: UTF-8
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2022-12-13 20:20:28 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -104,29 +100,27 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
+      date: Wed, 22 Feb 2023 21:17:44 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 404 Not Found
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 2cc9bd39-4571-4ca8-82a7-e9fa53194960
-      x-runtime: '0.009833'
-      x-xss-protection: 1; mode=block
+      x-request-id: 66a63f31-407b-438c-ab8b-1185a4fabdbb
+      x-runtime: '0.010345'
+      x-xss-protection: '0'
       content-length: '108'
     body:
       encoding: UTF-8
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2022-12-13 20:20:28 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -147,23 +141,22 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 13 Dec 2022 20:20:27 GMT
-      etag: W/"207c9eb5b25f6addc5c7905daed4cb5e"
+      date: Wed, 22 Feb 2023 21:17:44 GMT
+      etag: W/"5b1e24185904ca5cb92db89cbdfe51b2"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 10976948-36f3-4111-9e50-96348f926a38
-      x-runtime: '0.005020'
-      x-xss-protection: 1; mode=block
+      x-request-id: 86ad4925-6afa-4517-945f-679243240652
+      x-runtime: '0.008073'
+      x-xss-protection: '0'
+      content-length: '99902'
     body:
       encoding: UTF-8
       file: no
@@ -519,7 +512,7 @@ http_interactions:
         Persons by Place of Birth [10]","geographic_integration":"Nominal","sequence":4400.02,"years":["1990","2000","125","195"],"geog_levels":["nation","region","division","state","county","tract","cty_sub","place"]},{"name":"AK7","description":"Foreign-Born
         Persons by Place of Birth (Regions) [6*]","geographic_integration":"Nominal","sequence":4400.03,"years":["2000","1970","1980","1990","125","195"],"geog_levels":["state","county"]},{"name":"AB9","description":"Foreign-Born
         Persons by Place of Birth [25*]","geographic_integration":"Nominal","sequence":4400.04,"years":["1970","1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"CB2","description":"Persons
-        Born in (Former) Yugoslavia","geographic_integration":"Nominal","sequence":4400.05,"years":["1970","1980","1990","2000"],"geog_levels":["state","county"]},{"name":"AJ6","description":"Foreign-Born
+        Born in (Former) Yugoslavia","geographic_integration":"Nominal","sequence":4400.05,"years":["1970","1980","1990","2000","115"],"geog_levels":["state","county"]},{"name":"AJ6","description":"Foreign-Born
         Persons by Place of Birth [30*]","geographic_integration":"Nominal","sequence":4400.06,"years":["1970","1990","125","195"],"geog_levels":["state","county"]},{"name":"AJ7","description":"Foreign-Born
         Persons by Place of Birth [33*]","geographic_integration":"Nominal","sequence":4400.07,"years":["1980","1990","2000","125","195"],"geog_levels":["state","county"]},{"name":"AK0","description":"Persons
         Born in Africa by Place of Birth [2]","geographic_integration":"Nominal","sequence":4400.08,"years":["1980","2000","125","195"],"geog_levels":["state","county","cty_sub","place"]},{"name":"AJ9","description":"Persons
@@ -657,5 +650,5 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2022-12-13 20:20:28 GMT
+  recorded_at: 2023-02-22 21:17:44 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
