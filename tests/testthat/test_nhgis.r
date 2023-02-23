@@ -97,15 +97,14 @@ test_that("Can read NHGIS extract: fixed-width files", {
   # This has some coltype differences which are to be expected
   # as we can directly provide coltypes in read_nhgis_fwf()
   # whereas read_nhgis_csv() uses readr defaults
-  expect_true(
-    dplyr::all_equal(
-      nhgis_fwf1,
-      dplyr::mutate(
-        nhgis_csv1[, 2:ncol(nhgis_csv1)],
-        NATIONA = as.character(NATIONA)
-      ),
-      convert = TRUE
-    )
+  expect_identical(
+    purrr::map(nhgis_fwf1, attributes),
+    purrr::map(dplyr::select(nhgis_csv1, -"GISJOIN"), attributes)
+  )
+
+  expect_identical(
+    purrr::map(zap_ipums_attributes(nhgis_fwf1), "identity"),
+    purrr::map(zap_ipums_attributes(dplyr::select(nhgis_csv1, -"GISJOIN")), "identity")
   )
 
   expect_warning(
@@ -182,7 +181,15 @@ test_that("Can read NHGIS extract: single time series table", {
     show_col_types = FALSE
   )
 
-  expect_true(dplyr::all_equal(tst, tst2))
+  expect_identical(
+    purrr::map(tst, attributes),
+    purrr::map(tst2, attributes)
+  )
+
+  expect_identical(
+    purrr::map(zap_ipums_attributes(tst), "identity"),
+    purrr::map(zap_ipums_attributes(tst2), "identity")
+  )
 
   expect_equal(nrow(tst), 84)
   expect_equal(tst$GISJOIN[[1]], "G010")

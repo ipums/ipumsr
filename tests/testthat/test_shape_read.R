@@ -77,7 +77,7 @@ test_that("Can row bind multiple sp files", {
 
   skip_if_not_installed("sp")
 
-  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+  withr::with_options(list(lifecycle_verbosity = "quiet", warn = -1), {
     shp1 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 2, verbose = FALSE)
     shp2 <- read_ipums_sp(nhgis_multi_shp, shape_layer = 3, verbose = FALSE)
 
@@ -154,7 +154,7 @@ test_that("sf and sp geometries are consistent with each other", {
 
   nhgis_sf <- read_ipums_sf(nhgis_single_shp)
 
-  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+  withr::with_options(list(lifecycle_verbosity = "quiet", warn = -1), {
     nhgis_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE)
   })
 
@@ -198,11 +198,9 @@ test_that("We can pass arguments to underlying reader functions", {
   expect_true(any(sf::st_geometry_type(shp_sf) == "POLYGON"))
 
   withr::with_options(list(lifecycle_verbosity = "quiet"), {
-    expect_silent(
-      shp_sp <- read_ipums_sp(
-        nhgis_single_shp,
-        verbose = FALSE
-      )
+    expect_warning(
+      shp_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE),
+      "OGR support is provided"
     )
   })
 
@@ -228,7 +226,7 @@ test_that("We get informative errors when reading shapefiles", {
   # geometry differences don't trigger the variable warning used in sf
   # implementation, but lower level error will still catch incompatibilities
 
-  withr::with_options(list(lifecycle_verbosity = "quiet"), {
+  withr::with_options(list(lifecycle_verbosity = "quiet", warn = -1), {
     expect_error(
       read_ipums_sp(
         nhgis_multi_shp,
