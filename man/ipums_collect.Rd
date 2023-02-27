@@ -13,7 +13,7 @@ object stored in a database).}
 \item{ddi}{An \link{ipums_ddi} object created with \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.}
 
 \item{var_attrs}{Variable attributes to add to the output. Defaults to
-all available attributes (\code{"val_labels"}, \code{"var_label"} and \code{"var_desc"}).
+all available attributes.
 See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 }
 \value{

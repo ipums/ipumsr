@@ -519,7 +519,7 @@ careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
 #' [`read_nhgis()`]. To join spatial and tabular data, use an
 #' [ipums_shape_*_join][ipums_shape_left_join] function.
 #'
-#' To convert a `SpatialPolygonsDataFrame` or other `sp` object to an `sf`
+#' To convert an `sf` object to a `SpatialPolygonsDataFrame` or other `sp`
 #' object, use [`sf::as_Spatial()`].
 #'
 #' @param data_file  Path to a data file, a .zip archive from an NHGIS

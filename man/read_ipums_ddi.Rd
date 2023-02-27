@@ -48,14 +48,14 @@ IPUMS DDI codebook files.
 \section{Downloading IPUMS files}{
 The DDI codebook (.xml) file provided with IPUMS microdata extracts can be
 downloaded through the IPUMS extract interface or (for some collections)
-within R using the IPUMS extract API.
+within R using the IPUMS API.
 
 If using the IPUMS extract interface:
 \itemize{
-\item Download the DDI codebook by right clicking on the "DDI" link in the
-"CODEBOOK" column of the extract interface and selecting "Save as..."
-(on Safari, you may have to select "Download Linked File"). Be sure that
-the codebook is downloaded in .xml format.
+\item Download the DDI codebook by right clicking on the \strong{DDI} link in the
+\strong{Codebook} column of the extract interface and selecting \strong{Save as...}
+(on Safari, you may have to select \strong{Download Linked File As...}).
+Be sure that the codebook is downloaded in .xml format.
 }
 
 If using the IPUMS API:

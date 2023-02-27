@@ -15,7 +15,7 @@ An \code{ipums_extract} object of the same collection as the extracts
 provided in \code{...} containing the combined extract definition.
 }
 \description{
-Creates a single extract definition that includes all of the
+Create a single extract definition that includes all of the
 specifications included in a set of \code{ipums_extract} objects of the same
 collection.
 

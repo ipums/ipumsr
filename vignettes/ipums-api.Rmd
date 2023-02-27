@@ -69,17 +69,17 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
 
 ## Overview
 
-IPUMS provides two closely-related APIs: an extract API and a metadata
-API. ipumsr provides functions that make it easier to interact with both
-of these APIs.
+The IPUMS API supports two types of functionality.
 
--   The **IPUMS extract API** allows registered IPUMS users to define
-    extract requests, submit them for processing, and download completed
-    extract files, all without leaving R.
+-   The **extract** component of the API allows registered IPUMS users
+    to define extract requests, submit them for processing, and download
+    completed extract files, all without leaving R.
 
--   The **IPUMS metadata API** allows users to discover and explore data
-    sources as well as retrieve codes that can be used when forming
-    extract requests that will be submitted to the IPUMS extract API.
+-   The **metadata** component of the API allows users to discover and
+    explore data sources as well as retrieve codes that can be used when
+    forming extract requests to submit to the API for processing.
+
+ipumsr provides functions that support both of these components.
 
 Use of these APIs enables the adoption of a programmatic workflow that
 can help users to:
@@ -93,8 +93,7 @@ can help users to:
     into R
 -   Quickly identify and explore available IPUMS data sources
 
-The basic workflow for interacting with the IPUMS extract API is as
-follows:
+The basic workflow for interacting with the IPUMS API is as follows:
 
 1.  [Define](#define) the parameters of an extract request
 2.  [Submit](#submit) the extract request to the IPUMS API
@@ -112,15 +111,15 @@ library(purrr)
 
 ### API Availability
 
-The **IPUMS extract API** is currently available for the following
-collections:
+IPUMS **extract** support is currently available via API for the
+following collections:
 
 -   IPUMS USA
 -   IPUMS CPS
 -   IPUMS NHGIS
 
-The **IPUMS metadata API** is currently available for the following
-collections:
+IPUMS **metadata** support is currently available via API for the
+following collections:
 
 -   IPUMS NHGIS
 
@@ -135,8 +134,8 @@ ipums_data_collections()
 ### Note: New features currently in development
 
 The API tools in ipumsr are in active development, and some
-functionality may not yet be stable. Additionally, the IPUMS extract API
-for microdata collections is still in beta testing. Users will need to
+functionality may not yet be stable. Additionally, the IPUMS API for
+microdata collections is still in beta testing. Users will need to
 request beta access for these collections by emailing
 [ipums+api\@umn.edu](mailto:ipums+api@umn.edu){.email}.
 
@@ -240,7 +239,7 @@ define_extract_nhgis(
 ```
 
 To specify unique values for a subfield for each dataset, use a named
-`list` instead of a vector in the subfield argument. This allows you to
+list instead of a vector in the subfield argument. This allows you to
 explicitly indicate which dataset should be associated with which
 subfield values:
 
@@ -264,9 +263,9 @@ See `?define_extract_nhgis` for more information.
 ### Extract request objects
 
 `define_extract_` functions always produce an object that inherits from
-the `ipums_extract` class, which can be handled by other extract API
-functions (see `?ipums_extract`). Furthermore, these objects will have a
-subclass for the particular collection with which they are associated.
+the `ipums_extract` class, which can be handled by other API functions
+(see `?ipums_extract`). Furthermore, these objects will have a subclass
+for the particular collection with which they are associated.
 
 ```{r}
 class(usa_extract_definition)
@@ -325,8 +324,8 @@ specific data source.
 
 To explore summary metadata, use the `type` argument. This produces a
 `tibble` of information about each available data source and is best
-used to determine' the name used by the extract API to reference a data
-source of interest.
+used to determine the name used by the API to reference a data source of
+interest.
 
 ```{r}
 get_nhgis_metadata(type = "time_series_tables") %>%
@@ -577,11 +576,11 @@ IPUMS data into R.
 
 ## Share an extract definition {#share}
 
-One exciting feature enabled by the IPUMS extract API is the ability to
-share a standardized extract definition with other IPUMS users so that
-they can create an identical extract request themselves (recall that
-IPUMS data cannot be redistributed themselves, but the definition to
-reproduce them can).
+One exciting feature enabled by the IPUMS API is the ability to share a
+standardized extract definition with other IPUMS users so that they can
+create an identical extract request themselves (recall that IPUMS data
+cannot be redistributed themselves, but the definition to reproduce them
+can).
 
 ipumsr facilitates this with `save_extract_as_json()` and
 `define_extract_from_json()`, which read and write `ipums_extract`
@@ -594,7 +593,7 @@ save_extract_as_json(cps_extract_10, file = "cps_extract_10.json")
 
 At this point, you can send `cps_extract_10.json` to another user to
 allow them to create a duplicate `ipums_extract` object, which they can
-load and submit to the extract API themselves.
+load and submit to the API themselves.
 
 ```{r, eval=FALSE}
 clone_of_cps_extract_10 <- define_extract_from_json("cps_extract_10.json")
@@ -696,9 +695,9 @@ remove_from_extract(nhgis_extract_definition, geog_levels = "state")
 ```
 
 To selectively modify subfields from particular datasets or time series
-tables, pass a `list` to the argument instead of a vector. This allows
-you to indicate which parent field should have the subfield modified.
-This is analogous to the syntax that can be used when defining an NHGIS
+tables, pass a list to the argument instead of a vector. This allows you
+to indicate which parent field should have the subfield modified. This
+is analogous to the syntax that can be used when defining an NHGIS
 extract request.
 
 ```{r}

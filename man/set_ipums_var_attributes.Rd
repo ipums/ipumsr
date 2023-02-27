@@ -18,8 +18,7 @@ variable information. Variable information can be obtained by calling
 \code{ipums_var_info()} on an \code{ipums_ddi} object.}
 
 \item{var_attrs}{Variable attributes from the DDI to add to the columns of
-the output data. Defaults to all available attributes (\code{"val_labels"},
-\code{"var_label"}, and \code{"var_desc"}).}
+the output data. Defaults to all available attributes.}
 }
 \value{
 \code{data}, with variable attributes attached

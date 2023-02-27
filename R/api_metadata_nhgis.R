@@ -8,21 +8,21 @@
 #' List available data sources from IPUMS NHGIS
 #'
 #' @description
-#' Retrieve information about available NHGIS datasets, data tables, time
-#' series tables, and shapefiles.
+#' Retrieve information about available NHGIS data sources, including
+#' [datasets](https://www.nhgis.org/overview-nhgis-datasets),
+#' data tables (summary tables),
+#' [time series tables](https://www.nhgis.org/time-series-tables),
+#' and [shapefiles](https://www.nhgis.org/gis-files) (GIS files).
 #'
 #' To retrieve summary metadata for all available data sources of a particular
 #' type, use the `type` argument. To retrieve detailed metadata for a
 #' single data source, use the `dataset`, `data_table`, or `time_series_table`
-#' arguments.
+#' arguments. See the *metadata availability* section below for information on
+#' the metadata provided for each data type.
 #'
-#' See the *metadata availability* section below for more information on the
-#' metadata provided for each data type.
-#'
-#' More information about NHGIS can be found at the following links:
-#' - [NHGIS data](https://www.nhgis.org/data-availability)
-#' - [NHGIS FAQ](https://www.nhgis.org/frequently-asked-questions-faq)
-#' - [NHGIS API](https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/)
+#' For general information, see the NHGIS
+#' [data source overview](https://www.nhgis.org/data-availability) and the
+#' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -119,8 +119,8 @@
 #'
 #' @inheritParams submit_extract
 #' @param type One of `"datasets"`, `"time_series_tables"`, or `"shapefiles"`
-#'   indicating the type of summary metadata to retrieve. Leave `NULL` to
-#'   request metadata for a single `dataset`, `data_table`, or
+#'   indicating the type of summary metadata to retrieve. Leave `NULL` if
+#'   requesting metadata for a single `dataset`, `data_table`, or
 #'   `time_series_table`.
 #' @param dataset Name of an individual dataset for which to retrieve metadata.
 #' @param data_table Name of an individual data table for which to retrieve
@@ -135,8 +135,9 @@
 #'   a regular expression that is matched to the values in the metadata column
 #'   with the same name as the argument name. Only metadata records
 #'   whose values match the provided expressions will be included in the output.
+#'   See examples.
 #'
-#'   Only used when `type` is provided. See examples.
+#'   Only used when `type` is provided.
 #' @param match_all If `TRUE`, only metadata records that match all of the
 #'   expressions provided in `...` will be included in the output. If `FALSE`,
 #'   metadata records that match any of the expressions will be included.

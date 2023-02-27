@@ -31,7 +31,7 @@
 #'   position. This must uniquely identify a file.
 #' @param var_attrs Variable attributes to add from the codebook (.txt) file
 #'   included in the extract. Defaults to
-#'   all available attributes (`"val_labels"`, `"var_label"`, and `"var_desc"`).
+#'   all available attributes.
 #'
 #'   If the codebook is not found, data will be loaded with no variable
 #'   attributes.
@@ -41,7 +41,7 @@
 #'   header row that is included in some NHGIS .csv files. Otherwise, the
 #'   additional header will appear in the first row of the output data frame.
 #'
-#'   The header contains the same information that is
+#'   The header contains similar information to that
 #'   included in the `"label"` attribute of each data column (if `var_attrs`
 #'   includes `"var_label"`), and is therefore not usually needed.
 #' @param do_file For fixed-width files, path to the .do file associated with

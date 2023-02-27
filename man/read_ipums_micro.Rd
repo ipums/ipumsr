@@ -52,9 +52,8 @@ its location here.}
 to the console.}
 
 \item{var_attrs}{Variable attributes from the DDI to add to the columns of
-the output data. Defaults to all available attributes (\code{"val_labels"},
-\code{"var_label"}, and \code{"var_desc"}). See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}}
-for more details.}
+the output data. Defaults to all available attributes.
+See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 
 \item{lower_vars}{If reading a DDI from a file,
 a logical indicating whether to convert variable names to lowercase.
@@ -133,12 +132,12 @@ separate path to the data file with the \code{data_file} argument.
 
 If using the IPUMS extract interface:
 \itemize{
-\item Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
-column of the interface.
-\item Download the DDI codebook by right clicking on the "DDI" link in the
-"CODEBOOK" column of the extract interface and selecting "Save as..."
-(on Safari, you may have to select "Download Linked File"). Be sure that
-the codebook is downloaded in .xml format.
+\item Download the data file by clicking \strong{Download .dat} under
+\strong{Download Data}.
+\item Download the DDI codebook by right clicking on the \strong{DDI} link in the
+\strong{Codebook} column of the extract interface and selecting \strong{Save as...}
+(on Safari, you may have to select \strong{Download Linked File as...}).
+Be sure that the codebook is downloaded in .xml format.
 }
 
 If using the IPUMS API:

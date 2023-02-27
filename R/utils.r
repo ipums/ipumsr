@@ -169,8 +169,7 @@ find_files_in <- function(file,
 #'   variable information. Variable information can be obtained by calling
 #'   `ipums_var_info()` on an `ipums_ddi` object.
 #' @param var_attrs Variable attributes from the DDI to add to the columns of
-#'   the output data. Defaults to all available attributes (`"val_labels"`,
-#'   `"var_label"`, and `"var_desc"`).
+#'   the output data. Defaults to all available attributes.
 #'
 #' @return `data`, with variable attributes attached
 #'
@@ -305,7 +304,7 @@ set_single_var_attributes <- function(x, val_labels, var_label, var_desc) {
 #'   object stored in a database).
 #' @param ddi An [ipums_ddi] object created with [read_ipums_ddi()].
 #' @param var_attrs  Variable attributes to add to the output. Defaults to
-#'   all available attributes (`"val_labels"`, `"var_label"` and `"var_desc"`).
+#'   all available attributes.
 #'   See [set_ipums_var_attributes()] for more details.
 #'
 #' @return A local [`tibble`][tibble::tbl_df-class] with the requested

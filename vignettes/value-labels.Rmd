@@ -1,9 +1,9 @@
 ---
-title: "Value labels in IPUMS data"
+title: "Value Labels in IPUMS data"
 author: "Minnesota Population Center"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Value labels in IPUMS data}
+  %\VignetteIndexEntry{Value Labels in IPUMS data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -34,8 +34,7 @@ IPUMS data comes with 3 primary types of variable-level metadata:
     variable's value labels.
 
 The rest of this article will focus on value labels; for more about
-variable labels and descriptions, see
-`vignette("ipums", package = "ipumsr")`.
+variable labels and descriptions, see `vignette("ipums")`.
 
 ## Value labels
 

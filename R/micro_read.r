@@ -56,12 +56,12 @@
 #' separate path to the data file with the `data_file` argument.
 #'
 #' If using the IPUMS extract interface:
-#' - Download the data file by clicking "DOWNLOAD .DAT" in the "DOWNLOAD DATA"
-#'   column of the interface.
-#' - Download the DDI codebook by right clicking on the "DDI" link in the
-#'   "CODEBOOK" column of the extract interface and selecting "Save as..."
-#'   (on Safari, you may have to select "Download Linked File"). Be sure that
-#'   the codebook is downloaded in .xml format.
+#' - Download the data file by clicking **Download .dat** under
+#'   **Download Data**.
+#' - Download the DDI codebook by right clicking on the **DDI** link in the
+#'   **Codebook** column of the extract interface and selecting **Save as...**
+#'   (on Safari, you may have to select **Download Linked File as...**).
+#'   Be sure that the codebook is downloaded in .xml format.
 #'
 #' If using the IPUMS API:
 #' - For supported collections, use [download_extract()] to download a completed
@@ -90,9 +90,8 @@
 #' @param verbose Logical indicating whether to print progress information
 #'   to the console.
 #' @param var_attrs Variable attributes from the DDI to add to the columns of
-#'   the output data. Defaults to all available attributes (`"val_labels"`,
-#'   `"var_label"`, and `"var_desc"`). See [set_ipums_var_attributes()]
-#'   for more details.
+#'   the output data. Defaults to all available attributes.
+#'   See [set_ipums_var_attributes()] for more details.
 #' @param lower_vars If reading a DDI from a file,
 #'   a logical indicating whether to convert variable names to lowercase.
 #'   Defaults to `FALSE` for consistency with IPUMS conventions.

@@ -36,8 +36,9 @@ In general, for a given collection, the arguments to \code{add_to_extract()}
 are identical to those used when defining an extract for that collection. For
 more information about defining an extract, click \link[=define_extract]{here}.
 
-To remove existing values from an extract definition, see
-\code{\link[=remove_from_extract]{remove_from_extract()}}.
+To remove existing values from an extract definition,use
+\code{\link[=remove_from_extract]{remove_from_extract()}}. To add values
+contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }

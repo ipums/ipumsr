@@ -45,7 +45,7 @@ the extract definition.
 }
 \description{
 Define an IPUMS USA extract request to be submitted via the IPUMS
-extract API. An extract request contains the specifications required
+API. An extract request contains the specifications required
 to identify and obtain a particular set of data from the IPUMS USA system.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
@@ -71,6 +71,8 @@ process and manage an extract request.
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
 
-\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+\code{\link[=add_to_extract.usa_extract]{add_to_extract()}},
+\code{\link[=remove_from_extract.usa_extract]{remove_from_extract()}}, and
+\code{\link[=combine_extracts]{combine_extracts()}} to
 revise an extract definition.
 }

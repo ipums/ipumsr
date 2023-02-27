@@ -44,6 +44,8 @@ save_extract_as_json(my_extract, file = extract_json_path)
 copy_of_my_extract <- define_extract_from_json(extract_json_path)
 
 identical(my_extract, copy_of_my_extract)
+
+file.remove(extract_json_path)
 }
 \seealso{
 \code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}

@@ -84,34 +84,30 @@ data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
 
 shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
 
-if (require(sf)) {
+sf_data <- read_ipums_sf(shape_ex1)
 
-  sf_data <- read_ipums_sf(shape_ex1)
+sf_data
 
-  sf_data
+# Shapefiles are provided in .zip archives that may contain multiple
+# files. Select a single file with `file_select`:
+read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
 
-  # Shapefiles are provided in .zip archives that may contain multiple
-  # files. Select a single file with `file_select`:
-  read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
+# Or row-bind files with `bind_multiple`
+# (Useful for files of the same geographic level that cover different
+# extents)
+read_ipums_sf(
+  shape_ex2,
+  file_select = matches("us_pmsa"),
+  bind_multiple = TRUE
+)
 
-  # Or row-bind files with `bind_multiple`
-  # (Useful for files of the same geographic level that cover different
-  # extents)
-  read_ipums_sf(
-    shape_ex2,
-    file_select = matches("us_pmsa"),
-    bind_multiple = TRUE
-  )
-
-  # To combine spatial data with tabular data without losing the attributes
-  # included in the tabular data, use an ipums shape join:
-  ipums_shape_full_join(
-    data_ex1,
-    sf_data,
-    by = "GISJOIN"
-  )
-
-}
+# To combine spatial data with tabular data without losing the attributes
+# included in the tabular data, use an ipums shape join:
+ipums_shape_full_join(
+  data_ex1,
+  sf_data,
+  by = "GISJOIN"
+)
 }
 \seealso{
 \code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from

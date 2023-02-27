@@ -24,7 +24,7 @@ Remove values for specific fields in an existing \code{ipums_extract}
 object. This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To remove from an \strong{IPUMS USA} extract definition, click '
+\item To remove from an \strong{IPUMS USA} extract definition, click
 \link[=remove_from_extract.usa_extract]{here}
 \item To remove from an \strong{IPUMS CPS} extract definition, click
 \link[=remove_from_extract.cps_extract]{here}

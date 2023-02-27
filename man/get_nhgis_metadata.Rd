@@ -17,8 +17,8 @@ get_nhgis_metadata(
 }
 \arguments{
 \item{type}{One of \code{"datasets"}, \code{"time_series_tables"}, or \code{"shapefiles"}
-indicating the type of summary metadata to retrieve. Leave \code{NULL} to
-request metadata for a single \code{dataset}, \code{data_table}, or
+indicating the type of summary metadata to retrieve. Leave \code{NULL} if
+requesting metadata for a single \code{dataset}, \code{data_table}, or
 \code{time_series_table}.}
 
 \item{dataset}{Name of an individual dataset for which to retrieve metadata.}
@@ -37,8 +37,9 @@ character vector. Each string in the vector is interpreted as
 a regular expression that is matched to the values in the metadata column
 with the same name as the argument name. Only metadata records
 whose values match the provided expressions will be included in the output.
+See examples.
 
-Only used when \code{type} is provided. See examples.}
+Only used when \code{type} is provided.}
 
 \item{match_all}{If \code{TRUE}, only metadata records that match all of the
 expressions provided in \code{...} will be included in the output. If \code{FALSE},
@@ -49,7 +50,8 @@ Defaults to \code{TRUE}.}
 the expressions provided in \code{...}. Defaults to \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 If \code{type} is provided, a \code{\link[tibble:tbl_df-class]{tibble}} of
@@ -58,23 +60,21 @@ Otherwise, a named list of metadata for the specified \code{dataset},
 \code{data_table}, or \code{time_series_table}.
 }
 \description{
-Retrieve information about available NHGIS datasets, data tables, time
-series tables, and shapefiles.
+Retrieve information about available NHGIS data sources, including
+\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets},
+data tables (summary tables),
+\href{https://www.nhgis.org/time-series-tables}{time series tables},
+and \href{https://www.nhgis.org/gis-files}{shapefiles} (GIS files).
 
 To retrieve summary metadata for all available data sources of a particular
 type, use the \code{type} argument. To retrieve detailed metadata for a
 single data source, use the \code{dataset}, \code{data_table}, or \code{time_series_table}
-arguments.
+arguments. See the \emph{metadata availability} section below for information on
+the metadata provided for each data type.
 
-See the \emph{metadata availability} section below for more information on the
-metadata provided for each data type.
-
-More information about NHGIS can be found at the following links:
-\itemize{
-\item \href{https://www.nhgis.org/data-availability}{NHGIS data}
-\item \href{https://www.nhgis.org/frequently-asked-questions-faq}{NHGIS FAQ}
-\item \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{NHGIS API}
-}
+For general information, see the NHGIS
+\href{https://www.nhgis.org/data-availability}{data source overview} and the
+\href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }

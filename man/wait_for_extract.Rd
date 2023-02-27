@@ -20,8 +20,8 @@ wait_for_extract(
 \item The data collection and extract number formatted as a string of the
 form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for your default IPUMS collection. See
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
 Extract numbers do not need to be zero-padded. That is, use \code{1}, not
@@ -48,7 +48,8 @@ beginning of each wait interval and upon extract completion.
 Defaults to \code{TRUE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the

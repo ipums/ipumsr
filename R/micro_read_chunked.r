@@ -160,30 +160,26 @@
 #'
 #' # Using the biglm package, you can even run a regression without storing
 #' # the full dataset in memory
-#' if (require(biglm)) {
+#' lm_results <- read_ipums_micro_chunked(
+#'   ipums_example("cps_00015.xml"),
+#'   IpumsBiglmCallback$new(
+#'     INCTOT ~ AGE + HEALTH, # Model formula
+#'     function(x, pos) {
+#'       x %>%
+#'       mutate(
+#'         INCTOT = lbl_na_if(
+#'           INCTOT,
+#'           ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'         ),
+#'         HEALTH = as_factor(HEALTH)
+#'       )
+#'     }
+#'   ),
+#'   chunk_size = 1000,
+#'   verbose = FALSE
+#' )
 #'
-#'   lm_results <- read_ipums_micro_chunked(
-#'     ipums_example("cps_00015.xml"),
-#'     IpumsBiglmCallback$new(
-#'       INCTOT ~ AGE + HEALTH, # Model formula
-#'       function(x, pos) {
-#'         x %>%
-#'         mutate(
-#'           INCTOT = lbl_na_if(
-#'             INCTOT,
-#'             ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
-#'           ),
-#'           HEALTH = as_factor(HEALTH)
-#'         )
-#'       }
-#'     ),
-#'     chunk_size = 1000,
-#'     verbose = FALSE
-#'   )
-#'
-#'   summary(lm_results)
-#'
-#' }
+#' summary(lm_results)
 read_ipums_micro_chunked <- function(
   ddi,
   callback,

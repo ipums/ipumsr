@@ -12,7 +12,7 @@
 #' @description
 #' The `ipums_extract` class provides a data structure for storing the
 #' definition and status of a submitted or unsubmitted IPUMS data extract
-#' request for the purpose of interacting with the IPUMS extract API.
+#' request for the purpose of interacting with the IPUMS API.
 #'
 #' `ipums_extract` is a superclass encompassing all of the collection-specific
 #' extract classes. Currently supported collections are:
@@ -43,12 +43,10 @@
 #'   `define_extract_{collection}`
 #' * Use [get_extract_info()] to retrieve information about previously-submitted
 #'   extract requests
-#' * Create an `ipums_extract` object from a JSON-formatted definition with
-#'   [define_extract_from_json()]
 #'
 #' @section Submitting an extract:
 #' * Use [submit_extract()] to submit an extract request for processing through
-#'   the IPUMS extract API
+#'   the IPUMS API
 #' * [wait_for_extract()] will periodically check the status of a submitted
 #'   extract request until it is ready to download
 #' * Use [is_extract_ready()] to manually check whether a submitted extract
@@ -66,6 +64,8 @@
 #'
 #' @section Saving an extract:
 #' * Save an extract to a JSON-formatted file with [save_extract_as_json()]
+#' * Create an `ipums_extract` object from a saved JSON-formatted definition
+#'   with [define_extract_from_json()]
 #'
 #' @name ipums_extract-class
 #' @aliases ipums_extract
@@ -77,7 +77,8 @@ NULL
 #'
 #' @description
 #' Specify the parameters for a new IPUMS extract request object to be
-#' submitted via the IPUMS extract API.
+#' submitted via the IPUMS API. An extract request contains the specifications
+#' required to obtain a particular set of data from an IPUMS collection.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -85,9 +86,9 @@ NULL
 #' Currently, ipumsr supports extract definitions for the following
 #' collections:
 #'
-#' - **IPUMS NHGIS**: [define_extract_nhgis()]
 #' - **IPUMS USA**: [define_extract_usa()]
 #' - **IPUMS CPS**: [define_extract_cps()]
+#' - **IPUMS NHGIS**: [define_extract_nhgis()]
 #'
 #' @section Value:
 #' These functions produce an [`ipums_extract`][ipums_extract-class] object
@@ -106,7 +107,7 @@ NULL
 #'
 #' @description
 #' Define an IPUMS USA extract request to be submitted via the IPUMS
-#' extract API. An extract request contains the specifications required
+#' API. An extract request contains the specifications required
 #' to identify and obtain a particular set of data from the IPUMS USA system.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -141,7 +142,9 @@ NULL
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [`add_to_extract()`][add_to_extract.usa_extract()],
+#' [`remove_from_extract()`][remove_from_extract.usa_extract()], and
+#' [combine_extracts()] to
 #'   revise an extract definition.
 #'
 #' @export
@@ -210,7 +213,7 @@ define_extract_usa <- function(description,
 #'
 #' @description
 #' Define an IPUMS CPS extract request to be submitted via the IPUMS
-#' extract API. An extract request contains the specifications required
+#' API. An extract request contains the specifications required
 #' to identify and obtain a particular set of data from the IPUMS CPS system.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -223,7 +226,17 @@ define_extract_usa <- function(description,
 #' @return An object of class [`cps_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
-#' @inherit define_extract_usa seealso
+#' @seealso
+#' [submit_extract()], [download_extract()], and [get_extract_info()] to
+#'   process and manage an extract request.
+#'
+#' [save_extract_as_json()] and [define_extract_from_json()] to share an
+#'   extract definition.
+#'
+#' [`add_to_extract()`][add_to_extract.cps_extract()],
+#' [`remove_from_extract()`][remove_from_extract.cps_extract()], and
+#' [combine_extracts()] to
+#'   revise an extract definition.
 #'
 #' @export
 #'
@@ -291,19 +304,18 @@ define_extract_cps <- function(description,
 #'
 #' @description
 #' Define an IPUMS NHGIS request to be submitted via the IPUMS
-#' extract API. An extract request contains the specifications required
-#' to identify and obtain a particular set of data from the IPUMS NHGIS system.
+#' API. An extract request contains the specifications required
+#' to obtain a particular set of data from the IPUMS NHGIS system.
 #'
-#' See details for more information about creating valid IPUMS NHGIS extract
-#' definitions. Codes for particular data sources can be found using
-#' [get_nhgis_metadata()].
+#' Use [get_nhgis_metadata()] to browse and identify data sources for use
+#' in NHGIS extract definitions.
+#'
+#' See details for information about creating valid extract
+#' definitions. For general information, see the NHGIS
+#' [data source overview](https://www.nhgis.org/data-availability) and the
+#' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' More information about IPUMS NHGIS can be found at the following links:
-#' - [NHGIS data](https://www.nhgis.org/data-availability)
-#' - [NHGIS FAQ](https://www.nhgis.org/frequently-asked-questions-faq)
-#' - [NHGIS API](https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/)
 #'
 #' @details
 #' An NHGIS extract definition must include at least one dataset, time series
@@ -327,86 +339,89 @@ define_extract_cps <- function(description,
 #' - `geog_levels`
 #'
 #' To apply the values of these arguments to *all* of the `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a vector.
+#' `time_series_tables` in the extract definition, pass the values as a vector:
+#'
+#' ```{r}
+#' define_extract_nhgis(
+#'   datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
+#'   data_tables = "B01001",
+#'   geog_levels = c("county", "state")
+#' )
+#' ```
 #'
 #' To apply the values of these arguments to *specific* `datasets` and/or
 #' `time_series_tables` in the extract definition, pass the values as a named
 #' list. In this case, names should correspond to the `datasets` and/or
 #' `time_series_tables` and their associated values will only be applied to
-#' the indicated dataset or time series table.
+#' the indicated dataset or time series table:
+#'
+#' ```{r}
+#' define_extract_nhgis(
+#'   datasets = "2016_2020_ACS5a",
+#'   data_tables = "B01001",
+#'   time_series_tables = "A00",
+#'   geog_levels = list(
+#'     "2016_2020_ACS5a" = "county",
+#'     "A00" = "state"
+#'   )
+#' )
+#' ```
 #'
 #' Note that while it is possible to match elements to `datasets` and/or
 #' `time_series_tables` by index by providing an unnamed list, we recommend
 #' using names to explicitly specify the values that should be applied to each
 #' of the request's `datasets` and `time_series_tables`.
 #'
-#' Alternatively, extract definitions for individual datasets and
-#' time series tables can be combined using [combine_extracts()].
+#' Alternatively, you can create multiple extract definitions and combine
+#' them with [combine_extracts()].
 #'
 #' @param description Description of the extract.
-#' @param datasets Vector of
-#'   [datasets](https://www.nhgis.org/overview-nhgis-datasets) to include in
-#'   the extract request.
-#' @param data_tables Summary tables to retrieve for each of the requested
-#'   `datasets`.
-#'
-#'   If a vector, values are applied to all `datasets` in the
-#'   extract definition. If a named list, values are applied
-#'   to the `datasets` indicated by name in the list. See details.
-#'
-#'   Required if an extract definition includes any `datasets`.
-#' @param time_series_tables Vector of
-#'   [time series tables](https://www.nhgis.org/time-series-tables)
+#' @param datasets [Datasets](https://www.nhgis.org/overview-nhgis-datasets)
 #'   to include in the extract request.
-#' @param geog_levels Geographic levels (for example, `"county"` or `"state"`)
+#' @param data_tables Summary tables to retrieve for each of the requested
+#'   `datasets`. Required for all `datasets` in the extract definition.
+#'
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
+#' @param time_series_tables
+#'   [Time series tables](https://www.nhgis.org/time-series-tables)
+#'   to include in the extract request.
+#' @param geog_levels Geographic levels (e.g. `"county"` or `"state"`)
 #'   at which to obtain data for the requested `datasets` or
-#'   `time_series_tables`.
+#'   `time_series_tables`. Required for all `datasets` and `time_series_tables`
+#'   in the extract definition.
 #'
-#'   If a vector, values are applied to all `datasets` and `time_series_tables`
-#'   in the extract definition. If a named list, values are applied
-#'   to the `datasets` and/or `time_series_tables` indicated by name in the
-#'   list. See details.
-#'
-#'   Required if an extract definition includes any `datasets` or
-#'   `time_series_tables`.
+#'   See details for syntax options when an extract
+#'   definition has multiple `datasets` and/or `time_series_tables`.
 #' @param years Years for which to obtain the data contained in the requested
 #'   `datasets`. Use `"*"` to select all available years for a given dataset.
-#'
-#'   If a vector, values are applied to all `datasets`
-#'   in the extract definition. If a named list, values are applied
-#'   to the `datasets` indicated by name in the list. See details.
-#'
 #'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
-#' @param breakdown_values [breakdown
+#'
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
+#' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to apply to the requested `data_tables`.
+#'   to apply to the requested `datasets`.
 #'
-#'   If a vector, values are applied to all `datasets`
-#'   in the extract definition. If a named list, values are applied
-#'   to the `datasets` indicated by name in the list. See details.
-#'
-#'   If more than one breakdown value is requested,
-#'   `breakdown_and_data_type_layout` must also be specified.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
 #' @param geographic_extents Vector of geographic extents to use for
 #'   all of the `datasets` in the extract definition (for instance, to obtain
 #'   data within a particular state). Use `"*"` to select all available extents.
 #'
 #'   Required when the extract definition includes any `geog_levels` that
 #'   require extent selection. See [get_nhgis_metadata()] to determine if a
-#'   geographic level requires extent selection.
-#'
-#'   Currently, the NHGIS supports extent selection only for blocks and block
-#'   groups.
-#' @param shapefiles Vector of
-#'   [shapefiles](https://www.nhgis.org/gis-files) to include in the extract
-#'   request.
+#'   geographic level requires extent selection. At the time of writing, NHGIS
+#'   supports extent selection only for blocks and block groups.
+#' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to include
+#'   in the extract request.
 #' @param breakdown_and_data_type_layout The desired layout
 #'   of any `datasets` that have multiple data types or breakdown values.
 #'
 #'   - `"single_file"` (default) keeps all data types and breakdown values in
-#'   one file.
+#'   one file
 #'   - `"separate_files"` splits each data type or breakdown value into its
-#'   own file.
+#'   own file
 #'
 #'   Required if any `datasets` included in the extract definition consist of
 #'   multiple data types (for instance, estimates and margins of error) or have
@@ -415,8 +430,9 @@ define_extract_cps <- function(description,
 #' @param tst_layout The desired layout of all `time_series_tables` included in
 #'   the extract definition. One of:
 #'
-#'   - `"time_by_column_layout"` (wide format, default): rows correspond to geographic
-#'     units, columns correspond to different times in the time series
+#'   - `"time_by_column_layout"` (wide format, default): rows correspond to
+#'     geographic units, columns correspond to different times in the time
+#'     series
 #'   - `"time_by_row_layout"` (long format): rows correspond to a single
 #'     geographic unit at a single point in time
 #'   - `"time_by_file_layout"`: data for different times are provided in
@@ -426,10 +442,11 @@ define_extract_cps <- function(description,
 #' @param data_format The desired format of the extract data file. One of:
 #'
 #'   - `"csv_no_header"` (default) includes only a minimal header in the first
-#'     row.
-#'   - `"csv_header"` includes a second, more descriptive header row. Note that
-#'     this header is removed by default when reading data with [read_nhgis()].
-#'   - `"fixed_width"` provides data in a fixed width format.
+#'     row
+#'   - `"csv_header"` includes a second, more descriptive header row.
+#'     (By default this header is removed when reading data with [read_nhgis()],
+#'     but it can be retained.)
+#'   - `"fixed_width"` provides data in a fixed width format
 #'
 #'   Required when an extract definition includes any `datasets` or
 #'   `time_series_tables`.
@@ -437,7 +454,19 @@ define_extract_cps <- function(description,
 #' @return An object of class [`nhgis_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
-#' @inherit define_extract_usa seealso
+#' @seealso
+#' [get_nhgis_metadata()] to find data to include in an extract definition.
+#'
+#' [submit_extract()], [download_extract()], and [get_extract_info()] to
+#'   process and manage an extract request.
+#'
+#' [save_extract_as_json()] and [define_extract_from_json()] to share an
+#'   extract definition.
+#'
+#' [`add_to_extract()`][add_to_extract.nhgis_extract()],
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] and
+#' [combine_extracts()] to
+#'   revise an extract definition.
 #'
 #' @export
 #'
@@ -623,6 +652,8 @@ define_extract_nhgis <- function(description = "",
 #' copy_of_my_extract <- define_extract_from_json(extract_json_path)
 #'
 #' identical(my_extract, copy_of_my_extract)
+#'
+#' file.remove(extract_json_path)
 define_extract_from_json <- function(extract_json) {
 
   collection <- jsonlite::fromJSON(extract_json)$collection
@@ -689,9 +720,9 @@ save_extract_as_json <- function(extract, file) {
 #' Submit an extract request via the IPUMS API
 #'
 #' @description
-#' Given an [`ipums_extract`][ipums_extract-class] object, submit an extract
-#' request via the IPUMS API and return a modified copy of the extract object
-#' with the newly-assigned extract request number.
+#' Submit an extract request via the IPUMS API and return an [ipums_extract]
+#' object containing the extract definition with a newly-assigned extract
+#' request number.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -702,10 +733,11 @@ save_extract_as_json <- function(extract, file) {
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
-#'   * The extract number for your default IPUMS collection. See
-#'     [set_ipums_default_collection()]
+#'   * An extract number to be associated with your default IPUMS
+#'     collection. See [set_ipums_default_collection()]
 #' @param api_key API key associated with your user account. Defaults to the
-#'   value of environment variable `"IPUMS_API_KEY"`. See [set_ipums_api_key()].
+#'   value of the `IPUMS_API_KEY` environment variable. See
+#'   [set_ipums_api_key()].
 #'
 #' @seealso
 #' [download_extract()] to download an extract.
@@ -781,7 +813,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Get information about previous extract requests
 #'
 #' @description
-#' Retrieve the specifications of your previously submitted extract requests.
+#' Retrieve the definitions of your previously submitted extract requests.
 #'
 #' If a specific extract number is indicated, retrieve the most recent
 #' status of that extract request. If a collection is indicated, retrieve the
@@ -794,12 +826,13 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' @param extract One of:
 #'   * An [`ipums_extract`][ipums_extract-class] object
-#'   * An IPUMS collection with API support
+#'   * An IPUMS collection with API support (omit to use your default
+#'     collection)
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
-#'   * The extract number for your default IPUMS collection. See
-#'     [set_ipums_default_collection()]
+#'   * An extract number to be associated with your default IPUMS
+#'     collection. See [set_ipums_default_collection()]
 #'
 #'   Extract numbers do not need to be zero-padded. That is, use `1`, not
 #'   `"0001"`.
@@ -952,8 +985,8 @@ get_extract_info <- function(extract = NULL,
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
-#'   * The extract number for your default IPUMS collection. See
-#'     [set_ipums_default_collection()]
+#'   * An extract number to be associated with your default IPUMS
+#'     collection. See [set_ipums_default_collection()]
 #'
 #'   Extract numbers do not need to be zero-padded. That is, use `1`, not
 #'   `"0001"`.
@@ -1358,8 +1391,9 @@ download_extract <- function(extract,
 #' are identical to those used when defining an extract for that collection. For
 #' more information about defining an extract, click [here][define_extract].
 #'
-#' To remove existing values from an extract definition, see
-#' [remove_from_extract()].
+#' To remove existing values from an extract definition,use
+#' [remove_from_extract()]. To add values
+#' contained in another extract definition, use [combine_extracts()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -1427,8 +1461,9 @@ add_to_extract <- function(extract, ...) {
 #' for fields that take a single value, such as `description` and `data_format`,
 #' will replace the existing value with the supplied value.
 #'
-#' To remove existing values from an IPUMS USA extract definition, see
-#' [`remove_from_extract()`][remove_from_extract.usa_extract].
+#' To remove existing values from an IPUMS USA extract definition, use
+#' [`remove_from_extract()`][remove_from_extract.usa_extract]. To add values
+#' contained in another extract definition, use [combine_extracts()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -1508,8 +1543,9 @@ add_to_extract.usa_extract <- function(extract,
 #' for fields that take a single value, such as `description` and `data_format`,
 #' will replace the existing value with the supplied value.
 #'
-#' To remove existing values from an IPUMS CPS extract definition, see
-#' [`remove_from_extract()`][remove_from_extract.cps_extract].
+#' To remove existing values from an IPUMS CPS extract definition, use
+#' [`remove_from_extract()`][remove_from_extract.cps_extract]. To add values
+#' contained in another extract definition, use [combine_extracts()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -1565,49 +1601,60 @@ add_to_extract.cps_extract <- function(extract,
 #' Add values to an existing IPUMS NHGIS extract definition
 #'
 #' @description
-#' Add new values or replace existing values in an IPUMS NHGIS extract
-#' definition. All fields are optional, and if omitted, will be unchanged.
+#' Add new values to an IPUMS NHGIS extract definition.
+#' All fields are optional, and if omitted, will be unchanged.
 #' Supplying a value for fields that take a single value, such as
 #' `description` and `data_format`, will replace the existing value with
 #' the supplied value.
-#'
-#' To remove existing values from an IPUMS NHGIS extract definition, see
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract].
 #'
 #' In general, adding to an extract follows the same syntax conventions as used
 #' in [define_extract_nhgis()]. See details for more
 #' information on how values passed to dataset and time series table subfields
 #' are interpreted.
 #'
-#' To combine multiple extract definitions, use [combine_extracts()].
+#' To remove existing values from an IPUMS NHGIS extract definition, use
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract]. To add values
+#' contained in another extract definition, use [combine_extracts()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
+#' For extract definitions that include any `datasets`,
+#' corresponding `data_tables` and `geog_levels` must be specified. For
+#' extract definitions that include any `time_series_tables`, corresponding
+#' `geog_levels` must be specified.
+#'
 #' NHGIS extract definitions may contain multiple `datasets` or
 #' `time_series_tables.` Each dataset or time series table is associated with
 #' several subfields that apply only to that particular dataset or time series
 #' table.
 #'
-#' The following arguments are added to the requested `datasets`:
+#' The following arguments are applied to an extract definition's `datasets`:
 #' - `data_tables`
 #' - `years`
 #' - `breakdown_values`
 #'
-#' The following arguments are added to the requested `datasets` *and*
-#' `time_series_tables`:
+#' The following arguments are applied to an extract definition's `datasets`
+#' *and* `time_series_tables`:
 #' - `geog_levels`
 #'
-#' To add the values of these arguments to *all* of the `datasets` and/or
-#' `time_series_tables` provided to `add_to_extract()` (ignoring those that
-#' already exist in the extract definition), pass the values as a vector.
+#' To add the values of these arguments to *multiple* `datasets` and/or
+#' `time_series_tables` in the extract definition, pass the values as a vector.
+#' In this case, if any values are
+#' provided in the `datasets` or `time_series_tables` arguments, subfield values
+#' will only be applied to those `datasets` and/or `time_series_tables`.
+#' Otherwise, they will be applied to all `datasets` and/or
+#' `time_series_tables` that exist in the extract definition.
 #'
 #' To add the values of these arguments to *specific* `datasets` and/or
-#' `time_series_tables` in the extract definition (whether newly-added or
-#' preexisting), pass the values as a named
+#' `time_series_tables` in the extract definition, pass the values as a named
 #' list. In this case, names should correspond to the `datasets` and/or
 #' `time_series_tables` and their associated values will only be added to
-#' the indicated dataset or time series table.
+#' the indicated dataset or time series table. Values can be added for new
+#' `datasets` and `time_series_tables` or those that already exist in the
+#' extract definition.
+#'
+#' See examples for demonstrations of this syntax.
 #'
 #' Note that while it is possible to match elements to `datasets` and/or
 #' `time_series_tables` by index by providing an unnamed list, we recommend
@@ -1625,74 +1672,38 @@ add_to_extract.cps_extract <- function(extract,
 #'
 #' @inheritParams define_extract_nhgis
 #' @inheritParams add_to_extract
-#' @param datasets Vector of
-#'   [datasets](https://www.nhgis.org/overview-nhgis-datasets)
-#'   to add to the extract definition.
+#' @param data_tables Summary tables to retrieve for each of the requested
+#'   `datasets`. If no `datasets` are provided, applies to those that
+#'   already exist in the extract definition. Required if any new `datasets`
+#'   are specified.
 #'
-#'   Any specified `datasets` that
-#'   already exist in the extract definition will be modified by the values
-#'   provided to dataset subfields. See details.
-#' @param data_tables Summary tables to add for the `datasets` in the
-#'   extract definition.
-#'
-#'   If a vector, values are added to all of the specified `datasets`.
-#'   If no new `datasets` are specified, values are added to all of the
-#'   `datasets` that already exist in the extract definition.
-#'
-#'   If a named list, values are added to the `datasets` indicated by
-#'   name in the list. See details.
-#'
-#'   Required if any new `datasets` are specified.
-#' @param time_series_tables Character vector of
-#'   [time series tables](https://www.nhgis.org/time-series-tables)
-#'   to add to the extract.
-#'
-#'   Any specified `time_series_tables` that already
-#'   exist in the extract definition will be modified by the values provided to
-#'   time series table subfields. See details.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
 #' @param geog_levels Geographic levels (for example, `"county"` or `"state"`)
-#'   to add for the `datasets` and `time_series_tables` in the extract
-#'   definition.
+#'   at which to obtain data for the requested `datasets` and
+#'   `time_series_tables`. If no `datasets` and/or `time_series_tables` are
+#'   provided, applies to those that already
+#'   exist in the extract definition. Required if any new `datasets` or
+#'   `time_series_tables` are specified.
 #'
-#'   If a vector, values are added to all of the specified `datasets` and
-#'   `time_series_tables`.
-#'   If neither `datasets` nor `time_series_tables` is specified, values are
-#'   added to all of the `datasets` and `time_series_tables` that already exist
-#'   in the extract definition.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets` or `time_series_tables`.
+#' @param years Years for which to obtain the data contained in the requested
+#'   `datasets`. If no `datasets` are provided, applies to those that
+#'   already exist in the extract definition.
 #'
-#'   If a named list, values are added to the `datasets` and/or
-#'   `time_series_tables` indicated by name in the list. See details.
-#'
-#'   Required if any `datasets` or `time_series_tables` are specified.
-#' @param years Years to add for the `datasets` in the extract definition.
 #'   Use `"*"` to select all available years for a given dataset.
+#'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
 #'
-#'   Uses the same logic as `data_tables` when determining which `datasets`
-#'   to modify. See details.
-#'
-#'   See [get_nhgis_metadata()] to determine if a dataset allows year selection.
-#' @param breakdown_values [breakdown
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
+#' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to add for the `datasets` in the extract definition
+#'   to to apply to the requested `datasets`. If no `datasets` are provided,
+#'   applies to those that already exist in the extract definition.
 #'
-#'   Uses the same logic as `data_tables` when determining which `datasets`
-#'   to modify. See details.
-#'
-#'   If more than one breakdown value is requested,
-#'   `breakdown_and_data_type_layout` must also be specified.
-#' @param geographic_extents Character vector of geographic extents to use for
-#'   all `datasets` in the extract definition (for instance, to obtain data
-#'   within a particular state). Use `"*"` to select all available extents.
-#'
-#'   Required when the extract includes any `geog_levels` that require extent
-#'   selection. See [get_nhgis_metadata()] to determine if a geographic level
-#'   requires extent selection.
-#'
-#'   Currently, NHGIS supports extent selection only for blocks and block
-#'   groups.
-#' @param shapefiles Character vector of
-#'   [shapefiles](https://www.nhgis.org/gis-files) to add to the extract
-#'   definition.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
@@ -1700,8 +1711,8 @@ add_to_extract.cps_extract <- function(extract,
 #' @keywords internal
 #'
 #' @seealso
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] to remove values
-#' from an extract definition.
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] to remove
+#' values from an extract definition.
 #'
 #' [combine_extracts()] to combine multiple extract definitions.
 #'
@@ -1882,7 +1893,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' object. This function is an S3 generic whose behavior will depend on the
 #' subclass (i.e. collection) of the extract being modified.
 #'
-#' - To remove from an **IPUMS USA** extract definition, click '
+#' - To remove from an **IPUMS USA** extract definition, click
 #'   [here][remove_from_extract.usa_extract]
 #' - To remove from an **IPUMS CPS** extract definition, click
 #'   [here][remove_from_extract.cps_extract]
@@ -2099,21 +2110,26 @@ remove_from_extract.cps_extract <- function(extract,
 #' Remove existing values from an IPUMS NHGIS extract definition. All
 #' fields are optional, and if omitted, will be unchanged.
 #'
-#' To add new values to an IPUMS NHGIS extract definition, see
+#' In general, removing from an extract follows the same syntax conventions as
+#' used in [`define_extract_nhgis()`][define_extract_nhgis]. See details for
+#' more information on how values passed to dataset and time series table
+#' subfields are interpreted.
+#'
+#' To add new values to an IPUMS NHGIS extract definition, use
 #' [`add_to_extract()`][add_to_extract.nhgis_extract]. When replacing values,
 #' it is best to first add new values using
 #' `add_to_extract()` before removing values with
 #' `remove_from_extract()`. This limits the possibility of producing a
 #' temporarily invalid extract specification.
 #'
-#' In general, removing from an extract follows the same syntax conventions as
-#' used in [`define_extract_nhgis()`][define_extract_nhgis]. See details for
-#' more information on how values passed to dataset and time series table
-#' subfields are interpreted.
-#'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
+#' For extract definitions that include any `datasets`,
+#' corresponding `data_tables` and `geog_levels` must be specified. For
+#' extract definitions that include any `time_series_tables`, corresponding
+#' `geog_levels` must be specified.
+#'
 #' NHGIS extract definitions may contain multiple `datasets` or
 #' `time_series_tables.` Each dataset or time series table is associated with
 #' several subfields that apply only to that particular dataset or time series
@@ -2141,7 +2157,7 @@ remove_from_extract.cps_extract <- function(extract,
 #' and `time_series_tables` specified in `datasets` or
 #' `time_series_tables` arguments.
 #'
-#' Thus, while while it is possible to match
+#' While while it is possible to match
 #' elements to `datasets` and/or
 #' `time_series_tables` by index by providing an unnamed list, we recommend
 #' using names to explicitly specify the values that should be removed from each
@@ -2167,43 +2183,38 @@ remove_from_extract.cps_extract <- function(extract,
 #'
 #' @inheritParams define_extract_nhgis
 #' @inheritParams remove_from_extract
-#' @param datasets Character vector of
-#'   [datasets](https://www.nhgis.org/overview-nhgis-datasets) to remove from
-#'   the extract definition. All `data_tables`, `geog_levels`, `years`, and
-#'   `breakdown_values` associated with the specified
+#' @param datasets [Datasets](https://www.nhgis.org/overview-nhgis-datasets)
+#'   to remove from the extract definition. All `data_tables`, `geog_levels`,
+#'   `years`, and `breakdown_values` associated with the specified
 #'   `datasets` will also be removed.
 #' @param data_tables Summary tables to remove from the `datasets` in the
 #'   extract definition.
 #'
-#'   If a vector, values are removed from all `datasets` in the extract
-#'   definition. If a named list, values are removed from the `datasets`
-#'   indicated by name in the list. See details.
-#' @param time_series_tables Character vector of
-#'   [time series tables](https://www.nhgis.org/time-series-tables)
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
+#' @param time_series_tables
+#'   [Time series tables](https://www.nhgis.org/time-series-tables)
 #'   to remove from the extract definition. All `geog_levels`
 #'   associated  with the specified `time_series_tables` will also be removed.
 #' @param geog_levels Geographic levels to remove from the `datasets` and/or
-#'   `time_series_tables` in the extract definition
+#'   `time_series_tables` in the extract definition.
 #'
-#'   If a vector, values are removed from all `datasets` and
-#'   `time_series_tables` in the extract
-#'   definition. If a named list, values are removed from the `datasets` and/or
-#'   `time_series_tables` indicated by name in the list. See details.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets` or `time_series_tables`.
 #' @param years Years to remove from the `datasets` in the extract definition.
 #'
-#'   Uses the same logic as `data_tables` when determining which `datasets` to
-#'   modify. See details.
-#' @param breakdown_values [breakdown
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
+#' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to remove from the `datasets` in the extract definition.
 #'
-#'   Uses the same logic as `data_tables` when determining which datasets to
-#'   modify. See details.
+#'   See details for syntax options when an extract definition has multiple
+#'   `datasets`.
 #' @param geographic_extents Geographic extents to remove from the extract
 #'   definition.
-#' @param shapefiles Character vector of
-#'   [shapefiles](https://www.nhgis.org/gis-files) to remove from the extract
-#'   definition.
+#' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to remove
+#'   from the extract definition.
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
@@ -2387,7 +2398,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' Combine multiple IPUMS extract definitions into one
 #'
 #' @description
-#' Creates a single extract definition that includes all of the
+#' Create a single extract definition that includes all of the
 #' specifications included in a set of `ipums_extract` objects of the same
 #' collection.
 #'
@@ -2878,19 +2889,19 @@ set_ipums_default_collection <- function(collection = NULL,
 #' Create a new extract object
 #'
 #' Creates an object inheriting from class `ipums_extract` for use in
-#' interacting with the IPUMS extract API.
+#' interacting with the IPUMS API.
 #'
 #' @param collection Character indicating the IPUMS collection for this extract.
 #'   See [ipums_data_collections()].
 #' @param description Description of the extract.
 #' @param submitted Logical indicating whether this extract has been submitted
-#'   to the IPUMS extract API. See [submit_extract()].
+#'   to the IPUMS API. See [submit_extract()].
 #' @param download_links List of paths to the data included in the API response
 #'   after submitting an extract.
-#' @param number Number of the extract returned by the extract API on
+#' @param number Number of the extract returned by the API on
 #'   submission.
 #' @param status Character indicating the current status of the extract as
-#'   returned by the extract API. If the extract has not been submitted, the
+#'   returned by the API. If the extract has not been submitted, the
 #'   status is set to "unsubmitted".
 #' @param ... Additional arguments used in creating extract definitions for
 #'   specific data collections.
@@ -2952,12 +2963,13 @@ new_ipums_json <- function(json, collection) {
 #'
 #' @param extract One of:
 #'   * An [`ipums_extract`][ipums_extract-class] object
-#'   * An IPUMS collection with API support
+#'   * An IPUMS collection with API support (omit to use your default
+#'     collection)
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
-#'   * The extract number for the default IPUMS collection. See
-#'     [set_ipums_default_collection()]
+#'   * An extract number to be associated with your default IPUMS
+#'     collection. See [set_ipums_default_collection()]
 #' @param collection_ok Logical indicating whether `extract` can be an IPUMS
 #'   collection (`TRUE`) or if it must be a specific extract (`FALSE`).
 #'
@@ -3278,7 +3290,7 @@ unset_ipums_envvar <- function(var_name) {
 #'
 #' @description
 #' Ensures that the structure of an extract object is consistent with what is
-#' required by the IPUMS extract API.
+#' required by the IPUMS API.
 #'
 #' The checks are primarily handled by wrapper function
 #' `validate_extract_field()` and its helper functions. See the documentation
@@ -4788,7 +4800,7 @@ ipums_api_json_request <- function(verb,
 #' Convert JSON containing extract specifications to an extract object
 #'
 #' @param extract_json JSON containing the extract specification as returned
-#'   by the extract API
+#'   by the API
 #' @param validate Logical indicating whether the created extract object should
 #'   be validated using `validate_ipums_extract`
 #'
@@ -4975,7 +4987,7 @@ parse_400_error <- function(res) {
       res$status_code,
       " with the following details:"
     ),
-    response_detail
+    purrr::set_names(response_detail, "x")
   )
   return(error_message)
 }

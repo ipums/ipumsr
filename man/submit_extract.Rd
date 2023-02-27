@@ -15,12 +15,13 @@ If resubmitting an old request, one of:
 \item The data collection and extract number formatted as a string of the
 form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for your default IPUMS collection. See
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
@@ -28,9 +29,9 @@ extract definition and newly-assigned extract number of the submitted
 extract.
 }
 \description{
-Given an \code{\link[=ipums_extract-class]{ipums_extract}} object, submit an extract
-request via the IPUMS API and return a modified copy of the extract object
-with the newly-assigned extract request number.
+Submit an extract request via the IPUMS API and return an \link{ipums_extract}
+object containing the extract definition with a newly-assigned extract
+request number.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }

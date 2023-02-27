@@ -16,14 +16,12 @@ navbar:
   left:
     - icon: "fa-home"
       href: index.html
-    - text: "Intro"
+    - text: "Introduction"
       href: "articles/ipums.html"
     - text: "Reference"
       href: "reference/index.html"
     - text: "Articles"
       menu:
-      - text: "Introduction"
-        href: "articles/ipums.html"
       - text: "Read IPUMS data"
         href: "articles/ipums-read.html"
       - text: "Value labels"

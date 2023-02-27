@@ -38,8 +38,9 @@ All fields are optional, and if omitted, will be unchanged. Supplying a value
 for fields that take a single value, such as \code{description} and \code{data_format},
 will replace the existing value with the supplied value.
 
-To remove existing values from an IPUMS USA extract definition, see
-\code{\link[=remove_from_extract.usa_extract]{remove_from_extract()}}.
+To remove existing values from an IPUMS USA extract definition, use
+\code{\link[=remove_from_extract.usa_extract]{remove_from_extract()}}. To add values
+contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }

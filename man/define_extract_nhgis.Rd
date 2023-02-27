@@ -22,53 +22,38 @@ define_extract_nhgis(
 \arguments{
 \item{description}{Description of the extract.}
 
-\item{datasets}{Vector of
-\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets} to include in
-the extract request.}
-
-\item{data_tables}{Summary tables to retrieve for each of the requested
-\code{datasets}.
-
-If a vector, values are applied to all \code{datasets} in the
-extract definition. If a named list, values are applied
-to the \code{datasets} indicated by name in the list. See details.
-
-Required if an extract definition includes any \code{datasets}.}
-
-\item{time_series_tables}{Vector of
-\href{https://www.nhgis.org/time-series-tables}{time series tables}
+\item{datasets}{\href{https://www.nhgis.org/overview-nhgis-datasets}{Datasets}
 to include in the extract request.}
 
-\item{geog_levels}{Geographic levels (for example, \code{"county"} or \code{"state"})
+\item{data_tables}{Summary tables to retrieve for each of the requested
+\code{datasets}. Required for all \code{datasets} in the extract definition.
+
+See details for syntax options when an extract definition has multiple
+\code{datasets}.}
+
+\item{time_series_tables}{\href{https://www.nhgis.org/time-series-tables}{Time series tables}
+to include in the extract request.}
+
+\item{geog_levels}{Geographic levels (e.g. \code{"county"} or \code{"state"})
 at which to obtain data for the requested \code{datasets} or
-\code{time_series_tables}.
+\code{time_series_tables}. Required for all \code{datasets} and \code{time_series_tables}
+in the extract definition.
 
-If a vector, values are applied to all \code{datasets} and \code{time_series_tables}
-in the extract definition. If a named list, values are applied
-to the \code{datasets} and/or \code{time_series_tables} indicated by name in the
-list. See details.
-
-Required if an extract definition includes any \code{datasets} or
-\code{time_series_tables}.}
+See details for syntax options when an extract
+definition has multiple \code{datasets} and/or \code{time_series_tables}.}
 
 \item{years}{Years for which to obtain the data contained in the requested
 \code{datasets}. Use \code{"*"} to select all available years for a given dataset.
+Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.
 
-If a vector, values are applied to all \code{datasets}
-in the extract definition. If a named list, values are applied
-to the \code{datasets} indicated by name in the list. See details.
+See details for syntax options when an extract definition has multiple
+\code{datasets}.}
 
-Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.}
+\item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
+to apply to the requested \code{datasets}.
 
-\item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{breakdown values}
-to apply to the requested \code{data_tables}.
-
-If a vector, values are applied to all \code{datasets}
-in the extract definition. If a named list, values are applied
-to the \code{datasets} indicated by name in the list. See details.
-
-If more than one breakdown value is requested,
-\code{breakdown_and_data_type_layout} must also be specified.}
+See details for syntax options when an extract definition has multiple
+\code{datasets}.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
 all of the \code{datasets} in the extract definition (for instance, to obtain
@@ -76,22 +61,19 @@ data within a particular state). Use \code{"*"} to select all available extents.
 
 Required when the extract definition includes any \code{geog_levels} that
 require extent selection. See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a
-geographic level requires extent selection.
+geographic level requires extent selection. At the time of writing, NHGIS
+supports extent selection only for blocks and block groups.}
 
-Currently, the NHGIS supports extent selection only for blocks and block
-groups.}
-
-\item{shapefiles}{Vector of
-\href{https://www.nhgis.org/gis-files}{shapefiles} to include in the extract
-request.}
+\item{shapefiles}{\href{https://www.nhgis.org/gis-files}{Shapefiles} to include
+in the extract request.}
 
 \item{breakdown_and_data_type_layout}{The desired layout
 of any \code{datasets} that have multiple data types or breakdown values.
 \itemize{
 \item \code{"single_file"} (default) keeps all data types and breakdown values in
-one file.
+one file
 \item \code{"separate_files"} splits each data type or breakdown value into its
-own file.
+own file
 }
 
 Required if any \code{datasets} included in the extract definition consist of
@@ -102,8 +84,9 @@ determine whether a requested dataset has multiple data types.}
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
 the extract definition. One of:
 \itemize{
-\item \code{"time_by_column_layout"} (wide format, default): rows correspond to geographic
-units, columns correspond to different times in the time series
+\item \code{"time_by_column_layout"} (wide format, default): rows correspond to
+geographic units, columns correspond to different times in the time
+series
 \item \code{"time_by_row_layout"} (long format): rows correspond to a single
 geographic unit at a single point in time
 \item \code{"time_by_file_layout"}: data for different times are provided in
@@ -115,10 +98,11 @@ Required when an extract definition includes any \code{time_series_tables}.}
 \item{data_format}{The desired format of the extract data file. One of:
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
-row.
-\item \code{"csv_header"} includes a second, more descriptive header row. Note that
-this header is removed by default when reading data with \code{\link[=read_nhgis]{read_nhgis()}}.
-\item \code{"fixed_width"} provides data in a fixed width format.
+row
+\item \code{"csv_header"} includes a second, more descriptive header row.
+(By default this header is removed when reading data with \code{\link[=read_nhgis]{read_nhgis()}},
+but it can be retained.)
+\item \code{"fixed_width"} provides data in a fixed width format
 }
 
 Required when an extract definition includes any \code{datasets} or
@@ -130,21 +114,18 @@ the extract definition.
 }
 \description{
 Define an IPUMS NHGIS request to be submitted via the IPUMS
-extract API. An extract request contains the specifications required
-to identify and obtain a particular set of data from the IPUMS NHGIS system.
+API. An extract request contains the specifications required
+to obtain a particular set of data from the IPUMS NHGIS system.
 
-See details for more information about creating valid IPUMS NHGIS extract
-definitions. Codes for particular data sources can be found using
-\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}}.
+Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to browse and identify data sources for use
+in NHGIS extract definitions.
+
+See details for information about creating valid extract
+definitions. For general information, see the NHGIS
+\href{https://www.nhgis.org/data-availability}{data source overview} and the
+\href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
-
-More information about IPUMS NHGIS can be found at the following links:
-\itemize{
-\item \href{https://www.nhgis.org/data-availability}{NHGIS data}
-\item \href{https://www.nhgis.org/frequently-asked-questions-faq}{NHGIS FAQ}
-\item \href{https://developer.ipums.org/docs/workflows/create_extracts/nhgis_data/}{NHGIS API}
-}
 }
 \details{
 An NHGIS extract definition must include at least one dataset, time series
@@ -172,21 +153,58 @@ The following arguments are applied to the requested \code{datasets} \emph{and}
 }
 
 To apply the values of these arguments to \emph{all} of the \code{datasets} and/or
-\code{time_series_tables} in the extract definition, pass the values as a vector.
+\code{time_series_tables} in the extract definition, pass the values as a vector:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{define_extract_nhgis(
+  datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
+  data_tables = "B01001",
+  geog_levels = c("county", "state")
+)
+#> Unsubmitted IPUMS NHGIS extract 
+#> Description: 
+#> 
+#> Dataset: 2016_2020_ACS5a
+#>   Tables: B01001
+#>   Geog Levels: county, state
+#> 
+#> Dataset: 2017_2021_ACS5a
+#>   Tables: B01001
+#>   Geog Levels: county, state
+}\if{html}{\out{</div>}}
 
 To apply the values of these arguments to \emph{specific} \code{datasets} and/or
 \code{time_series_tables} in the extract definition, pass the values as a named
 list. In this case, names should correspond to the \code{datasets} and/or
 \code{time_series_tables} and their associated values will only be applied to
-the indicated dataset or time series table.
+the indicated dataset or time series table:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{define_extract_nhgis(
+  datasets = "2016_2020_ACS5a",
+  data_tables = "B01001",
+  time_series_tables = "A00",
+  geog_levels = list(
+    "2016_2020_ACS5a" = "county",
+    "A00" = "state"
+  )
+)
+#> Unsubmitted IPUMS NHGIS extract 
+#> Description: 
+#> 
+#> Dataset: 2016_2020_ACS5a
+#>   Tables: B01001
+#>   Geog Levels: county
+#> 
+#> Time Series Table: A00
+#>   Geog Levels: state
+}\if{html}{\out{</div>}}
 
 Note that while it is possible to match elements to \code{datasets} and/or
 \code{time_series_tables} by index by providing an unnamed list, we recommend
 using names to explicitly specify the values that should be applied to each
 of the request's \code{datasets} and \code{time_series_tables}.
 
-Alternatively, extract definitions for individual datasets and
-time series tables can be combined using \code{\link[=combine_extracts]{combine_extracts()}}.
+Alternatively, you can create multiple extract definitions and combine
+them with \code{\link[=combine_extracts]{combine_extracts()}}.
 }
 \examples{
 # Extract definition for tables from an NHGIS dataset
@@ -252,12 +270,16 @@ submit_extract(my_extract)
 }
 }
 \seealso{
+\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to find data to include in an extract definition.
+
 \code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
 process and manage an extract request.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
 
-\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}},
+\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}} and
+\code{\link[=combine_extracts]{combine_extracts()}} to
 revise an extract definition.
 }

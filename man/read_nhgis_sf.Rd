@@ -65,7 +65,7 @@ Please read spatial and tabular data separately using \code{\link[=read_ipums_sf
 \code{\link[=read_nhgis]{read_nhgis()}}. To join spatial and tabular data, use an
 \link[=ipums_shape_left_join]{ipums_shape_*_join} function.
 
-To convert a \code{SpatialPolygonsDataFrame} or other \code{sp} object to an \code{sf}
+To convert an \code{sf} object to a \code{SpatialPolygonsDataFrame} or other \code{sp}
 object, use \code{\link[sf:coerce-methods]{sf::as_Spatial()}}.
 }
 \keyword{internal}

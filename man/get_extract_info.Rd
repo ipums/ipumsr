@@ -18,12 +18,13 @@ get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
-\item An IPUMS collection with API support
+\item An IPUMS collection with API support (omit to use your default
+collection)
 \item The data collection and extract number formatted as a string of the
 form \code{"collection:number"} or as a vector of the form
 \code{c("collection", number)}
-\item The extract number for your default IPUMS collection. See
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
 Extract numbers do not need to be zero-padded. That is, use \code{1}, not
@@ -43,7 +44,8 @@ indicating whether to return recent extract information as a
 \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable \code{"IPUMS_API_KEY"}. See \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 
 \item{collection}{Character string of the IPUMS collection for which to
 retrieve the most recent extract request.}
@@ -57,7 +59,7 @@ If obtaining information for a collection, a list of
 a \code{\link[tibble:tbl_df-class]{tibble}} (if \code{table = TRUE}).
 }
 \description{
-Retrieve the specifications of your previously submitted extract requests.
+Retrieve the definitions of your previously submitted extract requests.
 
 If a specific extract number is indicated, retrieve the most recent
 status of that extract request. If a collection is indicated, retrieve the

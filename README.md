@@ -26,20 +26,6 @@ to:
 - Submit requests for data and download files through the IPUMS extract
   API
 
-## Installation
-
-To install the package from CRAN, use
-
-``` r
-install.packages("ipumsr")
-```
-
-To install the development version of the package, use
-
-``` r
-devtools::install_github("ipums/ipumsr")
-```
-
 ## What is IPUMS?
 
 [IPUMS](https://www.ipums.org/mission-purpose) is the world’s largest
@@ -67,6 +53,20 @@ particular geographic units.
 | [IPUMS Higher Ed](https://highered.ipums.org/highered/)               | Microdata      | Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013                                                                                                                                                                 |
 | [IPUMS NHGIS](https://www.nhgis.org/)                                 | Aggregate Data | Tabular U.S. Census data and GIS boundary files (1790-present)                                                                                                                                                                                          |
 | [IPUMS IHGIS](https://ihgis.ipums.org/)                               | Aggregate Data | Tabular and GIS data from population, housing, and agricultural censuses around the world                                                                                                                                                               |
+
+## Installation
+
+To install the package from CRAN, use
+
+``` r
+install.packages("ipumsr")
+```
+
+To install the development version of the package, use
+
+``` r
+devtools::install_github("ipums/ipumsr")
+```
 
 ## Getting Started
 

@@ -7,7 +7,7 @@
 \description{
 The \code{ipums_extract} class provides a data structure for storing the
 definition and status of a submitted or unsubmitted IPUMS data extract
-request for the purpose of interacting with the IPUMS extract API.
+request for the purpose of interacting with the IPUMS API.
 
 \code{ipums_extract} is a superclass encompassing all of the collection-specific
 extract classes. Currently supported collections are:
@@ -45,8 +45,6 @@ underlying list
 \verb{define_extract_\{collection\}}
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve information about previously-submitted
 extract requests
-\item Create an \code{ipums_extract} object from a JSON-formatted definition with
-\code{\link[=define_extract_from_json]{define_extract_from_json()}}
 }
 }
 
@@ -54,7 +52,7 @@ extract requests
 
 \itemize{
 \item Use \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing through
-the IPUMS extract API
+the IPUMS API
 \item \code{\link[=wait_for_extract]{wait_for_extract()}} will periodically check the status of a submitted
 extract request until it is ready to download
 \item Use \code{\link[=is_extract_ready]{is_extract_ready()}} to manually check whether a submitted extract
@@ -84,6 +82,8 @@ request is ready to download
 
 \itemize{
 \item Save an extract to a JSON-formatted file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}
+\item Create an \code{ipums_extract} object from a saved JSON-formatted definition
+with \code{\link[=define_extract_from_json]{define_extract_from_json()}}
 }
 }
 

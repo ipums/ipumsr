@@ -1,9 +1,9 @@
 ---
-title: "Big IPUMS data"
+title: "Big IPUMS Data"
 author: "Minnesota Population Center"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Big IPUMS data}
+  %\VignetteIndexEntry{Big IPUMS Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -82,7 +82,7 @@ library(dplyr)
 
 <!-- have changed -->
 
-## **Option 1: Trade money for convenience**
+## Option 1: Trade money for convenience
 
 If you need to work with a dataset that's too big for your RAM, the
 simplest option is to get more space. If upgrading your hardware isn't
@@ -132,8 +132,8 @@ data <- submit_extract(new_cps_extract) %>%
   read_ipums_micro()
 ```
 
-Use `vignette("ipums-api", package = "ipumsr")` to get more information
-about using the IPUMS API to make extract requests.
+Use `vignette("ipums-api")` to get more information about using the
+IPUMS API to make extract requests.
 
 ### Select cases {#select-cases}
 
@@ -200,8 +200,8 @@ Imagine we wanted to find the percent of people in the workforce grouped
 by their self-reported health. Since our example extract is small enough
 to fit in memory, we could load the full dataset with
 `read_ipums_micro()`, relabel the `EMPSTAT` variable into a binary
-variable (see `vignette("value-labels", package = "ipumsr")`), and count
-the people in each group.
+variable (see `vignette("value-labels")`), and count the people in each
+group.
 
 ```{r}
 read_ipums_micro(cps_ddi_file, data_file = cps_data_file, verbose = FALSE) %>%
@@ -430,7 +430,7 @@ or Unix tools.
 In addition to chunked reading, ipumsr also provides the similar but
 more flexible "yielded" reading.
 
-`read_ipums_micro_yield()` and `read_ipums_micro_yield_list()` grant you
+`read_ipums_micro_yield()` and `read_ipums_micro_list_yield()` grant you
 more freedom in determining what R code to run between chunks and
 include the ability to have multiple files open at once. Additionally,
 yields are compatible with the `bigglm` function from biglm, which
@@ -636,8 +636,7 @@ load the data into a database without needing to store the entire
 dataset in R.
 
 (For more about rectangular vs. hierarchical extracts, see the
-"Hierarchical extracts" section of
-`vignette("ipums-read", package = "ipumsr")`.)
+"Hierarchical extracts" section of `vignette("ipums-read")`.)
 
 ```{r, eval=installed_db_pkgs, results="hide"}
 library(DBI)
@@ -711,7 +710,7 @@ ipums_val_labels(data$MONTH)
 ```
 
 For more about variable metadata in IPUMS data, see
-`vignette("value-labels", package = "ipumsr")`.
+`vignette("value-labels")`.
 
 ## Learning more
 

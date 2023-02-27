@@ -32,7 +32,7 @@ position. This must uniquely identify a file.}
 
 \item{var_attrs}{Variable attributes to add from the codebook (.txt) file
 included in the extract. Defaults to
-all available attributes (\code{"val_labels"}, \code{"var_label"}, and \code{"var_desc"}).
+all available attributes.
 
 If the codebook is not found, data will be loaded with no variable
 attributes.
@@ -43,7 +43,7 @@ See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more
 header row that is included in some NHGIS .csv files. Otherwise, the
 additional header will appear in the first row of the output data frame.
 
-The header contains the same information that is
+The header contains similar information to that
 included in the \code{"label"} attribute of each data column (if \code{var_attrs}
 includes \code{"var_label"}), and is therefore not usually needed.}
 

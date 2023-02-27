@@ -40,12 +40,10 @@
 #'   show_col_types = FALSE
 #' )
 #'
-#' if (require(sf)) {
-#'   sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
-#'   joined_data <- ipums_shape_inner_join(data, sf_data, by = "GISJOIN")
+#' sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
+#' joined_data <- ipums_shape_inner_join(data, sf_data, by = "GISJOIN")
 #'
-#'   colnames(joined_data)
-#' }
+#' colnames(joined_data)
 NULL
 
 #' @rdname ipums_shape_join
