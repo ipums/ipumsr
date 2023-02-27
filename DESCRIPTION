@@ -60,4 +60,6 @@ Suggests:
     crayon,
     rmapshaper,
     ipumsexamples
+Remotes:
+    ipums/ipumsr/ipumsexamples
 VignetteBuilder: knitr
