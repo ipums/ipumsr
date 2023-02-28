@@ -1,10 +1,123 @@
 # ipumsr (development version)
 
+## IPUMS API updates
+
+* Adds API support for IPUMS NHGIS extract requests! Use 
+  `define_extract_nhgis()` to make an NHGIS extract definition.
+  
+* Adds API support for IPUMS NHGIS metadata. Use `get_nhgis_metadata()` to
+  browse NHGIS data sources when creating an NHGIS extract request.
+  
+* `submit_extract()` can now be used to resubmit an old extract request. Simply
+  provide the IPUMS collection and extract number to the `extract` argument.
+  
+* The `extract` argument of  `get_extract_info()` now accepts an IPUMS 
+  collection, which can be used to get recent extract information. 
+  Set `table = TRUE` to get recent extract information in tabular format.
+  This replaces `get_recent_extracts_info_*()` functions.
+  
+* Adds `combine_extracts()` to allow for the merging of multiple extract
+  definitions.
+  
+* `download_extract()` now includes a logical `wait` argument indicating
+  whether to wait for extract completion when attempting to download an
+  in-progress extract request.  
+  
+* Allows users to set a default IPUMS collection using
+  `set_ipums_default_collection()`. Users with a default collection do not 
+  need to specify the IPUMS collection in functions that require it; instead,
+  the default collection is used. This is a convenience for users who rely
+  primarily on a single IPUMS collection.
+  
+* `wait_for_extract()` wait intervals no longer double after each status
+  check. Instead, intervals increase by 10 seconds with each subsequent check.
+  
+* Extract definitions are now validated more frequently in extract-handling 
+  functions.
+
+* Warnings encourage users to resubmit extracts that have expired. Previously,
+  the distinction between expired and in-progress extract requests was not 
+  always made (e.g. in `is_extract_ready()`)
+
+
+## IPUMS reader updates
+
+* Adds handling for fixed-width extracts in `read_nhgis()`.
+
+* `read_ipums_sf()` no longer defaults to `bind_multiple = TRUE`.
+
+* `read_nhgis_codebook()` replaces `read_ipums_codebook()` and allows reading
+  of raw codebook lines (as opposed to extracting codebook information into 
+  an `ipums_ddi` object) by setting `raw = TRUE`. Furthermore, `var_info`
+  generated from NHGIS codebook files has been updated to include more
+  contextual information about the data variables.
+  
+* `read_nhgis()` now supports the passing of arguments to underlying readr
+  functions `readr::read_csv()` and `readr::read_fwf()`. 
+  `read_nhgis()` defaults will typically be appropriate, but users now can 
+  adjust data-reading parameters as needed. Note that some of these
+  options may impact ipumsr reading functionality (e.g. attaching variable 
+  metadata to data files).
+  
+* `read_nhgis()` now allows users to retain the extra header row included in
+  some NHGIS files. Set `remove_extra_header = FALSE` to do so. In general,
+  the information contained in the extra header is attached to the data from
+  the NHGIS codebook file, but in some cases the extra header may differ
+  slightly from the information found in the codebook.
+  
+* `ipums_example()` includes updated example files.
+
+* It is now possible to consistently read unzipped extract files. Previously,
+  some functions required that extracts be in the zipped format provided
+  upon download.
+
+## Deprecations
+
+* `data_layer` and `shape_layer` arguments have been deprecated in favor of
+  `file_select` throughout ipumsr. This provides clarity on the intended purpose
+  of this argument. Deprecated functions that use the original argument names 
+  remain unchanged.
+  
+* `get_recent_extracts_info_list()` and `get_recent_extracts_info_tbl()` have
+  been deprecated. This functionality has been included in `get_extract_info()`.
+  
+* `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
+  `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular
+  data, respectively. Join data with an `ipums_shape_*_join()` function.
+  
+* Support for objects from the sp package has been deprecated because of the 
+  upcoming retirement of rgdal. Use `read_ipums_sf()` to load spatial data
+  as an `sf` object. To convert to a `Spatial*` object, use `sf::as_Spatial()`.
+  For more, click [here](https://r-spatial.org/r/2022/04/12/evolution.html).
+  
+* Support for IPUMS Terra has been deprecated, as the IPUMS Terra project is
+  being decommissioned. This includes all `read_terra_*()` functions. 
+  For more, click [here](https://terra.ipums.org/decommissioning).
+  
+* `read_ipums_codebook()` has been deprecated in favor of 
+  `read_nhgis_codebook()`. Previously, `read_ipums_codebook()` handled
+  IPUMS Terra as well as IPUMS NHGIS extracts.
+  
+* `ipums_list_data()`, `ipums_list_shape()` and `ipums_list_raster()` have
+  been deprecated in favor of `ipums_list_files()`.
+  
+* The `verbose` argument has been deprecated in `read_ipums_sf()` for
+  consistency with the terminology used in the sf package. Please use `quiet`
+  instead.
+  
+## Miscellaneous
+
+* Various bug fixes
+
+* Updates to documentation and vignettes for clarity
+
 # ipumsr 0.5.2
 
 * Add progress bar when downloading extracts
+
 * Removed validate argument from extract revision functions and improved warning
   messages for invalid extract field names when used as arguments.
+  
 * Fixed bug preventing users from providing their API key directly to
   `submit_extract` and `wait_for_extract`.
 
