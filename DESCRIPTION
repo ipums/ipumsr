@@ -1,11 +1,13 @@
 Package: ipumsr
 Title: Read 'IPUMS' Extract Files
-Version: 0.5.0.9000
+Version: 0.5.2.9000
 Authors@R: c(
   person("Greg Freedman Ellis", role = "aut"), 
   person("Derek Burk", email = "ipums+cran@umn.edu", role = c("aut", "cre")),
   person("Joe Grover", role = "ctb"),
   person("Finn Roberts", role = "ctb"),
+  person("Dan Ehrlich", role = "ctb"),
+  person("Renae Rodgers", role = "ctb"),
   person("Minnesota Population Center", email = "ipums@umn.edu", role = "cph")
   )
 Contact: ipums@umn.edu
@@ -24,7 +26,6 @@ Imports:
     hipread (>= 0.2.0),
     purrr,
     R6,
-    raster,
     readr,
     rlang,
     tibble,
@@ -59,7 +60,8 @@ Suggests:
     withr,
     crayon,
     rmapshaper,
-    ipumsexamples
+    ipumsexamples,
+    raster
 Remotes:
     ipums/ipumsr/ipumsexamples
 VignetteBuilder: knitr

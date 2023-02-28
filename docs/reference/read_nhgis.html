@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -150,35 +150,50 @@
 <dd><p>Filepath to the data (either the .zip file directly
 downloaded from the website, the path to the unzipped folder, or
 the path to the unzipped .csv file directly).</p></dd>
+
+
 <dt>data_layer</dt>
 <dd><p>For .zip extracts with multiple datasets, the name of the
  data to load. Accepts a character vector specifying the file name, or
 <code><a href="dplyr_select_style.html">dplyr_select_style</a></code> conventions. Data layer must uniquely identify
 a dataset.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Logical, indicating whether to print progress information to
 console.</p></dd>
+
+
 <dt>var_attrs</dt>
 <dd><p>Variable attributes to add from the codebook, defaults to
 adding all (val_labels, var_label and var_desc). See
 <code><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></code> for more details.</p></dd>
+
+
 <dt>shape_file</dt>
 <dd><p>Filepath to the shape files (either the .zip
 file directly downloaded from the website, or the path to the unzipped
 folder, or the unzipped .shp file directly).</p></dd>
+
+
 <dt>shape_layer</dt>
 <dd><p>(Defaults to using the same value as data_layer) Specification
 of which shape files to load using the same semantics as <code>data_layer</code>. Can
 load multiple shape files, which will be combined.</p></dd>
+
+
 <dt>shape_encoding</dt>
 <dd><p>The text encoding to use when reading the shape file. Typically
 the defaults should read the data correctly, but for some extracts you may need
 to set them manually, but if funny characters appear in your data, you may need
 to. Defaults to "latin1" for NHGIS.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>read_nhgis</code> returns a <code>tbl_df</code> with only the tabular data,
+    
+
+<p><code>read_nhgis</code> returns a <code>tbl_df</code> with only the tabular data,
 <code>read_nhgis_sf</code> returns a <code>sf</code> object with data and the shapes, and
 <code>read_nhgis_sp</code> returns a <code>SpatialPolygonsDataFrame</code> with data and
 shapes.</p>
@@ -219,7 +234,7 @@ shapes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading geography...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> options:        ENCODING=latin1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `US_pmsa_1990' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e819c764b6\US_pmsa_1990.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/bp/l9qm36b10bq0jfwtkvty8q5h0000gq/T/Rtmp5Q0La8/file6d856a37e189/US_pmsa_1990.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 8 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
@@ -238,7 +253,7 @@ shapes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading data file...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading geography...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OGR data source with driver: ESRI Shapefile </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "C:\Users\derek\AppData\Local\Temp\RtmpCkCwmv\file36e81d5631a1", layer: "US_pmsa_1990"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Source: "/private/var/folders/bp/l9qm36b10bq0jfwtkvty8q5h0000gq/T/Rtmp5Q0La8/file6d857e178d9b", layer: "US_pmsa_1990"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> with 71 features</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> It has 8 fields</span>
 <span class="r-in"></span>

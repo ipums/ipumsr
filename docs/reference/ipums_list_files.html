@@ -20,7 +20,7 @@ directory."><meta property="og:image" content="http://tech.popdata.org/ipumsr/lo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -139,22 +139,33 @@ directory.</p>
     <h2>Arguments</h2>
     <dl><dt>file</dt>
 <dd><p>An IPUMS extract zip file or directory</p></dd>
+
+
 <dt>types</dt>
 <dd><p>One or more of "data", "shape", or "raster" indicating
 what type of files to look for.</p></dd>
+
+
 <dt>data_layer</dt>
 <dd><p>dplyr <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></code>-style notation for the data
 files to look for</p></dd>
+
+
 <dt>shape_layer</dt>
 <dd><p>dplyr <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></code>-style notation for the
 shape files to look for</p></dd>
+
+
 <dt>raster_layer</dt>
 <dd><p>dplyr <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></code>-style notation for the
 raster files to look for</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>tbl_df</code> data.frame containing the files available</p>
+    
+
+<p>A <code>tbl_df</code> data.frame containing the files available</p>
     </div>
 
     <div id="ref-examples">

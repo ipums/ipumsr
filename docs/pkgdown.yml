@@ -1,5 +1,5 @@
-pandoc: 2.17.1.1
-pkgdown: 2.0.3
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   ipums-api: ipums-api.html
@@ -10,7 +10,7 @@ articles:
   ipums-terra: ipums-terra.html
   ipums: ipums.html
   value-labels: value-labels.html
-last_built: 2022-06-03T16:00Z
+last_built: 2022-12-09T23:00Z
 urls:
   reference: http://tech.popdata.org/ipumsr/reference
   article: http://tech.popdata.org/ipumsr/articles

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -123,19 +123,28 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></code> vector</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Labels formed by <code><a href="lbl.html">lbl</a></code> indicating the value and label to be added.</p></dd>
+
+
 <dt>labeller</dt>
 <dd><p>A function that takes a single argument of the values and returns the
 labels. Defaults to <code>as.character</code>. <code><a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">as_function</a></code>, so
 also accepts quosure-style lambda functions. See examples for more details.</p></dd>
+
+
 <dt>vals</dt>
 <dd><p>Vector of values to be labelled. NULL, the default labels all values
 that are in the data, but aren't already labelled.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A haven::labelled vector</p>
+    
+
+<p>A haven::labelled vector</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

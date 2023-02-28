@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -109,10 +109,19 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.5.0" id="ipumsr-050">ipumsr 0.5.0<a class="anchor" aria-label="anchor" href="#ipumsr-050"></a></h2>
-<ul><li><p>Split <code>revise_extract_micro()</code> into <code><a href="../reference/add_to_extract.html">add_to_extract()</a></code> and <code><a href="../reference/remove_from_extract.html">remove_from_extract()</a></code></p></li>
-<li><p>Include endpoint information (IPUMS collection and API version) when saving an extract as json.</p></li>
-<li><p>Read endpoint information (IPUMS collection and API version) from json when they are included.</p></li>
+<h2 class="page-header" data-toc-text="0.5.2" id="ipumsr-052">ipumsr 0.5.2<a class="anchor" aria-label="anchor" href="#ipumsr-052"></a></h2>
+<ul><li>Add progress bar when downloading extracts</li>
+<li>Removed validate argument from extract revision functions and improved warning messages for invalid extract field names when used as arguments.</li>
+<li>Fixed bug preventing users from providing their API key directly to <code>submit_extract</code> and <code>wait_for_extract</code>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.1" id="ipumsr-051">ipumsr 0.5.1<small>2022-09-30</small><a class="anchor" aria-label="anchor" href="#ipumsr-051"></a></h2>
+<ul><li><p>Added the “Rmd for Reproducible Research” template, which sets up a workflow that leverages the IPUMS microdata extract API to facilitate sharing your analysis. For more details, see <a href="https://blog.popdata.org/reproducible-research-r-markdown-ipumsr-ipums-api/" class="external-link">the blog post</a>. Credit to <a href="https://github.com/ehrlichd" class="external-link">@ehrlichd</a> for the template and blog post!</p></li>
+<li><p>Moved the raster package to Suggests so that it is no longer installed automatically when you install ipumsr. The raster package is only required if you need to read raster extracts from the IPUMS Terra collection, and IPUMS Terra is slated to be decommissioned shortly.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.0" id="ipumsr-050">ipumsr 0.5.0<small>2022-06-04</small><a class="anchor" aria-label="anchor" href="#ipumsr-050"></a></h2>
+<ul><li>Added functions for interacting with the IPUMS microdata extract API. For an overview of this new functionality, see the API vignette with <code><a href="../articles/ipums-api.html">vignette("ipums-api", package = "ipumsr")</a></code>. Special thanks to <a href="https://github.com/robe2037" class="external-link">@robe2037</a>, <a href="https://github.com/renae-r" class="external-link">@renae-r</a>, and <a href="https://github.com/ehrlichd" class="external-link">@ehrlichd</a> for their work on the API functions!</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.5" id="ipumsr-045">ipumsr 0.4.5<small>2020-07-21</small><a class="anchor" aria-label="anchor" href="#ipumsr-045"></a></h2>

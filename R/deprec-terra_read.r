@@ -15,6 +15,9 @@
 #' removed in a future release. For general handling of raster data in R, see the
 #' [terra][terra::terra] package.
 #'
+#' \emph{Note: Reading IPUMS Terra raster extracts requires installation of the
+#' raster package, which is no longer installed automatically when you install
+#' ipumsr.}
 #' @return
 #'   For \code{read_terra_raster} A \code{\link[raster]{raster}} object, for
 #'   \code{read_terra_raster_list} A list of raster objects.
@@ -81,6 +84,17 @@ read_terra_raster_list <- function(
 # by a function change based on the inputs. Therefore, the singular version loads directly
 # as raster, and the multi one always returns a list.
 read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_ok) {
+
+  # Check if raster package is installed
+  if (!requireNamespace("raster", quietly = TRUE)) {
+    rlang::abort(paste0(
+      "Reading IPUMS Terra raster extracts requires installation of the ",
+      "raster package, which is no longer installed automatically when you ",
+      "install ipumsr. Use `install.packages(\"raster\")` to install the ",
+      "raster package and then try again."
+    ))
+  }
+
   # Read data files ----
     if (path_is_zip_or_dir(data_file)) {
       tiff_names <- find_files_in(data_file, "tiff", data_layer, multiple_ok = multiple_ok)

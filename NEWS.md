@@ -1,5 +1,26 @@
 # ipumsr (development version)
 
+# ipumsr 0.5.2
+
+* Add progress bar when downloading extracts
+* Removed validate argument from extract revision functions and improved warning
+  messages for invalid extract field names when used as arguments.
+* Fixed bug preventing users from providing their API key directly to
+  `submit_extract` and `wait_for_extract`.
+
+# ipumsr 0.5.1
+
+* Added the "Rmd for Reproducible Research" template, which sets up a workflow 
+  that leverages the IPUMS microdata extract API to facilitate sharing your 
+  analysis. For more details, see 
+  [the blog post](https://blog.popdata.org/reproducible-research-r-markdown-ipumsr-ipums-api/). 
+  Credit to @ehrlichd for the template and blog post!
+  
+* Moved the raster package to Suggests so that it is no longer installed 
+  automatically when you install ipumsr. The raster package is only required if 
+  you need to read raster extracts from the IPUMS Terra collection, and IPUMS 
+  Terra is slated to be decommissioned shortly.
+
 # ipumsr 0.5.0
 
 * Added functions for interacting with the IPUMS microdata extract API. For an 

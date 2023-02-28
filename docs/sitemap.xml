@@ -4,6 +4,12 @@
     <loc>http://tech.popdata.org/ipumsr/404.html</loc>
   </url>
   <url>
+    <loc>http://tech.popdata.org/ipumsr/CONDUCT.html</loc>
+  </url>
+  <url>
+    <loc>http://tech.popdata.org/ipumsr/CONTRIBUTING.html</loc>
+  </url>
+  <url>
     <loc>http://tech.popdata.org/ipumsr/articles/index.html</loc>
   </url>
   <url>
@@ -32,12 +38,6 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/CONTRIBUTING.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/index.html</loc>
@@ -82,9 +82,6 @@
     <loc>http://tech.popdata.org/ipumsr/reference/index.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/ipumsr-package.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_bind_rows.html</loc>
   </url>
   <url>
@@ -122,6 +119,9 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_website.html</loc>
+  </url>
+  <url>
+    <loc>http://tech.popdata.org/ipumsr/reference/ipumsr-package.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/is_extract_ready.html</loc>

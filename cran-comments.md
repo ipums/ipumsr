@@ -1,8 +1,9 @@
 ## Purpose of release
-This release adds functions to the interact with the new IPUMS API.
+* Fix bug preventing explicit specification of `api_key` argument
+* Update ipumsr-package.Rd to include all collaborators
 
 ## Test environments
-* local Windows, R 4.2.0
+* local MacOS, R 4.2.2
 * win builder release and devel
 * Windows: R 3.6 and release via GitHub Actions
 * Linux: R 3.5, oldrel, and release via GitHub Actions
@@ -12,17 +13,8 @@ This release adds functions to the interact with the new IPUMS API.
 
 0 errors | 0 warnings | 0 notes
 
-## Note from devtools::check_rhub()
-
-Got the following Note when checking on rhub:
-
-N  checking for detritus in the temp directory
-   Found the following files/directories:
-     'lastMiKTeXException'
-
-It seems that this might be a bug or crash in miktex, based on this GitHub 
-issue: https://github.com/r-hub/rhub/issues/503
-
 ## Reverse dependencies
-1 package lists ipumsr in the 'Suggests' field, but does not actually use any
-functionality from this package.
+1 package lists ipumsr in the 'Suggests' field. This package
+uses ipumsr in one of its vignettes, but does not use any code
+that is impacted by this release. Still, this package passed
+our reverse dependency checks for this release.

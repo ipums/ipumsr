@@ -33,6 +33,10 @@ Read a single raster datasets downloaded from the IPUMS Terra extract system usi
 Support for IPUMS Terra has been discontinued. These functions will be
 removed in a future release. For general handling of raster data in R, see the
 \link[terra:terra-package]{terra} package.
+
+\emph{Note: Reading IPUMS Terra raster extracts requires installation of the
+raster package, which is no longer installed automatically when you install
+ipumsr.}
 }
 \examples{
 \dontrun{

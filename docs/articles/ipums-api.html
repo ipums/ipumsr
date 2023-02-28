@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -286,7 +286,7 @@ object, with:</p>
 <code class="sourceCode R"><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span></code></pre></div>
 <p>To print the latest status, you can use:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">submitted_extract</span><span class="op">$</span><span class="va">status</span></code></pre></div>
+<code class="sourceCode R"><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">status</span></code></pre></div>
 <p>If you forget to capture the return value of
 <code><a href="../reference/submit_extract.html">submit_extract()</a></code>, you can pull down an
 <code>ipums_extract</code> object containing all the information on your
@@ -414,7 +414,11 @@ Here’s how you would pull down the definition of USA extract number 33
 and add a sample and a variable to it:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">old_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:33"</span><span class="op">)</span>
-<span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span><span class="va">old_extract</span>, samples <span class="op">=</span> <span class="st">"us2020a"</span>, vars <span class="op">=</span> <span class="st">"RELATE"</span><span class="op">)</span></code></pre></div>
+<span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>
+  <span class="va">old_extract</span>, 
+  samples <span class="op">=</span> <span class="st">"us2020a"</span>, 
+  variables <span class="op">=</span> <span class="st">"RELATE"</span>
+<span class="op">)</span></code></pre></div>
 <p>The <code><a href="../reference/add_to_extract.html">add_to_extract()</a></code> function returns an
 <code>ipums_extract</code> object that has been modified as requested
 and has been reset to an unsubmitted state, by stripping the extract
@@ -444,9 +448,9 @@ retrieve your most second-most-recent extract and revise it for
 resubmission, you could use:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">second_most_recent_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_recent_extracts_info.html">get_recent_extracts_info_list</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
-<span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu">revise_extract_micro</span><span class="op">(</span>
+<span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>
   <span class="va">second_most_recent_extract</span>, 
-  samples_to_add <span class="op">=</span> <span class="st">"us2010a"</span>
+  samples <span class="op">=</span> <span class="st">"us2010a"</span>
 <span class="op">)</span></code></pre></div>
 <p>Or to download all recent extracts that are ready to download, using
 <code><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">purrr::keep()</a></code> and <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map_chr()</a></code>:</p>
@@ -462,14 +466,14 @@ criteria.</p>
 <p>For example, to find extracts with descriptions including the word
 “occupation”, you could use:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">recent_usa_extracts</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
+<code class="sourceCode R"><span class="va">recent_usa_extracts_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"occupation"</span>, <span class="va">description</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Filtering on properties such as “samples” or “variables” is a little
 more complex, because these are stored in list columns, but it is
 possible. For example, to find extracts including the variable “AGE”,
 you could use <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map_lgl()</a></code> like this:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">recent_usa_extracts</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">recent_usa_extracts_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">variables</span>, <span class="op">~</span><span class="st">"AGE"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>To convert between these two representations, ipumsr provides the
 functions <code><a href="../reference/extract_list_to_tbl.html">extract_list_to_tbl()</a></code> and

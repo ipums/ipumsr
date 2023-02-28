@@ -18,7 +18,7 @@ from an ipums_ddi"><meta property="og:image" content="http://tech.popdata.org/ip
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -123,14 +123,20 @@ from an ipums_ddi</p>
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>An ipums_ddi object (loaded with <code><a href="read_ipums_ddi.html">read_ipums_ddi</a></code>).</p></dd>
+
+
 <dt>type</dt>
 <dd><p>NULL to load all types, or one of "ipums_project", "extract_data",
 "extract_notes", "conditions" or "citation".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If <code>type</code> is NULL, a list with the <code>ipums_project</code>,
-<code>extract_date</code>, <code>extract_notes</code>, <code>conditions</code>, and <code>citation</code>.
+    
+
+<p>If <code>type</code> is NULL, a list with the <code>ipums_project</code>,</p>
+<p></p>
+<p><code>extract_date</code>, <code>extract_notes</code>, <code>conditions</code>, and <code>citation</code>.
   Otherwise a string with the type of information requested in <code>type</code>.</p>
     </div>
 

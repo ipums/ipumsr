@@ -21,7 +21,7 @@ vignette("ipums-api", package = "ipumsr").'><meta property="og:image" content="h
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -125,43 +125,37 @@ fields are optional, and if omitted, will remain unchanged.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">remove_from_extract</span><span class="op">(</span><span class="va">extract</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for usa_extract</span>
-<span class="fu">remove_from_extract</span><span class="op">(</span>
-  <span class="va">extract</span>,
-  samples <span class="op">=</span> <span class="cn">NULL</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  validate <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
+<span class="fu">remove_from_extract</span><span class="op">(</span><span class="va">extract</span>, samples <span class="op">=</span> <span class="cn">NULL</span>, variables <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for cps_extract</span>
-<span class="fu">remove_from_extract</span><span class="op">(</span>
-  <span class="va">extract</span>,
-  samples <span class="op">=</span> <span class="cn">NULL</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  validate <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+<span class="fu">remove_from_extract</span><span class="op">(</span><span class="va">extract</span>, samples <span class="op">=</span> <span class="cn">NULL</span>, variables <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>extract</dt>
 <dd><p>An <code><a href="ipums_extract-class.html">ipums_extract</a></code> object.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to methods.</p></dd>
+
+
 <dt>samples</dt>
 <dd><p>Character vector of samples to remove from the extract,
 if any.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>Character vector of variables to remove from the extract,
 if any.</p></dd>
-<dt>validate</dt>
-<dd><p>Logical value indicating whether to check the modified
-extract structure for validity. Defaults to <code>TRUE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A modified IPUMS USA or CPS extract object</p>
+    
+
+<p>A modified IPUMS USA or CPS extract object</p>
     </div>
     <div id="note">
     <h2>Note</h2>
