@@ -364,6 +364,15 @@ show_readr_progress <- function(verbose) {
     is.null(getOption("knitr.in.progress"))
 }
 
+show_readr_coltypes <- function(verbose) {
+  if (is_null(readr::should_show_types())) {
+    show_types <- verbose
+  } else {
+    show_types <- verbose && readr::should_show_types()
+  }
+  show_types
+}
+
 tbl_print_for_message <- function(x, n = 5) {
   x <- tibble::as_tibble(x)
   out <- utils::capture.output(print(x, n = n))

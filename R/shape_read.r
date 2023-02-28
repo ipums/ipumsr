@@ -117,16 +117,19 @@ read_ipums_sf <- function(shape_file,
     file_select <- enquo(file_select)
   }
 
+  dots <- rlang::list2(...)
+
   if (!missing(verbose)) {
     lifecycle::deprecate_soft(
       "0.6.0",
       "read_ipums_sf(verbose = )",
       "read_ipums_sf(quiet = )"
     )
-    quiet <- !verbose
-  }
 
-  dots <- rlang::list2(...)
+    if (!"quiet" %in% names(dots)) {
+      dots$quiet <- !verbose
+    }
+  }
 
   vars <- enquo(vars)
   load_sf_namespace()

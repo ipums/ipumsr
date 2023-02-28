@@ -19,6 +19,11 @@ test_that("Can read NHGIS extract: single dataset", {
     "Use of data from NHGIS is subject"
   )
 
+  expect_message(
+    read_nhgis(nhgis_single_csv, verbose = FALSE, show_col_types = TRUE),
+    "Column specification"
+  )
+
   expect_equal(nrow(nhgis_csv), rows)
   expect_equal(ncol(nhgis_csv), vars_data)
   expect_equal(
@@ -40,28 +45,12 @@ test_that("Can read NHGIS extract: single dataset", {
 test_that("Can read NHGIS extract: fixed-width files", {
 
   expect_error(
-    read_nhgis(nhgis_multi_fwf, show_conditions = FALSE),
+    read_nhgis(nhgis_multi_fwf, verbose = FALSE),
     "Multiple files found"
   )
 
-  expect_silent(
-    nhgis_fwf1 <- read_nhgis(
-      nhgis_multi_fwf,
-      file_select = 1,
-      show_conditions = FALSE,
-      progress = FALSE
-    )
-  )
-
-  expect_silent(
-    nhgis_csv1 <- read_nhgis(
-      nhgis_multi_ds,
-      file_select = 1,
-      show_conditions = FALSE,
-      progress = FALSE,
-      show_col_types = FALSE
-    )
-  )
+  nhgis_fwf1 <- read_nhgis(nhgis_multi_fwf, file_select = 1, verbose = FALSE)
+  nhgis_csv1 <- read_nhgis(nhgis_multi_ds, file_select = 1, verbose = FALSE)
 
   # Test that .do file col typing is working.
   # These coltypes differ from what would be expected by readr defaults.
@@ -112,9 +101,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
       nhgis_multi_fwf,
       file_select = 1,
       do_file = FALSE,
-      show_conditions = FALSE,
-      progress = FALSE,
-      show_col_types = FALSE
+      verbose = FALSE
     ),
     "Data loaded from NHGIS fixed-width files may not be consistent"
   )
@@ -124,9 +111,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
       nhgis_multi_fwf,
       file_select = 1,
       do_file = "asdf",
-      show_conditions = FALSE,
-      progress = FALSE,
-      show_col_types = FALSE
+      verbose = FALSE
     ),
     "Could not find the provided `do_file`..+"
   )
@@ -137,9 +122,7 @@ test_that("Can read NHGIS extract: fixed-width files", {
       file_select = 1,
       do_file = "asdf",
       col_positions = readr::fwf_widths(1),
-      show_conditions = FALSE,
-      progress = FALSE,
-      show_col_types = FALSE
+      verbose = FALSE
     ),
     paste0(
       "Only one of `col_positions` or `do_file` can be provided. ",
@@ -169,16 +152,13 @@ test_that("Can read NHGIS extract: single time series table", {
   tst <- read_nhgis(
     nhgis_multi_fwf,
     file_select = contains("ts"),
-    progress = FALSE,
-    show_conditions = FALSE
+    verbose = FALSE
   )
 
   tst2 <- read_nhgis(
     nhgis_multi_ds,
     file_select = contains("ts"),
-    progress = FALSE,
-    show_conditions = FALSE,
-    show_col_types = FALSE
+    verbose = FALSE
   )
 
   expect_identical(
@@ -210,8 +190,8 @@ test_that("Can read NHGIS extract: single time series table", {
 
 test_that("Can select data files by index", {
 
-  nhgis1 <- read_nhgis(nhgis_multi_ds, file_select = 1, show_conditions = FALSE)
-  nhgis2 <- read_nhgis(nhgis_multi_ds, file_select = 2, show_conditions = FALSE)
+  nhgis1 <- read_nhgis(nhgis_multi_ds, file_select = 1, verbose = FALSE)
+  nhgis2 <- read_nhgis(nhgis_multi_ds, file_select = 2, verbose = FALSE)
 
   expect_equal(dim(nhgis1), c(1, 115))
   expect_equal(dim(nhgis2), c(84, 28))
@@ -238,13 +218,13 @@ test_that("Can select data files with tidyselect", {
   nhgis1 <- read_nhgis(
     nhgis_multi_ds,
     file_select = contains("ds239"),
-    show_conditions = FALSE
+    verbose = FALSE
   )
 
   nhgis2 <- read_nhgis(
     nhgis_multi_ds,
     file_select = contains("ts_nominal"),
-    show_conditions = FALSE
+    verbose = FALSE
   )
 
   expect_equal(dim(nhgis1), c(1, 115))
@@ -272,13 +252,13 @@ test_that("Can still find codebook if file_select matches data file only", {
   nhgis <- read_nhgis(
     nhgis_multi_ds,
     file_select = matches("nation.csv"),
-    show_conditions = FALSE
+    verbose = FALSE
   )
 
   nhgis2 <-  read_nhgis(
     nhgis_multi_ds,
     file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv",
-    show_conditions = FALSE
+    verbose = FALSE
   )
 
   expect_true(all.equal(nhgis, nhgis2))
@@ -297,9 +277,7 @@ test_that("We can pass arguments to underlying reader functions", {
   expect_silent(
     nhgis_data <- read_nhgis(
       nhgis_single_csv,
-      show_conditions = FALSE,
-      show_col_types = FALSE,
-      progress = FALSE,
+      verbose = FALSE,
       col_names = FALSE,
       col_types = readr::cols(.default = readr::col_character()),
       skip = 1,
@@ -311,7 +289,7 @@ test_that("We can pass arguments to underlying reader functions", {
     nhgis_data_fwf <- read_nhgis(
       nhgis_multi_fwf,
       file_select = 1,
-      show_conditions = FALSE,
+      verbose = FALSE,
       col_positions = readr::fwf_widths(c(4, 2, 2, 1)),
       col_types = "ccil"
     ),
@@ -320,9 +298,7 @@ test_that("We can pass arguments to underlying reader functions", {
 
   nhgis_data2 <- read_nhgis(
     nhgis_single_csv,
-    show_conditions = FALSE,
-    show_col_types = FALSE,
-    progress = FALSE,
+    verbose = FALSE,
     col_names = c("A", "B"),
     remove_extra_header = FALSE
   )
@@ -346,24 +322,24 @@ test_that("We can pass arguments to underlying reader functions", {
 test_that("We get informative error messages when reading NHGIS extracts", {
 
   expect_error(
-    read_nhgis("FAKE_FILE.zip", show_conditions = FALSE),
+    read_nhgis("FAKE_FILE.zip", verbose = FALSE),
     "Could not find file"
   )
 
   expect_error(
-    read_nhgis("~/Desktop/FAKE_FILE.zip", show_conditions = FALSE),
+    read_nhgis("~/Desktop/FAKE_FILE.zip", verbose = FALSE),
     "Could not find file `/.+/Desktop/FAKE_FILE.zip"
   )
 
   expect_error(
-    nhgis <- read_nhgis(nhgis_multi_ds, show_conditions = FALSE),
+    nhgis <- read_nhgis(nhgis_multi_ds, verbose = FALSE),
     "Multiple files found, please use the `file_select`"
   )
   expect_error(
     nhgis <- read_nhgis(
       nhgis_multi_ds,
       file_select = contains("nhgis"),
-      show_conditions = FALSE
+      verbose = FALSE
     ),
     "Multiple files found, please use the `file_select`"
   )
@@ -371,20 +347,20 @@ test_that("We get informative error messages when reading NHGIS extracts", {
     nhgis <- read_nhgis(
       nhgis_multi_ds,
       file_select = 1:2,
-      show_conditions = FALSE
+      verbose = FALSE
     ),
     "Multiple files found, please use the `file_select`"
   )
 
   expect_error(
-    read_nhgis(nhgis_multi_ds, file_select = 3, show_conditions = FALSE),
+    read_nhgis(nhgis_multi_ds, file_select = 3, verbose = FALSE),
     "Can't subset files past the end.+Available files:"
   )
   expect_error(
     read_nhgis(
       nhgis_multi_ds,
       file_select = contains("not-in-file"),
-      show_conditions = FALSE
+      verbose = FALSE
     ),
     "The provided `file_select` did not select any of the available files:"
   )
@@ -399,12 +375,7 @@ test_that("Can read NHGIS codebook", {
 
   # Single dataset ----------------
 
-  d_csv <- read_nhgis(
-    nhgis_single_csv,
-    show_conditions = FALSE,
-    progress = FALSE,
-    show_col_types = FALSE
-  )
+  d_csv <- read_nhgis(nhgis_single_csv, verbose = FALSE)
 
   cb_csv <- read_nhgis_codebook(nhgis_single_csv)
 
@@ -415,9 +386,7 @@ test_that("Can read NHGIS codebook", {
   d_fwf <- read_nhgis(
     nhgis_multi_fwf,
     file_select = 1,
-    show_conditions = FALSE,
-    progress = FALSE,
-    show_col_types = FALSE
+    verbose = FALSE
   )
 
   cb_fwf <- read_nhgis_codebook(nhgis_multi_fwf, file_select = 1)
@@ -427,9 +396,7 @@ test_that("Can read NHGIS codebook", {
   d_fwf_tst <- read_nhgis(
     nhgis_multi_fwf,
     file_select = 2,
-    show_conditions = FALSE,
-    progress = FALSE,
-    show_col_types = FALSE
+    verbose = FALSE
   )
 
   cb_fwf_ts <- read_nhgis_codebook(nhgis_multi_fwf, file_select = 2)

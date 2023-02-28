@@ -79,13 +79,17 @@
 #'   specify a different locale to control things like default time zone,
 #'   decimal mark, big mark, and day/month names. If you do so, specify
 #'   `encoding = "latin1"` to ensure files are encoded properly.
-#' @param show_conditions If `TRUE`, print IPUMS conditions to console when
-#'   loading data.
+#' @param verbose Logical controlling whether to display output when loading
+#'   data. If `TRUE`, displays IPUMS conditions, a progress bar, and
+#'   guessed column types, unless `progress` or `show_col_types` is specified.
+#' @param progress Logical indicating whether to display a progress bar when
+#'   loading data. By default, uses the value of `verbose`, unless
+#'   the `readr.show_progress` option is set to `FALSE`.
+#' @param show_col_types Logical indicating whether to display guessed column
+#'   types. By default, uses the value of `verbose`, unless
+#'   the `readr.show_col_types` option is set to `FALSE`.
 #' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
 #'   [`read_fwf()`][readr::read_fwf].
-#' @param verbose `r lifecycle::badge("deprecated")` Use `show_conditions` to
-#'   control display of IPUMS conditions. Use `progress` and/or `show_col_types`
-#'   to suppress `readr` output.
 #' @param data_layer `r lifecycle::badge("deprecated")` Please
 #'   use `file_select` instead.
 #'
@@ -112,10 +116,10 @@
 #' # a single file to load.
 #'
 #' # This accepts a tidyselect expression
-#' read_nhgis(fw_file, file_select = matches("ds239"), show_conditions = FALSE)
+#' read_nhgis(fw_file, file_select = matches("ds239"), verbose = FALSE)
 #'
 #' # Or an index position
-#' read_nhgis(fw_file, file_select = 2, show_conditions = FALSE)
+#' read_nhgis(fw_file, file_select = 2, verbose = FALSE)
 #'
 #' # NHGIS fixed-width files use the information contained in the extract's
 #' # .do file to parse the data correctly. If it does not exist, the parsing
@@ -125,8 +129,7 @@
 #'   fw_file,
 #'   file_select = 2,
 #'   do_file = FALSE,
-#'   show_conditions = FALSE,
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' bad_parse$X1[1:10]
@@ -143,9 +146,10 @@ read_nhgis <- function(data_file,
                        na = NULL,
                        col_names = TRUE,
                        locale = NULL,
-                       show_conditions = TRUE,
+                       verbose = TRUE,
+                       progress = NULL,
+                       show_col_types = NULL,
                        ...,
-                       verbose = deprecated(),
                        data_layer = deprecated()) {
 
   if (length(data_file) != 1) {
@@ -165,18 +169,6 @@ read_nhgis <- function(data_file,
     file_select <- enquo(data_layer)
   } else {
     file_select <- enquo(file_select)
-  }
-
-  if (!missing(verbose)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis(verbose = )",
-      details = paste0(
-        "Please use the `show_conditions` argument or arguments ",
-        "passed to `readr::read_csv` instead."
-      )
-    )
-    show_conditions <- show_conditions %||% verbose
   }
 
   custom_check_file_exists(data_file)
@@ -220,10 +212,12 @@ read_nhgis <- function(data_file,
       file_select = !!file_select,
       var_attrs = var_attrs,
       remove_extra_header = remove_extra_header,
-      show_conditions = show_conditions,
+      verbose = verbose,
       na = na %||% c("", "NA"),
       locale = locale,
       col_names = col_names,
+      progress = progress %||% show_readr_progress(verbose),
+      show_col_types = show_col_types %||% show_readr_coltypes(verbose),
       ...
     )
   } else {
@@ -232,9 +226,11 @@ read_nhgis <- function(data_file,
       file_select = !!file_select,
       var_attrs = var_attrs,
       do_file = do_file,
-      show_conditions = show_conditions,
+      verbose = verbose,
       na = na %||% c(".", "", "NA"),
       locale = locale,
+      progress = progress %||% show_readr_progress(verbose),
+      show_col_types = show_col_types %||% show_readr_coltypes(verbose),
       ...
     )
   }
@@ -249,7 +245,7 @@ read_nhgis_fwf <- function(data_file,
                            file_select = NULL,
                            do_file = NULL,
                            var_attrs = c("val_labels", "var_label", "var_desc"),
-                           show_conditions = TRUE,
+                           verbose = TRUE,
                            locale = NULL,
                            ...) {
 
@@ -306,7 +302,7 @@ read_nhgis_fwf <- function(data_file,
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
-  if (show_conditions) {
+  if (verbose) {
     message(short_conditions_text(cb_ddi_info))
   }
 
@@ -426,7 +422,7 @@ read_nhgis_csv <- function(data_file,
                            file_select = NULL,
                            var_attrs = c("val_labels", "var_label", "var_desc"),
                            remove_extra_header = TRUE,
-                           show_conditions = TRUE,
+                           verbose = TRUE,
                            locale = NULL,
                            skip = 0,
                            col_names = TRUE,
@@ -471,7 +467,7 @@ read_nhgis_csv <- function(data_file,
     cb_ddi_info <- NHGIS_EMPTY_DDI
   }
 
-  if (show_conditions) {
+  if (verbose) {
     message(short_conditions_text(cb_ddi_info))
   }
 

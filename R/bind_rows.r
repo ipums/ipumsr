@@ -26,15 +26,13 @@
 #' d1 <- read_nhgis(
 #'   file,
 #'   file_select = 1,
-#'   show_conditions = FALSE,
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' d2 <- read_nhgis(
 #'   file,
 #'   file_select = 2,
-#'   show_conditions = FALSE,
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' # Variables have associated label attributes:

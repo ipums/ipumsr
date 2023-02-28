@@ -14,9 +14,10 @@ read_nhgis(
   na = NULL,
   col_names = TRUE,
   locale = NULL,
-  show_conditions = TRUE,
+  verbose = TRUE,
+  progress = NULL,
+  show_col_types = NULL,
   ...,
-  verbose = deprecated(),
   data_layer = deprecated()
 )
 }
@@ -87,15 +88,20 @@ specify a different locale to control things like default time zone,
 decimal mark, big mark, and day/month names. If you do so, specify
 \code{encoding = "latin1"} to ensure files are encoded properly.}
 
-\item{show_conditions}{If \code{TRUE}, print IPUMS conditions to console when
-loading data.}
+\item{verbose}{Logical controlling whether to display output when loading
+data. If \code{TRUE}, displays IPUMS conditions, a progress bar, and
+guessed column types, unless \code{progress} or \code{show_col_types} is specified.}
+
+\item{progress}{Logical indicating whether to display a progress bar when
+loading data. By default, uses the value of \code{verbose}, unless
+the \code{readr.show_progress} option is set to \code{FALSE}.}
+
+\item{show_col_types}{Logical indicating whether to display guessed column
+types. By default, uses the value of \code{verbose}, unless
+the \code{readr.show_col_types} option is set to \code{FALSE}.}
 
 \item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
 \code{\link[readr:read_fwf]{read_fwf()}}.}
-
-\item{verbose}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{show_conditions} to
-control display of IPUMS conditions. Use \code{progress} and/or \code{show_col_types}
-to suppress \code{readr} output.}
 
 \item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please
 use \code{file_select} instead.}
@@ -133,10 +139,10 @@ read_nhgis(csv_file)
 # a single file to load.
 
 # This accepts a tidyselect expression
-read_nhgis(fw_file, file_select = matches("ds239"), show_conditions = FALSE)
+read_nhgis(fw_file, file_select = matches("ds239"), verbose = FALSE)
 
 # Or an index position
-read_nhgis(fw_file, file_select = 2, show_conditions = FALSE)
+read_nhgis(fw_file, file_select = 2, verbose = FALSE)
 
 # NHGIS fixed-width files use the information contained in the extract's
 # .do file to parse the data correctly. If it does not exist, the parsing
@@ -146,8 +152,7 @@ bad_parse <- read_nhgis(
   fw_file,
   file_select = 2,
   do_file = FALSE,
-  show_conditions = FALSE,
-  show_col_types = FALSE
+  verbose = FALSE
 )
 
 bad_parse$X1[1:10]

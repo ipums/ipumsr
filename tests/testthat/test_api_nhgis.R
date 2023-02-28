@@ -736,7 +736,7 @@ tryCatch(
       data <- read_nhgis(
         table_data_file_path,
         file_select = contains("blck_grp"),
-        show_conditions = FALSE
+        verbose = FALSE
       )
 
       shape_data_sf <- read_ipums_sf(gis_data_file_path)
@@ -893,7 +893,7 @@ tryCatch(
       data <- read_nhgis(
         table_data_file_path,
         file_select = contains("state"),
-        show_conditions = FALSE
+        verbose = FALSE
       )
 
       expect_equal(nrow(data), 153)

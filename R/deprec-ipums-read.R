@@ -572,9 +572,7 @@ read_nhgis_sf <- function(data_file,
     data <- read_nhgis(
       data_file,
       file_select = !!enquo(data_layer),
-      show_conditions = verbose,
-      progress = verbose,
-      show_col_types = verbose
+      verbose = verbose
     ),
     error = function(cnd) {
       rlang::abort(
@@ -676,9 +674,7 @@ read_nhgis_sp <- function(data_file,
     data <- read_nhgis(
       data_file,
       file_select = !!enquo(data_layer),
-      show_conditions = verbose,
-      progress = verbose,
-      show_col_types = verbose
+      verbose = verbose
     ),
     error = function(cnd) {
       rlang::abort(

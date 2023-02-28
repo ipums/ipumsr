@@ -448,11 +448,7 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #'
 #' # If variable metadata have been lost from a data source, reattach from
 #' # the corresponding `ipums_ddi` object:
-#' nhgis_data <- read_nhgis(
-#'   nhgis_file,
-#'   show_conditions = FALSE,
-#'   show_col_types = FALSE
-#' )
+#' nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
 #'
 #' nhgis_data <- zap_ipums_attributes(nhgis_data)
 #'
