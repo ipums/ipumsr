@@ -334,7 +334,7 @@ from the `sp` package. If you prefer to work with these objects, use
 `read_ipums_sf()` also supports the loading of spatial files within .zip
 archives and the `file_select` syntax for file selection.
 
-```{r}
+```{r, eval = requireNamespace("sf")}
 nhgis_shp_file <- ipums_example("nhgis0972_shape_small.zip")
 
 shp_data <- read_ipums_sf(nhgis_shp_file)
@@ -346,7 +346,7 @@ These data can then be joined on associated tabular data. To preserve
 ipums attributes from the tabular data used in the join, use
 an`ipums_shape_*_join` function:
 
-```{r}
+```{r, eval = requireNamespace("sf")}
 joined_data <- ipums_shape_left_join(
   nhgis_data,
   shp_data,

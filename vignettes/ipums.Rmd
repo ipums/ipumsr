@@ -148,7 +148,7 @@ ipumsr also supports the reading of IPUMS spatial boundary files into
 the `sf` format provided by the [sf](https://r-spatial.github.io/sf/)
 package:
 
-```{r}
+```{r, eval = requireNamespace("sf")}
 shp_file <- ipums_example("nhgis0972_shape_small.zip")
 nhgis_shp <- read_ipums_sf(shp_file)
 
