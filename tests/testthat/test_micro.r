@@ -151,7 +151,7 @@ test_that(
   "Informative error when no ddi file", {
     expect_error(
       read_ipums_micro("FAKE_FILE.xml"),
-      "Could not find file `/.+/FAKE_FILE.xml`"
+      "Could not find file .+/FAKE_FILE.xml`"
     )
     expect_error(
       read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"),

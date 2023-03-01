@@ -263,7 +263,7 @@ test_that("Careful rbind handles various data types (sf)", {
     )
   )
 
-  sf1 <- sf::st_sf(layer = "A", geometry = g1)
+  sf1 <- sf::st_sf(layer = "A", geometry = g1, stringsAsFactors = FALSE)
   sf2 <- sf::st_sf(layer = FALSE, layer.1 = 1, geometry = g2)
   sf3 <- sf::st_sf(b = 3, layer.1 = FALSE, layer = 4, geometry = g3)
 
