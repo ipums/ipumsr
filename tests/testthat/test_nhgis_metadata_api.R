@@ -189,7 +189,7 @@ test_that("We throw errors on bad metadata requests", {
 
   expect_error(
     get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
-    "bad/illegal format or missing URL"
+    "Unable to submit metadata request"
   )
 
   # Missing columns

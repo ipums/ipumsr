@@ -75,6 +75,7 @@ test_that("Can row bind multiple sf files", {
 
 test_that("Can row bind multiple sp files", {
 
+  skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
   withr::with_options(list(lifecycle_verbosity = "quiet", warn = -1), {
@@ -100,6 +101,8 @@ test_that("Can row bind multiple sp files", {
 })
 
 test_that("Can read extract at multiple file levels", {
+
+  skip_if_not_installed("sf")
 
   # Read standard zip format ------------
 
@@ -234,7 +237,7 @@ test_that("We get informative errors when reading shapefiles", {
         bind_multiple = TRUE,
         verbose = FALSE
       ),
-      "no method or default for coercing.+SpatialPointsDataFrame"
+      "no method.+for coercing"
     )
   })
 
@@ -250,6 +253,8 @@ test_that("We get informative errors when reading shapefiles", {
 })
 
 test_that("Careful rbind handles various data types (sf)", {
+
+  skip_if_not_installed("sf")
 
   g1 <- sf::st_sfc(sf::st_point(1:2))
   g2 <- sf::st_sfc(sf::st_point(3:4))
@@ -312,6 +317,9 @@ test_that("Careful rbind handles various data types (sf)", {
 })
 
 test_that("Careful rbind handles various data types (sp)", {
+
+  skip_if_not_installed("rgdal")
+  skip_if_not_installed("sp")
 
   sp1 <- sp::SpatialPointsDataFrame(
     cbind(1:2, 3:4),

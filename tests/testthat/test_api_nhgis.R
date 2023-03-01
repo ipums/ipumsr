@@ -70,16 +70,7 @@ if (have_api_access) {
         )
 
         expect_match(gis_data_file_path, "_shape\\.zip$")
-
         expect_true(file.exists(gis_data_file_path))
-
-        data_shp_sf <- read_ipums_sf(gis_data_file_path)
-        expect_s3_class(data_shp_sf, "sf")
-
-        lifecycle::expect_deprecated(
-          data_shp_sp <-  read_ipums_sp(gis_data_file_path, verbose = FALSE)
-        )
-        expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
       })
     })
   },
@@ -732,96 +723,6 @@ tryCatch(
 
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
-
-      data <- read_nhgis(
-        table_data_file_path,
-        file_select = contains("blck_grp"),
-        verbose = FALSE
-      )
-
-      shape_data_sf <- read_ipums_sf(gis_data_file_path)
-
-      lifecycle::expect_deprecated(
-        shape_data_sp <- read_ipums_sp(gis_data_file_path, verbose = FALSE)@data
-      )
-      expect_equal(nrow(data), 10190)
-
-      lifecycle::expect_deprecated(
-        data_shp_sf <- read_nhgis_sf(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("blck_grp"),
-          verbose = FALSE
-        )
-      )
-
-      expect_error(
-        read_nhgis_sf(
-          table_data_file_path,
-          gis_data_file_path,
-          verbose = FALSE
-        ),
-        "`data_layer`"
-      )
-
-      expect_error(
-        read_nhgis_sf(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("fake-layer"),
-          verbose = FALSE
-        ),
-        "`shape_layer`"
-      )
-
-      expect_s3_class(data_shp_sf, "sf")
-      expect_equal(nrow(data_shp_sf), nrow(data)) # sf keeps unmatched geoms
-      expect_equal(
-        ncol(data_shp_sf),
-        ncol(data) + ncol(shape_data_sf) -
-          length(intersect(colnames(data), colnames(shape_data_sf)))
-      )
-
-      lifecycle::expect_deprecated(
-        data_shp_sp <- read_nhgis_sp(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("blck_grp"),
-          verbose = FALSE
-        )
-      )
-
-      expect_error(
-        read_nhgis_sp(
-          table_data_file_path,
-          gis_data_file_path,
-          verbose = FALSE
-        ),
-        "`data_layer`"
-      )
-
-      expect_error(
-        read_nhgis_sp(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("fake-layer"),
-          verbose = FALSE
-        ),
-        "`shape_layer`"
-      )
-
-      expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
-      expect_equal(nrow(data_shp_sp@data), 450) # sp drops unmatched geoms
-      expect_equal(
-        ncol(data_shp_sp),
-        ncol(data) + ncol(data_shp_sp@data) -
-          length(intersect(colnames(data), colnames(data_shp_sp@data)))
-      )
-
     })
   }),
   warning = function(w) {
@@ -889,38 +790,6 @@ tryCatch(
 
       expect_true(file.exists(table_data_file_path))
       expect_true(file.exists(gis_data_file_path))
-
-      data <- read_nhgis(
-        table_data_file_path,
-        file_select = contains("state"),
-        verbose = FALSE
-      )
-
-      expect_equal(nrow(data), 153)
-
-      lifecycle::expect_deprecated(
-        data_shp_sf <- read_nhgis_sf(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("blck_grp"),
-          verbose = FALSE
-        )
-      )
-
-      expect_s3_class(data_shp_sf, "sf")
-
-      lifecycle::expect_deprecated(
-        data_shp_sp <- read_nhgis_sp(
-          table_data_file_path,
-          gis_data_file_path,
-          data_layer = contains("blck_grp"),
-          shape_layer = contains("blck_grp"),
-          verbose = FALSE
-        )
-      )
-
-      expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
     })
   }),
   warning = function(w) {
@@ -960,7 +829,6 @@ tryCatch(
       )
 
       expect_equal(length(file_paths), 2)
-
     })
   }),
   warning = function(w) {
@@ -969,6 +837,120 @@ tryCatch(
     }
   }
 )
+
+test_that("Can read downloaded files with ipumsr readers", {
+
+  skip_if_not_installed("sf")
+  skip_if_not_installed("rgdal")
+  skip_if_not_installed("sp")
+
+  vcr::use_cassette("ready-nhgis-extract", {
+    number <- ready_nhgis_extract$number
+  })
+
+  table_data_file_path <- list.files(
+    vcr::vcr_test_path("fixtures"),
+    pattern = paste0(number, "_csv"),
+    full.names = TRUE
+  )
+
+  gis_data_file_path <- list.files(
+    vcr::vcr_test_path("fixtures"),
+    pattern = paste0(number, "_shape"),
+    full.names = TRUE
+  )
+
+  # Can read downloaded files with ipumsr readers:
+  data <- read_nhgis(
+    table_data_file_path,
+    file_select = contains("blck_grp"),
+    verbose = FALSE
+  )
+
+  shape_data_sf <- read_ipums_sf(gis_data_file_path)
+
+  lifecycle::expect_deprecated(
+    shape_data_sp <- read_ipums_sp(gis_data_file_path, verbose = FALSE)@data
+  )
+  expect_equal(nrow(data), 10190)
+
+  lifecycle::expect_deprecated(
+    data_shp_sf <- read_nhgis_sf(
+      table_data_file_path,
+      gis_data_file_path,
+      data_layer = contains("blck_grp"),
+      shape_layer = contains("blck_grp"),
+      verbose = FALSE
+    )
+  )
+
+  expect_error(
+    read_nhgis_sf(
+      table_data_file_path,
+      gis_data_file_path,
+      verbose = FALSE
+    ),
+    "`data_layer`"
+  )
+
+  expect_error(
+    read_nhgis_sf(
+      table_data_file_path,
+      gis_data_file_path,
+      data_layer = contains("blck_grp"),
+      shape_layer = contains("fake-layer"),
+      verbose = FALSE
+    ),
+    "`shape_layer`"
+  )
+
+  expect_s3_class(data_shp_sf, "sf")
+  expect_equal(nrow(data_shp_sf), nrow(data)) # sf keeps unmatched geoms
+  expect_equal(
+    ncol(data_shp_sf),
+    ncol(data) + ncol(shape_data_sf) -
+      length(intersect(colnames(data), colnames(shape_data_sf)))
+  )
+
+  lifecycle::expect_deprecated(
+    data_shp_sp <- read_nhgis_sp(
+      table_data_file_path,
+      gis_data_file_path,
+      data_layer = contains("blck_grp"),
+      shape_layer = contains("blck_grp"),
+      verbose = FALSE
+    )
+  )
+
+  expect_error(
+    read_nhgis_sp(
+      table_data_file_path,
+      gis_data_file_path,
+      verbose = FALSE
+    ),
+    "`data_layer`"
+  )
+
+  expect_error(
+    read_nhgis_sp(
+      table_data_file_path,
+      gis_data_file_path,
+      data_layer = contains("blck_grp"),
+      shape_layer = contains("fake-layer"),
+      verbose = FALSE
+    ),
+    "`shape_layer`"
+  )
+
+  expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
+  expect_equal(nrow(data_shp_sp@data), 450) # sp drops unmatched geoms
+  expect_equal(
+    ncol(data_shp_sp),
+    ncol(data) + ncol(data_shp_sp@data) -
+      length(intersect(colnames(data), colnames(data_shp_sp@data)))
+  )
+
+})
 
 # > Revising ------------------------------------
 
