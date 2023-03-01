@@ -63,7 +63,7 @@
 #'
 #' @export
 #'
-#' @examples
+#' @examplesIf requireNamespace("sf")
 #' # Example shapefile from NHGIS
 #' shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
 #' data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))

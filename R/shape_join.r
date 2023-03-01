@@ -34,7 +34,7 @@
 #'
 #' @name ipums_shape_join
 #'
-#' @examples
+#' @examplesIf requireNamespace("sf")
 #' data <- read_nhgis(
 #'   ipums_example("nhgis0972_csv.zip"),
 #'   show_col_types = FALSE

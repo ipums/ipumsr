@@ -78,6 +78,7 @@ shapefiles, this function will throw an error. If this is the case, you may
 need to manually unzip the downloaded file before loading it into R.
 }
 \examples{
+\dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
 data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
@@ -108,6 +109,7 @@ ipums_shape_full_join(
   sf_data,
   by = "GISJOIN"
 )
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from

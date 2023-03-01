@@ -74,6 +74,7 @@ tabular data that emerge in some IPUMS files
 }
 }
 \examples{
+\dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- read_nhgis(
   ipums_example("nhgis0972_csv.zip"),
   show_col_types = FALSE
@@ -83,4 +84,5 @@ sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 joined_data <- ipums_shape_inner_join(data, sf_data, by = "GISJOIN")
 
 colnames(joined_data)
+\dontshow{\}) # examplesIf}
 }
