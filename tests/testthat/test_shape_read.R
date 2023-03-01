@@ -341,39 +341,12 @@ test_that("Careful rbind handles various data types (sp)", {
 
   expect_error(
     careful_sp_rbind(list(a = sp1, b = sp3)),
-    "no method or default for coercing"
+    "Unexpected variable type in shape file."
   )
 
-  expect_warning(
+  expect_error(
     careful_sp_rbind(list(a = sp1, b = sp2), add_layer_var = TRUE),
-    "Adding layer information to column \"layer.1\""
-  )
-
-  expect_warning(
-    sp_bind <- careful_sp_rbind(list(a = sp1, b = sp2)),
-    "Coercing variables .+ \"a\" \\(integer vs. logical\\)"
-  )
-
-  expect_null(
-    suppressWarnings(
-      careful_sp_rbind(list(a = sp1, b = sp2), add_layer_var = FALSE)$layer.1
-    )
-  )
-
-  expect_equal(
-    purrr::map(sp_bind@data, class),
-    list(
-      layer.1 = "character",
-      a = "integer",
-      b = "character",
-      layer = "character"
-    )
-  )
-
-  expect_equal(nrow(sp_bind@data), nrow(sp1@data) + nrow(sp2@data))
-  expect_equal(
-    ncol(sp_bind@data),
-    length(union(colnames(sp1@data), colnames(sp2@data))) + 1
+    "Cannot combine shape files because variable types don't match"
   )
 
 })

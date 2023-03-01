@@ -409,101 +409,46 @@ read_ipums_sp <- function(shape_file,
 # them together.
 # Warns if types don't match and are coerced
 careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
-
-  add_layer_var <- add_layer_var %||% (length(sp_list) > 1)
-
+  if (is.null(add_layer_var)) add_layer_var <- length(sp_list) > 1
   if (add_layer_var) {
-    existing_cols <- unique(unlist(purrr::map(sp_list, ~colnames(.x@data))))
-    lyr_name <- make.unique(c(existing_cols, "layer"))
-    lyr_name <- lyr_name[length(lyr_name)]
-
-    if (lyr_name != "layer") {
-      rlang::warn(
-        paste0(
-          "Adding layer information to column \"", lyr_name,
-          "\", as \"layer\" is already present in data."
-        )
-      )
-    }
-
-    sp_list <- purrr::imap(
-      sp_list,
-      function(.x, .y) {
-        .x@data <- dplyr::mutate(
-          .x@data,
-          {{ lyr_name }} := .y,
-          .before = dplyr::everything()
-        )
-        .x
-      }
-    )
+    sp_list <- purrr::imap(sp_list, function(.x, .y) {
+      .x@data[["layer"]] <- .y
+      .x
+    })
   }
 
   if (length(sp_list) == 1) {
     return(sp_list[[1]])
-  }
+  } else {
+    # Get var info for all columns
+    all_var_info <- purrr::map_df(sp_list, .id = "id", function(x) {
+      tibble::tibble(name = names(x@data), type = purrr::map(x@data, ~class(.)))
+    })
 
-  all_var_info <- purrr::map_df(
-    sp_list,
-    .id = "id",
-    ~tibble::tibble(name = names(.x@data), type = purrr::map(.x@data, class))
-  )
-
-  all_var_info <- dplyr::group_by(all_var_info, .data$name)
-
-  var_type_check <- dplyr::summarize(
-    all_var_info,
-    check = length(unique(.data$type))
-  )
-
-  # Warn on variable type coercion
-  if (any(var_type_check$check != 1)) {
-    bad_vars <- var_type_check$name[which(var_type_check$check > 1)]
-
-    bad_types <- purrr::map_chr(
-      bad_vars,
-      ~paste0(
-        all_var_info[all_var_info$name == .x, ]$type,
-        collapse = " vs. "
-      )
-    )
-
-    rlang::warn(
-      c(
-        "Coercing variables with inconsistent types across files: ",
-        purrr::set_names(
-          paste0("\"", bad_vars, "\" (", bad_types, ")"),
-          "*"
-        )
-      )
-    )
-  }
-
-  # Add missing values for cols that don't exist in all data sources
-  out <- purrr::map(
-    sp_list,
-    function(x) {
-      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
-
-      if (length(missing_vars) == 0) {
-        return(x)
-      }
-
-      purrr::walk(
-        missing_vars,
-        function(vn) {
-          x@data[[vn]] <<- NA
-        }
-      )
-
-      x
+    all_var_info <- dplyr::group_by(all_var_info, .data$name)
+    var_type_check <- dplyr::summarize(all_var_info, check = length(unique(.data$type)))
+    if (any(var_type_check$check != 1)) {
+      stop("Cannot combine shape files because variable types don't match.")
     }
-  )
+    all_var_info <- dplyr::slice(all_var_info, 1)
+    all_var_info <- dplyr::ungroup(all_var_info)
+    all_var_info$id <- NULL
 
-  out <- do.call(rbind, out)
+    out <- purrr::map(sp_list, function(x) {
+      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
+      if (length(missing_vars) == 0) return(x)
 
+      for (vn in missing_vars) {
+        vtype <- all_var_info$type[all_var_info$name == vn][[1]]
+        if (identical(vtype, "character")) x@data[[vn]] <- NA_character_
+        else if (identical(vtype, "numeric")) x@data[[vn]] <- NA_real_
+        else stop("Unexpected variable type in shape file.")
+      }
+      x
+    })
+    out <- do.call(rbind, out)
+  }
   out
-
 }
 
 #' Read and combine tabular and spatial data from an NHGIS extract
