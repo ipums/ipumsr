@@ -41,9 +41,6 @@ x <- haven::labelled(
 # Convert labelled values greater than 90 to `NA`
 lbl_na_if(x, function(.val, .lbl) .val >= 90)
 
-# Convert values over 90 or with label "Maybe" to `NA` (R >= 4.1 syntax)
-lbl_na_if(x, \(.val, .lbl) .val >= 90 | .lbl \%in\% c("Maybe"))
-
 # Can use purrr-style notation
 lbl_na_if(x, ~ .lbl \%in\% c("Maybe"))
 
