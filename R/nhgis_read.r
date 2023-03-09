@@ -51,7 +51,7 @@
 #'   By default, looks in the same directory as `data_file` for a .do
 #'   file with the same name. If `FALSE` or if the .do file cannot be found,
 #'   the .dat file will be parsed by the values provided to `col_positions`
-#'   in [`read_fwf()`][readr::read_fwf]. See details.
+#'   in [`read_fwf()`][readr::read_fwf]. See Details section.
 #' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
 #'   files) indicating the type of file to search for in the path provided to
 #'   `data_file`. If `NULL`, determines the file type automatically based on

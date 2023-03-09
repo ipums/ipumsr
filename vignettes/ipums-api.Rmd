@@ -161,12 +161,12 @@ above.)
 
 By default, ipumsr API functions assume that your key is stored in the
 `IPUMS_API_KEY` environment variable. You can also provide your key
-directly to these functions, but we recommend storing your key in your
-environment. This makes writing code less tedious and helps prevent you
+directly to these functions, but storing it in an environment variable saves you 
+some typing and helps prevent you
 from inadvertently sharing your key with others (for instance, on
 GitHub).
 
-You can save your API key to your environment with
+You can save your API key to the `IPUMS_API_KEY` environment variable with
 `set_ipums_api_key()`. To save your key for use in future sessions, set
 `save = TRUE`. This will add your API key to your `.Renviron` file in
 your user home directory.
@@ -176,8 +176,8 @@ your user home directory.
 set_ipums_api_key("paste-your-key-here", save = TRUE)
 ```
 
-The rest of this vignette assumes you have obtained an API key and have
-it stored in your environment.
+The rest of this vignette assumes you have obtained an API key and stored it in 
+the `IPUMS_API_KEY` environment variable.
 
 ## Define an extract request {#define}
 
@@ -286,7 +286,7 @@ nhgis_extract_definition[["data_tables"]]
 ```
 
 `ipums_extract` objects also contain information about the extract
-request's status. As expected, this extract hasn't yet been submitted,
+request's status. This extract hasn't yet been submitted,
 and therefore has no extract request number:
 
 ```{r}
@@ -305,7 +305,7 @@ insert_cassette("ipums-metadata-api")
 ```
 
 To build a valid extract request, you need to know the names and codes
-used for the data sources you want to include.
+used for the data sources and variables you want to include.
 
 While the IPUMS metadata API is not yet available for microdata
 collections, users can find sample ID codes at the following links:
@@ -314,6 +314,14 @@ collections, users can find sample ID codes at the following links:
     USA](https://usa.ipums.org/usa-action/samples/sample_ids){target="_blank"}
 -   [IPUMS
     CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
+
+For microdata variable names, refer to the relevant collection's online extract 
+builder:
+
+- [IPUMS
+  USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
+- [IPUMS 
+  CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
 
 IPUMS NHGIS users can find the codes used for datasets, data tables,
 time series tables, and more by using `get_nhgis_metadata()`.
@@ -528,7 +536,7 @@ extract is ready to download. This may be undesirable behavior for large
 extracts that take a long time to produce or when the IPUMS servers are
 busy. You can set a maximum wait time and adjust other API polling
 parameters in `wait_for_extract()` and `download_extract()`. See
-`?wait_for_extract()` for details.
+`?wait_for_extract` for details.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("download-nhgis")
@@ -578,11 +586,11 @@ IPUMS data into R.
 
 One exciting feature enabled by the IPUMS API is the ability to share a
 standardized extract definition with other IPUMS users so that they can
-create an identical extract request themselves (recall that IPUMS data
-cannot be redistributed themselves, but the definition to reproduce them
-can).
+create an identical extract request themselves. The terms of use for most IPUMS 
+collections prohibit the redistribution of IPUMS data, but don't prohibit 
+sharing data extract definitions.
 
-ipumsr facilitates this with `save_extract_as_json()` and
+ipumsr facilitates this type of sharing with `save_extract_as_json()` and
 `define_extract_from_json()`, which read and write `ipums_extract`
 objects to and from a standardized JSON-formatted file.
 
@@ -794,7 +802,7 @@ possible (and made easier with `purrr::map_lgl()`).
 ```{r}
 # Find extracts including a certain variable and convert to extract object
 usa_extract_tbl %>% 
-  filter(map_lgl(variables, ~"MARST" %in% .x))
+  filter(map_lgl(variables, ~ "MARST" %in% .x))
 ```
 
 To convert between these two representations, ipumsr provides the
@@ -813,7 +821,7 @@ to `ipums_extract` objects for resubmission.
 
 ```{r}
 usa_extract_tbl %>% 
-  filter(map_lgl(variables, ~"MARST" %in% .x)) %>%
+  filter(map_lgl(variables, ~ "MARST" %in% .x)) %>%
   extract_tbl_to_list() %>%
   pluck(1)
 ```

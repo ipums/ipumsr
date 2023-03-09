@@ -310,7 +310,7 @@ define_extract_cps <- function(description,
 #' Use [get_nhgis_metadata()] to browse and identify data sources for use
 #' in NHGIS extract definitions.
 #'
-#' See details for information about creating valid extract
+#' See Details section for information about creating valid extract
 #' definitions. For general information, see the NHGIS
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
@@ -381,8 +381,8 @@ define_extract_cps <- function(description,
 #' @param data_tables Summary tables to retrieve for each of the requested
 #'   `datasets`. Required for all `datasets` in the extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param time_series_tables
 #'   [Time series tables](https://www.nhgis.org/time-series-tables)
 #'   to include in the extract request.
@@ -391,20 +391,20 @@ define_extract_cps <- function(description,
 #'   `time_series_tables`. Required for all `datasets` and `time_series_tables`
 #'   in the extract definition.
 #'
-#'   See details for syntax options when an extract
+#'   See Details section for syntax options when an extract
 #'   definition has multiple `datasets` and/or `time_series_tables`.
 #' @param years Years for which to obtain the data contained in the requested
 #'   `datasets`. Use `"*"` to select all available years for a given dataset.
 #'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to apply to the requested `datasets`.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param geographic_extents Vector of geographic extents to use for
 #'   all of the `datasets` in the extract definition (for instance, to obtain
 #'   data within a particular state). Use `"*"` to select all available extents.
@@ -1238,7 +1238,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
-#' @param overwrite Logical indicating whether to overwrite any files that
+#' @param overwrite Logical value indicating whether to overwrite any files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
 #' @param wait Logical value indicating whether to wait for the completion of
 #'   the specified `extract` if it is not yet ready for download. Defaults to
@@ -1383,7 +1383,7 @@ download_extract <- function(extract,
 #'
 #' - To add to an **IPUMS USA** extract definition, click
 #'   [here][add_to_extract.usa_extract]
-#' - To add to a **IPUMS CPS** extract definition, click
+#' - To add to an **IPUMS CPS** extract definition, click
 #'   [here][add_to_extract.cps_extract]
 #' - To add to an **IPUMS NHGIS** extract definition, click
 #'   [here][add_to_extract.nhgis_extract]
@@ -1580,7 +1580,26 @@ add_to_extract.usa_extract <- function(extract,
 #'
 #' @export
 #'
-#' @inherit add_to_extract.usa_extract examples
+#' @examples
+#' extract <- define_extract_cps(
+#'   description = "Example CPS extract definition",
+#'   samples = c("cps2020_02s", "cps2020_03s"),
+#'   variables = c("AGE", "SEX", "YEAR")
+#' )
+#'
+#' add_to_extract(extract, samples = "cps2021_03s")
+#'
+#' extract2 <- add_to_extract(
+#'   extract,
+#'   samples = "cps2021_03s",
+#'   variables = c("MARST", "RELATE")
+#' )
+#'
+#' # Values that only take a single value are replaced
+#' add_to_extract(extract, description = "New description")$description
+#'
+#' # You can also combine two separate extract requests together
+#' combine_extracts(extract, extract2)
 add_to_extract.cps_extract <- function(extract,
                                        description = NULL,
                                        samples = NULL,
@@ -1609,7 +1628,7 @@ add_to_extract.cps_extract <- function(extract,
 #' the supplied value.
 #'
 #' In general, adding to an extract follows the same syntax conventions as used
-#' in [define_extract_nhgis()]. See details for more
+#' in [define_extract_nhgis()]. See Details section for more
 #' information on how values passed to dataset and time series table subfields
 #' are interpreted.
 #'
@@ -1678,8 +1697,8 @@ add_to_extract.cps_extract <- function(extract,
 #'   already exist in the extract definition. Required if any new `datasets`
 #'   are specified.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param geog_levels Geographic levels (for example, `"county"` or `"state"`)
 #'   at which to obtain data for the requested `datasets` and
 #'   `time_series_tables`. If no `datasets` and/or `time_series_tables` are
@@ -1687,8 +1706,8 @@ add_to_extract.cps_extract <- function(extract,
 #'   exist in the extract definition. Required if any new `datasets` or
 #'   `time_series_tables` are specified.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets` or `time_series_tables`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets` or `time_series_tables`.
 #' @param years Years for which to obtain the data contained in the requested
 #'   `datasets`. If no `datasets` are provided, applies to those that
 #'   already exist in the extract definition.
@@ -1696,15 +1715,15 @@ add_to_extract.cps_extract <- function(extract,
 #'   Use `"*"` to select all available years for a given dataset.
 #'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to to apply to the requested `datasets`. If no `datasets` are provided,
 #'   applies to those that already exist in the extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
@@ -2112,8 +2131,8 @@ remove_from_extract.cps_extract <- function(extract,
 #' fields are optional, and if omitted, will be unchanged.
 #'
 #' In general, removing from an extract follows the same syntax conventions as
-#' used in [`define_extract_nhgis()`][define_extract_nhgis]. See details for
-#' more information on how values passed to dataset and time series table
+#' used in [`define_extract_nhgis()`][define_extract_nhgis]. See Details section
+#' for more information on how values passed to dataset and time series table
 #' subfields are interpreted.
 #'
 #' To add new values to an IPUMS NHGIS extract definition, use
@@ -2191,8 +2210,8 @@ remove_from_extract.cps_extract <- function(extract,
 #' @param data_tables Summary tables to remove from the `datasets` in the
 #'   extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param time_series_tables
 #'   [Time series tables](https://www.nhgis.org/time-series-tables)
 #'   to remove from the extract definition. All `geog_levels`
@@ -2200,18 +2219,18 @@ remove_from_extract.cps_extract <- function(extract,
 #' @param geog_levels Geographic levels to remove from the `datasets` and/or
 #'   `time_series_tables` in the extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets` or `time_series_tables`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets` or `time_series_tables`.
 #' @param years Years to remove from the `datasets` in the extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to remove from the `datasets` in the extract definition.
 #'
-#'   See details for syntax options when an extract definition has multiple
-#'   `datasets`.
+#'   See Details section for syntax options when an extract definition has
+#'   multiple `datasets`..
 #' @param geographic_extents Geographic extents to remove from the extract
 #'   definition.
 #' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to remove
@@ -5684,7 +5703,7 @@ skip_if_no_api_access <- function(have_api_access) {
 #'   in subfields in extract functions.
 #' @param names Character vector of names for the entries in the output list.
 #'
-#' @return A list of recycled values. See details.
+#' @return A list of recycled values. See Details section.
 #'
 #' @noRd
 recycle_extract_subfield <- function(l, names) {

@@ -32,7 +32,7 @@ facilitate some of the other options.
 
 The examples in this vignette will rely on the ipumsr, dplyr and biglm
 packages. Additionally, we'll use data from the ipumsexamples package.
-If any of these packages are uninstalled, you can do so with:
+If you haven't already installed these packages, you can do so with:
 
 ```{r, eval=FALSE}
 devtools::install_github("ipums/ipumsr/ipumsexamples")
@@ -140,7 +140,7 @@ IPUMS API to make extract requests.
 For microdata projects, another good option for reducing extract size is
 to use the "Select Cases" option before submitting. This allows you to
 produce an extract containing data for a particular subset of values in
-an included variable. For example, you could select cases for `AGE` such
+an included variable. For example, you could select cases on `AGE` such
 that your extract only includes those older than 65.
 
 In general, the "Select Cases" option is available on the last page

@@ -17,11 +17,11 @@ knitr::opts_chunk$set(
 
 ## IPUMS Variable Metadata
 
-IPUMS data comes with 3 primary types of variable-level metadata:
+IPUMS data come with three primary types of variable-level metadata:
 
 -   ***Variable labels*** are succinct labels that serve as
     human-readable variable names (in contrast to more esoteric column
-    names)
+    names).
 
 -   ***Variable descriptions*** are extended text descriptions of the
     contents of a variable. These provide more information about what a
@@ -134,9 +134,13 @@ mean(cps$AGE)
 mean(as.numeric(cps$AGE_FACTOR))
 ```
 
-### Drawbacks of `labelled` variables
+### Cautions regarding `labelled` variables
 
-Note that *both* of the means calculated above are suspect.
+While `labelled` variables provide the benefits described above, they also 
+present challenges.
+
+For example, you may have noticed that *both* of the means calculated above 
+are suspect.
 
 In the case of `AGE_FACTOR`, the values have been remapped during
 conversion and several are inconsistent with the original data.
@@ -237,19 +241,21 @@ ipums_val_labels(cps$INCTOT)
 ```
 
 To convert one or both of these labelled values to `NA`, use
-`lbl_na_if()`. `lbl_na_if()` uses a function of the value labels to
-handle the conversion. The function should take each value label as its
-input and output `TRUE` for those observations whose values should be
+`lbl_na_if()`. To use `lbl_na_if()`, you must supply a function to
+handle the conversion. The function should take a value and label pair as its
+input and output `TRUE` for those pairs whose values should be
 converted to `NA`.
 
 #### Syntax for value label functions {#syntax}
 
+Several `lbl_*` helper functions, including `lbl_na_if()`, require a 
+user-defined function to handle recoding of values and value labels. 
 ipumsr provides a syntax to easily reference the values and labels in
-this function:
+this user-defined function:
 
--   The `.val` argument references the *values* in the value labels
+-   The `.val` argument references the *values*
 
--   The `.lbl` argument references the *labels* in the value labels
+-   The `.lbl` argument references the *labels*
 
 For instance, to convert all values equal to `99999999` to `NA`, we can
 provide a function that uses the `.val` argument:
@@ -312,11 +318,11 @@ recombine existing labels into more general categories. It takes a
 two-sided formula to handle the relabeling:
 
 -   On the left-hand side, use the `lbl()` helper to define a new
-    value/label pairing.
+    value-label pairing.
 
 -   On the right-hand side, provide a function that returns `TRUE` for
-    those values that should be relabelled with the new label from the
-    left-hand side
+    those value-label pairings that should be relabelled with the new 
+    value-label pairing from the left-hand side.
 
 The function again uses the `.val` and `.lbl` [syntax](#syntax)
 mentioned above to refer to values and labels, respectively.
@@ -351,9 +357,9 @@ You could use `lbl_relabel()` to collapse the detailed categories into
 the more general ones, but you would have to define new value labels for
 all the categories. Instead, you could use `lbl_collapse()`.
 
-`lbl_collapse()` uses a function that takes `.val` and/or `.lbl`
+`lbl_collapse()` uses a function that takes `.val` and `.lbl`
 [arguments](#syntax) and returns the new value each input value should
-be assigned to. The label of the lowest initial value is used for each
+be assigned to. The label of the lowest original value is used for each
 collapsed group. To group by the tens digit, use the integer division
 operator `%/%`:
 

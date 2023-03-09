@@ -66,6 +66,11 @@ cps_data <- read_ipums_micro(cps_ddi_file)
 head(cps_data)
 ```
 
+Note that you provide the path to the DDI file, *not* the data file. This is
+because ipumsr needs to find both the DDI and data files to read in your data,
+and the DDI file includes the name of the data file, whereas the data file 
+contains only the raw data.
+
 The loaded data have been parsed correctly and include variable metadata
 in each column. For a summary of the column contents, use
 `ipums_var_info()`:
@@ -126,8 +131,8 @@ ipums_val_labels(cps_data2$MONTH)
 IPUMS microdata can come in either "rectangular" or "hierarchical"
 format.
 
-Rectangular data are transformed such that each row of data represents
-only one type of record. For instance, each row will represent a person
+Rectangular data are transformed such that every row of data represents
+the same type of record. For instance, each row will represent a person
 record, and all household-level information for that person will be
 included in the same row. (This is the case for the CPS example above.)
 
@@ -144,13 +149,15 @@ cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
 read_ipums_micro(cps_hier_ddi)
 ```
 
-This structure contains a single row for each record, regardless of
-record type. Variables that do not apply to a particular record type
-will be filled with `NA` in rows of that record type.
+The long format consists of a single `data.frame` that includes rows with 
+varying record types. In this example, some rows have a record type of 
+"Household" and others have a record type of "Person". Variables that do not 
+apply to a particular record type will be filled with `NA` in rows of that 
+record type.
 
-To read data in list format, use `read_ipums_micro_list()`. This splits
-the record types into a list where each element contains all the records
-for a given type:
+To read data in list format, use `read_ipums_micro_list()`. This function 
+returns a list where each element contains all the records for a given 
+record type:
 
 ```{r}
 read_ipums_micro_list(cps_hier_ddi)
@@ -223,7 +230,8 @@ ipums_list_files(nhgis_ex2)
 ```
 
 In these cases, you can use the `file_select` argument to indicate which
-file to load. `file_select` accepts a tidyselect selection helper when
+file to load. `file_select` supports 
+[tidyselect helpers](https://tidyselect.r-lib.org/reference/language.html) for
 identifying the file to load:
 
 ```{r, error=TRUE, message=FALSE}
@@ -245,15 +253,14 @@ attributes(nhgis_data3$A00AA1790)
 it separately with `read_nhgis_codebook()`, which also accepts a
 `file_select` specification.)
 
-While generally less useful, `file_select` also accepts a precise string
-of the file name to load or an index position:
+`file_select` also accepts the full path or the index of the file to load:
 
 ```{r, eval=FALSE}
-# Match first file in extract
-read_nhgis(nhgis_ex2, file_select = 1)
-
 # Match by file name
 read_nhgis(nhgis_ex2, file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv")
+
+# Match first file in extract
+read_nhgis(nhgis_ex2, file_select = 1)
 ```
 
 ### NHGIS data formats
@@ -315,8 +322,8 @@ consistency with the loading of NHGIS .csv files.
 
 IPUMS distributes spatial data for several projects.
 
--   For microdata projects, spatial data are distributed in shapefile
-    format on dedicated geography pages separate from the standard
+-   For microdata projects, spatial data are distributed in shapefiles
+    on dedicated geography pages separate from the standard
     extract system. Look for a "Geography and GIS" link in the
     "Supplemental Data" section of the project's website to find spatial
     data files and information.
@@ -332,7 +339,9 @@ from the `sp` package. If you prefer to work with these objects, use
 `sf::as_Spatial()` to convert from `sf` to `sp`).
 
 `read_ipums_sf()` also supports the loading of spatial files within .zip
-archives and the `file_select` syntax for file selection.
+archives and the `file_select` syntax for file selection (we don't need
+`file_select` in this example because there is only one shapefile in this 
+example extract).
 
 ```{r, eval = requireNamespace("sf")}
 nhgis_shp_file <- ipums_example("nhgis0972_shape_small.zip")
@@ -342,8 +351,8 @@ shp_data <- read_ipums_sf(nhgis_shp_file)
 head(shp_data)
 ```
 
-These data can then be joined on associated tabular data. To preserve
-ipums attributes from the tabular data used in the join, use
+These data can then be joined to associated tabular data. To preserve
+IPUMS attributes from the tabular data used in the join, use
 an`ipums_shape_*_join` function:
 
 ```{r, eval = requireNamespace("sf")}

@@ -33,7 +33,7 @@ For a list of codes used to refer to each collection, see
 \item{download_dir}{Path to the directory where the files should be written.
 Defaults to current working directory.}
 
-\item{overwrite}{Logical indicating whether to overwrite any files that
+\item{overwrite}{Logical value indicating whether to overwrite any files that
 already exist in \code{download_dir}. Defaults to \code{FALSE}.}
 
 \item{wait}{Logical value indicating whether to wait for the completion of

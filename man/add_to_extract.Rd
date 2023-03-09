@@ -26,7 +26,7 @@ subclass (i.e. collection) of the extract being modified.
 \itemize{
 \item To add to an \strong{IPUMS USA} extract definition, click
 \link[=add_to_extract.usa_extract]{here}
-\item To add to a \strong{IPUMS CPS} extract definition, click
+\item To add to an \strong{IPUMS CPS} extract definition, click
 \link[=add_to_extract.cps_extract]{here}
 \item To add to an \strong{IPUMS NHGIS} extract definition, click
 \link[=add_to_extract.nhgis_extract]{here}

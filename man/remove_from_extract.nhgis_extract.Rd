@@ -28,8 +28,8 @@ to remove from the extract definition. All \code{data_tables}, \code{geog_levels
 \item{data_tables}{Summary tables to remove from the \code{datasets} in the
 extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{time_series_tables}{\href{https://www.nhgis.org/time-series-tables}{Time series tables}
 to remove from the extract definition. All \code{geog_levels}
@@ -38,19 +38,19 @@ associated  with the specified \code{time_series_tables} will also be removed.}
 \item{geog_levels}{Geographic levels to remove from the \code{datasets} and/or
 \code{time_series_tables} in the extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets} or \code{time_series_tables}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets} or \code{time_series_tables}.}
 
 \item{years}{Years to remove from the \code{datasets} in the extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
 to remove from the \code{datasets} in the extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}..}
 
 \item{geographic_extents}{Geographic extents to remove from the extract
 definition.}
@@ -68,8 +68,8 @@ Remove existing values from an IPUMS NHGIS extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
 In general, removing from an extract follows the same syntax conventions as
-used in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See details for
-more information on how values passed to dataset and time series table
+used in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See Details section
+for more information on how values passed to dataset and time series table
 subfields are interpreted.
 
 To add new values to an IPUMS NHGIS extract definition, use

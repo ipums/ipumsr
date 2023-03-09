@@ -23,7 +23,7 @@
 #' need to manually unzip the downloaded file before loading it into R.
 #'
 #' @param shape_file Path to a single .shp file, or a .zip archive or
-#'   directory containing at least one .shp file. See details.
+#'   directory containing at least one .shp file. See Details section.
 #' @param file_select If `shape_file` is a .zip archive or directory that
 #'   contains multiple files, an expression identifying the files to load.
 #'   Accepts a character string specifying the

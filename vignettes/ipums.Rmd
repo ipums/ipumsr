@@ -30,7 +30,7 @@ can be downloaded.
 
 Extracts typically contain both data and metadata files. Data files
 typically come as .dat (for fixed-width files) or .csv (for
-comma-delimited files). Metadata files generally contain information
+comma-delimited files). Metadata files contain information
 about the data file and its contents, including variable descriptions
 and parsing instructions for fixed-width data files. Microdata projects
 provide metadata in DDI (.xml) files. Aggregate data projects provide
@@ -48,7 +48,10 @@ the IPUMS project of interest by clicking **Select Data** in the heading
 of the project website. This leads to that project's extract interface,
 which allows you to specify the data you'd like to download. The data
 selection parameters will differ across projects; see each project's
-documentation for more details on the available options.
+documentation for more details on the available options. If you've never created 
+an extract for the project you're interested in, start by watching the 
+project-specific video on creating extracts hosted on the 
+[IPUMS Tutorials page](https://www.ipums.org/support/tutorials).
 
 #### For microdata projects
 
@@ -184,7 +187,7 @@ Summarize the variable metadata for a dataset using `ipums_var_info()`:
 ipums_var_info(cps_meta)
 ```
 
-Users can also get contextual details for specific variables:
+You can also get contextual details for specific variables:
 
 ```{r}
 ipums_var_desc(cps_data$INCTOT)

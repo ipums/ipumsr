@@ -63,7 +63,7 @@ If \code{lower_vars = TRUE} and \code{vars} is specified, \code{vars} should ref
 converted column names.}
 }
 \value{
-A HipYield R6 object (see details)
+A HipYield R6 object (see Details section)
 }
 \description{
 Read a microdata dataset downloaded from the IPUMS extract system into an

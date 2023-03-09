@@ -78,7 +78,7 @@
 #'
 #' @inheritSection read_ipums_micro Downloading IPUMS files
 #'
-#' @return A HipYield R6 object (see details)
+#' @return A HipYield R6 object (see Details section)
 #'
 #' @inheritParams read_ipums_micro
 #'

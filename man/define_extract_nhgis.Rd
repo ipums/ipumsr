@@ -28,8 +28,8 @@ to include in the extract request.}
 \item{data_tables}{Summary tables to retrieve for each of the requested
 \code{datasets}. Required for all \code{datasets} in the extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{time_series_tables}{\href{https://www.nhgis.org/time-series-tables}{Time series tables}
 to include in the extract request.}
@@ -39,21 +39,21 @@ at which to obtain data for the requested \code{datasets} or
 \code{time_series_tables}. Required for all \code{datasets} and \code{time_series_tables}
 in the extract definition.
 
-See details for syntax options when an extract
+See Details section for syntax options when an extract
 definition has multiple \code{datasets} and/or \code{time_series_tables}.}
 
 \item{years}{Years for which to obtain the data contained in the requested
 \code{datasets}. Use \code{"*"} to select all available years for a given dataset.
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
 to apply to the requested \code{datasets}.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
 all of the \code{datasets} in the extract definition (for instance, to obtain
@@ -120,7 +120,7 @@ to obtain a particular set of data from the IPUMS NHGIS system.
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to browse and identify data sources for use
 in NHGIS extract definitions.
 
-See details for information about creating valid extract
+See Details section for information about creating valid extract
 definitions. For general information, see the NHGIS
 \href{https://www.nhgis.org/data-availability}{data source overview} and the
 \href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.

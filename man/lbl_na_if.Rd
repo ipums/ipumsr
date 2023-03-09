@@ -12,7 +12,7 @@ lbl_na_if(x, .predicate)
 \item{.predicate}{A function taking \code{.val} and \code{.lbl} arguments that
 returns \code{TRUE} for all values that should be converted to \code{NA}.
 
-Can be provided as an anonymous function or formula. See details.}
+Can be provided as an anonymous function or formula. See Details section.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector

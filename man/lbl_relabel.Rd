@@ -21,14 +21,14 @@ The right hand side should be a function taking \code{.val} and \code{.lbl}
 arguments that evaluates to \code{TRUE} for all
 cases that should receive the label specified on the left hand side.
 
-Can be provided as an anonymous function or formula. See details.}
+Can be provided as an anonymous function or formula. See Details section.}
 
 \item{.fun}{A function taking \code{.val} and \code{.lbl} arguments that returns
 the value associated with an existing label in the vector. Input values to
 this function will be relabeled with the label of the function's output
 value.
 
-Can be provided as an anonymous function or formula. See details.}
+Can be provided as an anonymous function or formula. See Details section.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector

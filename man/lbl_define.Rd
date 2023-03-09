@@ -17,7 +17,7 @@ The right hand side should be a function taking \code{.val} that
 evaluates to \code{TRUE} for all cases that should receive the label specified
 on the left hand side.
 
-Can be provided as an anonymous function or formula. See details.}
+Can be provided as an anonymous function or formula. See Details section.}
 }
 \value{
 A \code{\link[haven:labelled]{labelled}} vector

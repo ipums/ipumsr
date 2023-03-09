@@ -50,18 +50,18 @@ a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
 }
 \examples{
-extract <- define_extract_usa(
-  description = "2013 ACS Data",
-  samples = "us2013a",
-  variables = c("SEX", "AGE", "YEAR")
+extract <- define_extract_cps(
+  description = "Example CPS extract definition",
+  samples = c("cps2020_02s", "cps2020_03s"),
+  variables = c("AGE", "SEX", "YEAR")
 )
 
-add_to_extract(extract, samples = "us2014a")
+add_to_extract(extract, samples = "cps2021_03s")
 
 extract2 <- add_to_extract(
   extract,
-  samples = "us2014a",
-  variables = c("MARST", "BIRTHYR")
+  samples = "cps2021_03s",
+  variables = c("MARST", "RELATE")
 )
 
 # Values that only take a single value are replaced

@@ -23,7 +23,7 @@
 #' @param .predicate A function taking `.val` and `.lbl` arguments that
 #'   returns `TRUE` for all values that should be converted to `NA`.
 #'
-#'   Can be provided as an anonymous function or formula. See details.
+#'   Can be provided as an anonymous function or formula. See Details section.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'
@@ -98,13 +98,13 @@ lbl_na_if <- function(x, .predicate) {
 #'   arguments that evaluates to `TRUE` for all
 #'   cases that should receive the label specified on the left hand side.
 #'
-#'   Can be provided as an anonymous function or formula. See details.
+#'   Can be provided as an anonymous function or formula. See Details section.
 #' @param .fun A function taking `.val` and `.lbl` arguments that returns
 #'   the value associated with an existing label in the vector. Input values to
 #'   this function will be relabeled with the label of the function's output
 #'   value.
 #'
-#'   Can be provided as an anonymous function or formula. See details.
+#'   Can be provided as an anonymous function or formula. See Details section.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'
@@ -239,7 +239,7 @@ lbl_collapse <- function(x, .fun) {
 #'   evaluates to `TRUE` for all cases that should receive the label specified
 #'   on the left hand side.
 #'
-#'   Can be provided as an anonymous function or formula. See details.
+#'   Can be provided as an anonymous function or formula. See Details section.
 #'
 #' @return A [`labelled`][haven::labelled()] vector
 #'

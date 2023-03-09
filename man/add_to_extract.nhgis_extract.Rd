@@ -34,8 +34,8 @@ to include in the extract request.}
 already exist in the extract definition. Required if any new \code{datasets}
 are specified.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{time_series_tables}{\href{https://www.nhgis.org/time-series-tables}{Time series tables}
 to include in the extract request.}
@@ -47,8 +47,8 @@ provided, applies to those that already
 exist in the extract definition. Required if any new \code{datasets} or
 \code{time_series_tables} are specified.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets} or \code{time_series_tables}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets} or \code{time_series_tables}.}
 
 \item{years}{Years for which to obtain the data contained in the requested
 \code{datasets}. If no \code{datasets} are provided, applies to those that
@@ -57,15 +57,15 @@ already exist in the extract definition.
 Use \code{"*"} to select all available years for a given dataset.
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
 to to apply to the requested \code{datasets}. If no \code{datasets} are provided,
 applies to those that already exist in the extract definition.
 
-See details for syntax options when an extract definition has multiple
-\code{datasets}.}
+See Details section for syntax options when an extract definition has
+multiple \code{datasets}.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
 all of the \code{datasets} in the extract definition (for instance, to obtain
@@ -133,7 +133,7 @@ Supplying a value for fields that take a single value, such as
 the supplied value.
 
 In general, adding to an extract follows the same syntax conventions as used
-in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See details for more
+in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See Details section for more
 information on how values passed to dataset and time series table subfields
 are interpreted.
 

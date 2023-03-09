@@ -55,7 +55,7 @@ indicate how to parse the data file.
 By default, looks in the same directory as \code{data_file} for a .do
 file with the same name. If \code{FALSE} or if the .do file cannot be found,
 the .dat file will be parsed by the values provided to \code{col_positions}
-in \code{\link[readr:read_fwf]{read_fwf()}}. See details.}
+in \code{\link[readr:read_fwf]{read_fwf()}}. See Details section.}
 
 \item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
 files) indicating the type of file to search for in the path provided to
