@@ -4438,7 +4438,8 @@ extract_to_request_json.cps_extract <- function(extract,
 }
 
 #' @export
-extract_to_request_json.ipums_extract <- function(extract) {
+extract_to_request_json.ipums_extract <- function(extract,
+                                                  include_endpoint_info = FALSE) {
 
   if (is_na(extract$description)) {
     extract$description <- ""
