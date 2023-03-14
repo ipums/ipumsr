@@ -1,6 +1,6 @@
 ---
 title: "Interacting with the IPUMS API"
-author: "Minnesota Population Center"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Interacting with the IPUMS API}
@@ -134,10 +134,7 @@ ipums_data_collections()
 ### Note: New features currently in development
 
 The API tools in ipumsr are in active development, and some
-functionality may not yet be stable. Additionally, the IPUMS API for
-microdata collections is still in beta testing. Users will need to
-request beta access for these collections by emailing
-[ipums+api\@umn.edu](mailto:ipums+api@umn.edu){.email}.
+functionality may not yet be stable.
 
 ## Set up your API key
 
@@ -154,30 +151,26 @@ collections below:
     NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fcps-action%2Fmenu)
 
 Once you're registered, you'll be able to [create an API
-key](https://account.ipums.org/api_keys). (For IPUMS USA and CPS, you'll
-also need to request API beta access by emailing
-[ipums+api\@umn.edu](mailto:ipums+api@umn.edu){.email} as mentioned
-above.)
+key](https://account.ipums.org/api_keys).
 
 By default, ipumsr API functions assume that your key is stored in the
 `IPUMS_API_KEY` environment variable. You can also provide your key
-directly to these functions, but storing it in an environment variable saves you 
-some typing and helps prevent you
-from inadvertently sharing your key with others (for instance, on
-GitHub).
+directly to these functions, but storing it in an environment variable
+saves you some typing and helps prevent you from inadvertently sharing
+your key with others (for instance, on GitHub).
 
-You can save your API key to the `IPUMS_API_KEY` environment variable with
-`set_ipums_api_key()`. To save your key for use in future sessions, set
-`save = TRUE`. This will add your API key to your `.Renviron` file in
-your user home directory.
+You can save your API key to the `IPUMS_API_KEY` environment variable
+with `set_ipums_api_key()`. To save your key for use in future sessions,
+set `save = TRUE`. This will add your API key to your `.Renviron` file
+in your user home directory.
 
 ```{r, eval=FALSE}
 # Save key in .Renviron for use across sessions
 set_ipums_api_key("paste-your-key-here", save = TRUE)
 ```
 
-The rest of this vignette assumes you have obtained an API key and stored it in 
-the `IPUMS_API_KEY` environment variable.
+The rest of this vignette assumes you have obtained an API key and
+stored it in the `IPUMS_API_KEY` environment variable.
 
 ## Define an extract request {#define}
 
@@ -286,8 +279,8 @@ nhgis_extract_definition[["data_tables"]]
 ```
 
 `ipums_extract` objects also contain information about the extract
-request's status. This extract hasn't yet been submitted,
-and therefore has no extract request number:
+request's status. This extract hasn't yet been submitted, and therefore
+has no extract request number:
 
 ```{r}
 usa_extract_definition$status
@@ -315,13 +308,13 @@ collections, users can find sample ID codes at the following links:
 -   [IPUMS
     CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
 
-For microdata variable names, refer to the relevant collection's online extract 
-builder:
+For microdata variable names, refer to the relevant collection's online
+extract builder:
 
-- [IPUMS
-  USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
-- [IPUMS 
-  CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
+-   [IPUMS
+    USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
+-   [IPUMS
+    CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
 
 IPUMS NHGIS users can find the codes used for datasets, data tables,
 time series tables, and more by using `get_nhgis_metadata()`.
@@ -586,12 +579,12 @@ IPUMS data into R.
 
 One exciting feature enabled by the IPUMS API is the ability to share a
 standardized extract definition with other IPUMS users so that they can
-create an identical extract request themselves. The terms of use for most IPUMS 
-collections prohibit the redistribution of IPUMS data, but don't prohibit 
-sharing data extract definitions.
+create an identical extract request themselves. The terms of use for
+most IPUMS collections prohibit the redistribution of IPUMS data, but
+don't prohibit sharing data extract definitions.
 
-ipumsr facilitates this type of sharing with `save_extract_as_json()` and
-`define_extract_from_json()`, which read and write `ipums_extract`
+ipumsr facilitates this type of sharing with `save_extract_as_json()`
+and `define_extract_from_json()`, which read and write `ipums_extract`
 objects to and from a standardized JSON-formatted file.
 
 ```{r, eval=FALSE}

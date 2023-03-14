@@ -25,15 +25,15 @@ Useful links:
 Authors:
 \itemize{
   \item Greg Freedman Ellis
+  \item Finn Roberts
 }
 
 Other contributors:
 \itemize{
   \item Joe Grover [contributor]
-  \item Finn Roberts [contributor]
   \item Dan Ehrlich [contributor]
   \item Renae Rodgers [contributor]
-  \item Minnesota Population Center \email{ipums@umn.edu} [copyright holder]
+  \item Institute for Social Research and Data Innovation \email{ipums@umn.edu} [copyright holder]
 }
 
 }

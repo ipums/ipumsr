@@ -12,21 +12,16 @@ Each argument can be a data frame or a
 list of data frames. When binding, columns are matched by name. Missing
 columns will be filled with \code{NA}.}
 
-\item{.id}{Data frame identifier.
-
-When \code{.id} is supplied, a new column of identifiers is
-created to link each row to its original data frame. The labels
-are taken from the named arguments to \code{bind_rows()}. When a
-list of data frames is supplied, the labels are taken from the
-names of the list. If no names are found a numeric sequence is
-used instead.}
+\item{.id}{The name of an optional identifier column. Provide a string to
+create an output column that identifies each input. The column will use
+names if available, otherwise it will use positions.}
 }
 \value{
 Returns the same type as the first input. Either a \code{data.frame},
 \code{tbl_df}, or \code{grouped_df}
 }
 \description{
-Analogous to \code{\link[dplyr:bind]{dplyr::bind_rows()}}, but preserves the
+Analogous to \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}, but preserves the
 labelled attributes provided with IPUMS data.
 }
 \examples{

@@ -61,17 +61,16 @@ ipums_var_label(codebook, "PMSA")
 nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
 
 nhgis_data <- zap_ipums_attributes(nhgis_data)
-
 ipums_var_label(nhgis_data$PMSA)
 
 nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
-
 ipums_var_label(nhgis_data$PMSA)
 
 # You can also load the codebook in raw format to display in the console
 codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
 
-codebook_raw[1:20]
+# Use `cat` for human-readable output
+cat(codebook_raw[1:20], sep = "\n")
 }
 \seealso{
 \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from an IPUMS NHGIS extract.

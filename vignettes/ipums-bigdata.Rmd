@@ -1,6 +1,6 @@
 ---
 title: "Big IPUMS Data"
-author: "Minnesota Population Center"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Big IPUMS Data}
@@ -35,7 +35,7 @@ packages. Additionally, we'll use data from the ipumsexamples package.
 If you haven't already installed these packages, you can do so with:
 
 ```{r, eval=FALSE}
-devtools::install_github("ipums/ipumsr/ipumsexamples")
+remotes::install_github("ipums/ipumsr/ipumsexamples")
 
 # To run the full vignette, you'll also need the following packages. If they
 # aren't installed already, do so with:

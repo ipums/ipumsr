@@ -469,7 +469,7 @@ release_questions <- function() {
       out,
       "It looks like you don't have ipumsexamples installed. Do ",
       "you want to install it with `",
-      "devtools::install_github('ipums/ipumsr/ipumsexample')",
+      "remotes::install_github('ipums/ipumsr/ipumsexample')",
       "` before you continue?"
     )
   }

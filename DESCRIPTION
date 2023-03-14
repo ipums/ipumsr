@@ -4,11 +4,11 @@ Version: 0.5.2.9000
 Authors@R: c(
   person("Greg Freedman Ellis", role = "aut"), 
   person("Derek Burk", email = "ipums+cran@umn.edu", role = c("aut", "cre")),
+  person("Finn Roberts", role = "aut"),
   person("Joe Grover", role = "ctb"),
-  person("Finn Roberts", role = "ctb"),
   person("Dan Ehrlich", role = "ctb"),
   person("Renae Rodgers", role = "ctb"),
-  person("Minnesota Population Center", email = "ipums@umn.edu", role = "cph")
+  person("Institute for Social Research and Data Innovation", email = "ipums@umn.edu", role = "cph")
   )
 Contact: ipums@umn.edu
 URL: https://www.ipums.org, https://github.com/ipums/ipumsr

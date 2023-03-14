@@ -1,6 +1,6 @@
 ---
 title: "IPUMS Data in R"
-author: "Minnesota Population Center"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{IPUMS Data in R}
@@ -30,11 +30,11 @@ can be downloaded.
 
 Extracts typically contain both data and metadata files. Data files
 typically come as .dat (for fixed-width files) or .csv (for
-comma-delimited files). Metadata files contain information
-about the data file and its contents, including variable descriptions
-and parsing instructions for fixed-width data files. Microdata projects
-provide metadata in DDI (.xml) files. Aggregate data projects provide
-metadata in either .txt or .csv formats.
+comma-delimited files). Metadata files contain information about the
+data file and its contents, including variable descriptions and parsing
+instructions for fixed-width data files. Microdata projects provide
+metadata in DDI (.xml) files. Aggregate data projects provide metadata
+in either .txt or .csv formats.
 
 Registered users can download IPUMS data from a particular project
 through the interactive extract system found on that project's website.
@@ -48,9 +48,9 @@ the IPUMS project of interest by clicking **Select Data** in the heading
 of the project website. This leads to that project's extract interface,
 which allows you to specify the data you'd like to download. The data
 selection parameters will differ across projects; see each project's
-documentation for more details on the available options. If you've never created 
-an extract for the project you're interested in, start by watching the 
-project-specific video on creating extracts hosted on the 
+documentation for more details on the available options. If you've never
+created an extract for the project you're interested in, start by
+watching the project-specific video on creating extracts hosted on the
 [IPUMS Tutorials page](https://www.ipums.org/support/tutorials).
 
 #### For microdata projects

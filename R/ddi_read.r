@@ -451,17 +451,16 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 #' nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
 #'
 #' nhgis_data <- zap_ipums_attributes(nhgis_data)
-#'
 #' ipums_var_label(nhgis_data$PMSA)
 #'
 #' nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
-#'
 #' ipums_var_label(nhgis_data$PMSA)
 #'
 #' # You can also load the codebook in raw format to display in the console
 #' codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
 #'
-#' codebook_raw[1:20]
+#' # Use `cat` for human-readable output
+#' cat(codebook_raw[1:20], sep = "\n")
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE,

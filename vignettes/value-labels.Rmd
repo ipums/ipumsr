@@ -1,6 +1,6 @@
 ---
 title: "Value Labels in IPUMS data"
-author: "Minnesota Population Center"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Value Labels in IPUMS data}
@@ -30,8 +30,8 @@ IPUMS data come with three primary types of variable-level metadata:
 -   ***Value labels*** link particular data values to more meaningful
     text labels. For instance, the `HEALTH` variable has data values
     including 1 and 2, but these are actually stand-ins for "Excellent"
-    and "Very good" health. This mapping would be contained in the
-    variable's value labels.
+    and "Very good" health. This mapping would be contained in a
+    value-label pair that includes a value and its associated label.
 
 The rest of this article will focus on value labels; for more about
 variable labels and descriptions, see `vignette("ipums")`.
@@ -82,11 +82,9 @@ its `factor` data type. While factors may be more familiar, they were
 designed to support efficient calculations in linear models, not as a
 human-readable labeling system for interpreting and processing data.
 
-Compared to factors, `labelled` vectors have a few properties that make
-them more suitable for working with IPUMS data:
+Compared to factors, `labelled` vectors have two main properties that
+make them more suitable for working with IPUMS data:
 
--   They provide more complete contextual information about the meaning
-    of certain values
 -   They don't require that all values be labelled
 -   They don't require values to be assigned to increasing integers
     starting at 1
@@ -136,11 +134,11 @@ mean(as.numeric(cps$AGE_FACTOR))
 
 ### Cautions regarding `labelled` variables
 
-While `labelled` variables provide the benefits described above, they also 
-present challenges.
+While `labelled` variables provide the benefits described above, they
+also present challenges.
 
-For example, you may have noticed that *both* of the means calculated above 
-are suspect.
+For example, you may have noticed that *both* of the means calculated
+above are suspect.
 
 In the case of `AGE_FACTOR`, the values have been remapped during
 conversion and several are inconsistent with the original data.
@@ -242,16 +240,16 @@ ipums_val_labels(cps$INCTOT)
 
 To convert one or both of these labelled values to `NA`, use
 `lbl_na_if()`. To use `lbl_na_if()`, you must supply a function to
-handle the conversion. The function should take a value and label pair as its
-input and output `TRUE` for those pairs whose values should be
+handle the conversion. The function should take a value-label pair as
+its input and output `TRUE` for those pairs whose values should be
 converted to `NA`.
 
 #### Syntax for value label functions {#syntax}
 
-Several `lbl_*` helper functions, including `lbl_na_if()`, require a 
-user-defined function to handle recoding of values and value labels. 
-ipumsr provides a syntax to easily reference the values and labels in
-this user-defined function:
+Several `lbl_*` helper functions, including `lbl_na_if()`, require a
+user-defined function to handle recoding of value-label pairs. ipumsr
+provides a syntax to easily reference the values and labels in this
+user-defined function:
 
 -   The `.val` argument references the *values*
 
@@ -313,16 +311,16 @@ To convert unlabelled values to `NA`, use `dplyr::na_if()` instead.
 
 ### Relabel values
 
-`lbl_relabel()` can be used to create new value labels, often to
+`lbl_relabel()` can be used to create new value-label pairs, often to
 recombine existing labels into more general categories. It takes a
 two-sided formula to handle the relabeling:
 
 -   On the left-hand side, use the `lbl()` helper to define a new
-    value-label pairing.
+    value-label pair.
 
 -   On the right-hand side, provide a function that returns `TRUE` for
-    those value-label pairings that should be relabelled with the new 
-    value-label pairing from the left-hand side.
+    those value-label pairs that should be relabelled with the new
+    value-label pair from the left-hand side.
 
 The function again uses the `.val` and `.lbl` [syntax](#syntax)
 mentioned above to refer to values and labels, respectively.

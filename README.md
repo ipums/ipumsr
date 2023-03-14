@@ -65,7 +65,7 @@ install.packages("ipumsr")
 To install the development version of the package, use
 
 ``` r
-devtools::install_github("ipums/ipumsr")
+remotes::install_github("ipums/ipumsr")
 ```
 
 ## Getting Started
@@ -96,8 +96,8 @@ and want to use the vignettes within R, you’ll have to install the
 associated ipumsexamples package:
 
 ``` r
-devtools::install_github("ipums/ipumsr/ipumsexamples")
-devtools::install_github("ipums/ipumsr", build_vignettes = TRUE)
+remotes::install_github("ipums/ipumsr/ipumsexamples")
+remotes::install_github("ipums/ipumsr", build_vignettes = TRUE)
 ```
 
 ## Related Work
