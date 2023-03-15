@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 19:46:08 GMT
+      date: Wed, 15 Mar 2023 21:05:28 GMT
       etag: W/"58242b357bf8d158b14a63b56053fad7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 602a0649-7c00-49f0-b753-20ea01fcca77
-      x-runtime: '0.006075'
+      x-request-id: bfdd6b7f-ae4d-4eb6-9b56-9ca02800c4dd
+      x-runtime: '0.006492'
       x-xss-protection: '0'
       content-length: '73801'
     body:
@@ -644,7 +644,7 @@ http_interactions:
         New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
         New England city and town area--urban"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"}]}]}'
-  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_at: 2023-03-15 21:05:29 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -665,7 +665,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 19:46:08 GMT
+      date: Wed, 15 Mar 2023 21:05:28 GMT
       etag: W/"cd66e8d14dd785fe1f6a810a1d15c7d7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -677,8 +677,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 6dcef922-dd07-4387-ac95-d6df48f63ee6
-      x-runtime: '0.006655'
+      x-request-id: f77bb1e7-dbe2-4c9c-8935-c480844aaec2
+      x-runtime: '0.005241'
       x-xss-protection: '0'
       content-length: '10313'
     body:
@@ -808,7 +808,7 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgis_code":"H72071"}]}'
-  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_at: 2023-03-15 21:05:29 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -829,7 +829,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 19:46:08 GMT
+      date: Wed, 15 Mar 2023 21:05:28 GMT
       etag: W/"f7bf5a96e9dd731790c9b08e7f997ca8"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -841,8 +841,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 0ba0dd6e-8214-4805-84bf-f1541261465e
-      x-runtime: '0.005988'
+      x-request-id: 9abce67b-fb4d-46e4-a362-2481b0bd6214
+      x-runtime: '0.005155'
       x-xss-protection: '0'
       content-length: '1216'
     body:
@@ -858,5 +858,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
         Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":363}]}'
-  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_at: 2023-03-15 21:05:29 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

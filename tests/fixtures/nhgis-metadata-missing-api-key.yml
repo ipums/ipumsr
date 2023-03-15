@@ -17,19 +17,19 @@ http_interactions:
       message: 'Client error: (401) Unauthorized'
     headers:
       content-type: application/json
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       vary: Origin
       x-generator: tyk.io
       content-length: '46'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: |-
         {
             "error": "Authorization field missing"
         }
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/datasets?version=v1
@@ -48,16 +48,16 @@ http_interactions:
       message: 'Client error: (403) Forbidden'
     headers:
       content-type: application/json
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       vary: Origin
       x-generator: tyk.io
       content-length: '57'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: |-
         {
             "error": "Access to this API has been disallowed"
         }
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

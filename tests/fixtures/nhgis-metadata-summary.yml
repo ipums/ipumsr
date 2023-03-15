@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:39 GMT
+      date: Wed, 15 Mar 2023 21:05:28 GMT
       etag: W/"f99017a9fed01dd751bd512e9b9a1b60"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,12 +30,12 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: bc487154-ddbc-4c65-96b2-b3f6cf4f76f0
-      x-runtime: '0.014004'
+      x-request-id: 8d16a929-7d35-4f67-a34b-03412f17db05
+      x-runtime: '0.007207'
       x-xss-protection: '0'
       content-length: '34572'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '[{"name":"1790_cPop","group":"1790 Census","description":"Population
         Data [US, States \u0026 Counties]","sequence":101},{"name":"1800_cPop","group":"1800
@@ -408,8 +408,8 @@ http_interactions:
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
         of Work]","sequence":6005}]'
-  recorded_at: 2023-02-22 21:17:40 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:28 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/shapefiles?version=v1
@@ -429,7 +429,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:39 GMT
+      date: Wed, 15 Mar 2023 21:05:28 GMT
       etag: W/"8c35a74cfa662a36c1c08b54619b667c"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -441,12 +441,12 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 168d7bf3-edb5-4b6b-a7a3-97a71f981a36
-      x-runtime: '0.008322'
+      x-request-id: 61d6f24a-d6e8-4adc-8b41-fdebfd536c19
+      x-runtime: '0.008400'
       x-xss-protection: '0'
       content-length: '283907'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '[{"name":"us_state_1790_tl2000","year":"1790","geographic_level":"State","extent":"United
         States","basis":"2000 TIGER/Line +","sequence":1},{"name":"us_county_1790_tl2000","year":"1790","geographic_level":"County","extent":"United
@@ -2583,5 +2583,5 @@ http_interactions:
         Group","extent":"West Virginia","basis":"2021 TIGER/Line +","sequence":1856},{"name":"550_blck_grp_2021_tl2021","year":"2021","geographic_level":"Block
         Group","extent":"Wisconsin","basis":"2021 TIGER/Line +","sequence":1857},{"name":"560_blck_grp_2021_tl2021","year":"2021","geographic_level":"Block
         Group","extent":"Wyoming","basis":"2021 TIGER/Line +","sequence":1858}]'
-  recorded_at: 2023-02-22 21:17:40 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:28 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

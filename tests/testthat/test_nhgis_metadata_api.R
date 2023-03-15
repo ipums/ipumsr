@@ -38,34 +38,48 @@ if (have_api_access) {
     single_tst_meta <- get_nhgis_metadata(time_series_table = tst)
   })
 
-  # API Errors
-  vcr::use_cassette("nhgis-metadata-errors", {
-    ds_err <- catch_cnd(get_nhgis_metadata(dataset = "bad-dataset"))$message
-    dt_err <- catch_cnd(
-      get_nhgis_metadata(data_table = "bad-table", dataset = "1980_STF1")
-    )$message
-    tst_err <- catch_cnd(
-      get_nhgis_metadata(time_series_table = "bad-tst")
-    )$message
-    filt_err <- catch_cnd(
-      get_nhgis_metadata("time_series_tables", foo = "bar")
-    )$message
+  test_that("API throws expected errors on bad metadata requests", {
+    # API Errors
+    vcr::use_cassette("nhgis-metadata-errors", {
+      expect_error(
+        get_nhgis_metadata(dataset = "bad-dataset"),
+        "Couldn\'t find Dataset"
+      )
+      expect_error(
+        get_nhgis_metadata(data_table = "bad-table", dataset = "1980_STF1"),
+        "Couldn\'t find DataTable"
+      )
+      expect_error(
+        get_nhgis_metadata(time_series_table = "bad-tst"),
+        "Couldn\'t find TimeSeriesTable"
+      )
+      expect_warning(
+        get_nhgis_metadata("time_series_tables", foo = "bar"),
+        "unrecognized metadata variables.+foo"
+      )
+    })
   })
 
-  # Create fake table metadata to simulate need for table metadata updates
-  all_ds <- unique(table_metadata$dataset)
-  last_ds <- all_ds[(length(all_ds) - 4):length(all_ds)]
-  tmp_metadata <- table_metadata[!table_metadata$dataset %in% last_ds, ]
+  test_that("API throws expected authorization errors", {
 
-  vcr::use_cassette("nhgis-metadata-missing-api-key", {
-    err_no_key <- catch_cnd(withr::with_envvar(
-      new = c("IPUMS_API_KEY" = NA),
-      get_nhgis_metadata("datasets")
-    ))$message
-    err_bad_key <- catch_cnd(withr::with_envvar(
-      new = c("IPUMS_API_KEY" = "foobar"),
-      get_nhgis_metadata("datasets")
-    ))$message
+    skip_if_not_installed("withr")
+
+    vcr::use_cassette("nhgis-metadata-missing-api-key", {
+      expect_error(
+        withr::with_envvar(
+          new = c("IPUMS_API_KEY" = NA),
+          get_nhgis_metadata("datasets")
+        ),
+        "Authorization field missing"
+      )
+      expect_error(
+        withr::with_envvar(
+          new = c("IPUMS_API_KEY" = "foobar"),
+          get_nhgis_metadata("datasets")
+        ),
+        "Access to this API has been disallowed"
+      )
+    })
   })
 
 }
@@ -180,19 +194,9 @@ test_that("We throw errors on bad metadata requests", {
     "`data_table` must be specified with a corresponding `dataset`"
   )
 
-  # API errors
-  expect_true(grepl("Couldn't find Dataset", ds_err))
-  expect_true(grepl("Couldn't find DataTable", dt_err))
-  expect_true(grepl("Couldn't find TimeSeriesTable", tst_err))
-  expect_true(grepl("Access to this API has been disallowed", err_bad_key))
-  expect_true(grepl("Authorization field missing", err_no_key))
-
   expect_error(
     get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
     "Unable to submit metadata request"
   )
-
-  # Missing columns
-  expect_true(grepl("unrecognized metadata variables:.+`foo`", filt_err))
 
 })

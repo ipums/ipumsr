@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -29,17 +29,17 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 00f9407e-aae3-4f64-b7af-8201aed698ab
-      x-runtime: '0.009461'
+      x-request-id: 2e8ae604-7b1d-46a7-8bc5-72e767b715c4
+      x-runtime: '0.009837'
       x-xss-protection: '0'
       content-length: '100'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/datasets/1980_STF1/data_tables/bad-table?version=v1
@@ -59,7 +59,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -70,17 +70,17 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: c0aa6e72-b96c-41ce-b240-cae9ae366131
-      x-runtime: '0.008621'
+      x-request-id: 4d372e2e-d887-4b62-b844-6a3dade1ff7f
+      x-runtime: '0.009507'
       x-xss-protection: '0'
       content-length: '102'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/time_series_tables/bad-tst?version=v1
@@ -100,7 +100,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -111,17 +111,17 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 66a63f31-407b-438c-ab8b-1185a4fabdbb
-      x-runtime: '0.010345'
+      x-request-id: 5d5242f7-db66-4960-a0fa-bec8f36db6db
+      x-runtime: '0.010268'
       x-xss-protection: '0'
       content-length: '108'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/time_series_tables?version=v1
@@ -141,7 +141,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 21:05:29 GMT
       etag: W/"5b1e24185904ca5cb92db89cbdfe51b2"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -153,12 +153,12 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 86ad4925-6afa-4517-945f-679243240652
-      x-runtime: '0.008073'
+      x-request-id: 76d408eb-a8e9-4aee-b1d8-677ede6e8041
+      x-runtime: '0.006083'
       x-xss-protection: '0'
       content-length: '99902'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '[{"name":"A00","description":"Total Population","geographic_integration":"Nominal","sequence":0.01,"years":["1790","1800","1810","1820","1830","1840","1850","1860","1870","1880","1890","1900","1910","1920","1930","1940","1950","1960","1970","1980","1990","2000","2010","2020"],"geog_levels":["state","county"]},{"name":"AV0","description":"Total
         Population","geographic_integration":"Nominal","sequence":0.02,"years":["1970","1980","1990","2000","2010","125","2020","195"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"B78","description":"Total
@@ -650,5 +650,5 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
