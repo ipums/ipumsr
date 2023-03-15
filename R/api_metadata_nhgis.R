@@ -64,8 +64,9 @@
 #'
 #' ## Data tables:
 #'
-#' - **`name`:** The unique identifier for the data table. This is the code that
-#'   is used to refer to the data table when interacting with the IPUMS API.
+#' - **`name`:** The unique identifier for the data table within its dataset.
+#'   This is the code that is used to refer to the data table when interacting
+#'   with the IPUMS API.
 #' - **`description`:** A short description of the data table.
 #' - **`universe`:** The statistical population measured by this data table
 #'   (e.g. persons, families, occupied housing units, etc.)
@@ -74,6 +75,7 @@
 #'   code.
 #' - **`sequence`:** Order in which the data table will appear in the metadata
 #'   API and extracts.
+#' - **`dataset_name`:** Name of the dataset to which this data table belongs.
 #' - **`variables`:** A [`tibble`][tibble::tbl_df-class] containing variable
 #'   descriptions and codes for the data table
 #'

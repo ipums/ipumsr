@@ -118,8 +118,9 @@ dataset. This field is only present if at least one of the dataset's
 
 \subsection{Data tables:}{
 \itemize{
-\item \strong{\code{name}:} The unique identifier for the data table. This is the code that
-is used to refer to the data table when interacting with the IPUMS API.
+\item \strong{\code{name}:} The unique identifier for the data table within its dataset.
+This is the code that is used to refer to the data table when interacting
+with the IPUMS API.
 \item \strong{\code{description}:} A short description of the data table.
 \item \strong{\code{universe}:} The statistical population measured by this data table
 (e.g. persons, families, occupied housing units, etc.)
@@ -128,6 +129,7 @@ Variables in the extract data will include column names prefixed with this
 code.
 \item \strong{\code{sequence}:} Order in which the data table will appear in the metadata
 API and extracts.
+\item \strong{\code{dataset_name}:} Name of the dataset to which this data table belongs.
 \item \strong{\code{variables}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing variable
 descriptions and codes for the data table
 }

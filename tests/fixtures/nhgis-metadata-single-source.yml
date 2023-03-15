@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:43 GMT
+      date: Wed, 15 Mar 2023 19:46:08 GMT
       etag: W/"58242b357bf8d158b14a63b56053fad7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,12 +30,12 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e6802b7a-abd1-44b2-8da2-a159fc8062fd
-      x-runtime: '3.579366'
+      x-request-id: 602a0649-7c00-49f0-b753-20ea01fcca77
+      x-runtime: '0.006075'
       x-xss-protection: '0'
       content-length: '73801'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '{"name":"2010_SF1a","nhgis_id":"ds172","group":"2010 Census","description":"SF
         1a - P \u0026 H Tables [Blocks \u0026 Larger Areas]","sequence":4802,"has_multiple_data_types":false,"data_tables":[{"name":"P1","nhgis_code":"H7V","description":"Total
@@ -644,8 +644,8 @@ http_interactions:
         New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
         New England city and town area--urban"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"}]}]}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a/data_tables/P8?version=v1
@@ -665,8 +665,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
-      etag: W/"02fcf1290a64f2050f8dd189a6ec85a6"
+      date: Wed, 15 Mar 2023 19:46:08 GMT
+      etag: W/"cd66e8d14dd785fe1f6a810a1d15c7d7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -677,14 +677,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 112c758d-50f0-4ad5-8f9b-885536dab138
-      x-runtime: '0.017168'
+      x-request-id: 6dcef922-dd07-4387-ac95-d6df48f63ee6
+      x-runtime: '0.006655'
       x-xss-protection: '0'
-      content-length: '10286'
+      content-length: '10313'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
-      string: '{"name":"P8","description":"Race","universe":"Total population","nhgis_code":"H72","sequence":8,"variables":[{"description":"Total","nhgis_code":"H72001"},{"description":"Population
+      string: '{"name":"P8","description":"Race","universe":"Total population","nhgis_code":"H72","sequence":8,"dataset_name":"2010_SF1a","variables":[{"description":"Total","nhgis_code":"H72001"},{"description":"Population
         of one race","nhgis_code":"H72002"},{"description":"Population of one race:
         White alone","nhgis_code":"H72003"},{"description":"Population of one race:
         Black or African American alone","nhgis_code":"H72004"},{"description":"Population
@@ -808,8 +808,8 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgis_code":"H72071"}]}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/time_series_tables/CM0?version=v1
@@ -829,7 +829,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 22 Feb 2023 21:17:44 GMT
+      date: Wed, 15 Mar 2023 19:46:08 GMT
       etag: W/"f7bf5a96e9dd731790c9b08e7f997ca8"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -841,12 +841,12 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 72e8b23b-93e5-422c-b820-1990dabc3bbe
-      x-runtime: '0.025076'
+      x-request-id: 0ba0dd6e-8214-4805-84bf-f1541261465e
+      x-runtime: '0.005988'
       x-xss-protection: '0'
       content-length: '1216'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
       string: '{"name":"CM0","description":"Persons by Sex [2]","geographic_integration":"Standardized
         to 2010","sequence":10.03,"time_series":[{"name":"AA","description":"Persons:
@@ -858,5 +858,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
         Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":363}]}'
-  recorded_at: 2023-02-22 21:17:44 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+  recorded_at: 2023-03-15 19:46:08 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

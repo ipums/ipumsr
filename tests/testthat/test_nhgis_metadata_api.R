@@ -141,11 +141,11 @@ test_that("We can get metadata for specific data sources", {
     )
   )
 
-  expect_equal(length(single_dt_meta), 6)
+  expect_equal(length(single_dt_meta), 7)
   expect_equal(
     names(single_dt_meta),
     c("name", "description", "universe", "nhgis_code",
-      "sequence", "variables")
+      "sequence", "dataset_name", "variables")
   )
   expect_equal(single_dt_meta$name, dt)
   expect_true(tibble::is_tibble(single_dt_meta$variables))
