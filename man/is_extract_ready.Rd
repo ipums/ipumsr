@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{is_extract_ready}
 \alias{is_extract_ready}
-\title{Is the extract ready to download?}
+\title{Check if an extract is ready to download}
 \usage{
 is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
@@ -10,78 +10,73 @@ is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
-\code{c("collection", "number")}
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
+\code{c("collection", number)}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.
+Extract numbers do not need to be zero-padded. That is, use \code{1}, not
+\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 A logical vector of length one.
 }
 \description{
-This function uses the IPUMS API to check whether the given extract is ready
-to download, returning TRUE for extracts that are ready and FALSE for those
-that are not. For an overview of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Get the latest status of an in-progress extract request and determine if
+it has finished processing and is ready for download.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
-This function checks the "download_links" element of the supplied extract to
-determine whether the extract files are available to download.
-The "status" of a submitted extract is one of "queued", "started", "produced",
-"canceled", "failed", or "completed". Only "completed" extracts can be ready
-to download, but not all "completed" extracts are ready to download, because
-extract files are subject to removal from the IPUMS servers 72 hours after
-they first become available. Completed extracts older than 72 hours will
-still have a "completed" status, but will return \code{FALSE} from
-\code{is_extract_ready()}, because the extract files are no longer available.
+The "status" of a submitted extract is one of \code{"queued"}, \code{"started"},
+\code{"produced"}, \code{"canceled"}, \code{"failed"}, or \code{"completed"}.
+
+To be ready to download, an extract must have a \code{"completed"} status.
+However, some requests that are \code{"completed"} may still be unavailable for
+download, as extracts expire and are removed from IPUMS servers after a set
+period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
+
+Therefore, this function also checks the \code{"download_links"} field of the
+extract request to determine if data are available for download. If an
+extract has expired (that is, it has completed but its download links are
+no longer available), this function will warn that the extract request
+must be resubmitted.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Check if extract is ready by supplying an ipums_extract object:
+# Check the extract request associated with a given `ipums_extract` object
 is_extract_ready(submitted_extract)
 
-# By supplying the data collection and extract number, as a string:
+# Or by supplying the collection and extract number
 is_extract_ready("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
-
-# By supplying the data collection and extract number, as a vector:
 is_extract_ready(c("usa", "1"))
-}
 
+# If you have a default collection, you can use the extract number alone:
+set_ipums_default_collection("usa")
+is_extract_ready(1)
+}
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=download_extract]{download_extract()}} to download an extract.
+
+\code{\link[=get_extract_info]{get_extract_info()}} to check the status of an extract request.
+
+\code{\link[=submit_extract]{submit_extract()}} to resubmit an expired extract request.
 }
-\concept{ipums_api}

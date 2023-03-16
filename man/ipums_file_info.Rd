@@ -2,26 +2,37 @@
 % Please edit documentation in R/ipums_info.r
 \name{ipums_file_info}
 \alias{ipums_file_info}
-\title{Get IPUMS file information}
+\alias{ipums_conditions}
+\title{Get file information for an IPUMS extract}
 \usage{
 ipums_file_info(object, type = NULL)
+
+ipums_conditions(object = NULL)
 }
 \arguments{
-\item{object}{An ipums_ddi object (loaded with \code{\link{read_ipums_ddi}}).}
+\item{object}{An \code{ipums_ddi} object.
 
-\item{type}{NULL to load all types, or one of "ipums_project", "extract_data",
-"extract_notes", "conditions" or "citation".}
+For \code{ipums_conditions()}, leave \code{NULL} to display conditions for most
+recently loaded dataset.}
+
+\item{type}{Type of file information to display. If \code{NULL}, loads all types.
+Otherwise, one of \code{"ipums_project"}, \code{"extract_date"},
+\code{"extract_notes"}, \code{"conditions"} or \code{"citation"}.}
 }
 \value{
-If \code{type} is NULL, a list with the \code{ipums_project},
-  \code{extract_date}, \code{extract_notes}, \code{conditions}, and \code{citation}.
-  Otherwise a string with the type of information requested in \code{type}.
+For \code{ipums_file_info()}, if \code{type = NULL}, a named list of metadata
+information. Otherwise, a string containing the requested information.
 }
 \description{
-Get IPUMS metadata information about the data file loaded into R
-from an ipums_ddi
+Get information about the IPUMS project, date, notes,
+conditions, and citation requirements for an extract based on an
+\link{ipums_ddi} object.
+
+\code{ipums_conditions()} is a convenience function that provides conditions and
+citation information for a recently loaded dataset.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+
 ipums_file_info(ddi)
 }

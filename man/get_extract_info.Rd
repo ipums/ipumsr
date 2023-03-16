@@ -2,74 +2,117 @@
 % Please edit documentation in R/api.R
 \name{get_extract_info}
 \alias{get_extract_info}
-\title{Get information about a submitted extract}
+\alias{get_last_extract_info}
+\title{Get information about previous extract requests}
 \usage{
-get_extract_info(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
+get_extract_info(
+  extract = NULL,
+  how_many = NULL,
+  table = FALSE,
+  api_key = Sys.getenv("IPUMS_API_KEY")
+)
+
+get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
-\code{c("collection", "number")}
+\item An IPUMS collection with API support (omit to use your default
+collection)
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
+\code{c("collection", number)}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.
+Extract numbers do not need to be zero-padded. That is, use \code{1}, not
+\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
+\item{how_many}{If the provided \code{extract} is an IPUMS collection, the number
+of recent extract requests for which to retrieve information. Defaults to
+10.}
+
+\item{table}{If the provided \code{extract} is an IPUMS collection, a logical
+indicating whether to return recent extract information as a
+\code{\link[tibble:tbl_df-class]{tibble}} (\code{TRUE}) or a list of
+\code{\link[=ipums_extract-class]{ipums_extract}} objects (\code{FALSE}). Defaults to
+\code{FALSE}.}
+
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+
+\item{collection}{Character string of the IPUMS collection for which to
+retrieve the most recent extract request.}
 }
 \value{
-An \code{\link[=ipums_extract-class]{ipums_extract}} object.
+If obtaining information about a single extract, an
+\code{\link[=ipums_extract-class]{ipums_extract}} object.
+
+If obtaining information for a collection, a list of
+\code{\link[=ipums_extract-class]{ipums_extract}} objects (if \code{table = FALSE}) or
+a \code{\link[tibble:tbl_df-class]{tibble}} (if \code{table = TRUE}).
 }
 \description{
-Get information about a submitted extract via the IPUMS API. For an overview
-of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Retrieve the definitions of your previously submitted extract requests.
+
+If a specific extract number is indicated, retrieve the most recent
+status of that extract request. If a collection is indicated, retrieve the
+information for the most recent extract requests for that collection.
+
+\code{get_last_extract_info()} is a convenience function to retrieve the
+information for the most recent extract of a given collection.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Get info by supplying an ipums_extract object:
+# Get latest info for the request associated with a given `ipums_extract`
+# object:
 get_extract_info(submitted_extract)
 
-# Get info by supplying the data collection and extract number, as a string:
+# Or specify the extract collection and number:
 get_extract_info("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
-
-# Get info by supplying the data collection and extract number, as a vector:
 get_extract_info(c("usa", "1"))
-}
 
+# Get information for multiple recent requests by specifying a collection
+# with no number:
+get_extract_info("usa")
+
+# If you have a default collection, you can use the extract number alone:
+set_ipums_default_collection("nhgis")
+get_extract_info(1)
+
+# Or omit the number to get information about recent extracts
+get_extract_info(how_many = 3, table = TRUE)
+get_last_extract_info()
+}
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
+process and manage an extract request.
+
+\code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
+extract definition.
+
+\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
+
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
+
+\code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information
+about recent extract requests.
 }
-\concept{ipums_api}

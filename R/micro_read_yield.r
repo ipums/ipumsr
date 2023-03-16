@@ -3,60 +3,130 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read data from an IPUMS extract (in yields)
+#' Read data from an IPUMS extract in yields
 #'
-#' Reads a dataset downloaded from the IPUMS extract system, but does
-#' so by returning an object that can read a group of lines at a time.
-#' This is a more flexible way to read data in chunks than
-#' the functions like \code{\link{read_ipums_micro_chunked}}, allowing
-#' you to do things like reading parts of multiple files at the same time
-#' and resetting from the beginning more easily than with the chunked
-#' functions. \strong{Note that while other \code{read_ipums_micro*} functions
-#' can read from .csv(.gz) or .dat(.gz) files, these functions can only read
-#' from .dat(.gz) files.}
+#' @description
+#' Read a microdata dataset downloaded from the IPUMS extract system into an
+#' object that can read and operate on a group ("yield") of lines at a time.
 #'
-#' These functions return an IpumsYield R6 object which have the following
-#' methods:
-#' \itemize{
-#' \item \code{yield(n = 10000)} A function to read the next 'yield' from the data,
-#'   returns a `tbl_df` (or list of `tbl_df` for `hipread_list_yield()`)
-#'   with up to n rows (it will return NULL if no rows are left, or all
-#'   available ones if less than n are available).
-#' \item \code{reset()} A function to reset the data so that the next yield will
-#'   read data from the start.
-#' \item \code{is_done()} A function that returns whether the file has been completely
-#'   read yet or not.
-#' \item \code{cur_pos} A property that contains the next row number that will be
-#'    read (1-indexed).
-#' }
+#' Use these functions to read a file that is too large to store in memory at
+#' a single time. They represent a more flexible implementation of
+#' [read_ipums_micro_chunked()] using R6.
+#'
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
+#'
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
+#'
+#' `read_ipums_micro_yield()` and `read_ipums_micro_list_yield()` differ
+#' in their handling of extracts that contain multiple record types.
+#' See *Data structrures* below.
+#'
+#' Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+#'
+#' # Methods summary:
+#' These functions return a HipYield R6 object with the following methods:
+#' - `yield(n = 10000)` reads the next "yield" from the
+#'   data.
+#'
+#'   For `read_ipums_micro_yield()`, returns a [`tibble`][tibble::tbl_df-class]
+#'   with up to `n` rows.
+#'
+#'   For `read_ipums_micro_list_yield()`, returns a list of tibbles with a
+#'   total of up to `n` rows across list elements.
+#'
+#'   If fewer than `n` rows are left in the data, returns all remaining rows.
+#'   If no rows are left in the data, returns `NULL`.
+#' - `reset()` resets the data so that the next yield will read data from the
+#'   start.
+#' - `is_done()` returns a logical indicating whether all rows in the file
+#'   have been read.
+#' - `cur_pos` contains the next row number that will be read (1-indexed).
+#'
+#' @section Data structures:
+#'
+#' Files from IPUMS projects that contain data for multiple types of records
+#' (e.g. household records and person records) may be either rectangular
+#' or hierarchical.
+#'
+#' Rectangular data are transformed such that each row of data
+#' represents only one type of record. For instance, each row will represent
+#' a person record, and all household-level information for that person will
+#' be included in the same row.
+#'
+#' Hierarchical data have records of
+#' different types interspersed in a single file. For instance, a household
+#' record will be included in its own row followed by the person records
+#' associated with that household.
+#'
+#' Hierarchical data can be read in two different formats:
+#' - `read_ipums_micro_yield()` produces an object that yields data as a
+#'   [`tibble`][tibble::tbl_df-class] whose rows
+#'   represent single records, regardless of record type. Variables that do
+#'   not apply to a particular record type will be filled with `NA` in rows of
+#'   that record type. For instance, a person-specific variable will be missing
+#'   in all rows associated with household records.
+#' - `read_ipums_micro_list_yield()` produces an object that yields data as a
+#'   list of `tibble` objects, where each list element contains
+#'   only one record type. Each list element is named with its corresponding
+#'   record type. In this case, when using `yield()`, `n` refers to
+#'   the total number of rows *across* record types, rather than in each
+#'   record type.
+#'
+#' @inheritSection read_ipums_micro Downloading IPUMS files
+#'
+#' @return A HipYield R6 object (see Details section)
+#'
 #' @inheritParams read_ipums_micro
 #'
-#' @return A HipYield R6 object (See 'Details' for more information)
 #' @export
-#' @family ipums_read
+#'
+#' @seealso [read_ipums_micro_chunked()] to read data from large IPUMS
+#'   microdata extracts in chunks.
+#'
+#'   [read_ipums_micro()] to read data from an IPUMS microdata extract.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @examples
-#' # An example using "long" data
+#' # Create an IpumsLongYield object
 #' long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))
-#' # Get first 10 rows
+#'
+#' # Yield the first 10 rows of the data
 #' long_yield$yield(10)
-#' # Get 20 more rows now
+#'
+#' # Yield the next 20 rows of the data
 #' long_yield$yield(20)
-#' # See what row we're on now
+#'
+#' # Check the current position after yielding 30 rows
 #' long_yield$cur_pos
-#' # Reset to beginning
+#'
+#' # Reset to the beginning of the file
 #' long_yield$reset()
-#' # Read the whole thing in chunks and count Minnesotans
+#'
+#' # Use a loop to flexibly process the data in pieces. Count all Minnesotans:
 #' total_mn <- 0
+#'
 #' while (!long_yield$is_done()) {
 #'   cur_data <- long_yield$yield(1000)
 #'   total_mn <- total_mn + sum(as_factor(cur_data$STATEFIP) == "Minnesota")
 #' }
+#'
 #' total_mn
 #'
 #' # Can also read hierarchical data as list:
-#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00006.xml"))
-#' list_yield$yield(10)
+#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
 #'
+#' # Yield size is based on total rows for all list elements
+#' list_yield$yield(10)
 read_ipums_micro_yield <- function(
   ddi,
   vars = NULL,
@@ -119,20 +189,20 @@ IpumsLongYield <- R6::R6Class(
     ) {
       lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
       if (lower_vars_was_ignored) {
-        warning(lower_vars_ignored_warning())
+        rlang::warn(lower_vars_ignored_warning())
       }
       if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
       if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
       if (fostr_detect(data_file, "\\.csv$|\\.csv\\.gz$")) {
-        stop(
-          "read_ipums_micro_yield does not support reading from .csv ",
-          "formatted data files, only from .dat (or .dat.gz) files"
-        )
+        rlang::abort(paste0(
+          "`read_ipums_micro_yield()` does not support .csv ",
+          "files, only .dat (or .dat.gz) files"
+        ))
       }
 
       data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-      if (verbose) custom_cat(short_conditions_text(ddi))
+      if (verbose) message(short_conditions_text(ddi))
 
       vars <- enquo(vars)
       if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -178,20 +248,20 @@ IpumsListYield <- R6::R6Class(
     ) {
       lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
       if (lower_vars_was_ignored) {
-        warning(lower_vars_ignored_warning())
+        rlang::warn(lower_vars_ignored_warning())
       }
       if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
       if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
       if (fostr_detect(data_file, "\\.csv$|\\.csv\\.gz$")) {
-        stop(
-          "read_ipums_micro_yield does not support reading from .csv ",
-          "formatted data files, only from .dat (or .dat.gz) files"
-        )
+        rlang::abort(paste0(
+          "`read_ipums_micro_yield()` does not support .csv ",
+          "files, only .dat (or .dat.gz) files"
+        ))
       }
 
       data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-      if (verbose) custom_cat(short_conditions_text(ddi))
+      if (verbose) message(short_conditions_text(ddi))
 
       vars <- enquo(vars)
       if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)

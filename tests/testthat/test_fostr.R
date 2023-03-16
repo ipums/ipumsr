@@ -1,4 +1,3 @@
-context("fostr - stringr replacements")
 
 test_that("fostr_detect works as expected", {
   expect_equal(ipumsr:::fostr_detect(c("abcdef", "xyz", "def abc"), "abc"), c(TRUE, FALSE, TRUE))

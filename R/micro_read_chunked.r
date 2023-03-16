@@ -3,95 +3,183 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-
-#' Read data from an IPUMS extract (in chunks)
+#' Read data from an IPUMS extract by chunk
 #'
-#' Reads a dataset downloaded from the IPUMS extract system, but does
-#' so by reading a chunk, then applying your code to that chunk and
-#' then continuing, which can allow you to deal with data that is
-#' too large to store in your computer's RAM all at once.
+#' @description
+#' Read a microdata dataset downloaded from the IPUMS extract system in chunks.
+#'
+#' Use these functions to read a file that is too large to store in memory
+#' at a single time. The file is processed in chunks of a given size, with a
+#' provided callback function applied to each chunk.
+#'
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
+#'
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
+#'
+#' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
+#' in their handling of extracts that contain multiple record types.
+#' See *Data structrures* below.
+#'
+#' @inheritSection read_ipums_micro Downloading IPUMS files
+#'
+#' @section Data structures:
+#' Files from IPUMS projects that contain data for multiple types of records
+#' (e.g. household records and person records) may be either rectangular
+#' or hierarchical.
+#'
+#' Rectangular data are transformed such that each row of data
+#' represents only one type of record. For instance, each row will represent
+#' a person record, and all household-level information for that person will
+#' be included in the same row.
+#'
+#' Hierarchical data have records of
+#' different types interspersed in a single file. For instance, a household
+#' record will be included in its own row followed by the person records
+#' associated with that household.
+#'
+#' Hierarchical data can be read in two different formats:
+#' - `read_ipums_micro_chunked()` reads each chunk of data into a
+#'   [`tibble`][tibble::tbl_df-class] where each row represents a single record,
+#'   regardless of record type. Variables that do not apply to a particular
+#'   record type will be filled with `NA` in rows of that record type. For
+#'   instance, a person-specific variable will be missing in all rows
+#'   associated with household records. The provided `callback` function should
+#'   therefore operate on a `tibble` object.
+#' - `read_ipums_micro_list_chunked()` reads each chunk of data into a list of
+#'   `tibble` objects, where each list element contains
+#'   only one record type. Each list element is named with its corresponding
+#'   record type. The provided `callback` function should therefore operate
+#'   on a list object. In this case, the chunk size references the total
+#'   number of rows *across* record types, rather than in each
+#'   record type.
 #'
 #' @inheritParams read_ipums_micro
-#' @param callback An \code{\link{ipums_callback}} object, or a function
-#'   that will be converted to an IpumsSideEffectCallback object.
-#' @param chunk_size An integer indicating how many observations to
-#'   read in per chunk (defaults to 10,000). Setting this higher
-#'   uses more RAM, but will usually be faster.
-#' @param lower_vars Only if reading a DDI from a file, a logical indicating
-#'   whether to convert variable names to lowercase (default is FALSE, in line
-#'   with IPUMS conventions). Note that this argument will be ignored if
-#'   argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
-#'   See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
-#'   when reading in the DDI. Also note that if reading in chunks from a .csv or
+#' @param callback An [ipums_callback] object, or a function
+#'   that will be converted to an `IpumsSideEffectCallback` object. Callback
+#'   functions should include both data (`x`) and position (`pos`) arguments.
+#'   See examples.
+#' @param chunk_size Integer number of observations to
+#'   read per chunk. Higher values use more RAM, but
+#'   typically result in faster processing. Defaults to 10,000.
+#' @param lower_vars If reading a DDI from a file,
+#'   a logical indicating whether to convert variable names to lowercase.
+#'   Defaults to `FALSE` for consistency with IPUMS conventions.
+#'
+#'   This argument will be ignored if argument `ddi` is
+#'   an [ipums_ddi] object. Use [read_ipums_ddi()] to convert variable
+#'   names to lowercase when reading a DDI file.
+#'
+#'   Note that if reading in chunks from a .csv or
 #'   .csv.gz file, the callback function will be called *before* variable names
 #'   are converted to lowercase, and thus should reference uppercase variable
 #'   names.
 #'
-#' @return Depends on the callback object
+#' @return Depends on the provided callback object. See [ipums_callback].
+#'
 #' @export
-#' @family ipums_read
+#'
+#' @seealso [read_ipums_micro_yield()] for more flexible handling of large
+#'   IPUMS microdata files.
+#'
+#'   [read_ipums_micro()] to read data from an IPUMS microdata extract.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @examples
-#' # Select Minnesotan cases from CPS example (Note you can also accomplish
-#' # this and avoid having to even download a huge file using the "Select Cases"
-#' # functionality of the IPUMS extract system)
-#' mn_only <- read_ipums_micro_chunked(
-#'   ipums_example("cps_00006.xml"),
-#'   IpumsDataFrameCallback$new(function(x, pos) {
-#'     x[x$STATEFIP == 27, ]
-#'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#' suppressMessages(library(dplyr))
+#'
+#' # Example codebook file
+#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#'
+#' # Function to extract Minnesota cases from CPS example
+#' # (This can also be accomplished using "Select Cases" in the IPUMS
+#' # extract system)
+#' #
+#' # Function must take `x` and `pos` to refer to data and row position,
+#' # respectively.
+#' filter_mn <- function(x, pos) {
+#'   x[x$STATEFIP == 27, ]
+#' }
+#'
+#' # Initialize callback
+#' filter_mn_callback <- IpumsDataFrameCallback$new(filter_mn)
+#'
+#' # Process data in chunks, filtering to MN cases in each chunk
+#' read_ipums_micro_chunked(
+#'   cps_rect_ddi_file,
+#'   filter_mn_callback,
+#'   chunk_size = 1000,
+#'   verbose = FALSE
 #' )
 #'
 #' # Tabulate INCTOT average by state without storing full dataset in memory
-#' library(dplyr)
-#' inc_by_state <- read_ipums_micro_chunked(
-#'   ipums_example("cps_00006.xml"),
-#'   IpumsDataFrameCallback$new(function(x, pos) {
-#'     x %>%
-#'       mutate(
-#'         INCTOT = lbl_na_if(
-#'           INCTOT, ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe)."))
+#' read_ipums_micro_chunked(
+#'   cps_rect_ddi_file,
+#'   IpumsDataFrameCallback$new(
+#'     function(x, pos) {
+#'       x %>%
+#'         mutate(
+#'           INCTOT = lbl_na_if(
+#'             INCTOT,
+#'             ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'           )
 #'         ) %>%
-#'       filter(!is.na(INCTOT)) %>%
-#'       group_by(STATEFIP = as_factor(STATEFIP)) %>%
-#'       summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
-#'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#'         filter(!is.na(INCTOT)) %>%
+#'         group_by(STATEFIP = as_factor(STATEFIP)) %>%
+#'         summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
+#'     }
+#'   ),
+#'   chunk_size = 1000
 #' ) %>%
 #' group_by(STATEFIP) %>%
 #' summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 #'
-#' # x will be a list when using `read_ipums_micro_list_chunked()`
+#' # `x` will be a list when using `read_ipums_micro_list_chunked()`
 #' read_ipums_micro_list_chunked(
 #'   ipums_example("cps_00010.xml"),
 #'   IpumsSideEffectCallback$new(function(x, pos) {
-#'     print(paste0(nrow(x$PERSON), " persons and ", nrow(x$HOUSEHOLD), " households in this chunk."))
+#'     print(
+#'       paste0(
+#'         nrow(x$PERSON), " persons and ",
+#'         nrow(x$HOUSEHOLD), " households in this chunk."
+#'       )
+#'     )
 #'   }),
-#'   chunk_size = 1000 # Generally you want this larger, but this example is a small file
+#'   chunk_size = 1000,
+#'   verbose = FALSE
 #' )
 #'
 #' # Using the biglm package, you can even run a regression without storing
 #' # the full dataset in memory
-#' library(dplyr)
-#' if (require(biglm)) {
-#'   lm_results <- read_ipums_micro_chunked(
-#'     ipums_example("cps_00015.xml"),
-#'     IpumsBiglmCallback$new(
-#'       INCTOT ~ AGE + HEALTH, # Simple regression (may not be very useful)
-#'       function(x, pos) {
-#'         x %>%
-#'         mutate(
-#'           INCTOT = lbl_na_if(
-#'             INCTOT, ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
-#'           ),
-#'           HEALTH = as_factor(HEALTH)
-#'         )
-#'     }),
-#'     chunk_size = 1000 # Generally you want this larger, but this example is a small file
-#'   )
-#'   summary(lm_results)
-#' }
+#' lm_results <- read_ipums_micro_chunked(
+#'   ipums_example("cps_00015.xml"),
+#'   IpumsBiglmCallback$new(
+#'     INCTOT ~ AGE + HEALTH, # Model formula
+#'     function(x, pos) {
+#'       x %>%
+#'       mutate(
+#'         INCTOT = lbl_na_if(
+#'           INCTOT,
+#'           ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'         ),
+#'         HEALTH = as_factor(HEALTH)
+#'       )
+#'     }
+#'   ),
+#'   chunk_size = 1000,
+#'   verbose = FALSE
+#' )
 #'
+#' summary(lm_results)
 read_ipums_micro_chunked <- function(
   ddi,
   callback,
@@ -104,14 +192,14 @@ read_ipums_micro_chunked <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -129,7 +217,9 @@ read_ipums_micro_chunked <- function(
   }
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv_chunked(
       data_file,
@@ -173,14 +263,14 @@ read_ipums_micro_list_chunked <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -195,7 +285,9 @@ read_ipums_micro_list_chunked <- function(
   }
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv_chunked(
       data_file,
@@ -239,7 +331,9 @@ ipumsify_data <- function(
     }
     names(out) <- rectype_label_names(names(out), rt_ddi)
   } else {
-    stop("Don't know what to do with data structure: ", data_structure)
+    rlang::abort(
+      paste0("Don't know what to do with data structure: ", data_structure)
+    )
   }
   out
 }

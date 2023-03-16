@@ -2,36 +2,36 @@
 % Please edit documentation in R/lbl_helpers.r
 \name{zap_ipums_attributes}
 \alias{zap_ipums_attributes}
-\title{Remove all IPUMS attributes from a variable (or all variables in a data.frame)}
+\title{Remove label attributes from a data frame or labelled vector}
 \usage{
 zap_ipums_attributes(x)
 }
 \arguments{
-\item{x}{A variable or a whole data.frame to remove attributes from}
+\item{x}{A data frame or \link[haven:labelled]{labelled} vector
+(for instance, from a data frame column)}
 }
 \value{
-A variable or data.frame
+An object of the same type as \code{x} without \code{"val_labels"},
+\verb{"var_label}", and \code{"var_desc"} attributes.
 }
 \description{
-Helper to remove ipums attributes (including value labels from the
-labelled class, the variable label and the variable description).
-These attributes can sometimes get in the way of functions like
-the dplyr join functions so you may want to remove them.
+Remove all label attributes (value labels, variable labels, and variable
+descriptions) from a data frame or vector.
 }
 \examples{
 cps <- read_ipums_micro(ipums_example("cps_00006.xml"))
-annual_unemployment <- data.frame(YEAR = c(1962, 1963), unemp = c(5.5, 5.7))
 
-# Avoids warning 'Column `YEAR` has different attributes on LHS and RHS of join'
-cps$YEAR <- zap_ipums_attributes(cps$YEAR)
-cps <- dplyr::left_join(cps, annual_unemployment, by = "YEAR")
+attributes(cps$YEAR)
+attributes(zap_ipums_attributes(cps$YEAR))
 
+cps <- zap_ipums_attributes(cps)
+attributes(cps$YEAR)
+attributes(cps$INCTOT)
 }
 \seealso{
 Other lbl_helpers: 
 \code{\link{lbl_add}()},
 \code{\link{lbl_clean}()},
-\code{\link{lbl_collapse}()},
 \code{\link{lbl_define}()},
 \code{\link{lbl_na_if}()},
 \code{\link{lbl_relabel}()},

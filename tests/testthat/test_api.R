@@ -42,19 +42,19 @@ if (have_api_access) {
 
 
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_recent_extracts_info_list("usa")
+    recent_usa_extracts_list <- get_extract_info("usa")
   })
 
   vcr::use_cassette("recent-cps-extracts-list", {
-    recent_cps_extracts_list <- get_recent_extracts_info_list("cps")
+    recent_cps_extracts_list <- get_extract_info("cps")
   })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
   })
 
   vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_recent_extracts_info_tbl("cps")
+    recent_cps_extracts_tbl <- get_extract_info("cps", table = TRUE)
   })
 }
 
@@ -94,6 +94,12 @@ test_that("Attempt to define a hierarchical extract throws an error", {
       "Test", "us2017b", "YEAR", data_structure = "hierarchical"
     ),
     regexp = "must be equal to \"rectangular\""
+  )
+  expect_error(
+    define_extract_cps(
+      "Test", "us2017b", "YEAR", rectangular_on = "H"
+    ),
+    "Currently, the `rectangular_on` argument must be equal to \"P\""
   )
 })
 
@@ -147,8 +153,105 @@ test_that("cps_extract print method works", {
   expect_output(print(cps_extract), regexp = "Unsubmitted IPUMS CPS extract")
 })
 
+test_that("ipums_extract validate method works", {
+  expect_identical(validate_ipums_extract(usa_extract), usa_extract)
+  expect_error(
+    validate_ipums_extract(define_extract_usa()),
+    "argument \"description\" is missing"
+  )
+  expect_error(
+    validate_ipums_extract(define_extract_cps()),
+    "argument \"description\" is missing"
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa"
+      )
+    ),
+    "`description` must not contain missing values"
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = ""
+      )
+    ),
+    paste0(
+      "`data_structure` must not contain missing.+",
+      "`data_format` must not contain missing.+",
+      "`samples` must not contain missing.+",
+      "`variables` must not contain missing.+"
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "cps",
+        description = "Test",
+        samples = "Test",
+        variables = "Test",
+        data_format = "Test",
+        data_structure = "Test"
+      )
+    ),
+    paste0(
+      "`data_structure` must be one of.+",
+      "`data_format` must be one of "
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = "",
+        data_structure = "hierarchical",
+        rectangular_on = "B",
+        samples = "Test",
+        variables = "Test",
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`rectangular_on` must be missing when ",
+      "`data_structure != \"rectangular\"`."
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = "",
+        data_structure = "rectangular",
+        samples = "Test",
+        variables = "Test",
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`rectangular_on` must not contain missing values when ",
+      "`data_structure == \"rectangular\"`."
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "cps",
+        description = "",
+        data_structure = "hierarchical",
+        samples = list("A"),
+        variables = list("B"),
+        data_format = "csv"
+      )
+    ),
+    paste0(
+      "`samples` must be of type `character`, not `list`.+",
+      "`variables` must be of type `character`, not `list`"
+    )
+  )
+})
 
-# > Get extract info ----
 test_that("Can check the status of a USA extract by supplying extract object", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("get-usa-extract-info", {
@@ -228,6 +331,23 @@ test_that("Can check the status of a CPS extract by supplying collection and num
   expect_true(is_ready)
 })
 
+test_that("extract_list_from_json reproduces extract specs", {
+
+  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
+  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
+
+  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
+  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
+  expect_identical(
+    extract_list_from_json(usa_json)[[1]],
+    usa_extract
+  )
+  expect_identical(
+    extract_list_from_json(cps_json)[[1]],
+    cps_extract
+  )
+
+})
 
 # > Get recent extracts info ----
 test_that("Tibble of recent USA extracts contains expected columns", {
@@ -251,7 +371,11 @@ test_that("Tibble of recent CPS extracts contains expected columns", {
 test_that("Can limit number of recent USA extracts to get info on", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_recent_extracts_info_tbl("usa", 2)
+    two_recent_usa_extracts <- get_extract_info(
+      "usa",
+      how_many = 2,
+      table = TRUE
+    )
   })
   expect_equal(nrow(two_recent_usa_extracts), 2)
 })
@@ -260,7 +384,11 @@ test_that("Can limit number of recent USA extracts to get info on", {
 test_that("Can limit number of recent CPS extracts to get info on", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-cps-extracts-tbl-two", {
-    two_recent_cps_extracts <- get_recent_extracts_info_tbl("cps", 2)
+    two_recent_cps_extracts <- get_extract_info(
+      "cps",
+      how_many = 2,
+      table = TRUE
+    )
   })
   expect_equal(nrow(two_recent_cps_extracts), 2)
 })
@@ -278,6 +406,7 @@ if (have_api_access) {
 
 download_dir <- file.path(tempdir(), "ipums-api-downloads")
 if (!dir.exists(download_dir)) dir.create(download_dir)
+on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
 tryCatch(
   vcr::use_cassette("download-usa-extract-ipums-extract", {
@@ -303,7 +432,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message, call. = FALSE))
     }
   }
 )
@@ -345,7 +474,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -380,7 +509,7 @@ tryCatch(
   }),
   warning = function(w) {
     if (!grepl("Empty cassette", w$message)) {
-      return(warning(w$message, call. = FALSE))
+      return(rlang::warn(w$message))
     }
   }
 )
@@ -390,9 +519,9 @@ tryCatch(
 test_that("An extract request with missing collection returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract()),
-    regexp = paste0(
-      "The following elements of an extract definition must not contain missing ",
-      "values:"
+    paste0(
+      "`collection` must not contain missing.+",
+      "`description` must not contain missing"
     )
   )
 })
@@ -400,10 +529,7 @@ test_that("An extract request with missing collection returns correct error", {
 test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
-    regexp = paste0(
-      "The following elements of an extract definition must not contain missing ",
-      "values:"
-    )
+    "`description` must not contain missing values"
   )
 })
 
@@ -412,13 +538,35 @@ test_that("An extract request with missing samples returns correct error", {
     submit_extract(
       ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
     ),
-    regexp = paste0(
-      "The following elements of an extract definition must not contain missing ",
-      "values:"
+    paste0(
+      "`data_structure` must not contain missing values.+",
+      "`data_format` must not contain missing values.+",
+      "`samples` must not contain missing values.+",
+      "`variables` must not contain missing values"
     )
   )
 })
 
+test_that("We parse API errors on bad requests", {
+
+  bad_extract <- new_ipums_extract(
+    "usa",
+    samples = "foo"
+  )
+
+  vcr::use_cassette("micro-extract-errors", {
+    expect_error(
+      ipums_api_json_request(
+        "POST",
+        collection = "usa",
+        path = NULL,
+        body = extract_to_request_json(bad_extract),
+        api_key = Sys.getenv("IPUMS_API_KEY")
+      ),
+      "variables"
+    )
+  })
+})
 
 # > Add to / remove from extract ----
 test_that("Can add to a USA extract", {
@@ -570,13 +718,11 @@ test_that("Unused revisions do not alter CPS extract", {
 
 
 test_that("Improper extract revisions throw warnings or errors", {
-  expect_warning(
-    add_to_extract(usa_extract, samples = "us2017b"),
-    regexp = "already included"
+  expect_silent(
+    add_to_extract(usa_extract, samples = "us2017b")
   )
-  expect_warning(
-    remove_from_extract(cps_extract, variables = "RELATE"),
-    regexp = "are not included"
+  expect_silent(
+    remove_from_extract(cps_extract, variables = "RELATE")
   )
   expect_warning(
     remove_from_extract(usa_extract,
@@ -584,7 +730,7 @@ test_that("Improper extract revisions throw warnings or errors", {
                         invalid = "invalid"),
     paste0(
       "The following fields were either not found in the provided extract ",
-      "or cannot be removed: `description`, `invalid`\nSee ",
+      "or cannot be removed:.+`description`, `invalid`.+Use ",
       "`add_to_extract\\(\\)`"
     )
   )
@@ -594,7 +740,7 @@ test_that("Improper extract revisions throw warnings or errors", {
                    invalid = "invalid"),
     paste0(
       "The following fields were either not found in the provided extract ",
-      "or cannot be modified: `invalid`"
+      "or cannot be modified:.+`invalid`"
     )
   )
   expect_silent(
@@ -607,22 +753,52 @@ test_that("Improper extract revisions throw warnings or errors", {
       variables = usa_extract$variables
     ),
     paste0(
-      "The following elements of an extract definition must not contain missing",
-      " values: samples, variables"
+      "`samples` must not contain missing values.+",
+      "`variables` must not contain missing values.+"
     )
   )
   expect_error(
     add_to_extract(usa_extract, data_format = "bad_format"),
-    "x\\$data_format %in% c\\(\"fixed_width\""
+    "`data_format` must be one of"
   )
-  expect_warning(
+  expect_error(
     add_to_extract(
       usa_extract,
       samples = "New Sample",
       data_format = c("csv", "bad_format"),
     ),
-    "Multiple values passed to `data_format`, which must be length 1"
+    "`data_format` must be length 1"
   )
+})
+
+test_that("Can combine extracts", {
+
+  x1 <- define_extract_usa(
+    description = "Combining",
+    samples = c("S1", "S2"),
+    variables = "V1",
+    data_format = "csv"
+  )
+
+  x2 <- define_extract_usa(
+    description = "",
+    samples = "S3",
+    variables = "V2",
+    data_format = "csv"
+  )
+
+  x <- combine_extracts(x1, x2)
+
+  expect_identical(
+    x,
+    define_extract_usa(
+      description = "Combining",
+      samples = c("S1", "S2", "S3"),
+      variables = c("V1", "V2"),
+      data_format = "csv"
+    )
+  )
+
 })
 
 
@@ -642,7 +818,7 @@ test_that("tbl to list and list to tbl conversion works", {
 # > Save as / define from JSON ----
 test_that("We can export to and import from JSON", {
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(usa_extract, json_tmpfile)
   copy_of_usa_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(usa_extract, copy_of_usa_extract)
@@ -652,7 +828,7 @@ test_that("We can export to and import from JSON", {
 test_that("We can export to and import from JSON, submitted extract", {
   skip_if_no_api_access(have_api_access)
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-  on.exit(unlink(json_tmpfile))
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
   save_extract_as_json(submitted_usa_extract, json_tmpfile)
   copy_of_submitted_usa_extract <- define_extract_from_json(json_tmpfile)
   expect_identical(
@@ -663,17 +839,18 @@ test_that("We can export to and import from JSON, submitted extract", {
 
 
 # > Set IPUMS API key ----
-test_that("set_ipums_api_key sets environment variable", {
+test_that("set_ipums_envvar sets environment variable", {
   skip_if_not_installed("withr")
+
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
   Sys.setenv(IPUMS_API_KEY = "")
-  set_ipums_api_key("testapikey")
+
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey")
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
 })
 
-
-test_that("set_ipums_api_key sets environment variable and saves to .Renviron", {
+test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
   skip_if_not_installed("withr")
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   current_home_dir <- Sys.getenv("HOME")
@@ -684,41 +861,71 @@ test_that("set_ipums_api_key sets environment variable and saves to .Renviron", 
 
   Sys.setenv(IPUMS_API_KEY = "")
   Sys.setenv(HOME = tempdir())
-  set_ipums_api_key("testapikey", save = TRUE)
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
+
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
   renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
+  expect_true("IPUMS_API_KEY=\"testapikey\"" %in% renviron_lines)
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "testcollect")
+  renviron_lines <- readLines(temp_renviron_file)
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"testcollect\"" %in% renviron_lines)
 })
 
 
-test_that("set_ipums_api_key works with existing .Renviron file", {
+test_that("set_ipums_envvar works with existing .Renviron file", {
   skip_if_not_installed("withr")
-  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
+  current_ipums_default_collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
   current_home_dir <- Sys.getenv("HOME")
   temp_renviron_file <- file.path(tempdir(), ".Renviron")
   temp_renviron_file_backup <- file.path(tempdir(), ".Renviron_backup")
   withr::defer(file.remove(temp_renviron_file_backup))
   withr::defer(file.remove(temp_renviron_file))
   withr::defer(Sys.setenv(HOME = current_home_dir))
-  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
-
-  Sys.setenv(IPUMS_API_KEY = "")
-  Sys.setenv(HOME = tempdir())
-  writeLines("OTHER_ENV_VAR = \"value\"", con = temp_renviron_file)
-  set_ipums_api_key("testapikey", save = TRUE)
-  expect_true(file.exists(temp_renviron_file_backup))
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
-  renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
-
-  expect_error(
-    set_ipums_api_key("newapikey", save = TRUE),
-    regexp = "IPUMS_API_KEY already exists"
+  withr::defer(
+    Sys.setenv(IPUMS_DEFAULT_COLLECTION = current_ipums_default_collection)
   )
 
-  set_ipums_api_key("newapikey", save = TRUE, overwrite = TRUE)
+  Sys.setenv(IPUMS_DEFAULT_COLLECTION = "")
+  Sys.setenv(HOME = tempdir())
+  writeLines("OTHER_ENV_VAR=\"value\"", con = temp_renviron_file)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
+  expect_true(file.exists(temp_renviron_file_backup))
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "usa")
   renviron_lines <- readLines(temp_renviron_file)
-  expect_false("IPUMS_API_KEY = \"testapikey\"" %in% renviron_lines)
-  expect_true("IPUMS_API_KEY = \"newapikey\"" %in% renviron_lines)
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "newapikey")
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+
+  expect_error(
+    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE),
+    "IPUMS_DEFAULT_COLLECTION already exists"
+  )
+
+  expect_message(
+    set_ipums_envvar(
+      IPUMS_DEFAULT_COLLECTION = "nhgis",
+      overwrite = TRUE
+    ),
+    "Existing \\.Renviron file copied"
+  )
+
+  renviron_lines <- readLines(temp_renviron_file)
+  renviron_backup_lines <- readLines(temp_renviron_file_backup)
+
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_backup_lines)
+
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_lines)
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_backup_lines)
+
+  expect_true("OTHER_ENV_VAR=\"value\"" %in% renviron_backup_lines)
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "nhgis")
+
+  unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
+  expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
+
 })
+

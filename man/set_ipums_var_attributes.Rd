@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.r
 \name{set_ipums_var_attributes}
 \alias{set_ipums_var_attributes}
-\title{Add IPUMS variable attributes to a data.frame}
+\title{Add IPUMS variable attributes to a data frame}
 \usage{
 set_ipums_var_attributes(
   data,
@@ -11,46 +11,63 @@ set_ipums_var_attributes(
 )
 }
 \arguments{
-\item{data}{A data.frame}
+\item{data}{\code{\link[tibble:tbl_df-class]{tibble}} or data frame}
 
-\item{var_info}{An \code{ipums_ddi} object or a data.frame with the
-variable information (equivalent to getting ipums_var_info on a DDI).}
+\item{var_info}{An \link{ipums_ddi} object or a data frame containing
+variable information. Variable information can be obtained by calling
+\code{ipums_var_info()} on an \code{ipums_ddi} object.}
 
-\item{var_attrs}{One or more of \code{val_labels}, \code{var_label} and
-\code{var_desc} describing what kinds of attributes you want to add.
-If NULL, will not add any attributes.}
+\item{var_attrs}{Variable attributes from the DDI to add to the columns of
+the output data. Defaults to all available attributes.}
 }
 \value{
-A \code{tbl_df} data.frame with data and IPUMS attributes
+\code{data}, with variable attributes attached
 }
 \description{
-Add variable attributes from an IPUMS DDI to the variables in a data.frame.
-This function is usually called automatically for you inside of the read_*
-functions (such as read_ipums_micro or read_nhgis), but they can
-be useful other times as well. For example, if you store the data in
-a database, you can store the data without attributes in the database
-and add them on after loading a subset into a data.frame.
+Add variable attributes from an \link{ipums_ddi} object to a data frame.
+These provide contextual information about the variables
+and values contained in the data columns.
+
+Most ipumsr data-reading functions automatically add these attributes.
+However, some data processing operations may remove attributes, or you
+may wish to store data in an external database that does not support
+these attributes. In these cases, use this function to manually attach
+this information.
 }
 \details{
-Attribute \code{val_labels} adds the haven::labelled class attributes and
-the corresponding value labels for variables that have value labels.
+Attribute \code{val_labels} adds the \code{\link[haven:labelled]{haven_labelled}} class
+and the corresponding value labels for applicable variables. For more
+about the \code{haven_labelled} class, see
+\code{vignette("semantics", package = "haven")}.
 
-Attribute \code{var_label} Adds a short summary of the variable's
-contents that to the attribute "label". This label is viewable in the
+Attribute \code{var_label} adds a short summary of the variable's
+contents to the \code{"label"} attribute. This label is viewable in the
 RStudio Viewer.
 
-Attribute \code{var_desc} Adds a longer summary of the variable's
-contents to the attribute "var_desc" when available.
+Attribute \code{var_desc} adds a longer description of the variable's
+contents to the \code{"var_desc"} attribute, when available.
+
+Variable information is attached to the data by column name. If column
+names in \code{data} do not match those found in \code{var_info}, attributes
+will not be added.
 }
 \examples{
-  ddi_file <- ipums_example("cps_00006.xml")
-  ddi <- read_ipums_ddi(ddi_file)
-  cps <- read_ipums_micro(ddi, var_attrs = NULL) # Don't load with attributes
+ddi_file <- ipums_example("cps_00006.xml")
 
-  ipums_var_desc(cps$YEAR) # Not available
+# Load metadata into `ipums_ddi` object
+ddi <- read_ipums_ddi(ddi_file)
 
-  # But, we can add on attributes after loading
-  cps_with_attr <- set_ipums_var_attributes(cps, ddi)
-  ipums_var_desc(cps_with_attr$YEAR)
+# Load data
+cps <- read_ipums_micro(ddi)
 
+# Data includes variable metadata:
+ipums_var_desc(cps$INCTOT)
+
+# Some operations remove attributes, even if they do not alter the data:
+cps$INCTOT <- ifelse(TRUE, cps$INCTOT, NA)
+ipums_var_desc(cps$INCTOT)
+
+# We can reattach metadata from the separate `ipums_ddi` object:
+cps <- set_ipums_var_attributes(cps, ddi)
+ipums_var_desc(cps$INCTOT)
 }

@@ -2,25 +2,41 @@
 % Please edit documentation in R/api.R
 \name{define_extract_from_json}
 \alias{define_extract_from_json}
-\title{Create an \code{\link[=ipums_extract-class]{ipums_extract}} object from a JSON-formatted
-definition}
+\alias{save_extract_as_json}
+\title{Store an extract definition in JSON format}
 \usage{
 define_extract_from_json(extract_json)
+
+save_extract_as_json(extract, file)
 }
 \arguments{
-\item{extract_json}{The path to a file containing the JSON definition, or a
-JSON string.}
+\item{extract_json}{Path to a file containing a JSON-formatted
+extract definition.}
+
+\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
+
+\item{file}{File path to which to write the JSON-formatted extract
+definition.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Create an \code{\link[=ipums_extract-class]{ipums_extract}} object based on an extract
-definition formatted as JSON. For an overview of ipumsr microdata API functionality,
-see \code{vignette("ipums-api", package = "ipumsr")}.
+Read and write an \code{\link[=ipums_extract-class]{ipums_extract}} object to a JSON
+file that contains the extract definition specifications.
+
+Use these functions to store a copy of an extract definition outside of your
+R environment and/or share an extract definition with another registered
+IPUMS user.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 extract_json_path <- file.path(tempdir(), "usa_extract.json")
 save_extract_as_json(my_extract, file = extract_json_path)
@@ -29,24 +45,15 @@ copy_of_my_extract <- define_extract_from_json(extract_json_path)
 
 identical(my_extract, copy_of_my_extract)
 
+file.remove(extract_json_path)
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+to define an extract request to save.
+
+\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
+
+\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
+process and manage an extract request.
 }
-\concept{ipums_api}

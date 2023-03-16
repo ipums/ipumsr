@@ -17,51 +17,62 @@ define_extract_cps(
 \item{description}{Description of the extract.}
 
 \item{samples}{Character vector of samples to include in the extract. Samples
-should be specified using the
+should be specified using IPUMS CPS
 \href{https://cps.ipums.org/cps-action/samples/sample_ids}{sample ID values}.}
 
 \item{variables}{Character vector of variables to include in the extract.}
 
-\item{data_format}{The desired format of the extract data file (one of
-"fixed_width", "csv", "stata", "spss", or "sas9").}
+\item{data_format}{The desired format of the extract data file. One of
+\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
 
-\item{data_structure}{Currently, this must be "rectangular", which is also
-the default. In the future, the API will also support "hierarchical"
-extracts.}
+\item{data_structure}{The desired structure of the extract data.
 
-\item{rectangular_on}{Currently, this must be "P", indicating that the
-extract will be rectangularized on person records. In the future, the API
-will also support household-only extracts (\code{rectangular_on = "H"}).}
+\code{"rectangular"} provides person records with all requested household
+information attached to respective household members.
+
+\code{"hierarchical"} provides household records followed by person records.
+
+Currently, only \code{"rectangular"} extracts are supported.}
+
+\item{rectangular_on}{Records on which to rectangularize. \code{"P"}
+rectangularizes on person records. \code{"H"} provides household-only records.
+
+Currently, only \code{"P"} is supported.}
 }
 \value{
-An object of class \code{\link[=ipums_extract-class]{c("cps_extract", "ipums_extract")}}
-containing the extract definition.
+An object of class \code{\link[=ipums_extract-class]{cps_extract}} containing
+the extract definition.
 }
 \description{
-Define an IPUMS CPS extract request to be submitted via the IPUMS microdata
-extract API. For an overview of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Define an IPUMS CPS extract request to be submitted via the IPUMS
+API. An extract request contains the specifications required
+to identify and obtain a particular set of data from the IPUMS CPS system.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_cps("Example", "cps2020_03s", "YEAR")
+my_extract <- define_extract_cps(
+  description = "Example CPS extract definition",
+  samples = c("cps2020_02s", "cps2020_03s"),
+  variables = c("AGE", "SEX", "YEAR")
+)
+
+my_extract
+
+\dontrun{
+# Use the extract definition to submit an extract request to the API
+submit_extract(my_extract)
+}
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
+process and manage an extract request.
+
+\code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
+extract definition.
+
+\code{\link[=add_to_extract.cps_extract]{add_to_extract()}},
+\code{\link[=remove_from_extract.cps_extract]{remove_from_extract()}}, and
+\code{\link[=combine_extracts]{combine_extracts()}} to
+revise an extract definition.
 }
-\concept{ipums_api}

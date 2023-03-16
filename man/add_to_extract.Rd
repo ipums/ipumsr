@@ -2,115 +2,84 @@
 % Please edit documentation in R/api.R
 \name{add_to_extract}
 \alias{add_to_extract}
-\alias{add_to_extract.usa_extract}
-\alias{add_to_extract.cps_extract}
-\title{Add values to an IPUMS USA or CPS extract}
+\title{Add values to an existing IPUMS extract definition}
 \usage{
 add_to_extract(extract, ...)
-
-\method{add_to_extract}{usa_extract}(
-  extract,
-  description = NULL,
-  samples = NULL,
-  variables = NULL,
-  data_format = NULL,
-  ...
-)
-
-\method{add_to_extract}{cps_extract}(
-  extract,
-  description = NULL,
-  samples = NULL,
-  variables = NULL,
-  data_format = NULL,
-  ...
-)
 }
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
-\item{...}{Further arguments passed to methods.}
+\item{...}{Additional arguments specifying the extract fields and values to
+add to the extract definition.
 
-\item{description}{Description of the extract.}
-
-\item{samples}{Character vector of samples to add to the extract, if any.
-Use the \href{https://usa.ipums.org/usa-action/samples/sample_ids}{USA sample ID values}
-or the \href{https://cps.ipums.org/cps-action/samples/sample_ids}{CPS sample ID values}.}
-
-\item{variables}{Character vector of variables to add to the extract, if any.}
-
-\item{data_format}{The desired format of the extract data file (one of
-"fixed_width", "csv", "stata", "spss", or "sas9").}
+All arguments available in a collection's \link{define_extract} function can be
+passed to \code{add_to_extract()}.}
 }
 \value{
-A modified IPUMS USA or CPS extract object
+An object of the same class as \code{extract} containing the modified
+extract definition
 }
 \description{
-Add new values to any fields of an IPUMS USA or CPS extract object. All
-fields are optional, and if omitted, will be unchanged. Supplying a value
-for fields that take a single value, such as \code{description} and \code{data_format},
-will replace the existing value with the supplied value.
-
-To remove existing values from an extract, see \code{\link[=remove_from_extract]{remove_from_extract()}}.
-
-For an overview of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
-}
-\section{Note}{
-
-If the supplied extract definition comes from
-a previously submitted extract, this function will reset the definition to an
-unsubmitted state.
+Add or replace values in an existing \code{ipums_extract} object.
+This function is an S3 generic whose behavior will depend on the
+subclass (i.e. collection) of the extract being modified.
+\itemize{
+\item To add to an \strong{IPUMS USA} extract definition, click
+\link[=add_to_extract.usa_extract]{here}
+\item To add to an \strong{IPUMS CPS} extract definition, click
+\link[=add_to_extract.cps_extract]{here}
+\item To add to an \strong{IPUMS NHGIS} extract definition, click
+\link[=add_to_extract.nhgis_extract]{here}
 }
 
+In general, for a given collection, the arguments to \code{add_to_extract()}
+are identical to those used when defining an extract for that collection. For
+more information about defining an extract, click \link[=define_extract]{here}.
+
+To remove existing values from an extract definition,use
+\code{\link[=remove_from_extract]{remove_from_extract()}}. To add values
+contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+}
 \examples{
 usa_extract <- define_extract_usa(
-  description = "USA example",
+  description = "2013 ACS Data",
   samples = "us2013a",
-  variables = "YEAR"
+  variables = c("SEX", "AGE", "YEAR")
 )
 
-revised_usa_extract <- add_to_extract(
-  usa_extract,
-  description = "Revised USA extract",
-  samples = "us2014a"
+add_to_extract(usa_extract, samples = "us2014a")
+add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
+
+nhgis_extract <- define_extract_nhgis(
+  datasets = "1990_STF1",
+  data_tables = c("NP1", "NP2"),
+  geog_levels = "county"
 )
 
-revised_usa_extract
-
-
-cps_extract <- define_extract_cps(
-  description = "CPS example",
-  samples = "cps2019_03s",
-  variables = "YEAR"
+# Add a new dataset/time series table
+add_to_extract(
+  nhgis_extract,
+  datasets = "1980_STF1",
+  data_tables = "NT1A",
+  geog_levels = c("county", "state")
 )
 
-revised_cps_extract <- add_to_extract(
-  cps_extract,
-  description = "Revised CPS extract",
-  samples = "cps2020_03s"
-)
+# Add to existing datasets/time series tables
+add_to_extract(nhgis_extract, geog_levels = "state")
 
-revised_cps_extract
-
+# Values that can only take a single value are replaced
+add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 }
 \seealso{
-Other ipums_api: 
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.
+
+\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
+
+\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
+extract request.
+
+\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+to create a new extract definition.
 }
-\concept{ipums_api}

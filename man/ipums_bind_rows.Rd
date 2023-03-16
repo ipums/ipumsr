@@ -2,20 +2,51 @@
 % Please edit documentation in R/bind_rows.r
 \name{ipums_bind_rows}
 \alias{ipums_bind_rows}
-\title{Bind rows together, but preserve labelled class attributes}
+\title{Bind multiple data frames by row, preserving labelled attributes}
 \usage{
 ipums_bind_rows(..., .id = NULL)
 }
 \arguments{
-\item{...}{Either data.frames or list of data.frames}
+\item{...}{Data frames or \code{\link[tibble:tbl_df-class]{tibbles}} to combine.
+Each argument can be a data frame or a
+list of data frames. When binding, columns are matched by name. Missing
+columns will be filled with \code{NA}.}
 
-\item{.id}{Data frame identifier, when arguments are named (or are named lists
-of data.frames), will make a new column with this name that has the original
-names.}
+\item{.id}{The name of an optional identifier column. Provide a string to
+create an output column that identifies each input. The column will use
+names if available, otherwise it will use positions.}
 }
 \value{
-A data.frame
+Returns the same type as the first input. Either a \code{data.frame},
+\code{tbl_df}, or \code{grouped_df}
 }
 \description{
-Bind rows together, but preserve labelled class attributes
+Analogous to \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}, but preserves the
+labelled attributes provided with IPUMS data.
+}
+\examples{
+file <- ipums_example("nhgis0712_csv.zip")
+
+d1 <- read_nhgis(
+  file,
+  file_select = 1,
+  verbose = FALSE
+)
+
+d2 <- read_nhgis(
+  file,
+  file_select = 2,
+  verbose = FALSE
+)
+
+# Variables have associated label attributes:
+ipums_var_label(d1$PMSAA)
+
+# Preserve labels when binding data sources:
+d <- ipums_bind_rows(d1, d2)
+ipums_var_label(d$PMSAA)
+
+# dplyr `bind_rows()` drops labels:
+d <- dplyr::bind_rows(d1, d2)
+ipums_var_label(d$PMSAA)
 }

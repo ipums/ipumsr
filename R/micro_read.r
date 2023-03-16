@@ -3,88 +3,158 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-
-#' Read data from an IPUMS extract
+#' Read data from an IPUMS microdata extract
 #'
-#' Reads a dataset downloaded from the IPUMS extract system.
-#' For IPUMS projects with microdata, it relies on a downloaded
-#' DDI codebook and a fixed-width file. Loads the data with
-#' value labels (using \code{\link[haven]{labelled}} format)
-#' and variable labels. See 'Details' for more information on
-#' how record types are handled by the ipumsr package.
+#' @description
+#' Read a microdata dataset downloaded from the IPUMS extract system.
 #'
-#' Some IPUMS projects have data for multiple types of records
-#' (eg Household and Person). When downloading data from many of these
-#' projects you have the option for the IPUMS extract system
-#' to "rectangularize" the data, meaning that the data is
-#' transformed so that each row of data represents only one
-#' type of record.
+#' Two files are required to load IPUMS microdata extracts:
+#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#'   (.xml) used to parse the extract's data file
+#' - A data file (generally .dat.gz)
 #'
-#' There also is the option to download "hierarchical" extracts,
-#' which are a single file with record types mixed in the rows.
-#' The ipumsr package offers two methods for importing this data.
+#' See *Downloading IPUMS files* below for more information about downloading
+#' these files.
 #'
-#' \code{read_ipums_micro} loads this data into a "long" format
-#' where the record types are mixed in the rows, but the variables
-#' are \code{NA} for the record types that they do not apply to.
+#' `read_ipums_micro()` and `read_ipums_micro_list()` differ in their handling
+#' of extracts that contain multiple record types. See *Data structrures*
+#' below.
 #'
-#' \code{read_ipums_micro_list} loads the data into a list of
-#' data frames objects, where each data frame contains only
-#' one record type. The names of the data frames in the list
-#' are the text from the record type labels without 'Record'
-#' (often 'HOUSEHOLD' for Household and 'PERSON' for Person).
+#' @section Data structures:
 #'
-#' @param ddi Either a filepath to a DDI xml file downloaded from
-#'   the website, or a \code{ipums_ddi} object parsed by \code{\link{read_ipums_ddi}}
-#' @param vars Names of variables to load. Accepts a character vector of names, or
-#'  \code{\link{dplyr_select_style}} conventions. For hierarchical data, the
-#'  rectype id variable will be added even if it is not specified.
-#' @param n_max The maximum number of records to load.
-#' @param data_file Specify a directory to look for the data file.
-#'   If left empty, it will look in the same directory as the DDI file.
-#' @param verbose Logical, indicating whether to print progress information
-#'   to console.
-#' @param var_attrs Variable attributes to add from the DDI, defaults to
-#'   adding all (val_labels, var_label and var_desc). See
-#'   \code{\link{set_ipums_var_attributes}} for more details.
-#' @param lower_vars Only if reading a DDI from a file, a logical indicating
-#'   whether to convert variable names to lowercase (default is FALSE, in line
-#'   with IPUMS conventions). Note that this argument will be ignored if
-#'   argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
-#'   See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
-#'   when reading in the DDI.
-#' @return \code{read_ipums_micro} returns a single tbl_df data frame, and
-#'   \code{read_ipums_micro_list} returns a list of data frames, named by
-#'   the Record Type. See 'Details' for more
-#'   information.
-#' @examples
-#'   # Rectangular example file
-#'   cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#' Files from IPUMS projects that contain data for multiple types of records
+#' (e.g. household records and person records) may be either rectangular
+#' or hierarchical.
 #'
-#'   cps <- read_ipums_micro(cps_rect_ddi_file)
-#'   # Or load DDI separately to keep the metadata
-#'   ddi <- read_ipums_ddi(cps_rect_ddi_file)
-#'   cps <- read_ipums_micro(ddi)
+#' Rectangular data are transformed such that each row of data
+#' represents only one type of record. For instance, each row will represent
+#' a person record, and all household-level information for that person will
+#' be included in the same row.
 #'
-#'   # Hierarchical example file
-#'   cps_hier_ddi_file <- ipums_example("cps_00010.xml")
+#' Hierarchical data have records of
+#' different types interspersed in a single file. For instance, a household
+#' record will be included in its own row followed by the person records
+#' associated with that household.
 #'
-#'   # Read in "long" format and you get 1 data frame
-#'   cps_long <- read_ipums_micro(cps_hier_ddi_file)
-#'   head(cps_long)
+#' Hierarchical data can be read in two different formats:
+#' - `read_ipums_micro()` reads data into a [`tibble`][tibble::tbl_df-class]
+#'   where each row represents a single record, regardless of record type.
+#'   Variables that do not apply to a particular record type will be filled with
+#'   `NA` in rows of that record type. For instance, a person-specific variable
+#'   will be missing in all rows associated with household records.
+#' - `read_ipums_micro_list()` reads data into a list of
+#'   `tibble` objects, where each list element contains
+#'   only one record type. Each list element is named with its corresponding
+#'   record type.
 #'
-#'   # Read in "list" format and you get a list of multiple data frames
-#'   cps_list <- read_ipums_micro_list(cps_hier_ddi_file)
-#'   head(cps_list$PERSON)
-#'   head(cps_list$HOUSEHOLD)
+#' @section Downloading IPUMS files:
 #'
-#'   # Or you can use the \code{%<-%} operator from zeallot to unpack
-#'   c(household, person) %<-% read_ipums_micro_list(cps_hier_ddi_file)
-#'   head(person)
-#'   head(household)
+#' You must download both the DDI codebook and the data file from the IPUMS
+#' extract system to load the data into R. `read_ipums_micro_*()` functions
+#' assume that the data file and codebook share a common base file name and
+#' are present in the same directory. If this is not the case, provide a
+#' separate path to the data file with the `data_file` argument.
 #'
-#' @family ipums_read
+#' If using the IPUMS extract interface:
+#' - Download the data file by clicking **Download .dat** under
+#'   **Download Data**.
+#' - Download the DDI codebook by right clicking on the **DDI** link in the
+#'   **Codebook** column of the extract interface and selecting **Save as...**
+#'   (on Safari, you may have to select **Download Linked File as...**).
+#'   Be sure that the codebook is downloaded in .xml format.
+#'
+#' If using the IPUMS API:
+#' - For supported collections, use [download_extract()] to download a completed
+#'   extract via the IPUMS API. This automatically downloads both the DDI
+#'   codebook and the data file from the extract and
+#'   returns the path to the codebook file.
+#'
+#' @param ddi Either a path to a DDI .xml file downloaded from
+#'   [IPUMS](https://www.ipums.org/), or an
+#'   [ipums_ddi] object parsed by [read_ipums_ddi()].
+#'
+#'   See *Downloading IPUMS files* below.
+#' @param vars Names of variables to include in the output. Accepts a
+#'   vector of names or a [selection helper][tidyselect::language].
+#'   If `NULL`, includes all variables in the file.
+#'
+#'   For hierarchical data, the `RECTYPE` variable is always included even if
+#'   unspecified.
+#' @param n_max The maximum number of lines to read. For
+#'   `read_ipums_micro_list()`, this applies before splitting records into
+#'   list components.
+#' @param data_file Path to the data (.gz) file associated with
+#'   the provided `ddi` file. By default, looks for the data file in the same
+#'   directory as the DDI file. If the data file has been moved, specify
+#'   its location here.
+#' @param verbose Logical indicating whether to print progress information
+#'   to the console.
+#' @param var_attrs Variable attributes from the DDI to add to the columns of
+#'   the output data. Defaults to all available attributes.
+#'   See [set_ipums_var_attributes()] for more details.
+#' @param lower_vars If reading a DDI from a file,
+#'   a logical indicating whether to convert variable names to lowercase.
+#'   Defaults to `FALSE` for consistency with IPUMS conventions.
+#'
+#'   This argument will be ignored if argument `ddi` is
+#'   an [ipums_ddi] object. Use [read_ipums_ddi()] to convert variable
+#'   names to lowercase when reading a DDI file.
+#'
+#'   If `lower_vars = TRUE` and `vars` is specified, `vars` should reference the
+#'   converted column names.
+#' @return `read_ipums_micro()` returns a single
+#'   [`tibble`][tibble::tbl_df-class] object.
+#'
+#'   `read_ipums_micro_list()` returns a list of `tibble` objects with one
+#'   entry for each record type.
+#'
+#' @seealso [read_ipums_micro_chunked()] and
+#'   [read_ipums_micro_yield()] to read data from large IPUMS
+#'   microdata extracts in chunks.
+#'
+#'   [read_ipums_ddi()] to read metadata associated with an IPUMS microdata
+#'   extract.
+#'
+#'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#'   [ipums_list_files()] to list files in an IPUMS extract.
+#'
 #' @export
+#'
+#' @examples
+#' # Codebook for rectangular example file
+#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#'
+#' # Load data based on codebook file info
+#' cps <- read_ipums_micro(cps_rect_ddi_file)
+#'
+#' head(cps)
+#'
+#' # Can also load data from a pre-existing `ipums_ddi` object
+#' # (This may be useful to retain codebook metadata even if lost from data
+#' # during processing)
+#' ddi <- read_ipums_ddi(cps_rect_ddi_file)
+#' cps <- read_ipums_micro(ddi, verbose = FALSE)
+#'
+#' # Codebook for hierarchical example file
+#' cps_hier_ddi_file <- ipums_example("cps_00010.xml")
+#'
+#' # Read in "long" format to get a single data frame
+#' read_ipums_micro(cps_hier_ddi_file, verbose = FALSE)
+#'
+#' # Read in "list" format and you get a list of multiple data frames
+#' cps_list <- read_ipums_micro_list(cps_hier_ddi_file)
+#'
+#' head(cps_list$PERSON)
+#'
+#' head(cps_list$HOUSEHOLD)
+#'
+#' # Use the `%<-%` operator from zeallot to unpack into separate objects
+#' c(household, person) %<-% read_ipums_micro_list(cps_hier_ddi_file)
+#'
+#' head(person)
+#'
+#' head(household)
 read_ipums_micro <- function(
   ddi,
   vars = NULL,
@@ -96,14 +166,31 @@ read_ipums_micro <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
-  data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
+  tryCatch(
+    data_file <- custom_check_file_exists(
+      data_file,
+      c(".dat.gz", ".csv", ".csv.gz")
+    ),
+    error = function(cnd) {
+      # Append hint to error message
+      rlang::abort(c(
+        conditionMessage(cnd),
+        "i" = paste0(
+          "Use `data_file` to specify the path to the data file associated ",
+          "with the provided `ddi`."
+        )),
+        call = expr(custom_check_file_exists())
+      )
+    }
+  )
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -111,7 +198,9 @@ read_ipums_micro <- function(
   ddi <- ddi_filter_vars(ddi, vars, "long", verbose)
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv(
       data_file,
@@ -154,14 +243,14 @@ read_ipums_micro_list <- function(
 ) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
-    warning(lower_vars_ignored_warning())
+    rlang::warn(lower_vars_ignored_warning())
   }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
   data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
 
-  if (verbose) custom_cat(short_conditions_text(ddi))
+  if (verbose) message(short_conditions_text(ddi))
 
   vars <- enquo(vars)
   if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
@@ -171,7 +260,9 @@ read_ipums_micro_list <- function(
   ddi <- ddi_filter_vars(ddi, vars, "list", verbose)
 
   if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") stop("Hierarchical data cannot be read as csv.")
+    if (ddi$file_type == "hierarchical") {
+      rlang::abort("Hierarchical data cannot be read as csv.")
+    }
     col_types <- ddi_to_readr_colspec(ddi)
     out <- readr::read_csv(
       data_file,
@@ -213,11 +304,14 @@ check_if_lower_vars_ignored <- function(ddi, lower_vars) {
   inherits(ddi, "ipums_ddi") & lower_vars
 }
 
+# TODO: Why is this? Should we add a way to alter the ipums_ddi object
+# to be consistent with lower_vars = TRUE on load?
 lower_vars_ignored_warning <- function() {
-  paste0(
-    "Argument lower_vars was set to TRUE but has been ignored because ",
-    "argument ddi is an ipums_ddi object. To obtain lowercase names in both ",
-    "the ipums_ddi object and the data, set lower_vars to TRUE in your call ",
-    "to function `read_ipums_ddi`."
+  c(
+    "Setting `lower_vars = FALSE` because `ddi` is an `ipums_ddi` object.",
+    "i" = paste0(
+      "To obtain an `ipums_ddi` with lowercase variables, set ",
+      "`lower_vars = TRUE` in `read_ipums_ddi()`."
+    )
   )
 }

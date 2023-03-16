@@ -1,4 +1,3 @@
-context("Microdata - yield")
 
 test_that(
   "basic yield reading - long .dat.gz rect matches chunked", {

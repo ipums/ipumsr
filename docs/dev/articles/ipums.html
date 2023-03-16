@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction to `ipumsr` - IPUMS Data in R • ipumsr</title>
+<title>IPUMS Data in R • ipumsr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Introduction to `ipumsr` - IPUMS Data in R">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="IPUMS Data in R">
 <meta property="og:description" content="ipumsr">
 <meta property="og:image" content="http://tech.popdata.org/ipumsr/logo.png">
 <meta name="robots" content="noindex">
@@ -29,6 +29,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -41,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.5.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2.9000</span>
       </span>
     </div>
 
@@ -54,45 +56,34 @@
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Intro</a>
+  <a href="../articles/ipums.html">Introduction</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/ipums.html">Introduction</a>
+      <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
       <a href="../articles/value-labels.html">Value labels</a>
     </li>
     <li>
-      <a href="../articles/ipums-geography.html">Geographic data in ipumsr</a>
-    </li>
-    <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
     <li>
-      <a href="../articles/ipums-api.html">IPUMS data extract API</a>
+      <a href="../articles/ipums-api.html">Interact with the IPUMS API</a>
     </li>
     <li class="divider">
-    <li>
-      <a href="../articles/ipums-cps.html">CPS exercise</a>
     </li>
-    <li>
-      <a href="../articles/ipums-nhgis.html">NHGIS exercise</a>
-    </li>
-    <li>
-      <a href="../articles/ipums-terra.html">IPUMS Terra exercise</a>
-    </li>
-    <li>
-      <a href="https://ipums.org/exercises.shtml">More project exercises</a>
+<li>
+      <a href="https://ipums.org/exercises.shtml" class="external-link">Project-specific exercises</a>
     </li>
   </ul>
 </li>
@@ -102,19 +93,19 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ipums/ipumsr">
+  <a href="https://github.com/ipums/ipumsr" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://forum.ipums.org">
+  <a href="https://forum.ipums.org" class="external-link">
     <span class="fa fa-users"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://www.ipums.org/">
+  <a href="https://www.ipums.org/" class="external-link">
     <span class="fa fa-globe"></span>
      
   </a>
@@ -135,335 +126,280 @@
 
       
 
-      </header><script src="ipums_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Introduction to <code>ipumsr</code> - IPUMS Data in R</h1>
-                        <h4 class="author">Minnesota Population Center</h4>
+      <h1 data-toc-skip>IPUMS Data in R</h1>
+                        <h4 data-toc-skip class="author">Institute for
+Social Research and Data Innovation</h4>
             
-            <h4 class="date">2021-12-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/master/vignettes/ipums.Rmd"><code>vignettes/ipums.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/vignettes/ipums.Rmd" class="external-link"><code>vignettes/ipums.Rmd</code></a></small>
       <div class="hidden name"><code>ipums.Rmd</code></div>
 
     </div>
 
     
     
-<p>The <code>ipumsr</code> package allows you to read data from your IPUMS extract into R along with the associated metadata like variable labels, value labels and more. IPUMS is a great source of international census and survey data.</p>
-<blockquote>
-<p>IPUMS provides census and survey data from around the world integrated across time and space. IPUMS integration and documentation makes it easy to study change, conduct comparative research, merge information across data types, and analyze individuals within family and community context. Data and services are available free of charge.</p>
-</blockquote>
-<p>Learn more here: <a href="https://ipums.org/what-is-ipums" class="uri">https://ipums.org/what-is-ipums</a></p>
-<div id="additional-vignettes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#additional-vignettes" class="anchor"></a>Additional Vignettes</h2>
-<p>This vignette gives the basic outline of the <code>ipumsr</code> package. Additional vignettes provide guidance on working with IPUMS value labels, IPUMS geographic data, and data from three specific IPUMS projects – CPS, NHGIS, and Terra.</p>
-<p>To view any of these additional vignettes, run one the following commands after installing the <code>ipumsr</code> package:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"value-labels"</span>, package <span class="op">=</span> <span class="st">"ipumsr"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"ipums-geography"</span>, package <span class="op">=</span> <span class="st">"ipumsr"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"ipums-cps"</span>, package <span class="op">=</span> <span class="st">"ipumsr"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"ipums-nhgis"</span>, package <span class="op">=</span> <span class="st">"ipumsr"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"ipums-terra"</span>, package <span class="op">=</span> <span class="st">"ipumsr"</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="getting-data-from-the-ipums-website" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-data-from-the-ipums-website" class="anchor"></a>Getting Data from the IPUMS website</h2>
-<p>Registered users can download IPUMS data from our website at <a href="https://www.ipums.org" class="uri">https://www.ipums.org</a>. The website provides an interactive extract system that allows you to select only the samples and variables that are relevant to your research question.</p>
-<p><strong>For microdata projects (all supported projects except NHGIS and IPUMS Terra)</strong>, once you have created your extract, you should choose to download your data in either a fixed-width text (.dat file extension) or comma delimited (.csv file extension) format.</p>
-<p>Once your extract is complete, download the data file and the DDI. Downloading the DDI is a little bit different depending on your browser. On most browsers you should right-click the file and select “Save As…”. If this saves a file with a .xml file extension, then you should be ready. However, Safari users must select “Download Linked File” instead of “Download Linked File <strong>As</strong>”. On Safari, selecting the wrong version of these two will download a file with a .html file extension instead of a .xml extension.</p>
-<div class="figure">
-<img src="microdata_annotated_screenshot.png" width="700" alt=""><p class="caption">Annotated screenshot for downloading microdata (may look different on your computer)</p>
-</div>
-<p><strong>For NHGIS</strong>, download the table data in a comma delimited format, and, if you want the associated mapping data, the GIS data. NHGIS provides the option to download comma-delimited files with an extra header row; it does not matter which option you select.</p>
-<p><strong>For IPUMS Terra</strong>, download the .zip extract “bundles”. If you want the associated mapping data, select the “include boundary files” option. You do not need to unzip the data.</p>
-</div>
-<div id="import-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#import-functions" class="anchor"></a>Import Functions</h2>
-<p>Once your extract is downloaded, the <code>ipumsr</code> package functions <code>read_*()</code> help you load the data into R.</p>
-<ul>
-<li>
-<code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> / <code><a href="../reference/read_ipums_micro.html">read_ipums_micro_list()</a></code>: Reads data from microdata projects (USA, CPS, International, DHS, Time Use, Health Surveys and Higher Ed)</li>
-<li>
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> / <code><a href="../reference/read_nhgis.html">read_nhgis_sf()</a></code> / <code><a href="../reference/read_nhgis.html">read_nhgis_sp()</a></code>: Reads data from the NHGIS project. <code>read_nhgis</code> loads only tabular data, whereas <code><a href="../reference/read_nhgis.html">read_nhgis_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis_sp()</a></code> load tabular data and shapefiles.</li>
-<li>
-<code><a href="../reference/read_terra_micro.html">read_terra_micro()</a></code>, <code>read_terra_micro_sf()</code>, <code>read_terra_micro_sp()</code>, <code><a href="../reference/read_terra_area.html">read_terra_area()</a></code> and <code><a href="../reference/read_terra_raster.html">read_terra_raster()</a></code> load data form the IPUMS Terra project.</li>
-<li>
-<code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_ipums_sf.html">read_ipums_sp()</a></code> load boundary files.</li>
-<li>
-<code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code>: Reads DDI files with metadata that are included with some extracts (mainly microdata)</li>
-<li>
-<code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>: Reads the text codebook included with some extracts (mainly NHGIS and some TerraPop extracts)</li>
-</ul>
-</div>
-<div id="metadata-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#metadata-functions" class="anchor"></a>Metadata Functions</h2>
-<p>Once the data is in R, you can view information about the extract using the metadata functions.</p>
-<ul>
-<li>
-<code><a href="../reference/ipums_view.html">ipums_view()</a></code>: Makes a webpage that displays in the RStudio Viewer which provides information about the extract as a whole (like your extract notes or the citation information) and the specific variables included (like the variable label, description and value labels).</li>
-<li>
-<code><a href="../reference/ipums_file_info.html">ipums_file_info()</a></code>: Returns the file-level metadata contained in <code><a href="../reference/ipums_view.html">ipums_view()</a></code> as an R data structure.</li>
-<li>
-<code><a href="../reference/ipums_var_info.html">ipums_var_info()</a></code>: Returns the variable-level metadata contained in <code><a href="../reference/ipums_view.html">ipums_view()</a></code> as an R data structure.</li>
-</ul>
-</div>
-<div id="grab-bag" class="section level2">
-<h2 class="hasAnchor">
-<a href="#grab-bag" class="anchor"></a>Grab Bag</h2>
-<div id="survey-weights" class="section level3">
-<h3 class="hasAnchor">
-<a href="#survey-weights" class="anchor"></a>Survey Weights</h3>
-<p>The data from most IPUMS projects contain some form of weighting variable that should be used to calculate estimates that are representative of the whole population. Many projects also provide specifications to help estimate variance given the complex design of the survey, such as replicate weights or design variables like STRATUM and PSU. The <a href="https://cran.r-project.org/package=survey">survey package</a> provides functions that allow you to estimate variance taking this into account, and the <a href="https://cran.r-project.org/package=srvyr">srvyr package</a> implements dplyr-like syntax for survey analysis, using the survey package’s functions.</p>
-<p>For more information about what these variables mean and how to use them, see the website for the project you are interested in.</p>
-</div>
-<div id="non-extract-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#non-extract-data" class="anchor"></a>Non-Extract Data</h3>
-<p>Some projects have data that is not contained within the extract system, such that no DDI is provided for this data. In this case, either use the comma delimited file (.csv file extension) if available, or use the <code>haven</code> package to read one of the files intended for another statistical software (like Stata, SAS or SPSS).</p>
-</div>
-<div id="value-labels" class="section level3">
-<h3 class="hasAnchor">
-<a href="#value-labels" class="anchor"></a>Value Labels</h3>
-<p>The way that IPUMS treats value labels does not align with factors (the main way that R is able to store values associated with labels). R’s <code>factor</code> variables can only store values as an integer sequence (1, 2, 3, …), but IPUMS conventions are to store missing and not-in-universe codes as large numbers, to distinguish them from the normal values.</p>
-<p>Therefore, the <code>ipumsr</code> package uses the <code>labelled</code> class from the <code>haven</code> package to store labelled values. See the “value-labels” vignette for more information (<code><a href="../articles/value-labels.html">vignette('value-labels')</a></code>).</p>
-<p>If you want to use IPUMS value labels attached to a variable, it is generally best to convert from the <code>labelled</code> class to <code>factor</code> early on in your data analysis workflow. This is because many data manipulation functions will drop the labels stored in a variable with class <code>labelled</code>. The function <code><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor()</a></code> is the main function to create factors from labels, but often you will need to do more manipulation before that.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Note that you can pass in the loaded DDI into the `read_ipums_micro()`</span>
-<span class="va">cps_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Show which variables have labels</span>
-<span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">select_if</a></span><span class="op">(</span><span class="va">is.labelled</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 7,668 x 3</span>
-<span class="co">#&gt;          STATEFIP     MONTH                               INCTOT</span>
-<span class="co">#&gt;         &lt;int+lbl&gt; &lt;int+lbl&gt;                            &lt;dbl+lbl&gt;</span>
-<span class="co">#&gt;  1 55 [Wisconsin] 3 [March]     4883                            </span>
-<span class="co">#&gt;  2 55 [Wisconsin] 3 [March]     5800                            </span>
-<span class="co">#&gt;  3 55 [Wisconsin] 3 [March] 99999998 [Missing.]                 </span>
-<span class="co">#&gt;  4 27 [Minnesota] 3 [March]    14015                            </span>
-<span class="co">#&gt;  5 27 [Minnesota] 3 [March]    16552                            </span>
-<span class="co">#&gt;  6 27 [Minnesota] 3 [March]     6375                            </span>
-<span class="co">#&gt;  7 19 [Iowa]      3 [March] 99999999 [N.I.U. (Not in Universe).]</span>
-<span class="co">#&gt;  8 19 [Iowa]      3 [March]        0                            </span>
-<span class="co">#&gt;  9 19 [Iowa]      3 [March]      600                            </span>
-<span class="co">#&gt; 10 19 [Iowa]      3 [March] 99999999 [N.I.U. (Not in Universe).]</span>
-<span class="co">#&gt; # ... with 7,658 more rows</span>
-
-<span class="co"># Notice how the tibble print function shows the dbl+lbl class on top</span>
-
-<span class="co"># Investigate labels</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 75 x 2</span>
-<span class="co">#&gt;      val lbl                 </span>
-<span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;               </span>
-<span class="co">#&gt;  1     1 Alabama             </span>
-<span class="co">#&gt;  2     2 Alaska              </span>
-<span class="co">#&gt;  3     4 Arizona             </span>
-<span class="co">#&gt;  4     5 Arkansas            </span>
-<span class="co">#&gt;  5     6 California          </span>
-<span class="co">#&gt;  6     8 Colorado            </span>
-<span class="co">#&gt;  7     9 Connecticut         </span>
-<span class="co">#&gt;  8    10 Delaware            </span>
-<span class="co">#&gt;  9    11 District of Columbia</span>
-<span class="co">#&gt; 10    12 Florida             </span>
-<span class="co">#&gt; # ... with 65 more rows</span>
-
-<span class="co"># Convert the labels to factors (and drop the unused levels)</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>STATE_factor <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="fu"><a href="../reference/lbl_clean.html">lbl_clean</a></span><span class="op">(</span><span class="va">STATEFIP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATE_factor</span>, useNA <span class="op">=</span> <span class="st">"always"</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;         Iowa    Minnesota North Dakota South Dakota    Wisconsin         &lt;NA&gt; </span>
-<span class="co">#&gt;         1892         2362          188          227         2999            0</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Manipulating the labelled value before as_factor </span>
-<span class="co"># often leads to losing the information...</span>
-<span class="co"># Say we want to set Iowa (STATEFIP == 19) to missing</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>STATE_factor2 <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">STATEFIP</span> <span class="op">==</span> <span class="fl">19</span>, <span class="cn">NA</span>, <span class="va">STATEFIP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># ipumsr provides helpers for these kinds of tasks, like lbl_na_if().</span>
-<span class="co"># See the value-labels vignette for more information</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>STATE_factor3 <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">STATEFIP</span>, <span class="op">~</span><span class="va">.val</span> <span class="op">==</span> <span class="fl">19</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># The as_factor function also has a "levels" argument that can </span>
-<span class="co"># put both the labels and values into the factor</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>STATE_factor4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html">droplevels</a></span><span class="op">(</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="va">STATEFIP</span>, levels <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATE_factor4</span>, useNA <span class="op">=</span> <span class="st">"always"</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;         [19] Iowa    [27] Minnesota [38] North Dakota [46] South Dakota </span>
-<span class="co">#&gt;              1892              2362               188               227 </span>
-<span class="co">#&gt;    [55] Wisconsin              &lt;NA&gt; </span>
-<span class="co">#&gt;              2999                 0</span></code></pre></div>
-</div>
-<div id="other-ipums-attributes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#other-ipums-attributes" class="anchor"></a>Other IPUMS attributes</h3>
-<p>As with value labels, the other attributes that <code>ipumsr</code> stores about the data are often lost during an analysis. One way to deal with this is to load the DDI or codebook in addition to the actual data using the functions <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> and <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>. This way, when you wish to refer to variable labels or other metadata, you can use the DDI object, which does not get modified during your analysis.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Note that you can pass in the loaded DDI into the `read_ipums_micro()`</span>
-<span class="va">cps_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Currently variable description is available for year</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_desc</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span>
-<span class="co">#&gt; [1] "YEAR reports the year in which the survey was conducted.  YEARP is repeated on person records."</span>
-
-<span class="co"># But after using ifelse it is gone</span>
-<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>YEAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">YEAR</span> <span class="op">==</span> <span class="fl">1962</span>, <span class="fl">62</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_desc</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span>
-<span class="co">#&gt; [1] NA</span>
-
-<span class="co"># So you can use the DDI</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_desc</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"YEAR"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "YEAR reports the year in which the survey was conducted.  YEARP is repeated on person records."</span>
-
-<span class="co"># The DDI also has file level information that is not available from just</span>
-<span class="co"># the data.</span>
-<span class="fu"><a href="../reference/ipums_file_info.html">ipums_file_info</a></span><span class="op">(</span><span class="va">cps_ddi</span>, <span class="st">"extract_notes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; User-provided description:  Minimal test extract</span>
-<span class="co">#&gt; Samples: 1962, 1963</span>
-<span class="co">#&gt; Variables: STATEFIP, INCTOT (automatically Year, SERIAL, HWTSUPP, MONTH, WTSUPP)</span>
-<span class="co">#&gt; Select Cases: State - Minnesota, Iowa, Wisconsin, South Dakota, North Dakota</span></code></pre></div>
-</div>
-<div id="dplyr-select-style-syntax" class="section level3">
-<h3 class="hasAnchor">
-<a href="#dplyr-select-style-syntax" class="anchor"></a>“dplyr select-style” Syntax</h3>
-<p>Several functions within the <code>ipumsr</code> package allow for “dplyr select-style” syntax. This means that they accept either a character vector of values (e.g. <code>c("YEAR", "AGE")</code>), bare vectors of values (e.g. <code>c(YEAR, AGE)</code>) and the helper functions allowed in <code><a href="https://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code> (e.g. <code>one_of(c("YEAR", "AGE"))</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># The vars argument for `read_ipums_micro` uses this syntax</span>
-<span class="co"># So these are all equivalent</span>
-<span class="va">cf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cf</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"YEAR"</span>, <span class="st">"INCTOT"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "YEAR"   "INCTOT"</span>
-
-<span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cf</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">INCTOT</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "YEAR"   "INCTOT"</span>
-
-<span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cf</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">"YEAR"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"INC"</span><span class="op">)</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "YEAR"   "INCTOT"</span>
-
-<span class="co"># `data_layer` and `shape_layer` arguments to `read_nhgis()` and terra functions</span>
-<span class="co"># also use it.</span>
-<span class="co"># (Sometimes extracts have multiple files, though all examples only have one)</span>
-<span class="va">nf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0008_csv.zip"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nf</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
-<span class="co">#&gt;   type  file                                       </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                      </span>
-<span class="co">#&gt; 1 data  nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv</span>
-
-<span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nf</span>, data_layer <span class="op">=</span> <span class="st">"nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
-<span class="co">#&gt;   type  file                                       </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                      </span>
-<span class="co">#&gt; 1 data  nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv</span>
-
-<span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nf</span>, data_layer <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"ds135"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
-<span class="co">#&gt;   type  file                                       </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                      </span>
-<span class="co">#&gt; 1 data  nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv</span></code></pre></div>
-</div>
-<div id="hierarchical-data-structures" class="section level3">
-<h3 class="hasAnchor">
-<a href="#hierarchical-data-structures" class="anchor"></a>Hierarchical data structures</h3>
-<p>For certain IPUMS projects, the data is hierarchical, multiple people are included in a single household, or multiple activities are performed by a single person. The <code>ipumsr</code> package provides two data structures for storing such data (for users who did not select the “rectangularize” option on the website). The data can be loaded as a <code>"list"</code> or <code>"long"</code>.</p>
-<p><strong>List</strong> data loads each record type into a separate data.frame. The names of the recordtype data.frames are the value of the RECTYPE variable (e.g. “H” and “P”). Use the function <code><a href="../reference/read_ipums_micro.html">read_ipums_micro_list()</a></code> to load the data this way.</p>
-<p><strong>Long</strong> data has one row per unit, regardless of what type of record the unit is. Therefore, datasets loaded this way often contain variables with a large number of missings, for the variables that only apply to certain record types. Use the function <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> to load the data this way.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># List data</span>
-<span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro_list</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00010.xml"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="va">cps</span><span class="op">$</span><span class="va">PERSON</span>
-<span class="co">#&gt; # A tibble: 7,668 x 6</span>
-<span class="co">#&gt;    RECTYPE            YEAR SERIAL PERNUM WTSUPP                           INCTOT</span>
-<span class="co">#&gt;    &lt;chr+lbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;                        &lt;dbl+lbl&gt;</span>
-<span class="co">#&gt;  1 P [Person Record]  1962     80      1  1476.     4883                        </span>
-<span class="co">#&gt;  2 P [Person Record]  1962     80      2  1471.     5800                        </span>
-<span class="co">#&gt;  3 P [Person Record]  1962     80      3  1579. 99999998 [Missing.]             </span>
-<span class="co">#&gt;  4 P [Person Record]  1962     82      1  1598.    14015                        </span>
-<span class="co">#&gt;  5 P [Person Record]  1962     83      1  1707.    16552                        </span>
-<span class="co">#&gt;  6 P [Person Record]  1962     84      1  1790.     6375                        </span>
-<span class="co">#&gt;  7 P [Person Record]  1962    107      1  4355. 99999999 [N.I.U. (Not in Univer~</span>
-<span class="co">#&gt;  8 P [Person Record]  1962    107      2  1386.        0                        </span>
-<span class="co">#&gt;  9 P [Person Record]  1962    107      3  1629.      600                        </span>
-<span class="co">#&gt; 10 P [Person Record]  1962    107      4  1432. 99999999 [N.I.U. (Not in Univer~</span>
-<span class="co">#&gt; # ... with 7,658 more rows</span>
-
-<span class="va">cps</span><span class="op">$</span><span class="va">HOUSEHOLD</span>
-<span class="co">#&gt; # A tibble: 3,385 x 6</span>
-<span class="co">#&gt;    RECTYPE               YEAR SERIAL HWTSUPP       STATEFIP     MONTH</span>
-<span class="co">#&gt;    &lt;chr+lbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;      &lt;int+lbl&gt; &lt;int+lbl&gt;</span>
-<span class="co">#&gt;  1 H [Household Record]  1962     80   1476. 55 [Wisconsin] 3 [March]</span>
-<span class="co">#&gt;  2 H [Household Record]  1962     82   1598. 27 [Minnesota] 3 [March]</span>
-<span class="co">#&gt;  3 H [Household Record]  1962     83   1707. 27 [Minnesota] 3 [March]</span>
-<span class="co">#&gt;  4 H [Household Record]  1962     84   1790. 27 [Minnesota] 3 [March]</span>
-<span class="co">#&gt;  5 H [Household Record]  1962    107   4355. 19 [Iowa]      3 [March]</span>
-<span class="co">#&gt;  6 H [Household Record]  1962    108   1479. 19 [Iowa]      3 [March]</span>
-<span class="co">#&gt;  7 H [Household Record]  1962    122   3603. 27 [Minnesota] 3 [March]</span>
-<span class="co">#&gt;  8 H [Household Record]  1962    124   4104. 55 [Wisconsin] 3 [March]</span>
-<span class="co">#&gt;  9 H [Household Record]  1962    125   2182. 55 [Wisconsin] 3 [March]</span>
-<span class="co">#&gt; 10 H [Household Record]  1962    126   1826. 55 [Wisconsin] 3 [March]</span>
-<span class="co">#&gt; # ... with 3,375 more rows</span>
-
-<span class="co"># Long data</span>
-<span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00010.xml"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="va">cps</span>
-<span class="co">#&gt; # A tibble: 11,053 x 9</span>
-<span class="co">#&gt;    RECTYPE    YEAR SERIAL HWTSUPP  STATEFIP    MONTH PERNUM WTSUPP        INCTOT</span>
-<span class="co">#&gt;    &lt;chr+lbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;int+lbl&gt; &lt;int+lb&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl+lbl&gt;</span>
-<span class="co">#&gt;  1 H [House~  1962     80   1476. 55 [Wisc~  3 [Mar~     NA    NA  NA           </span>
-<span class="co">#&gt;  2 P [Perso~  1962     80     NA  NA        NA            1  1476.  4.88e3      </span>
-<span class="co">#&gt;  3 P [Perso~  1962     80     NA  NA        NA            2  1471.  5.8 e3      </span>
-<span class="co">#&gt;  4 P [Perso~  1962     80     NA  NA        NA            3  1579.  1.00e8 [Mis~</span>
-<span class="co">#&gt;  5 H [House~  1962     82   1598. 27 [Minn~  3 [Mar~     NA    NA  NA           </span>
-<span class="co">#&gt;  6 P [Perso~  1962     82     NA  NA        NA            1  1598.  1.40e4      </span>
-<span class="co">#&gt;  7 H [House~  1962     83   1707. 27 [Minn~  3 [Mar~     NA    NA  NA           </span>
-<span class="co">#&gt;  8 P [Perso~  1962     83     NA  NA        NA            1  1707.  1.66e4      </span>
-<span class="co">#&gt;  9 H [House~  1962     84   1790. 27 [Minn~  3 [Mar~     NA    NA  NA           </span>
-<span class="co">#&gt; 10 P [Perso~  1962     84     NA  NA        NA            1  1790.  6.38e3      </span>
-<span class="co">#&gt; # ... with 11,043 more rows</span></code></pre></div>
-</div>
-<div id="geospatial-packages-sf-vs-sp" class="section level3">
-<h3 class="hasAnchor">
-<a href="#geospatial-packages-sf-vs-sp" class="anchor"></a>Geospatial Packages: <code>sf</code> vs <code>sp</code>
+<div class="section level2">
+<h2 id="obtaining-ipums-data">Obtaining IPUMS Data<a class="anchor" aria-label="anchor" href="#obtaining-ipums-data"></a>
+</h2>
+<p>IPUMS data are free, but do require registration. New users can
+register with a particular <a href="https://www.ipums.org/overview" class="external-link">IPUMS project</a> by clicking the
+<strong>Register</strong> link at the top right of the project
+website.</p>
+<p>IPUMS data are obtained by creating and submitting an <em>extract
+request</em>. This specifies the data to be included in the resulting
+<em>extract</em> (or <em>data extract</em>). A submitted extract request
+will be processed by the IPUMS servers. When complete, the extract
+containing the requested data can be downloaded.</p>
+<p>Extracts typically contain both data and metadata files. Data files
+typically come as .dat (for fixed-width files) or .csv (for
+comma-delimited files). Metadata files contain information about the
+data file and its contents, including variable descriptions and parsing
+instructions for fixed-width data files. Microdata projects provide
+metadata in DDI (.xml) files. Aggregate data projects provide metadata
+in either .txt or .csv formats.</p>
+<p>Registered users can download IPUMS data from a particular project
+through the interactive extract system found on that project’s website.
+For some projects, data can also be downloaded within R by interacting
+with the IPUMS API.</p>
+<div class="section level3">
+<h3 id="downloading-from-the-ipums-website">Downloading from the IPUMS Website<a class="anchor" aria-label="anchor" href="#downloading-from-the-ipums-website"></a>
 </h3>
-<p>The <code>ipumsr</code> package allows for loading geospatial data in two formats (sf for Simple Features and sp for Spatial). The <code>sf</code> package is relatively new, and so does not have as widespread support as the <code>sp</code> package. However, (in my opinion) it does allow for easier analysis, and so may be a better place to start if you have not used GIS data in R before.</p>
-<p>For more details about how to load geographic data using ipumsr, see the vignette “ipums-geography” (<code><a href="../articles/ipums-geography.html">vignette("ipums-geography", package = "ipumsr")</a></code>)</p>
+<p>To create a new extract request, navigate to the extract interface
+for the IPUMS project of interest by clicking <strong>Select
+Data</strong> in the heading of the project website. This leads to that
+project’s extract interface, which allows you to specify the data you’d
+like to download. The data selection parameters will differ across
+projects; see each project’s documentation for more details on the
+available options. If you’ve never created an extract for the project
+you’re interested in, start by watching the project-specific video on
+creating extracts hosted on the <a href="https://www.ipums.org/support/tutorials" class="external-link">IPUMS Tutorials
+page</a>.</p>
+<div class="section level4">
+<h4 id="for-microdata-projects">For microdata projects<a class="anchor" aria-label="anchor" href="#for-microdata-projects"></a>
+</h4>
+<p>Once your extract is ready, click the green <strong>Download</strong>
+button to download the data file. Then, right-click the
+<strong>DDI</strong> link in the codebook column, and select
+<strong>Save as…</strong> (see below).</p>
+<p>Note that some browsers may display different text, but there should
+be an option to download the DDI file as .xml. For instance, on Safari,
+select <strong>Download Linked File As…</strong>. The most important
+thing is that you download the file in .xml format, <em>not</em> .html
+format.</p>
+<p><img src="microdata_annotated_screenshot.png" width="1000"></p>
 </div>
+<div class="section level4">
+<h4 id="for-aggregate-data-projects">For aggregate data projects<a class="anchor" aria-label="anchor" href="#for-aggregate-data-projects"></a>
+</h4>
+<p>Simply download an extract’s data by clicking the green
+<strong>Tables</strong> button (for tabular data) and/or <strong>GIS
+Files</strong> button (for spatial boundary data) in the
+<strong>Download Data</strong> column.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="downloading-via-the-ipums-api">Downloading via the IPUMS API<a class="anchor" aria-label="anchor" href="#downloading-via-the-ipums-api"></a>
+</h3>
+<p>Extract requests can also be created and submitted from within R by
+interacting with the IPUMS API. The IPUMS API currently supports the
+following collections:</p>
+<ul>
+<li><p>IPUMS USA</p></li>
+<li><p>IPUMS CPS</p></li>
+<li><p>IPUMS NHGIS</p></li>
+</ul>
+<p>The workflow for requesting and downloading data via API is
+straightforward: first, define the parameters of your extract, then
+submit the extract. When it’s completed, you can download the files
+directly to your local machine without ever having to leave R:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">extract_request</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span>
+  description <span class="op">=</span> <span class="st">"Using the IPUMS API"</span>,
+  datasets <span class="op">=</span> <span class="st">"1990_STF1"</span>,
+  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NP1"</span>, <span class="st">"NP2"</span>, <span class="st">"NP3"</span><span class="op">)</span>,
+  geog_levels <span class="op">=</span> <span class="st">"state"</span>
+<span class="op">)</span>
+
+<span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">extract_request</span><span class="op">)</span>
+
+<span class="va">data_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">submitted_extract</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>You can also access previous extract requests, even if they weren’t
+made with the API:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">past_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"nhgis"</span><span class="op">)</span></code></pre></div>
+<p>See the associated <a href="ipums-api.html">vignette</a> for more
+details about how to use ipumsr to interact with the IPUMS API.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="reading-data">Reading Data<a class="anchor" aria-label="anchor" href="#reading-data"></a>
+</h2>
+<p>Once your extract is downloaded, you can load your data into R with
+the family of <code>read_*()</code> functions in ipumsr. These functions
+expand on those provided in <a href="https://readr.tidyverse.org/index.html" class="external-link">readr</a> in two ways:</p>
+<ul>
+<li><p>ipumsr anticipates standard IPUMS file structures, limiting the
+need for users to manually decompress and organize their downloaded
+files before reading.</p></li>
+<li><p>ipumsr uses an extract’s metadata files to automatically attach
+contextual information to the data. This allows users to easily identify
+variable names, variable descriptions, and labeled data values (from <a href="https://haven.tidyverse.org/" class="external-link">haven</a>), which are common in
+IPUMS files.</p></li>
+</ul>
+<p>For microdata files, use the <code>read_ipums_micro_*()</code>
+family:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span>
+<span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_file</span><span class="op">)</span>
+<span class="co">#&gt; Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span>
+<span class="co">#&gt;    YEAR SERIAL HWTSUPP STATEFIP       MONTH     PERNUM WTSUPP INCTOT            </span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>         </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>476.     <span style="text-decoration: underline;">4</span>883          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      2  <span style="text-decoration: underline;">1</span>471.     <span style="text-decoration: underline;">5</span>800          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      3  <span style="text-decoration: underline;">1</span>579. 99<span style="text-decoration: underline;">999</span>998<span style="color: #949494;"> [Missing…</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375</span></code></pre></div>
+<p>For NHGIS files, use <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nhgis_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span>
+<span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_file</span>, show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 25</span></span>
+<span class="co">#&gt;   GISJOIN  YEAR STUSAB CMSA  DIVISI…¹ MSA_C…² PMSA  PMSAA REGIONA STATEA AREAL…³</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">1</span>692 Akro… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000234…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> G0360    <span style="text-decoration: underline;">1</span>990 CA     49    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">4</span>472 Anah… 0360  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000204…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> G0440    <span style="text-decoration: underline;">1</span>990 MI     35    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">2</span>162 Ann … 0440  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000183…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> G0620    <span style="text-decoration: underline;">1</span>990 IL     14    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">1</span>602 Auro… 0620  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000217…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> G0845    <span style="text-decoration: underline;">1</span>990 PA     78    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">6</span>282 Beav… 0845  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000112…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> G0875    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>          <span style="text-decoration: underline;">5</span>602 Berg… 0875  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000108…</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 14 more variables: AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;, FUNCSTAT &lt;chr&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;, D6Z002 &lt;dbl&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;, D6Z007 &lt;dbl&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   D6Z008 &lt;dbl&gt;, and abbreviated variable names ¹​DIVISIONA, ²​MSA_CMSAA,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   ³​AREALAND</span></span></code></pre></div>
+<p>ipumsr also supports the reading of IPUMS spatial boundary files into
+the <code>sf</code> format provided by the <a href="https://r-spatial.github.io/sf/" class="external-link">sf</a> package:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">shp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span>
+<span class="va">nhgis_shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="va">shp_file</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nhgis_shp</span><span class="op">)</span>
+<span class="co">#&gt; Simple feature collection with 6 features and 8 fields</span>
+<span class="co">#&gt; Geometry type: MULTIPOLYGON</span>
+<span class="co">#&gt; Dimension:     XY</span>
+<span class="co">#&gt; Bounding box:  xmin: -129888.4 ymin: -967051.1 xmax: 1948770 ymax: 751282.5</span>
+<span class="co">#&gt; Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span>
+<span class="co">#&gt;   PMSA  MSACMSA ALTCMSA GISJOIN GISJOIN2   SHAPE_AREA SHAPE_LEN GISJOIN3 </span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 3280  3282    41      G3280   3280      <span style="text-decoration: underline;">2</span>840<span style="text-decoration: underline;">869</span>482.   <span style="text-decoration: underline;">320</span>921. G32823280</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 5760  5602    70      G5760   5760       237<span style="text-decoration: underline;">428</span>573.   <span style="text-decoration: underline;">126</span>226. G56025760</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 1145  3362    42      G1145   1145      <span style="text-decoration: underline;">3</span>730<span style="text-decoration: underline;">749</span>183.   <span style="text-decoration: underline;">489</span>789. G33621145</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1920  1922    31      G1920   1920     <span style="text-decoration: underline;">12</span>068<span style="text-decoration: underline;">105</span>590.   <span style="text-decoration: underline;">543</span>164. G19221920</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 0080  1692    28      G0080   0080      <span style="text-decoration: underline;">2</span>401<span style="text-decoration: underline;">347</span>006.   <span style="text-decoration: underline;">218</span>892. G16920080</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1640  1642    21      G1640   1640      <span style="text-decoration: underline;">5</span>608<span style="text-decoration: underline;">404</span>797.   <span style="text-decoration: underline;">415</span>671. G16421640</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span></code></pre></div>
+<p>ipumsr is primarily designed to read data produced by the IPUMS
+extract system. However, IPUMS does distribute other files, often
+available via direct download. In many cases, these can be loaded with
+ipumsr. Otherwise, these files can likely be handled by existing data
+reading packages like <a href="https://readr.tidyverse.org/" class="external-link">readr</a>
+(for delimited files) or <a href="https://haven.tidyverse.org/" class="external-link">haven</a> (for Stata, SPSS, or SAS
+files).</p>
+<p>See the <a href="ipums-read.html">vignette</a> focused on reading
+IPUMS data for more information.</p>
+</div>
+<div class="section level2">
+<h2 id="exploring-metadata">Exploring Metadata<a class="anchor" aria-label="anchor" href="#exploring-metadata"></a>
+</h2>
+<p>Load metadata information with <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> (for
+microdata projects) and <code><a href="../reference/ipums_codebook.html">read_nhgis_codebook()</a></code> (for NHGIS).
+These store file and variable-level metadata for a given data source,
+which can be used to interpret the data contents.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cps_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_file</span><span class="op">)</span>
+<span class="va">nhgis_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_file</span><span class="op">)</span></code></pre></div>
+<p>Summarize the variable metadata for a dataset using
+<code><a href="../reference/ipums_var_info.html">ipums_var_info()</a></code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">cps_meta</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 10</span></span>
+<span class="co">#&gt;   var_name var_la…¹ var_d…² val_la…³ code_…⁴ start   end imp_d…⁵ var_t…⁶ recty…⁷</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> YEAR     Survey … <span style="color: #949494;">"</span>YEAR … &lt;tibble&gt; <span style="color: #949494;">"</span>\nYEA…     1     4       0 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SERIAL   Househo… <span style="color: #949494;">"</span>SERIA… &lt;tibble&gt; <span style="color: #949494;">"</span>\nSER…     5     9       0 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> HWTSUPP  Househo… <span style="color: #949494;">"</span>HWTSU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nHWT…    10    19       4 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> STATEFIP State (… <span style="color: #949494;">"</span>STATE… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        20    21       0 integer <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> MONTH    Month    <span style="color: #949494;">"</span>MONTH… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        22    23       0 integer <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> PERNUM   Person … <span style="color: #949494;">"</span>PERNU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nPER…    24    25       0 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> WTSUPP   Supplem… <span style="color: #949494;">"</span>WTSUP… &lt;tibble&gt; <span style="color: #949494;">"</span>\nWTS…    26    35       4 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INCTOT   Total p… <span style="color: #949494;">"</span>INCTO… &lt;tibble&gt; <span style="color: #949494;">"</span>\n999…    36    43       0 numeric <span style="color: #BB0000;">NA</span>     </span>
+<span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​var_label, ²​var_desc, ³​val_labels,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   ⁴​code_instr, ⁵​imp_decim, ⁶​var_type, ⁷​rectypes</span></span></code></pre></div>
+<p>You can also get contextual details for specific variables:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_desc</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">INCTOT</span><span class="op">)</span>
+<span class="co">#&gt; [1] "INCTOT indicates each respondent's total pre-tax personal income or losses from all sources for the previous calendar year.  Amounts are expressed as they were reported to the interviewer; users must adjust for inflation using Consumer Price Index [URL omitted from DDI.] adjustment factors."</span>
+
+<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 2</span></span>
+<span class="co">#&gt;      val lbl                 </span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 Alabama             </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2 Alaska              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     4 Arizona             </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     5 Arkansas            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     6 California          </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     8 Colorado            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     9 Connecticut         </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>    10 Delaware            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>    11 District of Columbia</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    12 Florida             </span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 65 more rows</span></span></code></pre></div>
+<p>ipumsr also provides a family of <code>lbl_*()</code> functions to
+assist in accessing and manipulating the value-level metadata included
+in IPUMS data. This allows for value labels to be incorporated into the
+data processing pipeline. For instance:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Remove labels for values that do not appear in the data</span>
+<span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_clean.html">lbl_clean</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
+<span class="co">#&gt;     val lbl         </span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    19 Iowa        </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    27 Minnesota   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    38 North Dakota</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    46 South Dakota</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    55 Wisconsin</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Combine North and South Dakota into a single value/label pair</span>
+<span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
+  <span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span>, 
+  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="st">"38_46"</span>, <span class="st">"Dakotas"</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Dakota"</span>, <span class="va">.lbl</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span>
+<span class="co">#&gt;   val   lbl      </span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 19    Iowa     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 27    Minnesota</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 38_46 Dakotas  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 55    Wisconsin</span></code></pre></div>
+<p>See the <a href="value-labels.html">value labels</a> vignette for
+more details.</p>
 </div>
   </div>
 
@@ -478,11 +414,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.ipums.org">IPUMS</a> at the University of Minnesota.</p>
+  <p>Developed by <a href="https://www.ipums.org" class="external-link">IPUMS</a> at the University of Minnesota.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> .</p>
 </div>
 
       </footer>

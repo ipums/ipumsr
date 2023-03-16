@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1986397/usa_00122.xml
     body:
       encoding: ''
       string: ''
@@ -17,27 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.xml"; filename*=UTF-8''usa_00112.xml
-      content-length: '35232'
+      content-disposition: attachment; filename="usa_00122.xml"; filename*=UTF-8''usa_00122.xml
       content-type: application/xml
-      date: Fri, 27 May 2022 22:06:37 GMT
-      etag: '"62914b52-89a0"'
-      last-modified: Fri, 27 May 2022 22:06:10 GMT
+      date: Thu, 16 Mar 2023 20:16:52 GMT
+      etag: '"641378ab-8bbc"'
+      last-modified: Thu, 16 Mar 2023 20:14:35 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=mEnz%2BKWJRBF6tvWG9pdPKE7fMSXvE%2Bpuc6NFANj%2FI%2BHCiFcQ9cfwNNHrdHLy7SDiK3acdSjMyHnAAOJV6CgyFvChtTf9HNQHtroci3NMEmmswpBSibjodJBJIS%2BFAFC8cu7QS%2BMDCt1%2FxKCUBpiLqemrvftOw4TsFgEMwFdyqYncxGYf%2Fi%2Fm9U3kq0Yecdpk0%2BNxlPKfGW2uPf6EGI4K%2BPcytryG704sYz1UWhokC%2B9px6We%2FI4dCnhNCNxy8zg%3D--gUNnH9KJReks%2FqpQ--b3aL6075WninZZThm7MeDg%3D%3D;
+      set-cookie: _session_id=n5zHGH5itYOFdIMzzODz99z%2FmQw4f%2BMTl0mIAW6%2Fpabn%2FRvu%2FsxIOOGx6pBZ1BuLPaRX6XVKgxJpMmXkE27g4jdcF6J7wakHnV1rEB8uuTZ6el6wZ5%2FlHzMUS9qY2tliOYgD7CRiNiKNR%2FsZCaCd4IQr54vKzgwpXCf2f0bo7B4OxftHbsoPN4lNqdsMeGZJYufE1pKvGiuV2e9UnvdkAcLj35Whv4951KW2w2EvLPywMRaQ00AwC17Ovge5ME0%3D--KHHSkCrHxWSFoW3K--676NBj5qRnJSnbmNFiSAcA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
+      content-length: '35772'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: yes
-      string: ../fixtures/usa_00112.xml
-  recorded_at: 2022-05-27 22:06:37 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+      string: ../fixtures/usa_00122.xml
+  recorded_at: 2023-03-16 20:16:52 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1822056/usa_00112.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1986397/usa_00122.dat.gz
     body:
       encoding: ''
       string: ''
@@ -53,21 +53,21 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00112.dat.gz"; filename*=UTF-8''usa_00112.dat.gz
-      content-length: '167521'
+      content-disposition: attachment; filename="usa_00122.dat.gz"; filename*=UTF-8''usa_00122.dat.gz
       content-type: application/gzip
-      date: Fri, 27 May 2022 22:06:37 GMT
-      etag: '"62914b55-28e61"'
-      last-modified: Fri, 27 May 2022 22:06:13 GMT
+      date: Thu, 16 Mar 2023 20:16:52 GMT
+      etag: '"641378ad-28e61"'
+      last-modified: Thu, 16 Mar 2023 20:14:37 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=v6Tn43XZtV5HPxEk0qZ4YZwaLrBEr%2Fn7FBwKHB3mJ5%2F6EEd4rc%2F6XVHOoKt4nybJBUkRRsBPtEJ8NEWovqdadJhE%2Bog2s%2BvGdACr%2FXg5Ijdb6jF4yc7lduelC16evy1WXsFWtvdn%2FjWsuDy%2FrUg8WyABBJLxCdOdO2iO1JpBIETOzTiclY74tGk7dUjT6qos%2Baa5Pqm2m3QYcGEB5VzDM0eJbDesORRS8v5Ojci83g2bZZhsvq6OtIe6MSbA6Yg%3D--OJ0Op%2FwYToY3hSkP--xYA9vfkiKhJg1Ntdbg%2BeHg%3D%3D;
+      set-cookie: _session_id=AgbBISRNBJM6TnKhNtL2MQB14WuqDR7zrJZ12aZMfwdi6kjTPtpVhLwfn3Qqmtky5kgqwKhrn2cMRfZI5BhkWp%2BnqLYe6nQNHDyzyyUMk9PvujNst9v9ZT1nptuXhtt%2F9mE2jgZzpC2O%2BOycBSAisRX5aJn3SlD5M%2BXtZo9eZxvvkA7kAQje5OKZzqzLUXgmrDacjNM%2FQ16tqv4%2BVWDYXSCwTWWfYdMseFi1t3eFaJBFEhZ3LeJMl58nnMf0UI8%3D--SCHh3hOyTjwmPoEp--LSPygkeCHzZ6ZuULIIctKQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
+      content-length: '167521'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: yes
-      string: ../fixtures/usa_00112.dat.gz
-  recorded_at: 2022-05-27 22:06:37 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+      string: ../fixtures/usa_00122.dat.gz
+  recorded_at: 2023-03-16 20:16:52 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

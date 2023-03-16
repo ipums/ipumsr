@@ -4,65 +4,67 @@
 #   https://github.com/ipums/ipumsr
 
 
-#' Join data to geographic boundaries
+#' Join tabular data to geographic boundaries
 #'
-#' Helpers for joining shape files downloaded from the IPUMS website to data from extracts.
-#' Because of historical reasons, the attributes of (like variable type) of variables
-#' in the shape files does not always match those in the data files.
+#' @description
+#' These functions are analogous to dplyr's [joins][dplyr::left_join()], except
+#' that:
 #'
-#' @param data A dataset, usually one that has been aggregated to a geographic level.
-#' @param shape_data A shape file (loaded with \code{\link{read_ipums_sf}} or \code{read_ipums_sp})
-#' @param by A vector of variable names to join on. Like the dplyr join functions, named vectors
-#'   indicate that the names are different between the data and shape file.
-#'   shape files to load. Accepts a character vector specifying the file name, or
-#'  \code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-#'    which will be combined.
-#' @param suffix For variables that are found in both, but aren't joined on, a suffix
-#'   to put on the variables. Defaults to nothing for data variables and "_SHAPE" for
-#'   variables from the shape file.
-#' @param verbose I \code{TRUE}, will report information about geometries dropped in the merge.
-#' @return returns a sf or a SpatialPolygonsDataFrame depending on what was passed in.
-#' @examples
-#' # Note that these examples use NHGIS data so that they use the example data provided,
-#' # but the functions read_nhgis_sf/read_nhgis_sp perform this merge for you.
+#' - They operate on a data frame and an [`sf`][sf::sf] object
+#' - They retain the variable attributes provided in IPUMS files and loaded
+#'   by ipumsr data-reading functions
+#' - They handle minor incompatibilities between attributes in spatial and
+#'   tabular data that emerge in some IPUMS files
 #'
-#' data <- read_nhgis(ipums_example("nhgis0008_csv.zip"))
+#' @param data A tibble or data frame. Typically, this will contain data that
+#'   has been aggregated to a specific geographic level.
+#' @param shape_data An [`sf`][sf::sf] object loaded with [read_ipums_sf()].
+#' @param by Character vector of variables to join by. See [dplyr::left_join()]
+#'   for syntax.
+#' @param suffix If there are non-joined duplicate variables in the two
+#'   data sources, these suffixes will be added to the output to disambiguate
+#'   them. Should be a character vector of length 2.
 #'
-#' if (require(sf)) {
-#'   sf <- read_ipums_sf(ipums_example("nhgis0008_shape_small.zip"))
-#'   data_sf <- ipums_shape_inner_join(data, sf, by = "GISJOIN")
-#' }
+#'   Defaults to adding the `"SHAPE"` suffix to duplicated variables in
+#'   `shape_file`.
+#' @param verbose If `TRUE`, display information about any geometries that were
+#'   unmatched during the join.
 #'
-#' if (require(sp) && require(rgdal)) {
-#'   sp <- read_ipums_sp(ipums_example("nhgis0008_shape_small.zip"))
-#'   data_sp <- ipums_shape_inner_join(data, sp, by = "GISJOIN")
-#' }
+#' @return An `sf` object containing the joined data
 #'
-#' \dontrun{
-#'   # Sometimes variable names won't match between datasets (for example in IPUMS international)
-#'   data <- read_ipums_micro("ipumsi_00004.xml")
-#'   shape <- read_ipums_sf("geo2_br1980_2010.zip")
-#'   data_sf <- ipums_shape_inner_join(data, shape, by = c("GEO2" = "GEOLEVEL2"))
-#' }
+#' @name ipums_shape_join
 #'
+#' @examplesIf requireNamespace("sf")
+#' data <- read_nhgis(
+#'   ipums_example("nhgis0972_csv.zip"),
+#'   show_col_types = FALSE
+#' )
+#'
+#' sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
+#' joined_data <- ipums_shape_inner_join(data, sf_data, by = "GISJOIN")
+#'
+#' colnames(joined_data)
+NULL
+
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_left_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "left", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_right_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "right", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_inner_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "inner", suffix, verbose)
 }
 
-#' @rdname ipums_shape_left_join
+#' @rdname ipums_shape_join
 #' @export
 ipums_shape_full_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "full", suffix, verbose)
@@ -70,23 +72,23 @@ ipums_shape_full_join <- function(data, shape_data, by, suffix = c("", "SHAPE"),
 
 
 ipums_shape_join <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   UseMethod("ipums_shape_join", shape_data)
 }
 
 ipums_shape_join.sf <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   if (is.null(names(by))) {
     by_shape <- by
@@ -100,8 +102,8 @@ ipums_shape_join.sf <- function(
   }
   direction <- match.arg(direction)
 
-  check_shape_join_names(by_shape, names(shape_data), "shape data")
-  check_shape_join_names(by_data, names(data), "data")
+  check_shape_join_names(by_shape, names(shape_data), "`shape_data`")
+  check_shape_join_names(by_data, names(data), "`data`")
 
   # We're pretending like the x in the join is the data, but
   # because of the join functions dispatch, we will actually be
@@ -138,12 +140,12 @@ ipums_shape_join.sf <- function(
 }
 
 ipums_shape_join.SpatialPolygonsDataFrame <- function(
-  data,
-  shape_data,
-  by,
-  direction = c("full", "inner", "left", "right"),
-  suffix = c("", "_SHAPE"),
-  verbose = TRUE
+    data,
+    shape_data,
+    by,
+    direction = c("full", "inner", "left", "right"),
+    suffix = c("", "_SHAPE"),
+    verbose = TRUE
 ) {
   if (is.null(names(by))) {
     by_shape <- by
@@ -157,15 +159,15 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
   }
   direction <- match.arg(direction)
   if (direction %in% c("left", "full")) { # Note that directions are reversed because of dispatch
-    stop(paste0(
-      "Only inner and right joins are supported for SpatialPolygonsDataFrame (sp) data ",
-      "because non-matched observations from the data would create NULL geometries which ",
-      "are not allowed in the sp package."
+    rlang::abort(paste0(
+      "Only inner and right joins are supported for ",
+      "`SpatialPolygonsDataFrame` objects to avoid the creation of `NULL` ",
+      "geomtries."
     ))
   }
 
-  check_shape_join_names(by_shape, names(shape_data@data), "shape data")
-  check_shape_join_names(by_data, names(data), "data")
+  check_shape_join_names(by_shape, names(shape_data@data), "`shape_data`")
+  check_shape_join_names(by_data, names(data), "`data`")
 
   # We're pretending like the x in the join is the data, but
   # because of the join functions dispatch, we will actually be
@@ -189,7 +191,7 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
   if (verbose) {
     join_fail_attributes <- try(check_for_join_failures(out, by, alligned$shape_data, alligned$data))
     if (inherits(join_fail_attributes, "try-error")) {
-      warning("Join failures not available.")
+      rlang::warn("Join failures not available.")
       join_fail_attributes <- NULL
     }
   } else {
@@ -211,9 +213,9 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
 check_shape_join_names <- function(by_names, data_names, display) {
   not_avail <- dplyr::setdiff(by_names, data_names)
   if (length(not_avail) > 0) {
-    stop(custom_format_text(
-      "Variables ", paste(not_avail, collapse = ", "), " are not in ", display, ".",
-      indent = 2, exdent = 2
+    rlang::abort(c(
+      paste0("Join columns must be present in ", display, "."),
+      purrr::set_names(paste0("Problem with: `", not_avail, "`"), "x")
     ))
   }
 }
@@ -261,14 +263,14 @@ allign_id_vars <- function(shape_data, data, by) {
           data[[by[iii]]] <- as.character(data[[by[iii]]])
           shape_data[[by[iii]]] <- as.character(shape_data[[by[iii]]])
         },
-        "double" = {stop("Shape data has factor id var, but data has numeric id var")},
-        "integer" = {stop("Shape data has factor id var, but data has integer id var")}
+        "double" = {rlang::abort("Shape data has factor id var, but data has numeric id var")},
+        "integer" = {rlang::abort("Shape data has factor id var, but data has integer id var")}
       )
     } else if (shape_type[iii] == "double") {
       switch(
         data_type[iii],
         "character" = {data <- custom_parse_double(data[[by[iii]]])},
-        "factor" = {stop("Shape data has numeric id var, but data has factor id var")},
+        "factor" = {rlang::abort("Shape data has numeric id var, but data has factor id var")},
         "double" = NULL,
         "integer" = {data[[by[iii]]] <- as.double(data[[by[iii]]])}
       )
@@ -276,7 +278,7 @@ allign_id_vars <- function(shape_data, data, by) {
       switch(
         data_type[iii],
         "character" = {data <- custom_parse_integer(data[[by[iii]]])},
-        "factor" = {stop("Shape data has integer id var, but data has factor id var")},
+        "factor" = {rlang::abort("Shape data has integer id var, but data has factor id var")},
         "double" = {shape_data[[by[iii]]] <- as.double(shape_data[[by[iii]]])},
         "integer" = NULL
       )
@@ -322,16 +324,21 @@ check_for_join_failures <- function(merged, by, shape_data, data) {
 }
 
 
-#' Report on observations dropped by a join
+#' Report on observations dropped during a join
 #'
-#' Helper for learning which observations were dropped from a dataset because
-#' they were not joined on.
+#' Helper to display observations that were not matched when joining tabular
+#' and spatial data.
 #'
-#' @param join_results A dataset that has just been created by a shape join
-#'   (like \code{\link{ipums_shape_left_join}})
-#' @return returns a list of data.frames, where the first item (shape) is the observations
-#'   dropped from the shape file and the second (data) is the observations dropped from the
-#'   data.
+#' @param join_results A data frame that has just been created by an
+#'   [ipums shape join][ipums_shape_left_join()].
+#'
+#' @return A list of data frames, where the first element (`shape`) includes
+#'   the observations dropped from the shapefile and the second (`data`)
+#'   includes the
+#'   observations dropped from the data file.
+#'
+#' @keywords internal
+#'
 #' @export
 join_failures <- function(join_results) {
   out <- attr(join_results, "join_failures")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{wait_for_extract}
 \alias{wait_for_extract}
-\title{Wait for extract to finish}
+\title{Wait for an extract request to finish processing}
 \usage{
 wait_for_extract(
   extract,
@@ -17,85 +17,82 @@ wait_for_extract(
 \item{extract}{One of:
 \itemize{
 \item An \code{\link[=ipums_extract-class]{ipums_extract}} object
-\item The data collection and extract number formatted as a single string of the
-form \code{"collection:number"}
-\item The data collection and extract number formatted as a vector of the form
-\code{c("collection", "number")}
+\item The data collection and extract number formatted as a string of the
+form \code{"collection:number"} or as a vector of the form
+\code{c("collection", number)}
+\item An extract number to be associated with your default IPUMS
+collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-The extract number does not need to be zero-padded (e.g., use \code{"usa:1"}
-or \code{c("usa", "1")}, not \code{"usa:00001"} or \code{c("usa", "00001")}).
-See Examples section below for examples of each form.
+Extract numbers do not need to be zero-padded. That is, use \code{1}, not
+\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
-\item{initial_delay_seconds}{How many seconds to wait before first status
-check.}
+\item{initial_delay_seconds}{Seconds to wait before first status check. The
+wait time will automatically increase by 10 seconds between each
+successive check.}
 
-\item{max_delay_seconds}{Maximum seconds to wait between status checks. The
-function doubles the wait time after each check, but will cap the wait
-time at this maximum value (300 seconds, or 5 minutes, by default).}
+\item{max_delay_seconds}{Maximum interval to wait between status checks.
+When the wait interval reaches this value, checks will continue to
+occur at \code{max_delay_seconds} intervals until the extract is complete or
+\code{timeout_seconds} is reached. Defaults to 300 seconds (5 minutes).}
 
 \item{timeout_seconds}{Maximum total number of seconds to continue waiting
-for the extract before throwing an error. Defaults to 10,800 seconds (three
+for the extract before throwing an error. Defaults to 10,800 seconds (3
 hours).}
 
-\item{verbose}{If \code{TRUE}, the default, messages will be printed at the
-beginning of each wait interval with the current wait time, each time the
-status of the extract is checked, and when the extract is ready to
-download. Setting this argument to \code{FALSE} will silence these
-messages.}
+\item{verbose}{If \code{TRUE}, print status updates to the R console at the
+beginning of each wait interval and upon extract completion.
+Defaults to \code{TRUE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
-value of environment variable "IPUMS_API_KEY".}
+value of the \code{IPUMS_API_KEY} environment variable. See
+\code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
 extract definition and the URLs from which to download extract files.
 }
 \description{
-Wait for an extract to finish by periodically checking its status via the
-IPUMS API and returning when the extract is ready to download. For an
-overview of ipumsr microdata API functionality, see
-\code{vignette("ipums-api", package = "ipumsr")}.
+Wait for an extract request to finish by periodically checking its status
+via the IPUMS API until it is complete.
+
+Completed extracts will have a value of \code{"completed"} in their \code{status}
+field.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa("Example", "us2013a", "YEAR")
+my_extract <- define_extract_usa(
+  description = "2013-2014 ACS Data",
+  samples = c("us2013a", "us2014a"),
+  variables = c("SEX", "AGE", "YEAR")
+)
 
 \dontrun{
 submitted_extract <- submit_extract(my_extract)
 
-# Wait for extract by supplying ipums_extract object:
+# Wait for a particular extract request to complete by providing its
+# associated `ipums_extract` object:
 downloadable_extract <- wait_for_extract(submitted_extract)
 
-# By supplying the data collection and extract number, as a string:
+# Or by specifying the collection and number for the extract request:
 downloadable_extract <- wait_for_extract("usa:1")
-# Note that there is no space before or after the colon, and no zero-padding
-# of the extract number.
 
-# By supplying the data collection and extract number, as a vector:
-downloadable_extract <- wait_for_extract(c("usa", "1"))
+# If you have a default collection, you can use the extract number alone:
+set_ipums_default_collection("usa")
+downloadable_extract <- wait_for_extract(1)
+
+# If you want to subsequently download your completed extract, you can
+# use `download_extract()` directly:
+download_extract(1, wait = TRUE)
 }
-
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{set_ipums_api_key}()},
-\code{\link{submit_extract}()}
+\code{\link[=download_extract]{download_extract()}} to download an extract.
+
+\code{\link[=get_extract_info]{get_extract_info()}} and \code{\link[=is_extract_ready]{is_extract_ready()}} to check the status of an
+extract request.
 }
-\concept{ipums_api}

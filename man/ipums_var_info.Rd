@@ -2,62 +2,81 @@
 % Please edit documentation in R/ipums_info.r
 \name{ipums_var_info}
 \alias{ipums_var_info}
-\alias{ipums_var_desc}
 \alias{ipums_var_label}
+\alias{ipums_var_desc}
 \alias{ipums_val_labels}
-\title{Get IPUMS variable information}
+\title{Get contextual information about variables in an IPUMS data source}
 \usage{
 ipums_var_info(object, vars = NULL)
 
-ipums_var_desc(object, var = NULL)
-
 ipums_var_label(object, var = NULL)
+
+ipums_var_desc(object, var = NULL)
 
 ipums_val_labels(object, var = NULL)
 }
 \arguments{
-\item{object}{A DDI object (loaded with \code{\link{read_ipums_ddi}}), a data.frame
-with ipums metadata attached, or a single column from an ipums data.frame.}
+\item{object}{An \link{ipums_ddi} object, a data frame containing variable
+metadata (as produced by most ipumsr data-reading functions), or
+a \code{\link[haven:labelled]{haven::labelled()}} vector from a
+single column in such a data frame.}
 
-\item{vars}{dplyr \code{\link[dplyr]{select}}-style notation for the variables to
-give information about}
-
-\item{var}{select-style notation for a single variable
-
-\code{ipums_var_info()} loads all available variable information for one or more
-variables into a data.frame. If \code{object} is a vector, it will include
-the variable label, variable description and value labels. If \code{object} is
-a data.frame, it will include it for all variables (or only those specified
-by vars). If it is a DDI, it will also include information used to read the
-data from disk, including start/end position in the fixed-width file, implied
-decimals and variable type.
-
-\code{ipums_var_desc()} loads the variable description for a single variable.
-
-\code{ipums_var_label()} loads the short variable label for a single variable.
-
-\code{ipums_val_labels()} loads the value labels for a single variable.
-
-Note that many R functions drop attributes that provide this information.
-In order to make sure that they are available, it is best to keep a copy of the
-separate from the data your are manipulating using \code{\link{read_ipums_ddi}}. Then
-you can refer to the IPUMS documentation in this object.}
+\item{vars, var}{A \link[=selection_language]{tidyselect selection} identifying
+the variable(s) to include in the output. Only \code{ipums_var_info()} allows
+for the selection of multiple variables.}
 }
 \value{
-\code{ipums_var_info} returns a \code{tbl_df} data frame with variable information, and
-  the other functions return a length 1 character vector.
+For \code{ipums_var_info()}, a \code{\link[tibble:tbl_df-class]{tibble}} containing
+variable information.
+
+Otherwise, a length-1 character vector with the requested variable
+information.
 }
 \description{
-Get IPUMS metadata information about variables loaded into R. Will try to read
-the metadata from the loaded datasets, but it is more reliable to load the DDI
-into a separate object and use it instead.
+Summarize the variable metadata for the variables found in an \link{ipums_ddi}
+object or data frame. Provides descriptions of variable
+content (\code{var_label} and \code{var_desc}) as well as labels for particular
+values in each variable (\code{val_labels}).
+
+\code{ipums_var_info()} produces a \code{\link[tibble:tbl_df-class]{tibble}} summary
+of multiple variables at once.
+
+\code{ipums_var_label()}, \code{ipums_var_desc()}, and \code{ipums_val_labels()} provide
+specific metadata for a single variable.
+}
+\details{
+For \code{ipums_var_info()}, if the provided \code{object} is a
+\code{\link[haven:labelled]{haven::labelled()}}
+vector (i.e. a single column from a data frame), the summary output will
+include the variable label, variable description, and value labels, if
+applicable.
+
+If it is a data frame, the same information will be
+provided for all variables present in the data or to those indicated in
+\code{vars}.
+
+If it is an \link{ipums_ddi} object, the summary will also
+include information used when reading the data from disk, including
+start/end positions for columns in the fixed-width file, implied decimals,
+and variable types.
+
+Providing an \code{ipums_ddi} object is the most robust way to access
+variable metadata, as many data processing operations will remove these
+attributes from data frame-like objects.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
 
+# Info for all variables in a data source
 ipums_var_info(ddi)
-ipums_var_desc(ddi, MONTH)
-ipums_var_label(ddi, MONTH)
-ipums_val_labels(ddi, MONTH)
 
+# Metadata for individual variables
+ipums_var_desc(ddi, MONTH)
+
+ipums_var_label(ddi, MONTH)
+
+ipums_val_labels(ddi, MONTH)
+}
+\seealso{
+\code{\link[=read_ipums_ddi]{read_ipums_ddi()}} or \code{\link[=read_nhgis_codebook]{read_nhgis_codebook()}} to read IPUMS metadata files.
 }

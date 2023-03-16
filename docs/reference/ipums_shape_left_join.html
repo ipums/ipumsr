@@ -191,7 +191,7 @@ variables from the shape file.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Note that these examples use NHGIS data so that they use the example data provided,</span></span>
 <span class="r-in"><span class="co"># but the functions read_nhgis_sf/read_nhgis_sp perform this merge for you.</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0008_csv.zip"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0707_csv.zip"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Use of data from NHGIS is subject to conditions including that users should</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -199,7 +199,7 @@ variables from the shape file.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading data file...</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0008_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0707_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in">  <span class="va">data_sf</span> <span class="op">&lt;-</span> <span class="fu">ipums_shape_inner_join</span><span class="op">(</span><span class="va">data</span>, <span class="va">sf</span>, by <span class="op">=</span> <span class="st">"GISJOIN"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: sf</span>
@@ -215,7 +215,7 @@ variables from the shape file.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: Albers</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://rgdal.r-forge.r-project.org" class="external-link">rgdal</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sp</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0008_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sp</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0707_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in">  <span class="va">data_sp</span> <span class="op">&lt;-</span> <span class="fu">ipums_shape_inner_join</span><span class="op">(</span><span class="va">data</span>, <span class="va">sp</span>, by <span class="op">=</span> <span class="st">"GISJOIN"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: sp</span>

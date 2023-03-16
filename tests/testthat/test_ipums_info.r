@@ -1,4 +1,3 @@
-context("IPUMS Info")
 
 nvars <- 8
 first_three_vars <- c("YEAR", "SERIAL", "HWTSUPP")

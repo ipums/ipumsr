@@ -1,8 +1,9 @@
 ---
-title: "Interacting with the IPUMS microdata extract API"
+title: "Interacting with the IPUMS API"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ipums-api}
+  %\VignetteIndexEntry{Interacting with the IPUMS API}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,428 +11,840 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 ```
 
-# Warning: New features currently in development
+```{r, echo=FALSE, results="hide"}
+library(vcr)
 
-The IPUMS microdata extract API is still in beta testing, and the interface 
-for interacting with the API using ipumsr could still change in response to 
-tester feedback. If you are interested in becoming a beta tester, email 
-ipums+api@umn.edu.
+vcr_dir <- "fixtures"
 
-To install the latest version of ipumsr from CRAN, use:
+have_api_access <- TRUE
 
-```{r}
-install.packages("ipumsr")
-```
+if (!nzchar(Sys.getenv("IPUMS_API_KEY"))) {
+  if (dir.exists(vcr_dir) && length(dir(vcr_dir)) > 0) {
+    # Fake API token to fool ipumsr API functions
+    Sys.setenv("IPUMS_API_KEY" = "foobar")
+  } else {
+    # If there are no mock files nor API token, can't run API tests
+    have_api_access <- FALSE
+  }
+}
 
-Since we are still actively developing the functions for interacting with the 
-API, there may be changes in our GitHub repo that are not yet on CRAN. To 
-install the development version of ipumsr from GitHub, use:
-
-```{r}
-if (!require(remotes)) install.packages("remotes")
-remotes::install_github("ipums/ipumsr/ipumsexamples")
-remotes::install_github(
-  "ipums/ipumsr", 
-  build_vignettes = TRUE, 
-  dependencies = TRUE
+vcr_configure(
+  filter_sensitive_data = list(
+    "<<<IPUMS_API_KEY>>>" = Sys.getenv("IPUMS_API_KEY")
+  ),
+  write_disk_path = vcr_dir,
+  dir = vcr_dir
 )
+
+check_cassette_names()
+
+modify_ready_extract_cassette_file <- function(cassette_file_name,
+                                               fixture_path = NULL,
+                                               n_requests = 1) {
+
+  fixture_path <- fixture_path %||% vcr::vcr_test_path("fixtures")
+
+  ready_extract_cassette_file <- file.path(
+    fixture_path, cassette_file_name
+  )
+
+  ready_lines <- readLines(ready_extract_cassette_file)
+  request_lines <- which(grepl("^- request:", ready_lines))
+
+  start_line <- request_lines[length(request_lines) - n_requests + 1]
+
+  writeLines(
+    c(
+      ready_lines[[1]],
+      ready_lines[start_line:length(ready_lines)]
+    ),
+    con = ready_extract_cassette_file
+  )
+}
 ```
 
+## Overview
 
-# Overview
+The IPUMS API supports two asset types:
 
-The IPUMS microdata extract API allows registered IPUMS USA and CPS users to
-define extracts, submit extract requests, and download extract files without
-visiting the IPUMS website. ipumsr includes functions that help R users interact
-with the extract API from their R session.
+-   **IPUMS extract** endpoints can be used to submit extract requests
+    for processing and download completed extract files.
 
-```{r setup, eval=TRUE, message=FALSE}
+-   **IPUMS metadata** endpoints can be used to discover and explore
+    available IPUMS data as well as retrieve codes, names, and other
+    extract parameters necessary to form extract requests.
+
+ipumsr provides functions that support both of these assets.
+
+Use of the IPUMS API enables the adoption of a programmatic workflow
+that can help users to:
+
+-   Precisely reproduce the specifications of previous extract requests
+-   Easily revise and resubmit previous extract requests to update
+    analyses with new data
+-   Save extract request definitions that can be shared with others
+    without violating IPUMS conditions
+-   Integrate the extract download process with functions to load data
+    into R
+-   Quickly identify and explore available IPUMS data sources
+
+The basic workflow for interacting with the IPUMS API is as follows:
+
+1.  [Define](#define) the parameters of an extract request
+2.  [Submit](#submit) the extract request to the IPUMS API
+3.  [Check](#check) extract request status
+4.  [Download](#download) a completed extract
+
+Before getting started, we'll load the necessary packages for the
+examples in this vignette:
+
+```{r, message=FALSE}
 library(ipumsr)
-library(dplyr) # not necessary to use API functions, but used in some examples
-library(purrr) # not necessary to use API functions, but used in some examples
+library(dplyr) 
+library(purrr)
 ```
 
-# Setting up your API key
+### API Availability
 
-If you don’t have an IPUMS USA or IPUMS CPS account, you'll need to register for 
-access. Here's where you can [register for IPUMS USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu), or [register for IPUMS CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu). You'll also need to request API beta access by emailing 
-ipums+api@umn.edu, as mentioned above.
+IPUMS **extract** support is currently available via API for the
+following collections:
 
-Once you're registered, you'll need to 
-[create an API key](https://account.ipums.org/api_keys).
+-   IPUMS USA
+-   IPUMS CPS
+-   IPUMS NHGIS
 
-Once you've created an API key, you can choose to supply it as a function 
-argument whenever interacting with the API, or you can set the value of the 
-`IPUMS_API_KEY` environment variable to your key. The example code in this 
-vignette assumes you have assigned your key to this environment variable.
+IPUMS **metadata** support is currently available via API for the
+following collections:
 
-To set the value of the `IPUMS_API_KEY` environment variable for your current 
-session, you can use:
+-   IPUMS NHGIS
+
+API support will continue to be added for more collections in the
+future. You can check general API availability for all IPUMS collections
+with `ipums_data_collections()`.
 
 ```{r}
-set_ipums_api_key("paste-your-key-here")
+ipums_data_collections()
 ```
 
-To set your API key *and* save it for use in future sessions, use the same 
-function, but with `save` set to `TRUE`:
+### Note: New features currently in development
 
-```{r}
+The tools in ipumsr may not necessarily support all the functionality
+currently supported by the IPUMS API. See the [API
+documentation](https://developer.ipums.org/docs/apiprogram/) for more
+information about its latest features. Furthermore, the API tools in
+ipumsr are in active development, and some functionality may not yet be
+stable.
+
+## Set up your API key
+
+To interact with the IPUMS API, you'll need to register for access with
+the IPUMS project you'll be using. If you have not yet registered, you
+can find links to register for each of the API-supported IPUMS
+collections below:
+
+-   [IPUMS
+    USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
+-   [IPUMS
+    CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
+-   [IPUMS
+    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fcps-action%2Fmenu)
+
+Once you're registered, you'll be able to [create an API
+key](https://account.ipums.org/api_keys).
+
+By default, ipumsr API functions assume that your key is stored in the
+`IPUMS_API_KEY` environment variable. You can also provide your key
+directly to these functions, but storing it in an environment variable
+saves you some typing and helps prevent you from inadvertently sharing
+your key with others (for instance, on GitHub).
+
+You can save your API key to the `IPUMS_API_KEY` environment variable
+with `set_ipums_api_key()`. To save your key for use in future sessions,
+set `save = TRUE`. This will add your API key to your `.Renviron` file
+in your user home directory.
+
+```{r, eval=FALSE}
+# Save key in .Renviron for use across sessions
 set_ipums_api_key("paste-your-key-here", save = TRUE)
 ```
 
+The rest of this vignette assumes you have obtained an API key and
+stored it in the `IPUMS_API_KEY` environment variable.
 
-This will add your API key to a file named ".Renviron" in your user home 
-directory, so that the value of the `IPUMS_API_KEY` environment variable is 
-set when R starts up.
+## Define an extract request {#define}
 
+Each IPUMS collection has its own extract definition function that is
+used to specify the parameters of a new extract request from scratch.
+These functions take the form `define_extract_<collection>()`:
 
-# Defining your extract
+-   `define_extract_usa()`
+-   `define_extract_cps()`
+-   `define_extract_nhgis()`
 
-Each IPUMS data collection with API support has its own function for 
-defining an extract. These functions have names of the form 
-`define_extract_<collection>()`. Thus, to define an IPUMS USA extract, you use 
-`define_extract_usa()`, and to define an IPUMS CPS extract, you use 
-`define_extract_cps()`. 
+Alternatively, use `define_extract_from_json()` to load an extract
+definition from an external JSON file (see [*Share an extract
+definition*](#share)).
 
-All `define_extract_()` functions return an `ipums_extract` object which can
-then be submitted using the `submit_extract()` function. 
+When you define an extract request, you can specify the data to be
+included in the extract and indicate the desired format and layout.
 
-```{r eval=TRUE}
-usa_extract_definition <- define_extract_usa(
-  description = "USA extract for API vignette",
-  samples = c("us2018a","us2019a"),
-  variables = c("AGE","SEX","RACE","STATEFIP")
-)
-
-cps_extract_definition <- define_extract_cps(
-  description = "CPS extract for API vignette",
-  samples = c("cps1976_01s", "cps1976_02b"),
-  variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1")
-)
-```
-
-For more details on the `ipums_extract` class, view the documentation page with 
-`?ipums_extract-class`.
-
-Note that samples are specified using special sample ID codes, which can be 
-browsed [here on the IPUMS USA website](https://usa.ipums.org/usa-action/samples/sample_ids),
-or [here for IPUMS CPS](https://cps.ipums.org/cps-action/samples/sample_ids).
-
-
-# Submitting your extract
-
-To submit your extract, use:
+For instance, the following defines an extract request for the `AGE`,
+`SEX`, `RACE`, and `STATEFIP` variables from the 2018 and 2019 American
+Community Survey (ACS):
 
 ```{r}
-submit_extract(usa_extract_definition)
+usa_extract_definition <- define_extract_usa(
+  description = "USA extract for API vignette",
+  samples = c("us2018a", "us2019a"),
+  variables = c("AGE", "SEX", "RACE", "STATEFIP")
+)
+
+usa_extract_definition
 ```
 
+Similarly, the following would produce an NHGIS extract definition for
+tables P1 and P2 from the 2010 SF1a census file at the state level:
 
-However, like the `define_extract_()` functions, the `submit_extract()` function
-returns an `ipums_extract` object, and the returned object has been updated to
-include the extract number, so it can be useful to save that return object
-by assigning a name to it, like this:
+```{r}
+nhgis_extract_definition <- define_extract_nhgis(
+  description = "NHGIS extract for API vignette",
+  datasets = "2010_SF1a",
+  data_tables = c("P1", "P2"),
+  geog_levels = "state"
+)
+
+nhgis_extract_definition
+```
+
+Note that in NHGIS extract definitions, certain fields, like
+`data_tables` and `geog_levels`, are associated with a particular
+dataset. For an extract with multiple datasets, these subfields will be
+applied to all `datasets` in the extract definition:
+
+```{r}
+define_extract_nhgis(
+  description = "NHGIS extract with multiple datasets",
+  datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
+  data_tables = c("B01001", "B01002"),
+  geog_levels = "state"
+)
+```
+
+To specify unique values for a subfield for each dataset, use a named
+list instead of a vector in the subfield argument. This allows you to
+explicitly indicate which dataset should be associated with which
+subfield values:
+
+```{r}
+# In this case, data_tables are matched to individual datasets, while 
+# geog_levels are recycled to all datasets
+define_extract_nhgis(
+  description = "NHGIS extract with multiple datasets",
+  datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
+  data_tables = list(
+    "2016_2020_ACS5a" = "B01001", 
+    "2017_2021_ACS5a" = "B01002"
+  ),
+  geog_levels = "state"
+)
+```
+
+NHGIS time series tables also have similar behavior for `geog_levels`.
+See `?define_extract_nhgis` for more information.
+
+### Extract request objects
+
+`define_extract_` functions always produce an object that inherits from
+the `ipums_extract` class, which can be handled by other API functions
+(see `?ipums_extract`). Furthermore, these objects will have a subclass
+for the particular collection with which they are associated.
+
+```{r}
+class(usa_extract_definition)
+
+class(nhgis_extract_definition)
+```
+
+While `ipums_extract` objects for different collections have slightly
+different structures, they all support the same API workflow.
+
+The specifications for a given extract request object can be accessed
+using standard list-indexing syntax:
+
+```{r}
+usa_extract_definition$samples
+
+nhgis_extract_definition[["data_tables"]]
+```
+
+`ipums_extract` objects also contain information about the extract
+request's status. This extract hasn't yet been submitted, and therefore
+has no extract request number:
+
+```{r}
+usa_extract_definition$status
+
+usa_extract_definition$number
+```
+
+An extract request will receive a number once it has been submitted to
+the API for processing.
+
+### Metadata
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("ipums-metadata-api")
+```
+
+To build a valid extract request, you need to know the names and codes
+used for the data sources and variables you want to include.
+
+While the IPUMS metadata API is not yet available for microdata
+collections, users can find sample ID codes at the following links:
+
+-   [IPUMS
+    USA](https://usa.ipums.org/usa-action/samples/sample_ids){target="_blank"}
+-   [IPUMS
+    CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
+
+For microdata variable names, refer to the relevant collection's online
+extract builder:
+
+-   [IPUMS
+    USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
+-   [IPUMS
+    CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
+
+IPUMS NHGIS users can find the codes used for datasets, data tables,
+time series tables, and more by using `get_nhgis_metadata()`.
+
+NHGIS provides summary metadata for all available data sources of a
+given type (e.g. datasets, shapefiles) or detailed metadata for a
+specific data source.
+
+To explore summary metadata, use the `type` argument. This produces a
+`tibble` of information about each available data source and is best
+used to determine the name used by the API to reference a data source of
+interest.
+
+```{r}
+get_nhgis_metadata(type = "time_series_tables") %>%
+  head()
+```
+
+To get details on a particular data source, pass its name to the
+associated argument of `get_nhgis_metadata()`. Use this to determine the
+codes and descriptions of various subfields for a given data source
+(e.g. data tables for a given dataset, geographic levels for a dataset
+or time series table, etc.).
+
+For instance, we could use this metadata to determine that the tables
+included in the extract request above (P1 and P2) correspond to total
+population counts and urban/rural population counts, respectively:
+
+```{r}
+ds_meta <- get_nhgis_metadata(dataset = "2010_SF1a")
+
+ds_meta$data_tables %>%
+  filter(name %in% c("P1", "P2"))
+```
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("ipums-metadata-api")
+```
+
+## Submit an extract {#submit}
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("submit-and-check-extract")
+```
+
+To submit an extract definition for processing, use `submit_extract()`.
+
+If no errors are detected in the extract definition, a submitted extract
+request will be returned with its assigned number and status. Storing
+the returned object can be useful for checking the extract request's
+status later.
 
 ```{r}
 submitted_usa_extract <- submit_extract(usa_extract_definition)
+
+submitted_nhgis_extract <- submit_extract(nhgis_extract_definition)
 ```
 
-That way, you can use the `submitted_usa_extract` object as input to check the
-extract's status, as shown in the next section, or to reference the extract 
-number:
+The extract number will be stored in the returned object:
 
 ```{r}
 submitted_usa_extract$number
-```
 
-
-# Checking the status of your extract
-
-To retrieve the latest status of an extract, you can use the
-`get_extract_info()` function. `get_extract_info()` returns an `ipums_extract`
-object with the "status" element updated to reflect the latest status of the
-extract, and the "download_links" element updated to include links to any
-extract files that are available for download. 
-
-The "status" of a submitted extract is one of "queued", "started", "produced",
-"canceled", "failed", or "completed". Only "completed" extracts can be
-downloaded, but "completed" extracts older than 72 hours may not be available
-for download, since extract files are removed after that time (see discussion of
-the `is_extract_ready()` function below).
-
-If you assigned a name to the return value of `submit_extract()`, as shown
-above, you could get updated information on the extract, returned as an
-`ipums_extract` object, with:
-
-```{r}
-submitted_usa_extract <- get_extract_info(submitted_usa_extract)
-```
-
-To print the latest status, you can use:
-
-```{r}
 submitted_usa_extract$status
 ```
 
-If you forget to capture the return value of `submit_extract()`, you can pull 
-down an `ipums_extract` object containing all the information on your most 
-recent extract for a given data collection with:
+## Check the status of an extract {#check}
+
+It may take some time for the IPUMS servers to process your extract
+request. To determine if your extract is ready to download, you can
+check its latest status with `get_extract_info()`, which will return an
+`ipums_extract` object reflecting the requested extract definition with
+the most current `status`. The `status` of a submitted extract will be
+one of `"queued"`, `"started"`, `"produced"`, `"canceled"`, `"failed"`,
+or `"completed"`.
+
+If the extract is complete and ready for download, the `download_links`
+field will be populated with any extract files that are available for
+download.
 
 ```{r}
+submitted_usa_extract <- get_extract_info(submitted_usa_extract)
+
+submitted_usa_extract$status
+
+submitted_usa_extract$download_links
+```
+
+If you forget to capture the return value of `submit_extract()`, you can
+use the `get_last_extract_info()` helper to request the information for
+your most recent extract request for a given collection:
+
+```{r, eval=FALSE}
 submitted_usa_extract <- get_last_extract_info("usa")
 ```
 
-`get_last_extract_info()` is just a convenience wrapper around 
-`get_recent_extracts_info_list()`, described [below](#recent).
+You can also request the information for any single extract request by
+passing the collection and extract number to `get_extract_info()`. These
+can be provided either as a single string of the form
+`"collection:number"` or as a length-2 vector: `c(collection, number)`.
+Several other API functions also support this syntax. Note that there is
+no need to include the padded zeroes that are included in extract file
+names (e.g. 00010).
 
-If you don't have an `ipums_extract` object in your environment that describes
-the extract you're interested in, and you don't want the most recent extract,
-you can also query the latest status of an extract by supplying the name of the
-IPUMS data collection and extract number of the extract, in one of two formats. 
-Here's how you'd get the latest information on IPUMS CPS extract number 33:
-
-```{r}
-cps_extract_33 <- get_extract_info("cps:33")
+```{r, eval=FALSE}
+# These are equivalent:
+cps_extract_10 <- get_extract_info("cps:10")
+cps_extract_10 <- get_extract_info(c("cps", 10))
 ```
 
-or
+If you regularly use only a single IPUMS collection, you can save
+yourself some typing by setting that collection as your default.
+`set_ipums_default_collection()` will save a specified collection to the
+value of the `IPUMS_DEFAULT_COLLECTION` environment variable. If you
+have a default collection set, API functions will use that collection in
+all requests, assuming no other collection is specified.
 
-```{r}
-cps_extract_33 <- get_extract_info(c("cps", "33"))
+```{r, eval=FALSE}
+set_ipums_default_collection("cps") # Set `save = TRUE` to store across sessions
 ```
 
-Note that in the first format, there are no spaces before or after the colon, 
-and that in both formats, there is no need to zero-pad the extract number -- in 
-other words, use "33", not "00033".
-
-If you want R to periodically check the status of your extract, and only return 
-an updated `ipums_extract` object once the extract is ready to download, you 
-can use `wait_for_extract()`, as shown below:
-
-```{r}
-downloadable_cps_extract <- wait_for_extract(cps_extract_33)
+```{r, echo=FALSE, results="hide", message=FALSE}
+set_ipums_default_collection("cps")
 ```
 
-`wait_for_extract()` also accepts the same `"collection:number"` and 
-`c("collection", "number")` specifications shown above:
-
 ```{r}
-downloadable_cps_extract <- wait_for_extract("cps:33")
+# Check the default collection:
+Sys.getenv("IPUMS_DEFAULT_COLLECTION")
+
+# Most recent CPS extract:
+get_last_extract_info()
+
+# Request info on extract request "cps:10"
+get_extract_info(10)
+
+# You can still request other collections as usual:
+get_extract_info("usa:10")
 ```
 
-or
-
-```{r}
-downloadable_cps_extract <- wait_for_extract(c("cps", "33"))
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("submit-and-check-extract")
 ```
 
-For large extracts that take a long time to produce, or when the IPUMS servers
-are busy, you may not want to use `wait_for_extract()`, as it will tie up your R
-session until the extract is ready to download.
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("wait-for-extract-usa")
 
-`wait_for_extract()` will tie up your R session until the extract is ready to
-download, so it might not be the best option for large extracts that take a
-long time to produce. However, `wait_for_extract()` does offer a
-`timeout_seconds` argument to set the maximum number of seconds you want the
-function to wait. By default, that argument is set to 10,800 seconds (3 hours).
+submitted_usa_extract <- wait_for_extract(submitted_usa_extract)
 
-An alternative way to check whether your extract is ready to download is using 
-the `is_extract_ready()` function. This function accepts either an 
-`ipums_extract` object or a `"collection:number"` or `c("collection", "number")`
-specification, and returns a single `TRUE` or `FALSE` value indicating whether 
-the extract is ready to be downloaded.
+eject_cassette("wait-for-extract-usa")
 
-```{r}
-is_extract_ready(cps_extract_33)
-is_extract_ready("cps:33")
-is_extract_ready(c("cps", "33"))
+# Leave an extract request to simulate wait_for_extract() output for USA
+modify_ready_extract_cassette_file(
+  "wait-for-extract-usa.yml",
+  fixture_path = "fixtures"
+)
 ```
 
-As noted above, only extracts with status "completed" can be ready to download, 
-but not all "completed" extracts are ready to download, because extract files 
-are removed from IPUMS servers after 72 hours. The `is_extract_ready()` 
-function checks whether an extract can currently be downloaded by looking at the 
-"download_links" element of the extract object returned by the API.
+## Download an extract {#download}
 
-Note that the API has a limit of 60 requests with the same API key per minute, 
-so you wouldn't want to write a loop that repeatedly uses `is_extract_ready()` 
-to check your extract status.
+To be available for download, an extract must have a `"completed"`
+status. However, some requests that are `"completed"` may still be
+unavailable for download, as extracts expire and are removed from IPUMS
+servers after a set period of time (72 hours for microdata collections,
+2 weeks for IPUMS NHGIS).
 
-
-# Downloading your extract
-
-Once your extract is ready to download, use the `download_extract()` function to 
-download the data and DDI codebook files to your computer. The 
-`download_extract()` function returns the path to the DDI codebook file, which 
-can be used to read in the downloaded data with ipumsr functions. By default, 
-the function will download files into your current working directory, but 
-alternative locations can be specified with the `download_dir` argument.
+You can check whether an extract is ready for download with
+`is_extract_ready()`:
 
 ```{r}
+is_extract_ready(submitted_usa_extract)
+```
+
+This function will also warn you if your extract has expired and needs
+to be resubmitted.
+
+If your extract is ready to download, you can use `download_extract()`
+to download the extract's data files to your local machine.
+
+This will return the path to the downloaded file(s) required to load the
+data into R. For microdata collections, this is the path to the DDI
+codebook (.xml) file, which can be used to read the associated data
+(contained in a .dat.gz file).
+
+For NHGIS, this will be a path to the .zip archive containing the
+requested data files or shapefiles. If both data and shapefiles are
+requested, `download_extract()` will return a length-2 vector of paths
+to each, with data files first.
+
+```{r, eval=FALSE}
+# By default, downloads to your current working directory
 ddi_path <- download_extract(submitted_usa_extract)
+```
 
+The files produced by download_extract can be passed directly into the
+reader functions provided by ipumsr.
+
+```{r, eval=FALSE}
 ddi <- read_ipums_ddi(ddi_path)
-data <- read_ipums_micro(ddi)
+micro_data <- read_ipums_micro(ddi)
 ```
 
+If your extract request has not finished processing, you'll receive an
+error when attempting to download. If you want to ensure that you wait
+until the extract is ready before attempting to download, set
+`wait = TRUE`. If the extract request is not yet ready, R will poll the
+API regularly (each interval will increase by 10 seconds) until
+processing has completed. (To wait for extract completion *without*
+downloading, use `wait_for_extract()`.)
 
-Or, using a `"collection:number"` or `c("collection", "number")` specification:
+Note that setting `wait = TRUE` will tie up your R session until the
+extract is ready to download. This may be undesirable behavior for large
+extracts that take a long time to produce or when the IPUMS servers are
+busy. You can set a maximum wait time and adjust other API polling
+parameters in `wait_for_extract()` and `download_extract()`. See
+`?wait_for_extract` for details.
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("download-nhgis")
+
+download_dir <- file.path(tempdir(), "ipums-api-vignette-downloads")
+dir.create(download_dir)
+
+download_extract(
+  submitted_nhgis_extract, 
+  download_dir = download_dir,
+  wait = TRUE,
+  overwrite = TRUE
+)
+
+nhgis_path <- list.files(
+  "fixtures", 
+  pattern = "nhgis[0-9]{4}_csv.zip",
+  full.names = TRUE
+)
+
+eject_cassette("download-nhgis")
+
+# Remove extra `get_extract_info()` requests from fixture for faster processing
+# when re-knitting. Must keep at least 1 `get_extract_info()` request so `vcr`
+# can correctly mock `download_extract()`, hence `n_requests = 2`
+modify_ready_extract_cassette_file(
+  "download-nhgis.yml",
+  fixture_path = "fixtures",
+  n_requests = 2
+)
+```
+
+```{r, eval=FALSE}
+nhgis_path <- download_extract(submitted_nhgis_extract, wait = TRUE)
+```
 
 ```{r}
-ddi_path <- download_extract("cps:33")
-ddi_path <- download_extract(c("cps", "33"))
+nhgis_data <- read_nhgis(nhgis_path)
+
+head(nhgis_data)
 ```
 
+See the collection-specific vignettes for more information about loading
+IPUMS data into R.
 
-# Sharing an extract definition
+## Share an extract definition {#share}
 
-One exciting feature enabled by the IPUMS microdata extract API is the ability to 
-share a standardized extract definition with other IPUMS users so that they can 
-create an identical extract for themselves. ipumsr facilitates this by offering 
-the functions `save_extract_as_json()` and `define_extract_from_json()` to 
-write extract definitions to and read extract definitions from a standardized 
-JSON-formatted file.
+One exciting feature enabled by the IPUMS API is the ability to share a
+standardized extract definition with other IPUMS users so that they can
+create an identical extract request themselves. The terms of use for
+most IPUMS collections prohibit the redistribution of IPUMS data, but
+don't prohibit sharing data extract definitions.
 
-To write the definition of your CPS extract number 33 to a JSON-formatted file 
-that can be shared with other users, you could use:
+ipumsr facilitates this type of sharing with `save_extract_as_json()`
+and `define_extract_from_json()`, which read and write `ipums_extract`
+objects to and from a standardized JSON-formatted file.
 
-```{r}
-cps_extract_33 <- get_extract_info("cps:33")
-save_extract_as_json(cps_extract_33, file = "cps_extract_33.json")
+```{r, eval=FALSE}
+cps_extract_10 <- get_extract_info("cps:10")
+save_extract_as_json(cps_extract_10, file = "cps_extract_10.json")
 ```
 
-Then, you or another user could use that JSON file to create a duplicate
-`ipums_extract` object with the same definition, and submit it, using:
+At this point, you can send `cps_extract_10.json` to another user to
+allow them to create a duplicate `ipums_extract` object, which they can
+load and submit to the API themselves.
 
-```{r}
-clone_of_cps_extract_33 <- define_extract_from_json("cps_extract_33.json")
-submitted_cps_extract <- submit_extract(clone_of_cps_extract_33)
+```{r, eval=FALSE}
+clone_of_cps_extract_10 <- define_extract_from_json("cps_extract_10.json")
+submitted_cps_extract <- submit_extract(clone_of_cps_extract_10)
 ```
 
-Note that the code in the previous chunk assumes that the file is saved in the
-current working directory. If it's saved somewhere else, replace 
-`"cps_extract_33.json"` with the full path to the file.
+(Note that the code in the previous chunk assumes that the file is saved
+in the current working directory. If it's saved somewhere else, replace
+`"cps_extract_10.json"` with the full path to the file.)
 
+## Revise a previous extract
 
-# Revising a previous extract
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("revise-extract")
+```
 
-ipumsr also includes convenience functions for revising a previous extract 
-definition, facilitating a "revise and resubmit" workflow. Here's how you would 
-pull down the definition of USA extract number 33 and add a sample and a 
-variable to it:
+It's not uncommon to find that you no longer need certain data or would
+like to update a familiar extract definition with different or more
+current data. ipumsr includes functions for revising a previous extract
+definition, facilitating a "revise and resubmit" workflow.
+
+Let's say you decided you wanted to include the 2020 ACS sample as well
+as the `RELATE` variable to the data from a previous IPUMS USA extract.
+You can retrieve that extract definition as described above and add new
+values with `add_to_extract()`. In general, any parameters that can be
+passed to a collection's `define_extract_` function can also be provided
+to `add_to_extract()`.
 
 ```{r}
 old_extract <- get_extract_info("usa:33")
+
+old_extract$samples
+
+old_extract$variables
+```
+
+```{r}
 new_extract <- add_to_extract(
   old_extract, 
   samples = "us2020a", 
-  variables = "RELATE"
+  variables = "RELATE",
+  data_format = "sas9"
 )
+
+new_extract$samples
+
+new_extract$variables
 ```
 
-The `add_to_extract()` function returns an `ipums_extract` object that has been 
-modified as requested and has been reset to an unsubmitted state, by stripping 
-the extract number, status, and download links from the original extract. The 
-revised extract can then be submitted with:
+The new extract contains the contents of the original extract definition
+for USA 33 along with the new sample, variable, and format selections.
+For fields that take a single value, like `data_format`, the new value
+will automatically replace the existing one:
 
 ```{r}
-newly_submitted_extract <- submit_extract(new_extract)
+new_extract$data_format
 ```
 
-To remove values from an extract, use `remove_from_extract()`:
+Note that because the returned `ipums_extract` object represents a new
+extract definition, it will have been reset to an unsubmitted status and
+its extract number and download links will have been removed.
 
-```{r}
-newer_extract <- remove_from_extract(new_extract, samples = "us2020a")
+To submit this updated extract definition, just use `submit_extract()`
+again:
+
+```{r, eval=FALSE}
+updated_extract <- submit_extract(new_extract)
 ```
 
-
-
-# Getting info on multiple recent extracts {#recent}
-
-You can query the API for the details and status of recent extracts (the ten most 
-recent, by default) using the functions `get_recent_extracts_info_list()` and 
-`get_recent_extracts_info_tbl()`. The `_list` version of the function returns a 
-list of `ipums_extract` objects, whereas the `_tbl` version returns a tibble 
-(enhanced "data.frame") in which each row contains information on one extract. 
-
-The list representation is useful if you want to be able to operate on elements
-as `ipums_extract` objects. For instance, to retrieve your most
-second-most-recent extract and revise it for resubmission, you could use:
+On the other hand, if there are values that you no longer want to
+include in your extract request, use `remove_from_extract()`:
 
 ```{r}
-second_most_recent_extract <- get_recent_extracts_info_list("usa")[[2]]
+new_extract <- remove_from_extract(new_extract, samples = "us2020a")
+
+new_extract$samples
+```
+
+For NHGIS extracts, removing a dataset or time series table will remove
+all its associated subfields:
+
+```{r}
+nhgis_extract_definition <- define_extract_nhgis(
+  description = "Extract request with multiple TSTs",
+  time_series_tables = c("A00", "AV0"),
+  geog_levels = c("county", "state")
+)
+
+nhgis_extract_definition
+
+remove_from_extract(nhgis_extract_definition, time_series_tables = "A00")
+```
+
+In contrast, removing a subfield value will remove it from all datasets
+or time series tables in the extract:
+
+```{r}
+remove_from_extract(nhgis_extract_definition, geog_levels = "state")
+```
+
+To selectively modify subfields from particular datasets or time series
+tables, pass a list to the argument instead of a vector. This allows you
+to indicate which parent field should have the subfield modified. This
+is analogous to the syntax that can be used when defining an NHGIS
+extract request.
+
+```{r}
+nhgis_extract_definition %>%
+  add_to_extract(geog_levels = list(AV0 = "nation")) %>%
+  remove_from_extract(geog_levels = list(A00 = "state")) 
+```
+
+Note that it is possible to produce invalid extract definitions when
+revising an extract. If you want to *replace* values in a definition, it
+is usually best to use `add_to_extract()` before `remove_from_extract()`
+to limit the possibility of removing required extract fields.
+
+```{r, error=TRUE}
+# Throws error because all time series tables must have geog levels:
+nhgis_extract_definition %>%
+  remove_from_extract(geog_levels = c("county", "state")) %>%
+  add_to_extract(geog_levels = "nation")
+```
+
+```{r}
+# Add new values to extract definition first to avoid the error:
+nhgis_extract_definition %>%
+  add_to_extract(geog_levels = "nation") %>%
+  remove_from_extract(geog_levels = c("county", "state")) 
+```
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("revise-extract")
+```
+
+## Get info on past extracts {#recent}
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("recent-extracts")
+```
+
+If you know you made a specific extract definition in the past, but you
+can't remember the exact number, you can use `get_extract_info()` to
+peruse your recent extract requests. Just provide a collection to the
+`extract` argument instead of a collection with an extract number.
+
+By default, this returns your 10 most recent extract requests as a list
+of `ipums_extract` objects. You can adjust how many requests to retrieve
+with the `how_many` argument:
+
+```{r}
+nhgis_extracts <- get_extract_info("nhgis", how_many = 3)
+
+nhgis_extracts
+```
+
+Because this is a list of `ipums_extract` objects, you can operate on
+them with the familiar API functions. For instance, to revise your
+second-most-recent extract for resubmission:
+
+```{r, eval=FALSE}
 revised_extract <- add_to_extract(
-  second_most_recent_extract, 
-  samples = "us2010a"
+  nhgis_extracts[[2]], 
+  shapefiles = "us_nation_2010_tl2010"
 )
 ```
 
-Or to download all recent extracts that are ready to download, using 
-`purrr::keep()` and `purrr::map_chr()`:
+You could even download all recent extracts that have completed, using
+`purrr::keep()` and `purrr::map()`:
 
-```{r}
-ddi_paths <- get_recent_extracts_info_list("usa") %>% 
+```{r, eval=FALSE}
+ddi_paths <- nhgis_extracts %>% 
   keep(is_extract_ready) %>% 
-  map_chr(download_extract)
+  map(download_extract)
 ```
 
-The tibble representation is useful if you want to use functions for 
-manipulating data.frames to find recent extracts matching particular criteria.
+Set `table = TRUE` to get the same information in a tabular format:
 
 ```{r}
-recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+usa_extract_tbl <- get_extract_info("usa", how_many = 5, table = TRUE)
+
+head(usa_extract_tbl)
 ```
 
-For example, to find extracts with descriptions including the word "occupation", 
-you could use:
+This can be useful if you want to filter through your previous extracts
+to find one with particular details.
 
 ```{r}
-recent_usa_extracts_tbl %>%  
-  filter(grepl("occupation", description))
+# Look for a description containing specific term
+usa_extract_tbl %>%
+  filter(grepl("marital status", description))
 ```
 
-Filtering on properties such as "samples" or "variables" is a little more
-complex, because these are stored in list columns, but it is possible. For
-example, to find extracts including the variable "AGE", you could use
-`purrr::map_lgl()` like this:
+Filtering on properties such as "samples" or "variables" is a little
+more complex, because these are stored in list columns, but it is
+possible (and made easier with `purrr::map_lgl()`).
 
 ```{r}
-recent_usa_extracts_tbl %>% 
-  filter(map_lgl(variables, ~"AGE" %in% .x))
+# Find extracts including a certain variable and convert to extract object
+usa_extract_tbl %>% 
+  filter(map_lgl(variables, ~ "MARST" %in% .x))
 ```
 
-To convert between these two representations, ipumsr provides the functions 
-`extract_list_to_tbl()` and `extract_tbl_to_list()`, such that the following is 
-`TRUE`:
+To convert between these two representations, ipumsr provides the
+functions `extract_list_to_tbl()` and `extract_tbl_to_list()`, such that
+the following holds:
 
 ```{r}
 identical(
-  extract_list_to_tbl(get_recent_extracts_info_list("usa")),
-  get_recent_extracts_info_tbl("usa")
+  extract_list_to_tbl(get_extract_info("usa")),
+  get_extract_info("usa", table = TRUE)
 )
 ```
 
-
-# Putting it all together, with pipes
-
-The return values of the functions to interact with the API are configured in 
-such a way that you can define, submit, wait for, download, and read in your 
-extract all in one piped expression:
+This allows you to easily find old extract definitions and convert back
+to `ipums_extract` objects for resubmission.
 
 ```{r}
-data <- 
-  define_extract_usa(
-    "USA extract for API vignette",
-    c("us2018a","us2019a"),
-    c("AGE","SEX","RACE","STATEFIP")
-  ) %>% 
-    submit_extract() %>% 
-    wait_for_extract() %>% 
-    download_extract() %>% 
-    read_ipums_micro()
+usa_extract_tbl %>% 
+  filter(map_lgl(variables, ~ "MARST" %in% .x)) %>%
+  extract_tbl_to_list() %>%
+  pluck(1)
 ```
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("recent-extracts")
+```
+
+## Putting it all together
+
+Because each of the API functions in the standard workflow returns an
+`ipums_extract` object, we can easily pipe them together in one
+expression:
+
+```{r, eval=FALSE}
+data <- define_extract_usa(
+  "USA extract for API vignette",
+  c("us2018a","us2019a"),
+  c("AGE","SEX","RACE","STATEFIP")
+) %>% 
+  submit_extract() %>% 
+  download_extract(wait = TRUE) %>%
+  read_ipums_micro()
+```
+
+Not only does this pipeline allow you to obtain IPUMS data without ever
+leaving your R environment, but it also allows you to retain a
+reproducible record of your process. This makes it much easier to
+document your workflow, collaborate with other researchers, and update
+your analysis in the future.

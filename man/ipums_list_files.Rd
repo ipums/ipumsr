@@ -2,51 +2,59 @@
 % Please edit documentation in R/list_files.r
 \name{ipums_list_files}
 \alias{ipums_list_files}
-\alias{ipums_list_data}
-\alias{ipums_list_shape}
-\alias{ipums_list_raster}
-\title{List files available for analysis in an IPUMS extract}
+\title{List files contained within an IPUMS extract}
 \usage{
 ipums_list_files(
   file,
+  file_select = NULL,
   types = NULL,
-  data_layer = NULL,
-  shape_layer = NULL,
-  raster_layer = NULL
+  data_layer = deprecated(),
+  shape_layer = deprecated(),
+  raster_layer = deprecated()
 )
-
-ipums_list_data(file, data_layer = NULL)
-
-ipums_list_shape(file, shape_layer = NULL)
-
-ipums_list_raster(file, raster_layer = NULL)
 }
 \arguments{
-\item{file}{An IPUMS extract zip file or directory}
+\item{file}{Path to a .zip archive or directory containing the IPUMS extract
+to be examined.}
 
-\item{types}{One or more of "data", "shape", or "raster" indicating
-what type of files to look for.}
+\item{file_select}{If the path in \code{file} contains multiple files, a
+\link[=selection_language]{tidyselect selection} identifying the files to be
+included in the output. Only files that match the provided expression
+will be included.
 
-\item{data_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the data
-files to look for}
+While less useful, this can also be provided as a string specifying an
+exact file name or an integer to match files by index position.}
 
-\item{shape_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the
-shape files to look for}
+\item{types}{One or more of \code{"data"}, \code{"shape"}, or \code{"raster"} indicating
+the type of files to include in the output. \code{"data"} refers to
+tabular data sources, while \code{"shape"} refers to spatial data sources.
 
-\item{raster_layer}{dplyr \code{\link[dplyr]{select}}-style notation for the
-raster files to look for}
+The use of \code{"raster"} has been deprecated and will be removed in a
+future release.}
+
+\item{data_layer, shape_layer, raster_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Please use \code{file_select} instead.}
 }
 \value{
-A \code{tbl_df} data.frame containing the files available
+A \code{\link[tibble:tbl_df-class]{tibble}} containing the types and names of
+the available files.
 }
 \description{
-Find which files can be loaded from an IPUMS extract. On Windows,
-this is generally a zip file (which you can optionally unzip). On
-macOS, they are generally unzipped for you, so there will be a
-directory.
+Identify the files that can be read from an IPUMS extract, whether its
+files are stored in a .zip archive or a directory.
 }
 \examples{
-nhgis_file <- ipums_example("nhgis0008_csv.zip")
-ipums_list_files(nhgis_file) # Only one extract available
+nhgis_file <- ipums_example("nhgis0712_csv.zip")
 
+# 2 available files in this extract
+ipums_list_files(nhgis_file)
+
+# Look for files that match a particular pattern:
+ipums_list_files(nhgis_file, file_select = matches("ds136"))
+}
+\seealso{
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data
+from an IPUMS extract.
+
+\code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
 }

@@ -1,0 +1,73 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986389/nhgis1015_csv.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis1015_csv.zip"; filename*=UTF-8''nhgis1015_csv.zip
+      content-type: application/zip
+      date: Thu, 16 Mar 2023 20:14:22 GMT
+      etag: '"64137826-16293e"'
+      last-modified: Thu, 16 Mar 2023 20:12:22 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=qiiyW8rAJNKKiJD9n3ZHyZknPrYTmd73a3CgABZCAmBSMJKooE3VnMTiI57TQJov6Cl69%2FzkGuu6w1qCMCwt71iZfI2%2F6cFw%2FH8KtEPNcVQoHB4gm0lH6LV9P5Z%2B0pTl3m6MiN5VLjtMzf6G0wJBE%2BvORmyKihJwVnTlXl30yDSqjlGt6j%2BamtPby%2FSIraZMrrXz%2FAE1oLz9Tzvy%2FqUrJI6NN4qfP%2FSvNfVjEiKTcz5X5N5QQaua%2FDhqy3B%2B6IY%3D--lN6DHITRq1nTNtEQ--aBw%2F8WPNou6%2BwhOod7OWaA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '1452350'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/nhgis1015_csv.zip
+  recorded_at: 2023-03-16 20:14:22 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986389/nhgis1015_shape.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis1015_shape.zip"; filename*=UTF-8''nhgis1015_shape.zip
+      content-type: application/zip
+      date: Thu, 16 Mar 2023 20:14:22 GMT
+      etag: '"641377db-7ca81"'
+      last-modified: Thu, 16 Mar 2023 20:11:07 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=CZpLelKjSd46RBS0XzZRErTRcR%2FVAGm%2F0z7oJkpmc0xoEl8p7HKeMk5nXLcs0CaOPJfUYe9lio4IVEl6o42ZXezE2FQQ4MHs2gNYP2XESg52qlcGQhTxIUcJoczNGLzK96Cwxxmj1yVNZhXg%2BNsVtyz%2FDVrNB9%2Fc5eqSiiz7SXXpnZQpbv0Pe1KJuIgc1ySoebHK2NeArs836vFzswDsr%2BPZg3tvkedFs4k2sEKrWLd3PLwEhfN%2BIge%2BZsLBEoY%3D--5m1KOkQ9qfd6x12R--x%2FPNQySAw0%2BdEUEYXApU8g%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '510593'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/nhgis1015_shape.zip
+  recorded_at: 2023-03-16 20:14:22 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

@@ -1,0 +1,42 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/1017?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 16 Mar 2023 20:14:17 GMT
+      etag: W/"3ea6ebbf4812dd7603356c09a1f86333"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 1c203203-e825-406f-ad89-0a81d43d83da
+      x-runtime: '0.567648'
+      x-xss-protection: '0'
+      content-length: '209'
+    body:
+      encoding: ''
+      file: no
+      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1017,"status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986394/nhgis1017_shape.zip"}}'
+  recorded_at: 2023-03-16 20:14:17 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

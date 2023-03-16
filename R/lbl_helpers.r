@@ -3,37 +3,49 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Set labelled values to missing
+#' Convert labelled data values to NA
 #'
-#' Convert values to NA based on their label and value in a
-#' \code{\link[haven]{labelled}} vector. Ignores any value that does not have a
-#' label.
+#' Convert data values in a [`labelled`][haven::labelled()] vector
+#' to `NA` based on the value labels associated with that vector. Ignores
+#' values that do not have a label.
 #'
-#' @param x A \code{\link[haven]{labelled}} vector
-#' @param .predicate A function that takes .val and .lbl (the values and
-#'    labels) and returns TRUE or FALSE. It is passed to a function similar
-#'    to \code{\link[rlang]{as_function}}, so also accepts quosure-style lambda
-#'    functions (that use values .val and .lbl). See examples for more information.
-#' @return A haven::labelled vector
+#' @details
+#' Several `lbl_*()` functions include arguments that can be passed a function
+#' of `.val` and/or `.lbl`. These refer to the existing values and
+#' labels in the input vector, respectively.
+#'
+#' Use `.val` to refer to the *values* in the vector's value labels.
+#' Use `.lbl` to refer to the *label names* in the vector's value labels.
+#'
+#' Note that not all `lbl_*()` functions support both of these arguments.
+#'
+#' @param x A [`labelled`][haven::labelled()] vector
+#' @param .predicate A function taking `.val` and `.lbl` arguments that
+#'   returns `TRUE` for all values that should be converted to `NA`.
+#'
+#'   Can be provided as an anonymous function or formula. See Details section.
+#'
+#' @return A [`labelled`][haven::labelled()] vector
+#'
+#' @export
+#'
+#' @family lbl_helpers
+#'
 #' @examples
 #' x <- haven::labelled(
 #'   c(10, 10, 11, 20, 30, 99, 30, 10),
 #'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
 #' )
 #'
-#' lbl_na_if(x, ~.val >= 90)
-#' lbl_na_if(x, ~.lbl %in% c("Maybe"))
-#' lbl_na_if(x, ~.val >= 90 | .lbl %in% c("Maybe"))
-#'
-#' # You can also use the more explicit function notation
+#' # Convert labelled values greater than 90 to `NA`
 #' lbl_na_if(x, function(.val, .lbl) .val >= 90)
 #'
-#' # Or even the name of a function
-#' na_function <- function(.val, .lbl) .val >= 90
-#' lbl_na_if(x, "na_function")
+#' # Can use purrr-style notation
+#' lbl_na_if(x, ~ .lbl %in% c("Maybe"))
 #'
-#' @family lbl_helpers
-#' @export
+#' # Or refer to named function
+#' na_function <- function(.val, .lbl) .val >= 90
+#' lbl_na_if(x, na_function)
 lbl_na_if <- function(x, .predicate) {
   pred_f <- as_lbl_function(.predicate, caller_env())
 
@@ -41,7 +53,10 @@ lbl_na_if <- function(x, .predicate) {
   to_zap <- pred_f(.val = unname(labels), .lbl = names(labels))
 
   if (any(is.na(to_zap))) {
-    stop("Predicates cannot evaluate to missing in `lbl_na_if()`.", call. = FALSE)
+    rlang::abort(paste0(
+      "Predicate function cannot return missing values in ",
+      "`lbl_na_if()`."
+    ))
   }
 
   vals_to_zap <- unname(labels[to_zap])
@@ -54,112 +69,81 @@ lbl_na_if <- function(x, .predicate) {
   out
 }
 
-#' Collapse labelled values to labels that already exist
+#' Modify value labels for a labelled vector
 #'
-#' Converts values to a new value based on their label and value in a
-#' \code{\link[haven]{labelled}} vector. If the newly assigned value does
-#' not match an already existing labelled value, the smallest value's label
-#' is used. Ignores any value that does not have a label.
+#' @description
+#' Update the mapping between values and labels in a
+#' [`labelled`][haven::labelled()] vector. These functions allow you to
+#' simultaneously update data values and the existing value labels.
+#' Modifying data values directly does not result in updated value labels.
 #'
-#' @param x A \code{\link[haven]{labelled}} vector
-#' @param .fun A function that takes .val and .lbl (the values and
-#'    labels) and returns the values of the label you want to change it to.
-#'    It is passed to a function similar to \code{\link[rlang]{as_function}}, so
-#'    also accepts quosure-style lambda functions (that use values .val and .lbl).
-#'    See examples for more information.
-#' @return A haven::labelled vector
-#' @examples
-#' x <- haven::labelled(
-#'   c(10, 10, 11, 20, 30, 99, 30, 10),
-#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
-#' )
+#' Use `lbl_relabel()` to manually specify new value/label mappings. This
+#' allows for the addition of new labels.
 #'
-#' lbl_collapse(x, ~(.val %/% 10) * 10)
-#' # Notice that 90 get's NIU from 99 even though 90 didn't have a label in original
+#' Use `lbl_collapse()` to collapse detailed labels into more general
+#' categories. Values can be grouped together and associated with individual
+#' labels that already exist in the `labelled` vector.
 #'
-#' lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
-#' # But here 10 is assigned 11's label
+#' Unlabelled values will be converted to `NA`.
 #'
-#' # You can also use the more explicit function notation
-#' lbl_collapse(x, function(.val, .lbl) (.val %/% 10) * 10)
+#' @inherit lbl_na_if details
 #'
-#' # Or even the name of a function
-#' collapse_function <- function(.val, .lbl) (.val %/% 10) * 10
-#' lbl_collapse(x, "collapse_function")
+#' @param x A [`labelled`][haven::labelled()] vector
+#' @param ... Arbitrary number of two-sided formulas.
+#'
+#'   The left hand side should be a label placeholder created with [lbl()] or a
+#'   value that already exists in the data.
+#'
+#'   The right hand side should be a function taking `.val` and `.lbl`
+#'   arguments that evaluates to `TRUE` for all
+#'   cases that should receive the label specified on the left hand side.
+#'
+#'   Can be provided as an anonymous function or formula. See Details section.
+#' @param .fun A function taking `.val` and `.lbl` arguments that returns
+#'   the value associated with an existing label in the vector. Input values to
+#'   this function will be relabeled with the label of the function's output
+#'   value.
+#'
+#'   Can be provided as an anonymous function or formula. See Details section.
+#'
+#' @return A [`labelled`][haven::labelled()] vector
+#'
+#' @export
 #'
 #' @family lbl_helpers
-#' @export
-lbl_collapse <- function(x, .fun) {
-  pred_f <- as_lbl_function(.fun, caller_env())
-
-  old_attributes <- attributes(x)
-
-  label_info <- tibble::tibble(
-    old_val = unname(old_attributes$labels),
-    old_label = names(old_attributes$labels),
-    new_val = pred_f(.val = .data$old_val, .lbl = .data$old_label),
-    vals_equal = .data$old_val == .data$new_val
-  )
-  # Arrange so that if value existed in old values it is first, otherwise first old value
-  label_info <- dplyr::group_by(label_info, .data$new_val)
-  label_info <- dplyr::arrange(label_info, .data$new_val, dplyr::desc(.data$vals_equal), .data$old_val)
-  label_info <- dplyr::mutate(label_info, new_label = .data$old_label[1])
-  label_info <- dplyr::ungroup(label_info)
-
-  new_labels <- dplyr::select(label_info, dplyr::one_of(c("new_label", "new_val")))
-  new_labels <- dplyr::distinct(new_labels)
-  new_labels <- tibble::deframe(new_labels)
-  new_attributes <- old_attributes
-  new_attributes$labels <- new_labels
-
-  out <- label_info$new_val[match(x, label_info$old_val)]
-
-  attributes(out) <- new_attributes
-  out
-}
-
-#' Relabel labelled values
 #'
-#' Converts values to a new value (that may or may not exist) based on their
-#' label and value in a \code{\link[haven]{labelled}} vector. Ignores any value
-#' that does not have a label.
-#'
-#' @param x A \code{\link[haven]{labelled}} vector
-#' @param ... Two-sided formulas where the left hand side is a label placeholder
-#'   (created with the \code{\link{lbl}} function) or a value that already exists
-#'   in the data and the right hand side is a function that returns a logical
-#'   vector that indicates which labels should be relabeled. The right hand side
-#'   is passed to a function similar to \code{\link[rlang]{as_function}}, so
-#'   also accepts quosure-style lambda functions (that use values .val and .lbl).
-#'   See examples for more information.
-#' @return A haven::labelled vector
 #' @examples
 #' x <- haven::labelled(
-#'   c(10, 10, 11, 20, 30, 99, 30, 10),
-#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
+#'   c(10, 10, 11, 20, 21, 30, 99, 30, 10),
+#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
 #' )
 #'
+#' # Convert cases with value 11 to value 10 and associate with 10's label
+#' lbl_relabel(x, 10 ~ .val == 11)
+#'
+#' # To relabel using new value/label pairs, use `lbl()` to define a new pair
 #' lbl_relabel(
 #'   x,
 #'   lbl(10, "Yes/Yes-ish") ~ .val %in% c(10, 11),
 #'   lbl(90, "???") ~ .val == 99 | .lbl == "Maybe"
 #' )
 #'
-#' # If relabelling to labels that already exist, don't need to specify both label
-#' # and value:
-#' # If just bare, assumes it is a value:
-#' lbl_relabel(x, 10 ~ .val == 11)
-#' # Use single argument to lbl for the label
+#' # Use single argument in `lbl()` to update the label while leaving values
+#' # unchanged
 #' lbl_relabel(x, lbl("Yes") ~ .val == 11)
-#' # Or can used named arguments
-#' lbl_relabel(x, lbl(.val = 10) ~ .val == 11)
 #'
-#' @family lbl_helpers
-#' @export
+#' # Collapse labels to create new label groups
+#' lbl_collapse(x, ~ (.val %/% 10) * 10)
+#'
+#' # These are equivalent
+#' lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+#' lbl_relabel(x, 11 ~ .val == 10)
 lbl_relabel <- function(x, ...) {
   if (is.null(attr(x, "labels", exact = TRUE))) {
-    stop("Vector must be labelled. To add labels to an unlabelled vector use ",
-         "'lbl_define()'.")
+    rlang::abort(c(
+      "`x` must be labelled.",
+      "i" = "To add labels to an unlabelled vector, use `lbl_define()`."
+    ))
   }
   dots <- list(...)
 
@@ -190,15 +174,12 @@ lbl_relabel <- function(x, ...) {
   if (any(lbl_count > 1)) {
     dup_lbls <- new_lbls[new_lbls$val %in% names(lbl_count)[lbl_count > 1], ]
     dup_lbls <- dplyr::group_by(dup_lbls, .data$val)
-    dup_lbls <- dplyr::summarize(dup_lbls, all_lbls = paste0("'", lbl, "'", collapse = ", "))
+    dup_lbls <- dplyr::summarize(dup_lbls, all_lbls = paste0("\"", lbl, "\"", collapse = ", "))
 
-    stop(paste0(
-      "Some values have more than 1 label:\n",
-      custom_format_text(
-        paste(dup_lbls$val, "->", dup_lbls$all_lbls, collapse = "\n"),
-        indent = 2, exdent = 2
-      )
-    ), call. = FALSE)
+    rlang::abort(c(
+      "Values cannot have more than 1 label.",
+      paste("Value", dup_lbls$val, "maps to:", dup_lbls$all_lbls)
+    ))
   }
 
   new_lbls <- dplyr::arrange(new_lbls, .data$val)
@@ -210,37 +191,78 @@ lbl_relabel <- function(x, ...) {
   out
 }
 
+#' @rdname lbl_relabel
+#' @export
+lbl_collapse <- function(x, .fun) {
+  pred_f <- as_lbl_function(.fun, caller_env())
+
+  old_attributes <- attributes(x)
+
+  label_info <- tibble::tibble(
+    old_val = unname(old_attributes$labels),
+    old_label = names(old_attributes$labels),
+    new_val = pred_f(.val = .data$old_val, .lbl = .data$old_label),
+    vals_equal = .data$old_val == .data$new_val
+  )
+  # Arrange so that if value existed in old values it is first, otherwise first old value
+  label_info <- dplyr::group_by(label_info, .data$new_val)
+  label_info <- dplyr::arrange(label_info, .data$new_val, dplyr::desc(.data$vals_equal), .data$old_val)
+  label_info <- dplyr::mutate(label_info, new_label = .data$old_label[1])
+  label_info <- dplyr::ungroup(label_info)
+
+  new_labels <- dplyr::select(label_info, dplyr::one_of(c("new_label", "new_val")))
+  new_labels <- dplyr::distinct(new_labels)
+  new_labels <- tibble::deframe(new_labels)
+  new_attributes <- old_attributes
+  new_attributes$labels <- new_labels
+
+  out <- label_info$new_val[match(x, label_info$old_val)]
+
+  attributes(out) <- new_attributes
+  out
+}
 
 #' Define labels for an unlabelled vector
 #'
-#' Creates a \code{\link[haven]{labelled}} vector from an unlabelled atomic
-#' vector using \code{\link{lbl_relabel}} syntax, which allows grouping multiple
-#' values into a single labelled value. Values not assigned a label will remain
-#' unlabelled.
-#' @param x An unlabelled atomic vector
-#' @param ... Two-sided formulas where the left hand side is a label placeholder
-#'   (created with the \code{\link{lbl}} function) and the right hand side is a
-#'   function that returns a logical vector that indicates which existing values
-#'   should be assigned that labeled value. The right hand side is passed to a
-#'   function similar to \code{\link[rlang]{as_function}}, so also accepts
-#'   quosure-style lambda functions (that use values .val and .lbl). See
-#'   examples for more information.
-#' @return A haven::labelled vector
+#' Create a [`labelled`][haven::labelled] vector from an unlabelled
+#' vector using [lbl_relabel()] syntax, allowing for the grouping of multiple
+#' values into a single label. Values not assigned a label remain unlabelled.
+#'
+#' @inherit lbl_na_if details
+#'
+#' @param x An unlabelled vector
+#' @param ... Arbitrary number of two-sided formulas.
+#'
+#'   The left hand side should be a label placeholder created with [lbl()].
+#'
+#'   The right hand side should be a function taking `.val` that
+#'   evaluates to `TRUE` for all cases that should receive the label specified
+#'   on the left hand side.
+#'
+#'   Can be provided as an anonymous function or formula. See Details section.
+#'
+#' @return A [`labelled`][haven::labelled()] vector
+#'
+#' @family lbl_helpers
+#'
+#' @export
+#'
 #' @examples
 #' age <- c(10, 12, 16, 18, 20, 22, 25, 27)
 #'
-#' # Note that values not assigned a new labelled value remain unchanged
+#' # Group age values into two label groups.
+#' # Values not captured by the right hand side functions remain unlabelled
 #' lbl_define(
 #'   age,
 #'   lbl(1, "Pre-college age") ~ .val < 18,
 #'   lbl(2, "College age") ~ .val >= 18 & .val <= 22
 #' )
-#' @family lbl_helpers
-#' @export
 lbl_define <- function(x, ...) {
   if (!is.null(attr(x, "labels", exact = TRUE))) {
-    stop("Vector should not have labels. To relabel a labelled vector use",
-         "'lbl_relabel()'.")
+    rlang::abort(c(
+      "`x` should be unlabelled.",
+      "To relabel a labelled vector, use `lbl_relabel()`."
+    ))
   }
   unique_x <- sort(unique(x))
   tmp_lbls <- rep(NA_character_, length(unique_x))
@@ -251,35 +273,61 @@ lbl_define <- function(x, ...) {
   haven::labelled(x, labels = attr(x, "labels")[!label_is_na])
 }
 
-
 #' Add labels for unlabelled values
 #'
-#' Add labels for values that don't already have them.
+#' Add labels for values that don't already have them in a
+#' [`labelled`][haven::labelled()] vector.
 #'
-#' @param x A \code{\link[haven]{labelled}} vector
-#' @param ... Labels formed by \code{\link{lbl}} indicating the value and label to be added.
-#' @param vals Vector of values to be labelled. NULL, the default labels all values
-#'   that are in the data, but aren't already labelled.
-#' @param labeller A function that takes a single argument of the values and returns the
-#'   labels. Defaults to \code{as.character}. \code{\link[rlang]{as_function}}, so
-#'   also accepts quosure-style lambda functions. See examples for more details.
-#' @return A haven::labelled vector
+#' @param x A [`labelled`][haven::labelled()] vector
+#' @param ... Arbitrary number of label placeholders created with [lbl()]
+#'   indicating the value/label pairs to add.
+#' @param vals Vector of values to be labelled. If `NULL`, labels all unlabelled
+#'   values that exist in the data.
+#' @param labeller A function that takes values being added as an argument and
+#'   returns the labels to associate with those values. By default, uses the
+#'   values themselves after converting to character.
+#'
+#' @return A [`labelled`][haven::labelled()] vector
+#'
+#' @family lbl_helpers
+#'
+#' @export
+#'
 #' @examples
 #' x <- haven::labelled(
 #'   c(100, 200, 105, 990, 999, 230),
 #'   c(`Unknown` = 990, NIU = 999)
 #' )
 #'
-#' lbl_add(x, lbl(100, "$100"), lbl(105, "$105"), lbl(200, "$200"), lbl(230, "$230"))
+#' # Add new labels manually
+#' lbl_add(
+#'   x,
+#'   lbl(100, "$100"),
+#'   lbl(105, "$105"),
+#'   lbl(200, "$200"),
+#'   lbl(230, "$230")
+#' )
 #'
+#' # Add labels for all unlabelled values
 #' lbl_add_vals(x)
-#' lbl_add_vals(x, ~paste0("$", .))
-#' lbl_add_vals(x, vals = c(100, 200))
 #'
-#' @family lbl_helpers
-#' @export
+#' # Update label names while adding
+#' lbl_add_vals(x, labeller = ~ paste0("$", .))
+#'
+#' # Add labels for select values
+#' lbl_add_vals(x, vals = c(100, 200))
 lbl_add <- function(x, ...) {
   dots <- list(...)
+
+  new_vals <- purrr::map_dbl(dots, ~ .$.val)
+  new_vals <- new_vals[new_vals %in% attr(x, "labels")]
+
+  if (length(new_vals) > 0) {
+    rlang::abort(paste0(
+      "Some values have more than 1 label: ",
+      paste0(new_vals, collapse = ", ")
+    ))
+  }
 
   purrr::reduce(dots, .init = x, function(.x, .y) {
     old_labels <- attr(.x, "labels")
@@ -295,20 +343,13 @@ lbl_add <- function(x, ...) {
       value = c(unname(old_labels), lblval$.val)
     )
     new_labels <- dplyr::distinct(new_labels)
-
-    dup_labels <- table(new_labels$value)
-    dup_labels <- names(dup_labels)[dup_labels > 1]
-    if (length(dup_labels) > 0) {
-      dup_labels <- paste(dup_labels, collapse = ", ")
-      stop(paste0(
-        "Some values have more than 1 label:\n",
-        custom_format_text(dup_labels, indent = 2, exdent = 2)
-      ))
-    }
-
     new_labels <- dplyr::arrange(new_labels, .data$value)
     new_labels <- tibble::deframe(new_labels)
 
+    # TODO: if unlabelled vector is passed, this does not convert to labelled class.
+    # Instead try:
+    # haven::labelled(out, labels = new_labels)
+    # Also consider adding label arg to pass to haven::labelled()
     attr(out, "labels") <- new_labels
     out
   })
@@ -324,7 +365,7 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
     vals <- dplyr::setdiff(unique(x), old_labels$val)
   } else {
     if (any(vals %in% unname(old_labels))) {
-      stop(paste0("Some values have more than 1 label."))
+      rlang::abort("Some values have more than 1 label.")
     }
   }
   new_labels <- tibble::tibble(
@@ -337,27 +378,37 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
   new_labels <- purrr::set_names(new_labels$val, new_labels$lbl)
 
   out <- x
+  # TODO: if unlabelled vector is passed, this does not convert to labelled class.
+  # See above.
   attr(out, "labels") <- new_labels
   out
 }
 
-
 #' Clean unused labels
 #'
-#' Remove labels that do not appear in the data.
+#' Remove labels that do not appear in the data. When converting lablled
+#' values to a factor, this avoids the creation of additional factor levels.
 #'
-#' @param x A \code{\link[haven]{labelled}} vector
-#' @return A haven::labelled vector
+#' @param x A [`labelled`][haven::labelled()] vector
+#'
+#' @return A [`labelled`][haven::labelled()] vector
+#'
+#' @family lbl_helpers
+#'
+#' @export
+#'
 #' @examples
 #' x <- haven::labelled(
 #'   c(1, 2, 3, 1, 2, 3, 1, 2, 3),
-#'   c(Q1 = 1, Q2 = 2, Q3 = 3, Q4= 4)
+#'   c(Q1 = 1, Q2 = 2, Q3 = 3, Q4 = 4)
 #' )
 #'
 #' lbl_clean(x)
 #'
-#' @family lbl_helpers
-#' @export
+#' # Compare the factor levels of the normal and cleaned labels after coercion
+#' as_factor(lbl_clean(x))
+#'
+#' as_factor(x)
 lbl_clean <-function(x) {
   old_labels <- attr(x, "labels")
   unused_labels <- unname(old_labels) %in% dplyr::setdiff(unname(old_labels), unique(unname(x)))
@@ -402,29 +453,55 @@ abort_coercion_function <- function(x) {
   abort(paste0("Can't convert ", x_type, " to function"))
 }
 
-
 #' Make a label placeholder object
 #'
-#' Helper to make a placeholder for a label-value pair.
-#' @param ... Either one or two arguments, possibly named .val and .lbl. If a
-#'   single unnamed value, represents the label, if 2 unnamed values, the first
-#'   is the value and the second is the label.
-#' @return A \code{label_placeholder} object, useful in functions like \code{\link{lbl_add}}
+#' Define a new label/value pair. For use in functions like [lbl_relabel()]
+#' and [lbl_add()].
+#'
+#' @inherit lbl_na_if details
+#'
+#' @param ... Either one or two arguments specifying the label (`.lbl`) and
+#'   value (`.val`) to use in the new label pair.
+#'
+#'   If arguments are named, they must be named `.val` and/or `.lbl`.
+#'
+#'   If a single unnamed value is passed, it is used as the `.lbl` for the new
+#'   label. If two unnamed values are passed, they are used as the `.val` and
+#'   `.lbl`, respectively.
+#'
+#' @return A `label_placeholder` object
+#'
+#' @family lbl_helpers
+#'
+#' @export
+#'
 #' @examples
+#' # Label placeholder with no associated value
+#' lbl("New label")
+#'
+#' # Label placeholder with a value/label pair
+#' lbl(10, "New label")
+#'
+#' # Use placeholders as inputs to other label handlers
 #' x <- haven::labelled(
 #'   c(100, 200, 105, 990, 999, 230),
 #'   c(`Unknown` = 990, NIU = 999)
 #' )
 #'
-#' lbl_add(x, lbl(100, "$100"), lbl(105, "$105"), lbl(200, "$200"), lbl(230, "$230"))
+#' x <- lbl_add(
+#'   x,
+#'   lbl(100, "$100"),
+#'   lbl(105, "$105"),
+#'   lbl(200, "$200"),
+#'   lbl(230, "$230")
+#' )
 #'
-#' @family lbl_helpers
-#' @export
+#' lbl_relabel(x, lbl(9999, "Missing") ~ .val > 900)
 lbl <- function(...) {
   dots <- list(...)
 
   if (!is.null(names(dots)) && any(!names(dots) %in% c(".val", ".lbl", ""))) {
-    stop("Expected only arguments named `.lbl` and `.val`")
+    rlang::abort("Expected only arguments named `.lbl` and `.val`")
   }
 
   if (length(dots) == 1) {
@@ -444,7 +521,7 @@ lbl <- function(...) {
     }
     out <- list(.val = dots[[".val"]], .lbl = dots[[".lbl"]])
   } else {
-    stop("Expected either 1 or 2 arguments.")
+    rlang::abort("Expected either 1 or 2 arguments.")
   }
 
   class(out) <- "lbl_placeholder"
@@ -454,43 +531,55 @@ lbl <- function(...) {
 fill_in_lbl <- function(lblval, orig_labels) {
   if (!inherits(lblval, "lbl_placeholder")) lblval <- lbl(.val = lblval)
   if (is.null(lblval$.lbl) & is.null(lblval$.val)) {
-    stop("Could not fill in label because neither label nor value is specified")
+    rlang::abort(
+      "Could not fill in label because neither label nor value is specified"
+    )
   }
   if (is.null(lblval$.lbl)) {
     found_val <- unname(orig_labels) == lblval$.val
     if (!any(found_val)) {
-      stop(paste0("Could not find value ", lblval$.val,  " in existing labels."))
+      rlang::abort(
+        paste0("Could not find value ", lblval$.val,  " in existing labels.")
+      )
     }
     lblval$.lbl <- names(orig_labels)[found_val]
   }
   if (is.null(lblval$.val)) {
     found_lbl <- names(orig_labels) == lblval$.lbl
     if (!any(found_lbl)) {
-      stop(paste0("Could not find label ", lblval$.lbl,  " in existing labels."))
+      rlang::abort(
+        paste0("Could not find label \"", lblval$.lbl,  "\" in existing labels.")
+      )
     }
     lblval$.val <- unname(orig_labels)[found_lbl]
   }
   lblval
 }
 
-#' Remove all IPUMS attributes from a variable (or all variables in a data.frame)
+#' Remove label attributes from a data frame or labelled vector
 #'
-#' Helper to remove ipums attributes (including value labels from the
-#' labelled class, the variable label and the variable description).
-#' These attributes can sometimes get in the way of functions like
-#' the dplyr join functions so you may want to remove them.
-#' @param x A variable or a whole data.frame to remove attributes from
-#' @return A variable or data.frame
-#' @examples
-#' cps <- read_ipums_micro(ipums_example("cps_00006.xml"))
-#' annual_unemployment <- data.frame(YEAR = c(1962, 1963), unemp = c(5.5, 5.7))
+#' Remove all label attributes (value labels, variable labels, and variable
+#' descriptions) from a data frame or vector.
 #'
-#' # Avoids warning 'Column `YEAR` has different attributes on LHS and RHS of join'
-#' cps$YEAR <- zap_ipums_attributes(cps$YEAR)
-#' cps <- dplyr::left_join(cps, annual_unemployment, by = "YEAR")
+#' @param x A data frame or [labelled][haven::labelled()] vector
+#'   (for instance, from a data frame column)
+#'
+#' @return An object of the same type as `x` without `"val_labels"`,
+#' `"var_label`", and `"var_desc"` attributes.
 #'
 #' @family lbl_helpers
+#'
 #' @export
+#'
+#' @examples
+#' cps <- read_ipums_micro(ipums_example("cps_00006.xml"))
+#'
+#' attributes(cps$YEAR)
+#' attributes(zap_ipums_attributes(cps$YEAR))
+#'
+#' cps <- zap_ipums_attributes(cps)
+#' attributes(cps$YEAR)
+#' attributes(cps$INCTOT)
 zap_ipums_attributes <- function(x) {
   UseMethod("zap_ipums_attributes")
 }

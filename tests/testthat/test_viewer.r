@@ -1,4 +1,3 @@
-context("ipums_view is fault tolerant")
 
 test_that("normal ddi doesn't error", {
   skip_if_not_installed("htmltools")
@@ -13,7 +12,7 @@ test_that("empty ddi doesn't error", {
   skip_if_not_installed("htmltools")
   skip_if_not_installed("shiny")
   skip_if_not_installed("DT")
-  ddi <- make_ddi_from_scratch()
+  ddi <- new_ipums_ddi()
   ipums_view(ddi, launch = FALSE)
   expect_true(TRUE)
 })
@@ -42,7 +41,7 @@ test_that("nhgis codebook doesn't error", {
   skip_if_not_installed("htmltools")
   skip_if_not_installed("shiny")
   skip_if_not_installed("DT")
-  cb <- read_ipums_codebook(ipums_example("nhgis0008_csv.zip"))
+  cb <- read_nhgis_codebook(ipums_example("nhgis0972_csv.zip"))
   ipums_view(cb, launch = FALSE)
   expect_true(TRUE)
 })

@@ -2,35 +2,104 @@
 % Please edit documentation in R/ddi_read.r
 \name{read_ipums_ddi}
 \alias{read_ipums_ddi}
-\title{Read metadata about an IPUMS extract from a DDI (.xml) file}
+\title{Read metadata about an IPUMS extract from a DDI codebook (.xml) file}
 \usage{
-read_ipums_ddi(ddi_file, data_layer = NULL, lower_vars = FALSE)
+read_ipums_ddi(
+  ddi_file,
+  file_select = NULL,
+  lower_vars = FALSE,
+  data_layer = deprecated()
+)
 }
 \arguments{
-\item{ddi_file}{Filepath to DDI xml file}
+\item{ddi_file}{Path to a DDI .xml file downloaded from
+\href{https://www.ipums.org/}{IPUMS} or a .zip archive or directory containing
+the .xml file.
 
-\item{data_layer}{If ddi_file is an extract with multiple DDIs, dplyr
-\code{\link[dplyr]{select}}-style notation indicating which .xml data
-layer to load.}
+See \emph{Downloading IPUMS files} below.}
 
-\item{lower_vars}{Logical indicating whether to convert variable names
-to lowercase (default is FALSE, in line with IPUMS conventions)}
+\item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
+multiple .xml files, an expression identifying the file to read.
+Accepts a character string specifying the file name, a
+\link[=selection_language]{tidyselect selection}, or an index position.
+Ignored if \code{ddi_file} is the path to a single .xml file.}
+
+\item{lower_vars}{Logical indicating whether to convert variable names to
+lowercase. Defaults to \code{FALSE} for consistency with IPUMS conventions.}
+
+\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
+instead.}
 }
 \value{
-An \code{ipums_ddi} object with metadata information.
+An \link{ipums_ddi} object with metadata information.
 }
 \description{
-Reads the metadata about an IPUMS extract from a DDI file into R.
-Includes information about variable and value labels, terms of
-usage for the data and positions for the fixed-width file.
+Reads the metadata about an IPUMS extract from a
+\href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} into an
+\link{ipums_ddi} object.
+
+These metadata contains parsing instructions for the associated fixed-width
+data file, contextual labels for variables and values in the data, and
+general extract information.
+
+See \emph{Downloading IPUMS files} below for information about downloading
+IPUMS DDI codebook files.
 }
+\section{Downloading IPUMS files}{
+The DDI codebook (.xml) file provided with IPUMS microdata extracts can be
+downloaded through the IPUMS extract interface or (for some collections)
+within R using the IPUMS API.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the DDI codebook by right clicking on the \strong{DDI} link in the
+\strong{Codebook} column of the extract interface and selecting \strong{Save as...}
+(on Safari, you may have to select \strong{Download Linked File As...}).
+Be sure that the codebook is downloaded in .xml format.
+}
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
+}
+}
+
 \examples{
-# Example extract DDI
+# Example codebook file
 ddi_file <- ipums_example("cps_00006.xml")
+
+# Load data into an `ipums_ddi` obj
 ddi <- read_ipums_ddi(ddi_file)
+
+# Use the object to load its associated data
+cps <- read_ipums_micro(ddi)
+
+head(cps)
+
+# Or get metadata information directly
+ipums_var_info(ddi)
+
+ipums_file_info(ddi)[1:2]
+
+# If variable metadata have been lost from a data source, reattach from
+# its corresponding `ipums_ddi` object:
+cps <- zap_ipums_attributes(cps)
+
+ipums_var_label(cps$STATEFIP)
+
+cps <- set_ipums_var_attributes(cps, ddi$var_info)
+
+ipums_var_label(cps$STATEFIP)
 }
 \seealso{
-Other ipums_metadata: 
-\code{\link{read_ipums_codebook}()}
+\code{\link[=read_ipums_micro]{read_ipums_micro()}}, \code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} and
+\code{\link[=read_ipums_micro_yield]{read_ipums_micro_yield()}} to read data from IPUMS microdata extracts.
+
+\code{\link[=ipums_var_info]{ipums_var_info()}} and \code{\link[=ipums_file_info]{ipums_file_info()}} to view metadata about an
+\link{ipums_ddi} object.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_metadata}

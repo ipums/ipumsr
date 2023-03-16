@@ -9,37 +9,29 @@ footer:
     left: Developed by [IPUMS](https://www.ipums.org) at the University of Minnesota
     right: built_with
 development:
-  mode: release
+  mode: auto
 navbar:
   title: "ipumsr"
   type: inverse
   left:
     - icon: "fa-home"
       href: index.html
-    - text: "Intro"
+    - text: "Introduction"
       href: "articles/ipums.html"
     - text: "Reference"
       href: "reference/index.html"
     - text: "Articles"
       menu:
-      - text: "Introduction"
-        href: "articles/ipums.html"
+      - text: "Read IPUMS data"
+        href: "articles/ipums-read.html"
       - text: "Value labels"
         href: "articles/value-labels.html"
-      - text: "Geographic data in ipumsr"
-        href: "articles/ipums-geography.html"
       - text: "Big IPUMS data"
         href: "articles/ipums-bigdata.html"
-      - text: "IPUMS data extract API"
+      - text: "Interact with the IPUMS API"
         href: "articles/ipums-api.html"
       - text: "------------------"
-      - text: "CPS exercise"
-        href: "articles/ipums-cps.html"
-      - text: "NHGIS exercise"
-        href: "articles/ipums-nhgis.html"
-      - text: "IPUMS Terra exercise"
-        href: "articles/ipums-terra.html"
-      - text: "More project exercises"
+      - text: "Project-specific exercises"
         href: "https://ipums.org/exercises.shtml"
     - text: "Changelog"
       href: "news/index.html"
@@ -55,23 +47,45 @@ home:
   - text: Ask a question
     href: http://forum.ipums.org
 reference:
-  - title: "Read IPUMS data"
+  - title: "Read IPUMS microdata"
     contents:
       - read_ipums_micro
       - read_ipums_micro_list
-      - starts_with("read_nhgis")
-      - starts_with("read_terra")
-      - read_ipums_sf
-      - read_ipums_sp
       - read_ipums_ddi
-      - read_ipums_codebook
       - read_ipums_micro_chunked
       - read_ipums_micro_list_chunked
       - read_ipums_micro_yield
       - read_ipums_micro_list_yield
-      - IpumsLongYield
-      - IpumsListYield
-  - title: "Explore IPUMS metadata"
+      - read_ipums_sf
+      - ipums_list_files
+  - title: "Read IPUMS aggregate data"
+  - contents:
+      - read_nhgis
+      - read_nhgis_codebook
+      - read_ipums_sf
+      - ipums_list_files
+  - title: "Interact with the IPUMS API"
+    contents:
+      - set_ipums_api_key
+      - set_ipums_default_collection
+      - define_extract_usa
+      - define_extract_cps
+      - define_extract_nhgis
+      - submit_extract
+      - get_extract_info
+      - download_extract
+      - wait_for_extract
+      - is_extract_ready
+      - add_to_extract
+      - remove_from_extract
+      - combine_extracts
+      - save_extract_as_json
+      - define_extract_from_json
+      - get_nhgis_metadata
+      - ipums_extract
+      - ipums_data_collections
+      - extract_tbl_to_list
+  - title: "Explore IPUMS variable metadata"
     contents:
       - ipums_view
       - ipums_var_info
@@ -81,39 +95,18 @@ reference:
       - ipums_website
       - ipums_conditions
       - ipums_file_info
-      - starts_with("ipums_list")
   - title: "Work with value labels"
     desc: "Translate IPUMS value labels to standard R data structures"
     contents:
       - lbl_na_if
       - lbl_relabel
-      - lbl_define
       - lbl_collapse
+      - lbl_define
       - zap_ipums_attributes
       - lbl_clean
       - lbl_add
       - lbl_add_vals
       - lbl
-  - title: "Interact with the IPUMS API"
-    contents:
-      - set_ipums_api_key
-      - define_extract_usa
-      - define_extract_cps
-      - ipums_extract-class
-      - submit_extract
-      - wait_for_extract
-      - is_extract_ready
-      - download_extract
-      - get_extract_info
-      - get_last_extract_info
-      - get_recent_extracts_info
-      - add_to_extract
-      - remove_from_extract
-      - save_extract_as_json
-      - define_extract_from_json
-      - ipums_data_collections
-      - extract_tbl_to_list
-      - extract_list_to_tbl
   - title: "Other helpers"
     desc: "Miscellaneous other helper functions for working with IPUMS data"
     contents:
@@ -123,5 +116,4 @@ reference:
       - starts_with("ipums_shape")
       - join_failures
       - set_ipums_var_attributes
-      - dplyr_select_style
-
+      - selection_language

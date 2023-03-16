@@ -1,282 +1,220 @@
 ---
-title: "Introduction to `ipumsr` - IPUMS Data in R"
-author: "Minnesota Population Center"
-date: "`r Sys.Date()`"
+title: "IPUMS Data in R"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ipums}
+  %\VignetteIndexEntry{IPUMS Data in R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(ipumsr)
 ```
 
-The `ipumsr` package allows you to read data from your IPUMS extract into R along with 
-the associated metadata like variable labels, value labels and more. IPUMS 
-is a great source of international census and survey data.
+## Obtaining IPUMS Data
 
-> IPUMS provides census and survey data from around the world integrated across 
-> time and space. IPUMS integration and documentation makes it easy to study change, 
-> conduct comparative research, merge information across data types, and analyze 
-> individuals within family and community context. Data and services are available free 
-> of charge. 
+IPUMS data are free, but do require registration. New users can register
+with a particular [IPUMS project](https://www.ipums.org/overview) by
+clicking the **Register** link at the top right of the project website.
 
-Learn more here: <https://www.ipums.org/mission-purpose>
+IPUMS data are obtained by creating and submitting an *extract request*.
+This specifies the data to be included in the resulting *extract* (or
+*data extract*). A submitted extract request will be processed by the
+IPUMS servers. When complete, the extract containing the requested data
+can be downloaded.
 
-## Additional Vignettes
-This vignette gives the basic outline of the `ipumsr` package. Additional
-vignettes provide guidance on working with IPUMS value labels, IPUMS geographic data,
-and data from three specific IPUMS projects -- CPS, NHGIS, and Terra. 
+Extracts typically contain both data and metadata files. Data files
+typically come as .dat (for fixed-width files) or .csv (for
+comma-delimited files). Metadata files contain information about the
+data file and its contents, including variable descriptions and parsing
+instructions for fixed-width data files. Microdata projects provide
+metadata in DDI (.xml) files. Aggregate data projects provide metadata
+in either .txt or .csv formats.
 
-To view any of these additional vignettes, run one the following commands after 
-installing the `ipumsr` package:
-```{r, eval = FALSE}
-vignette("value-labels", package = "ipumsr")
-vignette("ipums-geography", package = "ipumsr")
-vignette("ipums-cps", package = "ipumsr")
-vignette("ipums-nhgis", package = "ipumsr")
-vignette("ipums-terra", package = "ipumsr")
+Registered users can download IPUMS data from a particular project
+through the interactive extract system found on that project's website.
+For some projects, data can also be downloaded within R by interacting
+with the IPUMS API.
+
+### Downloading from the IPUMS Website
+
+To create a new extract request, navigate to the extract interface for
+the IPUMS project of interest by clicking **Select Data** in the heading
+of the project website. This leads to that project's extract interface,
+which allows you to specify the data you'd like to download. The data
+selection parameters will differ across projects; see each project's
+documentation for more details on the available options. If you've never
+created an extract for the project you're interested in, start by
+watching the project-specific video on creating extracts hosted on the
+[IPUMS Tutorials page](https://www.ipums.org/support/tutorials).
+
+#### For microdata projects
+
+Once your extract is ready, click the green **Download** button to
+download the data file. Then, right-click the **DDI** link in the
+codebook column, and select **Save as...** (see below).
+
+Note that some browsers may display different text, but there should be
+an option to download the DDI file as .xml. For instance, on Safari,
+select **Download Linked File As...**. The most important thing is that
+you download the file in .xml format, *not* .html format.
+
+![](microdata_annotated_screenshot.png){width="1000"}
+
+#### For aggregate data projects
+
+Simply download an extract's data by clicking the green **Tables**
+button (for tabular data) and/or **GIS Files** button (for spatial
+boundary data) in the **Download Data** column.
+
+### Downloading via the IPUMS API
+
+Extract requests can also be created and submitted from within R by
+interacting with the IPUMS API. The IPUMS API currently supports the
+following collections:
+
+-   IPUMS USA
+
+-   IPUMS CPS
+
+-   IPUMS NHGIS
+
+The workflow for requesting and downloading data via API is
+straightforward: first, define the parameters of your extract, then
+submit the extract. When it's completed, you can download the files
+directly to your local machine without ever having to leave R:
+
+```{r, eval=FALSE}
+extract_request <- define_extract_nhgis(
+  description = "Using the IPUMS API",
+  datasets = "1990_STF1",
+  data_tables = c("NP1", "NP2", "NP3"),
+  geog_levels = "state"
+)
+
+submitted_extract <- submit_extract(extract_request)
+
+data_files <- download_extract(submitted_extract, wait = TRUE)
 ```
 
-## Getting Data from the IPUMS website
-Registered users can download IPUMS data from our website at <https://www.ipums.org>. 
-The website provides an interactive extract system that allows you to select
-only the samples and variables that are relevant to your research question.
+You can also access previous extract requests, even if they weren't made
+with the API:
 
-**For microdata projects (all supported projects except NHGIS and IPUMS Terra)**, once you 
-have created your extract, you should choose to download your data in either a
-fixed-width text (.dat file extension) or comma delimited (.csv file extension) 
-format. 
+```{r, eval=FALSE}
+past_extracts <- get_extract_info("nhgis")
+```
 
-Once your extract is complete, download the data file and the
-DDI. Downloading the DDI is a little bit different depending on your browser.
-On most browsers you should right-click the file and select "Save As...".
-If this saves a file with a .xml file extension, then you should be ready. However, Safari users
-must select "Download Linked File" instead of "Download Linked File **As**". On
-Safari, selecting the wrong version of these two will download a file with a .html file
-extension instead of a .xml extension.
+See the associated [vignette](ipums-api.html) for more details about how
+to use ipumsr to interact with the IPUMS API.
 
-![Annotated screenshot for downloading microdata (may look different on your computer)](microdata_annotated_screenshot.png){ width=700px }
+## Reading Data
 
-**For NHGIS**, download the table data in a comma delimited format, and, if you want 
-the associated mapping data, the GIS data. NHGIS provides the option to download 
-comma-delimited files with an extra header row; it does not matter which option you select.
+Once your extract is downloaded, you can load your data into R with the
+family of `read_*()` functions in ipumsr. These functions expand on
+those provided in [readr](https://readr.tidyverse.org/index.html) in two
+ways:
 
-**For IPUMS Terra**, download the .zip extract "bundles". If you want the associated 
-mapping data, select the "include boundary files" option. You do not need to unzip
-the data.
+-   ipumsr anticipates standard IPUMS file structures, limiting the need
+    for users to manually decompress and organize their downloaded files
+    before reading.
 
-## Import Functions
-Once your extract is downloaded, the `ipumsr` package functions `read_*()`
-help you load the data into R. 
+-   ipumsr uses an extract's metadata files to automatically attach
+    contextual information to the data. This allows users to easily
+    identify variable names, variable descriptions, and labeled data
+    values (from [haven](https://haven.tidyverse.org/)), which are
+    common in IPUMS files.
 
-- `read_ipums_micro()` / `read_ipums_micro_list()`: Reads data from microdata projects (USA, CPS, International, DHS, Time Use, Health Surveys and Higher Ed)
-- `read_nhgis()` / `read_nhgis_sf()` / `read_nhgis_sp()`: Reads data from the NHGIS project. `read_nhgis` loads only tabular data, whereas `read_nhgis_sf()` and `read_nhgis_sp()` load tabular data and shapefiles.
-- `read_terra_micro()`, `read_terra_micro_sf()`, `read_terra_micro_sp()`, `read_terra_area()` and `read_terra_raster()` load
-data form the IPUMS Terra project.
-- `read_ipums_sf()` and `read_ipums_sp()` load boundary files.
-- `read_ipums_ddi()`: Reads DDI files with metadata that are included with some extracts (mainly microdata)
-- `read_ipums_codebook()`: Reads the text codebook included with some extracts (mainly NHGIS and some TerraPop extracts)
-
-## Metadata Functions
-Once the data is in R, you can view information about the extract using the metadata functions.
-
-- `ipums_view()`: Makes a webpage that displays in the RStudio Viewer which provides information about the extract as a whole (like your extract notes or the citation information) and the specific variables included (like the variable label, description and value labels).
-- `ipums_file_info()`: Returns the file-level metadata contained in `ipums_view()` as an R data structure.
-- `ipums_var_info()`: Returns the variable-level metadata contained in `ipums_view()` as an R data structure.
-
-## Grab Bag
-### Survey Weights
-The data from most IPUMS projects contain some form of weighting variable that should be used to 
-calculate estimates that are representative of the whole population. Many projects also provide 
-specifications to help estimate variance given the complex design of the survey, such as replicate
-weights or design variables like STRATUM and PSU. The 
-[survey package](https://cran.r-project.org/package=survey) provides functions that allow you to 
-estimate variance taking this into account, and the [srvyr package](https://cran.r-project.org/package=srvyr)
-implements dplyr-like syntax for survey analysis, using the survey package's functions. 
-
-For more information about what these variables mean and how to use them, see the 
-website for the project you are interested in.
-
-### Non-Extract Data
-Some projects have data that is not contained within the extract system, such that no DDI is provided
-for this data. In this case, either use the comma delimited file (.csv file extension) if available, or use the `haven` package to read one
-of the files intended for another statistical software (like Stata, SAS or SPSS). 
-
-### Value Labels
-The way that IPUMS treats value labels does not align with factors (the main way that R is able
-to store values associated with labels). R's `factor` variables can only store
-values as an integer sequence (1, 2, 3, ...), but IPUMS conventions are to store 
-missing and not-in-universe codes as large numbers, to distinguish them from the normal values.
-
-Therefore, the `ipumsr` package uses the `labelled` class from the `haven` package to store
-labelled values. See the "value-labels" vignette for more information 
-(`vignette('value-labels')`).
-
-If you want to use IPUMS value labels attached to a variable, it is generally best to convert from
-the `labelled` class to `factor` early on in your data analysis workflow. This is
-because many data manipulation functions will drop the labels stored in a variable with class `labelled`. The
-function `as_factor()` is the main function to create factors from labels, but 
-often you will need to do more manipulation before that.
+For microdata files, use the `read_ipums_micro_*()` family:
 
 ```{r}
-library(ipumsr)
-library(dplyr, warn.conflicts = FALSE)
+cps_file <- ipums_example("cps_00006.xml")
+cps_data <- read_ipums_micro(cps_file)
 
-# Note that you can pass in the loaded DDI into the `read_ipums_micro()`
-cps_ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
-cps_data <- read_ipums_micro(cps_ddi, verbose = FALSE)
+head(cps_data)
+```
 
-# Show which variables have labels
-cps_data %>%
-  select_if(is.labelled)
+For NHGIS files, use `read_nhgis()`:
 
-# Notice how the tibble print function shows the dbl+lbl class on top
+```{r}
+nhgis_file <- ipums_example("nhgis0972_csv.zip")
+nhgis_data <- read_nhgis(nhgis_file, show_col_types = FALSE)
 
-# Investigate labels
+head(nhgis_data)
+```
+
+ipumsr also supports the reading of IPUMS spatial boundary files into
+the `sf` format provided by the [sf](https://r-spatial.github.io/sf/)
+package:
+
+```{r, eval = requireNamespace("sf")}
+shp_file <- ipums_example("nhgis0972_shape_small.zip")
+nhgis_shp <- read_ipums_sf(shp_file)
+
+head(nhgis_shp)
+```
+
+ipumsr is primarily designed to read data produced by the IPUMS extract
+system. However, IPUMS does distribute other files, often available via
+direct download. In many cases, these can be loaded with ipumsr.
+Otherwise, these files can likely be handled by existing data reading
+packages like [readr](https://readr.tidyverse.org/) (for delimited
+files) or [haven](https://haven.tidyverse.org/) (for Stata, SPSS, or SAS
+files).
+
+See the [vignette](ipums-read.html) focused on reading IPUMS data for
+more information.
+
+## Exploring Metadata
+
+Load metadata information with `read_ipums_ddi()` (for microdata
+projects) and `read_nhgis_codebook()` (for NHGIS). These store file and
+variable-level metadata for a given data source, which can be used to
+interpret the data contents.
+
+```{r}
+cps_meta <- read_ipums_ddi(cps_file)
+nhgis_meta <- read_nhgis_codebook(nhgis_file)
+```
+
+Summarize the variable metadata for a dataset using `ipums_var_info()`:
+
+```{r}
+ipums_var_info(cps_meta)
+```
+
+You can also get contextual details for specific variables:
+
+```{r}
+ipums_var_desc(cps_data$INCTOT)
+
 ipums_val_labels(cps_data$STATEFIP)
-
-# Convert the labels to factors (and drop the unused levels)
-cps_data <- cps_data %>%
-  mutate(STATE_factor = as_factor(lbl_clean(STATEFIP)))
-
-table(cps_data$STATE_factor, useNA = "always")
-```
-```{r, error = TRUE}
-# Manipulating the labelled value before as_factor 
-# often leads to losing the information...
-# Say we want to set Iowa (STATEFIP == 19) to missing
-cps_data <- cps_data %>%
-  mutate(STATE_factor2 = as_factor(ifelse(STATEFIP == 19, NA, STATEFIP)))
-```
-```{r}
-# ipumsr provides helpers for these kinds of tasks, like lbl_na_if().
-# See the value-labels vignette for more information
-cps_data <- cps_data %>%
-  mutate(STATE_factor3 = as_factor(lbl_na_if(STATEFIP, ~.val == 19)))
-
-# The as_factor function also has a "levels" argument that can 
-# put both the labels and values into the factor
-cps_data <- cps_data %>%
-  mutate(STATE_factor4 = droplevels(as_factor(STATEFIP, levels = "both")))
-
-table(cps_data$STATE_factor4, useNA = "always")
-
 ```
 
-### Other IPUMS attributes
-As with value labels, the other attributes that `ipumsr` stores about the data are often lost
-during an analysis. One way to deal with this is to load the DDI or codebook in addition
-to the actual data using the functions `read_ipums_ddi()` and `read_ipums_codebook()`. This
-way, when you wish to refer to variable labels or other metadata, you can use the 
-DDI object, which does not get modified during your analysis.
+ipumsr also provides a family of `lbl_*()` functions to assist in
+accessing and manipulating the value-level metadata included in IPUMS
+data. This allows for value labels to be incorporated into the data
+processing pipeline. For instance:
 
 ```{r}
-library(ipumsr)
-library(dplyr, warn.conflicts = FALSE)
+# Remove labels for values that do not appear in the data
+cps_data$STATEFIP <- lbl_clean(cps_data$STATEFIP)
 
-# Note that you can pass in the loaded DDI into the `read_ipums_micro()`
-cps_ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
-cps_data <- read_ipums_micro(cps_ddi, verbose = FALSE)
-
-# Currently variable description is available for year
-ipums_var_desc(cps_data$YEAR)
-
-# But after using ifelse it is gone
-cps_data <- cps_data %>%
-  mutate(YEAR = ifelse(YEAR == 1962, 62, NA))
-ipums_var_desc(cps_data$YEAR)
-
-# So you can use the DDI
-ipums_var_desc(cps_ddi, "YEAR")
-
-# The DDI also has file level information that is not available from just
-# the data.
-ipums_file_info(cps_ddi, "extract_notes") %>% cat()
+ipums_val_labels(cps_data$STATEFIP)
 ```
 
-### "dplyr select-style" Syntax
-Several functions within the `ipumsr` package allow for "dplyr select-style" syntax.
-This means that they accept either a character vector of values (e.g. `c("YEAR", "AGE")`), 
-bare vectors of values (e.g. `c(YEAR, AGE)`) and the helper functions allowed in 
-`dplyr::select()` (e.g. `one_of(c("YEAR", "AGE"))`).
-
 ```{r}
-library(ipumsr)
-library(dplyr, warn.conflicts = FALSE)
-
-# The vars argument for `read_ipums_micro` uses this syntax
-# So these are all equivalent
-cf <- ipums_example("cps_00006.xml")
-read_ipums_micro(cf, vars = c("YEAR", "INCTOT"), verbose = FALSE) %>%
-  names()
-
-read_ipums_micro(cf, vars = c(YEAR, INCTOT), verbose = FALSE) %>%
-  names()
-
-read_ipums_micro(cf, vars = c(one_of("YEAR"), starts_with("INC")), verbose = FALSE) %>%
-  names()
-
-# `data_layer` and `shape_layer` arguments to `read_nhgis()` and terra functions
-# also use it.
-# (Sometimes extracts have multiple files, though all examples only have one)
-nf <- ipums_example("nhgis0008_csv.zip")
-ipums_list_files(nf)
-
-ipums_list_files(nf, data_layer = "nhgis0008_csv/nhgis0008_ds135_1990_pmsa.csv")
-
-ipums_list_files(nf, data_layer = contains("ds135"))
-```
-
-### Hierarchical data structures
-For certain IPUMS projects, the data is hierarchical, multiple people are 
-included in a single household, or multiple activities are performed by
-a single person. The `ipumsr` package provides two data structures for
-storing such data (for users who did not select the "rectangularize" option
-on the website). The data can be loaded as a `"list"` or `"long"`. 
-
-**List** data loads each record type into a separate data.frame. The names 
-of the recordtype data.frames are the value of the RECTYPE variable (e.g. "H" 
-and "P"). Use the function `read_ipums_micro_list()` to load the data
-this way.
-
-**Long** data has one row per unit, regardless of what type of record the unit is.
-Therefore, datasets loaded this way often contain variables with a large 
-number of missings, for the variables that only apply to certain record types. 
-Use the function `read_ipums_micro()` to load the data this way.
-```{r}
-library(ipumsr)
-library(dplyr, warn.conflicts = FALSE)
-
-# List data
-cps <- read_ipums_micro_list(
-  ipums_example("cps_00010.xml"),
-  verbose = FALSE
+# Combine North and South Dakota into a single value/label pair
+cps_data$STATEFIP <- lbl_relabel(
+  cps_data$STATEFIP, 
+  lbl("38_46", "Dakotas") ~ grepl("Dakota", .lbl)
 )
 
-cps$PERSON
-
-cps$HOUSEHOLD
-
-# Long data
-cps <- read_ipums_micro(
-  ipums_example("cps_00010.xml"),
-  verbose = FALSE
-)
-
-cps
+ipums_val_labels(cps_data$STATEFIP)
 ```
 
-### Geospatial Packages: `sf` vs `sp`
-The `ipumsr` package allows for loading geospatial data in two formats (sf for
-Simple Features and sp for Spatial). The `sf` package is relatively new, and so 
-does not have as widespread support as the `sp` package. However, (in my opinion)
-it does allow for easier analysis, and so may be a better place to start if you
-have not used GIS data in R before.
-
-For more details about how to load geographic data using ipumsr, see the vignette
-"ipums-geography" (`vignette("ipums-geography", package = "ipumsr")`)
+See the [value labels](value-labels.html) vignette for more details.

@@ -3,7 +3,7 @@
 \name{read_ipums_micro_chunked}
 \alias{read_ipums_micro_chunked}
 \alias{read_ipums_micro_list_chunked}
-\title{Read data from an IPUMS extract (in chunks)}
+\title{Read data from an IPUMS extract by chunk}
 \usage{
 read_ipums_micro_chunked(
   ddi,
@@ -28,120 +28,237 @@ read_ipums_micro_list_chunked(
 )
 }
 \arguments{
-\item{ddi}{Either a filepath to a DDI xml file downloaded from
-the website, or a \code{ipums_ddi} object parsed by \code{\link{read_ipums_ddi}}}
+\item{ddi}{Either a path to a DDI .xml file downloaded from
+\href{https://www.ipums.org/}{IPUMS}, or an
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
 
-\item{callback}{An \code{\link{ipums_callback}} object, or a function
-that will be converted to an IpumsSideEffectCallback object.}
+See \emph{Downloading IPUMS files} below.}
 
-\item{chunk_size}{An integer indicating how many observations to
-read in per chunk (defaults to 10,000). Setting this higher
-uses more RAM, but will usually be faster.}
+\item{callback}{An \link{ipums_callback} object, or a function
+that will be converted to an \code{IpumsSideEffectCallback} object. Callback
+functions should include both data (\code{x}) and position (\code{pos}) arguments.
+See examples.}
 
-\item{vars}{Names of variables to load. Accepts a character vector of names, or
-\code{\link{dplyr_select_style}} conventions. For hierarchical data, the
-rectype id variable will be added even if it is not specified.}
+\item{chunk_size}{Integer number of observations to
+read per chunk. Higher values use more RAM, but
+typically result in faster processing. Defaults to 10,000.}
 
-\item{data_file}{Specify a directory to look for the data file.
-If left empty, it will look in the same directory as the DDI file.}
+\item{vars}{Names of variables to include in the output. Accepts a
+vector of names or a \link[tidyselect:language]{selection helper}.
+If \code{NULL}, includes all variables in the file.
 
-\item{verbose}{Logical, indicating whether to print progress information
-to console.}
+For hierarchical data, the \code{RECTYPE} variable is always included even if
+unspecified.}
 
-\item{var_attrs}{Variable attributes to add from the DDI, defaults to
-adding all (val_labels, var_label and var_desc). See
-\code{\link{set_ipums_var_attributes}} for more details.}
+\item{data_file}{Path to the data (.gz) file associated with
+the provided \code{ddi} file. By default, looks for the data file in the same
+directory as the DDI file. If the data file has been moved, specify
+its location here.}
 
-\item{lower_vars}{Only if reading a DDI from a file, a logical indicating
-whether to convert variable names to lowercase (default is FALSE, in line
-with IPUMS conventions). Note that this argument will be ignored if
-argument \code{ddi} is an \code{ipums_ddi} object rather than a file path.
-See \code{\link{read_ipums_ddi}} for converting variable names to lowercase
-when reading in the DDI. Also note that if reading in chunks from a .csv or
-.csv.gz file, the callback function will be called *before* variable names
+\item{verbose}{Logical indicating whether to print progress information
+to the console.}
+
+\item{var_attrs}{Variable attributes from the DDI to add to the columns of
+the output data. Defaults to all available attributes.
+See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
+
+\item{lower_vars}{If reading a DDI from a file,
+a logical indicating whether to convert variable names to lowercase.
+Defaults to \code{FALSE} for consistency with IPUMS conventions.
+
+This argument will be ignored if argument \code{ddi} is
+an \link{ipums_ddi} object. Use \code{\link[=read_ipums_ddi]{read_ipums_ddi()}} to convert variable
+names to lowercase when reading a DDI file.
+
+Note that if reading in chunks from a .csv or
+.csv.gz file, the callback function will be called \emph{before} variable names
 are converted to lowercase, and thus should reference uppercase variable
 names.}
 }
 \value{
-Depends on the callback object
+Depends on the provided callback object. See \link{ipums_callback}.
 }
 \description{
-Reads a dataset downloaded from the IPUMS extract system, but does
-so by reading a chunk, then applying your code to that chunk and
-then continuing, which can allow you to deal with data that is
-too large to store in your computer's RAM all at once.
+Read a microdata dataset downloaded from the IPUMS extract system in chunks.
+
+Use these functions to read a file that is too large to store in memory
+at a single time. The file is processed in chunks of a given size, with a
+provided callback function applied to each chunk.
+
+Two files are required to load IPUMS microdata extracts:
+\itemize{
+\item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
+(.xml) used to parse the extract's data file
+\item A data file (generally .dat.gz)
 }
+
+See \emph{Downloading IPUMS files} below for more information about downloading
+these files.
+
+\code{read_ipums_micro_chunked()} and \code{read_ipums_micro_list_chunked()} differ
+in their handling of extracts that contain multiple record types.
+See \emph{Data structrures} below.
+}
+\section{Data structures}{
+
+Files from IPUMS projects that contain data for multiple types of records
+(e.g. household records and person records) may be either rectangular
+or hierarchical.
+
+Rectangular data are transformed such that each row of data
+represents only one type of record. For instance, each row will represent
+a person record, and all household-level information for that person will
+be included in the same row.
+
+Hierarchical data have records of
+different types interspersed in a single file. For instance, a household
+record will be included in its own row followed by the person records
+associated with that household.
+
+Hierarchical data can be read in two different formats:
+\itemize{
+\item \code{read_ipums_micro_chunked()} reads each chunk of data into a
+\code{\link[tibble:tbl_df-class]{tibble}} where each row represents a single record,
+regardless of record type. Variables that do not apply to a particular
+record type will be filled with \code{NA} in rows of that record type. For
+instance, a person-specific variable will be missing in all rows
+associated with household records. The provided \code{callback} function should
+therefore operate on a \code{tibble} object.
+\item \code{read_ipums_micro_list_chunked()} reads each chunk of data into a list of
+\code{tibble} objects, where each list element contains
+only one record type. Each list element is named with its corresponding
+record type. The provided \code{callback} function should therefore operate
+on a list object. In this case, the chunk size references the total
+number of rows \emph{across} record types, rather than in each
+record type.
+}
+}
+
+\section{Downloading IPUMS files}{
+
+
+You must download both the DDI codebook and the data file from the IPUMS
+extract system to load the data into R. \verb{read_ipums_micro_*()} functions
+assume that the data file and codebook share a common base file name and
+are present in the same directory. If this is not the case, provide a
+separate path to the data file with the \code{data_file} argument.
+
+If using the IPUMS extract interface:
+\itemize{
+\item Download the data file by clicking \strong{Download .dat} under
+\strong{Download Data}.
+\item Download the DDI codebook by right clicking on the \strong{DDI} link in the
+\strong{Codebook} column of the extract interface and selecting \strong{Save as...}
+(on Safari, you may have to select \strong{Download Linked File as...}).
+Be sure that the codebook is downloaded in .xml format.
+}
+
+If using the IPUMS API:
+\itemize{
+\item For supported collections, use \code{\link[=download_extract]{download_extract()}} to download a completed
+extract via the IPUMS API. This automatically downloads both the DDI
+codebook and the data file from the extract and
+returns the path to the codebook file.
+}
+}
+
 \examples{
-# Select Minnesotan cases from CPS example (Note you can also accomplish
-# this and avoid having to even download a huge file using the "Select Cases"
-# functionality of the IPUMS extract system)
-mn_only <- read_ipums_micro_chunked(
-  ipums_example("cps_00006.xml"),
-  IpumsDataFrameCallback$new(function(x, pos) {
-    x[x$STATEFIP == 27, ]
-  }),
-  chunk_size = 1000 # Generally you want this larger, but this example is a small file
+suppressMessages(library(dplyr))
+
+# Example codebook file
+cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+
+# Function to extract Minnesota cases from CPS example
+# (This can also be accomplished using "Select Cases" in the IPUMS
+# extract system)
+#
+# Function must take `x` and `pos` to refer to data and row position,
+# respectively.
+filter_mn <- function(x, pos) {
+  x[x$STATEFIP == 27, ]
+}
+
+# Initialize callback
+filter_mn_callback <- IpumsDataFrameCallback$new(filter_mn)
+
+# Process data in chunks, filtering to MN cases in each chunk
+read_ipums_micro_chunked(
+  cps_rect_ddi_file,
+  filter_mn_callback,
+  chunk_size = 1000,
+  verbose = FALSE
 )
 
 # Tabulate INCTOT average by state without storing full dataset in memory
-library(dplyr)
-inc_by_state <- read_ipums_micro_chunked(
-  ipums_example("cps_00006.xml"),
-  IpumsDataFrameCallback$new(function(x, pos) {
-    x \%>\%
-      mutate(
-        INCTOT = lbl_na_if(
-          INCTOT, ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe)."))
+read_ipums_micro_chunked(
+  cps_rect_ddi_file,
+  IpumsDataFrameCallback$new(
+    function(x, pos) {
+      x \%>\%
+        mutate(
+          INCTOT = lbl_na_if(
+            INCTOT,
+            ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+          )
         ) \%>\%
-      filter(!is.na(INCTOT)) \%>\%
-      group_by(STATEFIP = as_factor(STATEFIP)) \%>\%
-      summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
-  }),
-  chunk_size = 1000 # Generally you want this larger, but this example is a small file
+        filter(!is.na(INCTOT)) \%>\%
+        group_by(STATEFIP = as_factor(STATEFIP)) \%>\%
+        summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
+    }
+  ),
+  chunk_size = 1000
 ) \%>\%
 group_by(STATEFIP) \%>\%
 summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 
-# x will be a list when using `read_ipums_micro_list_chunked()`
+# `x` will be a list when using `read_ipums_micro_list_chunked()`
 read_ipums_micro_list_chunked(
   ipums_example("cps_00010.xml"),
   IpumsSideEffectCallback$new(function(x, pos) {
-    print(paste0(nrow(x$PERSON), " persons and ", nrow(x$HOUSEHOLD), " households in this chunk."))
+    print(
+      paste0(
+        nrow(x$PERSON), " persons and ",
+        nrow(x$HOUSEHOLD), " households in this chunk."
+      )
+    )
   }),
-  chunk_size = 1000 # Generally you want this larger, but this example is a small file
+  chunk_size = 1000,
+  verbose = FALSE
 )
 
 # Using the biglm package, you can even run a regression without storing
 # the full dataset in memory
-library(dplyr)
-if (require(biglm)) {
-  lm_results <- read_ipums_micro_chunked(
-    ipums_example("cps_00015.xml"),
-    IpumsBiglmCallback$new(
-      INCTOT ~ AGE + HEALTH, # Simple regression (may not be very useful)
-      function(x, pos) {
-        x \%>\%
-        mutate(
-          INCTOT = lbl_na_if(
-            INCTOT, ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
-          ),
-          HEALTH = as_factor(HEALTH)
-        )
-    }),
-    chunk_size = 1000 # Generally you want this larger, but this example is a small file
-  )
-  summary(lm_results)
-}
+lm_results <- read_ipums_micro_chunked(
+  ipums_example("cps_00015.xml"),
+  IpumsBiglmCallback$new(
+    INCTOT ~ AGE + HEALTH, # Model formula
+    function(x, pos) {
+      x \%>\%
+      mutate(
+        INCTOT = lbl_na_if(
+          INCTOT,
+          ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+        ),
+        HEALTH = as_factor(HEALTH)
+      )
+    }
+  ),
+  chunk_size = 1000,
+  verbose = FALSE
+)
 
+summary(lm_results)
 }
 \seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_ipums_sf}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
+\code{\link[=read_ipums_micro_yield]{read_ipums_micro_yield()}} for more flexible handling of large
+IPUMS microdata files.
+
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} to read data from an IPUMS microdata extract.
+
+\code{\link[=read_ipums_ddi]{read_ipums_ddi()}} to read metadata associated with an IPUMS microdata
+extract.
+
+\code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}

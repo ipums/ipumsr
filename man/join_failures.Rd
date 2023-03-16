@@ -2,20 +2,22 @@
 % Please edit documentation in R/shape_join.r
 \name{join_failures}
 \alias{join_failures}
-\title{Report on observations dropped by a join}
+\title{Report on observations dropped during a join}
 \usage{
 join_failures(join_results)
 }
 \arguments{
-\item{join_results}{A dataset that has just been created by a shape join
-(like \code{\link{ipums_shape_left_join}})}
+\item{join_results}{A data frame that has just been created by an
+\link[=ipums_shape_left_join]{ipums shape join}.}
 }
 \value{
-returns a list of data.frames, where the first item (shape) is the observations
-  dropped from the shape file and the second (data) is the observations dropped from the
-  data.
+A list of data frames, where the first element (\code{shape}) includes
+the observations dropped from the shapefile and the second (\code{data})
+includes the
+observations dropped from the data file.
 }
 \description{
-Helper for learning which observations were dropped from a dataset because
-they were not joined on.
+Helper to display observations that were not matched when joining tabular
+and spatial data.
 }
+\keyword{internal}

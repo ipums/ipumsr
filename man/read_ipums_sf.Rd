@@ -2,87 +2,118 @@
 % Please edit documentation in R/shape_read.r
 \name{read_ipums_sf}
 \alias{read_ipums_sf}
-\alias{read_ipums_sp}
-\title{Read boundary files from an IPUMS extract}
+\title{Read spatial data from an IPUMS extract}
 \usage{
 read_ipums_sf(
   shape_file,
-  shape_layer = NULL,
+  file_select = NULL,
   vars = NULL,
   encoding = NULL,
-  bind_multiple = TRUE,
+  bind_multiple = FALSE,
   add_layer_var = NULL,
-  verbose = TRUE
-)
-
-read_ipums_sp(
-  shape_file,
-  shape_layer = NULL,
-  vars = NULL,
-  encoding = NULL,
-  bind_multiple = TRUE,
-  add_layer_var = NULL,
-  verbose = TRUE
+  ...,
+  verbose = deprecated(),
+  shape_layer = deprecated()
 )
 }
 \arguments{
-\item{shape_file}{Filepath to one or more .shp files, a .zip file from an IPUMS extract
-or a path to an unzipped folder.}
+\item{shape_file}{Path to a single .shp file, or a .zip archive or
+directory containing at least one .shp file. See Details section.}
 
-\item{shape_layer}{For .zip extracts with multiple datasets, the name of the
- shape files to load. Accepts a character vector specifying the file name, or
-\code{\link{dplyr_select_style}} conventions. Can load multiple shape files,
-  which will be combined.}
+\item{file_select}{If \code{shape_file} is a .zip archive or directory that
+contains multiple files, an expression identifying the files to load.
+Accepts a character string specifying the
+file name, a \link[=selection_language]{tidyselect selection}, or index
+position. If multiple files are selected, \code{bind_multiple} must be
+equal to \code{TRUE}.}
 
-\item{vars}{Which variables in the shape file's data to keep (NULL the default
-keeps all)}
+\item{vars}{Names of variables to include in the output. Accepts a
+character vector of names or a \link[=selection_language]{tidyselect selection}.
+If \code{NULL}, includes all variables in the file.}
 
-\item{encoding}{The text encoding to use when reading the shape file. Typically
-the defaults should read the data correctly, but for some extracts you may
-need to set them manually, but if funny characters appear in your data, you
-may need to. For microdata projects, the default NULL will look for a .cpg
-file to determine the encoding and if none is available, it will default to
-latin1. The NHGIS and the IPUMS Terra functions specify the encoding for
-those projects (latin1 and UTF-8 respectively).}
+\item{encoding}{Encoding to use when reading the shape file. If \code{NULL},
+defaults to \code{"latin1"} unless the file includes a .cpg metadata file
+with encoding information. The default value should generally be
+appropriate.}
 
-\item{bind_multiple}{If \code{TRUE}, will combine multiple shape files found into
-a single object.}
+\item{bind_multiple}{If \code{TRUE} and \code{shape_file} contains multiple .shp files,
+row-bind the files into a single \code{sf} object. Useful when \code{shape_file}
+contains multiple files that represent the same geographic units for
+different extents (e.g. block-level data for multiple states).}
 
-\item{add_layer_var}{Whether to add a variable named \code{layer} that indicates
-which shape_layer the data came from. NULL, the default, uses TRUE if more than
-1 layer is found, and FALSE otherwise.}
+\item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
+the file that each row originates from. Defaults to \code{TRUE} if
+\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
 
-\item{verbose}{I \code{TRUE}, will report progress information}
+The column name will always be prefixed with \code{"layer"}, but will be
+adjusted to avoid name conflicts if another column named \code{"layer"} already
+exists in the data.}
+
+\item{...}{Additional arguments passed to \code{\link[sf:st_read]{sf::read_sf()}}.}
+
+\item{verbose}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{quiet}
+(passed to \code{sf::read_sf}) instead.}
+
+\item{shape_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
+\code{file_select} instead.}
 }
 \value{
-\code{read_ipums_sf} returns a sf object and \code{read_ipums_sp} returns
-  a SpatialPolygonsDataFrame.
+An \link[sf:sf]{sf} object
 }
 \description{
-Reads the boundary files from an IPUMS extract into R as simple features (sf) objects or
-SpatialPolygonsDataFrame (sp) objects.
+Read a spatial data file (also referred to as a GIS file or shapefile) from
+an IPUMS extract into an \code{sf} object from the
+\href{https://r-spatial.github.io/sf/}{sf} package.
+}
+\details{
+Some IPUMS products provide shapefiles in a "nested" .zip archive. That is,
+each shapefile (including a .shp as well as accompanying files) is
+compressed in its own archive, and the collection of all
+shapefiles provided in an extract is also compressed into a single .zip
+archive.
+
+\code{read_ipums_sf()} is designed to handle this structure. However, if any files
+are altered such that an internal .zip archive contains \emph{multiple}
+shapefiles, this function will throw an error. If this is the case, you may
+need to manually unzip the downloaded file before loading it into R.
 }
 \examples{
-shape_file <- ipums_example("nhgis0008_shape_small.zip")
-# If sf package is availble, can load as sf object
-if (require(sf)) {
-  sf_data <- read_ipums_sf(shape_file)
-}
+\dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Example shapefile from NHGIS
+shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
+data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
 
-# If sp package is available, can load as SpatialPolygonsDataFrame
-if (require(sp) && require(rgdal)) {
-  sp_data <- read_ipums_sp(shape_file)
-}
+shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
 
+sf_data <- read_ipums_sf(shape_ex1)
+
+sf_data
+
+# Shapefiles are provided in .zip archives that may contain multiple
+# files. Select a single file with `file_select`:
+read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
+
+# Or row-bind files with `bind_multiple`
+# (Useful for files of the same geographic level that cover different
+# extents)
+read_ipums_sf(
+  shape_ex2,
+  file_select = matches("us_pmsa"),
+  bind_multiple = TRUE
+)
+
+# To combine spatial data with tabular data without losing the attributes
+# included in the tabular data, use an ipums shape join:
+ipums_shape_full_join(
+  data_ex1,
+  sf_data,
+  by = "GISJOIN"
+)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
-Other ipums_read: 
-\code{\link{read_ipums_micro_chunked}()},
-\code{\link{read_ipums_micro_yield}()},
-\code{\link{read_ipums_micro}()},
-\code{\link{read_nhgis}()},
-\code{\link{read_terra_area}()},
-\code{\link{read_terra_micro}()},
-\code{\link{read_terra_raster}()}
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from
+an IPUMS extract.
+
+\code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
-\concept{ipums_read}

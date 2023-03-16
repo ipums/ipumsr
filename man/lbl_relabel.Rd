@@ -2,56 +2,93 @@
 % Please edit documentation in R/lbl_helpers.r
 \name{lbl_relabel}
 \alias{lbl_relabel}
-\title{Relabel labelled values}
+\alias{lbl_collapse}
+\title{Modify value labels for a labelled vector}
 \usage{
 lbl_relabel(x, ...)
+
+lbl_collapse(x, .fun)
 }
 \arguments{
-\item{x}{A \code{\link[haven]{labelled}} vector}
+\item{x}{A \code{\link[haven:labelled]{labelled}} vector}
 
-\item{...}{Two-sided formulas where the left hand side is a label placeholder
-(created with the \code{\link{lbl}} function) or a value that already exists
-in the data and the right hand side is a function that returns a logical
-vector that indicates which labels should be relabeled. The right hand side
-is passed to a function similar to \code{\link[rlang]{as_function}}, so
-also accepts quosure-style lambda functions (that use values .val and .lbl).
-See examples for more information.}
+\item{...}{Arbitrary number of two-sided formulas.
+
+The left hand side should be a label placeholder created with \code{\link[=lbl]{lbl()}} or a
+value that already exists in the data.
+
+The right hand side should be a function taking \code{.val} and \code{.lbl}
+arguments that evaluates to \code{TRUE} for all
+cases that should receive the label specified on the left hand side.
+
+Can be provided as an anonymous function or formula. See Details section.}
+
+\item{.fun}{A function taking \code{.val} and \code{.lbl} arguments that returns
+the value associated with an existing label in the vector. Input values to
+this function will be relabeled with the label of the function's output
+value.
+
+Can be provided as an anonymous function or formula. See Details section.}
 }
 \value{
-A haven::labelled vector
+A \code{\link[haven:labelled]{labelled}} vector
 }
 \description{
-Converts values to a new value (that may or may not exist) based on their
-label and value in a \code{\link[haven]{labelled}} vector. Ignores any value
-that does not have a label.
+Update the mapping between values and labels in a
+\code{\link[haven:labelled]{labelled}} vector. These functions allow you to
+simultaneously update data values and the existing value labels.
+Modifying data values directly does not result in updated value labels.
+
+Use \code{lbl_relabel()} to manually specify new value/label mappings. This
+allows for the addition of new labels.
+
+Use \code{lbl_collapse()} to collapse detailed labels into more general
+categories. Values can be grouped together and associated with individual
+labels that already exist in the \code{labelled} vector.
+
+Unlabelled values will be converted to \code{NA}.
+}
+\details{
+Several \verb{lbl_*()} functions include arguments that can be passed a function
+of \code{.val} and/or \code{.lbl}. These refer to the existing values and
+labels in the input vector, respectively.
+
+Use \code{.val} to refer to the \emph{values} in the vector's value labels.
+Use \code{.lbl} to refer to the \emph{label names} in the vector's value labels.
+
+Note that not all \verb{lbl_*()} functions support both of these arguments.
 }
 \examples{
 x <- haven::labelled(
-  c(10, 10, 11, 20, 30, 99, 30, 10),
-  c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
+  c(10, 10, 11, 20, 21, 30, 99, 30, 10),
+  c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
 )
 
+# Convert cases with value 11 to value 10 and associate with 10's label
+lbl_relabel(x, 10 ~ .val == 11)
+
+# To relabel using new value/label pairs, use `lbl()` to define a new pair
 lbl_relabel(
   x,
   lbl(10, "Yes/Yes-ish") ~ .val \%in\% c(10, 11),
   lbl(90, "???") ~ .val == 99 | .lbl == "Maybe"
 )
 
-# If relabelling to labels that already exist, don't need to specify both label
-# and value:
-# If just bare, assumes it is a value:
-lbl_relabel(x, 10 ~ .val == 11)
-# Use single argument to lbl for the label
+# Use single argument in `lbl()` to update the label while leaving values
+# unchanged
 lbl_relabel(x, lbl("Yes") ~ .val == 11)
-# Or can used named arguments
-lbl_relabel(x, lbl(.val = 10) ~ .val == 11)
 
+# Collapse labels to create new label groups
+lbl_collapse(x, ~ (.val \%/\% 10) * 10)
+
+# These are equivalent
+lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+lbl_relabel(x, 11 ~ .val == 10)
 }
 \seealso{
 Other lbl_helpers: 
 \code{\link{lbl_add}()},
 \code{\link{lbl_clean}()},
-\code{\link{lbl_collapse}()},
 \code{\link{lbl_define}()},
 \code{\link{lbl_na_if}()},
 \code{\link{lbl}()},

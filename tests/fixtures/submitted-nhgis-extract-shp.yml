@@ -1,0 +1,42 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: '{"shapefiles":["110_blck_grp_2019_tl2019"],"description":""}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 16 Mar 2023 20:12:46 GMT
+      etag: W/"84c5a841ca122e8021c0f542b5274d22"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 92fec7fe-8384-4778-ac3d-95a867357c0d
+      x-runtime: '2.022442'
+      x-xss-protection: '0'
+      content-length: '112'
+    body:
+      encoding: ''
+      file: no
+      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1017,"status":"queued","download_links":{}}'
+  recorded_at: 2023-03-16 20:12:46 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

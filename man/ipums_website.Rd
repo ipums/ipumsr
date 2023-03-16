@@ -15,51 +15,54 @@ ipums_website(
 )
 }
 \arguments{
-\item{x}{A DDI or empty (if specifying project)}
+\item{x}{An \code{\link{ipums_ddi}} object. If left empty, \code{project} must be specified.}
 
-\item{var}{A single variable name in a character vector}
+\item{var}{Name of the variable to load}
 
-\item{project}{If not using a DDI (or object with a project attribute)
-A name of an IPUMS project, one of:
-  "IPUMS-USA", "IPUMS-CPS", "IPUMS-International", "IPUMS-DHS",
-  "ATUS-X", "AHTUS-X", "MTUS-X", "NHIS", "Higher Ed", "NHGIS",
-  or "IPUMS Terra"}
+\item{project}{Name of an IPUMS project. Must be one of:
+\code{"IPUMS-USA"}, \code{"IPUMS-CPS"}, \code{"IPUMS-International"}, \code{"IPUMS-DHS"},
+\code{"ATUS-X"}, \code{"AHTUS-X"}, \code{"MTUS-X"}, \code{"NHIS"}, \code{"Higher Ed"}, \code{"NHGIS"}}
 
 \item{launch}{If \code{TRUE}, launch the website.}
 
-\item{verbose}{If \code{TRUE}, message user if no variable specific websites are available}
+\item{verbose}{If \code{TRUE}, produces message if no variable-specific websites
+are found.}
 
-\item{var_label}{Sometimes the variable label is useful for finding the correct URL. Only needed
-if not passing in the ddi object.}
+\item{var_label}{Variable label for the provided \code{var}.
 
-\item{homepage_if_missing}{If \code{TRUE}, Return homepage if project does not provide variable
-specific web pages.}
+This may be useful if the URL produced by \code{var} alone is incorrect.
+
+Only used if specifying \code{project}, not \code{x}.}
+
+\item{homepage_if_missing}{If \code{TRUE}, return the project homepage if the
+project does not provide variable-specific web pages.}
 }
 \value{
-The url to the page on ipums.org (silently if launch is \code{TRUE})
+The URL to the page on ipums.org (silently if launch is \code{TRUE})
 }
 \description{
-Takes a DDI (or you can specify a project directly) and
-a variable name, and makes a best guess at the URL for
-the variable's page on the IPUMS website. Note that
-NHGIS and TerraPop do not have accessible pages for
-variables.
+Using an \link{ipums_ddi} object or IPUMS project
+along with a variable name, guesses the most appropriate URL for
+the variable's page on the IPUMS website.
 }
 \details{
-Because some variables are constructed during the extract
-creation process, the URL may not always work unfortunately.
+Note that some IPUMS projects (e.g. NHGIS) do not have variable-specific
+pages.
+
+The generated URL may not work for variables that are constructed during the
+extract creation process.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+
+# Get URL for information about a particular variable
 ipums_website(ddi, "MONTH", launch = FALSE)
 
 \dontrun{
-# Launches website
+# Launch webpage for particular variable
 ipums_website(ddi, "MONTH")
 }
 
-# Can also specify project instead of using DDI
+# Can specify an IPUMS project instead of using an `ipums_ddi` object
 ipums_website(var = "RECTYPE", project = "IPUMS-CPS", launch = FALSE)
-
-
 }

@@ -4,47 +4,39 @@
 \alias{set_ipums_api_key}
 \title{Set your IPUMS API key}
 \usage{
-set_ipums_api_key(api_key, save = FALSE, overwrite = FALSE)
+set_ipums_api_key(api_key, save = overwrite, overwrite = FALSE, unset = FALSE)
 }
 \arguments{
-\item{api_key}{API key associated with your user account, formatted in
-quotes.}
+\item{api_key}{API key associated with your user account.}
 
-\item{save}{Do you want to save this value for future sessions by adding it
-to the file ".Renviron" in your home directory? Defaults to \code{FALSE}.}
+\item{save}{If \code{TRUE}, save the key for use in future
+sessions by adding it to the \code{.Renviron} file in your home directory.
+Defaults to \code{FALSE}, unless \code{overwrite = TRUE}.}
 
-\item{overwrite}{Do you want to overwrite any existing value of
-\code{IPUMS_API_KEY} in the file ".Renviron"? Defaults to \code{FALSE}.}
+\item{overwrite}{If \code{TRUE}, overwrite any existing value of
+\code{IPUMS_API_KEY} in the \code{.Renviron} file with the provided \code{api_key}.
+Defaults to \code{FALSE}.}
+
+\item{unset}{If \code{TRUE}, remove the existing value of \code{IPUMS_API_KEY}
+from the environment and the \code{.Renviron} file in your home directory.}
 }
 \value{
 The value of \code{api_key}, invisibly.
 }
 \description{
-Set your IPUMS API key for the duration of your session, or indefinitely by
-adding it to the file ".Renviron" in your home directory. In either case,
-this function works by assigning your API key as the value of the environment
-variable \code{IPUMS_API_KEY}. If you choose to save your key to ".Renviron", this
-function will create a backup copy of the file before modifying. This
-function is modeled after the \code{census_api_key()} function
-from the R package \href{https://walker-data.com/tidycensus/}{tidycensus}.
+Set your IPUMS API key as the value associated with the \code{IPUMS_API_KEY}
+environment variable.
+
+The key can be stored for the duration of your session or for future
+sessions. If saved for future sessions, it is added to the \code{.Renviron}
+file in your home directory. If you choose to save your key to \code{.Renviron},
+this function will create a backup copy of the file before modifying.
+
+This function is modeled after the \code{census_api_key()} function
+from \href{https://walker-data.com/tidycensus/}{tidycensus}.
+
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \seealso{
-Other ipums_api: 
-\code{\link{add_to_extract}()},
-\code{\link{define_extract_cps}()},
-\code{\link{define_extract_from_json}()},
-\code{\link{define_extract_usa}()},
-\code{\link{download_extract}()},
-\code{\link{extract_list_to_tbl}()},
-\code{\link{extract_tbl_to_list}()},
-\code{\link{get_extract_info}()},
-\code{\link{get_last_extract_info}()},
-\code{\link{get_recent_extracts_info}},
-\code{\link{ipums_data_collections}()},
-\code{\link{is_extract_ready}()},
-\code{\link{remove_from_extract}()},
-\code{\link{save_extract_as_json}()},
-\code{\link{submit_extract}()},
-\code{\link{wait_for_extract}()}
+\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
 }
-\concept{ipums_api}

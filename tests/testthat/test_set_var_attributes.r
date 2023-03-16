@@ -1,4 +1,3 @@
-context("Set var attributes")
 
 test_that("can set attributes altogether", {
   data <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00006.xml")), verbose = FALSE)

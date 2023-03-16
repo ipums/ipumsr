@@ -1,4 +1,3 @@
-context("Microdata")
 
 # Manually set these constants...
 rows_h <- 3385
@@ -38,7 +37,7 @@ test_that(
 
     temp <- readr::read_lines(ipums_example("cps_00006.dat.gz"))
     readr::write_lines(temp, temp_file)
-    on.exit(unlink(temp_file))
+    on.exit(unlink(temp_file), add = TRUE, after = FALSE)
 
     cps <- read_ipums_micro(
       ipums_example("cps_00006.xml"),
@@ -150,8 +149,14 @@ test_that(
 
 test_that(
   "Informative error when no ddi file", {
-    expect_error(read_ipums_micro("FAKE_FILE.xml"), "working directory")
-    expect_error(read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"), "check the path")
+    expect_error(
+      read_ipums_micro("FAKE_FILE.xml"),
+      "Could not find file .+/FAKE_FILE.xml`"
+    )
+    expect_error(
+      read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"),
+      "Could not find file `C:/FAKE_FOLDER/FAKE_FILE.xml`"
+    )
   })
 
 test_that("keyvar is loaded regardless of selection in hierarchical", {

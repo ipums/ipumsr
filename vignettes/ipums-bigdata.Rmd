@@ -1,222 +1,304 @@
 ---
-title: "Big IPUMS data"
-author: "Minnesota Population Center"
-date: "`r Sys.Date()`"
+title: "Big IPUMS Data"
+author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ipums-bigdata}
+  %\VignetteIndexEntry{Big IPUMS Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-Browsing data on the IPUMS website can be a little like grocery shopping when
-you're hungry — you show up to grab a couple things, but everything looks so
-good, and you end up with an overflowing cart[^1]. When you do this with IPUMS
-data, unfortunately, sometimes your extract may get so large that it doesn't fit
-in your computer's memory. 
+Browsing for IPUMS data can be a little like grocery shopping when
+you're hungry---you show up to grab a couple things, but everything
+looks so good that you end up with an overflowing cart[^1].
+Unfortunately, this can lead to extracts so large that they don't fit in
+your computer's memory.
 
-If you've got an extract that's too big, both the IPUMS website
-and the ipumsr package have tools to help. There are four basic strategies:
+[^1]: Bonus joke: why is the IPUMS website better than any grocery
+    store? More free samples.
 
-1. Get more memory.
-2. Reduce the size of your dataset.
-3. Use "chunked"/"yield" reading to work one piece at a time.
-4. Use a database.
+If you've got an extract that's too big, both the IPUMS website and the
+ipumsr package have tools to help. There are four basic strategies:
 
-The IPUMS website has features to help with option 2, and the ipumsr package can 
-help you with options 3 and 4 (option 1 depends on your wallet).
+1.  Get more memory
+2.  Reduce the size of your extract
+3.  Read data in "chunks" or "yields"
+4.  Store data in a database
+
+ipumsr can't do much for you when it comes to option 1, but it can help
+facilitate some of the other options.
+
+## Setup
 
 The examples in this vignette will rely on the ipumsr, dplyr and biglm
-packages, and the example CPS extract used in the `ipums-cps` vignette.
-If you want to follow along, you should follow the instructions in that vignette
-to make an extract.
-```{r, message = FALSE}
-library(ipumsr)
-library(dplyr)
+packages. Additionally, we'll use data from the ipumsexamples package.
+If you haven't already installed these packages, you can do so with:
 
-# To run the full vignette you'll also need the following packages:
+```{r, eval=FALSE}
+remotes::install_github("ipums/ipumsr/ipumsexamples")
+
+# To run the full vignette, you'll also need the following packages. If they
+# aren't installed already, do so with:
+install.packages("biglm")
+install.packages("DBI")
+install.packages("RSQLite")
+install.packages("dbplyr")
+```
+
+```{r, include=FALSE}
+installed_ipumsexamples <- requireNamespace("ipumsexamples")
+
 installed_biglm <- requireNamespace("biglm")
+
 installed_db_pkgs <- requireNamespace("DBI") & 
   requireNamespace("RSQLite") & 
   requireNamespace("dbplyr")
 
-# Change these filepaths to the filepaths of your downloaded extract
-cps_ddi_file <- "cps_00001.xml"
-cps_data_file <- "cps_00001.dat"
-```
-```{r, echo = FALSE}
-# If files doesn't exist, check if ipumsexamples is installed
-if (!file.exists(cps_ddi_file) | !file.exists(cps_data_file)) {
-  ipumsexamples_ddi <- system.file("extdata", "cps_00011.xml", package = "ipumsexamples")
-  ipumsexamples_data <- system.file("extdata", "cps_00011.dat.gz", package = "ipumsexamples")
-  if (file.exists(ipumsexamples_ddi)) cps_ddi_file <- ipumsexamples_ddi
-  if (file.exists(ipumsexamples_data)) cps_data_file <- ipumsexamples_data
-}
-
-# But if they still don't exist, give an error message
-if (!file.exists(cps_ddi_file) | !file.exists(cps_data_file)) {
-  message(paste0(
-    "Could not find CPS data and so could not run vignette.\n\n",
-    "If you tried to download the data following the instructions above, please make" , 
-    "sure that the filenames are correct: ", 
-    "\nddi - ", cps_ddi_file, "\ndata - ", cps_data_file, "\nAnd that you are in ",
-    "the correct directory if you are using a relative path:\nCurrent directory - ", 
-    getwd(), "\n\n",
-    "The data is also available on github. You can install it using the following ",
-    "commands: \n",
-    "  if (!require(devtools)) install.packages('devtools')\n",
-    "  devtools::install_github('ipums/ipumsr/ipumsexamples')\n",
-    "After installation, the data should be available for this vignette.\n\n"
-  ))
+if (!installed_ipumsexamples) {
+  message(
+    "ipumsexamples is not installed and example data cannot be loaded.",
+    "Code in this example will not be evaluated."
+  )
   
   installed_biglm <- FALSE
   installed_db_pkgs <- FALSE
-  
-  knitr::opts_chunk$set(eval = FALSE)
 }
 ```
 
-# Option 1: Trade money for convenience 
-If you've got a dataset that's too big for your RAM, you could always get more.
-You could accomplish this by upgrading your current computer, getting a new
-one, or paying a cloud service like Amazon or Microsoft Azure (or one of the
-many other similar services). Here are guides for using R on
-[Amazon](https://aws.amazon.com/blogs/big-data/statistical-analysis-with-open-source-r-and-rstudio-on-amazon-emr/)
-and 
-[Microsoft Azure](https://www.jumpingrivers.com/blog/hosting-rstudio-server-on-azure/).
+```{r, echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = installed_ipumsexamples
+)
+```
 
-# Option 2: Do you really need all of that?
-The IPUMS website has many features that will let you reduce the size of your
-extract. The easiest thing to do is to review your sample and variable
-selections to see if you can drop some. 
+```{r, eval=TRUE, message=FALSE}
+library(ipumsr)
+library(dplyr)
+```
 
-If you do need every sample and variable, but your analysis is on a specific
-subset of the data, the IPUMS extract engine has a feature called "Select
-Cases", where you can subset on an included variable (for example you could
-subset on AGE so that your extract only includes those older than 65, or subset
-on EDUCATION to look at only college graduates). In most IPUMS microdata
-projects, the select cases feature is on the "Create Extract" page, as the last
-step before you submit the extract. If you've already submitted the extract, you
-can click the "revise" link on the "Download or Revise Extracts" page to access
-the "Select Cases" feature.
+<!-- TODO: These data could be updated: certain weighting variable codes -->
 
-Or, if you would be happy with a random subsample of the data, the IPUMS extract
-engine has an option to "Customize Sample Size" that will take a random sample.
-This feature is also available on the "Create Extract" page, as the last step
-before you submit the extract. Again, if you've already submitted your extract,
-you can access this feature by clicking the "revise" link on the "Download or
-Revise Extracts" page.
+<!-- have changed -->
 
-# Option 3: work one "chunk"/"yield" at a time
-ipumsr has two closely related concepts for reading parts of a function at a time.
-The "chunk" API inherits directly from the readr framework for reading chunks of
-data. These functions allow you to specify a function that will be called on each
-chunk and then how you'd like to combine them at the end. The "yield" API is unique
-to ipumsr (and fixed-width data), but allows a little more flexibility because 
-control is returned to you between each piece of data.
+## Option 1: Trade money for convenience
 
-## Option 3A: Work one chunk at a time
-ipumsr has "chunked" versions of the microdata reading functions
- (`read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()`). 
-These chunked versions of the functions allow you to specify a function that
-will be applied to each chunk, and then also control how the results from these
-chunks are combined. This functionality is based on the chunked functionality
-introduced by `readr` and so is quite flexible. Below, we'll outline solutions
-to three common use-cases for IPUMS data: tabulation, regression and selecting
-cases.
+If you need to work with a dataset that's too big for your RAM, the
+simplest option is to get more space. If upgrading your hardware isn't
+an option, paying for a cloud service like Amazon or Microsoft Azure may
+be worth considering. Here are guides for using R on
+[Amazon](https://aws.amazon.com/blogs/opensource/getting-started-with-r-on-amazon-web-services/)
+and [Microsoft
+Azure](https://www.jumpingrivers.com/blog/hosting-rstudio-server-on-azure/).
 
-### Chunked tabulation example 
-Let's say you want to find the percent of people in the workforce by
-their self-reported health. Since this extract is small enough to fit
-in memory, we could just do the following:
+Of course, this option isn't feasible for most users---in this case,
+updates to the data being used in the analysis or the processing
+pipeline may be required.
+
+## Option 2: Reduce extract size
+
+### Remove unused data
+
+The easiest way to reduce the size of your extract is to drop unused
+samples and variables. This can be done through the extract interface
+for the specific IPUMS project you're using or within R using the IPUMS
+API (for projects that are supported).
+
+If using the API, use `remove_from_extract()` to easily remove unneeded
+extract values:
+
+```{r, eval=TRUE}
+sample_cps_extract <- define_extract_cps(
+  description = "Sample extract for big data vignette",
+  samples = "cps2011_03s",
+  variables = c("PERNUM", "FOODSTMP", "AGE", "EMPSTAT", "AHRSWORKT", "HEALTH")
+)
+
+new_cps_extract <- remove_from_extract(
+  sample_cps_extract,
+  variables = c("EMPSTAT", "HEALTH")
+)
+
+new_cps_extract
+```
+
+To obtain the updated data, resubmit the extract request and download
+the new files:
+
+```{r, eval=FALSE}
+data <- submit_extract(new_cps_extract) %>%
+  download_extract(wait = TRUE) %>%
+  read_ipums_micro()
+```
+
+Use `vignette("ipums-api")` to get more information about using the
+IPUMS API to make extract requests.
+
+### Select cases {#select-cases}
+
+For microdata projects, another good option for reducing extract size is
+to use the "Select Cases" option before submitting. This allows you to
+produce an extract containing data for a particular subset of values in
+an included variable. For example, you could select cases on `AGE` such
+that your extract only includes those older than 65.
+
+In general, the "Select Cases" option is available on the last page
+before submitting an extract request.
+
+Case selection is not yet available via the IPUMS API, but is slated to
+be supported in the future.
+
+### Use a sampled subset of the data
+
+Yet another option (also only for microdata projects) is to take a
+random subsample of the data before producing your extract. Use the
+"Customize Sample Size" option to do so. This also appears on the final
+page before submitting an extract request.
+
+If you've already submitted the extract, you can click the "REVISE" link
+on the "Download or Revise Extracts" page to access these features and
+produce a new data extract.
+
+## Option 3: Process the data in pieces
+
+ipumsr provides two related options for reading data sources in
+increments:
+
+-   *Chunked* functions allow you to specify a function that will be
+    called on each chunk of data as it is read in as well as how you
+    would like the chunks to be combined at the end. These functions use
+    the readr
+    [framework](https://readr.tidyverse.org/reference/read_delim_chunked.html)
+    for reading chunked data.
+
+-   *Yielded* functions allow more flexibility by returning control to
+    the user between the loading of each piece of data. These functions
+    are unique to ipumsr and fixed-width data.
+
+### Reading chunked data
+
+Use `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()`
+to read data in chunks. These are analogous to the standard
+`read_ipums_micro()` and `read_ipums_micro_list()` functions, but allow
+you to specify a function that will be applied to each data chunk and
+control how the results from these chunks are combined.
+
+Below, we'll use chunking to outline solutions to three common use-cases
+for IPUMS data: tabulation, regression and case selection.
+
+First, we'll load our example data:
+
 ```{r}
-read_ipums_micro(
-  cps_ddi_file, data_file = cps_data_file, verbose = FALSE
-) %>%
+cps_ddi_file <- ipumsexamples::ipums_extra_example("cps_00011.xml")
+cps_data_file <- ipumsexamples::ipums_extra_example("cps_00011.dat.gz")
+```
+
+#### Chunked tabulation {#chunked-tab}
+
+Imagine we wanted to find the percent of people in the workforce grouped
+by their self-reported health. Since our example extract is small enough
+to fit in memory, we could load the full dataset with
+`read_ipums_micro()`, relabel the `EMPSTAT` variable into a binary
+variable (see `vignette("value-labels")`), and count the people in each
+group.
+
+```{r}
+read_ipums_micro(cps_ddi_file, data_file = cps_data_file, verbose = FALSE) %>%
   mutate(
     HEALTH = as_factor(HEALTH),
-    AT_WORK = EMPSTAT %>% 
+    AT_WORK = as_factor(
       lbl_relabel(
+        EMPSTAT,
         lbl(1, "Yes") ~ .lbl == "At work", 
         lbl(0, "No") ~ .lbl != "At work"
-      ) %>% 
-      as_factor()
+      )
+    )
   ) %>%
   group_by(HEALTH, AT_WORK) %>%
   summarize(n = n(), .groups = "drop")
 ```
 
-But let's pretend like we can only store 1,000 rows at a time.
-In this case, we need to use a chunked function, tabulate for
-each chunk, and then calculate the counts across all of the
-chunks. 
+For the sake of this example, let's imagine we can only store 1,000 rows
+in memory at a time. In this case, we need to use a `chunked` function,
+tabulate for each chunk, and then calculate the counts across all of the
+chunks.
 
-First we'll make the callback function, which will take two arguments: 
-x (the data from a chunk) and pos (the position of the chunk, expressed as 
-the line in the input file at which the chunk starts). We'll only use x, but 
-the callback function must always take both these arguments.
+The `chunked` functions will apply a user-defined callback function to
+each chunk. The callback takes two arguments: `x`, which represents the
+data contained in a given chunk, and `pos`, which represents the
+position of the chunk, expressed as the line in the input file at which
+the chunk starts. Generally you will only need to use `x`, but the
+callback must always take both arguments.
+
+In this case, the callback will implement the same processing steps that
+we demonstrated above:
 
 ```{r}
 cb_function <- function(x, pos) {
-  x %>% mutate(
-    HEALTH = as_factor(HEALTH),
-    AT_WORK = EMPSTAT %>% 
-      lbl_relabel(
-        lbl(1, "Yes") ~ .lbl == "At work", 
-        lbl(0, "No") ~ .lbl != "At work"
-      ) %>% 
-      as_factor()
-  ) %>%
+  x %>% 
+    mutate(
+      HEALTH = as_factor(HEALTH),
+      AT_WORK =  as_factor(
+        lbl_relabel(
+          EMPSTAT,
+          lbl(1, "Yes") ~ .lbl == "At work", 
+          lbl(0, "No") ~ .lbl != "At work"
+        )
+      )
+    ) %>%
     group_by(HEALTH, AT_WORK) %>%
     summarize(n = n(), .groups = "drop")
 }
 ```
 
-Next we need to create a callback object. The choice of a callback object
-depends mainly on how we want to combine the results from applying our callback
-function to each chunk. The tree main types of callbacks that apply IPUMS variable
-metadata are:
+Next, we need to create a callback object, which will determine how we
+want to combine the ultimate results for each chunk. ipumsr provides
+three main types of callback objects that preserve variable metadata:
 
-- `IpumsDataFrameCallback` - Combine the results from each chunk together by 
-row binding them together.
-- `IpumsListCallback` - Use when you don't want to (or can't) immediately combine
-the results, so it returns a list with one item per chunk containing the results.
-- `IpumsSideEffectCallback` - Use when you are calling the function primarily for
-side effects, and do not need the results at all (for example if you are saving
-each chunk to disk).
+-   `IpumsDataFrameCallback` combines the results from each chunk
+    together by row binding them together
+-   `IpumsListCallback` returns a list with one item per chunk
+    containing the results for that chunk. Use this when you don't want
+    to (or can't) immediately combine the results.
+-   `IpumsSideEffectCallback` does not return any results. Use this when
+    your callback function is intended only for its side effects (for
+    instance, if you are saving the results for each chunk to disk).
 
-(The fourth, which is used for running lm regression is discussed later in this 
-document).
+(ipumsr also provides a fourth callback used for running linear
+regression models discussed [below](#chunked-reg)).
 
-In this case, we want to row-bind the data.frames returned by `cb_function()`,
-so we use `IpumsDataFrameCallback`.
+In this case, we want to row-bind the data frames returned by
+`cb_function()`, so we use `IpumsDataFrameCallback`.
 
-Callback objects are [R6]( https://CRAN.R-project.org/package=R6) 
-objects, but you don't need to be familiar with R6 to use them[^2]. For now, all
-we really need to know is that to create a callback, we use `$new()` syntax.
+Callback objects are [R6](https://CRAN.R-project.org/package=R6)
+objects, but you don't need to be familiar with R6 to use them[^2]. To
+initialize a callback object, simply use `$new()`:
+
+[^2]: If you're interested in learning more about R6, check out Hadley
+    Wickham's [Advanced R](https://adv-r.hadley.nz/r6.html?q=R6#r6)
+    book, which is available for free online.
 
 ```{r}
 cb <- IpumsDataFrameCallback$new(cb_function)
 ```
 
-Next we read in the data with the `read_ipums_micro_chunked()` function,
-specifying the callback and that we want the `chunk_size` to be 1000.
+At this point, we're ready to load the data in chunks. We use
+`read_ipums_micro_chunked()` to specify the callback and chunk size:
+
 ```{r}
 chunked_tabulations <- read_ipums_micro_chunked(
-  cps_ddi_file, data_file = cps_data_file, verbose = FALSE,
-  callback = cb, chunk_size = 1000
+  cps_ddi_file, 
+  data_file = cps_data_file, 
+  callback = cb, 
+  chunk_size = 1000,
+  verbose = FALSE
 )
 ```
 
-Now we have a data.frame with the counts by health and work status within each
-chunk. To get the full table, we just need to sum by health and work status one
-more time.
+Now we have a data frame with the counts by health and work status
+within each chunk. To get the full table, we just need to sum by health
+and work status one more time:
 
 ```{r}
 chunked_tabulations %>%
@@ -224,50 +306,55 @@ chunked_tabulations %>%
   summarize(n = sum(n), .groups = "drop")
 ```
 
-### Chunked regression example
-With the biglm package, it is possible to use R to perform a regression 
-on data that is too large to store in memory all at once. The ipumsr
-package provides a callback designed to make this simple: `IpumsBiglmCallback`.
+#### Chunked regression {#chunked-reg}
 
-Again we'll use the CPS example, which is small enough that we can keep it in
-memory. Here's an example of a regression looking at how hours worked,
-self-reported health and age are related among those who are currently working.
-This is meant as a simple example, and ignores many of the complexities in this
-relationship, so please use caution when interpreting.
+With the biglm package, it is possible to use R to perform a regression
+on data that is too large to store in memory all at once. The ipumsr
+package provides another callback designed to make this simple:
+`IpumsBiglmCallback`.
+
+In this example, we'll conduct a regression with total hours worked
+(`AHRSWORKT`) as the outcome and age (`AGE`) and self-reported health
+(`HEALTH`) as predictors. (Note that this is intended as a code
+demonstration, so we ignore many complexities that should be addressed
+in real analyses.)
+
+If we were running the analysis on our full dataset, we'd first load our
+data and prepare the variables in our analysis for use in the model:
 
 ```{r}
-# Read in data
-data <- read_ipums_micro(
-  cps_ddi_file, data_file = cps_data_file, verbose = FALSE
-)
+data <- read_ipums_micro(cps_ddi_file, data_file = cps_data_file, verbose = FALSE) %>%
+  mutate(
+    HEALTH = as_factor(HEALTH),
+    AHRSWORKT = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)"),
+    AT_WORK =  as_factor(
+      lbl_relabel(
+        EMPSTAT,
+        lbl(1, "Yes") ~ .lbl == "At work", 
+        lbl(0, "No") ~ .lbl != "At work"
+      )
+    )
+  ) %>%
+  filter(AT_WORK == "Yes")
+```
 
-# Prepare data for model
-# (age has been capped at 99, which we assume is high enough to not
-#  cause any problems so we leave it.)
-data <- data %>%
-   mutate(
-      HEALTH = as_factor(HEALTH),
-      AHRSWORKT = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)"),
-      AT_WORK = EMPSTAT %>% 
-        lbl_relabel(
-          lbl(1, "Yes") ~ .lbl == "At work", 
-          lbl(0, "No") ~ .lbl != "At work"
-        ) %>% 
-        as_factor()
-    ) %>%
-    filter(AT_WORK == "Yes")
+Then, we'd provide our model formula and data to `lm`:
 
-# Run regression
-model <- lm(AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data)
+```{r}
+model <- lm(AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data = data)
 summary(model)
 ```
 
-To do the same regression, but with only 1000 rows loaded at a time, we work in
-a similar manner.
+To do the same regression, but with only 1,000 rows loaded at a time, we
+work in a similar manner.
 
-First we make the `IpumsBiglmCallback` callback object that specifies both the 
-model and a function to prepare the data.
-```{r, eval = installed_biglm}
+First we make an `IpumsBiglmCallback` callback object. We provide the
+model formula as well as the code used to process the data before
+running the regression:
+
+```{r, eval=installed_biglm}
+library(biglm)
+
 biglm_cb <- IpumsBiglmCallback$new(
   model = AHRSWORKT ~ AGE + I(AGE^2) + HEALTH,
   prep = function(x, pos) {
@@ -275,69 +362,90 @@ biglm_cb <- IpumsBiglmCallback$new(
       mutate(
         HEALTH = as_factor(HEALTH),
         AHRSWORKT = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)"),
-        AT_WORK = EMPSTAT %>% 
+        AT_WORK =  as_factor(
           lbl_relabel(
+            EMPSTAT,
             lbl(1, "Yes") ~ .lbl == "At work", 
             lbl(0, "No") ~ .lbl != "At work"
-          ) %>% 
-          as_factor()
+          )
+        )
       ) %>%
       filter(AT_WORK == "Yes")
   }
 )
 ```
-And then we read the data using `read_ipums_micro_chunked()`, passing the
-callback that we just made.
-```{r, eval = installed_biglm}
+
+And then we read the data using `read_ipums_micro_chunked()`, passing
+the callback that we just made.
+
+```{r, eval=installed_biglm}
 chunked_model <- read_ipums_micro_chunked(
-  cps_ddi_file, data_file = cps_data_file, verbose = FALSE,
-  callback = biglm_cb, chunk_size = 1000
+  cps_ddi_file,
+  data_file = cps_data_file,
+  callback = biglm_cb,
+  chunk_size = 1000,
+  verbose = FALSE
 )
 
 summary(chunked_model)
 ```
 
-### Chunked "select cases" example
-Sometimes you may want to select a subset of the data before reading it in. The
-IPUMS website has this functionality built in, which can be a faster way to do
-this (this "select cases" functionality is described in the second section
-above). Also, Unix commands like `awk` and `sed` will generally be much faster
-than these R based solutions. However, it is possible to use the chunked functions 
-to create a subset, which can be convenient if you want to subset on some complex
-logic that would be hard to code into the IPUMS extract system or Unix tools.
+#### Chunked case selection
+
+Sometimes you may only be interested in a subset of the data, but can't
+read the entire dataset into memory to remove the unused cases.
+
+It may make the most sense to do this when creating your extract, which
+can be done through the IPUMS extract interface (see the [select
+cases](#select-cases) section above). R is also likely to be slower for
+this functionality than other options, like Unix commands `awk` and
+`sed`.
+
+However, ipumsr `chunked` functions can emulate this functionality by
+filtering the chunked data in the callback function:
 
 ```{r}
 # Subset only those in "Poor" health
 chunked_subset <- read_ipums_micro_chunked(
-  cps_ddi_file, data_file = cps_data_file, verbose = FALSE,
-  callback = IpumsDataFrameCallback$new(function(x, pos) {
-    filter(x, HEALTH == 5)
-  }), 
-  chunk_size = 1000
+  cps_ddi_file, 
+  data_file = cps_data_file, 
+  callback = IpumsDataFrameCallback$new(
+    function(x, pos) {
+      filter(x, HEALTH == 5)
+    }
+  ), 
+  chunk_size = 1000,
+  verbose = FALSE
 )
+
+chunked_subset
 ```
 
+This option may be particularly useful if you want to subset based on
+complex logic that would be hard to code into the IPUMS extract system
+or Unix tools.
 
-## Option 3B: Work one 'yield' at a time
-ipumsr now has a second form of chunked reading called 'yields' which 
-accomplish a similar goal as chunks, but are more flexible. They
-grant you more freedom in what R code you run between reading chunks, 
-including the ability to have multiple files open at once. Additionally,
-yields are compatible with the bigglm function which allows you to run 
-glm models on data larger than memory (as opposed to plain old lm's that 
-you can run with chunks). The downside to this greater control is that 
-yields have an API that is unique to IPUMS data and the way they work
-is unusual for R code.
+### Reading yielded data
 
-### Chunked tabulation example 
-To see how the yield functions work as compared to the chunked functions,
-here's the same chunked tabulation example that was shown earlier in
-this document, but using yields rather than chunks. We want to calculate 
-the percent of people in the workforce by their self-reported health status. 
+In addition to chunked reading, ipumsr also provides the similar but
+more flexible "yielded" reading.
 
-First we create the yield object with the function 
-`read_ipums_micro_yield()` -- the arguments are similar to 
-`read_ipums_micro()`.
+`read_ipums_micro_yield()` and `read_ipums_micro_list_yield()` grant you
+more freedom in determining what R code to run between chunks and
+include the ability to have multiple files open at once. Additionally,
+yields are compatible with the `bigglm` function from biglm, which
+allows you to run glm models on data larger than memory.
+
+The downside to this greater control is that yields have an API that is
+unique to IPUMS data and the way they work is unusual for R code.
+
+#### Yielded tabulation
+
+We'll compare the `yield` and `chunked` functions by conducting the same
+[tabulation example](#chunked-tab) from above using yields.
+
+First, we create the yield object with the function
+`read_ipums_micro_yield()`:
 
 ```{r}
 data <- read_ipums_micro_yield(
@@ -347,10 +455,45 @@ data <- read_ipums_micro_yield(
 )
 ```
 
-This function returns an R6 object (like the callbacks for the chunked data) which
-contains methods for reading the data. The most important method is the `yield(n)` 
-function which will return n rows of the data.frame. In this example, we'll also use
-`is_done()`, which tells us whether we've finished reading the data yet.
+This function returns an `R6` object which contains methods for reading
+the data. The most important method is the `yield()` method which will
+return `n` rows of data:
+
+```{r}
+# Return the first 10 rows of data
+data$yield(10)
+```
+
+Note that the row position in the data is stored in the object, so
+running the same code again will produce *different* rows of data:
+
+```{r}
+# Return the next 10 rows of data
+data$yield(10)
+```
+
+Use `cur_pos` to get the current position in the data file:
+
+```{r}
+data$cur_pos
+```
+
+The `is_done()` method tells us whether we have read the entire file
+yet:
+
+```{r}
+data$is_done()
+```
+
+In preparation for our actual example, we'll use `reset()` to reset to
+the beginning of the data:
+
+```{r}
+data$reset()
+```
+
+Using `yield()` and `is_done()`, we can set up our processing pipeline.
+First, we create an empty placeholder tibble to store our results:
 
 ```{r}
 yield_results <- tibble(
@@ -358,82 +501,94 @@ yield_results <- tibble(
   AT_WORK = factor(levels = c("No", "Yes")),
   n = integer(0)
 )
+```
+
+Then, we iterate through the data, yielding 1,000 rows at a time and
+processing the results as we did in the chunked example. The iteration
+will end when we've finished reading the entire file.
+
+```{r}
 while (!data$is_done()) {
+  
+  # Yield new data and process
   new <- data$yield(n = 1000) %>% 
     mutate(
       HEALTH = as_factor(HEALTH),
-      AT_WORK = EMPSTAT %>% 
+      AT_WORK = as_factor(
         lbl_relabel(
+          EMPSTAT,
           lbl(1, "Yes") ~ .lbl == "At work", 
           lbl(0, "No") ~ .lbl != "At work"
-        ) %>% 
-        as_factor()
+        )
+      )
     ) %>%
     group_by(HEALTH, AT_WORK) %>%
-    summarize(n = n())
+    summarize(n = n(), .groups = "drop")
   
+  # Combine the new yield with the previously processed yields
   yield_results <- bind_rows(yield_results, new) %>%
     group_by(HEALTH, AT_WORK) %>%
     summarize(n = sum(n), .groups = "drop")
+  
 }
 
 yield_results
 ```
 
+#### Yielded GLM regression
 
-### GLM yield regression example
-One of the major benefits of the yield-style reading over chunks is that
-it is compatible with the GLM functions from biglm, allowing more complicated
-models than just linear models. Logistic models are one such model that
-requires GLM methods. The same caution as the chunked example applies -
-this is meant as a simple example model, please interpret with caution.
+One of the major benefits of the yielded reading over chunked reading is
+that it is compatible with the GLM functions from biglm, allowing for
+the use of more complicated models.
 
-To run a logistic model we start by loading the data in the same way as 
-the frequency example above:
+To run a logistic regression, we first need to reset our yield object
+from the previous example:
 
 ```{r}
-data <- read_ipums_micro_yield(
-  cps_ddi_file, 
-  data_file = cps_data_file, 
-  verbose = FALSE
-)
+data$reset()
 ```
 
-Next we make a function that takes a single argument `reset`. When it is
-`FALSE`, it returns the next chunk of data (and formats it for our model). 
-When reset is `TRUE`, it resets the data to the beginning. To create this 
-function, we use the the `reset()` method from the yield object.
+Next we make a function that takes a single argument: `reset`. When
+`reset` is `TRUE`, it resets the data to the beginning. This is dictated
+by `bigglm` from biglm.
+
+To create this function, we use the the `reset()` method from the yield
+object:
 
 ```{r}
 get_model_data <- function(reset) {
+  
   if (reset) {
     data$reset()
   } else {
-    yield <- data$yield(n = 1000) # Set n pretty low for example
-    if (is.null(yield)) return(yield)
-    out <- yield %>%
+    yield <- data$yield(n = 1000)
+    
+    if (is.null(yield)) {
+      return(yield)
+    }
+    
+    yield %>%
       mutate(
         HEALTH = as_factor(HEALTH),
-        WORK30PLUS = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)") %>%
-          {. >= 30},
-        AT_WORK = EMPSTAT %>% 
+        WORK30PLUS = lbl_na_if(AHRSWORKT, ~ .lbl == "NIU (Not in universe)") >= 30,
+        AT_WORK = as_factor(
           lbl_relabel(
+            EMPSTAT,
             lbl(1, "Yes") ~ .lbl == "At work", 
             lbl(0, "No") ~ .lbl != "At work"
-          ) %>% 
-          as_factor()
+          )
+        )
       ) %>%
       filter(AT_WORK == "Yes")
-    return(out)
+    
   }
 }
 ```
 
-Finally we feed this function and a model specification to the `bigglm()`
-function:
+Finally we feed this function and a model specification to the
+`bigglm()` function:
 
 ```{r, eval=installed_biglm}
-library(biglm)
 results <- bigglm(
   WORK30PLUS ~ AGE + I(AGE^2) + HEALTH,
   family = binomial(link = "logit"),
@@ -443,107 +598,142 @@ results <- bigglm(
 summary(results)
 ```
 
-# Option 4: Use a database
-Databases are another option for data that cannot fit in memory as an R
-data.frame. If you have access to a database on a remote machine, then
-you can easily pull in parts of the data for your analysis. Even if you'll
-need to store the database on your machine, it may have more efficient
-storage of data so your data fits in your memory, or it may use your
-hard drive.
+## Option 4: Use a database {#database}
 
-R's tools for integrating with databases are improving quickly. The DBI 
-package has been updated, dplyr (through dbplyr) provides a
-frontend that allows you to write the same code for data in a database as you
-would for a local data.frame, and packages like sparklyr, sparkR, bigrquery and
-others provide access to the latest and greatest.
+Storing your data in a database is another way to work with data that
+cannot fit into memory as a data frame. If you have access to a database
+on a remote machine, then you can easily select and use parts of the
+data for your analysis. Even databases on your own machine may provide
+more efficient data storage or use your hard drive, enabling the data to
+be loaded into R.
 
-There are many different kinds of databases, each with their own benefits, 
-weaknesses and tradeoffs. As such, it's hard to give concrete advice without
-knowing your specific use-case. However, once you've chosen a database, in
-general, there will be two steps: Importing the data into the database and then
-connecting it to R. 
+There are many different kinds of databases, each with their own
+benefits and drawbacks, and the database you choose to use will be
+specific to your use case. However, once you've chosen a database, there
+will be two general steps:
 
-As an example, we'll use the RSQLite package to load the data into an in-memory 
-database. RSQLite is great because it is easy to set up, but it is probably
-not efficient enough to help you if you need to use a database because your
-data doesn't fit in memory.
+-   Importing data into the database
 
-## Importing data into a database
-When using rectangular extracts, your best bet to import IPUMS data into
-your database is probably going to be a csv file. Most databases support
-csv importing, and these implementations will generally be well supported
-since this is a common file format.
+-   Connecting the database to R
 
-However, if you need a hierarchical extract, or your database software
-doesn't support the csv format, then you can use the chunking functions 
-to load the data into a database without storing the full data in R.
+R has several tools that support database integration, including
+[DBI](https://dbi.r-dbi.org/), [dbplyr](https://dbplyr.tidyverse.org/),
+[sparklyr](https://spark.rstudio.com/),
+[sparkR](https://spark.apache.org/docs/latest/sparkr.html),
+[bigrquery](https://bigrquery.r-dbi.org/), and others. In this example,
+we'll use RSQLite to load the data into an in-memory databse. (We use
+RSQLite because it is easy to set up, but it is likely not efficient
+enough to fully resolve issues with large IPUMS data, so it may be wise
+to consider an alternative in practice.)
 
-```{r, eval = installed_db_pkgs}
-# Connect to database
+#### Importing data into the database
+
+For rectangular extracts, it is likely simplest to load your data into
+the database in CSV format, which is widely supported. If you are
+working with a hierarchical extract (or your database software doesn't
+support CSV format), then you can use an ipumsr `chunked` function to
+load the data into a database without needing to store the entire
+dataset in R.
+
+(For more about rectangular vs. hierarchical extracts, see the
+"Hierarchical extracts" section of `vignette("ipums-read")`.)
+
+```{r, eval=installed_db_pkgs, results="hide"}
 library(DBI)
 library(RSQLite)
+
+# Connect to database
 con <- dbConnect(SQLite(), path = ":memory:")
 
-# Add data to tables in chunks
+# Load file metadata
 ddi <- read_ipums_ddi(cps_ddi_file)
+
+# Write data to database in chunks
 read_ipums_micro_chunked(
   ddi,
   data_file = cps_data_file,
-  readr::SideEffectChunkCallback$new(function(x, pos) {
-    if (pos == 1) {
-      dbWriteTable(con, "cps", x)
-    } else {
-      dbWriteTable(con, "cps", x, row.names = FALSE, append = TRUE)
+  readr::SideEffectChunkCallback$new(
+    function(x, pos) {
+      if (pos == 1) {
+        dbWriteTable(con, "cps", x)
+      } else {
+        dbWriteTable(con, "cps", x, row.names = FALSE, append = TRUE)
+      }
     }
-  }),
+  ),
   chunk_size = 1000,
   verbose = FALSE
 )
 
 ```
 
-## Connecting to a database with dbplyr
-The dbplyr vignette "dbplyr" (which you can access with 
-`vignette("dbplyr", package = "dbplyr")`) is a good place to get started
-learning about how to connect to a database. Here I'll just briefly show
-some examples.
+#### Connecting to a database with dbplyr
 
-```{r, eval = installed_db_pkgs}
+There are a variety of ways to access your data once it is stored in the
+database. In this example, we use dbplyr. For more details about dbplyr,
+see `vignette("dbplyr", package = "dbplyr")`.
+
+To run a simple query for `AGE`, we can use the same syntax we would use
+with dplyr:
+
+```{r, eval=installed_db_pkgs}
 example <- tbl(con, "cps")
 
 example %>%
-  filter('AGE' > 25)
+  filter("AGE" > 25)
 ```
 
-Though dbplyr shows us a nice preview of the first rows of the result of our
-query, the data still lives in the database. When using a regular database,
-in general you'd use the function `dplyr::collect()` to load in the full
-results of the query to your R session. However, the database has no
-concept of IPUMS attributes like value and variable labels, so if you 
-want them, you can use `ipums_collect()` like so:
+dbplyr shows us a nice preview of the first rows of the result of our
+query, but the data still exist only in the database. You can use
+`dplyr::collect()` to load the full results of the query into the
+current R session. However, this would omit the variable metadata
+attached to IPUMS data, since the database doesn't store this metadata:
 
-```{r, eval = installed_db_pkgs}
-example %>%
-  filter('AGE' > 25) %>%
+```{r}
+data <- example %>%
+  filter("AGE" > 25) %>%
+  collect()
+
+# Variable metadata is missing
+ipums_val_labels(data$MONTH)
+```
+
+Instead, use `ipums_collect()`, which uses a provided `ipums_ddi` object
+to reattach the metadata while loading into the R environment:
+
+```{r, eval=installed_db_pkgs}
+data <- example %>%
+  filter("AGE" > 25) %>%
   ipums_collect(ddi)
+
+ipums_val_labels(data$MONTH)
 ```
 
-# Learning more
-Big data is a problem for lots of R users, not just IPUMS users, so there
-are a lot of resources to help you out! These are just a few that I found
-useful while writing this document:
+For more about variable metadata in IPUMS data, see
+`vignette("value-labels")`.
 
-- *Best practice to handle out-of-memory data* - RStudio Community Thread
-[link](https://community.rstudio.com/t/best-practice-to-handle-out-of-memory-data/734)
-- *Big Data in R* - Part of Stephen Mooney's EPIC: Epidemiologic Analysis Using R, June 2015 class [link](http://www.columbia.edu/~sjm2186/EPIC_R/EPIC_R_BigData.pdf)
-- *Statistical Analysis with Open-Source R and RStudio on Amazon EMR* - Markus Schmidberger on
-  the AWS Big Data Blog [link](https://aws.amazon.com/blogs/big-data/statistical-analysis-with-open-source-r-and-rstudio-on-amazon-emr/)
-- *Hosting RStudio Server on Azure* - Colin Gillespie's blog post on using Rstudio on Azure
-[link](https://www.jumpingrivers.com/blog/hosting-rstudio-server-on-azure/)
-- *Improving DBI: A Retrospect* - Kirill Müller's report on the R Consortium 
-  grant to improve database support in R 
-  [link](https://www.r-consortium.org/blog/2017/05/15/improving-dbi-a-retrospect)
+## Learning more
 
+Big data isn't just a problem for IPUMS users, so there are many R
+resources available.
 
-[^1]: Bonus joke: Why is the IPUMS website better than any grocery store? Answer: More free samples.
-[^2]: If you're interested in learning more about R6, the upcoming revision to Hadley Wickham's Advanced R book includes a chapter on R6 [available for free here](https://adv-r.hadley.nz/r6.html) 
+See the documentation for the packages mentioned in the
+[databases](#databases) section for more information about those
+options.
+
+For some past blog posts and articles on the topic, see the following:
+
+-   [*Big Data in
+    R*](http://www.columbia.edu/~sjm2186/EPIC_R/EPIC_R_BigData.pdf) -
+    Part of Stephen Mooney's EPIC: Epidemiologic Analysis Using R, June
+    2015 class
+-   [*Statistical Analysis with Open-Source R and RStudio on Amazon
+    EMR*](https://aws.amazon.com/blogs/big-data/statistical-analysis-with-open-source-r-and-rstudio-on-amazon-emr/) -
+    Markus Schmidberger on the AWS Big Data Blog
+-   [*Hosting RStudio Server on
+    Azure*](https://www.jumpingrivers.com/blog/hosting-rstudio-server-on-azure/) -
+    Colin Gillespie's blog post on using Rstudio on Azure
+-   [*Improving DBI: A
+    Retrospect*](https://www.r-consortium.org/blog/2017/05/15/improving-dbi-a-retrospect) -
+    Kirill Müller's report on the R Consortium grant to improve database
+    support in R
