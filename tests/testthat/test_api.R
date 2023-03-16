@@ -547,6 +547,26 @@ test_that("An extract request with missing samples returns correct error", {
   )
 })
 
+test_that("We parse API errors on bad requests", {
+
+  bad_extract <- new_ipums_extract(
+    "usa",
+    samples = "foo"
+  )
+
+  vcr::use_cassette("micro-extract-errors", {
+    expect_error(
+      ipums_api_json_request(
+        "POST",
+        collection = "usa",
+        path = NULL,
+        body = extract_to_request_json(bad_extract),
+        api_key = Sys.getenv("IPUMS_API_KEY")
+      ),
+      "variables"
+    )
+  })
+})
 
 # > Add to / remove from extract ----
 test_that("Can add to a USA extract", {
@@ -749,6 +769,36 @@ test_that("Improper extract revisions throw warnings or errors", {
     ),
     "`data_format` must be length 1"
   )
+})
+
+test_that("Can combine extracts", {
+
+  x1 <- define_extract_usa(
+    description = "Combining",
+    samples = c("S1", "S2"),
+    variables = "V1",
+    data_format = "csv"
+  )
+
+  x2 <- define_extract_usa(
+    description = "",
+    samples = "S3",
+    variables = "V2",
+    data_format = "csv"
+  )
+
+  x <- combine_extracts(x1, x2)
+
+  expect_identical(
+    x,
+    define_extract_usa(
+      description = "Combining",
+      samples = c("S1", "S2", "S3"),
+      variables = c("V1", "V2"),
+      data_format = "csv"
+    )
+  )
+
 })
 
 

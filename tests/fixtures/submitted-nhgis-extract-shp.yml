@@ -18,27 +18,25 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 04 Jan 2023 16:46:09 GMT
-      etag: W/"c8f8c3270c6cfbe0801f6985229287e8"
+      date: Thu, 16 Mar 2023 20:12:46 GMT
+      etag: W/"84c5a841ca122e8021c0f542b5274d22"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 498f1160-5429-4e75-865c-dfd8aeec9729
-      x-runtime: '2.566362'
-      x-xss-protection: 1; mode=block
-      content-length: '266'
+      x-request-id: 92fec7fe-8384-4778-ac3d-95a867357c0d
+      x-runtime: '2.022442'
+      x-xss-protection: '0'
+      content-length: '112'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
-      string: '{"number":843,"data_format":null,"description":"","status":"queued","download_links":null,"datasets":null,"time_series_tables":null,"time_series_table_layout":null,"shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":null,"breakdown_and_data_type_layout":null}'
-  recorded_at: 2023-01-04 16:46:09 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1017,"status":"queued","download_links":{}}'
+  recorded_at: 2023-03-16 20:12:46 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

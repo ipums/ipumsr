@@ -1288,67 +1288,21 @@ test_that("Can combine extracts", {
 
   x <- combine_extracts(x1, x2, x3)
 
-  expect_equal(
-    x$datasets,
-    union(
-      union(
-        x1$datasets,
-        x2$datasets
+  expect_identical(
+    x,
+    define_extract_nhgis(
+      description = "Combining",
+      datasets = c("A", "B", "C"),
+      data_tables = list(c("D1", "D2"), "D3", c("D2", "D4")),
+      years = list(C = "Y1"),
+      time_series_tables = c("T1", "T2"),
+      geog_levels = list(
+        T1 = "G1", T2 = "G1", A = "G1", B = "G1", C = c("G2", "G3")
       ),
-      x3$datasets
+      tst_layout = "time_by_file_layout",
+      shapefiles = "S1",
+      data_format = "csv_no_header"
     )
-  )
-  expect_equal(
-    x$time_series_tables,
-    union(
-      union(
-        x1$time_series_tables,
-        x2$time_series_tables
-      ),
-      x3$time_series_tables
-    )
-  )
-  expect_equal(
-    x$shapefiles,
-    "S1"
-  )
-
-  expect_equal(
-    x$data_tables,
-    c(x1$data_tables,
-      x2$data_tables,
-      x3$data_tables)
-  )
-  expect_equal(
-    x$geog_levels,
-    c(x1$geog_levels,
-      x2$geog_levels,
-      x3$geog_levels)[c(x$datasets, x$time_series_tables)]
-  )
-  expect_equal(
-    x$years,
-    c(x1$years,
-      x2$years,
-      x3$years)
-  )
-  expect_equal(
-    x$breakdown_values,
-    c(x1$breakdown_values,
-      x2$breakdown_values,
-      x3$breakdown_values)
-  )
-
-  expect_equal(
-    x$tst_layout,
-    x2$tst_layout
-  )
-  expect_equal(
-    x$data_format,
-    x2$data_format
-  )
-  expect_equal(
-    x$description,
-    x1$description
   )
 
   expect_error(
@@ -1523,4 +1477,41 @@ test_that("We can get correct API version info for each collection", {
     dplyr::filter(ipums_data_collections(), code_for_api == "nhgis")$api_support
   )
   expect_error(ipums_api_version("fake collection"), "No API version found")
+})
+
+test_that("We parse API errors on bad requests", {
+
+  bad_extract <- new_ipums_extract(
+    "nhgis",
+    datasets = "foo",
+    data_tables = "bar",
+    geog_levels = "baz"
+  )
+
+  vcr::use_cassette("nhgis-extract-errors", {
+    expect_error(
+      get_last_extract_info("nhgis", api_key = "foobar"),
+      "API Key is either missing or invalid"
+    )
+    expect_error(
+      get_extract_info(
+        c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)
+      ),
+      paste0(
+        "number ",
+        recent_nhgis_extracts_list[[1]]$number + 1,
+        " does not exist"
+      )
+    )
+    expect_error(
+      ipums_api_json_request(
+        "POST",
+        collection = "nhgis",
+        path = NULL,
+        body = extract_to_request_json(bad_extract),
+        api_key = Sys.getenv("IPUMS_API_KEY")
+      ),
+      "Datasets invalid"
+    )
+  })
 })

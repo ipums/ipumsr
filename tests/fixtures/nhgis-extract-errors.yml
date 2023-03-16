@@ -1,0 +1,148 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1&limit=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: foobar
+  response:
+    status:
+      status_code: 403
+      category: Client error
+      reason: Forbidden
+      message: 'Client error: (403) Forbidden'
+    headers:
+      content-type: application/json
+      date: Thu, 16 Mar 2023 20:14:30 GMT
+      vary: Origin
+      x-generator: tyk.io
+      content-length: '57'
+    body:
+      encoding: ''
+      file: no
+      string: |-
+        {
+            "error": "Access to this API has been disallowed"
+        }
+  recorded_at: 2023-03-16 20:14:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/1018?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      content-type: text/html; charset=UTF-8
+      date: Thu, 16 Mar 2023 20:14:31 GMT
+      server: nginx/1.18.0
+      vary: Origin
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: c9d4854d-1293-463c-b23c-2313d1a73c75
+      x-runtime: '0.482627'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2023-03-16 20:14:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1&limit=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 16 Mar 2023 20:14:32 GMT
+      etag: W/"cd77a582d58c0176b2f1d0aa94a2eb6c"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: f472c92c-c6ce-410e-884f-8e30579855fb
+      x-runtime: '0.577378'
+      x-xss-protection: '0'
+      content-length: '211'
+    body:
+      encoding: ''
+      file: no
+      string: '[{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1017,"status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986394/nhgis1017_shape.zip"}}]'
+  recorded_at: 2023-03-16 20:14:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: '{"datasets":{"foo":{"data_tables":[null],"geog_levels":[null]}}}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Thu, 16 Mar 2023 20:14:32 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 0da823e3-1d49-4782-9358-44d9e7c65485
+      x-runtime: '0.064467'
+      x-xss-protection: '0'
+      content-length: '208'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
+        Request"},"detail":["Datasets invalid: ''foo''","Data format invalid: '''';
+        valid options include ''csv_no_header'', ''csv_header'', ''fixed_width''"]}'
+  recorded_at: 2023-03-16 20:14:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
