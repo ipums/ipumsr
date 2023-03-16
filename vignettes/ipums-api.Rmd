@@ -69,20 +69,19 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
 
 ## Overview
 
-The IPUMS API supports two types of functionality.
+The IPUMS API supports two asset types:
 
--   The **extract** component of the API allows registered IPUMS users
-    to define extract requests, submit them for processing, and download
-    completed extract files, all without leaving R.
+-   **IPUMS extract** endpoints can be used to submit extract requests
+    for processing and download completed extract files.
 
--   The **metadata** component of the API allows users to discover and
-    explore data sources as well as retrieve codes that can be used when
-    forming extract requests to submit to the API for processing.
+-   **IPUMS metadata** endpoints can be used to discover and explore
+    available IPUMS data as well as retrieve codes, names, and other
+    extract parameters necessary to form extract requests.
 
-ipumsr provides functions that support both of these components.
+ipumsr provides functions that support both of these assets.
 
-Use of these APIs enables the adoption of a programmatic workflow that
-can help users to:
+Use of the IPUMS API enables the adoption of a programmatic workflow
+that can help users to:
 
 -   Precisely reproduce the specifications of previous extract requests
 -   Easily revise and resubmit previous extract requests to update
@@ -133,12 +132,16 @@ ipums_data_collections()
 
 ### Note: New features currently in development
 
-The API tools in ipumsr are in active development, and some
-functionality may not yet be stable.
+The tools in ipumsr may not necessarily support all the functionality
+currently supported by the IPUMS API. See the [API
+documentation](https://developer.ipums.org/docs/apiprogram/) for more
+information about its latest features. Furthermore, the API tools in
+ipumsr are in active development, and some functionality may not yet be
+stable.
 
 ## Set up your API key
 
-To interact with the IPUMS APIs, you'll need to register for access with
+To interact with the IPUMS API, you'll need to register for access with
 the IPUMS project you'll be using. If you have not yet registered, you
 can find links to register for each of the API-supported IPUMS
 collections below:

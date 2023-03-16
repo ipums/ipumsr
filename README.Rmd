@@ -35,7 +35,7 @@ to:
     the variable-level metadata that is included with many IPUMS files
 
 -   Submit requests for data and download files through the IPUMS
-    extract API
+    API
 
 ## What is IPUMS?
 

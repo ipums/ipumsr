@@ -23,8 +23,7 @@ to:
 - Clean and prepare data using the contextual information contained in
   the variable-level metadata that is included with many IPUMS files
 
-- Submit requests for data and download files through the IPUMS extract
-  API
+- Submit requests for data and download files through the IPUMS API
 
 ## What is IPUMS?
 

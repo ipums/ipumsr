@@ -124,7 +124,7 @@
 # ipumsr 0.5.1
 
 * Added the "Rmd for Reproducible Research" template, which sets up a workflow 
-  that leverages the IPUMS microdata extract API to facilitate sharing your 
+  that leverages the IPUMS API to facilitate sharing your 
   analysis. For more details, see 
   [the blog post](https://blog.popdata.org/reproducible-research-r-markdown-ipumsr-ipums-api/). 
   Credit to @ehrlichd for the template and blog post!
@@ -136,8 +136,8 @@
 
 # ipumsr 0.5.0
 
-* Added functions for interacting with the IPUMS microdata extract API. For an 
-  overview of this new functionality, see the API vignette with 
+* Added functions for interacting with the IPUMS API for IPUMS USA and IPUMS 
+  CPS. For an overview of this new functionality, see the API vignette with 
   `vignette("ipums-api", package = "ipumsr")`. Special thanks to @robe2037, 
   @renae-r, and @ehrlichd for their work on the API functions!
 

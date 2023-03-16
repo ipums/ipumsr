@@ -24,7 +24,7 @@ This template is for two types of IPUMS users:
    and perhaps modify, that analysis themself. We'll call this user the 
    **collaborator**.
    
-This template uses the IPUMS extract API to help the analyst and collaborator
+This template uses the IPUMS API to help the analyst and collaborator
 work with the same dataset. It helps the analyst by including code to download
 their IPUMS data extract and save the extract definition in a shareable format,
 and it helps the collaborator by including code to create and download a new
