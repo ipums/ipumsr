@@ -1,29 +1,33 @@
 Package: ipumsr
-Title: Read 'IPUMS' Extract Files
+Title: An R interface for downloading, reading, and handling IPUMS data
 Version: 0.5.2.9000
 Authors@R: c(
-  person("Greg Freedman Ellis", role = "aut"), 
-  person("Derek Burk", email = "ipums+cran@umn.edu", role = c("aut", "cre")),
-  person("Finn Roberts", role = "aut"),
-  person("Joe Grover", role = "ctb"),
-  person("Dan Ehrlich", role = "ctb"),
-  person("Renae Rodgers", role = "ctb"),
-  person("Institute for Social Research and Data Innovation", email = "ipums@umn.edu", role = "cph")
+    person("Greg Freedman Ellis", role = "aut"),
+    person("Derek Burk", , , "ipums+cran@umn.edu", role = c("aut", "cre")),
+    person("Finn Roberts", role = "aut"),
+    person("Joe Grover", role = "ctb"),
+    person("Dan Ehrlich", role = "ctb"),
+    person("Renae Rodgers", role = "ctb"),
+    person("Institute for Social Research and Data Innovation", , , "ipums@umn.edu", role = "cph")
   )
-Contact: ipums@umn.edu
+Description: An easy way to work with census, survey, and geographic data
+    provided by IPUMS in R. Generate and download data through the IPUMS
+    API and load IPUMS files into R with their associated metadata to
+    make analysis easier. IPUMS data describing 1.4 billion individuals
+    drawn from over 750 censuses and surveys is available free of charge
+    from the IPUMS website <https://www.ipums.org>.
+License: Mozilla Public License 2.0
 URL: https://www.ipums.org, https://github.com/ipums/ipumsr
 BugReports: https://github.com/ipums/ipumsr/issues
-Description: An easy way to import census, survey and geographic data provided by 'IPUMS'
-    into R plus tools to help use the associated metadata to make analysis easier. 'IPUMS'
-    data describing 1.4 billion individuals drawn from over 750 censuses and surveys is
-    available free of charge from our website <https://www.ipums.org>.
-License: Mozilla Public License 2.0
-Encoding: UTF-8
-Depends: R (>= 3.5.0)
+Depends: 
+    R (>= 3.5.0)
 Imports:
     dplyr (>= 0.7.0),
     haven (>= 2.2.0),
     hipread (>= 0.2.0),
+    httr,
+    jsonlite,
+    lifecycle,
     purrr,
     R6,
     readr,
@@ -31,37 +35,37 @@ Imports:
     tibble,
     tidyselect,
     xml2,
-    zeallot,
-    jsonlite,
-    httr,
-    lifecycle
-RoxygenNote: 7.2.3
-Roxygen: list(markdown = TRUE)
+    zeallot
 Suggests:
+    biglm,
+    covr,
+    crayon,
+    DBI,
+    dbplyr,
     DT,
     ggplot2,
     htmltools,
+    ipumsexamples,
     knitr,
+    raster,
     rgdal,
+    rmapshaper,
     rmarkdown,
+    RSQLite,
     rstudioapi,
     scales,
     sf,
-    sp,
     shiny,
+    sp,
     testthat,
     tidyr,
-    covr,
-    biglm,
-    DBI,
-    RSQLite,
-    dbplyr,
     vcr (>= 0.6.0),
-    withr,
-    crayon,
-    rmapshaper,
-    ipumsexamples,
-    raster
+    withr
+VignetteBuilder: 
+    knitr
 Remotes:
     ipums/ipumsr/ipumsexamples
-VignetteBuilder: knitr
+Contact: ipums@umn.edu
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
