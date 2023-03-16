@@ -209,7 +209,9 @@ contents themselves without converting to an `ipums_ddi` object, set
 `raw = TRUE`.
 
 ```{r}
-read_nhgis_codebook(nhgis_ex1, raw = TRUE)[1:20]
+nhgis_cb <- read_nhgis_codebook(nhgis_ex1, raw = TRUE)
+
+cat(nhgis_cb[1:20], sep = "\n")
 ```
 
 ### Handling multiple files
@@ -280,7 +282,8 @@ columns that contain geographic codes that are stored as numeric values:
 # Convert MSA codes to character format
 read_nhgis(
   nhgis_ex1,
-  col_types = c(MSA_CMSAA = "c")
+  col_types = c(MSA_CMSAA = "c"),
+  verbose = FALSE
 )
 ```
 
@@ -297,7 +300,9 @@ the codebook itself).
 ```{r}
 nhgis_fwf <- ipums_example("nhgis0730_fixed.zip")
 
-read_nhgis(nhgis_fwf, file_select = matches("ts_nominal"))
+nhgis_fwf_data <- read_nhgis(nhgis_fwf, file_select = matches("ts_nominal"))
+
+nhgis_fwf_data
 ```
 
 Note that in this case numeric geographic codes are correctly loaded as

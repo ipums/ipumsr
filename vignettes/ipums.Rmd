@@ -142,7 +142,7 @@ For NHGIS files, use `read_nhgis()`:
 
 ```{r}
 nhgis_file <- ipums_example("nhgis0972_csv.zip")
-nhgis_data <- read_nhgis(nhgis_file)
+nhgis_data <- read_nhgis(nhgis_file, show_col_types = FALSE)
 
 head(nhgis_data)
 ```
@@ -217,4 +217,4 @@ cps_data$STATEFIP <- lbl_relabel(
 ipums_val_labels(cps_data$STATEFIP)
 ```
 
-See the [value labels](value_labels.html) vignette for more details.
+See the [value labels](value-labels.html) vignette for more details.
