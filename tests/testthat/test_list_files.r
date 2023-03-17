@@ -1,4 +1,3 @@
-
 # This function helps find the data from the ipumsexamples package for us
 ex_file <- function(x) {
   system.file("extdata", x, package = "ipumsexamples")
@@ -42,11 +41,17 @@ test_that("Listing files from nhgis shape zip works", {
 
   all_files <- ipums_list_files(nhgis_shp)
   expect_equal(all_files$type, "shape")
-  expect_equal(all_files$file, "nhgis0972_shape/nhgis0972_shapefile_tl2000_us_pmsa_1990.zip")
+  expect_equal(
+    all_files$file,
+    "nhgis0972_shape/nhgis0972_shapefile_tl2000_us_pmsa_1990.zip"
+  )
 
   withr::with_options(list(lifecycle_verbosity = "quiet"), {
     shape_files <- ipums_list_shape(nhgis_shp)
-    expect_equal(shape_files$file, "nhgis0972_shape/nhgis0972_shapefile_tl2000_us_pmsa_1990.zip")
+    expect_equal(
+      shape_files$file,
+      "nhgis0972_shape/nhgis0972_shapefile_tl2000_us_pmsa_1990.zip"
+    )
 
     data_files <- ipums_list_data(nhgis_shp)
     expect_equal(nrow(data_files), 0)
@@ -84,7 +89,10 @@ test_that("Listing files from terra area zip works", {
 
   all_files <- ipums_list_files(terra_area)
   expect_equal(all_files$type, c("data", "shape"))
-  expect_equal(all_files$file, c("data_3485_AGG_NP_FLAD_1981.csv", "boundaries_3485_AGG_NP_FLAD_1981.zip"))
+  expect_equal(
+    all_files$file,
+    c("data_3485_AGG_NP_FLAD_1981.csv", "boundaries_3485_AGG_NP_FLAD_1981.zip")
+  )
 
   withr::with_options(list(lifecycle_verbosity = "quiet"), {
     data_files <- ipums_list_data(terra_area)
@@ -105,7 +113,10 @@ test_that("Listing files from terra micro zip works", {
 
   all_files <- ipums_list_files(terra_micro)
   expect_equal(all_files$type, c("data", "shape"))
-  expect_equal(all_files$file, c("terrapop_extract_3484.csv.gz", "boundaries_3484_IPUMS_SL_FLAD_2004.zip"))
+  expect_equal(
+    all_files$file,
+    c("terrapop_extract_3484.csv.gz", "boundaries_3484_IPUMS_SL_FLAD_2004.zip")
+  )
 
   withr::with_options(list(lifecycle_verbosity = "quiet"), {
     data_files <- ipums_list_data(terra_micro)
@@ -131,7 +142,10 @@ test_that("Can list files from unzipped folder works (terra micro)", {
 
   all_files <- ipums_list_files(temp_dir)
   expect_equal(all_files$type, c("data", "shape"))
-  expect_equal(all_files$file, c("terrapop_extract_3484.csv.gz", "boundaries_3484_IPUMS_SL_FLAD_2004.zip"))
+  expect_equal(
+    all_files$file,
+    c("terrapop_extract_3484.csv.gz", "boundaries_3484_IPUMS_SL_FLAD_2004.zip")
+  )
 
   withr::with_options(list(lifecycle_verbosity = "quiet"), {
     data_files <- ipums_list_data(temp_dir)

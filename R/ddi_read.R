@@ -144,7 +144,6 @@ read_ipums_ddi <- function(ddi_file,
                            file_select = NULL,
                            lower_vars = FALSE,
                            data_layer = deprecated()) {
-
   if (!missing(data_layer)) {
     lifecycle::deprecate_warn(
       "0.6.0",
@@ -203,6 +202,7 @@ read_ipums_ddi <- function(ddi_file,
 
   # File information
   files <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:fileDscr")
+
   if (length(files) > 1) {
     rlang::warn("Extracts with multiple files not supported, using first file.")
   }
@@ -237,18 +237,21 @@ read_ipums_ddi <- function(ddi_file,
 
     rectypes_keyvars <- xml2::xml_text(
       xml2::xml_find_first(
-        xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:fileDscr/d1:fileTxt/d1:fileStrc/d1:recGrp"),
+        xml2::xml_find_all(
+          ddi_xml,
+          "/d1:codeBook/d1:fileDscr/d1:fileTxt/d1:fileStrc/d1:recGrp"
+        ),
         "@keyvar"
       )
     )
     rectypes_keyvars <- fostr_split(rectypes_keyvars, "[[:blank:]]+")
-    rectypes_keyvars <- purrr::map(rectypes_keyvars, ~.[!is.na(.)])
+    rectypes_keyvars <- purrr::map(rectypes_keyvars, ~ .[!is.na(.)])
     rectypes_keyvars <- tibble::tibble(
       rectype = rectypes,
       keyvars = rectypes_keyvars
     )
 
-    # For some reason our extract engine can't provide value labels for rec types
+    # For some reason our extract engine can't provide value labels for rectypes
     # So get it from file structure area
     rt_lbls <- xml_text_from_path_all(
       ddi_xml,
@@ -266,11 +269,20 @@ read_ipums_ddi <- function(ddi_file,
   }
 
   # Get variable specific information
-  var_info <- get_var_info_from_ddi(ddi_xml, file_type, rectype_idvar, rectype_labels)
+  var_info <- get_var_info_from_ddi(
+    ddi_xml,
+    file_type,
+    rectype_idvar,
+    rectype_labels
+  )
 
   if (lower_vars) {
     var_info$var_name <- tolower(var_info$var_name)
-    if (!is.null(rectype_idvar)) rectype_idvar <- tolower(rectype_idvar)
+
+    if (!is.null(rectype_idvar)) {
+      rectype_idvar <- tolower(rectype_idvar)
+    }
+
     if (!is.null(rectypes_keyvars)) {
       rectypes_keyvars$keyvars <- purrr::map(rectypes_keyvars$keyvars, tolower)
     }
@@ -306,17 +318,31 @@ xml_text_from_path_all <- function(xml, path) {
   xml2::xml_text(xml2::xml_find_all(xml, path))
 }
 
-get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) {
+get_var_info_from_ddi <- function(ddi_xml,
+                                  file_type,
+                                  rt_idvar,
+                                  rectype_labels) {
   var_info_xml <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:dataDscr/d1:var")
-  if (length(var_info_xml) == 0) return(NULL)
+
+  if (length(var_info_xml) == 0) {
+    return(NULL)
+  }
 
   var_name <- xml2::xml_attr(var_info_xml, "name")
-  start <- as.numeric(xml_text_from_path_first(var_info_xml, "d1:location/@StartPos"))
-  end <- as.numeric(xml_text_from_path_first(var_info_xml, "d1:location/@EndPos"))
-  width <- as.numeric(xml_text_from_path_first(var_info_xml, "d1:location/@width"))
+  start <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@StartPos")
+  )
+  end <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@EndPos")
+  )
+  width <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@width")
+  )
   var_label <- xml_text_from_path_first(var_info_xml, "d1:labl")
   var_desc <- xml_text_from_path_first(var_info_xml, "d1:txt")
-  imp_decim <- as.numeric(xml2::xml_attr(var_info_xml, "dcml"))
+  imp_decim <- as.numeric(
+    xml2::xml_attr(var_info_xml, "dcml")
+  )
 
   var_type <- xml_text_from_path_first(var_info_xml, "d1:varFormat/@type")
   var_intrvl <- xml2::xml_attr(var_info_xml, "intrvl")
@@ -329,7 +355,7 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 
   code_instr <- xml_text_from_path_first(var_info_xml, "d1:codInstr")
 
-  if  (file_type == "hierarchical") {
+  if (file_type == "hierarchical") {
     rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
   } else {
     rectype_by_var <- NA
@@ -343,11 +369,14 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
   if (file_type == "hierarchical") {
     # If var is numeric, need to convert
     rt_type <- var_type[var_name == rt_idvar]
+
     if (length(rt_type) == 1 && rt_type %in% c("numeric", "integer")) {
       rectype_labels$val <- suppressWarnings(as.numeric(rectype_labels$val))
     }
+
     rectype_labels <- dplyr::filter(rectype_labels, !is.na(.data$val))
     rectype_labels <- dplyr::arrange(rectype_labels, .data$val)
+
     # Replace in the code_instructions
     if (nrow(rectype_labels) > 0) {
       lbls_from_code_instr[[which(var_name == rt_idvar)]] <- rectype_labels
@@ -358,7 +387,10 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
     list(var_info_xml, var_type, lbls_from_code_instr),
     function(vvv, vtype, extra_labels) {
       lbls <- xml2::xml_find_all(vvv, "d1:catgry")
-      if (length(lbls) == 0) return(extra_labels)
+
+      if (length(lbls) == 0) {
+        return(extra_labels)
+      }
 
       lbls <- tibble::tibble(
         val = xml_text_from_path_all(lbls, "d1:catValu"),
@@ -378,11 +410,12 @@ get_var_info_from_ddi <- function(ddi_xml, file_type, rt_idvar, rectype_labels) 
 
       out <- dplyr::bind_rows(lbls, extra_labels)
       dplyr::arrange(out, .data$val)
-    })
+    }
+  )
 
   make_var_info_from_scratch(
     var_name = var_name,
-    var_label =  var_label,
+    var_label = var_label,
     var_desc = var_desc,
     val_labels = val_labels,
     code_instr = code_instr,
@@ -465,7 +498,6 @@ read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE,
                                 data_layer = deprecated()) {
-
   if (!missing(data_layer)) {
     lifecycle::deprecate_warn(
       "0.6.0",
@@ -521,22 +553,20 @@ read_nhgis_codebook <- function(cb_file,
   blank_rows <- which(fostr_detect(dd, "^[[:blank:]]+$"))
 
   data_types <- dd[data_type_rows]
-  # data_types <- ifelse(fostr_detect(data_types, "(E)"), "Estimate", "MOE")
 
   # If multiple data types, process variable info for each data
   # type separately.
   if (length(data_type_rows) > 0) {
-
     data_type_sections <- purrr::map(
       data_type_rows,
-      ~seq(.x, blank_rows[which(.x <= blank_rows)[1]] - 1)
+      ~ seq(.x, blank_rows[which(.x <= blank_rows)[1]] - 1)
     )
 
     # Combine multiple lines of data type/breakdown value info into single
     # string to attach to var info
     data_types <- purrr::map(
       data_type_sections,
-      ~parse_breakdown(
+      ~ parse_breakdown(
         dd[.x][length(.x):2] # Go in reverse so data types come before brkdowns
       )
     )
@@ -544,12 +574,12 @@ read_nhgis_codebook <- function(cb_file,
     data_type_rows <- purrr::map2(
       data_type_rows,
       c(data_type_rows[-1], length(dd) + 1),
-      ~seq(.x, .y - 1)
+      ~ seq(.x, .y - 1)
     )
 
     table_name_rows <- purrr::map(
       data_type_rows,
-      ~.x[fostr_detect(dd[.x], "^[[:blank:]]*(Table)|(Data Type)")]
+      ~ .x[fostr_detect(dd[.x], "^[[:blank:]]*(Table)|(Data Type)")]
     )
 
     table_sections <- purrr::map2(
@@ -559,44 +589,49 @@ read_nhgis_codebook <- function(cb_file,
         purrr::map2(
           tn,
           c(tn[-1], max(dt) + 1),
-          ~seq(.x, .y - 1)
+          ~ seq(.x, .y - 1)
         )
       }
     )
 
     table_sections <- purrr::flatten(
-      purrr::map2(table_sections, data_types, ~set_names(.x, .y))
+      purrr::map2(table_sections, data_types, ~ set_names(.x, .y))
     )
 
     if (any(fostr_detect(cb, "^Time series layout:"))) {
-      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+      table_vars <- purrr::map_dfr(
+        table_sections,
+        ~ read_nhgis_tst_tables(dd, .x)
+      )
     } else {
       table_vars <- purrr::map2_dfr(
         table_sections,
         names(table_sections),
-        ~read_nhgis_ds_tables(dd, .x, data_type = .y)
+        ~ read_nhgis_ds_tables(dd, .x, data_type = .y)
       )
     }
-
   } else {
-
-    table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)"))
+    table_name_rows <- which(
+      fostr_detect(dd, "^[[:blank:]]*(Table)|(Data Type)")
+    )
 
     table_sections <- purrr::map2(
       table_name_rows,
       c(table_name_rows[-1], length(dd)),
-      ~seq(.x, .y - 1)
+      ~ seq(.x, .y - 1)
     )
 
     if (any(fostr_detect(cb, "^Time series layout:"))) {
-      table_vars <- purrr::map_dfr(table_sections, ~read_nhgis_tst_tables(dd, .x))
+      table_vars <- purrr::map_dfr(
+        table_sections,
+        ~ read_nhgis_tst_tables(dd, .x)
+      )
     } else {
       table_vars <- purrr::map_dfr(
         table_sections,
-        ~read_nhgis_ds_tables(dd, .x)
+        ~ read_nhgis_ds_tables(dd, .x)
       )
     }
-
   }
 
   var_info <- make_var_info_from_scratch(
@@ -614,16 +649,13 @@ read_nhgis_codebook <- function(cb_file,
 
   conditions_text <- paste(conditions_text, collapse = "\n")
 
-  out <- new_ipums_ddi(
+  new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
     ipums_project = "NHGIS",
     var_info = var_info,
     conditions = conditions_text
   )
-
-  out
-
 }
 
 #' Parse NHGIS codebook lines with data type or breakdown info
@@ -646,10 +678,9 @@ read_nhgis_codebook <- function(cb_file,
 #'
 #' @noRd
 parse_breakdown <- function(bkdown_lines) {
-
   dt_bkdwn <- purrr::map(
     bkdown_lines,
-    ~if (fostr_detect(.x, "::")) {
+    ~ if (fostr_detect(.x, "::")) {
       fostr_named_capture(.x, "::(?<x>[^\\(]+)")$x
     } else if (fostr_detect(.x, ":")) {
       fostr_named_capture(.x, ":(?<x>[^\\(]+)")$x
@@ -659,7 +690,6 @@ parse_breakdown <- function(bkdown_lines) {
   )
 
   paste0(trimws(dt_bkdwn), collapse = ": ")
-
 }
 
 #' Helper function to read codebook information for an NHGIS
@@ -674,7 +704,6 @@ parse_breakdown <- function(bkdown_lines) {
 #'
 #' @noRd
 read_nhgis_tst_tables <- function(dd, table_rows) {
-
   table_name_and_code <- fostr_named_capture(
     dd[table_rows[1]],
     paste0(
@@ -702,7 +731,6 @@ read_nhgis_tst_tables <- function(dd, table_rows) {
   vars$var_desc <- paste0("Table ", nhgis_table_code, ": ", table_name)
 
   vars
-
 }
 
 #' Helper function to read codebook information for an NHGIS
@@ -717,9 +745,7 @@ read_nhgis_tst_tables <- function(dd, table_rows) {
 #'
 #' @noRd
 read_nhgis_ds_tables <- function(dd, table_rows, data_type = NULL) {
-
   if (fostr_detect(dd[table_rows[1]], "Data Type")) {
-
     rows <- dd[table_rows]
 
     # Start at first blank row. Rows before this are part of the
@@ -736,9 +762,7 @@ read_nhgis_ds_tables <- function(dd, table_rows, data_type = NULL) {
     )
 
     vars$var_desc <- ""
-
   } else {
-
     table_name <- fostr_named_capture_single(
       dd[table_rows[1]],
       "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
@@ -768,16 +792,16 @@ read_nhgis_ds_tables <- function(dd, table_rows, data_type = NULL) {
       "Table ", nhgis_table_code, ": ", table_name,
       " (Universe: ", universe, ")"
     )
-
   }
 
   vars
-
 }
 
 find_cb_section <- function(cb_text, section, section_markers) {
   start <- which(fostr_detect(cb_text, section))
-  start <- start[start - 1 %in% section_markers & start + 1 %in% section_markers] + 2
+  start <- 2 + start[
+    start - 1 %in% section_markers & start + 1 %in% section_markers
+  ]
 
   end <- min(c(length(cb_text), section_markers[section_markers > start])) - 1
   cb_text[seq(start, end)]
@@ -796,7 +820,6 @@ new_ipums_ddi <- function(file_name = NULL,
                           conditions = NULL,
                           citation = NULL,
                           file_encoding = NULL) {
-
   ddi <- list(
     file_name = file_name,
     file_path = file_path,
@@ -814,21 +837,22 @@ new_ipums_ddi <- function(file_name = NULL,
   )
 
   structure(ddi, class = "ipums_ddi")
-
 }
 
-make_var_info_from_scratch <- function(
-  var_name = "",
-  var_label = "",
-  var_desc = "",
-  val_labels = list(tibble::tibble(val = numeric(0), lbl = character(0))),
-  code_instr = "",
-  start = NA,
-  end = NA,
-  imp_decim = 0,
-  var_type = "",
-  rectypes = NA
-) {
+make_var_info_from_scratch <- function(var_name = "",
+                                       var_label = "",
+                                       var_desc = "",
+                                       val_labels = NULL,
+                                       code_instr = "",
+                                       start = NA,
+                                       end = NA,
+                                       imp_decim = 0,
+                                       var_type = "",
+                                       rectypes = NA) {
+  val_labels <- val_labels %||% list(
+    tibble::tibble(val = numeric(0), lbl = character(0))
+  )
+
   tibble::tibble(
     var_name = var_name,
     var_label = var_label,
@@ -852,12 +876,18 @@ make_empty_labels <- function(vt) {
 
 # Helper to get labels out of free text from codInstr in xml
 parse_labels_from_code_instr <- function(code, var_type) {
-  purrr::map2(code, var_type, function(x, vt) {
-    if (is.na(x)) return(make_empty_labels(vt))
-    lines <- fostr_split(x, "\n")[[1]]
-    labels <- parse_code_regex(lines, vt)
-    dplyr::arrange(labels, .data$val)
-  })
+  purrr::map2(
+    code,
+    var_type,
+    function(x, vt) {
+      if (is.na(x)) {
+        return(make_empty_labels(vt))
+      }
+      lines <- fostr_split(x, "\n")[[1]]
+      labels <- parse_code_regex(lines, vt)
+      dplyr::arrange(labels, .data$val)
+    }
+  )
 }
 
 parse_code_regex <- function(x, vtype) {
@@ -875,7 +905,7 @@ parse_code_regex <- function(x, vtype) {
       "^(?<val>[[:graph:]]+)(([[:blank:]]+[[:punct:]|=]+[[:blank:]])+)(?<lbl>.+)$",
       only_matches = TRUE
     )
-
   }
+
   labels
 }

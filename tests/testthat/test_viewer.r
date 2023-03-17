@@ -1,4 +1,3 @@
-
 test_that("normal ddi doesn't error", {
   skip_if_not_installed("htmltools")
   skip_if_not_installed("shiny")
@@ -31,7 +30,8 @@ test_that("attribute-less microdata doesn't error", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("DT")
   data <- read_ipums_micro(
-    ipums_example("cps_00006.xml"), verbose = FALSE, var_attrs = NULL
+    ipums_example("cps_00006.xml"),
+    verbose = FALSE, var_attrs = NULL
   )
   ipums_view(data, launch = FALSE)
   expect_true(TRUE)

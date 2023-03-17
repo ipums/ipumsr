@@ -115,7 +115,10 @@ lbl_na_if <- function(x, .predicate) {
 #' @examples
 #' x <- haven::labelled(
 #'   c(10, 10, 11, 20, 21, 30, 99, 30, 10),
-#'   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
+#'   c(
+#'     Yes = 10, `Yes - Logically Assigned` = 11,
+#'     No = 20, Unlikely = 21, Maybe = 30, NIU = 99
+#'   )
 #' )
 #'
 #' # Convert cases with value 11 to value 10 and associate with 10's label
@@ -136,7 +139,7 @@ lbl_na_if <- function(x, .predicate) {
 #' lbl_collapse(x, ~ (.val %/% 10) * 10)
 #'
 #' # These are equivalent
-#' lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+#' lbl_collapse(x, ~ ifelse(.val == 10, 11, .val))
 #' lbl_relabel(x, 11 ~ .val == 10)
 lbl_relabel <- function(x, ...) {
   if (is.null(attr(x, "labels", exact = TRUE))) {
@@ -156,7 +159,10 @@ lbl_relabel <- function(x, ...) {
     # Figure out which values we're changing from rhs
     ddd_rhs <- ddd
     rlang::f_lhs(ddd_rhs) <- NULL
-    to_change <- as_lbl_function(ddd_rhs)(.val = transformation$val, .lbl = transformation$lbl)
+    to_change <- as_lbl_function(ddd_rhs)(
+      .val = transformation$val,
+      .lbl = transformation$lbl
+    )
 
     # Figure out which label we're changing to from lhs
     ddd_lhs <- ddd
@@ -168,13 +174,21 @@ lbl_relabel <- function(x, ...) {
     transformation$new_lbl[to_change] <- lblval$.lbl
   }
 
-  new_lbls <- dplyr::distinct(transformation, val = .data$new_val, lbl = .data$new_lbl)
+  new_lbls <- dplyr::distinct(
+    transformation,
+    val = .data$new_val,
+    lbl = .data$new_lbl
+  )
+
   lbl_count <- table(new_lbls$val)
 
   if (any(lbl_count > 1)) {
     dup_lbls <- new_lbls[new_lbls$val %in% names(lbl_count)[lbl_count > 1], ]
     dup_lbls <- dplyr::group_by(dup_lbls, .data$val)
-    dup_lbls <- dplyr::summarize(dup_lbls, all_lbls = paste0("\"", lbl, "\"", collapse = ", "))
+    dup_lbls <- dplyr::summarize(
+      dup_lbls,
+      all_lbls = paste0("\"", lbl, "\"", collapse = ", ")
+    )
 
     rlang::abort(c(
       "Values cannot have more than 1 label.",
@@ -188,6 +202,7 @@ lbl_relabel <- function(x, ...) {
   out <- transformation$new_val[match(x, transformation$val)]
   attributes(out) <- attributes(x)
   attr(out, "labels") <- new_lbls
+
   out
 }
 
@@ -204,21 +219,33 @@ lbl_collapse <- function(x, .fun) {
     new_val = pred_f(.val = .data$old_val, .lbl = .data$old_label),
     vals_equal = .data$old_val == .data$new_val
   )
-  # Arrange so that if value existed in old values it is first, otherwise first old value
+
+  # Arrange so that if value existed in old values it is first, otherwise
+  # first old value
   label_info <- dplyr::group_by(label_info, .data$new_val)
-  label_info <- dplyr::arrange(label_info, .data$new_val, dplyr::desc(.data$vals_equal), .data$old_val)
+  label_info <- dplyr::arrange(
+    label_info,
+    .data$new_val,
+    dplyr::desc(.data$vals_equal),
+    .data$old_val
+  )
   label_info <- dplyr::mutate(label_info, new_label = .data$old_label[1])
   label_info <- dplyr::ungroup(label_info)
 
-  new_labels <- dplyr::select(label_info, dplyr::one_of(c("new_label", "new_val")))
+  new_labels <- dplyr::select(
+    label_info,
+    dplyr::one_of(c("new_label", "new_val"))
+  )
   new_labels <- dplyr::distinct(new_labels)
   new_labels <- tibble::deframe(new_labels)
+
   new_attributes <- old_attributes
   new_attributes$labels <- new_labels
 
   out <- label_info$new_val[match(x, label_info$old_val)]
 
   attributes(out) <- new_attributes
+
   out
 }
 
@@ -264,6 +291,7 @@ lbl_define <- function(x, ...) {
       "To relabel a labelled vector, use `lbl_relabel()`."
     ))
   }
+
   unique_x <- sort(unique(x))
   tmp_lbls <- rep(NA_character_, length(unique_x))
   attr(x, "labels") <- purrr::set_names(unique_x, tmp_lbls)
@@ -329,37 +357,43 @@ lbl_add <- function(x, ...) {
     ))
   }
 
-  purrr::reduce(dots, .init = x, function(.x, .y) {
-    old_labels <- attr(.x, "labels")
+  purrr::reduce(
+    dots,
+    .init = x,
+    function(.x, .y) {
+      old_labels <- attr(.x, "labels")
 
-    # Figure out which label we're changing to
-    lblval <- fill_in_lbl(.y, old_labels)
+      # Figure out which label we're changing to
+      lblval <- fill_in_lbl(.y, old_labels)
 
-    # Make changes to vector
-    out <- .x
+      # Make changes to vector
+      out <- .x
 
-    new_labels <- tibble::tibble(
-      label <- c(names(old_labels), lblval$.lbl),
-      value = c(unname(old_labels), lblval$.val)
-    )
-    new_labels <- dplyr::distinct(new_labels)
-    new_labels <- dplyr::arrange(new_labels, .data$value)
-    new_labels <- tibble::deframe(new_labels)
+      new_labels <- tibble::tibble(
+        label <- c(names(old_labels), lblval$.lbl),
+        value = c(unname(old_labels), lblval$.val)
+      )
+      new_labels <- dplyr::distinct(new_labels)
+      new_labels <- dplyr::arrange(new_labels, .data$value)
+      new_labels <- tibble::deframe(new_labels)
 
-    # TODO: if unlabelled vector is passed, this does not convert to labelled class.
-    # Instead try:
-    # haven::labelled(out, labels = new_labels)
-    # Also consider adding label arg to pass to haven::labelled()
-    attr(out, "labels") <- new_labels
-    out
-  })
+      # TODO: if unlabelled vector is passed, this does not convert to labelled
+      # class. Instead try: haven::labelled(out, labels = new_labels)
+      # Also consider adding label arg to pass to haven::labelled()
+      attr(out, "labels") <- new_labels
+      out
+    }
+  )
 }
 
 #' @export
 #' @rdname lbl_add
 lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
   old_labels <- attr(x, "labels")
-  old_labels <- tibble::tibble(val = unname(old_labels), lbl = names(old_labels))
+  old_labels <- tibble::tibble(
+    val = unname(old_labels),
+    lbl = names(old_labels)
+  )
 
   if (is.null(vals)) {
     vals <- dplyr::setdiff(unique(x), old_labels$val)
@@ -368,6 +402,7 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
       rlang::abort("Some values have more than 1 label.")
     }
   }
+
   new_labels <- tibble::tibble(
     val = vals,
     lbl = purrr::map_chr(vals, rlang::as_function(labeller))
@@ -378,8 +413,8 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
   new_labels <- purrr::set_names(new_labels$val, new_labels$lbl)
 
   out <- x
-  # TODO: if unlabelled vector is passed, this does not convert to labelled class.
-  # See above.
+  # TODO: if unlabelled vector is passed, this does not convert to labelled
+  # class. See above.
   attr(out, "labels") <- new_labels
   out
 }
@@ -409,9 +444,13 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
 #' as_factor(lbl_clean(x))
 #'
 #' as_factor(x)
-lbl_clean <-function(x) {
+lbl_clean <- function(x) {
   old_labels <- attr(x, "labels")
-  unused_labels <- unname(old_labels) %in% dplyr::setdiff(unname(old_labels), unique(unname(x)))
+
+  unused_labels <- unname(old_labels) %in% dplyr::setdiff(
+    unname(old_labels),
+    unique(unname(x))
+  )
 
   out <- x
   attr(out, "labels") <- old_labels[!unused_labels]
@@ -435,8 +474,14 @@ as_lbl_function <- function(x, env = caller_env()) {
       rlang::abort("Can't convert a two-sided formula to a function")
     }
 
-    args <- list(... = rlang::missing_arg(), .val = quote(..1), .lbl = quote(..2))
+    args <- list(
+      ... = rlang::missing_arg(),
+      .val = quote(..1),
+      .lbl = quote(..2)
+    )
+
     fn <- new_function(args, rlang::f_rhs(x), rlang::f_env(x))
+
     return(fn)
   }
 
@@ -516,9 +561,16 @@ lbl <- function(...) {
     } else {
       named_val <- names(dots) == ".val"
       named_lbl <- names(dots) == ".lbl"
-      if (any(named_val)) names(dots)[!named_val] <- ".lbl"
-      if (any(named_lbl)) names(dots)[!named_lbl] <- ".val"
+
+      if (any(named_val)) {
+        names(dots)[!named_val] <- ".lbl"
+      }
+
+      if (any(named_lbl)) {
+        names(dots)[!named_lbl] <- ".val"
+      }
     }
+
     out <- list(.val = dots[[".val"]], .lbl = dots[[".lbl"]])
   } else {
     rlang::abort("Expected either 1 or 2 arguments.")
@@ -529,7 +581,10 @@ lbl <- function(...) {
 }
 
 fill_in_lbl <- function(lblval, orig_labels) {
-  if (!inherits(lblval, "lbl_placeholder")) lblval <- lbl(.val = lblval)
+  if (!inherits(lblval, "lbl_placeholder")) {
+    lblval <- lbl(.val = lblval)
+  }
+
   if (is.null(lblval$.lbl) & is.null(lblval$.val)) {
     rlang::abort(
       "Could not fill in label because neither label nor value is specified"
@@ -537,22 +592,27 @@ fill_in_lbl <- function(lblval, orig_labels) {
   }
   if (is.null(lblval$.lbl)) {
     found_val <- unname(orig_labels) == lblval$.val
+
     if (!any(found_val)) {
       rlang::abort(
-        paste0("Could not find value ", lblval$.val,  " in existing labels.")
+        paste0("Could not find value ", lblval$.val, " in existing labels.")
       )
     }
+
     lblval$.lbl <- names(orig_labels)[found_val]
   }
   if (is.null(lblval$.val)) {
     found_lbl <- names(orig_labels) == lblval$.lbl
+
     if (!any(found_lbl)) {
       rlang::abort(
-        paste0("Could not find label \"", lblval$.lbl,  "\" in existing labels.")
+        paste0("Could not find label \"", lblval$.lbl, "\" in existing labels.")
       )
     }
+
     lblval$.val <- unname(orig_labels)[found_lbl]
   }
+
   lblval
 }
 

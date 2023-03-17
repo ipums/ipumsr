@@ -1,8 +1,6 @@
-
 # Setup ------------------------------------------------------------------------
 
 if (have_api_access) {
-
   # Summary metadata
   vcr::use_cassette("nhgis-metadata-summary", {
     ds_meta <- get_nhgis_metadata("datasets")
@@ -61,7 +59,6 @@ if (have_api_access) {
   })
 
   test_that("API throws expected authorization errors", {
-
     skip_if_not_installed("withr")
 
     vcr::use_cassette("nhgis-metadata-missing-api-key", {
@@ -81,13 +78,11 @@ if (have_api_access) {
       )
     })
   })
-
 }
 
 # Tests ------------------------------------------------------------------------
 
 test_that("We can get summary metadata", {
-
   skip_if_no_api_access(have_api_access)
 
   expect_true(tibble::is_tibble(ds_meta))
@@ -98,35 +93,33 @@ test_that("We can get summary metadata", {
 
   expect_true(tibble::is_tibble(shp_meta))
   expect_true(!is_empty(shp_meta))
-
 })
 
 test_that("We can filter summary metadata", {
-
   skip_if_no_api_access(have_api_access)
 
   expect_true(all(grepl("[Ss]ex", tst_meta_filt$description)))
   expect_true(all(grepl("[Aa]ge", tst_meta_filt$description)))
   expect_true(
-    all(purrr::map_lgl(tst_meta_filt$years, ~all(c("1990", "2000") %in% .x)))
+    all(purrr::map_lgl(tst_meta_filt$years, ~ all(c("1990", "2000") %in% .x)))
   )
   expect_true(all(grepl("[Ss]tandard", tst_meta_filt$geographic_integration)))
 
   expect_equal(nrow(ds_meta_filt), 2)
-
 })
 
 test_that("We can get metadata for specific data sources", {
-
   skip_if_no_api_access(have_api_access)
 
   expect_true(is_list(single_ds_meta))
   expect_equal(length(single_ds_meta), 10)
   expect_equal(
     names(single_ds_meta),
-    c("name", "nhgis_id", "group", "description", "sequence",
+    c(
+      "name", "nhgis_id", "group", "description", "sequence",
       "has_multiple_data_types", "data_tables", "geog_levels",
-      "geographic_instances", "breakdowns")
+      "geographic_instances", "breakdowns"
+    )
   )
   expect_equal(single_ds_meta$name, ds)
   expect_true(
@@ -143,8 +136,10 @@ test_that("We can get metadata for specific data sources", {
   expect_equal(length(single_tst_meta), 7)
   expect_equal(
     names(single_tst_meta),
-    c("name", "description", "geographic_integration", "sequence",
-      "time_series", "years", "geog_levels")
+    c(
+      "name", "description", "geographic_integration", "sequence",
+      "time_series", "years", "geog_levels"
+    )
   )
   expect_equal(single_tst_meta$name, tst)
   expect_true(
@@ -158,16 +153,16 @@ test_that("We can get metadata for specific data sources", {
   expect_equal(length(single_dt_meta), 7)
   expect_equal(
     names(single_dt_meta),
-    c("name", "description", "universe", "nhgis_code",
-      "sequence", "dataset_name", "variables")
+    c(
+      "name", "description", "universe", "nhgis_code",
+      "sequence", "dataset_name", "variables"
+    )
   )
   expect_equal(single_dt_meta$name, dt)
   expect_true(tibble::is_tibble(single_dt_meta$variables))
-
 })
 
 test_that("We throw errors on bad metadata requests", {
-
   skip_if_no_api_access(have_api_access)
 
   # Only one source per metadata request
@@ -198,5 +193,4 @@ test_that("We throw errors on bad metadata requests", {
     get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
     "Unable to submit metadata request"
   )
-
 })

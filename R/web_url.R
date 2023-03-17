@@ -15,9 +15,9 @@
 #' The generated URL may not work for variables that are constructed during the
 #' extract creation process.
 #'
-#'@param x An [`ipums_ddi`] object. If left empty, `project` must be specified.
-#'@param var Name of the variable to load
-#'@param project Name of an IPUMS project. Must be one of:
+#' @param x An [`ipums_ddi`] object. If left empty, `project` must be specified.
+#' @param var Name of the variable to load
+#' @param project Name of an IPUMS project. Must be one of:
 #'   `"IPUMS-USA"`, `"IPUMS-CPS"`, `"IPUMS-International"`, `"IPUMS-DHS"`,
 #'   `"ATUS-X"`, `"AHTUS-X"`, `"MTUS-X"`, `"NHIS"`, `"Higher Ed"`, `"NHGIS"`
 #' @param launch If `TRUE`, launch the website.
@@ -48,22 +48,32 @@
 #'
 #' # Can specify an IPUMS project instead of using an `ipums_ddi` object
 #' ipums_website(var = "RECTYPE", project = "IPUMS-CPS", launch = FALSE)
-ipums_website <- function(
-  x, var, project = NULL, launch = TRUE, verbose = TRUE, var_label = NULL, homepage_if_missing = TRUE
-) {
+ipums_website <- function(x,
+                          var,
+                          project = NULL,
+                          launch = TRUE,
+                          verbose = TRUE,
+                          var_label = NULL,
+                          homepage_if_missing = TRUE) {
   UseMethod("ipums_website")
 }
 
-#'@export
-ipums_website.ipums_ddi <- function(
-  x, var, project = NULL, launch = TRUE, verbose = TRUE, var_label = NULL, homepage_if_missing = TRUE
-) {
+#' @export
+ipums_website.ipums_ddi <- function(x,
+                                    var,
+                                    project = NULL,
+                                    launch = TRUE,
+                                    verbose = TRUE,
+                                    var_label = NULL,
+                                    homepage_if_missing = TRUE) {
   if (is.null(project)) project <- x$ipums_project
 
-  # Some convuluted code to check for "detailed variables", because their urls aren't right
+  # Some convuluted code to check for "detailed variables", because their
+  # urls aren't right
   var <- fix_for_detailed_var(x, var, var_label)
 
   url <- get_ipums_url(var, project, verbose, homepage_if_missing)
+
   if (launch) {
     shell.exec(url)
     invisible(url)
@@ -72,17 +82,28 @@ ipums_website.ipums_ddi <- function(
   }
 }
 
-#'@export
-ipums_website.default <- function(
-  x, var, project = NULL, launch = TRUE, verbose = TRUE, var_label = NULL, homepage_if_missing = TRUE
-) {
-  if (is.null(project)) project <- attributes(x)[["ipums_project"]]
-  if (missing(x)) x <- NULL
+#' @export
+ipums_website.default <- function(x,
+                                  var,
+                                  project = NULL,
+                                  launch = TRUE,
+                                  verbose = TRUE,
+                                  var_label = NULL,
+                                  homepage_if_missing = TRUE) {
+  if (is.null(project)) {
+    project <- attributes(x)[["ipums_project"]]
+  }
 
-  # Some convuluted code to check for "detailed variables", because their urls aren't right
+  if (missing(x)) {
+    x <- NULL
+  }
+
+  # Some convuluted code to check for "detailed variables", because their
+  # urls aren't right
   var <- fix_for_detailed_var(x, var, var_label)
 
   url <- get_ipums_url(var, project, verbose, homepage_if_missing)
+
   if (launch) {
     shell.exec(url)
     invisible(url)
@@ -91,11 +112,16 @@ ipums_website.default <- function(
   }
 }
 
-get_ipums_url <- function(var, project, verbose = TRUE, homepage_if_missing = FALSE) {
-
+get_ipums_url <- function(var,
+                          project,
+                          verbose = TRUE,
+                          homepage_if_missing = FALSE) {
   if (is.null(project)) {
     rlang::abort(c(
-      "No project found. Use `project` to specify a project. Available projects:",
+      paste0(
+        "No project found. Use `project` to specify a project. ",
+        "Available projects:"
+      ),
       paste0("\"", all_proj_names(), "\"")
     ))
   }
@@ -125,16 +151,22 @@ get_ipums_url <- function(var, project, verbose = TRUE, homepage_if_missing = FA
 }
 
 
-# Some convuluted code to check for "detailed variables", because their urls aren't right
+# Some convuluted code to check for "detailed variables", because their urls
+# aren't right
 fix_for_detailed_var <- function(object, var, var_label) {
-  if (is.null(var_label) & !is.null(object)) var_label <- ipums_var_label(object, one_of(var))
+  if (is.null(var_label) & !is.null(object)) {
+    var_label <- ipums_var_label(object, one_of(var))
+  }
 
-  if (is.null(var_label)) return(var)
+  if (is.null(var_label)) {
+    return(var)
+  }
 
   is_det <- grepl("detailed version", tolower(var_label), fixed = TRUE)
 
   if (is_det && fostr_sub(var, -1) == "D") {
     var <- fostr_sub(var, 1, -2)
   }
+
   var
 }

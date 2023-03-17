@@ -44,10 +44,10 @@
 #'
 #'    Initialize with a function that takes 2 arguments: The first argument
 #'    should correspond to a [formula][stats::formula] specifying the regression
-#'    model. The second should correspond to a function that prepares the data before
-#'    running the regression analsis. This function follows the conventions
-#'    of the functions used in other callbacks. Any additional arguments passed
-#'    to this function are passed to biglm.
+#'    model. The second should correspond to a function that prepares the data
+#'    before running the regression analsis. This function follows the
+#'    conventions of the functions used in other callbacks. Any additional
+#'    arguments passed to this function are passed to biglm.
 #'  }
 #'  \item{IpumsChunkCallback}{
 #'    (Advanced) Callback interface definition. All
@@ -66,14 +66,17 @@
 #'
 #' @export
 IpumsChunkCallback <- R6::R6Class(
-  "IpumsChunkCallback", inherit = hipread::HipChunkCallback,
+  "IpumsChunkCallback",
+  inherit = hipread::HipChunkCallback,
   private = list(
     data_structure = NULL,
     ddi = NULL,
     var_attrs = NULL,
     rt_ddi = NULL,
     ipumsify = function(data) {
-      if (is.null(private$data_structure)) return(data)
+      if (is.null(private$data_structure)) {
+        return(data)
+      }
       ipumsify_data(
         data, private$data_structure, private$ddi,
         private$var_attrs, private$rt_ddi
@@ -95,7 +98,8 @@ IpumsChunkCallback <- R6::R6Class(
 #' @rdname ipums_callback
 #' @export
 IpumsSideEffectCallback <- R6::R6Class(
-  "IpumsSideEffectCallback", inherit = IpumsChunkCallback,
+  "IpumsSideEffectCallback",
+  inherit = IpumsChunkCallback,
   private = list(
     cancel = FALSE
   ),
@@ -118,7 +122,8 @@ IpumsSideEffectCallback <- R6::R6Class(
 #' @rdname ipums_callback
 #' @export
 IpumsDataFrameCallback <- R6::R6Class(
-  "IpumsDataFrameCallback", inherit = IpumsChunkCallback,
+  "IpumsDataFrameCallback",
+  inherit = IpumsChunkCallback,
   private = list(
     results = list()
   ),
@@ -144,7 +149,8 @@ IpumsDataFrameCallback <- R6::R6Class(
 #' @rdname ipums_callback
 #' @export
 IpumsListCallback <- R6::R6Class(
-  "IpumsListCallback", inherit = IpumsChunkCallback,
+  "IpumsListCallback",
+  inherit = IpumsChunkCallback,
   private = list(
     results = list()
   ),
@@ -169,8 +175,9 @@ IpumsListCallback <- R6::R6Class(
 #' @format NULL
 #' @rdname ipums_callback
 #' @export
-IpumsBiglmCallback <-  R6::R6Class(
-  "IpumsBiglmCallback", inherit = IpumsChunkCallback,
+IpumsBiglmCallback <- R6::R6Class(
+  "IpumsBiglmCallback",
+  inherit = IpumsChunkCallback,
   private = list(
     acc = NULL,
     prep = NULL,

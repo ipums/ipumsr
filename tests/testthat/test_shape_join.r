@@ -1,4 +1,3 @@
-
 data <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 test_that("Basic join works (sf)", {
@@ -36,7 +35,12 @@ test_that("suffix argument works (sf)", {
   data$test <- 1
   shape$test <- 2
 
-  joined <- ipums_shape_inner_join(data, shape, by = "GISJOIN", suffix = c("_d", "_s"))
+  joined <- ipums_shape_inner_join(
+    data,
+    shape,
+    by = "GISJOIN",
+    suffix = c("_d", "_s")
+  )
   expect_equal(data$test, joined$test_d)
   expect_equal(shape$test, joined$test_s)
 })
@@ -59,7 +63,8 @@ test_that("complicated by works (sf)", {
   shape <- dplyr::select(shape, starts_with("join_"), everything(), geometry)
 
   joined <- ipums_shape_inner_join(
-    data, shape, by = c("join_split1", "join_split2" = "join_split_xxx")
+    data, shape,
+    by = c("join_split1", "join_split2" = "join_split_xxx")
   )
 
   joined <- dplyr::select(joined, -dplyr::one_of("join_split1", "join_split2"))
@@ -83,7 +88,9 @@ test_that("Join failures are mentioned", {
   data$GISJOIN[data$GISJOIN == "G1120"] <- "ABC"
   shape$GISJOIN[shape$GISJOIN == "G1120"] <- "XYZ"
 
-  capture.output(joined_fail <- ipums_shape_inner_join(data, shape, by = "GISJOIN"))
+  capture.output(
+    joined_fail <- ipums_shape_inner_join(data, shape, by = "GISJOIN")
+  )
 
   jf <- join_failures(joined_fail)
   expect_equal(nrow(jf$data), 1)

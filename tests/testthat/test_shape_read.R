@@ -1,4 +1,3 @@
-
 nhgis_single_shp <- ipums_example("nhgis0972_shape_small.zip")
 nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
@@ -9,7 +8,6 @@ vars_data_shape_sp <- 8
 pmsa_first2_codes <- c("0080", "0360")
 
 test_that("Can read single shapefile: sf", {
-
   skip_if_not_installed("sf")
 
   expect_silent(
@@ -20,11 +18,9 @@ test_that("Can read single shapefile: sf", {
   expect_equal(ncol(shp), vars_data_shape_sf)
   expect_equal(sort(shp$PMSA)[1:2], pmsa_first2_codes)
   expect_s3_class(shp, c("sf", "tbl_df", "tbl", "data.frame"))
-
 })
 
 test_that("Can read NHGIS extract: single shapefile (sp)", {
-
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
@@ -45,11 +41,9 @@ test_that("Can read NHGIS extract: single shapefile (sp)", {
   expect_equal(ncol(shp@data), vars_data_shape_sp)
   expect_equal(sort(shp$PMSA)[1:2], pmsa_first2_codes)
   expect_s4_class(shp, "SpatialPolygonsDataFrame")
-
 })
 
 test_that("Can row bind multiple sf files", {
-
   skip_if_not_installed("sf")
 
   shp2 <- read_ipums_sf(nhgis_multi_shp, file_select = 2)
@@ -70,11 +64,9 @@ test_that("Can row bind multiple sf files", {
 
   expect_equal(unique(shp$layer), c("US_pmsa_1990", "US_pmsa_2000"))
   expect_s3_class(shp, c("sf", "tbl_df", "tbl", "data.frame"))
-
 })
 
 test_that("Can row bind multiple sp files", {
-
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
@@ -97,11 +89,9 @@ test_that("Can row bind multiple sp files", {
 
   expect_equal(unique(shp$layer), c("US_pmsa_1990", "US_pmsa_2000"))
   expect_s4_class(shp, "SpatialPolygonsDataFrame")
-
 })
 
 test_that("Can read extract at multiple file levels", {
-
   skip_if_not_installed("sf")
 
   # Read standard zip format ------------
@@ -145,12 +135,10 @@ test_that("Can read extract at multiple file levels", {
 
   expect_identical(shp_unzip_dir, shp_direct)
   expect_identical(shp_direct, dir_of_shp)
-
 })
 
 
 test_that("sf and sp geometries are consistent with each other", {
-
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
@@ -171,11 +159,9 @@ test_that("sf and sp geometries are consistent with each other", {
     dplyr::filter(nhgis_sf, GISJOIN == check_geo)$geometry[[2]][[1]][[1]],
     subset(nhgis_sp, GISJOIN == check_geo)@polygons[[2]]@Polygons[[1]]@coords
   )
-
 })
 
 test_that("We can pass arguments to underlying reader functions", {
-
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
@@ -206,11 +192,9 @@ test_that("We can pass arguments to underlying reader functions", {
       "OGR support is provided"
     )
   })
-
 })
 
 test_that("We get informative errors when reading shapefiles", {
-
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
@@ -249,11 +233,9 @@ test_that("We get informative errors when reading shapefiles", {
     ),
     "Some variables had inconsistent types across files:"
   )
-
 })
 
 test_that("Careful rbind handles various data types (sf)", {
-
   skip_if_not_installed("sf")
 
   g1 <- sf::st_sfc(sf::st_point(1:2))
@@ -261,9 +243,9 @@ test_that("Careful rbind handles various data types (sf)", {
   g3 <- sf::st_sfc(
     sf::st_polygon(
       list(
-        matrix(c(0,0,10,0,10,10,0,10,0,0), ncol = 2, byrow = TRUE),
-        matrix(c(5,5,5,6,6,6,6,5,5,5), ncol = 2, byrow = TRUE),
-        matrix(c(5,5,5,6,6,6,6,5,5,5), ncol = 2, byrow = TRUE)
+        matrix(c(0, 0, 10, 0, 10, 10, 0, 10, 0, 0), ncol = 2, byrow = TRUE),
+        matrix(c(5, 5, 5, 6, 6, 6, 6, 5, 5, 5), ncol = 2, byrow = TRUE),
+        matrix(c(5, 5, 5, 6, 6, 6, 6, 5, 5, 5), ncol = 2, byrow = TRUE)
       )
     )
   )
@@ -312,12 +294,9 @@ test_that("Careful rbind handles various data types (sf)", {
     ncol(sf_bind),
     length(union(union(colnames(sf1), colnames(sf2)), colnames(sf3))) + 1
   )
-
-
 })
 
 test_that("Careful rbind handles various data types (sp)", {
-
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
 
@@ -336,7 +315,7 @@ test_that("Careful rbind handles various data types (sp)", {
   poly <- sp::SpatialPolygons(
     list(
       sp::Polygons(
-        list(sp::Polygon(cbind(c(2,4,4,1,2), c(2,3,5,4,2)))),
+        list(sp::Polygon(cbind(c(2, 4, 4, 1, 2), c(2, 3, 5, 4, 2)))),
         "s1"
       )
     )
@@ -356,5 +335,4 @@ test_that("Careful rbind handles various data types (sp)", {
     careful_sp_rbind(list(a = sp1, b = sp2), add_layer_var = TRUE),
     "Cannot combine shape files because variable types don't match"
   )
-
 })

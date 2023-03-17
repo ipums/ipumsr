@@ -130,7 +130,7 @@
 #'         mutate(
 #'           INCTOT = lbl_na_if(
 #'             INCTOT,
-#'             ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'             ~ .lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
 #'           )
 #'         ) %>%
 #'         filter(!is.na(INCTOT)) %>%
@@ -140,8 +140,8 @@
 #'   ),
 #'   chunk_size = 1000
 #' ) %>%
-#' group_by(STATEFIP) %>%
-#' summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
+#'   group_by(STATEFIP) %>%
+#'   summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 #'
 #' # `x` will be a list when using `read_ipums_micro_list_chunked()`
 #' read_ipums_micro_list_chunked(
@@ -166,13 +166,13 @@
 #'     INCTOT ~ AGE + HEALTH, # Model formula
 #'     function(x, pos) {
 #'       x %>%
-#'       mutate(
-#'         INCTOT = lbl_na_if(
-#'           INCTOT,
-#'           ~.lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
-#'         ),
-#'         HEALTH = as_factor(HEALTH)
-#'       )
+#'         mutate(
+#'           INCTOT = lbl_na_if(
+#'             INCTOT,
+#'             ~ .lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'           ),
+#'           HEALTH = as_factor(HEALTH)
+#'         )
 #'     }
 #'   ),
 #'   chunk_size = 1000,
@@ -181,29 +181,40 @@
 #'
 #' summary(lm_results)
 read_ipums_micro_chunked <- function(
-  ddi,
-  callback,
-  chunk_size = 10000,
-  vars = NULL,
-  data_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc"),
-  lower_vars = FALSE
-) {
+    ddi,
+    callback,
+    chunk_size = 10000,
+    vars = NULL,
+    data_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc"),
+    lower_vars = FALSE) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
     rlang::warn(lower_vars_ignored_warning())
   }
+
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
-  data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
+  data_file <- custom_check_file_exists(
+    data_file,
+    c(".dat.gz", ".csv", ".csv.gz")
+  )
 
-  if (verbose) message(short_conditions_text(ddi))
+  if (verbose) {
+    message(short_conditions_text(ddi))
+  }
 
   vars <- enquo(vars)
-  if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
-  if (is.function(callback)) callback <- IpumsSideEffectCallback$new(callback)
+
+  if (!is.null(var_attrs)) {
+    var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  }
+
+  if (is.function(callback)) {
+    callback <- IpumsSideEffectCallback$new(callback)
+  }
 
   ddi <- ddi_filter_vars(ddi, vars, "long", verbose)
 
@@ -211,8 +222,12 @@ read_ipums_micro_chunked <- function(
     if (is.null(ddi$rectype_idvar)) {
       rec_vinfo <- NULL
     } else {
-      rec_vinfo <- dplyr::filter(ddi$var_info, .data$var_name == ddi$rectype_idvar)
+      rec_vinfo <- dplyr::filter(
+        ddi$var_info,
+        .data$var_name == ddi$rectype_idvar
+      )
     }
+
     callback$set_ipums_fields("long", ddi, var_attrs, ddi)
   }
 
@@ -220,7 +235,9 @@ read_ipums_micro_chunked <- function(
     if (ddi$file_type == "hierarchical") {
       rlang::abort("Hierarchical data cannot be read as csv.")
     }
+
     col_types <- ddi_to_readr_colspec(ddi)
+
     out <- readr::read_csv_chunked(
       data_file,
       callback,
@@ -229,12 +246,14 @@ read_ipums_micro_chunked <- function(
       locale = ipums_locale(ddi$file_encoding),
       progress = show_readr_progress(verbose)
     )
+
     if (ddi_has_lowercase_var_names(ddi)) {
       out <- dplyr::rename_all(out, tolower)
     }
   } else {
     rt_info <- ddi_to_rtinfo(ddi)
     col_spec <- ddi_to_colspec(ddi, "long", verbose)
+
     out <- hipread::hipread_long_chunked(
       data_file,
       callback,
@@ -252,15 +271,14 @@ read_ipums_micro_chunked <- function(
 #' @export
 #' @rdname read_ipums_micro_chunked
 read_ipums_micro_list_chunked <- function(
-  ddi,
-  callback,
-  chunk_size = 10000,
-  vars = NULL,
-  data_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc"),
-  lower_vars = FALSE
-) {
+    ddi,
+    callback,
+    chunk_size = 10000,
+    vars = NULL,
+    data_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc"),
+    lower_vars = FALSE) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
     rlang::warn(lower_vars_ignored_warning())
@@ -268,7 +286,10 @@ read_ipums_micro_list_chunked <- function(
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
-  data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
+  data_file <- custom_check_file_exists(
+    data_file,
+    c(".dat.gz", ".csv", ".csv.gz")
+  )
 
   if (verbose) message(short_conditions_text(ddi))
 
@@ -319,9 +340,11 @@ read_ipums_micro_list_chunked <- function(
   out
 }
 
-ipumsify_data <- function(
-  data, data_structure, ddi, var_attrs, rt_ddi
-) {
+ipumsify_data <- function(data,
+                          data_structure,
+                          ddi,
+                          var_attrs,
+                          rt_ddi) {
   if (data_structure == "long") {
     out <- set_ipums_var_attributes(data, ddi$var_info, var_attrs)
   } else if (data_structure == "list") {

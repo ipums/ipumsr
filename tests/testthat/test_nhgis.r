@@ -1,8 +1,7 @@
-
 nhgis_single_csv <- ipums_example("nhgis0972_csv.zip")
 nhgis_single_shp <- ipums_example("nhgis0972_shape_small.zip")
 
-nhgis_multi_ds <-  ipums_example("nhgis0731_csv.zip")
+nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
 nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
 nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
@@ -13,7 +12,6 @@ vars_data <- 25
 # Read single files -------------------------------
 
 test_that("Can read NHGIS extract: single dataset", {
-
   expect_message(
     nhgis_csv <- read_nhgis(nhgis_single_csv),
     "Use of data from NHGIS is subject"
@@ -39,11 +37,9 @@ test_that("Can read NHGIS extract: single dataset", {
     c("Akron, OH PMSA", "Anaheim--Santa Ana, CA PMSA")
   )
   expect_s3_class(nhgis_csv, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
-
 })
 
 test_that("Can read NHGIS extract: fixed-width files", {
-
   expect_error(
     read_nhgis(nhgis_multi_fwf, verbose = FALSE),
     "Multiple files found"
@@ -93,7 +89,10 @@ test_that("Can read NHGIS extract: fixed-width files", {
 
   expect_identical(
     purrr::map(zap_ipums_attributes(nhgis_fwf1), "identity"),
-    purrr::map(zap_ipums_attributes(dplyr::select(nhgis_csv1, -"GISJOIN")), "identity")
+    purrr::map(
+      zap_ipums_attributes(dplyr::select(nhgis_csv1, -"GISJOIN")),
+      "identity"
+    )
   )
 
   expect_warning(
@@ -144,11 +143,9 @@ test_that("Can read NHGIS extract: fixed-width files", {
 
   expect_equal(attr(nhgis_fwf1$YEAR, "label"), "Data File Year")
   expect_s3_class(nhgis_fwf1, c("spec_tbl_df", "tbl_df", "tbl", "data.frame"))
-
 })
 
 test_that("Can read NHGIS extract: single time series table", {
-
   tst <- read_nhgis(
     nhgis_multi_fwf,
     file_select = contains("ts"),
@@ -183,13 +180,11 @@ test_that("Can read NHGIS extract: single time series table", {
       var_desc = "Table A00: Total Population"
     )
   )
-
 })
 
 # Select files when multiple exist -------------------------------
 
 test_that("Can select data files by index", {
-
   nhgis1 <- read_nhgis(nhgis_multi_ds, file_select = 1, verbose = FALSE)
   nhgis2 <- read_nhgis(nhgis_multi_ds, file_select = 2, verbose = FALSE)
 
@@ -210,11 +205,9 @@ test_that("Can select data files by index", {
     attributes(nhgis2$GISJOIN),
     list(label = "GIS Join Match Code", var_desc = "")
   )
-
 })
 
 test_that("Can select data files with tidyselect", {
-
   nhgis1 <- read_nhgis(
     nhgis_multi_ds,
     file_select = contains("ds239"),
@@ -244,18 +237,16 @@ test_that("Can select data files with tidyselect", {
     attributes(nhgis2$GISJOIN),
     list(label = "GIS Join Match Code", var_desc = "")
   )
-
 })
 
 test_that("Can still find codebook if file_select matches data file only", {
-
   nhgis <- read_nhgis(
     nhgis_multi_ds,
     file_select = matches("nation.csv"),
     verbose = FALSE
   )
 
-  nhgis2 <-  read_nhgis(
+  nhgis2 <- read_nhgis(
     nhgis_multi_ds,
     file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv",
     verbose = FALSE
@@ -267,13 +258,11 @@ test_that("Can still find codebook if file_select matches data file only", {
     attributes(nhgis$GISJOIN),
     list(label = "GIS Join Match Code", var_desc = "")
   )
-
 })
 
 # Can read data when provided in zip, dir, and shp formats -------
 
 test_that("We can pass arguments to underlying reader functions", {
-
   expect_silent(
     nhgis_data <- read_nhgis(
       nhgis_single_csv,
@@ -316,11 +305,9 @@ test_that("We can pass arguments to underlying reader functions", {
 
   expect_equal(colnames(nhgis_data2)[1:2], c("A", "B"))
   expect_equal(nhgis_data2[[1]][1], "GIS Join Match Code")
-
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
-
   expect_error(
     read_nhgis("FAKE_FILE.zip", verbose = FALSE),
     "Could not find file"
@@ -367,7 +354,6 @@ test_that("We get informative error messages when reading NHGIS extracts", {
 })
 
 test_that("Can read NHGIS codebook", {
-
   expect_error(
     read_nhgis_codebook(nhgis_multi_ds),
     "Multiple files found"
@@ -420,11 +406,9 @@ test_that("Can read NHGIS codebook", {
     attr(d_fwf$AJWBE009, "var_desc"),
     "Table AJWB: Sex by Age (Universe: Total population)"
   )
-
 })
 
 test_that("Can read Terra codebook", {
-
   terra_area <- system.file(
     "extdata",
     "3485_bundle.zip",
@@ -447,11 +431,9 @@ test_that("Can read Terra codebook", {
   )
 
   expect_equal(dim(cb$var_info), c(4, 10))
-
 })
 
 test_that("Can read certain unzipped structures", {
-
   sps_tmpfile <- file.path(tempdir(), "test.sps")
   csv_tmpfile1 <- file.path(tempdir(), "test1.csv")
   csv_tmpfile2 <- file.path(tempdir(), "test2.csv")
@@ -527,5 +509,4 @@ test_that("Can read certain unzipped structures", {
     suppressWarnings(read_nhgis(csv_tmpfile1, file_select = 3)),
     x2
   )
-
 })

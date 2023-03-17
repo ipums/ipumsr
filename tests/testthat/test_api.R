@@ -91,13 +91,15 @@ test_that("Can define a CPS extract", {
 test_that("Attempt to define a hierarchical extract throws an error", {
   expect_error(
     define_extract_usa(
-      "Test", "us2017b", "YEAR", data_structure = "hierarchical"
+      "Test", "us2017b", "YEAR",
+      data_structure = "hierarchical"
     ),
     regexp = "must be equal to \"rectangular\""
   )
   expect_error(
     define_extract_cps(
-      "Test", "us2017b", "YEAR", rectangular_on = "H"
+      "Test", "us2017b", "YEAR",
+      rectangular_on = "H"
     ),
     "Currently, the `rectangular_on` argument must be equal to \"P\""
   )
@@ -107,7 +109,8 @@ test_that("Attempt to define a hierarchical extract throws an error", {
 test_that("Attempt to rectangularize on H records throws an error", {
   expect_error(
     define_extract_usa(
-      "Test", "us2017b", "YEAR", rectangular_on = "H"
+      "Test", "us2017b", "YEAR",
+      rectangular_on = "H"
     ),
     regexp = "`rectangular_on` argument must be equal to \"P\""
   )
@@ -282,7 +285,7 @@ test_that("Can check the status of a CPS extract by supplying extract object", {
 })
 
 
-test_that("Can check the status of a USA extract by supplying collection and number", {
+test_that("Can check USA extract status by supplying collection and number", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("get-usa-extract-info", {
     extract <- get_extract_info(c("usa", submitted_usa_extract$number))
@@ -307,7 +310,7 @@ test_that("Can check the status of a USA extract by supplying collection and num
 })
 
 
-test_that("Can check the status of a CPS extract by supplying collection and number", {
+test_that("Can check CPS extract status by supplying collection and number", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("get-cps-extract-info", {
     extract <- get_extract_info(c("cps", submitted_cps_extract$number))
@@ -332,7 +335,6 @@ test_that("Can check the status of a CPS extract by supplying collection and num
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
-
   usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
   cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
 
@@ -346,24 +348,27 @@ test_that("extract_list_from_json reproduces extract specs", {
     extract_list_from_json(cps_json)[[1]],
     cps_extract
   )
-
 })
 
 # > Get recent extracts info ----
 test_that("Tibble of recent USA extracts contains expected columns", {
   skip_if_no_api_access(have_api_access)
-  expected_columns <- c("collection", "description", "data_structure",
-                        "rectangular_on", "data_format", "samples", "variables",
-                        "submitted", "download_links", "number", "status")
+  expected_columns <- c(
+    "collection", "description", "data_structure",
+    "rectangular_on", "data_format", "samples", "variables",
+    "submitted", "download_links", "number", "status"
+  )
   expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
 })
 
 
 test_that("Tibble of recent CPS extracts contains expected columns", {
   skip_if_no_api_access(have_api_access)
-  expected_columns <- c("collection", "description", "data_structure",
-                        "rectangular_on", "data_format", "samples", "variables",
-                        "submitted", "download_links", "number", "status")
+  expected_columns <- c(
+    "collection", "description", "data_structure",
+    "rectangular_on", "data_format", "samples", "variables",
+    "submitted", "download_links", "number", "status"
+  )
   expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
 })
 
@@ -453,7 +458,7 @@ if (have_api_access) {
 tryCatch(
   vcr::use_cassette("download-usa-extract-collection-number", {
     skip_if_no_api_access(have_api_access)
-    test_that("Can download a USA extract by supplying collection and number as vector", {
+    test_that("Can download USA extract with collection and number as vector", {
       expect_message(
         ddi_file_path <- download_extract(
           c("usa", ready_usa_extract$number),
@@ -488,7 +493,7 @@ if (have_api_access) {
 tryCatch(
   vcr::use_cassette("download-usa-extract-collection-number", {
     skip_if_no_api_access(have_api_access)
-    test_that("Can download a USA extract by supplying collection and number as string", {
+    test_that("Can download USA extract with collection and number as string", {
       expect_message(
         ddi_file_path <- download_extract(
           paste0("usa:", ready_usa_extract$number),
@@ -548,7 +553,6 @@ test_that("An extract request with missing samples returns correct error", {
 })
 
 test_that("We parse API errors on bad requests", {
-
   bad_extract <- new_ipums_extract(
     "usa",
     samples = "foo"
@@ -628,7 +632,6 @@ test_that("Can add to a submitted USA extract", {
 
 
 test_that("Can remove from a USA extract", {
-
   revised_extract <- add_to_extract(
     usa_extract,
     samples = "us2014a",
@@ -652,7 +655,6 @@ test_that("Can remove from a USA extract", {
 
 
 test_that("Can remove from a CPS extract", {
-
   revised_extract <- remove_from_extract(
     cps_extract,
     samples = "cps1976_02b",
@@ -726,8 +728,9 @@ test_that("Improper extract revisions throw warnings or errors", {
   )
   expect_warning(
     remove_from_extract(usa_extract,
-                        description = "description",
-                        invalid = "invalid"),
+      description = "description",
+      invalid = "invalid"
+    ),
     paste0(
       "The following fields were either not found in the provided extract ",
       "or cannot be removed:.+`description`, `invalid`.+Use ",
@@ -736,8 +739,9 @@ test_that("Improper extract revisions throw warnings or errors", {
   )
   expect_warning(
     add_to_extract(cps_extract,
-                   description = "description",
-                   invalid = "invalid"),
+      description = "description",
+      invalid = "invalid"
+    ),
     paste0(
       "The following fields were either not found in the provided extract ",
       "or cannot be modified:.+`invalid`"
@@ -772,7 +776,6 @@ test_that("Improper extract revisions throw warnings or errors", {
 })
 
 test_that("Can combine extracts", {
-
   x1 <- define_extract_usa(
     description = "Combining",
     samples = c("S1", "S2"),
@@ -798,7 +801,6 @@ test_that("Can combine extracts", {
       data_format = "csv"
     )
   )
-
 })
 
 
@@ -926,6 +928,4 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 
   expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
   expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
-
 })
-

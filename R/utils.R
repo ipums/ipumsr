@@ -11,7 +11,9 @@
 # (some county names have diacritics).
 # However, UTF-8 appears in Terrapop Area extracts (and maybe microdata?)
 ipums_locale <- function(encoding = NULL) {
-  if (is.null(encoding)) encoding <- "ISO-8859-1"
+  if (is.null(encoding)) {
+    encoding <- "ISO-8859-1"
+  }
   readr::locale(encoding = encoding)
 }
 
@@ -25,6 +27,7 @@ select_var_rows <- function(df, vars, filter_var = "var_name") {
 
     df <- dplyr::filter(df, .data[[!!filter_var]] %in% vars)
   }
+
   df
 }
 
@@ -34,7 +37,6 @@ find_files_in <- function(file,
                           file_select = quo(NULL),
                           multiple_ok = FALSE,
                           none_ok = TRUE) {
-
   stopifnot(length(file) == 1)
 
   if (file_is_zip(file)) {
@@ -66,12 +68,12 @@ find_files_in <- function(file,
     rlang::abort(
       paste0(
         "Did not find any files matching extension \"",
-        name_ext, "\" in the provided file path.")
+        name_ext, "\" in the provided file path."
+      )
     )
   }
 
   if (!quo_is_null(file_select)) {
-
     names(file_names) <- file_names
 
     selection <- tryCatch(
@@ -100,7 +102,6 @@ find_files_in <- function(file,
     )
 
     file_names_sel <- file_names[selection]
-
   } else {
     file_names_sel <- file_names
   }
@@ -195,13 +196,13 @@ find_files_in <- function(file,
 #' cps <- set_ipums_var_attributes(cps, ddi)
 #' ipums_var_desc(cps$INCTOT)
 set_ipums_var_attributes <- function(
-  data,
-  var_info,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-
+    data,
+    var_info,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   if (inherits(var_info, "ipums_ddi")) var_info <- var_info$var_info
-  if (is.null(var_info) || is.null(var_attrs)) return(data)
+  if (is.null(var_info) || is.null(var_attrs)) {
+    return(data)
+  }
 
   var_attrs <- match.arg(var_attrs, several.ok = TRUE)
 
@@ -220,28 +221,32 @@ set_ipums_var_attributes <- function(
 
   # Give error message if type doesn't match between value labels and variable
   # as haven::labelled would
-
   class_data <- tibble::tibble(
     var_name = names(data),
     d_type = purrr::map(data, typeof),
     d_is_num = purrr::map_lgl(data, is.numeric)
   )
+
   class_labels <- tibble::tibble(
     var_name = var_info$var_name,
-    l_type = purrr::map(var_info$val_labels, ~typeof(.$val)),
+    l_type = purrr::map(var_info$val_labels, ~ typeof(.$val)),
     l_is_num = purrr::map_lgl(
       var_info$val_labels,
-      function(x) {if (is.null(x) || nrow(x) == 0) NA else is.numeric(x$val)}
+      function(x) {
+        if (is.null(x) || nrow(x) == 0) NA else is.numeric(x$val)
+      }
     )
   )
   class_labels <- dplyr::filter(class_labels, !is.na(.data$l_is_num))
+
   class_join <- dplyr::inner_join(class_data, class_labels, by = "var_name")
   class_join <- dplyr::mutate(
     class_join,
-    coercible =  purrr::map2_lgl(.data$d_type, .data$l_type, ~.x == .y) |
+    coercible = purrr::map2_lgl(.data$d_type, .data$l_type, ~ .x == .y) |
       (.data$d_is_num & .data$l_is_num)
   )
   class_join <- dplyr::filter(class_join, !.data$coercible)
+
   if (nrow(class_join) > 0) {
     rlang::abort(c(
       "Data types in `val_labels` are inconsistent with those found in data.",
@@ -254,29 +259,44 @@ set_ipums_var_attributes <- function(
 
   # Check for values with multiple labels and drop shorter ones because
   # haven will break
-  var_info$val_labels <- purrr::map(var_info$val_labels, function(x) {
-    duplicated_values <- unique(x$val[which(duplicated(x$val))])
-    for (vvv in duplicated_values) {
-      dup_labels <- x$lbl[x$val == vvv]
-      longest_label <- x$lbl[x$val == vvv][which.max(nchar(dup_labels))[1]]
-      x <- dplyr::distinct(x[x$val != vvv | (x$val == vvv & x$lbl == longest_label), ])
-    }
-    x
-  })
+  var_info$val_labels <- purrr::map(
+    var_info$val_labels,
+    function(x) {
+      duplicated_values <- unique(x$val[which(duplicated(x$val))])
 
-  # Convert data frame of value labels to named vector as the labelled class expects
-  var_info$val_labels <- purrr::map(var_info$val_labels, function(x) {
-    if (length(x) == 0 || nrow(x) == 0) NULL else purrr::set_names(x$val, x$lbl)
-  })
+      for (vvv in duplicated_values) {
+        dup_labels <- x$lbl[x$val == vvv]
+        longest_label <- x$lbl[x$val == vvv][which.max(nchar(dup_labels))[1]]
+        x <- dplyr::distinct(
+          x[x$val != vvv | (x$val == vvv & x$lbl == longest_label), ]
+        )
+      }
+
+      x
+    }
+  )
+
+  # Convert data frame of value labels to named vector as the labelled class
+  # expects
+  var_info$val_labels <- purrr::map(
+    var_info$val_labels,
+    function(x) {
+      if (length(x) == 0 || nrow(x) == 0) {
+        NULL
+      } else {
+        purrr::set_names(x$val, x$lbl)
+      }
+    }
+  )
 
   purrr::walk(
     seq_len(nrow(var_info)),
     function(iii) {
       data[[var_info$var_name[iii]]] <<- set_single_var_attributes(
-          data[[var_info$var_name[iii]]],
-          var_info$val_labels[[iii]],
-          var_info$var_label[[iii]],
-          var_info$var_desc[[iii]]
+        data[[var_info$var_name[iii]]],
+        var_info$val_labels[[iii]],
+        var_info$var_label[[iii]],
+        var_info$var_desc[[iii]]
       )
     }
   )
@@ -285,10 +305,20 @@ set_ipums_var_attributes <- function(
 }
 
 set_single_var_attributes <- function(x, val_labels, var_label, var_desc) {
-  if (is.na(var_label)) var_label <- NULL
-  if (is.na(var_desc)) var_desc <- NULL
+  if (is.na(var_label)) {
+    var_label <- NULL
+  }
+
+  if (is.na(var_desc)) {
+    var_desc <- NULL
+  }
+
   if (!is.null(val_labels)) {
-    structure(haven::labelled(x, val_labels), label = var_label, var_desc = var_desc)
+    structure(
+      haven::labelled(x, val_labels),
+      label = var_label,
+      var_desc = var_desc
+    )
   } else {
     structure(x, label = var_label, var_desc = var_desc)
   }
@@ -311,7 +341,10 @@ set_single_var_attributes <- function(x, val_labels, var_label, var_desc) {
 #'   attributes attached.
 #'
 #' @export
-ipums_collect <- function(data, ddi, var_attrs = c("val_labels", "var_label", "var_desc")) {
+ipums_collect <- function(
+    data,
+    ddi,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   var_attrs <- match.arg(var_attrs, several.ok = TRUE)
   set_ipums_var_attributes(dplyr::collect(data), ddi, var_attrs)
 }
@@ -345,10 +378,16 @@ file_is_dir <- function(file) {
 # Treat .gz as an incomplete file extension
 ipums_file_ext <- function(file) {
   ext <- tools::file_ext(file)
-  if (ext != "") ext <- paste0(".", ext)
+
+  if (ext != "") {
+    ext <- paste0(".", ext)
+  }
+
   if (ext == ".gz") {
     ext_part1 <- tools::file_ext(tools::file_path_sans_ext(file))
-    if (ext_part1 != "") ext <- paste0(".", ext_part1, ext)
+    if (ext_part1 != "") {
+      ext <- paste0(".", ext_part1, ext)
+    }
   }
 
   ext
@@ -399,7 +438,6 @@ custom_parse_integer <- function(x, var_msg_info = "variable") {
   }
 }
 
-
 custom_format_text <- function(..., indent = 0, exdent = 0) {
   text <- paste0(...)
   text <- fostr_split(text, "\n")
@@ -425,7 +463,7 @@ custom_check_file_exists <- function(file, extra_ext = NULL) {
   file <- file.path(dirname(file), basename(file))
 
   if (!is.null(extra_ext)) {
-    file <- c(file, purrr::map_chr(extra_ext, ~file_as_ext(file, .)))
+    file <- c(file, purrr::map_chr(extra_ext, ~ file_as_ext(file, .)))
   }
 
   exists_check <- file.exists(file)
@@ -437,26 +475,23 @@ custom_check_file_exists <- function(file, extra_ext = NULL) {
         "Could not find file `", file.path(getwd(), basename(file)), "`."
       ))
     } else {
-      rlang::abort(paste0(
-        "Could not find file `", file, "`"
-      ))
+      rlang::abort(paste0("Could not find file `", file, "`"))
     }
   } else {
     file[exists_check][1]
   }
 }
 
-
 path_is_zip_or_dir <- function(file) {
   ext <- tools::file_ext(file)
   ext == "zip" || ext == ""
 }
 
-
 release_questions <- function() {
   installed_packages <- rownames(utils::installed.packages())
 
   out <- c()
+
   if (!"ipumsexamples" %in% installed_packages) {
     out <- c(
       out,
@@ -475,6 +510,7 @@ release_questions <- function() {
       "` before you continue?"
     )
   }
+
   out
 }
 
@@ -537,11 +573,20 @@ fostr_named_capture <- function(string, pattern, only_matches = FALSE) {
   if (is.null(attr(matches, "capture.start"))) {
     rlang::abort("No named capture items in regex")
   }
+
   capture_names <- colnames(attr(matches, "capture.start"))
   capture_names <- capture_names[capture_names != ""]
-  starts <- purrr::map(capture_names, ~attr(matches, "capture.start")[, .])
-  ends <- purrr::map2(capture_names, starts, ~attr(matches, "capture.length")[, .x] + .y - 1)
 
+  starts <- purrr::map(
+    capture_names,
+    ~ attr(matches, "capture.start")[, .]
+  )
+
+  ends <- purrr::map2(
+    capture_names,
+    starts,
+    ~ attr(matches, "capture.length")[, .x] + .y - 1
+  )
 
   out <- purrr::pmap_dfc(
     dplyr::tibble(start = starts, end = ends, nm = capture_names),
@@ -550,7 +595,10 @@ fostr_named_capture <- function(string, pattern, only_matches = FALSE) {
       dplyr::tibble(!!nm := substr(string, start, end))
     }
   )
-  if (only_matches) out <- out[out[[1]] != "", ]
+
+  if (only_matches) {
+    out <- out[out[[1]] != "", ]
+  }
 
   out
 }
@@ -580,7 +628,6 @@ fostr_named_capture_single <- function(string, pattern, only_matches = FALSE) {
 #'
 #' @noRd
 simplify_nhgis_gis_file <- function(file) {
-
   if (!rlang::is_installed("rmapshaper")) {
     rlang::abort("`rmapshaper` is required to simplify an NHGIS GIS extract")
   }
@@ -609,7 +656,7 @@ simplify_nhgis_gis_file <- function(file) {
 
   shp_data <- purrr::map(
     1:n_files,
-    ~tryCatch(
+    ~ tryCatch(
       rmapshaper::ms_simplify(
         read_ipums_sf(file, file_select = !!.x),
         keep = 0.01
@@ -627,7 +674,7 @@ simplify_nhgis_gis_file <- function(file) {
 
   inner_files <- purrr::map_chr(
     inner_files_zip_name,
-    ~fostr_replace(
+    ~ fostr_replace(
       fostr_subset(utils::unzip(.x, list = TRUE)$Name, ".shp$"),
       ".shp$",
       ""
@@ -639,7 +686,7 @@ simplify_nhgis_gis_file <- function(file) {
   purrr::walk2(
     shp_data,
     inner_files,
-    ~suppressWarnings(
+    ~ suppressWarnings(
       sf::st_write(
         .x,
         dsn = getwd(),
@@ -652,7 +699,7 @@ simplify_nhgis_gis_file <- function(file) {
   purrr::walk2(
     inner_files,
     inner_files_zip_name,
-    ~{
+    ~ {
       files <- dir(pattern = .x)
       utils::zip(.y, files)
       unlink(files)
@@ -671,5 +718,4 @@ simplify_nhgis_gis_file <- function(file) {
   setwd(orig_wd)
 
   invisible(file)
-
 }

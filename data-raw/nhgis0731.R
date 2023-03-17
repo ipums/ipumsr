@@ -1,4 +1,3 @@
-
 # Generate sample csv data for comparison to fixed-width data
 #
 # This script produces:

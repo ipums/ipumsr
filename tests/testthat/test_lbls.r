@@ -1,4 +1,3 @@
-
 x <- haven::labelled(
   c(10, 10, 11, 20, 30, 99, 30, 10),
   c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
@@ -19,7 +18,7 @@ attr(x_inc, "label") <- "Test label"
 
 x_unused <- haven::labelled(
   c(1, 2, 3, 1, 2, 3, 1, 2, 3),
-  c(Q1 = 1, Q2 = 2, Q3 = 3, Q4= 4)
+  c(Q1 = 1, Q2 = 2, Q3 = 3, Q4 = 4)
 )
 attr(x_unused, "label") <- "Test label"
 
@@ -31,7 +30,7 @@ attr(x_flipped, "label") <- "Test label"
 
 test_that("lbl_na_if: Simple example with both .lbl and .val keywords", {
   expect_equal(
-    lbl_na_if(x, ~.val >= 90 | .lbl %in% c("Maybe")),
+    lbl_na_if(x, ~ .val >= 90 | .lbl %in% c("Maybe")),
     x_na
   )
 })
@@ -39,7 +38,7 @@ test_that("lbl_na_if: Simple example with both .lbl and .val keywords", {
 test_that("lbl_na_if: Respects environment", {
   upper_val <- 90
   expect_equal(
-    lbl_na_if(x, ~.val >= upper_val | .lbl %in% c("Maybe")),
+    lbl_na_if(x, ~ .val >= upper_val | .lbl %in% c("Maybe")),
     x_na
   )
 })
@@ -67,12 +66,12 @@ test_that("lbl_collapse: basic", {
   attr(x_collapse, "label") <- "Test label"
 
   expect_equal(
-    lbl_collapse(x, ~(.val %/% 10) * 10),
+    lbl_collapse(x, ~ (.val %/% 10) * 10),
     x_collapse
   )
 })
 
-test_that("lbl_collapse: if recoding to old value it is maintained (even if it's not first)", {
+test_that("lbl_collapse maintains old label values (even if not first)", {
   x_collapse <- haven::labelled(
     c(11, 11, 11, 20, 30, 99, 30, 11),
     c(`Yes - Logically Assigned` = 11, No = 20, Maybe = 30, NIU = 99)
@@ -80,7 +79,7 @@ test_that("lbl_collapse: if recoding to old value it is maintained (even if it's
   attr(x_collapse, "label") <- "Test label"
 
   expect_equal(
-    lbl_collapse(x, ~ifelse(.val == 10, 11, .val)),
+    lbl_collapse(x, ~ ifelse(.val == 10, 11, .val)),
     x_collapse
   )
 })
@@ -168,7 +167,11 @@ test_that("lbl_relabel: error when to existing value with new label", {
 
 test_that("lbl_relabel: can flip labels", {
   expect_equal(
-    lbl_relabel(x, lbl(10, "Yes - Logically Assigned") ~ .val == 11, lbl(11, "Yes") ~ .val == 10),
+    lbl_relabel(
+      x,
+      lbl(10, "Yes - Logically Assigned") ~ .val == 11,
+      lbl(11, "Yes") ~ .val == 10
+    ),
     x_flipped
   )
 })
@@ -216,7 +219,10 @@ test_that("lbl_define: error when x is already labelled", {
 test_that("lbl_add: can add a single label", {
   x_newlabel <- haven::labelled(
     c(10, 10, 11, 20, 30, 99, 30, 10),
-    c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, `New Label` = 90, NIU = 99)
+    c(
+      Yes = 10, `Yes - Logically Assigned` = 11, No = 20,
+      Maybe = 30, `New Label` = 90, NIU = 99
+    )
   )
   attr(x_newlabel, "label") <- "Test label"
   expect_equal(
@@ -228,7 +234,10 @@ test_that("lbl_add: can add a single label", {
 test_that("lbl_add: can add more than one label", {
   x_newlabel <- haven::labelled(
     c(10, 10, 11, 20, 30, 99, 30, 10),
-    c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Maybe = 30, `New Label` = 90, `n2` = 91, NIU = 99)
+    c(
+      Yes = 10, `Yes - Logically Assigned` = 11, No = 20,
+      Maybe = 30, `New Label` = 90, `n2` = 91, NIU = 99
+    )
   )
   attr(x_newlabel, "label") <- "Test label"
 
@@ -250,7 +259,7 @@ test_that("lbl_add_vals: basic", {
   )
   attr(x_inc_new, "label") <- "Test label"
 
-  expect_equal(lbl_add_vals(x_inc, ~paste0("$", .), c(100, 105)), x_inc_new)
+  expect_equal(lbl_add_vals(x_inc, ~ paste0("$", .), c(100, 105)), x_inc_new)
 })
 
 

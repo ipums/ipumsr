@@ -50,7 +50,6 @@ ipums_list_files <- function(file,
                              data_layer = deprecated(),
                              shape_layer = deprecated(),
                              raster_layer = deprecated()) {
-
   has_dl <- !missing(data_layer)
   has_sl <- !missing(shape_layer)
   has_rl <- !missing(raster_layer)
@@ -96,7 +95,6 @@ ipums_list_files <- function(file,
   raster_files <- NULL
 
   if (is.null(types) | "data" %in% types) {
-
     data_layer <- enquo(data_layer)
 
     data_files <- tibble::tibble(
@@ -107,11 +105,9 @@ ipums_list_files <- function(file,
         multiple_ok = TRUE
       )
     )
-
   }
 
   if (is.null(types) | "shape" %in% types) {
-
     shape_layer <- enquo(shape_layer)
 
     shape_files <- tibble::tibble(
@@ -122,11 +118,9 @@ ipums_list_files <- function(file,
         multiple_ok = TRUE
       )
     )
-
   }
 
   if (is.null(types) | "raster" %in% types) {
-
     raster_layer <- enquo(raster_layer)
 
     raster_files <- tibble::tibble(
@@ -137,7 +131,6 @@ ipums_list_files <- function(file,
         multiple_ok = TRUE
       )
     )
-
   }
 
   dplyr::bind_rows(
@@ -146,5 +139,4 @@ ipums_list_files <- function(file,
     raster = raster_files,
     .id = "type"
   )
-
 }

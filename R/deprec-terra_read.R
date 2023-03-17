@@ -37,12 +37,9 @@
 #' data <- read_terra_raster("2552_bundle.zip", "LCDECIDOPZM2013.tiff")
 #' data <- read_terra_raster_list("2552_bundle.zip", "ZM")
 #' }
-read_terra_raster <- function(
-  data_file,
-  data_layer = NULL,
-  verbose = TRUE
-) {
-
+read_terra_raster <- function(data_file,
+                              data_layer = NULL,
+                              verbose = TRUE) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -59,12 +56,9 @@ read_terra_raster <- function(
 
 #' @rdname read_terra_raster
 #' @export
-read_terra_raster_list <- function(
-  data_file,
-  data_layer = NULL,
-  verbose = TRUE
-) {
-
+read_terra_raster_list <- function(data_file,
+                                   data_layer = NULL,
+                                   verbose = TRUE) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -83,8 +77,10 @@ read_terra_raster_list <- function(
 # without having to know about lists, but I also don't want to have the type returned
 # by a function change based on the inputs. Therefore, the singular version loads directly
 # as raster, and the multi one always returns a list.
-read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_ok) {
-
+read_terra_raster_internal <- function(data_file,
+                                       data_layer,
+                                       verbose,
+                                       multiple_ok) {
   # Check if raster package is installed
   if (!requireNamespace("raster", quietly = TRUE)) {
     rlang::abort(paste0(
@@ -96,46 +92,53 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
   }
 
   # Read data files ----
-    if (path_is_zip_or_dir(data_file)) {
-      tiff_names <- find_files_in(data_file, "tiff", data_layer, multiple_ok = multiple_ok)
+  if (path_is_zip_or_dir(data_file)) {
+    tiff_names <- find_files_in(
+      data_file,
+      "tiff",
+      data_layer,
+      multiple_ok = multiple_ok
+    )
 
-      if (file_is_zip(data_file)) {
-        raster_temp <- tempfile()
-        dir.create(raster_temp)
+    if (file_is_zip(data_file)) {
+      raster_temp <- tempfile()
+      dir.create(raster_temp)
 
-        on.exit(
-          unlink(raster_temp, recursive = TRUE),
-          add = TRUE,
-          after = FALSE
-        )
+      on.exit(
+        unlink(raster_temp, recursive = TRUE),
+        add = TRUE,
+        after = FALSE
+      )
 
-        # Don't delete raster temp files, because R reads from disk
-        utils::unzip(data_file, tiff_names, exdir = raster_temp)
+      # Don't delete raster temp files, because R reads from disk
+      utils::unzip(data_file, tiff_names, exdir = raster_temp)
 
-        raster_paths <- file.path(raster_temp, tiff_names)
-      } else {
-        raster_paths <- file.path(data_file, tiff_names)
-      }
-
-      if (!multiple_ok) {
-        out <- raster::raster(raster_paths)
-      } else {
-        out <- purrr::map(raster_paths, ~raster::raster(.))
-        out <- purrr::set_names(out, fostr_sub(basename(raster_paths), 1, -6))
-      }
+      raster_paths <- file.path(raster_temp, tiff_names)
     } else {
-      if (!multiple_ok) {
-        out <- raster::raster(data_file)
-      } else {
-        out <- purrr::map(data_file, raster::raster)
-        out <- purrr::set_names(out, fostr_sub(data_file, 1, -6))
-      }
+      raster_paths <- file.path(data_file, tiff_names)
     }
 
-    if (verbose) message(short_conditions_text(terra_empty_ddi))
-
-    out
+    if (!multiple_ok) {
+      out <- raster::raster(raster_paths)
+    } else {
+      out <- purrr::map(raster_paths, ~ raster::raster(.))
+      out <- purrr::set_names(out, fostr_sub(basename(raster_paths), 1, -6))
+    }
+  } else {
+    if (!multiple_ok) {
+      out <- raster::raster(data_file)
+    } else {
+      out <- purrr::map(data_file, raster::raster)
+      out <- purrr::set_names(out, fostr_sub(data_file, 1, -6))
+    }
   }
+
+  if (verbose) {
+    message(short_conditions_text(terra_empty_ddi))
+  }
+
+  out
+}
 
 #' Read data from an IPUMS Terra area extract
 #'
@@ -189,14 +192,12 @@ read_terra_raster_internal <- function(data_file, data_layer, verbose, multiple_
 #' data <- read_terra_area("2553_bundle.zip")
 #' }
 read_terra_area <- function(
-  data_file,
-  data_layer = NULL,
-  ddi_file = NULL,
-  cb_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-
+    data_file,
+    data_layer = NULL,
+    ddi_file = NULL,
+    cb_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -208,12 +209,15 @@ read_terra_area <- function(
   )
 
   data_layer <- enquo(data_layer)
-  if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  if (!is.null(var_attrs)) {
+    var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  }
   data_is_zip_or_path <- path_is_zip_or_dir(data_file)
 
   # Try to read DDI for license info ----
   if (data_is_zip_or_path & is.null(ddi_file)) {
-    ddi <- read_ipums_ddi(data_file) # Don't pass in `data_layer` bc only 1 ddi/area extract
+    # Don't pass in `data_layer` bc only 1 ddi/area extract
+    ddi <- read_ipums_ddi(data_file)
   } else if (!is.null(ddi_file)) {
     ddi <- read_ipums_ddi(ddi_file)
   }
@@ -239,7 +243,9 @@ read_terra_area <- function(
   # Regardless of what DDI says, it appears that files are stored as UTF-8
   ddi$file_encoding <- "UTF-8"
 
-  if (verbose) message(short_conditions_text(ddi))
+  if (verbose) {
+    message(short_conditions_text(ddi))
+  }
 
   # Read data file ----
   if (file_is_zip(data_file)) {
@@ -251,6 +257,7 @@ read_terra_area <- function(
   } else {
     read_data <- data_file
   }
+
   data <- readr::read_csv(
     read_data,
     col_types = readr::cols(.default = "c"),
@@ -270,17 +277,15 @@ read_terra_area <- function(
 #' @rdname read_terra_area
 #' @export
 read_terra_area_sf <- function(
-  data_file,
-  shape_file = NULL,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "UTF-8",
-  ddi_file = NULL,
-  cb_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-
+    data_file,
+    shape_file = NULL,
+    data_layer = NULL,
+    shape_layer = data_layer,
+    shape_encoding = "UTF-8",
+    ddi_file = NULL,
+    cb_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -292,14 +297,29 @@ read_terra_area_sf <- function(
   )
 
   data_layer <- enquo(data_layer)
-  data <- read_terra_area(data_file, !!data_layer, ddi_file, cb_file, verbose, var_attrs)
+  data <- read_terra_area(
+    data_file,
+    !!data_layer,
+    ddi_file,
+    cb_file,
+    verbose,
+    var_attrs
+  )
 
   shape_layer <- enquo(shape_layer)
-  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
 
-  if (is.null(shape_file)) shape_file <- data_file
+  if (quo_text(shape_layer) == "data_layer") {
+    shape_layer <- data_layer
+  }
+
+  if (is.null(shape_file)) {
+    shape_file <- data_file
+  }
+
   shape_data <- read_ipums_sf(
-    shape_file, !!shape_layer, encoding = shape_encoding
+    shape_file,
+    !!shape_layer,
+    encoding = shape_encoding
   )
 
   geo_vars <- unname(tidyselect::vars_select(names(data), starts_with("GEO")))
@@ -317,17 +337,15 @@ read_terra_area_sf <- function(
 #' @rdname read_terra_area
 #' @export
 read_terra_area_sp <- function(
-  data_file,
-  shape_file = NULL,
-  data_layer = NULL,
-  shape_layer = data_layer,
-  shape_encoding = "UTF-8",
-  ddi_file = NULL,
-  cb_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-
+    data_file,
+    shape_file = NULL,
+    data_layer = NULL,
+    shape_layer = data_layer,
+    shape_encoding = "UTF-8",
+    ddi_file = NULL,
+    cb_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -339,12 +357,24 @@ read_terra_area_sp <- function(
   )
 
   data_layer <- enquo(data_layer)
-  data <- read_terra_area(data_file, !!data_layer, ddi_file, cb_file, verbose, var_attrs)
+  data <- read_terra_area(
+    data_file,
+    !!data_layer,
+    ddi_file,
+    cb_file,
+    verbose,
+    var_attrs
+  )
 
   shape_layer <- enquo(shape_layer)
-  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
+  if (quo_text(shape_layer) == "data_layer") {
+    shape_layer <- data_layer
+  }
 
-  if (is.null(shape_file)) shape_file <- data_file
+  if (is.null(shape_file)) {
+    shape_file <- data_file
+  }
+
   shape_data <- read_ipums_sp(shape_file, !!shape_layer, verbose = verbose)
 
   # Shape data's label column is not reliable. Sometimes it is cut short
@@ -398,14 +428,12 @@ read_terra_area_sp <- function(
 #' data <- read_terra_micro("2553_bundle.zip")
 #' }
 read_terra_micro <- function(
-  data_file,
-  ddi_file = NULL,
-  data_layer = NULL,
-  n_max = Inf,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc")
-) {
-
+    data_file,
+    ddi_file = NULL,
+    data_layer = NULL,
+    n_max = Inf,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc")) {
   lifecycle::deprecate_warn(
     "0.6.0",
     I("All `read_terra_*()` functionality"),
@@ -417,7 +445,10 @@ read_terra_micro <- function(
   )
 
   data_layer <- enquo(data_layer)
-  if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+
+  if (!is.null(var_attrs)) {
+    var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  }
 
   data_is_zip_or_path <- path_is_zip_or_dir(data_file)
 
@@ -429,9 +460,14 @@ read_terra_micro <- function(
   } else {
     ddi <- terra_empty_ddi
   }
-  if (is.na(ddi$ipums_project)) ddi$ipums_project <- "IPUMS Terra"
 
-  if (verbose) message(short_conditions_text(ddi))
+  if (is.na(ddi$ipums_project)) {
+    ddi$ipums_project <- "IPUMS Terra"
+  }
+
+  if (verbose) {
+    message(short_conditions_text(ddi))
+  }
 
   # Read data file ----
   if (file_is_zip(data_file)) {
@@ -449,21 +485,23 @@ read_terra_micro <- function(
 
   # Use DDI for vartype information, if available
   if (!is.null(ddi$var_info$var_type)) {
-    # IPUMS Terra microdata DDIs are messy. They have a non-exhaustive list of variables with
-    # multiple versions for some of them.
+    # IPUMS Terra microdata DDIs are messy. They have a non-exhaustive list of
+    # variables with multiple versions for some of them.
     # Get unique list of col_types provided, and read the rest in as characters.
     # Then guess based on all values using `readr::type_convert()`
     var_type_info <- ddi$var_info
     var_type_info <- var_type_info[, c("var_name", "var_type")]
     var_type_info <- dplyr::distinct(var_type_info)
-    var_type_spec <- purrr::map(var_type_info$var_type, function(x) {
-      switch(
-        x,
-        "numeric" = readr::col_number(),
-        "character" = readr::col_character(),
-        "integer" = readr::col_integer()
-      )
-    })
+    var_type_spec <- purrr::map(
+      var_type_info$var_type,
+      function(x) {
+        switch(x,
+          "numeric" = readr::col_number(),
+          "character" = readr::col_character(),
+          "integer" = readr::col_integer()
+        )
+      }
+    )
     var_type_spec <- purrr::set_names(var_type_spec, var_type_info$var_name)
     var_types <- readr::cols(.defualt = readr::col_character())
     var_types$cols <- var_type_spec

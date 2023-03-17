@@ -23,8 +23,6 @@ NULL
 get_recent_extracts_info_list <- function(collection = NULL,
                                           how_many = 10,
                                           api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_list()",
@@ -36,7 +34,6 @@ get_recent_extracts_info_list <- function(collection = NULL,
     how_many = how_many,
     api_key = api_key
   )
-
 }
 
 #' @rdname get_recent_extracts_info
@@ -44,7 +41,6 @@ get_recent_extracts_info_list <- function(collection = NULL,
 get_recent_extracts_info_tbl <- function(collection = NULL,
                                          how_many = 10,
                                          api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_tbl()",
@@ -57,5 +53,4 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
     table = TRUE,
     api_key = api_key
   )
-
 }

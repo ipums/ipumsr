@@ -198,7 +198,7 @@ read_ipums_micro_chunked(
         mutate(
           INCTOT = lbl_na_if(
             INCTOT,
-            ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+            ~ .lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
           )
         ) \%>\%
         filter(!is.na(INCTOT)) \%>\%
@@ -208,8 +208,8 @@ read_ipums_micro_chunked(
   ),
   chunk_size = 1000
 ) \%>\%
-group_by(STATEFIP) \%>\%
-summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
+  group_by(STATEFIP) \%>\%
+  summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 
 # `x` will be a list when using `read_ipums_micro_list_chunked()`
 read_ipums_micro_list_chunked(
@@ -234,13 +234,13 @@ lm_results <- read_ipums_micro_chunked(
     INCTOT ~ AGE + HEALTH, # Model formula
     function(x, pos) {
       x \%>\%
-      mutate(
-        INCTOT = lbl_na_if(
-          INCTOT,
-          ~.lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
-        ),
-        HEALTH = as_factor(HEALTH)
-      )
+        mutate(
+          INCTOT = lbl_na_if(
+            INCTOT,
+            ~ .lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+          ),
+          HEALTH = as_factor(HEALTH)
+        )
     }
   ),
   chunk_size = 1000,

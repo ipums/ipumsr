@@ -1,4 +1,3 @@
-
 test_that("can read DDI with labeled string variable", {
   ddi <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
   sample_val_labels <- ddi$var_info[
@@ -16,7 +15,6 @@ test_that("We ignore layer selection for direct .xml files", {
 })
 
 test_that("Can read ddi from zip archives and directories", {
-
   xml1 <- xml2::read_xml(ipums_example("cps_00006.xml"))
   xml2 <- xml2::read_xml(ipums_example("cps_00010.xml"))
 
@@ -73,5 +71,4 @@ test_that("Can read ddi from zip archives and directories", {
     )$var_info,
     read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
   )
-
 })

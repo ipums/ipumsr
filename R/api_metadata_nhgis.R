@@ -191,7 +191,6 @@ get_nhgis_metadata <- function(type = NULL,
                                match_all = TRUE,
                                match_case = FALSE,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   summary_req <- !is.null(type)
   ds_req <- !is.null(dataset)
   dt_req <- !is.null(data_table)
@@ -220,7 +219,7 @@ get_nhgis_metadata <- function(type = NULL,
 
   is_too_long <- purrr::map_lgl(
     list(type, dataset, data_table, time_series_table),
-    ~length(.x) > 1
+    ~ length(.x) > 1
   )
 
   if (any(is_too_long)) {
@@ -237,7 +236,6 @@ get_nhgis_metadata <- function(type = NULL,
   }
 
   if (summary_req) {
-
     metadata <- get_nhgis_summary_metadata(type = type, api_key = api_key)
 
     metadata <- filter_multi_col(
@@ -246,9 +244,7 @@ get_nhgis_metadata <- function(type = NULL,
       match_all = match_all,
       match_case = match_case
     )
-
   } else {
-
     api_url <- metadata_request_url(
       .base_url = nhgis_api_metadata_url(),
       datasets = dataset,
@@ -257,11 +253,9 @@ get_nhgis_metadata <- function(type = NULL,
     )
 
     metadata <- ipums_api_metadata_request(api_url, api_key)
-
   }
 
   metadata
-
 }
 
 # Internal functions -----------------------------------------------------------
@@ -278,7 +272,6 @@ get_nhgis_metadata <- function(type = NULL,
 #' @noRd
 get_nhgis_summary_metadata <- function(type,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   if (!type %in% c("datasets", "time_series_tables", "shapefiles")) {
     rlang::abort(
       paste0(
@@ -294,7 +287,6 @@ get_nhgis_summary_metadata <- function(type,
   )
 
   metadata
-
 }
 
 #' Generate a URL to submit to the NHGIS metadata API
@@ -310,7 +302,6 @@ get_nhgis_summary_metadata <- function(type,
 #'
 #' @noRd
 metadata_request_url <- function(.base_url, ...) {
-
   dots <- purrr::compact(rlang::list2(...))
   fields <- names(dots)
 
@@ -328,7 +319,6 @@ metadata_request_url <- function(.base_url, ...) {
   )
 
   api_url
-
 }
 
 #' Submit a request to the IPUMS metadata API and parse response
@@ -342,24 +332,25 @@ metadata_request_url <- function(.base_url, ...) {
 #' @noRd
 ipums_api_metadata_request <- function(request_url,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
+  tryCatch(
+    {
+      res <- httr::GET(
+        url = request_url,
+        httr::user_agent(
+          paste0(
+            "https://github.com/ipums/ipumsr ",
+            as.character(utils::packageVersion("ipumsr"))
+          )
+        ),
+        httr::content_type_json(),
+        add_user_auth_header(api_key)
+      )
 
-  tryCatch({
-    res <- httr::GET(
-      url = request_url,
-      httr::user_agent(
-        paste0(
-          "https://github.com/ipums/ipumsr ",
-          as.character(utils::packageVersion("ipumsr"))
-        )
-      ),
-      httr::content_type_json(),
-      add_user_auth_header(api_key)
-    )
-
-    content <- jsonlite::fromJSON(
-      suppressMessages(httr::content(res, "text")),
-      simplifyVector = TRUE
-    )},
+      content <- jsonlite::fromJSON(
+        suppressMessages(httr::content(res, "text")),
+        simplifyVector = TRUE
+      )
+    },
     error = function(cond) {
       rlang::abort(
         paste0(
@@ -386,7 +377,6 @@ ipums_api_metadata_request <- function(request_url,
   metadata <- nested_df_to_tbl(content)
 
   metadata
-
 }
 
 #' Identify list elements that match provided regular expressions
@@ -409,7 +399,6 @@ ipums_api_metadata_request <- function(request_url,
 #'
 #' @noRd
 filter_list <- function(l, match_vals, match_all = FALSE, match_case = FALSE) {
-
   if (!match_case) {
     l <- purrr::map(l, tolower)
     match_vals <- tolower(match_vals)
@@ -423,16 +412,17 @@ filter_list <- function(l, match_vals, match_all = FALSE, match_case = FALSE) {
 
   i <- purrr::map_lgl(
     l,
-    function(x) filt(
-      purrr::map_lgl(
-        match_vals,
-        function(y) any(grepl(y, x))
+    function(x) {
+      filt(
+        purrr::map_lgl(
+          match_vals,
+          function(y) any(grepl(y, x))
+        )
       )
-    )
+    }
   )
 
   i
-
 }
 
 #' Filter tibble with column-specific regular expressions
@@ -453,11 +443,10 @@ filter_list <- function(l, match_vals, match_all = FALSE, match_case = FALSE) {
 #'   (`TRUE`) or case-insensitive matching (`FALSE`). Defaults to `FALSE`.
 #'
 #' @return tibble/data.frame. Rows are a subset of the input `.data`, while
-#' columns remain unmodified.
+#'   columns remain unmodified.
 #'
 #' @noRd
 filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
-
   dots <- purrr::compact(rlang::list2(...))
 
   missing_names <- setdiff(names(dots), colnames(.data))
@@ -478,7 +467,7 @@ filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
 
   matches <- purrr::map(
     names(dots),
-    ~filter_list(
+    ~ filter_list(
       .data[[.x]],
       match_vals = dots[[.x]],
       match_all = match_all,
@@ -493,116 +482,11 @@ filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
   }
 
   .data[matches, ]
-
 }
 
-nhgis_api_metadata_url <- function() "https://api.ipums.org/metadata/nhgis"
-
-#' Cache metadata for cross-session use
-#'
-#' @description
-#' Used when handling data table summary metadata, which is not kept up to date
-#' automatically by the metadata API. This caches updated table metadata
-#' so users do not have to request table metadata for new datasets each time
-#' they call `get_nhgis_metadata("data_tables")`.
-#'
-#' Caches in the directory given by `rappdirs::user_cache_dir("ipumsr")`.
-#' Cached data persists across R sessions.
-#'
-#' NB: caching functions not currently used, but may be useful after updating to
-#' API v2.
-#'
-#' @param data Data object to be cached as .rds file
-#' @param file_name File name for the cached data
-#' @param cache_dir Directory in which to cache data
-#' @param overwrite Whether to overwrite an existing .rds file in the cache
-#'   of the same name.
-#'
-#' @return Returns `data` invisibly
-# cache_data <- function(data,
-#                        file_name,
-#                        cache_dir = ipumsr_cache_dir(),
-#                        overwrite = FALSE) {
-#
-#   if (!grepl(".rds$", file_name)) {
-#     file_name <- paste0(file_name, ".rds")
-#   }
-#
-#   fp <- file.path(cache_dir, file_name)
-#
-#   dir_exists <- file.exists(cache_dir)
-#   fp_exists <- file.exists(fp)
-#
-#   if (!dir_exists) {
-#     dir.create(cache_dir, recursive = TRUE)
-#   }
-#
-#   if (fp_exists && !overwrite) {
-#     # TODO: remove + force overwrite?
-#     rlang::warn("Unable to cache data: file exists and `overwrite = FALSE`.")
-#     return(invisible(data))
-#   }
-#
-#   readr::write_rds(data, fp)
-#
-#   invisible(data)
-#
-# }
-
-
-#' Load data from cache
-#'
-#' @param cache_dir Directory where data file is cached
-#' @param pattern Character of regex pattern to match to the files in
-#'   `cache_dir` to determine which to open. Must uniquely identify a file in
-#'   `cache_dir`
-#' @param ... Additional arguments passed to `list.files`
-#'
-#' @return The data stored in the .rds file identified by `pattern`
-# load_cached_data <- function(cache_dir = ipumsr_cache_dir(),
-#                              pattern = NULL,
-#                              ...) {
-#   readr::read_rds(
-#     list.files(cache_dir, pattern = pattern, full.names = TRUE, ...)
-#   )
-# }
-
-#' Get information on cache directory for ipumsr files
-#'
-#' Allows for easier access to cache directory and contents when saving
-#' files to user system. Currently used for caching updated data table
-#' metadata for NHGIS.
-#'
-#' @param list If `TRUE`, list files within the cache directory.
-#'   If `FALSE`, return the path to the cache directory itself. Ignored if
-#'   `clear = TRUE`, which will always return the directory path.
-#' @param clear If `TRUE`, recursively remove contents of the cache directory.
-#' @param ... Additional arguments passed to `list.files`
-#'
-#' @return If `list = FALSE`, the cache directory path.
-#'   If `list = TRUE`, a vector of file paths to all files in the directory.
-# ipumsr_cache_dir <- function(list = FALSE, clear = FALSE, ...) {
-#
-#   # TODO: Add rappdirs to Suggests if adding caching functionality for
-#   # metadata in future.
-#   if (!requireNamespace("rappdirs", quietly = TRUE) || TRUE) {
-#     rlang::abort(c(
-#       "The `rappdirs` package is required to cache metadata.",
-#       "i" = "Install it with `install.packages(\"rappdirs\")`")
-#     )
-#   }
-#
-#   cache_dir <- rappdirs::user_cache_dir("ipumsr")
-#
-#   if (clear) {
-#     unlink(list.files(cache_dir, full.names = TRUE, ...), recursive = TRUE)
-#   } else if (list) {
-#     return(list.files(cache_dir, ...))
-#   }
-#
-#   cache_dir
-#
-# }
+nhgis_api_metadata_url <- function() {
+  "https://api.ipums.org/metadata/nhgis"
+}
 
 #' Convert all data.frames in a nested list/data.frame into tibbles
 #'
@@ -612,13 +496,12 @@ nhgis_api_metadata_url <- function() "https://api.ipums.org/metadata/nhgis"
 #'
 #' @noRd
 nested_df_to_tbl <- function(l) {
-
   if (is.data.frame(l) || tibble::is_tibble(l)) {
     l <- dplyr::mutate(
       tibble::as_tibble(l),
       dplyr::across(
         dplyr::everything(),
-        ~if (rlang::is_list(.x)) {
+        ~ if (rlang::is_list(.x)) {
           purrr::map(.x, nested_df_to_tbl)
         } else {
           .x
@@ -630,5 +513,4 @@ nested_df_to_tbl <- function(l) {
   }
 
   l
-
 }

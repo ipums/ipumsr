@@ -162,14 +162,13 @@ NULL
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(my_extract)
 #' }
-define_extract_usa <- function(description,
-                               samples,
-                               variables,
-                               data_format = c("fixed_width", "csv", "stata",
-                                               "spss", "sas9"),
-                               data_structure = "rectangular",
-                               rectangular_on = "P") {
-
+define_extract_usa <- function(
+    description,
+    samples,
+    variables,
+    data_format = c("fixed_width", "csv", "stata", "spss", "sas9"),
+    data_structure = "rectangular",
+    rectangular_on = "P") {
   data_format <- match.arg(data_format)
 
   # Remove these once we allow for hierarchical and rectangular on H extracts
@@ -253,14 +252,13 @@ define_extract_usa <- function(description,
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(my_extract)
 #' }
-define_extract_cps <- function(description,
-                               samples,
-                               variables,
-                               data_format = c("fixed_width", "csv", "stata",
-                                               "spss", "sas9"),
-                               data_structure = "rectangular",
-                               rectangular_on = "P") {
-
+define_extract_cps <- function(
+    description,
+    samples,
+    variables,
+    data_format = c("fixed_width", "csv", "stata", "spss", "sas9"),
+    data_structure = "rectangular",
+    rectangular_on = "P") {
   data_format <- match.arg(data_format)
 
   # Remove these once we allow for hierarchical and rectangular on H extracts
@@ -544,7 +542,6 @@ define_extract_nhgis <- function(description = "",
                                  breakdown_and_data_type_layout = NULL,
                                  tst_layout = NULL,
                                  data_format = NULL) {
-
   n_datasets <- length(datasets)
   n_tsts <- length(time_series_tables)
 
@@ -602,7 +599,6 @@ define_extract_nhgis <- function(description = "",
   extract <- validate_ipums_extract(extract)
 
   extract
-
 }
 
 # > Save extract as json ----
@@ -655,7 +651,6 @@ define_extract_nhgis <- function(description = "",
 #'
 #' file.remove(extract_json_path)
 define_extract_from_json <- function(extract_json) {
-
   collection <- jsonlite::fromJSON(extract_json)$collection
 
   if (is.null(collection)) {
@@ -694,7 +689,7 @@ define_extract_from_json <- function(extract_json) {
       "extract definition. ipumsr is currently configured to submit extract ",
       "requests using API version ", ipums_api_version(collection), "."
     ))
-  } else if (ipums_api_version(collection) != json_api_version){
+  } else if (ipums_api_version(collection) != json_api_version) {
     rlang::warn(paste0(
       "The extract provided in `extract_json` was made using API version ",
       json_api_version, ". ipumsr is currently configured to submit extract ",
@@ -703,7 +698,6 @@ define_extract_from_json <- function(extract_json) {
   }
 
   list_of_extracts[[1]]
-
 }
 
 #' @rdname define_extract_from_json
@@ -778,7 +772,6 @@ save_extract_as_json <- function(extract, file) {
 #' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   extract <- standardize_extract_identifier(extract)
 
   if (!inherits(extract, "ipums_extract")) {
@@ -808,7 +801,6 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   )
 
   invisible(extract)
-
 }
 
 #' Get information about previous extract requests
@@ -909,7 +901,6 @@ get_extract_info <- function(extract = NULL,
                              how_many = NULL,
                              table = FALSE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   extract <- standardize_extract_identifier(
     extract %||% get_default_collection(),
     collection_ok = TRUE
@@ -962,7 +953,6 @@ get_extract_info <- function(extract = NULL,
   }
 
   extract_info
-
 }
 
 #' Wait for an extract request to finish processing
@@ -1050,11 +1040,10 @@ wait_for_extract <- function(extract,
                              timeout_seconds = 10800,
                              verbose = TRUE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-              timeout_seconds > 0)
+    timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -1076,7 +1065,6 @@ wait_for_extract <- function(extract,
       if (verbose) {
         message(paste("Waiting", current_delay, "seconds..."))
       }
-
       Sys.sleep(current_delay)
     }
 
@@ -1122,7 +1110,6 @@ wait_for_extract <- function(extract,
   }
 
   invisible(extract)
-
 }
 
 #' Check if an extract is ready to download
@@ -1183,7 +1170,6 @@ wait_for_extract <- function(extract,
 #' is_extract_ready(1)
 #' }
 is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   extract <- standardize_extract_identifier(extract)
 
   is_extract <- inherits(extract, "ipums_extract")
@@ -1214,7 +1200,6 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   }
 
   is_ready
-
 }
 
 #' Download a completed IPUMS data extract
@@ -1308,7 +1293,6 @@ download_extract <- function(extract,
                              wait = FALSE,
                              api_key = Sys.getenv("IPUMS_API_KEY"),
                              ...) {
-
   extract <- standardize_extract_identifier(extract)
 
   # Make sure we get latest extract status, but also make sure we don't check
@@ -1316,12 +1300,9 @@ download_extract <- function(extract,
   is_ipums_extract_object <- inherits(extract, "ipums_extract")
 
   if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
-
     extract <- validate_ipums_extract(extract)
     is_downloadable <- TRUE
-
   } else {
-
     extract <- get_extract_info(extract, api_key = api_key)
     is_downloadable <- extract_is_completed_and_has_links(extract)
     is_expired <- !extract$status %in% c("queued", "started", "produced")
@@ -1358,7 +1339,6 @@ download_extract <- function(extract,
         is_downloadable <- extract_is_completed_and_has_links(extract)
       }
     }
-
   }
 
   download_dir <- normalizePath(download_dir, winslash = "/", mustWork = FALSE)
@@ -1371,7 +1351,6 @@ download_extract <- function(extract,
   }
 
   ipums_extract_specific_download(extract, download_dir, overwrite, api_key)
-
 }
 
 #' Add values to an existing IPUMS extract definition
@@ -1524,7 +1503,6 @@ add_to_extract.usa_extract <- function(extract,
                                        variables = NULL,
                                        data_format = NULL,
                                        ...) {
-
   add_to_extract_micro(
     extract,
     description = description,
@@ -1533,7 +1511,6 @@ add_to_extract.usa_extract <- function(extract,
     data_format = data_format,
     ...
   )
-
 }
 
 #' Add values to an existing IPUMS CPS extract definition
@@ -1606,7 +1583,6 @@ add_to_extract.cps_extract <- function(extract,
                                        variables = NULL,
                                        data_format = NULL,
                                        ...) {
-
   add_to_extract_micro(
     extract,
     description = description,
@@ -1615,7 +1591,6 @@ add_to_extract.cps_extract <- function(extract,
     data_format = data_format,
     ...
   )
-
 }
 
 #' Add values to an existing IPUMS NHGIS extract definition
@@ -1805,7 +1780,6 @@ add_to_extract.nhgis_extract <- function(extract,
                                          tst_layout = NULL,
                                          data_format = NULL,
                                          ...) {
-
   if (is.list(geographic_extents)) {
     rlang::warn(paste0(
       "`geographic_extents` was provided as a list, but this parameter ",
@@ -1903,7 +1877,6 @@ add_to_extract.nhgis_extract <- function(extract,
   extract <- validate_ipums_extract(extract)
 
   extract
-
 }
 
 #' Remove values from an existing IPUMS extract definition
@@ -2044,14 +2017,12 @@ remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
                                             ...) {
-
   remove_from_extract_micro(
     extract = extract,
     samples = samples,
     variables = variables,
     ...
   )
-
 }
 
 #' Remove values from an existing IPUMS CPS extract definition
@@ -2114,14 +2085,12 @@ remove_from_extract.cps_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
                                             ...) {
-
   remove_from_extract_micro(
     extract = extract,
     samples = samples,
     variables = variables,
     ...
   )
-
 }
 
 #' Remove values from an existing NHGIS extract definition
@@ -2296,7 +2265,6 @@ remove_from_extract.nhgis_extract <- function(extract,
                                               geographic_extents = NULL,
                                               shapefiles = NULL,
                                               ...) {
-
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
@@ -2364,12 +2332,14 @@ remove_from_extract.nhgis_extract <- function(extract,
   ds_args <- purrr::set_names(
     purrr::map(
       names(ds_args),
-      ~if (is_null(extract[[.x]])) {
+      ~ if (is_null(extract[[.x]])) {
         ds_args[.x] <- NULL
       } else {
         ds_args[[.x]] <- reduce_list_by_name(
-          c(extract[[.x]][new_ds],
-            recycle_extract_subfield(ds_args[[.x]], new_ds)),
+          c(
+            extract[[.x]][new_ds],
+            recycle_extract_subfield(ds_args[[.x]], new_ds)
+          ),
           setdiff_null
         )
       }
@@ -2380,12 +2350,14 @@ remove_from_extract.nhgis_extract <- function(extract,
   ds_tst_args <- purrr::set_names(
     purrr::map(
       names(ds_tst_args),
-      ~if (is_null(extract[[.x]])) {
+      ~ if (is_null(extract[[.x]])) {
         ds_tst_args[.x] <- NULL
       } else {
         ds_tst_args[[.x]] <- reduce_list_by_name(
-          c(extract[[.x]][c(new_ds, new_tst)],
-            recycle_extract_subfield(ds_tst_args[[.x]], c(new_ds, new_tst))),
+          c(
+            extract[[.x]][c(new_ds, new_tst)],
+            recycle_extract_subfield(ds_tst_args[[.x]], c(new_ds, new_tst))
+          ),
           setdiff_null
         )
       }
@@ -2412,7 +2384,6 @@ remove_from_extract.nhgis_extract <- function(extract,
   extract <- validate_ipums_extract(extract)
 
   extract
-
 }
 
 #' Combine multiple IPUMS extract definitions into one
@@ -2476,10 +2447,9 @@ combine_extracts <- function(...) {
 
 #' @export
 combine_extracts.usa_extract <- function(...) {
-
   extracts <- rlang::list2(...)
 
-  collection <- purrr::map_chr(extracts, ~.x$collection)
+  collection <- purrr::map_chr(extracts, ~ .x$collection)
 
   if (length(unique(collection)) != 1) {
     rlang::abort("Can only combine extracts of the same collection.")
@@ -2487,7 +2457,7 @@ combine_extracts.usa_extract <- function(...) {
 
   extract <- purrr::reduce(
     extracts,
-    ~add_to_extract(
+    ~ add_to_extract(
       .x,
       description = .x$description,
       samples = .y$samples,
@@ -2499,15 +2469,13 @@ combine_extracts.usa_extract <- function(...) {
   )
 
   extract
-
 }
 
 #' @export
 combine_extracts.cps_extract <- function(...) {
-
   extracts <- rlang::list2(...)
 
-  collection <- purrr::map_chr(extracts, ~.x$collection)
+  collection <- purrr::map_chr(extracts, ~ .x$collection)
 
   if (length(unique(collection)) != 1) {
     rlang::abort("Can only combine extracts of the same collection.")
@@ -2515,7 +2483,7 @@ combine_extracts.cps_extract <- function(...) {
 
   extract <- purrr::reduce(
     extracts,
-    ~add_to_extract(
+    ~ add_to_extract(
       .x,
       description = .x$description,
       samples = .y$samples,
@@ -2527,15 +2495,13 @@ combine_extracts.cps_extract <- function(...) {
   )
 
   extract
-
 }
 
 #' @export
 combine_extracts.nhgis_extract <- function(...) {
-
   extracts <- rlang::list2(...)
 
-  collection <- purrr::map_chr(extracts, ~.x$collection)
+  collection <- purrr::map_chr(extracts, ~ .x$collection)
 
   if (length(unique(collection)) != 1) {
     rlang::abort("Can only combine extracts of the same collection.")
@@ -2543,7 +2509,7 @@ combine_extracts.nhgis_extract <- function(...) {
 
   extract <- purrr::reduce(
     extracts,
-    ~add_to_extract(
+    ~ add_to_extract(
       .x,
       description = .x$description,
       datasets = .y$datasets,
@@ -2555,7 +2521,7 @@ combine_extracts.nhgis_extract <- function(...) {
       geographic_extents = .y$geographic_extents,
       breakdown_and_data_type_layout =
         .x$breakdown_and_data_type_layout %||%
-        .y$breakdown_and_data_type_layout,
+          .y$breakdown_and_data_type_layout,
       tst_layout = .x$tst_layout %||% .y$tst_layout,
       shapefiles = .y$shapefiles,
       data_format = .x$data_format %||% .y$data_format
@@ -2563,7 +2529,6 @@ combine_extracts.nhgis_extract <- function(...) {
   )
 
   extract
-
 }
 
 # > Get info on recent extracts ----
@@ -2575,13 +2540,11 @@ combine_extracts.nhgis_extract <- function(...) {
 #' @export
 get_last_extract_info <- function(collection = NULL,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   collection <- collection %||% get_default_collection()
 
   ipums_api_version(collection)
 
   get_extract_info(collection, how_many = 1, api_key = api_key)[[1]]
-
 }
 
 #' Convert recent extract definitions from tibble to list format
@@ -2650,7 +2613,6 @@ get_last_extract_info <- function(collection = NULL,
 #' extract_list_to_tbl(list_of_last_10_extracts)
 #' }
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
-
   collection <- unique(extract_tbl$collection)
 
   if (length(collection) > 1) {
@@ -2675,7 +2637,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   }
 
   if (collection == "nhgis") {
-
     if (!requireNamespace("tidyr", quietly = TRUE)) {
       rlang::abort(
         paste0(
@@ -2688,7 +2649,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     # NHGIS extract tbls are not one-row-per-extract by default,
     # but need to be for conversion using new_ipums_extract()
     extract_tbl <- collapse_nhgis_extract_tbl(extract_tbl)
-
   }
 
   extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
@@ -2698,7 +2658,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
   }
 
   extract_list
-
 }
 
 #' @rdname extract_tbl_to_list
@@ -2708,7 +2667,6 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 #'
 #' @export
 extract_list_to_tbl <- function(extract_list) {
-
   if ("ipums_extract" %in% class(extract_list)) {
     extract_list <- list(extract_list)
   }
@@ -2720,14 +2678,13 @@ extract_list_to_tbl <- function(extract_list) {
     )
   )
 
-  if(length(extract_types) != 1) {
+  if (length(extract_types) != 1) {
     rlang::abort(
       "All extracts in `extract_list` must belong to same collection."
     )
   }
 
   purrr::map_dfr(extract_list, extract_to_tbl)
-
 }
 
 #' List IPUMS data collections
@@ -2804,7 +2761,6 @@ set_ipums_api_key <- function(api_key,
                               save = overwrite,
                               overwrite = FALSE,
                               unset = FALSE) {
-
   if (unset) {
     api_key <- unset_ipums_envvar("IPUMS_API_KEY")
   } else {
@@ -2816,7 +2772,6 @@ set_ipums_api_key <- function(api_key,
   }
 
   invisible(api_key)
-
 }
 
 #' Set your default IPUMS collection
@@ -2884,7 +2839,6 @@ set_ipums_default_collection <- function(collection = NULL,
                                          save = overwrite,
                                          overwrite = FALSE,
                                          unset = FALSE) {
-
   if (unset) {
     collection <- unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
   } else {
@@ -2901,7 +2855,6 @@ set_ipums_default_collection <- function(collection = NULL,
   }
 
   invisible(collection)
-
 }
 
 # Non-exported functions ---------------------------------------------------
@@ -2937,7 +2890,6 @@ new_ipums_extract <- function(collection = NA_character_,
                               number = NA_integer_,
                               status = "unsubmitted",
                               ...) {
-
   out <- list(
     collection = collection,
     description = description,
@@ -2952,7 +2904,6 @@ new_ipums_extract <- function(collection = NA_character_,
     out,
     class = c(paste0(collection, "_extract"), "ipums_extract")
   )
-
 }
 
 #' Create a new IPUMS JSON object
@@ -2998,7 +2949,6 @@ new_ipums_json <- function(json, collection) {
 #'
 #' @noRd
 standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
-
   if (inherits(extract, "ipums_extract")) {
     return(extract)
   }
@@ -3006,13 +2956,9 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
   # If extract is length 1, must be a "collection:number" id
   # or a single number to be paired with the default collection
   if (length(extract) == 1) {
-
     if (fostr_detect(extract, ":")) {
-
       extract <- fostr_split(extract, ":")[[1]]
-
     } else {
-
       # Only use default collection if `extract` can be coerced to numeric.
       extract_as_num <- suppressWarnings(
         as.numeric(fostr_replace(extract, "L$", "")) # Handle int specification
@@ -3042,9 +2988,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
       }
 
       extract <- c(get_default_collection(), extract)
-
     }
-
   }
 
   # At this point, should be in `c(collection, number)` format
@@ -3080,7 +3024,6 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
   }
 
   list(collection = collection, number = number)
-
 }
 
 #' Get default IPUMS collection
@@ -3090,7 +3033,6 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
 #'
 #' @noRd
 get_default_collection <- function() {
-
   collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
 
   versions <- dplyr::filter(
@@ -3098,8 +3040,7 @@ get_default_collection <- function() {
     .data$api_support != "none"
   )
 
-  if(!collection %in% versions$code_for_api) {
-
+  if (!collection %in% versions$code_for_api) {
     if (collection == "") {
       rlang::abort(
         c(
@@ -3129,11 +3070,9 @@ get_default_collection <- function() {
         )
       )
     }
-
   }
 
   collection
-
 }
 
 
@@ -3151,8 +3090,6 @@ get_default_collection <- function() {
 set_ipums_envvar <- function(...,
                              save = overwrite,
                              overwrite = FALSE) {
-
-
   dots <- rlang::list2(...)
 
   stopifnot(length(dots) == 1 && is_named(dots))
@@ -3161,18 +3098,14 @@ set_ipums_envvar <- function(...,
   var_value <- dots[[var_name]]
 
   if (save) {
-
     home_dir <- Sys.getenv("HOME")
     renviron_file <- file.path(home_dir, ".Renviron")
     new_envvar <- paste0(var_name, "=\"", var_value, "\"")
 
     if (!file.exists(renviron_file)) {
-
       file.create(renviron_file)
       writeLines(new_envvar, con = renviron_file)
-
     } else {
-
       # TODO: Do we actually need to back this up?
       # If we're *sure* we're not touching any of the variables already in the
       # file, why worry so much about backing up?
@@ -3199,12 +3132,9 @@ set_ipums_envvar <- function(...,
       has_existing_envvar <- any(fostr_detect(renviron_lines, var_match))
 
       if (isTRUE(overwrite) && has_existing_envvar) {
-
         renviron_lines[fostr_detect(renviron_lines, var_match)] <- new_envvar
         writeLines(renviron_lines, con = renviron_file)
-
       } else {
-
         if (has_existing_envvar) {
           rlang::abort(
             paste0(
@@ -3216,9 +3146,7 @@ set_ipums_envvar <- function(...,
         }
 
         writeLines(c(renviron_lines, new_envvar), con = renviron_file)
-
       }
-
     }
 
     Sys.setenv(...)
@@ -3227,9 +3155,7 @@ set_ipums_envvar <- function(...,
       "The environment variable ", var_name,
       " has been set and saved for future sessions."
     )
-
   } else {
-
     Sys.setenv(...)
 
     message(
@@ -3237,11 +3163,9 @@ set_ipums_envvar <- function(...,
       " has been set. To save it for future sessions, ",
       "set `save = TRUE`."
     )
-
   }
 
   invisible(var_value)
-
 }
 
 #' Helper for removing an IPUMS environmental variable
@@ -3253,7 +3177,6 @@ set_ipums_envvar <- function(...,
 #'
 #' @noRd
 unset_ipums_envvar <- function(var_name) {
-
   home_dir <- Sys.getenv("HOME")
   renviron_file <- file.path(home_dir, ".Renviron")
 
@@ -3262,14 +3185,12 @@ unset_ipums_envvar <- function(var_name) {
   if (!file.exists(renviron_file)) {
     rlang::warn("No .Renviron file to update.")
   } else {
-
     renviron_lines <- readLines(renviron_file)
     var_match <- paste0("^(\\s?)+", var_name)
 
     line_is_envvar <- fostr_detect(renviron_lines, var_match)
 
     if (any(line_is_envvar)) {
-
       backup_file <- file.path(home_dir, ".Renviron_backup")
 
       backed_up_renviron <- file.copy(
@@ -3291,9 +3212,7 @@ unset_ipums_envvar <- function(var_name) {
 
       renviron_lines <- renviron_lines[!line_is_envvar]
       writeLines(renviron_lines, con = renviron_file)
-
     }
-
   }
 
   message(
@@ -3303,7 +3222,6 @@ unset_ipums_envvar <- function(var_name) {
   Sys.unsetenv(var_name)
 
   invisible("")
-
 }
 
 #' Validate the structure of an IPUMS extract object
@@ -3327,7 +3245,6 @@ validate_ipums_extract <- function(x) {
 
 #' @export
 validate_ipums_extract.nhgis_extract <- function(x) {
-
   # Call base .ipums_extract method
   NextMethod(x)
 
@@ -3344,9 +3261,11 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
-  if (any(is.na(x$datasets)) ||
-      any(is.na(x$time_series_tables)) ||
-      any(is.na(x$shapefiles))) {
+  has_no_data_sources <- any(is.na(x$datasets)) ||
+    any(is.na(x$time_series_tables)) ||
+    any(is.na(x$shapefiles))
+
+  if (has_no_data_sources) {
     rlang::abort(
       paste0(
         "None of `datasets`, `time_series_tables`, or `shapefiles` ",
@@ -3362,7 +3281,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
   }
 
   # Specify the validation requirements for each extract field
-  extract_field_spec <-  list(
+  extract_field_spec <- list(
     list(
       field = "datasets",
       type = "character"
@@ -3409,8 +3328,10 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       field = "tst_layout",
       required = includes_tst,
       allowed = includes_tst,
-      choices = c("time_by_row_layout", "time_by_column_layout",
-                  "time_by_file_layout"),
+      choices = c(
+        "time_by_row_layout", "time_by_column_layout",
+        "time_by_file_layout"
+      ),
       match_length = 1,
       must_be_missing_msg = " when no `time_series_tables` are specified",
       must_be_present_msg = " when any `time_series_tables` are specified"
@@ -3436,7 +3357,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
   # Collect errors and display together.
   extract_issues <- purrr::map(
     extract_field_spec,
-    ~tryCatch(
+    ~ tryCatch(
       rlang::exec("validate_extract_field", !!!.x, extract = x),
       error = function(cnd) {
         conditionMessage(cnd)
@@ -3456,12 +3377,10 @@ validate_ipums_extract.nhgis_extract <- function(x) {
   }
 
   invisible(x)
-
 }
 
 #' @export
 validate_ipums_extract.usa_extract <- function(x) {
-
   NextMethod(x)
 
   extract_field_spec <- list(
@@ -3503,7 +3422,7 @@ validate_ipums_extract.usa_extract <- function(x) {
 
   extract_issues <- purrr::map(
     extract_field_spec,
-    ~tryCatch(
+    ~ tryCatch(
       rlang::exec("validate_extract_field", !!!.x, extract = x),
       error = function(cnd) {
         conditionMessage(cnd)
@@ -3523,12 +3442,10 @@ validate_ipums_extract.usa_extract <- function(x) {
   }
 
   invisible(x)
-
 }
 
 #' @export
 validate_ipums_extract.cps_extract <- function(x) {
-
   NextMethod(x)
 
   extract_field_spec <- list(
@@ -3570,7 +3487,7 @@ validate_ipums_extract.cps_extract <- function(x) {
 
   extract_issues <- purrr::map(
     extract_field_spec,
-    ~tryCatch(
+    ~ tryCatch(
       rlang::exec("validate_extract_field", !!!.x, extract = x),
       error = function(cnd) {
         conditionMessage(cnd)
@@ -3590,12 +3507,10 @@ validate_ipums_extract.cps_extract <- function(x) {
   }
 
   invisible(x)
-
 }
 
 #' @export
 validate_ipums_extract.ipums_extract <- function(x) {
-
   extract_field_spec <- list(
     list(
       field = "collection",
@@ -3611,8 +3526,10 @@ validate_ipums_extract.ipums_extract <- function(x) {
     ),
     list(
       field = "status",
-      choices = c("unsubmitted", "queued", "started", "produced",
-                  "canceled", "failed", "completed"),
+      choices = c(
+        "unsubmitted", "queued", "started", "produced",
+        "canceled", "failed", "completed"
+      ),
       match_length = 1
     ),
     list(
@@ -3630,7 +3547,7 @@ validate_ipums_extract.ipums_extract <- function(x) {
   # Collect errors and display together.
   extract_issues <- purrr::map(
     extract_field_spec,
-    ~tryCatch(
+    ~ tryCatch(
       rlang::exec("validate_extract_field", !!!.x, extract = x),
       error = function(cnd) {
         conditionMessage(cnd)
@@ -3653,7 +3570,6 @@ validate_ipums_extract.ipums_extract <- function(x) {
   ipums_api_version(x$collection)
 
   x
-
 }
 
 #' Validate the structure of a single field in an IPUMS extract
@@ -3696,13 +3612,11 @@ validate_extract_field <- function(extract,
                                    must_be_present_msg = NULL,
                                    must_be_missing_msg = NULL,
                                    parent_field = NULL) {
-
   if (!is_null(parent_field)) {
-
     # Child field is only allowed when its parent field is provided.
     allowed <- any(purrr::map_lgl(
       parent_field,
-      ~!is_null(extract[[.x]])
+      ~ !is_null(extract[[.x]])
     ))
 
     # Child field messages default to use parent_field for convenience
@@ -3719,9 +3633,6 @@ validate_extract_field <- function(extract,
         paste0(parent_field, collapse = "` or `"),
         "` are specified"
       )
-
-  } else {
-    parent_field_msg <- NULL
   }
 
   if (required) {
@@ -3769,7 +3680,6 @@ validate_extract_field <- function(extract,
   )
 
   invisible(NULL)
-
 }
 
 #' Check whether an extract field exists or has missing values
@@ -3806,7 +3716,6 @@ validate_exists <- function(extract,
                             allowed = TRUE,
                             must_be_present_msg = NULL,
                             must_be_missing_msg = NULL) {
-
   values <- extract[[field]]
 
   if (is_null(required) && is_null(allowed)) {
@@ -3825,8 +3734,10 @@ validate_exists <- function(extract,
 
   if (required && (has_missing_values || is_missing)) {
     rlang::abort(
-      paste0("`", field,
-             "` must not contain missing values", must_be_present_msg, ".")
+      paste0(
+        "`", field,
+        "` must not contain missing values", must_be_present_msg, "."
+      )
     )
   }
 
@@ -3853,17 +3764,16 @@ validate_exists <- function(extract,
 validate_length <- function(extract,
                             field,
                             match_length = NULL) {
-
   values <- extract[[field]]
 
   if (is_character(match_length)) {
-
     match_field <- match_length
 
     match_length <- sum(
       purrr::map_dbl(
         match_length,
-        ~length(extract[[.x]]))
+        ~ length(extract[[.x]])
+      )
     )
 
     if (length(values) > match_length) {
@@ -3879,13 +3789,14 @@ validate_length <- function(extract,
         paste0(match_field, collapse = "` + `"), "`"
       )
     }
-
   } else {
     length_msg <- paste0("`", field, "` must be length ", match_length, ".")
   }
 
-  if (is_null(values) || length(values) == 0 ||
-      is_null(match_length) || match_length == 0) {
+  empty_field <- is_null(values) || length(values) == 0 ||
+    is_null(match_length) || match_length == 0
+
+  if (empty_field) {
     return(invisible(NULL))
   }
 
@@ -3894,7 +3805,6 @@ validate_length <- function(extract,
   }
 
   invisible(NULL)
-
 }
 
 #' Check whether an extract field's values are in a selection of choices
@@ -3912,7 +3822,6 @@ validate_length <- function(extract,
 #'
 #' @noRd
 validate_choices <- function(extract, field, choices = NULL) {
-
   values <- extract[[field]]
 
   if (is_null(choices) || is_null(values)) {
@@ -3927,7 +3836,6 @@ validate_choices <- function(extract, field, choices = NULL) {
   }
 
   invisible(NULL)
-
 }
 
 #' Check whether an extract field is of the correct type
@@ -3946,7 +3854,6 @@ validate_choices <- function(extract, field, choices = NULL) {
 #'
 #' @noRd
 validate_type <- function(extract, field, type = NULL) {
-
   values <- extract[[field]]
 
   if (is_null(type) || is_null(values)) {
@@ -3963,7 +3870,6 @@ validate_type <- function(extract, field, type = NULL) {
   }
 
   invisible(NULL)
-
 }
 
 #' Check whether an extract subfield is consistent with its parent field
@@ -3988,12 +3894,11 @@ validate_subfield_names <- function(extract,
                                     field,
                                     parent_field = NULL,
                                     required = FALSE) {
-
   values <- extract[[field]]
 
   parent_values <- unlist(purrr::map(
     parent_field,
-    ~extract[[.x]]
+    ~ extract[[.x]]
   ))
 
   parent_field <- paste0("`", paste0(parent_field, collapse = "`, `"), "`")
@@ -4027,7 +3932,6 @@ validate_subfield_names <- function(extract,
 
 #' @export
 print.ipums_extract <- function(x, ...) {
-
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
@@ -4038,12 +3942,10 @@ print.ipums_extract <- function(x, ...) {
   cat(to_cat)
 
   invisible(x)
-
 }
 
 #' @export
 print.usa_extract <- function(x, ...) {
-
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
@@ -4057,12 +3959,10 @@ print.usa_extract <- function(x, ...) {
   cat(to_cat)
 
   invisible(x)
-
 }
 
 #' @export
 print.cps_extract <- function(x, ...) {
-
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
@@ -4076,17 +3976,15 @@ print.cps_extract <- function(x, ...) {
   cat(to_cat)
 
   invisible(x)
-
 }
 
 #' @export
 print.nhgis_extract <- function(x, ...) {
-
-  style_ds <- extract_field_styler(NHGIS_DS_COLOR, "bold")
+  style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
 
   ds_to_cat <- purrr::map(
     seq_along(x$datasets),
-    ~format_field_for_printing(
+    ~ format_field_for_printing(
       parent_field = list("Dataset: " = x$datasets[[.x]]),
       subfields = list(
         "Tables: " = x$data_tables[x$datasets][[.x]],
@@ -4109,19 +4007,25 @@ print.nhgis_extract <- function(x, ...) {
 
   tst_to_cat <- purrr::map(
     seq_along(x$time_series_tables),
-    ~format_field_for_printing(
+    ~ format_field_for_printing(
       parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
       subfields = list(
         "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]]
       ),
-      parent_style = extract_field_styler(NHGIS_TST_COLOR, "bold"),
+      parent_style = extract_field_styler(
+        nhgis_print_color("time_series_table"),
+        "bold"
+      ),
       subfield_style = extract_field_styler("bold")
     )
   )
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
-    parent_style = extract_field_styler(NHGIS_SHP_COLOR, "bold")
+    parent_style = extract_field_styler(
+      nhgis_print_color("shapefile"),
+      "bold"
+    )
   )
 
   to_cat <- paste0(
@@ -4138,7 +4042,6 @@ print.nhgis_extract <- function(x, ...) {
   cat(to_cat)
 
   invisible(x)
-
 }
 
 format_collection_for_printing <- function(collection) {
@@ -4178,7 +4081,6 @@ format_field_for_printing <- function(parent_field = NULL,
                                       parent_style = NULL,
                                       subfield_style = NULL,
                                       padding = 2) {
-
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -4203,7 +4105,7 @@ format_field_for_printing <- function(parent_field = NULL,
   if (!is.null(subfields)) {
     purrr::map(
       names(subfields),
-      ~if (!is.null(subfields[[.x]])) {
+      ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
           output,
           "\n  ",
@@ -4214,7 +4116,6 @@ format_field_for_printing <- function(parent_field = NULL,
   }
 
   output
-
 }
 
 #' Create a `crayon` style function if `crayon` is installed
@@ -4234,14 +4135,19 @@ extract_field_styler <- function(...) {
   style
 }
 
-NHGIS_DS_COLOR <- "blue"
-NHGIS_TST_COLOR <- "green"
-NHGIS_SHP_COLOR <- "yellow"
+nhgis_print_color <- function(type) {
+  type <- match.arg(type, c("dataset", "time_series_table", "shapefile"))
+
+  switch(type,
+    dataset = "blue",
+    time_series_table = "green",
+    shapefile = "yellow"
+  )
+}
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 
 print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
-
   max_width <- min(getOption("width"), 80)
   max_width <- max(max_width, 20) # don't allow width less than 20
 
@@ -4264,15 +4170,6 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   }
 
   untruncated
-
-  # will_be_truncated <- length(x) > truncate_at
-  # x <- head(x, truncate_at)
-  # out <- paste0(x, collapse = ", ")
-  # if (will_be_truncated) {
-  #   return(paste0(out, "..."))
-  # }
-  # out
-
 }
 
 #' Convert an `ipums_extract` object to a JSON string for API submission
@@ -4289,19 +4186,15 @@ extract_to_request_json <- function(extract, include_endpoint_info) {
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(extract,
-                                                  include_endpoint_info = FALSE) {
-
-  # if (is.null(extract$description) || is.na(extract$description)) {
-  #   extract$description <- ""
-  # }
-
+extract_to_request_json.nhgis_extract <- function(
+    extract,
+    include_endpoint_info = FALSE) {
   extract$years <- purrr::map(
     extract$years,
-    ~if(!is.null(.x)) as.character(.x)
+    ~ if (!is.null(.x)) as.character(.x)
   )
 
-  if(!is.null(extract$geographic_extents)) {
+  if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
 
@@ -4334,7 +4227,7 @@ extract_to_request_json.nhgis_extract <- function(extract,
 
   request_list <- purrr::keep(
     request_list,
-    ~!(any(is.na(.x)) || is_empty(.x))
+    ~ !(any(is.na(.x)) || is_empty(.x))
   )
 
   if (include_endpoint_info) {
@@ -4346,13 +4239,12 @@ extract_to_request_json.nhgis_extract <- function(extract,
   }
 
   jsonlite::toJSON(request_list)
-
 }
 
 geog_extent_lookup <- function(states) {
   purrr::map_chr(
     states,
-    ~if (.x %in% state_extent_codes$description) {
+    ~ if (.x %in% state_extent_codes$description) {
       state_extent_codes[.x == state_extent_codes$description, ]$name
     } else {
       .x
@@ -4360,17 +4252,10 @@ geog_extent_lookup <- function(states) {
   )
 }
 
-# tst_year_lookup <- function() {
-#   list(
-#     "125" = 2008:2012,
-#     "195" = 2015:2019
-#   )
-# }
-
 #' @export
-extract_to_request_json.usa_extract <- function(extract,
-                                                include_endpoint_info = FALSE) {
-
+extract_to_request_json.usa_extract <- function(
+    extract,
+    include_endpoint_info = FALSE) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -4399,13 +4284,11 @@ extract_to_request_json.usa_extract <- function(extract,
   }
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
-
 }
 
 #' @export
 extract_to_request_json.cps_extract <- function(extract,
                                                 include_endpoint_info = FALSE) {
-
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -4434,13 +4317,12 @@ extract_to_request_json.cps_extract <- function(extract,
   }
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
-
 }
 
 #' @export
-extract_to_request_json.ipums_extract <- function(extract,
-                                                  include_endpoint_info = FALSE) {
-
+extract_to_request_json.ipums_extract <- function(
+    extract,
+    include_endpoint_info = FALSE) {
   if (is_na(extract$description)) {
     extract$description <- ""
   }
@@ -4450,7 +4332,6 @@ extract_to_request_json.ipums_extract <- function(extract,
   )
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
-
 }
 
 
@@ -4458,7 +4339,7 @@ format_samples_for_json <- function(samples) {
   if (length(samples) == 1 && is.na(samples)) {
     return(EMPTY_NAMED_LIST)
   }
-  sample_spec <- purrr::map(seq_along(samples), ~ EMPTY_NAMED_LIST)
+  sample_spec <- purrr::map(seq_along(samples), ~EMPTY_NAMED_LIST)
   purrr::set_names(sample_spec, samples)
 }
 
@@ -4466,7 +4347,7 @@ format_variables_for_json <- function(variables) {
   if (length(variables) == 1 && is.na(variables)) {
     return(EMPTY_NAMED_LIST)
   }
-  var_spec <- purrr::map(seq_along(variables), ~ EMPTY_NAMED_LIST)
+  var_spec <- purrr::map(seq_along(variables), ~EMPTY_NAMED_LIST)
   purrr::set_names(var_spec, variables)
 }
 
@@ -4483,7 +4364,6 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
 }
 
 format_nhgis_field_for_json <- function(...) {
-
   dots <- rlang::list2(...)
 
   if (all(is.na(dots[[1]])) || is_empty(dots[[1]])) {
@@ -4493,11 +4373,11 @@ format_nhgis_field_for_json <- function(...) {
   supfields <- purrr::map(purrr::compact(dots[[1]]), c)
   n_supfields <- length(supfields)
 
-  subfields <- dots[2:length(dots)]
+  subfields <- dots[seq_len(length(dots))]
 
   subfields_grp <- purrr::map(
     1:n_supfields,
-    ~purrr::map(subfields, .x)
+    ~ purrr::map(subfields, .x)
   )
 
   subfields_formatted <- purrr::set_names(
@@ -4506,7 +4386,6 @@ format_nhgis_field_for_json <- function(...) {
   )
 
   subfields_formatted
-
 }
 
 #' Writes the given url to file_path. Returns the file path of the
@@ -4517,9 +4396,6 @@ ipums_api_download_request <- function(url,
                                        file_path,
                                        overwrite,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
-
-  file_already_exists <- file.exists(file_path)
-
   if (file.exists(file_path) && !overwrite) {
     rlang::abort(
       c(
@@ -4577,7 +4453,6 @@ ipums_extract_specific_download.usa_extract <- function(extract,
                                                         download_dir,
                                                         overwrite,
                                                         api_key) {
-
   ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
 
@@ -4597,12 +4472,13 @@ ipums_extract_specific_download.usa_extract <- function(extract,
   ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
 
   message(
-    paste0("DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
-           "to ", data_file_path)
+    paste0(
+      "DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
+      "to ", data_file_path
+    )
   )
 
   invisible(ddi_file_path)
-
 }
 
 #' @export
@@ -4610,7 +4486,6 @@ ipums_extract_specific_download.cps_extract <- function(extract,
                                                         download_dir,
                                                         overwrite,
                                                         api_key) {
-
   ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
 
@@ -4630,12 +4505,13 @@ ipums_extract_specific_download.cps_extract <- function(extract,
   ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
 
   message(
-    paste0("DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
-           "to ", data_file_path)
+    paste0(
+      "DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
+      "to ", data_file_path
+    )
   )
 
   invisible(ddi_file_path)
-
 }
 
 #' @export
@@ -4643,7 +4519,6 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
                                                           api_key) {
-
   table_url <- extract$download_links$table_data
   gis_url <- extract$download_links$gis_data
 
@@ -4656,7 +4531,7 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
 
   file_paths <- purrr::map_chr(
     urls,
-    ~normalizePath(
+    ~ normalizePath(
       file.path(download_dir, basename(.x)),
       winslash = "/",
       mustWork = FALSE
@@ -4684,7 +4559,7 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   file_paths <- purrr::map2_chr(
     urls,
     file_paths,
-    ~ipums_api_download_request(.x, .y, overwrite, api_key)
+    ~ ipums_api_download_request(.x, .y, overwrite, api_key)
   )
 
   if (!is.null(table_url) && !is.null(gis_url)) {
@@ -4705,7 +4580,6 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   }
 
   invisible(file_paths)
-
 }
 
 #' Helper function to form, submit, and receive responses of requests expecting
@@ -4730,7 +4604,6 @@ ipums_api_json_request <- function(verb,
                                    body = FALSE,
                                    queries = NULL,
                                    api_key = Sys.getenv("IPUMS_API_KEY")) {
-
   queries_is_null_or_named_list <- is.null(queries) ||
     is.list(queries) && !is.null(names(queries)) && !any(names(queries) == "")
 
@@ -4762,7 +4635,6 @@ ipums_api_json_request <- function(verb,
   )
 
   if (httr::http_status(res)$category != "Success") {
-
     status <- httr::status_code(res)
 
     if (status == 400) {
@@ -4794,8 +4666,10 @@ ipums_api_json_request <- function(verb,
                 coll, " extract number ",
                 extract_number, " does not exist."
               ),
-              paste0("Most recent extract number: ",
-                     most_recent_extract_number)
+              paste0(
+                "Most recent extract number: ",
+                most_recent_extract_number
+              )
             )
           )
         }
@@ -4804,13 +4678,18 @@ ipums_api_json_request <- function(verb,
     } else if (status %in% c(401, 403)) {
       rlang::abort(c(
         "The provided API Key is either missing or invalid.",
-        "i" = paste0("Please provide your API key to the `api_key` argument ",
-                     "or request a key at https://account.ipums.org/api_keys"),
+        "i" = paste0(
+          "Please provide your API key to the `api_key` argument ",
+          "or request a key at https://account.ipums.org/api_keys"
+        ),
         "i" = "Use `set_ipums_api_key() to save your key for future use."
       ))
     } else { # other non-success codes, e.g. 300s + 500s
       rlang::abort(c(
-        paste0("Extract API request failed with status ", httr::status_code(res)),
+        paste0(
+          "Extract API request failed with status ",
+          httr::status_code(res)
+        ),
         paste0("URL: ", api_url),
         paste0("Content: ", httr::content(res, "text"))
       ))
@@ -4825,7 +4704,6 @@ ipums_api_json_request <- function(verb,
     httr::content(res, "text"),
     collection = collection
   )
-
 }
 
 
@@ -4846,7 +4724,6 @@ extract_list_from_json <- function(extract_json, validate) {
 
 #' @export
 extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
-
   list_of_extract_info <- jsonlite::fromJSON(
     extract_json,
     simplifyVector = FALSE
@@ -4864,7 +4741,6 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
   purrr::map(
     list_of_extract_info,
     function(x) {
-
       no_datasets <- is.null(x$datasets)
       no_tsts <- is.null(x$time_series_tables)
 
@@ -4875,24 +4751,26 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         data_tables = if (no_datasets) {
           NULL
         } else {
-          purrr::map(x$datasets, ~unlist(.x$data_tables))
+          purrr::map(x$datasets, ~ unlist(.x$data_tables))
         },
         time_series_tables = names(x$time_series_tables),
         geog_levels = if (no_datasets && no_tsts) {
           NULL
         } else {
-          purrr::map(c(x$datasets, x$time_series_tables),
-                     ~unlist(.x$geog_levels))
+          purrr::map(
+            c(x$datasets, x$time_series_tables),
+            ~ unlist(.x$geog_levels)
+          )
         },
         years = if (no_datasets) {
           NULL
         } else {
-          purrr::map(x$datasets, ~unlist(.x$years))
+          purrr::map(x$datasets, ~ unlist(.x$years))
         },
         breakdown_values = if (no_datasets) {
           NULL
         } else {
-          purrr::map(x$datasets, ~unlist(.x$breakdown_values))
+          purrr::map(x$datasets, ~ unlist(.x$breakdown_values))
         },
         geographic_extents = geog_extent_lookup(
           unlist(x$geographic_extents),
@@ -4917,7 +4795,6 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 
 #' @export
 extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
-
   list_of_extract_info <- jsonlite::fromJSON(
     extract_json,
     simplifyVector = FALSE
@@ -4950,7 +4827,9 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
         download_links = if ("download_links" %in% names(x)) {
           x$download_links
-        } else EMPTY_NAMED_LIST,
+        } else {
+          EMPTY_NAMED_LIST
+        },
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
         status = ifelse("status" %in% names(x), x$status, "unsubmitted")
       )
@@ -4963,7 +4842,6 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
 
 #' @export
 extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
-
   list_of_extract_info <- jsonlite::fromJSON(
     extract_json,
     simplifyVector = FALSE
@@ -4996,7 +4874,9 @@ extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
         submitted = ifelse("number" %in% names(x), TRUE, FALSE),
         download_links = if ("download_links" %in% names(x)) {
           x$download_links
-        } else EMPTY_NAMED_LIST,
+        } else {
+          EMPTY_NAMED_LIST
+        },
         number = ifelse("number" %in% names(x), x$number, NA_integer_),
         status = ifelse("status" %in% names(x), x$status, "unsubmitted")
       )
@@ -5041,7 +4921,7 @@ extract_is_completed_and_has_links.usa_extract <- function(extract) {
   download_links <- extract$download_links
 
   has_url <- function(links, name) {
-    return (is.list(links[[name]]) && is.character(links[[name]][["url"]]))
+    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
   }
 
   status == "completed" && has_url(download_links, "ddi_codebook") &&
@@ -5054,7 +4934,7 @@ extract_is_completed_and_has_links.cps_extract <- function(extract) {
   download_links <- extract$download_links
 
   has_url <- function(links, name) {
-    return (is.list(links[[name]]) && is.character(links[[name]][["url"]]))
+    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
   }
 
   status == "completed" && has_url(download_links, "ddi_codebook") &&
@@ -5063,12 +4943,10 @@ extract_is_completed_and_has_links.cps_extract <- function(extract) {
 
 #' @export
 extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
-
   status <- extract$status
   download_links <- extract$download_links
 
   status == "completed" && length(download_links) > 0
-
 }
 
 add_user_auth_header <- function(api_key) {
@@ -5087,7 +4965,6 @@ add_to_extract_micro <- function(extract,
                                  data_structure = NULL,
                                  rectangular_on = NULL,
                                  ...) {
-
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
@@ -5133,7 +5010,6 @@ add_to_extract_micro <- function(extract,
   extract <- validate_ipums_extract(extract)
 
   extract
-
 }
 
 #' Helper taking advantage of the fact that USA and CPS work the same way for
@@ -5144,7 +5020,6 @@ remove_from_extract_micro <- function(extract,
                                       samples = NULL,
                                       variables = NULL,
                                       ...) {
-
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
@@ -5174,7 +5049,6 @@ remove_from_extract_micro <- function(extract,
   extract <- validate_ipums_extract(extract)
 
   extract
-
 }
 
 #' Combine values in a named list by common names
@@ -5193,8 +5067,7 @@ remove_from_extract_micro <- function(extract,
 #' @return Named list with a single entry for each unique name found in `l`
 #'
 #' @noRd
-reduce_list_by_name <- function(l, f = ~union(.x, .y), name_order = NULL) {
-
+reduce_list_by_name <- function(l, f = ~ union(.x, .y), name_order = NULL) {
   if (is_empty(l)) {
     return(NULL)
   }
@@ -5207,7 +5080,7 @@ reduce_list_by_name <- function(l, f = ~union(.x, .y), name_order = NULL) {
 
   l <- purrr::map(
     labs,
-    ~purrr::reduce(l[.x == names(l)], f)
+    ~ purrr::reduce(l[.x == names(l)], f)
   )
 
   l <- purrr::set_names(l, labs)
@@ -5218,7 +5091,6 @@ reduce_list_by_name <- function(l, f = ~union(.x, .y), name_order = NULL) {
   }
 
   l
-
 }
 
 #' Calculate set difference with the empty set represented as `NULL`
@@ -5233,7 +5105,6 @@ reduce_list_by_name <- function(l, f = ~union(.x, .y), name_order = NULL) {
 #'
 #' @noRd
 setdiff_null <- function(x, y) {
-
   v <- setdiff(x, y)
 
   if (length(v) == 0) {
@@ -5241,18 +5112,15 @@ setdiff_null <- function(x, y) {
   }
 
   v
-
 }
 
 copy_ipums_extract <- function(extract) {
-
   extract$submitted <- FALSE
   extract$download_links <- EMPTY_NAMED_LIST
   extract$number <- NA_integer_
   extract$status <- "unsubmitted"
 
   extract
-
 }
 
 #' Convert a single extract to a tibble
@@ -5276,7 +5144,6 @@ extract_to_tbl <- function(x) {
 
 #' @export
 extract_to_tbl.usa_extract <- function(x) {
-
   if (is.character(x$samples)) x$samples <- list(x$samples)
   if (is.character(x$variables)) x$variables <- list(x$variables)
   x$download_links <- list(x$download_links)
@@ -5284,12 +5151,10 @@ extract_to_tbl.usa_extract <- function(x) {
   unclassed_extract <- unclass(x)
 
   do.call(tibble::tibble, unclassed_extract)
-
 }
 
 #' @export
 extract_to_tbl.cps_extract <- function(x) {
-
   if (is.character(x$samples)) x$samples <- list(x$samples)
   if (is.character(x$variables)) x$variables <- list(x$variables)
   x$download_links <- list(x$download_links)
@@ -5297,12 +5162,10 @@ extract_to_tbl.cps_extract <- function(x) {
   unclassed_extract <- unclass(x)
 
   do.call(tibble::tibble, unclassed_extract)
-
 }
 
 #' @export
 extract_to_tbl.nhgis_extract <- function(x) {
-
   base_vars <- list(
     collection = x$collection,
     description = x$description %||% NA_character_,
@@ -5370,14 +5233,15 @@ extract_to_tbl.nhgis_extract <- function(x) {
   tbl <- dplyr::bind_rows(tbl1, tbl2, tbl3)
   tbl <- tbl[!is.na(tbl$name), ]
 
-  var_order <- c("collection", "number", "description", "data_type",
-                 "name", "data_tables", "geog_levels",
-                 "years", "breakdown_values",  "geographic_extents",
-                 "tst_layout", "breakdown_and_data_type_layout",
-                 "data_format", "submitted", "download_links", "status")
+  var_order <- c(
+    "collection", "number", "description", "data_type",
+    "name", "data_tables", "geog_levels",
+    "years", "breakdown_values", "geographic_extents",
+    "tst_layout", "breakdown_and_data_type_layout",
+    "data_format", "submitted", "download_links", "status"
+  )
 
   tbl[, var_order]
-
 }
 
 #' Flatten a long-format tibble of NHGIS extract specifications
@@ -5396,7 +5260,6 @@ extract_to_tbl.nhgis_extract <- function(x) {
 #'
 #' @noRd
 collapse_nhgis_extract_tbl <- function(extract_tbl) {
-
   if (!requireNamespace("tidyr", quietly = TRUE)) {
     rlang::abort(
       paste0(
@@ -5418,7 +5281,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     dplyr::mutate(
       dplyr::across(
         c("data_tables", "years", "breakdown_values"),
-        ~ifelse(is_null(unlist(.x)), .x, list(.x))
+        ~ ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
     # Subfields that apply to both datasets and time series tables
@@ -5430,7 +5293,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     dplyr::mutate(
       dplyr::across(
         "geog_levels",
-        ~ifelse(is_null(unlist(.x)), .x, list(.x))
+        ~ ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
     dplyr::group_by(.data$number) %>%
@@ -5462,19 +5325,23 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     dplyr::mutate(
       dplyr::across(
         c("data_tables", "years", "breakdown_values"),
-        function(d) purrr::map2(
-          d,
-          .data$datasets,
-          ~recycle_extract_subfield(.x, .y)
-        )
+        function(d) {
+          purrr::map2(
+            d,
+            .data$datasets,
+            ~ recycle_extract_subfield(.x, .y)
+          )
+        }
       ),
       dplyr::across(
         "geog_levels",
-        function(d) purrr::map2(
-          d,
-          purrr::map2(.data$datasets, .data$time_series_tables, c),
-          ~recycle_extract_subfield(.x, .y)
-        )
+        function(d) {
+          purrr::map2(
+            d,
+            purrr::map2(.data$datasets, .data$time_series_tables, c),
+            ~ recycle_extract_subfield(.x, .y)
+          )
+        }
       ),
     ) %>%
     # For consistency of output after conversion to list, define_extract_nhgis()
@@ -5482,23 +5349,24 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     dplyr::mutate(
       dplyr::across(
         c("data_format", "breakdown_and_data_type_layout", "tst_layout"),
-        ~ifelse(is.na(.x), list(NULL), .x)
+        ~ ifelse(is.na(.x), list(NULL), .x)
       )
     )
 
   # Reorder
-  var_sort <- c("collection", "number",
-                "description", "datasets", "data_tables", "time_series_tables",
-                "geog_levels", "years", "breakdown_values",
-                "geographic_extents", "shapefiles",
-                "breakdown_and_data_type_layout",
-                "tst_layout", "data_format",
-                "submitted", "download_links", "status")
+  var_sort <- c(
+    "collection", "number",
+    "description", "datasets", "data_tables", "time_series_tables",
+    "geog_levels", "years", "breakdown_values",
+    "geographic_extents", "shapefiles",
+    "breakdown_and_data_type_layout",
+    "tst_layout", "data_format",
+    "submitted", "download_links", "status"
+  )
 
   extract_tbl <- extract_tbl[, var_sort]
 
   extract_tbl
-
 }
 
 #' This is currently used only to catch unexpected names in
@@ -5550,7 +5418,9 @@ get_extract_tbl_fields.ipums_extract <- function(x) {
 
 api_base_url <- function() {
   api_url <- Sys.getenv("IPUMS_API_URL")
-  if (api_url == "") return("https://api.ipums.org/extracts/")
+  if (api_url == "") {
+    return("https://api.ipums.org/extracts/")
+  }
   api_url
 }
 
@@ -5567,13 +5437,12 @@ api_extracts_path <- function() {
 #'
 #' @noRd
 ipums_api_version <- function(collection) {
-
   versions <- dplyr::filter(
     ipums_data_collections(),
     .data$api_support != "none"
   )
 
-  if(!collection %in% versions$code_for_api) {
+  if (!collection %in% versions$code_for_api) {
     rlang::abort(
       c(
         paste0("No API version found for collection \"", collection, "\""),
@@ -5592,7 +5461,6 @@ ipums_api_version <- function(collection) {
   } else {
     api_version
   }
-
 }
 
 #' Get API version from a JSON file
@@ -5662,7 +5530,7 @@ convert_paths_in_cassette_file_to_relative <- function(cassette_path) {
   file_path_lines <- which(fostr_detect(lines, "file: yes")) + 1
   orig_paths <- purrr::map_chr(
     lines[file_path_lines],
-    ~strsplit(.x, "string: ")[[1]][[2]]
+    ~ strsplit(.x, "string: ")[[1]][[2]]
   )
   converted_paths <- purrr::map_chr(orig_paths, convert_to_relative_path)
   for (i in seq_along(orig_paths)) {
@@ -5708,10 +5576,8 @@ skip_if_no_api_access <- function(have_api_access) {
 #'
 #' @noRd
 recycle_extract_subfield <- function(l, names) {
-
   if (is_null(names)) {
     return(l)
-    # return(NULL)
   }
 
   if (any(have_name(l))) {
@@ -5729,12 +5595,12 @@ recycle_extract_subfield <- function(l, names) {
     # If list is named, consolidate any entries with duplicate names
     if (any(duplicated(names(l)))) {
       labs <- unique(names(l))
-      l <- purrr::map(labs, ~unlist(l[.x == names(l)], use.names = FALSE))
+      l <- purrr::map(labs, ~ unlist(l[.x == names(l)], use.names = FALSE))
       names(l) <- labs
     }
   } else {
     # If list is unnamed, attach names in index order
-    names(l) <- names[1:length(l)]
+    names(l) <- names[seq_len(length(l))]
   }
 
   # Add NULL entries for any names that are not present in l
@@ -5746,7 +5612,7 @@ recycle_extract_subfield <- function(l, names) {
   l_sub <- purrr::set_names(
     purrr::map(
       names,
-      ~union(null_list[[.x]], l[[.x]])
+      ~ union(null_list[[.x]], l[[.x]])
     ),
     names
   )
@@ -5754,7 +5620,6 @@ recycle_extract_subfield <- function(l, names) {
   l <- c(l_sub, l[!names(l) %in% names])
 
   l
-
 }
 
 # Should be moved to utils?
@@ -5780,18 +5645,7 @@ recycle_extract_subfield <- function(l, names) {
 #'
 #' @noRd
 geog_extent_lookup <- function(values, lookup_key) {
-
   values_lower <- tolower(values)
-
-  # not_in_key <- !values_lower %in% names(lookup_key)
-  #
-  # if (any(not_in_key)) {
-  #   warning(
-  #     "Values `", paste0(values[not_in_key], collapse = "`, `"),
-  #     "` were not found.",
-  #     call. = FALSE
-  #   )
-  # }
 
   if (length(values_lower) == 0) {
     return(NULL)
@@ -5800,5 +5654,4 @@ geog_extent_lookup <- function(values, lookup_key) {
   recoded <- toupper(dplyr::recode(values_lower, !!!lookup_key))
 
   recoded
-
 }

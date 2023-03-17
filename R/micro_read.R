@@ -156,20 +156,25 @@
 #'
 #' head(household)
 read_ipums_micro <- function(
-  ddi,
-  vars = NULL,
-  n_max = Inf,
-  data_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc"),
-  lower_vars = FALSE
-) {
+    ddi,
+    vars = NULL,
+    n_max = Inf,
+    data_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc"),
+    lower_vars = FALSE) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
     rlang::warn(lower_vars_ignored_warning())
   }
-  if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
-  if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
+
+  if (is.character(ddi)) {
+    ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
+  }
+
+  if (is.null(data_file)) {
+    data_file <- file.path(ddi$file_path, ddi$file_name)
+  }
 
   tryCatch(
     data_file <- custom_check_file_exists(
@@ -178,22 +183,28 @@ read_ipums_micro <- function(
     ),
     error = function(cnd) {
       # Append hint to error message
-      rlang::abort(c(
-        conditionMessage(cnd),
-        "i" = paste0(
-          "Use `data_file` to specify the path to the data file associated ",
-          "with the provided `ddi`."
-        )),
+      rlang::abort(
+        c(
+          conditionMessage(cnd),
+          "i" = paste0(
+            "Use `data_file` to specify the path to the data file associated ",
+            "with the provided `ddi`."
+          )
+        ),
         call = expr(custom_check_file_exists())
       )
     }
   )
 
-
-  if (verbose) message(short_conditions_text(ddi))
+  if (verbose) {
+    message(short_conditions_text(ddi))
+  }
 
   vars <- enquo(vars)
-  if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+
+  if (!is.null(var_attrs)) {
+    var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  }
 
   ddi <- ddi_filter_vars(ddi, vars, "long", verbose)
 
@@ -201,7 +212,9 @@ read_ipums_micro <- function(
     if (ddi$file_type == "hierarchical") {
       rlang::abort("Hierarchical data cannot be read as csv.")
     }
+
     col_types <- ddi_to_readr_colspec(ddi)
+
     out <- readr::read_csv(
       data_file,
       col_types = col_types,
@@ -209,12 +222,14 @@ read_ipums_micro <- function(
       locale = ipums_locale(ddi$file_encoding),
       progress = show_readr_progress(verbose)
     )
+
     if (ddi_has_lowercase_var_names(ddi)) {
       out <- dplyr::rename_all(out, tolower)
     }
   } else {
     rt_info <- ddi_to_rtinfo(ddi)
     col_spec <- ddi_to_colspec(ddi, "long", verbose)
+
     out <- hipread::hipread_long(
       data_file,
       col_spec,
@@ -233,27 +248,40 @@ read_ipums_micro <- function(
 #' @export
 #' @rdname read_ipums_micro
 read_ipums_micro_list <- function(
-  ddi,
-  vars = NULL,
-  n_max = Inf,
-  data_file = NULL,
-  verbose = TRUE,
-  var_attrs = c("val_labels", "var_label", "var_desc"),
-  lower_vars = FALSE
-) {
+    ddi,
+    vars = NULL,
+    n_max = Inf,
+    data_file = NULL,
+    verbose = TRUE,
+    var_attrs = c("val_labels", "var_label", "var_desc"),
+    lower_vars = FALSE) {
   lower_vars_was_ignored <- check_if_lower_vars_ignored(ddi, lower_vars)
   if (lower_vars_was_ignored) {
     rlang::warn(lower_vars_ignored_warning())
   }
-  if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
-  if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 
-  data_file <- custom_check_file_exists(data_file, c(".dat.gz", ".csv", ".csv.gz"))
+  if (is.character(ddi)) {
+    ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
+  }
 
-  if (verbose) message(short_conditions_text(ddi))
+  if (is.null(data_file)) {
+    data_file <- file.path(ddi$file_path, ddi$file_name)
+  }
+
+  data_file <- custom_check_file_exists(
+    data_file,
+    c(".dat.gz", ".csv", ".csv.gz")
+  )
+
+  if (verbose) {
+    message(short_conditions_text(ddi))
+  }
 
   vars <- enquo(vars)
-  if (!is.null(var_attrs)) var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+
+  if (!is.null(var_attrs)) {
+    var_attrs <- match.arg(var_attrs, several.ok = TRUE)
+  }
 
   # rectype can be removed from ddi, so keep it for use later
   rt_ddi <- get_rt_ddi(ddi)
@@ -263,7 +291,9 @@ read_ipums_micro_list <- function(
     if (ddi$file_type == "hierarchical") {
       rlang::abort("Hierarchical data cannot be read as csv.")
     }
+
     col_types <- ddi_to_readr_colspec(ddi)
+
     out <- readr::read_csv(
       data_file,
       col_types = col_types,
@@ -271,14 +301,20 @@ read_ipums_micro_list <- function(
       locale = ipums_locale(ddi$file_encoding),
       progress = show_readr_progress(verbose)
     )
+
     if (ddi_has_lowercase_var_names(ddi)) {
       out <- dplyr::rename_all(out, tolower)
     }
-    if (verbose) cat("Assuming data rectangularized to 'P' record type")
+
+    if (verbose) {
+      cat("Assuming data rectangularized to 'P' record type")
+    }
+
     out <- list("P" = out)
   } else {
     rt_info <- ddi_to_rtinfo(rt_ddi)
     col_spec <- ddi_to_colspec(ddi, "list", verbose)
+
     out <- hipread::hipread_list(
       data_file,
       col_spec,
@@ -287,6 +323,7 @@ read_ipums_micro_list <- function(
       n_max = n_max,
       encoding = ddi$file_encoding
     )
+
     names(out) <- rectype_label_names(names(out), rt_ddi)
   }
 

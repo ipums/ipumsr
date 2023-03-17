@@ -23,7 +23,6 @@ download_dir <- file.path(tempdir(), "ipums-api-downloads")
 if (!dir.exists(download_dir)) dir.create(download_dir)
 
 if (have_api_access) {
-
   # Full extract
   vcr::use_cassette("submitted-nhgis-extract", {
     submitted_nhgis_extract <- submit_extract(nhgis_extract)
@@ -46,39 +45,41 @@ if (have_api_access) {
     submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
   })
 
-  tryCatch({
-    vcr::use_cassette("download-nhgis-shp-extract", {
-      test_that("Can wait during download", {
-        expect_message(
-          file_paths <- download_extract(
-            submitted_nhgis_extract_shp,
-            wait = TRUE,
-            initial_delay_seconds = 1,
-            max_delay_seconds = 2,
-            download_dir = download_dir,
-            overwrite = TRUE
-          ),
-          "Shapefile saved to"
-        )
+  tryCatch(
+    {
+      vcr::use_cassette("download-nhgis-shp-extract", {
+        test_that("Can wait during download", {
+          expect_message(
+            file_paths <- download_extract(
+              submitted_nhgis_extract_shp,
+              wait = TRUE,
+              initial_delay_seconds = 1,
+              max_delay_seconds = 2,
+              download_dir = download_dir,
+              overwrite = TRUE
+            ),
+            "Shapefile saved to"
+          )
 
-        expect_equal(length(file_paths), 1)
-        expect_equal(names(file_paths), "shape")
+          expect_equal(length(file_paths), 1)
+          expect_equal(names(file_paths), "shape")
 
-        gis_data_file_path <- file.path(
-          vcr::vcr_test_path("fixtures"),
-          basename(file_paths)
-        )
+          gis_data_file_path <- file.path(
+            vcr::vcr_test_path("fixtures"),
+            basename(file_paths)
+          )
 
-        expect_match(gis_data_file_path, "_shape\\.zip$")
-        expect_true(file.exists(gis_data_file_path))
+          expect_match(gis_data_file_path, "_shape\\.zip$")
+          expect_true(file.exists(gis_data_file_path))
+        })
       })
-    })
-  },
-  warning = function(w) {
-    if (!grepl("Empty cassette", w$message)) {
-      return(rlang::warn(w$message))
+    },
+    warning = function(w) {
+      if (!grepl("Empty cassette", w$message)) {
+        return(rlang::warn(w$message))
+      }
     }
-  })
+  )
 
   vcr::use_cassette("ready-nhgis-extract-shp", {
     ready_nhgis_extract_shp <- get_extract_info(
@@ -106,7 +107,6 @@ if (have_api_access) {
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
     recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
   })
-
 }
 
 # Tests ------------------------------------------------------------------------
@@ -121,24 +121,32 @@ test_that("Can define an NHGIS extract", {
   )
   expect_equal(
     nhgis_extract$data_tables,
-    list("2014_2018_ACS5a" = c("B01001", "B01002"),
-         "2015_2019_ACS5a" = c("B01001", "B01002"))
+    list(
+      "2014_2018_ACS5a" = c("B01001", "B01002"),
+      "2015_2019_ACS5a" = c("B01001", "B01002")
+    )
   )
   expect_equal(
     nhgis_extract$geog_levels,
-    list("2014_2018_ACS5a" = "nation",
-         "2015_2019_ACS5a" = "blck_grp",
-         "CW3" = "state")
+    list(
+      "2014_2018_ACS5a" = "nation",
+      "2015_2019_ACS5a" = "blck_grp",
+      "CW3" = "state"
+    )
   )
   expect_equal(
     nhgis_extract$years,
-    list("2014_2018_ACS5a" = NULL,
-         "2015_2019_ACS5a" = NULL)
+    list(
+      "2014_2018_ACS5a" = NULL,
+      "2015_2019_ACS5a" = NULL
+    )
   )
   expect_equal(
     nhgis_extract$breakdown_values,
-    list("2014_2018_ACS5a" = NULL,
-         "2015_2019_ACS5a" = NULL)
+    list(
+      "2014_2018_ACS5a" = NULL,
+      "2015_2019_ACS5a" = NULL
+    )
   )
   expect_equal(nhgis_extract$time_series_tables, "CW3")
   expect_equal(nhgis_extract$tst_layout, "time_by_row_layout")
@@ -174,7 +182,6 @@ test_that("NHGIS extracts get correct default values", {
 })
 
 test_that("Extract print coloring works", {
-
   local_reproducible_output(crayon = TRUE)
   expect_equal(
     format_field_for_printing(
@@ -183,7 +190,7 @@ test_that("Extract print coloring works", {
         "Tables: " = "B",
         "Geog Levels: " = "C"
       ),
-      parent_style = extract_field_styler(NHGIS_DS_COLOR, "bold"),
+      parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
       subfield_style = extract_field_styler("bold"),
       padding = 1
     ),
@@ -224,7 +231,7 @@ test_that("Extract print coloring works", {
         "Tables: " = "B",
         "Geog Levels: " = "C"
       ),
-      parent_style = extract_field_styler(NHGIS_DS_COLOR, "bold"),
+      parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
       subfield_style = extract_field_styler("bold"),
       padding = 2
     ),
@@ -364,7 +371,7 @@ test_that("nhgis_extract validate method works", {
         "nhgis",
         description = "",
         time_series_tables = c("A00", "A01"),
-        geog_levels = list(A00 = "a", A01= "b", A01 = "c"),
+        geog_levels = list(A00 = "a", A01 = "b", A01 = "c"),
         data_format = "csv_no_header"
       )
     ),
@@ -434,20 +441,26 @@ test_that("Can submit an NHGIS extract of multiple types", {
   )
   expect_equal(
     submitted_nhgis_extract$data_tables,
-    list("2014_2018_ACS5a" = c("B01001", "B01002"),
-         "2015_2019_ACS5a" = c("B01001", "B01002"))
+    list(
+      "2014_2018_ACS5a" = c("B01001", "B01002"),
+      "2015_2019_ACS5a" = c("B01001", "B01002")
+    )
   )
   expect_equal(
     submitted_nhgis_extract$breakdown_values,
-    list("2014_2018_ACS5a" = NULL,
-         "2015_2019_ACS5a" = NULL)
+    list(
+      "2014_2018_ACS5a" = NULL,
+      "2015_2019_ACS5a" = NULL
+    )
   )
   expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
   expect_equal(
     submitted_nhgis_extract$geog_levels,
-    list("2014_2018_ACS5a" = "nation",
-         "2015_2019_ACS5a" = "blck_grp",
-         "CW3" = "state")
+    list(
+      "2014_2018_ACS5a" = "nation",
+      "2015_2019_ACS5a" = "blck_grp",
+      "CW3" = "state"
+    )
   )
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
@@ -574,9 +587,7 @@ test_that("extract_list_from_json reproduces extract specs", {
 })
 
 test_that("Can use default collection when getting extract info", {
-
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
-
     extract_id <- standardize_extract_identifier(1)
 
     expect_equal(extract_id$collection, "nhgis")
@@ -609,7 +620,6 @@ test_that("Can use default collection when getting extract info", {
       standardize_extract_identifier("usa:1"),
       list(collection = "usa", number = 1)
     )
-
   })
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "usa"), {
@@ -639,7 +649,6 @@ test_that("Can use default collection when getting extract info", {
       )
     )
   })
-
 })
 
 test_that("standardize_extract_identifier handles unusual cases", {
@@ -710,13 +719,11 @@ tryCatch(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[1])
       )
-      # table_data_file_path <- convert_to_relative_path(table_data_file_path)
 
       gis_data_file_path <- file.path(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[2])
       )
-      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
 
       expect_match(table_data_file_path, "_csv\\.zip$")
       expect_match(gis_data_file_path, "_shape\\.zip$")
@@ -734,15 +741,20 @@ tryCatch(
 
 if (have_api_access) {
   if (!already_existed) {
-    convert_paths_in_cassette_file_to_relative(download_nhgis_extract_cassette_file)
+    convert_paths_in_cassette_file_to_relative(
+      download_nhgis_extract_cassette_file
+    )
   }
 
   if (!already_existed_shp) {
-    convert_paths_in_cassette_file_to_relative(download_nhgis_extract_cassette_file_shp)
+    convert_paths_in_cassette_file_to_relative(
+      download_nhgis_extract_cassette_file_shp
+    )
   }
 
   download_nhgis_extract_cassette_file <- file.path(
-    vcr::vcr_test_path("fixtures"), "download-nhgis-extract-collection-number.yml"
+    vcr::vcr_test_path("fixtures"),
+    "download-nhgis-extract-collection-number.yml"
   )
 
   already_existed <- file.exists(download_nhgis_extract_cassette_file)
@@ -752,7 +764,6 @@ tryCatch(
   vcr::use_cassette("download-nhgis-extract-collection-number", {
     skip_if_no_api_access(have_api_access)
     test_that("Can download NHGIS extract with collection/number as vector", {
-
       expect_message(
         file_paths <- download_extract(
           c("nhgis", ready_nhgis_extract$number),
@@ -777,13 +788,11 @@ tryCatch(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[1])
       )
-      # table_data_file_path <- convert_to_relative_path(table_data_file_path)
 
       gis_data_file_path <- file.path(
         vcr::vcr_test_path("fixtures"),
         basename(file_paths[2])
       )
-      # gis_data_file_path <- convert_to_relative_path(gis_data_file_path)
 
       expect_match(table_data_file_path, "_csv\\.zip$")
       expect_match(gis_data_file_path, "_shape\\.zip$")
@@ -801,7 +810,9 @@ tryCatch(
 
 if (have_api_access) {
   if (!already_existed) {
-    convert_paths_in_cassette_file_to_relative(download_nhgis_extract_cassette_file)
+    convert_paths_in_cassette_file_to_relative(
+      download_nhgis_extract_cassette_file
+    )
   }
 }
 
@@ -809,7 +820,6 @@ tryCatch(
   vcr::use_cassette("download-nhgis-extract-collection-number", {
     skip_if_no_api_access(have_api_access)
     test_that("Can download NHGIS extract with collection/number as string", {
-
       expect_message(
         file_paths <- download_extract(
           paste0("nhgis:", ready_nhgis_extract$number),
@@ -839,7 +849,6 @@ tryCatch(
 )
 
 test_that("Can read downloaded files with ipumsr readers", {
-
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
@@ -949,13 +958,11 @@ test_that("Can read downloaded files with ipumsr readers", {
     ncol(data) + ncol(data_shp_sp@data) -
       length(intersect(colnames(data), colnames(data_shp_sp@data)))
   )
-
 })
 
 # > Revising ------------------------------------
 
 test_that("Can add new fields to an NHGIS extract", {
-
   revised <- add_to_extract(
     nhgis_extract,
     datasets = "New",
@@ -974,12 +981,14 @@ test_that("Can add new fields to an NHGIS extract", {
   )
   expect_equal(
     revised$geog_levels,
-    list(`2014_2018_ACS5a` = "nation",
-         `2015_2019_ACS5a` = "blck_grp",
-         New = "G1",
-         CW3 = "state",
-         CW4 = "G1",
-         CW5 = "G2")
+    list(
+      `2014_2018_ACS5a` = "nation",
+      `2015_2019_ACS5a` = "blck_grp",
+      New = "G1",
+      CW3 = "state",
+      CW4 = "G1",
+      CW5 = "G2"
+    )
   )
   expect_equal(
     revised$years,
@@ -994,35 +1003,42 @@ test_that("Can add new fields to an NHGIS extract", {
 })
 
 test_that("Can add subfields to existing parent fields", {
-
   revised <- add_to_extract(
     nhgis_extract,
     data_tables = c("T1", "T2"),
     time_series_tables = c("CW3", "CW4"),
-    geog_levels = list(`2015_2019_ACS5a` = "G1",
-                       CW3 = "G1",
-                       CW4 = "G2"),
+    geog_levels = list(
+      `2015_2019_ACS5a` = "G1",
+      CW3 = "G1",
+      CW4 = "G2"
+    ),
     years = list("Y1", "Y2")
   )
 
   expect_equal(revised$datasets, nhgis_extract$datasets)
   expect_equal(
     revised$data_tables,
-    list(`2014_2018_ACS5a` = c("B01001", "B01002", "T1", "T2"),
-         `2015_2019_ACS5a` = c("B01001", "B01002", "T1", "T2"))
+    list(
+      `2014_2018_ACS5a` = c("B01001", "B01002", "T1", "T2"),
+      `2015_2019_ACS5a` = c("B01001", "B01002", "T1", "T2")
+    )
   )
   expect_equal(revised$time_series_tables, c("CW3", "CW4"))
   expect_equal(
     revised$geog_levels,
-    list(`2014_2018_ACS5a` = c("nation"),
-         `2015_2019_ACS5a` = c("blck_grp", "G1"),
-         CW3 = c("state", "G1"),
-         CW4 = "G2")
+    list(
+      `2014_2018_ACS5a` = c("nation"),
+      `2015_2019_ACS5a` = c("blck_grp", "G1"),
+      CW3 = c("state", "G1"),
+      CW4 = "G2"
+    )
   )
   expect_equal(
     revised$years,
-    list(`2014_2018_ACS5a` = "Y1",
-         `2015_2019_ACS5a` = "Y2")
+    list(
+      `2014_2018_ACS5a` = "Y1",
+      `2015_2019_ACS5a` = "Y2"
+    )
   )
 
   # Recycling handling for extracts with DS + TST
@@ -1032,9 +1048,11 @@ test_that("Can add subfields to existing parent fields", {
       time_series_tables = "CW3",
       geog_levels = "C"
     )$geog_levels,
-    list("2014_2018_ACS5a" = "nation",
-         "2015_2019_ACS5a" = "blck_grp",
-         "CW3" = c("state", "C"))
+    list(
+      "2014_2018_ACS5a" = "nation",
+      "2015_2019_ACS5a" = "blck_grp",
+      "CW3" = c("state", "C")
+    )
   )
 
   expect_equal(
@@ -1044,15 +1062,15 @@ test_that("Can add subfields to existing parent fields", {
       time_series_tables = "CW3",
       geog_levels = "C"
     )$geog_levels,
-    list("2014_2018_ACS5a" = c("nation", "C"),
-         "2015_2019_ACS5a" = "blck_grp",
-         "CW3" = c("state", "C"))
+    list(
+      "2014_2018_ACS5a" = c("nation", "C"),
+      "2015_2019_ACS5a" = "blck_grp",
+      "CW3" = c("state", "C")
+    )
   )
-
 })
 
 test_that("Can remove full fields from an NHGIS extract", {
-
   revised <- remove_from_extract(
     nhgis_extract,
     datasets = "2015_2019_ACS5a",
@@ -1079,41 +1097,43 @@ test_that("Can remove full fields from an NHGIS extract", {
   expect_null(revised$tst_layout)
 
   expect_equal(revised$geographic_extents, "PA")
-
 })
 
 test_that("Can remove subfields from an NHGIS extract", {
-
   revised <- remove_from_extract(
     add_to_extract(
       nhgis_extract,
       geog_levels = list(`2014_2018_ACS5a` = "tract", CW3 = "tract"),
     ),
     data_tables = "B01001",
-    geog_levels = list(`2014_2018_ACS5a` = "nation",
-                       CW3 = c("state", "blck_grp")),
+    geog_levels = list(
+      `2014_2018_ACS5a` = "nation",
+      CW3 = c("state", "blck_grp")
+    ),
     geographic_extents = "420"
   )
 
   expect_equal(revised$datasets, nhgis_extract$datasets)
   expect_equal(
     revised$data_tables,
-    list(`2014_2018_ACS5a` = "B01002",
-         `2015_2019_ACS5a` = "B01002")
+    list(
+      `2014_2018_ACS5a` = "B01002",
+      `2015_2019_ACS5a` = "B01002"
+    )
   )
   expect_equal(revised$time_series_tables, nhgis_extract$time_series_tables)
   expect_equal(
     revised$geog_levels,
-    list(`2014_2018_ACS5a` = "tract",
-         `2015_2019_ACS5a` = "blck_grp",
-         CW3 = "tract")
+    list(
+      `2014_2018_ACS5a` = "tract",
+      `2015_2019_ACS5a` = "blck_grp",
+      CW3 = "tract"
+    )
   )
   expect_equal(revised$geographic_extents, "DC")
-
 })
 
 test_that("Removing parent fields occurs before evaluating subfields", {
-
   revised <- remove_from_extract(
     nhgis_extract,
     datasets = "2014_2018_ACS5a",
@@ -1122,11 +1142,9 @@ test_that("Removing parent fields occurs before evaluating subfields", {
 
   expect_equal(revised$datasets, "2015_2019_ACS5a")
   expect_equal(revised$data_tables, list(`2015_2019_ACS5a` = "B01002"))
-
 })
 
 test_that("Revisions do not alter unspecified extract fields", {
-
   extract1 <- define_extract_nhgis(
     shapefiles = "Test"
   )
@@ -1153,7 +1171,6 @@ test_that("Revisions do not alter unspecified extract fields", {
     add_to_extract(extract1, geog_levels = "Test"),
     "`geog_levels` must be missing when no `datasets` or `time_series_tables`"
   )
-
 })
 
 test_that("Improper extract revisions throw warnings or errors", {
@@ -1162,8 +1179,10 @@ test_that("Improper extract revisions throw warnings or errors", {
       nhgis_extract,
       datasets = "2014_2018_ACS5a",
       data_tables = list("a", "b"),
-      geog_levels = list("2014_2018_ACS5a" = "a",
-                         "not_in_extract" = "blck_grp"),
+      geog_levels = list(
+        "2014_2018_ACS5a" = "a",
+        "not_in_extract" = "blck_grp"
+      ),
       years = list(C = "c")
     ),
     paste0(
@@ -1263,7 +1282,6 @@ test_that("Improper extract revisions throw warnings or errors", {
 })
 
 test_that("Can combine extracts", {
-
   x1 <- define_extract_nhgis(
     description = "Combining",
     shapefiles = "S1"
@@ -1311,7 +1329,6 @@ test_that("Can combine extracts", {
     ),
     "same collection"
   )
-
 })
 
 # > Recent extracts ------------------------------
@@ -1319,17 +1336,19 @@ test_that("Can combine extracts", {
 test_that("Tibble of recent NHGIS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
-  expected_columns <- c("collection", "number", "description", "data_type",
-                        "name", "data_tables",
-                        "geog_levels", "years",
-                        "breakdown_values", "geographic_extents",
-                        "tst_layout",
-                        "breakdown_and_data_type_layout", "data_format",
-                        "submitted", "download_links", "status")
+  expected_columns <- c(
+    "collection", "number", "description", "data_type",
+    "name", "data_tables",
+    "geog_levels", "years",
+    "breakdown_values", "geographic_extents",
+    "tst_layout",
+    "breakdown_and_data_type_layout", "data_format",
+    "submitted", "download_links", "status"
+  )
 
   recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
     which(recent_nhgis_extracts_tbl$number == submitted_extract_number &
-            recent_nhgis_extracts_tbl$data_type == "datasets"),
+      recent_nhgis_extracts_tbl$data_type == "datasets"),
   ]
 
   row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)
@@ -1438,7 +1457,6 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
     x,
     extract_tbl_to_list(extract_to_tbl(x))[[1]]
   )
-
 })
 
 # > JSON export -----------------------------------
@@ -1480,7 +1498,6 @@ test_that("We can get correct API version info for each collection", {
 })
 
 test_that("We parse API errors on bad requests", {
-
   bad_extract <- new_ipums_extract(
     "nhgis",
     datasets = "foo",

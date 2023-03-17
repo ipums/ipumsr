@@ -30,14 +30,17 @@ ipums_example <- function(path = NULL) {
     file <- dir(system.file("extdata", package = "ipumsr"))
   } else {
     file <- system.file("extdata", path, package = "ipumsr")
+
     if (!file.exists(file)) {
       all_files <- dir(system.file("extdata", package = "ipumsr"))
       rlang::abort(c(
-        paste0("Could not find file \"", path,
-               "\" in examples. Available files:"),
+        paste0(
+          "Could not find file \"", path, "\" in examples. Available files:"
+        ),
         all_files
       ))
     }
   }
+
   file
 }

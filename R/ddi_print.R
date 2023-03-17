@@ -22,6 +22,8 @@ print.ipums_ddi <- function(x, ...) {
 
 
 ifelsenull <- function(x, y, .f = identity) {
-  if (is.null(x)) return(y)
+  if (is.null(x)) {
+    return(y)
+  }
   .f(x)
 }

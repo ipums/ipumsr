@@ -48,48 +48,59 @@ NULL
 
 #' @rdname ipums_shape_join
 #' @export
-ipums_shape_left_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
+ipums_shape_left_join <- function(data,
+                                  shape_data,
+                                  by,
+                                  suffix = c("", "SHAPE"),
+                                  verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "left", suffix, verbose)
 }
 
 #' @rdname ipums_shape_join
 #' @export
-ipums_shape_right_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
+ipums_shape_right_join <- function(data,
+                                   shape_data,
+                                   by,
+                                   suffix = c("", "SHAPE"),
+                                   verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "right", suffix, verbose)
 }
 
 #' @rdname ipums_shape_join
 #' @export
-ipums_shape_inner_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
+ipums_shape_inner_join <- function(data,
+                                   shape_data,
+                                   by,
+                                   suffix = c("", "SHAPE"),
+                                   verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "inner", suffix, verbose)
 }
 
 #' @rdname ipums_shape_join
 #' @export
-ipums_shape_full_join <- function(data, shape_data, by, suffix = c("", "SHAPE"), verbose = TRUE) {
+ipums_shape_full_join <- function(data,
+                                  shape_data,
+                                  by,
+                                  suffix = c("", "SHAPE"),
+                                  verbose = TRUE) {
   ipums_shape_join(data, shape_data, by, "full", suffix, verbose)
 }
 
-
-ipums_shape_join <- function(
-    data,
-    shape_data,
-    by,
-    direction = c("full", "inner", "left", "right"),
-    suffix = c("", "_SHAPE"),
-    verbose = TRUE
-) {
+ipums_shape_join <- function(data,
+                             shape_data,
+                             by,
+                             direction = c("full", "inner", "left", "right"),
+                             suffix = c("", "_SHAPE"),
+                             verbose = TRUE) {
   UseMethod("ipums_shape_join", shape_data)
 }
 
-ipums_shape_join.sf <- function(
-    data,
-    shape_data,
-    by,
-    direction = c("full", "inner", "left", "right"),
-    suffix = c("", "_SHAPE"),
-    verbose = TRUE
-) {
+ipums_shape_join.sf <- function(data,
+                                shape_data,
+                                by,
+                                direction = c("full", "inner", "left", "right"),
+                                suffix = c("", "_SHAPE"),
+                                verbose = TRUE) {
   if (is.null(names(by))) {
     by_shape <- by
     by_data <- by
@@ -100,6 +111,7 @@ ipums_shape_join.sf <- function(
     by_shape <- unname(by)
     by_data <- names(by)
   }
+
   direction <- match.arg(direction)
 
   check_shape_join_names(by_shape, names(shape_data), "`shape_data`")
@@ -113,29 +125,49 @@ ipums_shape_join.sf <- function(
     shape_data <- dplyr::rename(shape_data, !!!rlang::syms(by))
     by <- names(by)
   }
-  suffix <- rev(suffix)
-  if (direction == "left") direction <- "right"
-  if (direction == "right") direction <- "left"
 
-  alligned <- allign_id_vars(shape_data, data, by)
+  suffix <- rev(suffix)
+
+  if (direction == "left") {
+    direction <- "right"
+  }
+
+  if (direction == "right") {
+    direction <- "left"
+  }
+
+  aligned <- align_id_vars(shape_data, data, by)
+
   merge_f <- utils::getFromNamespace(paste0(direction, "_join"), "dplyr")
-  out <- merge_f(alligned$shape_data, alligned$data, by = by, suffix = suffix)
+
+  out <- merge_f(aligned$shape_data, aligned$data, by = by, suffix = suffix)
   attr(out, "sf_column") <- attr(shape_data, "sf_column")
 
   # message for merge failures
   if (verbose) {
-    join_fail_attributes <- check_for_join_failures(out, by, alligned$shape_data, alligned$data)
+    join_fail_attributes <- check_for_join_failures(
+      out,
+      by,
+      aligned$shape_data,
+      aligned$data
+    )
   }
+
   # Bring variables in data to front of data.frame (but need to get names
   # after possibly renamed by suffix)
   dvars <- names(data)
   renamed <- dvars[dvars %in% names(shape_data) & !dvars %in% by]
+
   if (length(renamed) > 0) {
     dvars[dvars %in% renamed] <- paste0(renamed, suffix[2])
   }
+
   out <- dplyr::select(out, dplyr::one_of(dvars), dplyr::everything())
 
-  if (verbose) attr(out, "join_failures") <- join_fail_attributes
+  if (verbose) {
+    attr(out, "join_failures") <- join_fail_attributes
+  }
+
   out
 }
 
@@ -145,8 +177,7 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
     by,
     direction = c("full", "inner", "left", "right"),
     suffix = c("", "_SHAPE"),
-    verbose = TRUE
-) {
+    verbose = TRUE) {
   if (is.null(names(by))) {
     by_shape <- by
     by_data <- by
@@ -157,8 +188,11 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
     by_shape <- unname(by)
     by_data <- names(by)
   }
+
   direction <- match.arg(direction)
-  if (direction %in% c("left", "full")) { # Note that directions are reversed because of dispatch
+
+  # Note that directions are reversed because of dispatch
+  if (direction %in% c("left", "full")) {
     rlang::abort(paste0(
       "Only inner and right joins are supported for ",
       "`SpatialPolygonsDataFrame` objects to avoid the creation of `NULL` ",
@@ -177,19 +211,31 @@ ipums_shape_join.SpatialPolygonsDataFrame <- function(
     shape_data@data <- dplyr::rename(shape_data@data, !!!rlang::syms(by))
     by <- names(by)
   }
-  suffix <- rev(suffix)
-  if (direction == "left") direction <- "right"
-  if (direction == "right") direction <- "left"
 
-  alligned <- allign_id_vars(shape_data@data, data, by)
+  suffix <- rev(suffix)
+
+  if (direction == "left") {
+    direction <- "right"
+  }
+
+  if (direction == "right") {
+    direction <- "left"
+  }
+
+  aligned <- align_id_vars(shape_data@data, data, by)
   # Use same secret ID variable as the sp package
   # (https://github.com/cran/sp/blob/a7c10d3e1b02db2451ff2bc8435a8518d0b5c692/R/merge.R#L32)
-  alligned$data$DoNotUse_temp_sequential_ID_963 <- seq(1, nrow(alligned$data))
+  aligned$data$DoNotUse_temp_sequential_ID_963 <- seq(1, nrow(aligned$data))
+
   merge_f <- utils::getFromNamespace(paste0(direction, "_join"), "dplyr")
-  out <- merge_f(alligned$shape_data, alligned$data, by = by, suffix = suffix)
+
+  out <- merge_f(aligned$shape_data, aligned$data, by = by, suffix = suffix)
 
   if (verbose) {
-    join_fail_attributes <- try(check_for_join_failures(out, by, alligned$shape_data, alligned$data))
+    join_fail_attributes <- try(
+      check_for_join_failures(out, by, aligned$shape_data, aligned$data)
+    )
+
     if (inherits(join_fail_attributes, "try-error")) {
       rlang::warn("Join failures not available.")
       join_fail_attributes <- NULL
@@ -221,70 +267,97 @@ check_shape_join_names <- function(by_names, data_names, display) {
 }
 
 
-allign_id_vars <- function(shape_data, data, by) {
+align_id_vars <- function(shape_data, data, by) {
   shape_type <- dplyr::case_when(
-    purrr::map_lgl(by, ~is.character(shape_data[[.]])) ~ "character",
-    purrr::map_lgl(by, ~is.factor(shape_data[[.]]))    ~ "factor",
-    purrr::map_lgl(by, ~is.double(shape_data[[.]]))    ~ "double",
-    purrr::map_lgl(by, ~is.integer(shape_data[[.]]))   ~ "integer"
+    purrr::map_lgl(by, ~ is.character(shape_data[[.]])) ~ "character",
+    purrr::map_lgl(by, ~ is.factor(shape_data[[.]])) ~ "factor",
+    purrr::map_lgl(by, ~ is.double(shape_data[[.]])) ~ "double",
+    purrr::map_lgl(by, ~ is.integer(shape_data[[.]])) ~ "integer"
   )
 
   data_type <- dplyr::case_when(
-    purrr::map_lgl(by, ~is.character(data[[.]])) ~ "character",
-    purrr::map_lgl(by, ~is.factor(data[[.]]))    ~ "factor",
-    purrr::map_lgl(by, ~is.double(data[[.]]))    ~ "double",
-    purrr::map_lgl(by, ~is.integer(data[[.]]))   ~ "integer"
+    purrr::map_lgl(by, ~ is.character(data[[.]])) ~ "character",
+    purrr::map_lgl(by, ~ is.factor(data[[.]])) ~ "factor",
+    purrr::map_lgl(by, ~ is.double(data[[.]])) ~ "double",
+    purrr::map_lgl(by, ~ is.integer(data[[.]])) ~ "integer"
   )
-
-  convert_failures <- rep(FALSE, length(by))
 
   # If one is character but other is double/integer, convert if possible
   # if one is factor and the other is character, convert to character
   # If one is factor and the other is integer/double, give error because I can't
   # really imagine how this happened.
-  # TODO: It seems like a lot of people may convert the data from number -> factor
-  #       (using the labels) and then try to merge on the "numeric" id (which
-  #       is often stored as text in shape file). Consider trying to give
-  #       better error in this situation.
+  # TODO: It seems like a lot of people may convert the data from
+  #       number -> factor (using the labels) and then try to merge on the
+  #       "numeric" id (which is often stored as text in shape file). Consider
+  #       trying to give better error in this situation.
   for (iii in seq_along(by)) {
     if (shape_type[iii] == "character") {
-      switch(
-        data_type[iii],
+      switch(data_type[iii],
         "character" = NULL,
-        "factor" = {data[[by[iii]]] <- as.character(data[[by[iii]]])},
-        "double" = {shape_data[[by[iii]]] <- custom_parse_double(shape_data[[by[iii]]])},
-        "integer" = {shape_data[[by[iii]]] <- custom_parse_integer(shape_data[[by[iii]]])}
+        "factor" = {
+          data[[by[iii]]] <- as.character(data[[by[iii]]])
+        },
+        "double" = {
+          shape_data[[by[iii]]] <- custom_parse_double(shape_data[[by[iii]]])
+        },
+        "integer" = {
+          shape_data[[by[iii]]] <- custom_parse_integer(shape_data[[by[iii]]])
+        }
       )
     } else if (shape_type[iii] == "factor") {
-      switch(
-        data_type[iii],
-        "character" = {shape_data[[by[iii]]] <- as.character(shape_data[[by[iii]]])},
+      switch(data_type[iii],
+        "character" = {
+          shape_data[[by[iii]]] <- as.character(shape_data[[by[iii]]])
+        },
         "factor" = {
           data[[by[iii]]] <- as.character(data[[by[iii]]])
           shape_data[[by[iii]]] <- as.character(shape_data[[by[iii]]])
         },
-        "double" = {rlang::abort("Shape data has factor id var, but data has numeric id var")},
-        "integer" = {rlang::abort("Shape data has factor id var, but data has integer id var")}
+        "double" = {
+          rlang::abort(
+            "Shape data has factor id var, but data has numeric id var"
+          )
+        },
+        "integer" = {
+          rlang::abort(
+            "Shape data has factor id var, but data has integer id var"
+          )
+        }
       )
     } else if (shape_type[iii] == "double") {
-      switch(
-        data_type[iii],
-        "character" = {data <- custom_parse_double(data[[by[iii]]])},
-        "factor" = {rlang::abort("Shape data has numeric id var, but data has factor id var")},
+      switch(data_type[iii],
+        "character" = {
+          data <- custom_parse_double(data[[by[iii]]])
+        },
+        "factor" = {
+          rlang::abort(
+            "Shape data has numeric id var, but data has factor id var"
+          )
+        },
         "double" = NULL,
-        "integer" = {data[[by[iii]]] <- as.double(data[[by[iii]]])}
+        "integer" = {
+          data[[by[iii]]] <- as.double(data[[by[iii]]])
+        }
       )
     } else if (shape_type[iii] == "integer") {
-      switch(
-        data_type[iii],
-        "character" = {data <- custom_parse_integer(data[[by[iii]]])},
-        "factor" = {rlang::abort("Shape data has integer id var, but data has factor id var")},
-        "double" = {shape_data[[by[iii]]] <- as.double(shape_data[[by[iii]]])},
+      switch(data_type[iii],
+        "character" = {
+          data <- custom_parse_integer(data[[by[iii]]])
+        },
+        "factor" = {
+          rlang::abort(
+            "Shape data has integer id var, but data has factor id var"
+          )
+        },
+        "double" = {
+          shape_data[[by[iii]]] <- as.double(shape_data[[by[iii]]])
+        },
         "integer" = NULL
       )
     }
 
-    #Combine attributes (prioritzing data attributes because the DDI has more info)
+    # Combine attributes
+    # (prioritzing data attributes because the DDI has more info)
     shape_attr <- attributes(shape_data[[by[iii]]])
     data_attr <- attributes(data[[by[iii]]])
 
@@ -295,6 +368,7 @@ allign_id_vars <- function(shape_data, data, by) {
     attributes(shape_data[[by[iii]]]) <- all_attr
     attributes(data[[by[iii]]]) <- all_attr
   }
+
   list(shape_data = shape_data, data = data)
 }
 
@@ -303,20 +377,27 @@ check_for_join_failures <- function(merged, by, shape_data, data) {
     shape = dplyr::anti_join(shape_data, as.data.frame(merged), by = by),
     data = dplyr::anti_join(data, as.data.frame(merged), by = by)
   )
+
   sh_num <- nrow(merge_fail$shape)
   d_num <- nrow(merge_fail$data)
+
   if (sh_num > 0 | d_num > 0) {
     if (sh_num > 0 && d_num > 0) {
-      count_message <- paste0(sh_num, " observations in the shape file and ", d_num, " obervation in data")
+      count_message <- paste0(
+        sh_num, " observations in the shape file and ",
+        d_num, " obervation in data"
+      )
     } else if (sh_num > 0) {
       count_message <- paste0(sh_num, " observations in the shape file")
     } else if (d_num > 0) {
       count_message <- paste0(d_num, " observations in the data")
     }
+
     custom_cat(
       "Some observations were lost in the join (", count_message,
       "). See `join_failures(...)` for more details."
     )
+
     merge_fail
   } else {
     return(NULL)

@@ -151,7 +151,6 @@ read_nhgis <- function(data_file,
                        show_col_types = NULL,
                        ...,
                        data_layer = deprecated()) {
-
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
   }
@@ -184,7 +183,6 @@ read_nhgis <- function(data_file,
   has_dat <- any(grepl(".dat$", data_files))
 
   if (!has_csv && !has_dat) {
-
     if (is_null(file_type)) {
       msg <- ".csv or .dat"
     } else {
@@ -194,7 +192,6 @@ read_nhgis <- function(data_file,
     rlang::abort(
       paste0("No ", msg, " files found in the provided `data_file`.")
     )
-
   } else if (has_csv && has_dat) {
     rlang::abort(
       c(
@@ -236,7 +233,6 @@ read_nhgis <- function(data_file,
   }
 
   data
-
 }
 
 # Internal ---------------------
@@ -248,10 +244,9 @@ read_nhgis_fwf <- function(data_file,
                            verbose = TRUE,
                            locale = NULL,
                            ...) {
-
   dots <- rlang::list2(...)
 
-  if (!is_null(dots$col_positions) && !is_FALSE(do_file)) {
+  if (!is_null(dots$col_positions) && !is_false(do_file)) {
     rlang::warn(
       paste0(
         "Only one of `col_positions` or `do_file` can be provided. ",
@@ -283,11 +278,7 @@ read_nhgis_fwf <- function(data_file,
   if (length(cb_files) > 0) {
     cb_file <- fostr_subset(
       cb_files,
-      fostr_replace(
-        basename(file),
-        ipums_file_ext(file),
-        ""
-      )
+      fostr_replace(basename(file), ipums_file_ext(file), "")
     )
   }
 
@@ -307,7 +298,6 @@ read_nhgis_fwf <- function(data_file,
   }
 
   if (file_is_zip(data_file)) {
-
     # Cannot use fwf_empty() col_positions on an unz() connection
     # Must unzip file to allow for default fwf_empty() specification
     fwf_dir <- tempfile()
@@ -321,21 +311,15 @@ read_nhgis_fwf <- function(data_file,
     utils::unzip(data_file, exdir = fwf_dir)
 
     file <- file.path(fwf_dir, file)
-
   } else if (file_is_dir(data_file)) {
-
     file <- file.path(data_file, file)
-
   }
 
   do_file <- do_file %||% fostr_replace(file, "\\.dat$", ".do")
 
-  if (is_FALSE(do_file)) {
-
+  if (is_false(do_file)) {
     warn_default_fwf_parsing()
-
   } else if (!file.exists(do_file)) {
-
     if (!is_null(do_file)) {
       rlang::warn(
         c(
@@ -361,9 +345,7 @@ read_nhgis_fwf <- function(data_file,
       )
       warn_default_fwf_parsing()
     }
-
   } else if (file.exists(do_file)) {
-
     col_spec <- tryCatch(
       parse_nhgis_do_file(do_file),
       error = function(cnd) {
@@ -380,7 +362,6 @@ read_nhgis_fwf <- function(data_file,
         NULL
       }
     )
-
   }
 
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
@@ -415,7 +396,6 @@ read_nhgis_fwf <- function(data_file,
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
 
   data
-
 }
 
 read_nhgis_csv <- function(data_file,
@@ -427,7 +407,6 @@ read_nhgis_csv <- function(data_file,
                            skip = 0,
                            col_names = TRUE,
                            ...) {
-
   file_select <- enquo(file_select)
 
   file <- find_files_in(
@@ -507,7 +486,7 @@ read_nhgis_csv <- function(data_file,
     rlang::warn(
       c(
         "Unable to read codebook associated with this file.",
-        "i" =  "To load a codebook manually, use `read_nhgis_codebook()`.",
+        "i" = "To load a codebook manually, use `read_nhgis_codebook()`.",
         "i" = paste0(
           "To attach codebook information to loaded data, ",
           "use `set_ipums_var_attributes()`."
@@ -519,11 +498,9 @@ read_nhgis_csv <- function(data_file,
   data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
 
   data
-
 }
 
 check_header_row <- function(data_file, file_select = NULL) {
-
   file_select <- enquo(file_select)
 
   file <- find_files_in(
@@ -559,11 +536,9 @@ check_header_row <- function(data_file, file_select = NULL) {
     header_vals = header_vals,
     col_names = colnames(header_row)
   )
-
 }
 
 parse_nhgis_do_file <- function(file) {
-
   do_lines <- trimws(readr::read_lines(file, progress = FALSE))
 
   col_spec <- parse_col_positions(do_lines)
@@ -574,11 +549,9 @@ parse_nhgis_do_file <- function(file) {
     col_positions = col_spec$col_positions,
     col_recode = col_recode
   )
-
 }
 
 parse_col_recode <- function(do_lines) {
-
   recode_lines <- which(grepl("^replace", do_lines))
 
   if (length(recode_lines) == 0) {
@@ -598,11 +571,9 @@ parse_col_recode <- function(do_lines) {
     cols = cols,
     exprs = rlang::parse_exprs(exprs)
   )
-
 }
 
 parse_col_positions <- function(do_lines) {
-
   # Get positions and labels
   start <- which(grepl("^quietly", do_lines)) + 1
   end <- which(grepl("^using", do_lines)) - 1
@@ -620,11 +591,9 @@ parse_col_positions <- function(do_lines) {
     col_types = col_types,
     col_positions = readr::fwf_positions(col_start, col_end, col_name)
   )
-
 }
 
 convert_col_types <- function(types) {
-
   types <- fostr_replace(types, "^str.+", "str")
 
   recode_key <- c(
@@ -637,7 +606,6 @@ convert_col_types <- function(types) {
   )
 
   paste0(dplyr::recode(types, !!!recode_key), collapse = "")
-
 }
 
 warn_default_fwf_parsing <- function() {

@@ -61,7 +61,10 @@ Note that not all \verb{lbl_*()} functions support both of these arguments.
 \examples{
 x <- haven::labelled(
   c(10, 10, 11, 20, 21, 30, 99, 30, 10),
-  c(Yes = 10, `Yes - Logically Assigned` = 11, No = 20, Unlikely = 21, Maybe = 30, NIU = 99)
+  c(
+    Yes = 10, `Yes - Logically Assigned` = 11,
+    No = 20, Unlikely = 21, Maybe = 30, NIU = 99
+  )
 )
 
 # Convert cases with value 11 to value 10 and associate with 10's label
@@ -82,7 +85,7 @@ lbl_relabel(x, lbl("Yes") ~ .val == 11)
 lbl_collapse(x, ~ (.val \%/\% 10) * 10)
 
 # These are equivalent
-lbl_collapse(x, ~ifelse(.val == 10, 11, .val))
+lbl_collapse(x, ~ ifelse(.val == 10, 11, .val))
 lbl_relabel(x, 11 ~ .val == 10)
 }
 \seealso{

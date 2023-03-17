@@ -103,7 +103,6 @@ read_ipums_sf <- function(shape_file,
                           ...,
                           verbose = deprecated(),
                           shape_layer = deprecated()) {
-
   custom_check_file_exists(shape_file)
 
   if (!missing(shape_layer)) {
@@ -188,7 +187,6 @@ read_ipums_sf <- function(shape_file,
 # Takes a list of sf's, fills in empty columns for you and binds them together.
 # Warns if types don't match and are coerced
 careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
-
   add_layer_var <- add_layer_var %||% (length(sf_list) > 1)
 
   if (add_layer_var) {
@@ -207,7 +205,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 
     sf_list <- purrr::imap(
       sf_list,
-      ~dplyr::mutate(.x, {{ lyr_name }} := .y, .before = dplyr::everything())
+      ~ dplyr::mutate(.x, {{ lyr_name }} := .y, .before = dplyr::everything())
     )
   }
 
@@ -219,7 +217,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
   all_var_info <- purrr::map_df(
     sf_list,
     .id = "id",
-    ~tibble::tibble(name = names(.x), type = purrr::map(.x, class))
+    ~ tibble::tibble(name = names(.x), type = purrr::map(.x, class))
   )
 
   all_var_info <- dplyr::group_by(all_var_info, .data$name)
@@ -235,7 +233,7 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 
     bad_types <- purrr::map_chr(
       bad_vars,
-      ~paste0(
+      ~ paste0(
         all_var_info[all_var_info$name == .x, ]$type,
         collapse = " vs. "
       )
@@ -281,7 +279,6 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
   )
 
   sf::st_as_sf(tibble::as_tibble(out))
-
 }
 
 # Encoding:
@@ -289,7 +286,8 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 # add to the spec a cpg file that can specify an encoding.
 ## NHGIS: Place names in 2010 have accents - and are latin1 encoded,
 ##        No indication of encoding.
-## IPUMSI: Brazil has a cpg file indicating the encoding is ANSI 1252,  # This is not true anymore?
+# TODO: Confirm Brazil encoding is still the following?
+## IPUMSI: Brazil has a cpg file indicating the encoding is ANSI 1252,
 ##         while China has UTF-8 (but only english characters)
 ## USA:   Also have cpg files.
 ## Terrapop: Always UTF-8 (and sometimes has been ruined if the
@@ -299,7 +297,6 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 # defaults of functions eg read_terra says UTF-8, but read_nghis says latin1),
 # then use that. If not, and a cpg file exists, use that. Else, assume latin1.
 determine_encoding <- function(shape_file_vector, encoding = NULL) {
-
   if (!is.null(encoding)) {
     return(encoding)
   }
@@ -331,7 +328,6 @@ determine_encoding <- function(shape_file_vector, encoding = NULL) {
   )
 
   out
-
 }
 
 
@@ -341,7 +337,6 @@ shape_file_prep <- function(shape_file,
                             file_select,
                             bind_multiple,
                             shape_temp) {
-
   shape_is_shp <- tools::file_ext(shape_file) == "shp"
   shape_is_zip <- tools::file_ext(shape_file) == "zip"
   shape_is_dir <- tools::file_ext(shape_file) == ""
@@ -363,7 +358,6 @@ shape_file_prep <- function(shape_file,
   # If there are any .shp files in this zip or dir, load them.
   # Otherwise, we should have .zip files containing .shp files
   if (has_shp) {
-
     # Add hint to error if bind_multiple = FALSE and multiple files found
     shape_shps <- tryCatch(
       find_files_in(
@@ -414,9 +408,7 @@ shape_file_prep <- function(shape_file,
         }
       }
     )
-
   } else if (has_zip) {
-
     shape_zips <- tryCatch(
       find_files_in(
         shape_file,
@@ -456,7 +448,6 @@ shape_file_prep <- function(shape_file,
     }
 
     read_shape_files <- dir(shape_temp, "\\.shp$", full.names = TRUE)
-
   } else {
     rlang::abort("No .shp or .zip files found in the provided `shape_file`.")
   }
@@ -465,7 +456,7 @@ shape_file_prep <- function(shape_file,
   # if someone tries to read a zip of a zip/dir where there are 2 shps in the
   # inner zip) something was not as expected.
   if (length(read_shape_files) == 0 ||
-      (length(read_shape_files) > 1 && !bind_multiple)) {
+    (length(read_shape_files) > 1 && !bind_multiple)) {
     rlang::abort(
       c(
         "Files in `shape_file` not formatted as expected. ",
@@ -475,5 +466,4 @@ shape_file_prep <- function(shape_file,
   }
 
   read_shape_files
-
 }

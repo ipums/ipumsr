@@ -78,10 +78,10 @@ ipums_var_info.default <- function(object, vars = NULL) {
   obj_info <- attributes(object)
 
   if (length(obj_info$labels) > 0) {
-  value_labels <- list(tibble::tibble(
-    val = unname(obj_info$labels),
-    lbl = names(obj_info$labels)
-  ))
+    value_labels <- list(tibble::tibble(
+      val = unname(obj_info$labels),
+      lbl = names(obj_info$labels)
+    ))
   } else {
     value_labels <- list(tibble::tibble(
       val = numeric(0),
@@ -90,8 +90,16 @@ ipums_var_info.default <- function(object, vars = NULL) {
   }
 
   tibble::tibble(
-    var_label = if (is.null(obj_info[["label"]])) NA_character_ else obj_info[["label"]],
-    var_desc = if (is.null(obj_info$var_desc)) NA_character_ else obj_info$var_desc,
+    var_label = if (is.null(obj_info[["label"]])) {
+      NA_character_
+    } else {
+      obj_info[["label"]]
+    },
+    var_desc = if (is.null(obj_info$var_desc)) {
+      NA_character_
+    } else {
+      obj_info$var_desc
+    },
     val_labels = value_labels
   )
 }
@@ -107,7 +115,7 @@ ipums_var_info.ipums_ddi <- function(object, vars = NULL) {
 #' @export
 ipums_var_info.data.frame <- function(object, vars = NULL) {
   vars <- enquo(vars)
-  out <- purrr::map(object, ~ipums_var_info.default(.))
+  out <- purrr::map(object, ~ ipums_var_info.default(.))
   names(out) <- names(object)
   out <- dplyr::bind_rows(out, .id = "var_name")
   out <- select_var_rows(out, vars)
@@ -118,7 +126,7 @@ ipums_var_info.data.frame <- function(object, vars = NULL) {
 ipums_var_info.list <- function(object, vars = NULL) {
   # For hierarchical list datasets
   vars <- enquo(vars)
-  out <- purrr::map_df(object, ~ipums_var_info(.))
+  out <- purrr::map_df(object, ~ ipums_var_info(.))
   out <- dplyr::distinct(out, .data$var_name, .keep_all = TRUE)
   out <- select_var_rows(out, vars)
   out
@@ -223,8 +231,14 @@ ipums_file_info.ipums_ddi <- function(object, type = NULL) {
   if (!is.null(type)) {
     out <- object[[type]]
   } else {
-    out <- object[c("ipums_project", "extract_date", "extract_notes", "conditions", "citation")]
+    fields <- c(
+      "ipums_project", "extract_date", "extract_notes",
+      "conditions", "citation"
+    )
+
+    out <- object[fields]
   }
+
   out
 }
 
@@ -233,13 +247,20 @@ ipums_file_info.ipums_ddi <- function(object, type = NULL) {
 ipums_conditions <- function(object = NULL) {
   if (is.null(object)) {
     out <- last_conditions_info$conditions
-    if (is.null(out)) out <- "No conditions available."
+
+    if (is.null(out)) {
+      out <- "No conditions available."
+    }
   } else if (inherits(object, "ipums_ddi")) {
     out <- paste0(object$conditions, "\n\n")
-    if (!is.null(object$citation)) out <- paste0(out, object$citation, "\n\n")
+
+    if (!is.null(object$citation)) {
+      out <- paste0(out, object$citation, "\n\n")
+    }
   } else {
     rlang::abort("Could not find ipums condition for object.")
   }
+
   class(out) <- "ipums_formatted_print"
   out
 }
