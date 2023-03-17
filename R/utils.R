@@ -373,13 +373,6 @@ show_readr_coltypes <- function(verbose) {
   show_types
 }
 
-tbl_print_for_message <- function(x, n = 5) {
-  x <- tibble::as_tibble(x)
-  out <- utils::capture.output(print(x, n = n))
-  out <- paste(out[-1], collapse = "\n")
-  out
-}
-
 # TODO: Could adapt readr parse_number to be much faster than this.
 #       Can't use it directly because parse_number ignores when there
 #       are letters and numbers, while readr::parse_guess thinks leading
@@ -483,24 +476,6 @@ release_questions <- function() {
     )
   }
   out
-}
-
-
-
-readr_to_hipread_specs <- function(positions, types) {
-  hip_types <- purrr::map_chr(types$cols, function(x) {
-    if (identical(x, readr::col_double())) out <- "double"
-    else if (identical(x, readr::col_character())) out <- "character"
-    else if (identical(x, readr::col_integer())) out <- "integer"
-    out
-  })
-
-  hipread::hip_fwf_positions(
-    positions$begin + 1,
-    positions$end,
-    positions$col_names,
-    hip_types
-  )
 }
 
 hipread_type_name_convert <- function(x) {
