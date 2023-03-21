@@ -31,12 +31,9 @@ facilitate some of the other options.
 ## Setup
 
 The examples in this vignette will rely on the ipumsr, dplyr and biglm
-packages. Additionally, we'll use data from the ipumsexamples package.
-If you haven't already installed these packages, you can do so with:
+packages. If you haven't already installed these packages, you can do so with:
 
 ```{r, eval=FALSE}
-remotes::install_github("ipums/ipumsr/ipumsexamples")
-
 # To run the full vignette, you'll also need the following packages. If they
 # aren't installed already, do so with:
 install.packages("biglm")
@@ -46,30 +43,17 @@ install.packages("dbplyr")
 ```
 
 ```{r, include=FALSE}
-installed_ipumsexamples <- requireNamespace("ipumsexamples")
-
 installed_biglm <- requireNamespace("biglm")
 
 installed_db_pkgs <- requireNamespace("DBI") & 
   requireNamespace("RSQLite") & 
   requireNamespace("dbplyr")
-
-if (!installed_ipumsexamples) {
-  message(
-    "ipumsexamples is not installed and example data cannot be loaded.",
-    "Code in this example will not be evaluated."
-  )
-  
-  installed_biglm <- FALSE
-  installed_db_pkgs <- FALSE
-}
 ```
 
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = installed_ipumsexamples
+  comment = "#>"
 )
 ```
 
@@ -190,8 +174,8 @@ for IPUMS data: tabulation, regression and case selection.
 First, we'll load our example data:
 
 ```{r}
-cps_ddi_file <- ipumsexamples::ipums_extra_example("cps_00011.xml")
-cps_data_file <- ipumsexamples::ipums_extra_example("cps_00011.dat.gz")
+cps_ddi_file <- ipums_example("cps_00097.xml")
+cps_data_file <- ipums_example("cps_00097.dat.gz")
 ```
 
 #### Chunked tabulation {#chunked-tab}
