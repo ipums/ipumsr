@@ -1,145 +1,72 @@
-library(dplyr)
-library(purrr)
+# Print extract ------------------------
 
+test_that("Microdata print methods works", {
+  usa_extract <- test_usa_extract()
+  cps_extract <- test_cps_extract()
 
-# Setup ----
-usa_extract <- define_extract_usa(
-  samples = "us2017b",
-  variables = "YEAR",
-  description = "Test extract",
-  data_format = "fixed_width"
-)
-
-cps_extract <- define_extract_cps(
-  samples = c("cps1976_01s", "cps1976_02b"),
-  variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1"),
-  description = "Compare age-sex-race breakdowns 1976",
-  data_format = "fixed_width"
-)
-
-# Tests ----
-
-# > Print extract ----
-test_that("usa_extract print method works", {
-  expect_output(print(usa_extract), regexp = "Unsubmitted IPUMS USA extract")
+  expect_output(print(usa_extract), "Unsubmitted IPUMS USA extract")
+  expect_output(print(cps_extract), "Unsubmitted IPUMS CPS extract")
 })
 
+test_that("NHGIS print method works", {
+  nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
 
-test_that("cps_extract print method works", {
-  expect_output(print(cps_extract), regexp = "Unsubmitted IPUMS CPS extract")
-})
-
-# > Set IPUMS API key ----
-test_that("set_ipums_envvar sets environment variable", {
-  skip_if_not_installed("withr")
-
-  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
-  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
-  Sys.setenv(IPUMS_API_KEY = "")
-
-  set_ipums_envvar(IPUMS_API_KEY = "testapikey")
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
-})
-
-test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
-  skip_if_not_installed("withr")
-  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
-  current_home_dir <- Sys.getenv("HOME")
-  temp_renviron_file <- file.path(tempdir(), ".Renviron")
-  withr::defer(Sys.setenv(HOME = current_home_dir))
-  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
-  withr::defer(file.remove(temp_renviron_file))
-
-  Sys.setenv(IPUMS_API_KEY = "")
-  Sys.setenv(HOME = tempdir())
-  set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
-  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
-
-  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
-  renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_API_KEY=\"testapikey\"" %in% renviron_lines)
-
-  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "testcollect")
-  renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_DEFAULT_COLLECTION=\"testcollect\"" %in% renviron_lines)
-})
-
-
-test_that("set_ipums_envvar works with existing .Renviron file", {
-  skip_if_not_installed("withr")
-  current_ipums_default_collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
-  current_home_dir <- Sys.getenv("HOME")
-  temp_renviron_file <- file.path(tempdir(), ".Renviron")
-  temp_renviron_file_backup <- file.path(tempdir(), ".Renviron_backup")
-  withr::defer(file.remove(temp_renviron_file_backup))
-  withr::defer(file.remove(temp_renviron_file))
-  withr::defer(Sys.setenv(HOME = current_home_dir))
-  withr::defer(
-    Sys.setenv(IPUMS_DEFAULT_COLLECTION = current_ipums_default_collection)
+  expect_output(
+    print(nhgis_extract),
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: Extract for R client testing",
+      "\n",
+      "\nDataset: 2014_2018_ACS5a",
+      "\n  Tables: B01001, B01002",
+      "\n  Geog Levels: nation",
+      "\n",
+      "\nDataset: 2015_2019_ACS5a",
+      "\n  Tables: B01001, B01002",
+      "\n  Geog Levels: blck_grp",
+      "\n",
+      "\nGeographic extents: DC, PA",
+      "\n",
+      "\nTime Series Table: CW3",
+      "\n  Geog Levels: state",
+      "\n",
+      "\nShapefiles: 110_blck_grp_2019_tl2019"
+    )
   )
-
-  Sys.setenv(IPUMS_DEFAULT_COLLECTION = "")
-  Sys.setenv(HOME = tempdir())
-  writeLines("OTHER_ENV_VAR=\"value\"", con = temp_renviron_file)
-  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
-  expect_true(file.exists(temp_renviron_file_backup))
-  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "usa")
-  renviron_lines <- readLines(temp_renviron_file)
-  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
-
-  expect_error(
-    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE),
-    "IPUMS_DEFAULT_COLLECTION already exists"
+  expect_output(
+    print(nhgis_extract_shp),
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: ",
+      "\n",
+      "\nShapefiles: 110_blck_grp_2019_tl2019"
+    )
   )
-
-  expect_message(
-    set_ipums_envvar(
-      IPUMS_DEFAULT_COLLECTION = "nhgis",
-      overwrite = TRUE
+  expect_output(
+    print(
+      define_extract_nhgis(
+        datasets = "DS",
+        data_tables = "DT",
+        geog_levels = "DG",
+        years = "Y1",
+        breakdown_values = "B1"
+      )
     ),
-    "Existing \\.Renviron file copied"
+    regexp = paste0(
+      "Unsubmitted IPUMS NHGIS extract ",
+      "\nDescription: ",
+      "\n",
+      "\nDataset: DS",
+      "\n  Tables: DT",
+      "\n  Geog Levels: DG",
+      "\n  Years: Y1",
+      "\n  Breakdowns: B1"
+    )
   )
-
-  renviron_lines <- readLines(temp_renviron_file)
-  renviron_backup_lines <- readLines(temp_renviron_file_backup)
-
-  expect_false("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
-  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_backup_lines)
-
-  expect_true("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_lines)
-  expect_false("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_backup_lines)
-
-  expect_true("OTHER_ENV_VAR=\"value\"" %in% renviron_backup_lines)
-
-  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "nhgis")
-
-  unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
-
-  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
-  expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
 })
 
-# Setup ------------------------------------------------------------------------
-
-nhgis_extract <- define_extract_nhgis(
-  description = "Extract for R client testing",
-  dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
-  data_tables = c("B01001", "B01002"),
-  time_series_table = "CW3",
-  geog_levels = list("nation", "blck_grp", "state"),
-  geographic_extents = c("110", "Pennsylvania"),
-  tst_layout = "time_by_row_layout",
-  shapefiles = "110_blck_grp_2019_tl2019",
-  data_format = "csv_no_header"
-)
-
-nhgis_extract_shp <- define_extract_nhgis(
-  shapefiles = "110_blck_grp_2019_tl2019"
-)
-
-# Tests ------------------------------------------------------------------------
-
-test_that("Extract print coloring works", {
+test_that("NHGIS extract print coloring works", {
   local_reproducible_output(crayon = TRUE)
   expect_equal(
     format_field_for_printing(
@@ -197,59 +124,122 @@ test_that("Extract print coloring works", {
   )
 })
 
-test_that("nhgis_extract print method works", {
-  expect_output(
-    print(nhgis_extract),
-    regexp = paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: Extract for R client testing",
-      "\n",
-      "\nDataset: 2014_2018_ACS5a",
-      "\n  Tables: B01001, B01002",
-      "\n  Geog Levels: nation",
-      "\n",
-      "\nDataset: 2015_2019_ACS5a",
-      "\n  Tables: B01001, B01002",
-      "\n  Geog Levels: blck_grp",
-      "\n",
-      "\nGeographic extents: DC, PA",
-      "\n",
-      "\nTime Series Table: CW3",
-      "\n  Geog Levels: state",
-      "\n",
-      "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
+# IPUMS environment variables -------------------
+
+test_that("set_ipums_envvar sets environment variable", {
+  skip_if_not_installed("withr")
+
+  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
+
+  # Reset envvars to original state upon test completion
+  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
+
+  # Ensure no envvar value exists before setting
+  Sys.setenv(IPUMS_API_KEY = "")
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey")
+
+  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
+})
+
+test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
+  skip_if_not_installed("withr")
+
+  current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
+  current_home_dir <- Sys.getenv("HOME")
+  temp_renviron_file <- file.path(tempdir(), ".Renviron")
+
+  # Reset envvars to original state upon test completion
+  withr::defer(Sys.setenv(HOME = current_home_dir))
+  withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
+  withr::defer(file.remove(temp_renviron_file))
+
+  Sys.setenv(IPUMS_API_KEY = "")
+  Sys.setenv(HOME = tempdir())
+  set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
+
+  renviron_lines <- readLines(temp_renviron_file)
+
+  expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
+  expect_true("IPUMS_API_KEY=\"testapikey\"" %in% renviron_lines)
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "testcollect")
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"testcollect\"" %in% renviron_lines)
+})
+
+test_that("set_ipums_envvar works with existing .Renviron file", {
+  skip_if_not_installed("withr")
+
+  current_ipums_default_collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
+  current_home_dir <- Sys.getenv("HOME")
+  temp_renviron_file <- file.path(tempdir(), ".Renviron")
+  temp_renviron_file_backup <- file.path(tempdir(), ".Renviron_backup")
+
+  # Reset envvars to original state upon test completion
+  withr::defer(file.remove(temp_renviron_file_backup))
+  withr::defer(file.remove(temp_renviron_file))
+  withr::defer(Sys.setenv(HOME = current_home_dir))
+  withr::defer(
+    Sys.setenv(IPUMS_DEFAULT_COLLECTION = current_ipums_default_collection)
   )
-  expect_output(
-    print(nhgis_extract_shp),
-    regexp = paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: ",
-      "\n",
-      "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
+
+  Sys.setenv(IPUMS_DEFAULT_COLLECTION = "")
+  Sys.setenv(HOME = tempdir())
+  writeLines("OTHER_ENV_VAR=\"value\"", con = temp_renviron_file)
+  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
+
+  renviron_lines <- readLines(temp_renviron_file)
+  renviron_backup_lines <- readLines(temp_renviron_file_backup)
+
+  expect_true(file.exists(temp_renviron_file_backup))
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "usa")
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+
+  expect_error(
+    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE),
+    "IPUMS_DEFAULT_COLLECTION already exists"
   )
-  expect_output(
-    print(
-      define_extract_nhgis(
-        datasets = "DS",
-        data_tables = "DT",
-        geog_levels = "DG",
-        years = "Y1",
-        breakdown_values = "B1"
-      )
+  expect_message(
+    set_ipums_envvar(
+      IPUMS_DEFAULT_COLLECTION = "nhgis",
+      overwrite = TRUE
     ),
-    regexp = paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: ",
-      "\n",
-      "\nDataset: DS",
-      "\n  Tables: DT",
-      "\n  Geog Levels: DG",
-      "\n  Years: Y1",
-      "\n  Breakdowns: B1"
-    )
+    "Existing \\.Renviron file copied"
   )
+
+  renviron_lines <- readLines(temp_renviron_file)
+  renviron_backup_lines <- readLines(temp_renviron_file_backup)
+
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_backup_lines)
+
+  expect_true("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_lines)
+  expect_false("IPUMS_DEFAULT_COLLECTION=\"nhgis\"" %in% renviron_backup_lines)
+
+  expect_true("OTHER_ENV_VAR=\"value\"" %in% renviron_backup_lines)
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "nhgis")
+
+  unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
+
+  expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
+  expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
+})
+
+
+# Misc ------------------------------------------
+
+test_that("We can get correct API version info for each collection", {
+  expect_equal(ipums_api_version("usa"), "beta")
+  expect_equal(ipums_api_version("nhgis"), "v1")
+  expect_equal(
+    ipums_api_version("usa"),
+    dplyr::filter(ipums_data_collections(), code_for_api == "usa")$api_support
+  )
+  expect_equal(
+    ipums_api_version("nhgis"),
+    dplyr::filter(ipums_data_collections(), code_for_api == "nhgis")$api_support
+  )
+  expect_error(ipums_api_version("fake collection"), "No API version found")
 })
 
 test_that("standardize_extract_identifier handles unusual cases", {
@@ -275,19 +265,3 @@ test_that("standardize_extract_identifier handles unusual cases", {
   )
 })
 
-
-# > Misc ------------------------------------------
-
-test_that("We can get correct API version info for each collection", {
-  expect_equal(ipums_api_version("usa"), "beta")
-  expect_equal(ipums_api_version("nhgis"), "v1")
-  expect_equal(
-    ipums_api_version("usa"),
-    dplyr::filter(ipums_data_collections(), code_for_api == "usa")$api_support
-  )
-  expect_equal(
-    ipums_api_version("nhgis"),
-    dplyr::filter(ipums_data_collections(), code_for_api == "nhgis")$api_support
-  )
-  expect_error(ipums_api_version("fake collection"), "No API version found")
-})

@@ -1,26 +1,8 @@
-library(dplyr)
-library(purrr)
+# Extract definitions ---------------------------
 
-
-# Setup ----
-usa_extract <- define_extract_usa(
-  samples = "us2017b",
-  variables = "YEAR",
-  description = "Test extract",
-  data_format = "fixed_width"
-)
-
-cps_extract <- define_extract_cps(
-  samples = c("cps1976_01s", "cps1976_02b"),
-  variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1"),
-  description = "Compare age-sex-race breakdowns 1976",
-  data_format = "fixed_width"
-)
-
-# Tests ----
-
-# > Define extract ----
 test_that("Can define a USA extract", {
+  usa_extract <- test_usa_extract()
+
   expect_s3_class(usa_extract, "usa_extract")
   expect_s3_class(usa_extract, "ipums_extract")
   expect_equal(usa_extract$variables[[1]], "YEAR")
@@ -32,8 +14,9 @@ test_that("Can define a USA extract", {
   expect_equal(usa_extract$status, "unsubmitted")
 })
 
-
 test_that("Can define a CPS extract", {
+  cps_extract <- test_cps_extract()
+
   expect_s3_class(cps_extract, "cps_extract")
   expect_s3_class(cps_extract, "ipums_extract")
   expect_equal(cps_extract$variables[[1]], "YEAR")
@@ -45,37 +28,108 @@ test_that("Can define a CPS extract", {
   expect_equal(cps_extract$status, "unsubmitted")
 })
 
+test_that("Can define an NHGIS extract", {
+  nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
+
+  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
+  expect_equal(nhgis_extract$datasets, c("2014_2018_ACS5a", "2015_2019_ACS5a"))
+  expect_equal(
+    nhgis_extract$data_tables,
+    list(
+      "2014_2018_ACS5a" = c("B01001", "B01002"),
+      "2015_2019_ACS5a" = c("B01001", "B01002")
+    )
+  )
+  expect_equal(
+    nhgis_extract$geog_levels,
+    list(
+      "2014_2018_ACS5a" = "nation",
+      "2015_2019_ACS5a" = "blck_grp",
+      "CW3" = "state"
+    )
+  )
+  expect_equal(
+    nhgis_extract$years,
+    list(
+      "2014_2018_ACS5a" = NULL,
+      "2015_2019_ACS5a" = NULL
+    )
+  )
+  expect_equal(
+    nhgis_extract$breakdown_values,
+    list(
+      "2014_2018_ACS5a" = NULL,
+      "2015_2019_ACS5a" = NULL
+    )
+  )
+  expect_equal(nhgis_extract$time_series_tables, "CW3")
+  expect_equal(nhgis_extract$tst_layout, "time_by_row_layout")
+  expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_equal(nhgis_extract$data_format, "csv_no_header")
+  expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
+  expect_false(nhgis_extract$submitted)
+  expect_equal(nhgis_extract$number, NA_integer_)
+  expect_equal(nhgis_extract$status, "unsubmitted")
+  expect_true(is.null(nhgis_extract_shp$datasets))
+})
+
+test_that("NHGIS extracts get correct default values", {
+  nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
+
+  expect_equal(nhgis_extract$breakdown_and_data_type_layout, "single_file")
+  expect_equal(
+    define_extract_nhgis(
+      time_series_tables = "A00",
+      geog_levels = "A1"
+    )$tst_layout,
+    "time_by_column_layout"
+  )
+  expect_null(nhgis_extract_shp$breakdown_and_data_type_layout)
+  expect_null(nhgis_extract_shp$data_format)
+})
+
+# Extract validation ------------------------
+
 test_that("Attempt to define a hierarchical extract throws an error", {
   expect_error(
     define_extract_usa(
-      "Test", "us2017b", "YEAR",
+      "Test",
+      "us2017b",
+      "YEAR",
       data_structure = "hierarchical"
     ),
-    regexp = "must be equal to \"rectangular\""
+    "must be equal to \"rectangular\""
   )
   expect_error(
     define_extract_cps(
-      "Test", "us2017b", "YEAR",
+      "Test",
+      "us2017b",
+      "YEAR",
       rectangular_on = "H"
     ),
     "Currently, the `rectangular_on` argument must be equal to \"P\""
   )
 })
 
-
 test_that("Attempt to rectangularize on H records throws an error", {
   expect_error(
     define_extract_usa(
-      "Test", "us2017b", "YEAR",
+      "Test",
+      "us2017b",
+      "YEAR",
       rectangular_on = "H"
     ),
-    regexp = "`rectangular_on` argument must be equal to \"P\""
+    "`rectangular_on` argument must be equal to \"P\""
   )
 })
 
+test_that("Microdata validation methods work", {
+  usa_extract <- test_usa_extract()
 
-test_that("ipums_extract validate method works", {
   expect_identical(validate_ipums_extract(usa_extract), usa_extract)
+
   expect_error(
     validate_ipums_extract(define_extract_usa()),
     "argument \"description\" is missing"
@@ -85,20 +139,11 @@ test_that("ipums_extract validate method works", {
     "argument \"description\" is missing"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "usa"
-      )
-    ),
+    validate_ipums_extract(new_ipums_extract("usa")),
     "`description` must not contain missing values"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "usa",
-        description = ""
-      )
-    ),
+    validate_ipums_extract(new_ipums_extract("usa", description = "")),
     paste0(
       "`data_structure` must not contain missing.+",
       "`data_format` must not contain missing.+",
@@ -173,332 +218,10 @@ test_that("ipums_extract validate method works", {
   )
 })
 
-test_that("extract_list_from_json reproduces extract specs", {
-  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
-  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
+test_that("NHGIS validation method works", {
+  nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
 
-  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
-  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
-  expect_identical(
-    extract_list_from_json(usa_json)[[1]],
-    usa_extract
-  )
-  expect_identical(
-    extract_list_from_json(cps_json)[[1]],
-    cps_extract
-  )
-})
-
-# > Add to / remove from extract ----
-test_that("Can add to a USA extract", {
-  revised_extract <- add_to_extract(
-    usa_extract,
-    samples = "us2014a",
-    variables = "RELATE"
-  )
-  expect_true(revised_extract$status == "unsubmitted")
-
-  expect_equal(
-    revised_extract$samples,
-    union(usa_extract$samples, "us2014a")
-  )
-  expect_equal(
-    revised_extract$variables,
-    union(usa_extract$variables, "RELATE")
-  )
-})
-
-
-test_that("Can add to a CPS extract", {
-  revised_extract <- add_to_extract(
-    cps_extract,
-    samples = "cps2019_03s",
-    variables = "RELATE"
-  )
-  expect_true(revised_extract$status == "unsubmitted")
-
-  expect_equal(
-    revised_extract$samples,
-    union(cps_extract$samples, "cps2019_03s")
-  )
-  expect_equal(
-    revised_extract$variables,
-    union(cps_extract$variables, "RELATE")
-  )
-})
-
-test_that("Can remove from a USA extract", {
-  revised_extract <- add_to_extract(
-    usa_extract,
-    samples = "us2014a",
-    variables = c("RELATE", "AGE", "SEX")
-  )
-
-  revised_extract <- remove_from_extract(
-    revised_extract,
-    samples = "us2017b",
-    variables = c("AGE", "SEX")
-  )
-
-  expect_true(revised_extract$status == "unsubmitted")
-
-  expect_equal(revised_extract$samples, "us2014a")
-  expect_equal(
-    revised_extract$variables,
-    c("YEAR", "RELATE")
-  )
-})
-
-
-test_that("Can remove from a CPS extract", {
-  revised_extract <- remove_from_extract(
-    cps_extract,
-    samples = "cps1976_02b",
-    variables = c("MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1")
-  )
-
-  expect_true(revised_extract$status == "unsubmitted")
-
-  expect_equal(revised_extract$samples, "cps1976_01s")
-  expect_equal(
-    revised_extract$variables,
-    c("YEAR")
-  )
-})
-
-
-test_that("Unused revisions do not alter USA extract", {
-  expect_identical(usa_extract, add_to_extract(usa_extract))
-  expect_identical(usa_extract, remove_from_extract(usa_extract))
-  expect_identical(
-    usa_extract,
-    suppressWarnings(
-      add_to_extract(
-        usa_extract,
-        samples = usa_extract$samples
-      )
-    )
-  )
-  expect_identical(
-    usa_extract,
-    suppressWarnings(
-      remove_from_extract(
-        usa_extract,
-        variables = "not in extract"
-      )
-    )
-  )
-})
-
-
-test_that("Unused revisions do not alter CPS extract", {
-  expect_identical(cps_extract, add_to_extract(cps_extract))
-  expect_identical(cps_extract, remove_from_extract(cps_extract))
-  expect_identical(
-    cps_extract,
-    suppressWarnings(
-      add_to_extract(
-        cps_extract,
-        samples = cps_extract$samples
-      )
-    )
-  )
-  expect_identical(
-    cps_extract,
-    suppressWarnings(
-      remove_from_extract(
-        cps_extract,
-        variables = "not in extract"
-      )
-    )
-  )
-})
-
-
-test_that("Improper extract revisions throw warnings or errors", {
-  expect_silent(
-    add_to_extract(usa_extract, samples = "us2017b")
-  )
-  expect_silent(
-    remove_from_extract(cps_extract, variables = "RELATE")
-  )
-  expect_warning(
-    remove_from_extract(usa_extract,
-      description = "description",
-      invalid = "invalid"
-    ),
-    paste0(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be removed:.+`description`, `invalid`.+Use ",
-      "`add_to_extract\\(\\)`"
-    )
-  )
-  expect_warning(
-    add_to_extract(cps_extract,
-      description = "description",
-      invalid = "invalid"
-    ),
-    paste0(
-      "The following fields were either not found in the provided extract ",
-      "or cannot be modified:.+`invalid`"
-    )
-  )
-  expect_silent(
-    add_to_extract(cps_extract, description = "description")
-  )
-  expect_error(
-    remove_from_extract(
-      usa_extract,
-      samples = usa_extract$samples,
-      variables = usa_extract$variables
-    ),
-    paste0(
-      "`samples` must not contain missing values.+",
-      "`variables` must not contain missing values.+"
-    )
-  )
-  expect_error(
-    add_to_extract(usa_extract, data_format = "bad_format"),
-    "`data_format` must be one of"
-  )
-  expect_error(
-    add_to_extract(
-      usa_extract,
-      samples = "New Sample",
-      data_format = c("csv", "bad_format"),
-    ),
-    "`data_format` must be length 1"
-  )
-})
-
-test_that("Can combine extracts", {
-  x1 <- define_extract_usa(
-    description = "Combining",
-    samples = c("S1", "S2"),
-    variables = "V1",
-    data_format = "csv"
-  )
-
-  x2 <- define_extract_usa(
-    description = "",
-    samples = "S3",
-    variables = "V2",
-    data_format = "csv"
-  )
-
-  x <- combine_extracts(x1, x2)
-
-  expect_identical(
-    x,
-    define_extract_usa(
-      description = "Combining",
-      samples = c("S1", "S2", "S3"),
-      variables = c("V1", "V2"),
-      data_format = "csv"
-    )
-  )
-})
-
-# > Save as / define from JSON ----
-test_that("We can export to and import from JSON", {
-  json_tmpfile <- file.path(tempdir(), "usa_extract.json")
-  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
-  save_extract_as_json(usa_extract, json_tmpfile)
-  copy_of_usa_extract <- define_extract_from_json(json_tmpfile)
-  expect_identical(usa_extract, copy_of_usa_extract)
-})
-
-# Setup ------------------------------------------------------------------------
-
-nhgis_extract <- define_extract_nhgis(
-  description = "Extract for R client testing",
-  dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
-  data_tables = c("B01001", "B01002"),
-  time_series_table = "CW3",
-  geog_levels = list("nation", "blck_grp", "state"),
-  geographic_extents = c("110", "Pennsylvania"),
-  tst_layout = "time_by_row_layout",
-  shapefiles = "110_blck_grp_2019_tl2019",
-  data_format = "csv_no_header"
-)
-
-nhgis_extract_shp <- define_extract_nhgis(
-  shapefiles = "110_blck_grp_2019_tl2019"
-)
-
-# Tests ------------------------------------------------------------------------
-
-# > Defining Extracts ----------------------------
-
-test_that("Can define an NHGIS extract", {
-  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(
-    nhgis_extract$datasets,
-    c("2014_2018_ACS5a", "2015_2019_ACS5a")
-  )
-  expect_equal(
-    nhgis_extract$data_tables,
-    list(
-      "2014_2018_ACS5a" = c("B01001", "B01002"),
-      "2015_2019_ACS5a" = c("B01001", "B01002")
-    )
-  )
-  expect_equal(
-    nhgis_extract$geog_levels,
-    list(
-      "2014_2018_ACS5a" = "nation",
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = "state"
-    )
-  )
-  expect_equal(
-    nhgis_extract$years,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
-    )
-  )
-  expect_equal(
-    nhgis_extract$breakdown_values,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
-    )
-  )
-  expect_equal(nhgis_extract$time_series_tables, "CW3")
-  expect_equal(nhgis_extract$tst_layout, "time_by_row_layout")
-  expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_equal(nhgis_extract$data_format, "csv_no_header")
-  expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
-  expect_false(nhgis_extract$submitted)
-  expect_equal(nhgis_extract$number, NA_integer_)
-  expect_equal(nhgis_extract$status, "unsubmitted")
-  expect_true(is.null(nhgis_extract_shp$datasets))
-})
-
-test_that("NHGIS extracts get correct default values", {
-  expect_equal(
-    nhgis_extract$breakdown_and_data_type_layout,
-    "single_file"
-  )
-  expect_equal(
-    define_extract_nhgis(
-      time_series_tables = "A00",
-      geog_levels = "A1"
-    )$tst_layout,
-    "time_by_column_layout"
-  )
-  expect_equal(
-    nhgis_extract_shp$breakdown_and_data_type_layout,
-    NULL
-  )
-  expect_equal(
-    nhgis_extract_shp$data_format,
-    NULL
-  )
-})
-
-test_that("nhgis_extract validate method works", {
   expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
   expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
   expect_error(
@@ -545,15 +268,8 @@ test_that("nhgis_extract validate method works", {
     "`data_format` must be one of"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = NULL
-      )
-    ),
-    paste0(
-      "`description` must not contain missing values"
-    )
+    validate_ipums_extract(new_ipums_extract("nhgis", description = NULL)),
+    "`description` must not contain missing values"
   )
   expect_error(
     validate_ipums_extract(
@@ -614,9 +330,7 @@ test_that("nhgis_extract validate method works", {
       geog_levels = "A",
       tst_layout = c("time_by_row_layout", "time_by_row_layout")
     ),
-    paste0(
-      "`tst_layout` must be length 1."
-    )
+    "`tst_layout` must be length 1."
   )
   expect_error(
     validate_ipums_extract(
@@ -634,17 +348,77 @@ test_that("nhgis_extract validate method works", {
 })
 
 test_that("extract_list_from_json reproduces extract specs", {
+  usa_extract <- test_usa_extract()
+  cps_extract <- test_cps_extract()
+  nhgis_extract <- test_nhgis_extract()
+
+  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
+  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
   nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
+
+  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
+  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
+
+  expect_identical(
+    extract_list_from_json(usa_json)[[1]],
+    usa_extract
+  )
+  expect_identical(
+    extract_list_from_json(cps_json)[[1]],
+    cps_extract
+  )
   expect_identical(
     extract_list_from_json(nhgis_json)[[1]],
     nhgis_extract
   )
 })
 
-# > Revising ------------------------------------
+# Extract revisions --------------------------
+
+test_that("Can add to a USA extract", {
+  usa_extract <- test_usa_extract()
+
+  revised_extract <- add_to_extract(
+    usa_extract,
+    samples = "us2014a",
+    variables = "RELATE"
+  )
+
+  expect_true(revised_extract$status == "unsubmitted")
+  expect_equal(
+    revised_extract$samples,
+    union(usa_extract$samples, "us2014a")
+  )
+  expect_equal(
+    revised_extract$variables,
+    union(usa_extract$variables, "RELATE")
+  )
+})
+
+test_that("Can add to a CPS extract", {
+  cps_extract <- test_cps_extract()
+
+  revised_extract <- add_to_extract(
+    cps_extract,
+    samples = "cps2019_03s",
+    variables = "RELATE"
+  )
+
+  expect_true(revised_extract$status == "unsubmitted")
+  expect_equal(
+    revised_extract$samples,
+    union(cps_extract$samples, "cps2019_03s")
+  )
+  expect_equal(
+    revised_extract$variables,
+    union(cps_extract$variables, "RELATE")
+  )
+})
 
 test_that("Can add new fields to an NHGIS extract", {
+  nhgis_extract <- test_nhgis_extract()
+
   revised <- add_to_extract(
     nhgis_extract,
     datasets = "New",
@@ -685,6 +459,8 @@ test_that("Can add new fields to an NHGIS extract", {
 })
 
 test_that("Can add subfields to existing parent fields", {
+  nhgis_extract <- test_nhgis_extract()
+
   revised <- add_to_extract(
     nhgis_extract,
     data_tables = c("T1", "T2"),
@@ -736,7 +512,6 @@ test_that("Can add subfields to existing parent fields", {
       "CW3" = c("state", "C")
     )
   )
-
   expect_equal(
     add_to_extract(
       nhgis_extract,
@@ -752,7 +527,43 @@ test_that("Can add subfields to existing parent fields", {
   )
 })
 
+test_that("Can remove from a USA extract", {
+  usa_extract <- test_usa_extract()
+
+  revised_extract <- add_to_extract(
+    usa_extract,
+    samples = "us2014a",
+    variables = c("RELATE", "AGE", "SEX")
+  )
+
+  revised_extract <- remove_from_extract(
+    revised_extract,
+    samples = "us2017b",
+    variables = c("AGE", "SEX")
+  )
+
+  expect_true(revised_extract$status == "unsubmitted")
+  expect_equal(revised_extract$samples, "us2014a")
+  expect_equal(revised_extract$variables, c("YEAR", "RELATE"))
+})
+
+test_that("Can remove from a CPS extract", {
+  cps_extract <- test_cps_extract()
+
+  revised_extract <- remove_from_extract(
+    cps_extract,
+    samples = "cps1976_02b",
+    variables = c("MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1")
+  )
+
+  expect_equal(revised_extract$status, "unsubmitted")
+  expect_equal(revised_extract$samples, "cps1976_01s")
+  expect_equal(revised_extract$variables, "YEAR")
+})
+
 test_that("Can remove full fields from an NHGIS extract", {
+  nhgis_extract <- test_nhgis_extract()
+
   revised <- remove_from_extract(
     nhgis_extract,
     datasets = "2015_2019_ACS5a",
@@ -761,7 +572,6 @@ test_that("Can remove full fields from an NHGIS extract", {
   )
 
   expect_equal(revised$datasets, "2014_2018_ACS5a")
-
   expect_equal(
     revised$data_tables,
     list(`2014_2018_ACS5a` = c("B01001", "B01002"))
@@ -774,14 +584,14 @@ test_that("Can remove full fields from an NHGIS extract", {
     revised$years,
     list(`2014_2018_ACS5a` = NULL)
   )
-
   expect_null(revised$time_series_tables)
   expect_null(revised$tst_layout)
-
   expect_equal(revised$geographic_extents, "PA")
 })
 
 test_that("Can remove subfields from an NHGIS extract", {
+  nhgis_extract <- test_nhgis_extract()
+
   revised <- remove_from_extract(
     add_to_extract(
       nhgis_extract,
@@ -816,6 +626,8 @@ test_that("Can remove subfields from an NHGIS extract", {
 })
 
 test_that("Removing parent fields occurs before evaluating subfields", {
+  nhgis_extract <- test_nhgis_extract()
+
   revised <- remove_from_extract(
     nhgis_extract,
     datasets = "2014_2018_ACS5a",
@@ -826,10 +638,39 @@ test_that("Removing parent fields occurs before evaluating subfields", {
   expect_equal(revised$data_tables, list(`2015_2019_ACS5a` = "B01002"))
 })
 
-test_that("Revisions do not alter unspecified extract fields", {
-  extract1 <- define_extract_nhgis(
-    shapefiles = "Test"
+test_that("Unused revisions do not alter extract", {
+  usa_extract <- test_usa_extract()
+
+  expect_identical(usa_extract, add_to_extract(usa_extract))
+  expect_identical(usa_extract, remove_from_extract(usa_extract))
+  expect_identical(
+    usa_extract,
+    add_to_extract(usa_extract, samples = usa_extract$samples)
   )
+  expect_identical(
+    usa_extract,
+    remove_from_extract(usa_extract, variables = "not in extract")
+  )
+})
+
+test_that("Unused revisions do not alter CPS extract", {
+  cps_extract <- test_cps_extract()
+
+  expect_identical(cps_extract, add_to_extract(cps_extract))
+  expect_identical(cps_extract, remove_from_extract(cps_extract))
+  expect_identical(
+    cps_extract,
+    add_to_extract(cps_extract, samples = cps_extract$samples)
+  )
+  expect_identical(
+    cps_extract,
+    remove_from_extract(cps_extract, variables = "not in extract")
+  )
+})
+
+test_that("Unused revisions do not alter NHGIS extract", {
+  nhgis_extract <- test_nhgis_extract()
+  extract1 <- define_extract_nhgis(shapefiles = "Test")
 
   extract2 <- add_to_extract(
     extract1,
@@ -855,7 +696,65 @@ test_that("Revisions do not alter unspecified extract fields", {
   )
 })
 
-test_that("Improper extract revisions throw warnings or errors", {
+test_that("Improper microdata extract revisions throw warnings or errors", {
+  usa_extract <- test_usa_extract()
+  cps_extract <- test_cps_extract()
+
+  expect_silent(add_to_extract(usa_extract, samples = "us2017b"))
+  expect_silent(remove_from_extract(cps_extract, variables = "RELATE"))
+  expect_warning(
+    remove_from_extract(
+      usa_extract,
+      description = "description",
+      invalid = "invalid"
+    ),
+    paste0(
+      "The following fields were either not found in the provided extract ",
+      "or cannot be removed:.+`description`, `invalid`.+Use ",
+      "`add_to_extract\\(\\)`"
+    )
+  )
+  expect_warning(
+    add_to_extract(
+      cps_extract,
+      description = "description",
+      invalid = "invalid"
+    ),
+    paste0(
+      "The following fields were either not found in the provided extract ",
+      "or cannot be modified:.+`invalid`"
+    )
+  )
+  expect_silent(add_to_extract(cps_extract, description = "description"))
+  expect_error(
+    remove_from_extract(
+      usa_extract,
+      samples = usa_extract$samples,
+      variables = usa_extract$variables
+    ),
+    paste0(
+      "`samples` must not contain missing values.+",
+      "`variables` must not contain missing values.+"
+    )
+  )
+  expect_error(
+    add_to_extract(usa_extract, data_format = "bad_format"),
+    "`data_format` must be one of"
+  )
+  expect_error(
+    add_to_extract(
+      usa_extract,
+      samples = "New Sample",
+      data_format = c("csv", "bad_format"),
+    ),
+    "`data_format` must be length 1"
+  )
+})
+
+test_that("Improper NHGIS extract revisions throw warnings or errors", {
+  nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
+
   expect_error(
     remove_from_extract(
       nhgis_extract,
@@ -897,7 +796,7 @@ test_that("Improper extract revisions throw warnings or errors", {
       description = "Extract for R client testing",
       bad_field = "not in extract"
     ),
-    regexp = paste0(
+    paste0(
       "The following fields were either not found in the provided extract ",
       "or cannot be removed:.+`description`, `bad_field`"
     )
@@ -921,9 +820,7 @@ test_that("Improper extract revisions throw warnings or errors", {
       nhgis_extract,
       geog_levels = "nation"
     ),
-    paste0(
-      "`geog_levels` must not contain missing values"
-    )
+    "`geog_levels` must not contain missing values"
   )
   expect_error(
     add_to_extract(
@@ -963,7 +860,35 @@ test_that("Improper extract revisions throw warnings or errors", {
   )
 })
 
-test_that("Can combine extracts", {
+test_that("Can combine microdata extracts", {
+  x1 <- define_extract_usa(
+    description = "Combining",
+    samples = c("S1", "S2"),
+    variables = "V1",
+    data_format = "csv"
+  )
+
+  x2 <- define_extract_usa(
+    description = "",
+    samples = "S3",
+    variables = "V2",
+    data_format = "csv"
+  )
+
+  x_target <- define_extract_usa(
+    description = "Combining",
+    samples = c("S1", "S2", "S3"),
+    variables = c("V1", "V2"),
+    data_format = "csv"
+  )
+
+  x <- combine_extracts(x1, x2)
+
+  expect_identical(x, x_target)
+})
+
+
+test_that("Can combine NHGIS extracts", {
   x1 <- define_extract_nhgis(
     description = "Combining",
     shapefiles = "S1"
@@ -986,39 +911,48 @@ test_that("Can combine extracts", {
     data_format = "fixed_width",
   )
 
-  x <- combine_extracts(x1, x2, x3)
-
-  expect_identical(
-    x,
-    define_extract_nhgis(
-      description = "Combining",
-      datasets = c("A", "B", "C"),
-      data_tables = list(c("D1", "D2"), "D3", c("D2", "D4")),
-      years = list(C = "Y1"),
-      time_series_tables = c("T1", "T2"),
-      geog_levels = list(
-        T1 = "G1", T2 = "G1", A = "G1", B = "G1", C = c("G2", "G3")
-      ),
-      tst_layout = "time_by_file_layout",
-      shapefiles = "S1",
-      data_format = "csv_no_header"
-    )
+  x_target <- define_extract_nhgis(
+    description = "Combining",
+    datasets = c("A", "B", "C"),
+    data_tables = list(c("D1", "D2"), "D3", c("D2", "D4")),
+    years = list(C = "Y1"),
+    time_series_tables = c("T1", "T2"),
+    geog_levels = list(
+      T1 = "G1", T2 = "G1", A = "G1", B = "G1", C = c("G2", "G3")
+    ),
+    tst_layout = "time_by_file_layout",
+    shapefiles = "S1",
+    data_format = "csv_no_header"
   )
 
+  x <- combine_extracts(x1, x2, x3)
+
+
+  expect_identical(x, x_target)
   expect_error(
-    combine_extracts(
-      x1, define_extract_usa("A", "B", "C")
-    ),
+    combine_extracts(x1, define_extract_usa("A", "B", "C")),
     "same collection"
   )
 })
 
-# > JSON export -----------------------------------
+# JSON Conversion ----------------
 
-test_that("We can export to and import from JSON for NHGIS", {
-  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
-  save_extract_as_json(nhgis_extract, json_tmpfile)
-  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile)
+test_that("We can export to and import from JSON", {
+  usa_extract <- test_usa_extract()
+  nhgis_extract <- test_nhgis_extract()
+
+  json_tmpfile_usa <- file.path(tempdir(), "usa_extract.json")
+  json_tmpfile_nhgis <- file.path(tempdir(), "nhgis_extract.json")
+
+  on.exit(unlink(json_tmpfile_usa), add = TRUE, after = FALSE)
+  on.exit(unlink(json_tmpfile_nhgis), add = TRUE, after = FALSE)
+
+  save_extract_as_json(usa_extract, json_tmpfile_usa)
+  save_extract_as_json(nhgis_extract, json_tmpfile_nhgis)
+
+  copy_of_usa_extract <- define_extract_from_json(json_tmpfile_usa)
+  copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile_nhgis)
+
+  expect_identical(usa_extract, copy_of_usa_extract)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
 })
