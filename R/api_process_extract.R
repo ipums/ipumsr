@@ -687,7 +687,7 @@ format_nhgis_field_for_json <- function(...) {
   supfields <- purrr::map(purrr::compact(dots[[1]]), c)
   n_supfields <- length(supfields)
 
-  subfields <- dots[seq_len(length(dots))]
+  subfields <- dots[seq(2, length(dots))]
 
   subfields_grp <- purrr::map(
     1:n_supfields,
