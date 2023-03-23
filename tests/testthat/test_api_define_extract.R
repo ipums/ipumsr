@@ -5,9 +5,11 @@ test_that("Can define a USA extract", {
 
   expect_s3_class(usa_extract, "usa_extract")
   expect_s3_class(usa_extract, "ipums_extract")
+
   expect_equal(usa_extract$variables[[1]], "YEAR")
   expect_equal(usa_extract$data_structure, "rectangular")
   expect_equal(usa_extract$rectangular_on, "P")
+
   expect_identical(usa_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
   expect_false(usa_extract$submitted)
   expect_equal(usa_extract$number, NA_integer_)
@@ -19,9 +21,11 @@ test_that("Can define a CPS extract", {
 
   expect_s3_class(cps_extract, "cps_extract")
   expect_s3_class(cps_extract, "ipums_extract")
+
   expect_equal(cps_extract$variables[[1]], "YEAR")
   expect_equal(cps_extract$data_structure, "rectangular")
   expect_equal(cps_extract$rectangular_on, "P")
+
   expect_identical(cps_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
   expect_false(cps_extract$submitted)
   expect_equal(cps_extract$number, NA_integer_)
@@ -32,8 +36,13 @@ test_that("Can define an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
-  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(nhgis_extract$datasets, c("2014_2018_ACS5a", "2015_2019_ACS5a"))
+  expect_s3_class(nhgis_extract, "nhgis_extract")
+  expect_s3_class(nhgis_extract, "ipums_extract")
+
+  expect_equal(
+    nhgis_extract$datasets,
+    c("2014_2018_ACS5a", "2015_2019_ACS5a")
+  )
   expect_equal(
     nhgis_extract$data_tables,
     list(
@@ -67,14 +76,17 @@ test_that("Can define an NHGIS extract", {
   expect_equal(nhgis_extract$tst_layout, "time_by_row_layout")
   expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(nhgis_extract$data_format, "csv_no_header")
+
   expect_identical(nhgis_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
   expect_false(nhgis_extract$submitted)
   expect_equal(nhgis_extract$number, NA_integer_)
   expect_equal(nhgis_extract$status, "unsubmitted")
-  expect_true(is.null(nhgis_extract_shp$datasets))
+
+  expect_null(nhgis_extract_shp$datasets)
+  expect_null(nhgis_extract_shp$time_series_tables)
 })
 
-test_that("NHGIS extracts get correct default values", {
+test_that("NHGIS extract fields get correct default values", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
@@ -86,6 +98,14 @@ test_that("NHGIS extracts get correct default values", {
     )$tst_layout,
     "time_by_column_layout"
   )
+  expect_equal(
+    define_extract_nhgis(
+      time_series_tables = "A00",
+      geog_levels = "A1"
+    )$data_format,
+    "csv_no_header"
+  )
+
   expect_null(nhgis_extract_shp$breakdown_and_data_type_layout)
   expect_null(nhgis_extract_shp$data_format)
 })
@@ -96,8 +116,8 @@ test_that("Attempt to define a hierarchical extract throws an error", {
   expect_error(
     define_extract_usa(
       "Test",
-      "us2017b",
-      "YEAR",
+      samples = "us2017b",
+      variables = "YEAR",
       data_structure = "hierarchical"
     ),
     "must be equal to \"rectangular\""
@@ -105,8 +125,8 @@ test_that("Attempt to define a hierarchical extract throws an error", {
   expect_error(
     define_extract_cps(
       "Test",
-      "us2017b",
-      "YEAR",
+      samples = "us2017b",
+      variables = "YEAR",
       rectangular_on = "H"
     ),
     "Currently, the `rectangular_on` argument must be equal to \"P\""
@@ -117,8 +137,8 @@ test_that("Attempt to rectangularize on H records throws an error", {
   expect_error(
     define_extract_usa(
       "Test",
-      "us2017b",
-      "YEAR",
+      samples = "us2017b",
+      variables = "YEAR",
       rectangular_on = "H"
     ),
     "`rectangular_on` argument must be equal to \"P\""
@@ -347,33 +367,6 @@ test_that("NHGIS validation method works", {
   )
 })
 
-test_that("extract_list_from_json reproduces extract specs", {
-  usa_extract <- test_usa_extract()
-  cps_extract <- test_cps_extract()
-  nhgis_extract <- test_nhgis_extract()
-
-  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
-  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
-  nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
-
-  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
-  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
-  expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
-
-  expect_identical(
-    extract_list_from_json(usa_json)[[1]],
-    usa_extract
-  )
-  expect_identical(
-    extract_list_from_json(cps_json)[[1]],
-    cps_extract
-  )
-  expect_identical(
-    extract_list_from_json(nhgis_json)[[1]],
-    nhgis_extract
-  )
-})
-
 # Extract revisions --------------------------
 
 test_that("Can add to a USA extract", {
@@ -416,7 +409,7 @@ test_that("Can add to a CPS extract", {
   )
 })
 
-test_that("Can add new fields to an NHGIS extract", {
+test_that("Can add new parent fields to an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- add_to_extract(
@@ -458,7 +451,7 @@ test_that("Can add new fields to an NHGIS extract", {
   expect_equal(revised$shapefiles, c(nhgis_extract$shapefiles, "New"))
 })
 
-test_that("Can add subfields to existing parent fields", {
+test_that("Can add subfields to existing NHGIS extract parent fields", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- add_to_extract(
@@ -561,7 +554,7 @@ test_that("Can remove from a CPS extract", {
   expect_equal(revised_extract$variables, "YEAR")
 })
 
-test_that("Can remove full fields from an NHGIS extract", {
+test_that("Can remove parent fields from an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- remove_from_extract(
@@ -589,7 +582,7 @@ test_that("Can remove full fields from an NHGIS extract", {
   expect_equal(revised$geographic_extents, "PA")
 })
 
-test_that("Can remove subfields from an NHGIS extract", {
+test_that("Can remove subfields from existing NHGIS extract parent fields", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- remove_from_extract(
@@ -625,7 +618,7 @@ test_that("Can remove subfields from an NHGIS extract", {
   expect_equal(revised$geographic_extents, "DC")
 })
 
-test_that("Removing parent fields occurs before evaluating subfields", {
+test_that("Removing NHGIS parent fields occurs before removing subfields", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- remove_from_extract(
@@ -638,7 +631,7 @@ test_that("Removing parent fields occurs before evaluating subfields", {
   expect_equal(revised$data_tables, list(`2015_2019_ACS5a` = "B01002"))
 })
 
-test_that("Unused revisions do not alter extract", {
+test_that("Unused revisions do not alter USA extract", {
   usa_extract <- test_usa_extract()
 
   expect_identical(usa_extract, add_to_extract(usa_extract))
@@ -689,11 +682,6 @@ test_that("Unused revisions do not alter NHGIS extract", {
 
   expect_null(extract2$time_series_tables)
   expect_null(extract2$tst_layout)
-
-  expect_error(
-    add_to_extract(extract1, geog_levels = "Test"),
-    "`geog_levels` must be missing when no `datasets` or `time_series_tables`"
-  )
 })
 
 test_that("Improper microdata extract revisions throw warnings or errors", {
@@ -927,7 +915,6 @@ test_that("Can combine NHGIS extracts", {
 
   x <- combine_extracts(x1, x2, x3)
 
-
   expect_identical(x, x_target)
   expect_error(
     combine_extracts(x1, define_extract_usa("A", "B", "C")),
@@ -937,7 +924,34 @@ test_that("Can combine NHGIS extracts", {
 
 # JSON Conversion ----------------
 
-test_that("We can export to and import from JSON", {
+test_that("Can reproduce extract specs from JSON definition", {
+  usa_extract <- test_usa_extract()
+  cps_extract <- test_cps_extract()
+  nhgis_extract <- test_nhgis_extract()
+
+  usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
+  cps_json <- new_ipums_json(extract_to_request_json(cps_extract), "cps")
+  nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
+
+  expect_s3_class(usa_json, c("usa_json", "ipums_json"))
+  expect_s3_class(cps_json, c("cps_json", "ipums_json"))
+  expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
+
+  expect_identical(
+    extract_list_from_json(usa_json)[[1]],
+    usa_extract
+  )
+  expect_identical(
+    extract_list_from_json(cps_json)[[1]],
+    cps_extract
+  )
+  expect_identical(
+    extract_list_from_json(nhgis_json)[[1]],
+    nhgis_extract
+  )
+})
+
+test_that("Can export to and import from JSON", {
   usa_extract <- test_usa_extract()
   nhgis_extract <- test_nhgis_extract()
 

@@ -336,3 +336,108 @@ test_that("Careful rbind handles various data types (sp)", {
     "Cannot combine shape files because variable types don't match"
   )
 })
+
+test_that("Can read and combine with read_nhgis_sf() (deprecated)", {
+  skip_if_not_installed("sf")
+
+  nhgis_data_file <- ipums_example("nhgis0712_csv.zip")
+
+  data <- read_nhgis(
+    nhgis_data_file,
+    file_select = contains("ds136_1990_pmsa"),
+    verbose = FALSE
+  )
+
+  shape_data_sf <- read_ipums_sf(
+    nhgis_multi_shp,
+    contains("pmsa_1990")
+  )
+
+  expect_error(
+    suppressWarnings(
+      read_nhgis_sf(nhgis_data_file, nhgis_single_shp, verbose = FALSE)
+    ),
+    "`data_layer`"
+  )
+  expect_error(
+    read_nhgis_sf(
+      nhgis_data_file,
+      nhgis_single_shp,
+      data_layer = contains("ds136_1990_pmsa"),
+      shape_layer = contains("fake-layer"),
+      verbose = FALSE
+    ),
+    "`shape_layer`"
+  )
+
+  lifecycle::expect_deprecated(
+    data_shp_sf <- read_nhgis_sf(
+      nhgis_data_file,
+      nhgis_single_shp,
+      data_layer = contains("ds136_1990_pmsa"),
+      shape_layer = contains("pmsa_1990"),
+      verbose = FALSE
+    )
+  )
+
+  expect_s3_class(data_shp_sf, "sf")
+  expect_equal(nrow(data_shp_sf), nrow(data))
+  expect_equal(
+    ncol(data_shp_sf),
+    ncol(data) + ncol(shape_data_sf) -
+      length(intersect(colnames(data), colnames(shape_data_sf)))
+  )
+})
+
+test_that("Can read and combine with read_nhgis_sp() (deprecated)", {
+  skip_if_not_installed("rgdal")
+  skip_if_not_installed("sp")
+
+  nhgis_data_file <- ipums_example("nhgis0712_csv.zip")
+
+  data <- read_nhgis(
+    nhgis_data_file,
+    file_select = contains("ds136_1990_pmsa"),
+    verbose = FALSE
+  )
+
+  expect_error(
+    suppressWarnings(
+      read_nhgis_sp(
+        nhgis_data_file,
+        nhgis_single_shp,
+        verbose = FALSE
+      )
+    ),
+    "`data_layer`"
+  )
+
+  expect_error(
+    read_nhgis_sp(
+      nhgis_data_file,
+      nhgis_single_shp,
+      data_layer = contains("ds136_1990_pmsa"),
+      shape_layer = contains("fake-layer"),
+      verbose = FALSE
+    ),
+    "`shape_layer`"
+  )
+
+  lifecycle::expect_deprecated(
+    data_shp_sp <- read_nhgis_sp(
+      nhgis_data_file,
+      nhgis_single_shp,
+      data_layer = contains("ds136_1990_pmsa"),
+      shape_layer = contains("pmsa_1990"),
+      verbose = FALSE
+    )
+  )
+
+  expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
+  expect_equal(nrow(data_shp_sp@data), nrow(data))
+  expect_equal(
+    ncol(data_shp_sp),
+    ncol(data) + ncol(data_shp_sp@data) -
+      length(intersect(colnames(data), colnames(data_shp_sp@data)))
+  )
+})

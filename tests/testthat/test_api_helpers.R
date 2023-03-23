@@ -1,6 +1,6 @@
 # Print extract ------------------------
 
-test_that("Microdata print methods works", {
+test_that("Microdata print methods work", {
   usa_extract <- test_usa_extract()
   cps_extract <- test_cps_extract()
 
@@ -14,7 +14,7 @@ test_that("NHGIS print method works", {
 
   expect_output(
     print(nhgis_extract),
-    regexp = paste0(
+    paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
       "\n",
@@ -36,7 +36,7 @@ test_that("NHGIS print method works", {
   )
   expect_output(
     print(nhgis_extract_shp),
-    regexp = paste0(
+    paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: ",
       "\n",
@@ -53,7 +53,7 @@ test_that("NHGIS print method works", {
         breakdown_values = "B1"
       )
     ),
-    regexp = paste0(
+    paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: ",
       "\n",
@@ -264,4 +264,3 @@ test_that("standardize_extract_identifier handles unusual cases", {
     list(collection = "nhgis", number = NA)
   )
 })
-

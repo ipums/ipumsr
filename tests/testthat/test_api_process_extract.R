@@ -145,7 +145,10 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_equal(submitted_nhgis_extract_shp$collection, "nhgis")
   expect_true(is.null(submitted_nhgis_extract_shp$datasets))
   expect_true(is.null(submitted_nhgis_extract_shp$time_series_table))
-  expect_equal(submitted_nhgis_extract_shp$shapefiles, "110_blck_grp_2019_tl2019")
+  expect_equal(
+    submitted_nhgis_extract_shp$shapefiles,
+    "110_blck_grp_2019_tl2019"
+  )
   expect_true(submitted_nhgis_extract_shp$submitted)
   expect_equal(submitted_nhgis_extract_shp$status, "queued")
   expect_identical(
@@ -182,7 +185,7 @@ test_that("Can resubmit an extract", {
 
 # Download extract ---------------------
 
-test_that("Can download a USA extract by supplying extract object", {
+test_that("Can download USA extract by supplying extract object", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -201,7 +204,7 @@ test_that("Can download a USA extract by supplying extract object", {
   })
 
   expect_message(
-    vcr::use_cassette("download-usa-extract-ipums-extract", {
+    vcr::use_cassette("download-usa-extract", {
       ddi_file_path <- download_extract(
         ready_usa_extract,
         download_dir = download_dir,
@@ -223,89 +226,7 @@ test_that("Can download a USA extract by supplying extract object", {
   expect_equal(nrow(data), 20972)
 })
 
-test_that("Can download USA extract with collection and number as vector", {
-  skip_if_no_api_access(have_api_access)
-
-  download_dir <- file.path(tempdir(), "ipums-api-downloads")
-
-  if (!dir.exists(download_dir)) {
-    dir.create(download_dir)
-  }
-
-  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
-
-  vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
-  })
-  vcr::use_cassette("ready-usa-extract", {
-    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
-  })
-
-  expect_message(
-    vcr::use_cassette("download-usa-extract-collection-number", {
-      ddi_file_path <- download_extract(
-        c("usa", ready_usa_extract$number),
-        download_dir = download_dir,
-        overwrite = TRUE
-      )
-    }),
-    "DDI codebook file saved to"
-  )
-
-  ddi_file_path <- file.path(
-    vcr::vcr_test_path("fixtures"),
-    basename(ddi_file_path)
-  )
-
-  expect_match(ddi_file_path, "\\.xml$")
-  expect_true(file.exists(ddi_file_path))
-
-  data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-  expect_equal(nrow(data), 20972)
-})
-
-test_that("Can download USA extract with collection and number as string", {
-  skip_if_no_api_access(have_api_access)
-
-  download_dir <- file.path(tempdir(), "ipums-api-downloads")
-
-  if (!dir.exists(download_dir)) {
-    dir.create(download_dir)
-  }
-
-  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
-
-  vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
-  })
-  vcr::use_cassette("ready-usa-extract", {
-    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
-  })
-
-  expect_message(
-    vcr::use_cassette("download-usa-extract-collection-number", {
-      ddi_file_path <- download_extract(
-        paste0("usa:", ready_usa_extract$number),
-        download_dir = download_dir,
-        overwrite = TRUE
-      )
-    }),
-    "DDI codebook file saved to"
-  )
-
-  ddi_file_path <- file.path(
-    vcr::vcr_test_path("fixtures"),
-    basename(ddi_file_path)
-  )
-
-  expect_match(ddi_file_path, "\\.xml$")
-  expect_true(file.exists(ddi_file_path))
-
-  data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-  expect_equal(nrow(data), 20972)
-})
-
-test_that("Can download an NHGIS extract by supplying extract object", {
+test_that("Can download NHGIS extract by supplying extract object", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -363,7 +284,48 @@ test_that("Can download an NHGIS extract by supplying extract object", {
   expect_true(file.exists(gis_data_file_path))
 })
 
-test_that("Can download NHGIS extract with collection/number as vector", {
+test_that("Can download extract with collection and number as vector", {
+  skip_if_no_api_access(have_api_access)
+
+  download_dir <- file.path(tempdir(), "ipums-api-downloads")
+
+  if (!dir.exists(download_dir)) {
+    dir.create(download_dir)
+  }
+
+  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
+
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(test_usa_extract())
+  })
+  vcr::use_cassette("ready-usa-extract", {
+    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+  })
+
+  expect_message(
+    vcr::use_cassette("download-usa-extract-collection-number", {
+      ddi_file_path <- download_extract(
+        c("usa", ready_usa_extract$number),
+        download_dir = download_dir,
+        overwrite = TRUE
+      )
+    }),
+    "DDI codebook file saved to"
+  )
+
+  ddi_file_path <- file.path(
+    vcr::vcr_test_path("fixtures"),
+    basename(ddi_file_path)
+  )
+
+  expect_match(ddi_file_path, "\\.xml$")
+  expect_true(file.exists(ddi_file_path))
+
+  data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
+  expect_equal(nrow(data), 20972)
+})
+
+test_that("Can download extract with collection and number as string", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -384,7 +346,7 @@ test_that("Can download NHGIS extract with collection/number as vector", {
   expect_message(
     vcr::use_cassette("download-nhgis-extract-collection-number", {
       file_paths <- download_extract(
-        c("nhgis", ready_nhgis_extract$number),
+        paste0("nhgis:", ready_nhgis_extract$number),
         download_dir = download_dir,
         overwrite = TRUE
       )
@@ -420,52 +382,6 @@ test_that("Can download NHGIS extract with collection/number as vector", {
   expect_true(file.exists(gis_data_file_path))
 })
 
-test_that("Can download NHGIS extract with collection/number as string", {
-  skip_if_no_api_access(have_api_access)
-
-  download_dir <- file.path(tempdir(), "ipums-api-downloads")
-
-  if (!dir.exists(download_dir)) {
-    dir.create(download_dir)
-  }
-
-  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
-
-  vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
-  })
-  vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
-  })
-
-  expect_message(
-    vcr::use_cassette("download-nhgis-extract-collection-number", {
-      file_paths <- download_extract(
-        paste0("nhgis:", ready_nhgis_extract$number),
-        download_dir = download_dir,
-        overwrite = TRUE
-      )
-    }),
-    regexp = "Data file saved to "
-  )
-
-  expect_error(
-    download_extract(
-      ready_nhgis_extract,
-      download_dir = vcr::vcr_test_path("fixtures"),
-      overwrite = FALSE
-    ),
-    regexp = "The following files already exist: "
-  )
-
-  expect_equal(length(file_paths), 2)
-})
-
-# This does not currently test properly, as the necessary fixtures are
-# modified to exclude requests prior in test_api_extract_info to running
-# Need to consider whether to add a header in either of these files to ensure
-# sequencing is done correctly or whether to scrap this test, which essentially
-# only tests that we can pass args to wait_for_extract()...
 test_that("Can wait for completion during download", {
   skip_if_no_api_access(have_api_access)
 
@@ -533,7 +449,6 @@ test_that("Can read downloaded files with ipumsr readers", {
     full.names = TRUE
   )
 
-  # Can read downloaded files with ipumsr readers:
   data <- read_nhgis(
     table_data_file_path,
     file_select = contains("blck_grp"),
@@ -542,91 +457,12 @@ test_that("Can read downloaded files with ipumsr readers", {
 
   shape_data_sf <- read_ipums_sf(gis_data_file_path)
 
-  lifecycle::expect_deprecated(
-    shape_data_sp <- read_ipums_sp(gis_data_file_path, verbose = FALSE)@data
-  )
   expect_equal(nrow(data), 10190)
-
-  lifecycle::expect_deprecated(
-    data_shp_sf <- read_nhgis_sf(
-      table_data_file_path,
-      gis_data_file_path,
-      data_layer = contains("blck_grp"),
-      shape_layer = contains("blck_grp"),
-      verbose = FALSE
-    )
-  )
-
-  expect_error(
-    read_nhgis_sf(
-      table_data_file_path,
-      gis_data_file_path,
-      verbose = FALSE
-    ),
-    "`data_layer`"
-  )
-
-  expect_error(
-    read_nhgis_sf(
-      table_data_file_path,
-      gis_data_file_path,
-      data_layer = contains("blck_grp"),
-      shape_layer = contains("fake-layer"),
-      verbose = FALSE
-    ),
-    "`shape_layer`"
-  )
-
-  expect_s3_class(data_shp_sf, "sf")
-  expect_equal(nrow(data_shp_sf), nrow(data)) # sf keeps unmatched geoms
-  expect_equal(
-    ncol(data_shp_sf),
-    ncol(data) + ncol(shape_data_sf) -
-      length(intersect(colnames(data), colnames(shape_data_sf)))
-  )
-
-  lifecycle::expect_deprecated(
-    data_shp_sp <- read_nhgis_sp(
-      table_data_file_path,
-      gis_data_file_path,
-      data_layer = contains("blck_grp"),
-      shape_layer = contains("blck_grp"),
-      verbose = FALSE
-    )
-  )
-
-  expect_error(
-    read_nhgis_sp(
-      table_data_file_path,
-      gis_data_file_path,
-      verbose = FALSE
-    ),
-    "`data_layer`"
-  )
-
-  expect_error(
-    read_nhgis_sp(
-      table_data_file_path,
-      gis_data_file_path,
-      data_layer = contains("blck_grp"),
-      shape_layer = contains("fake-layer"),
-      verbose = FALSE
-    ),
-    "`shape_layer`"
-  )
-
-  expect_s4_class(data_shp_sp, "SpatialPolygonsDataFrame")
-  expect_equal(nrow(data_shp_sp@data), 450) # sp drops unmatched geoms
-  expect_equal(
-    ncol(data_shp_sp),
-    ncol(data) + ncol(data_shp_sp@data) -
-      length(intersect(colnames(data), colnames(data_shp_sp@data)))
-  )
 })
 
 # Submit extract errors ------------------
 
-test_that("An extract request with missing collection returns correct error", {
+test_that("We throw errors on attempted submission of invalid extract", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract()),
     paste0(
@@ -634,16 +470,10 @@ test_that("An extract request with missing collection returns correct error", {
       "`description` must not contain missing"
     )
   )
-})
-
-test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
     "`description` must not contain missing values"
   )
-})
-
-test_that("An extract request with missing samples returns correct error", {
   expect_error(
     submit_extract(
       ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
@@ -676,7 +506,7 @@ test_that("We parse API errors on bad requests", {
 
 # Revise a submitted extract -------------
 
-test_that("Can add to a submitted USA extract", {
+test_that("Can add to a submitted extract", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
@@ -718,24 +548,5 @@ test_that("We can export to and import from JSON, submitted extract", {
   expect_identical(
     ipumsr:::copy_ipums_extract(submitted_usa_extract),
     copy_of_submitted_usa_extract
-  )
-})
-
-test_that("We can export to and import from JSON, submitted NHGIS extract", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
-  })
-
-  json_tmpfile <- file.path(tempdir(), "nhgis_extract.json")
-  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
-
-  save_extract_as_json(submitted_nhgis_extract, json_tmpfile)
-  copy_of_submitted_nhgis_extract <- define_extract_from_json(json_tmpfile)
-
-  expect_identical(
-    ipumsr:::copy_ipums_extract(submitted_nhgis_extract),
-    copy_of_submitted_nhgis_extract
   )
 })
