@@ -719,3 +719,24 @@ simplify_nhgis_gis_file <- function(file) {
 
   invisible(file)
 }
+
+#' Calculate set difference with the empty set represented as `NULL`
+#'
+#' Convenience function to allow for easier removal of values from extracts
+#' whose extract fields can contain `NULL` values.
+#'
+#' @param x,y Vectors to use to calculate set difference
+#'
+#' @return Same output as `setdiff`, except that empty set return values
+#'   are `NULL` rather than length-0 vectors.
+#'
+#' @noRd
+setdiff_null <- function(x, y) {
+  v <- setdiff(x, y)
+
+  if (length(v) == 0) {
+    v <- NULL
+  }
+
+  v
+}

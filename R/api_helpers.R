@@ -738,27 +738,6 @@ add_user_auth_header <- function(api_key) {
   httr::add_headers("Authorization" = api_key)
 }
 
-#' Calculate set difference with the empty set represented as `NULL`
-#'
-#' Convenience function to allow for easier removal of values from extracts
-#' whose extract fields can contain `NULL` values.
-#'
-#' @param x,y Vectors to use to calculate set difference
-#'
-#' @return Same output as `setdiff`, except that empty set return values
-#'   are `NULL` rather than length-0 vectors.
-#'
-#' @noRd
-setdiff_null <- function(x, y) {
-  v <- setdiff(x, y)
-
-  if (length(v) == 0) {
-    v <- NULL
-  }
-
-  v
-}
-
 copy_ipums_extract <- function(extract) {
   extract$submitted <- FALSE
   extract$download_links <- EMPTY_NAMED_LIST
@@ -827,15 +806,6 @@ api_version_from_json <- function(extract_json) {
 }
 
 EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))
-
-# Should be moved to utils?
-`%||%` <- function(a, b) {
-  if (is.null(a)) {
-    b
-  } else {
-    a
-  }
-}
 
 #' Convert geog extent values from names to codes and vice versa
 #'
