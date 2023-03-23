@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Thu, 16 Mar 2023 20:29:00 GMT
+      date: Thu, 23 Mar 2023 20:06:40 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -29,8 +29,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 988c85ad-8750-4d7c-8d1c-3d16072e3d42
-      x-runtime: '0.066216'
+      x-request-id: db873d15-bdcf-4215-bf1f-bcad97af0f5e
+      x-runtime: '0.064427'
       x-xss-protection: '0'
       content-length: '257'
     body:
@@ -40,5 +40,5 @@ http_interactions:
         Request"},"detail":["The property ''#/data_structure'' did not contain a minimum
         number of properties 1.","The property ''#/variables'' of type array did not
         match the following type: object."]}'
-  recorded_at: 2023-03-16 20:29:00 GMT
+  recorded_at: 2023-03-23 20:06:40 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

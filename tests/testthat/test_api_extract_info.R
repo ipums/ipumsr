@@ -1,64 +1,22 @@
-if (have_api_access) {
-  # Submitted extracts
-  vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
-  })
+# Fixture clean-up -------------------------------------------------------------
 
-  vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(test_cps_extract())
-  })
-
-  vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
-  })
-
-  vcr::use_cassette("submitted-nhgis-extract-shp", {
-    submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
-  })
-
-  # Must wait for completion so that we don't get error when
-  # resubmitting this extract definition
-  vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
-  })
-
-  vcr::use_cassette("resubmitted-nhgis-extract", {
-    resubmitted_nhgis_extract <- submit_extract(
-      c("nhgis", submitted_nhgis_extract$number)
+# Clean up fixtures after testing
+# Files will only be modified on the run that first produces them;
+# otherwise, they remain unchanged.
+on.exit(
+  # Remove all but last API request for wait_for_extract() requests
+  # to avoid waiting on subsequent runs
+  modify_ready_extract_cassette_files(
+    c(
+      "ready-usa-extract.yml",
+      "ready-cps-extract.yml",
+      "ready-nhgis-extract.yml",
+      "ready-nhgis-extract-shp.yml"
     )
-  })
-
-  vcr::use_cassette("ready-nhgis-extract-shp", {
-    ready_nhgis_extract_shp <- get_extract_info(
-      c("nhgis", submitted_nhgis_extract_shp$number)
-    )
-  })
-
-  # Recent extracts
-  vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_extract_info("usa")
-  })
-
-  vcr::use_cassette("recent-cps-extracts-list", {
-    recent_cps_extracts_list <- get_extract_info("cps")
-  })
-
-  vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_info("nhgis")
-  })
-
-  vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
-  })
-
-  vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_extract_info("cps", table = TRUE)
-  })
-
-  vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
-  })
-}
+  ),
+  add = TRUE,
+  after = FALSE
+)
 
 # Tests ------------------------------------------------------------------------
 
@@ -67,147 +25,176 @@ if (have_api_access) {
 test_that("Can check the status of a USA extract by supplying extract object", {
   skip_if_no_api_access(have_api_access)
 
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(test_usa_extract())
+  })
+  vcr::use_cassette("ready-usa-extract", {
+    wait_for_extract(submitted_usa_extract)
+  })
   vcr::use_cassette("get-usa-extract-info", {
     extract <- get_extract_info(submitted_usa_extract)
+  })
+  vcr::use_cassette("get-usa-extract-info", {
+    is_ready <- is_extract_ready(submitted_usa_extract)
   })
 
   expect_s3_class(extract, "usa_extract")
   expect_s3_class(extract, "ipums_extract")
   expect_true(extract$status == "completed")
-
-  vcr::use_cassette("is-usa-extract-ready", {
-    is_ready <- is_extract_ready(submitted_usa_extract)
-  })
-
   expect_true(is_ready)
 })
-
 
 test_that("Can check the status of a CPS extract by supplying extract object", {
   skip_if_no_api_access(have_api_access)
 
+  vcr::use_cassette("submitted-cps-extract", {
+    submitted_cps_extract <- submit_extract(test_cps_extract())
+  })
+  vcr::use_cassette("ready-cps-extract", {
+    wait_for_extract(submitted_cps_extract)
+  })
   vcr::use_cassette("get-cps-extract-info", {
     extract <- get_extract_info(submitted_cps_extract)
+  })
+  vcr::use_cassette("get-cps-extract-info", {
+    is_ready <- is_extract_ready(submitted_cps_extract)
   })
 
   expect_s3_class(extract, "cps_extract")
   expect_s3_class(extract, "ipums_extract")
   expect_true(extract$status == "completed")
-
-  vcr::use_cassette("is-cps-extract-ready", {
-    is_ready <- is_extract_ready(submitted_cps_extract)
-  })
-
   expect_true(is_ready)
 })
 
-
 test_that("Can check NHGIS extract status by supplying extract object", {
   skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+  })
+  vcr::use_cassette("ready-nhgis-extract", {
+    wait_for_extract(submitted_nhgis_extract)
+  })
   vcr::use_cassette("get-nhgis-extract-info", {
     checked_nhgis_extract <- get_extract_info(submitted_nhgis_extract)
   })
-  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  vcr::use_cassette("is-nhgis-extract-ready", {
+  vcr::use_cassette("get-nhgis-extract-info", {
     is_ready <- is_extract_ready(submitted_nhgis_extract)
   })
+
+  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_true(is_ready)
 })
 
 test_that("Can check USA extract status by supplying collection and number", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("get-usa-extract-info", {
-    extract <- get_extract_info(c("usa", submitted_usa_extract$number))
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(test_usa_extract())
   })
-
-  expect_s3_class(extract, "usa_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
-
-  vcr::use_cassette("is-usa-extract-ready", {
-    is_ready <- is_extract_ready(c("usa", submitted_usa_extract$number))
+  vcr::use_cassette("ready-usa-extract", {
+    wait_for_extract(submitted_usa_extract)
   })
-
-  expect_true(is_ready)
 
   vcr::use_cassette("get-usa-extract-info", {
-    extract <- get_extract_info(paste0("usa:", submitted_usa_extract$number))
+    extract1 <- get_extract_info(c("usa", submitted_usa_extract$number))
+  })
+  vcr::use_cassette("get-usa-extract-info", {
+    extract2 <- get_extract_info(paste0("usa:", submitted_usa_extract$number))
   })
 
-  expect_s3_class(extract, "usa_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
+  expect_s3_class(extract1, "usa_extract")
+  expect_s3_class(extract1, "ipums_extract")
+  expect_true(extract1$status == "completed")
+  expect_identical(extract1, extract2)
 
-  vcr::use_cassette("is-usa-extract-ready", {
-    is_ready <- is_extract_ready(paste0("usa:", submitted_usa_extract$number))
+  vcr::use_cassette("get-usa-extract-info", {
+    is_ready1 <- is_extract_ready(c("usa", submitted_usa_extract$number))
+  })
+  vcr::use_cassette("get-usa-extract-info", {
+    is_ready2 <- is_extract_ready(paste0("usa:", submitted_usa_extract$number))
   })
 
-  expect_true(is_ready)
+  expect_true(is_ready1)
+  expect_true(is_ready2)
 })
-
 
 test_that("Can check CPS extract status by supplying collection and number", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("get-cps-extract-info", {
-    extract <- get_extract_info(c("cps", submitted_cps_extract$number))
+  vcr::use_cassette("submitted-cps-extract", {
+    submitted_cps_extract <- submit_extract(test_cps_extract())
   })
-
-  expect_s3_class(extract, "cps_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
-
-  vcr::use_cassette("is-cps-extract-ready", {
-    is_ready <- is_extract_ready(c("cps", submitted_cps_extract$number))
+  vcr::use_cassette("ready-cps-extract", {
+    wait_for_extract(submitted_cps_extract)
   })
-
-  expect_true(is_ready)
 
   vcr::use_cassette("get-cps-extract-info", {
-    extract <- get_extract_info(paste0("cps:", submitted_cps_extract$number))
+    extract1 <- get_extract_info(c("cps", submitted_cps_extract$number))
+  })
+  vcr::use_cassette("get-cps-extract-info", {
+    extract2 <- get_extract_info(paste0("cps:", submitted_cps_extract$number))
   })
 
-  expect_s3_class(extract, "cps_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
+  expect_s3_class(extract1, "cps_extract")
+  expect_s3_class(extract1, "ipums_extract")
+  expect_true(extract1$status == "completed")
+  expect_identical(extract1, extract2)
 
-  vcr::use_cassette("is-cps-extract-ready", {
-    is_ready <- is_extract_ready(paste0("cps:", submitted_cps_extract$number))
+  vcr::use_cassette("get-cps-extract-info", {
+    is_ready1 <- is_extract_ready(c("cps", submitted_cps_extract$number))
+  })
+  vcr::use_cassette("get-cps-extract-info", {
+    is_ready2 <- is_extract_ready(paste0("cps:", submitted_cps_extract$number))
   })
 
-  expect_true(is_ready)
+  expect_true(is_ready1)
+  expect_true(is_ready2)
 })
 
 test_that("Can check NHGIS extract status with collection and number", {
   skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+  })
+  vcr::use_cassette("ready-nhgis-extract", {
+    wait_for_extract(submitted_nhgis_extract)
+  })
+
   vcr::use_cassette("get-nhgis-extract-info", {
-    checked_nhgis_extract <- get_extract_info(
+    checked_nhgis_extract1 <- get_extract_info(
       c("nhgis", submitted_nhgis_extract$number)
     )
   })
-  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(checked_nhgis_extract$status, "completed")
-  vcr::use_cassette("is-nhgis-extract-ready", {
-    is_ready <- is_extract_ready(c("nhgis", submitted_nhgis_extract$number))
-  })
-  expect_true(is_ready)
   vcr::use_cassette("get-nhgis-extract-info", {
-    checked_nhgis_extract <- get_extract_info(
+    checked_nhgis_extract2 <- get_extract_info(
       paste0("nhgis:", submitted_nhgis_extract$number)
     )
   })
-  expect_s3_class(checked_nhgis_extract, c("nhgis_extract", "ipums_extract"))
-  expect_equal(checked_nhgis_extract$status, "completed")
-  vcr::use_cassette("is-nhgis-extract-ready", {
-    is_ready <- is_extract_ready(submitted_nhgis_extract)
-  })
-  expect_true(is_ready)
 
+  expect_s3_class(checked_nhgis_extract1, c("nhgis_extract", "ipums_extract"))
+  expect_equal(checked_nhgis_extract1$status, "completed")
+  expect_identical(checked_nhgis_extract1, checked_nhgis_extract2)
+
+  vcr::use_cassette("get-nhgis-extract-info", {
+    is_ready1 <- is_extract_ready(c("nhgis", submitted_nhgis_extract$number))
+  })
+  vcr::use_cassette("get-nhgis-extract-info", {
+    is_ready2 <- is_extract_ready(paste0("nhgis:", submitted_nhgis_extract$number))
+  })
+
+  expect_true(is_ready1)
+  expect_true(is_ready2)
+})
+
+test_that("We throw error when extract object has no number", {
   expect_error(
     get_extract_info(
       define_extract_nhgis(
-        datasets = "a", data_tables = "B", geog_levels = "C"
+        datasets = "a",
+        data_tables = "B",
+        geog_levels = "C"
       )
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number."
@@ -217,8 +204,18 @@ test_that("Can check NHGIS extract status with collection and number", {
 test_that("We avoid superflous checks when getting extract status", {
   skip_if_no_api_access(have_api_access)
 
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+  })
+  vcr::use_cassette("ready-nhgis-extract", {
+    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+  })
+
   # This should not make an API request because the extract is already
-  # ready, and therefore should succeed
+  # ready, and therefore should succeed despite an invalid key
+  # TODO: how to reconcile this behavior with fact that someone may have
+  # stored a "ready_nhgis_extract" object, and then it may have expired
+  # before they use wait_for_extract()?
   expect_message(
     wait_for_extract(ready_nhgis_extract, api_key = NULL),
     "IPUMS NHGIS extract.+is ready to download"
@@ -241,6 +238,12 @@ test_that("We avoid superflous checks when getting extract status", {
 })
 
 test_that("Can use default collection when getting extract info", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("recent-nhgis-extracts-list", {
+    recent_nhgis_extracts_list <- get_extract_info("nhgis")
+  })
+
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
     extract_id <- standardize_extract_identifier(1)
 
@@ -248,9 +251,12 @@ test_that("Can use default collection when getting extract info", {
     expect_equal(length(extract_id), 2)
     expect_equal(extract_id$number, 1)
 
+    vcr::use_cassette("submitted-nhgis-extract", {
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    })
     vcr::use_cassette("ready-nhgis-extract", {
       expect_equal(
-        wait_for_extract(ready_nhgis_extract$number)$status,
+        wait_for_extract(submitted_nhgis_extract$number)$status,
         "completed"
       )
     })
@@ -306,6 +312,12 @@ test_that("Can use default collection when getting extract info", {
 })
 
 test_that("We parse API errors on bad requests", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("recent-nhgis-extracts-list", {
+    recent_nhgis_extracts_list <- get_extract_info("nhgis")
+  })
+
   bad_extract <- new_ipums_extract(
     "nhgis",
     datasets = "foo",
@@ -346,6 +358,10 @@ test_that("We parse API errors on bad requests", {
 test_that("Tibble of recent USA extracts contains expected columns", {
   skip_if_no_api_access(have_api_access)
 
+  vcr::use_cassette("recent-usa-extracts-tbl", {
+    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
+  })
+
   expected_columns <- c(
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
@@ -358,6 +374,10 @@ test_that("Tibble of recent USA extracts contains expected columns", {
 test_that("Tibble of recent CPS extracts contains expected columns", {
   skip_if_no_api_access(have_api_access)
 
+  vcr::use_cassette("recent-cps-extracts-tbl", {
+    recent_cps_extracts_tbl <- get_extract_info("cps", table = TRUE)
+  })
+
   expected_columns <- c(
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
@@ -367,9 +387,18 @@ test_that("Tibble of recent CPS extracts contains expected columns", {
   expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
 })
 
-
 test_that("Tibble of recent NHGIS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+  })
+  vcr::use_cassette("ready-nhgis-extract", {
+    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+  })
+  vcr::use_cassette("recent-nhgis-extracts-tbl", {
+    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
+  })
 
   expected_columns <- c(
     "collection", "number", "description", "data_type",
@@ -443,7 +472,6 @@ test_that("Can limit number of recent USA extracts to get info on", {
   expect_equal(nrow(two_recent_usa_extracts), 2)
 })
 
-
 test_that("Can limit number of recent CPS extracts to get info on", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-cps-extracts-tbl-two", {
@@ -458,7 +486,6 @@ test_that("Can limit number of recent CPS extracts to get info on", {
 
 test_that("Can limit number of recent extracts to get info on", {
   skip_if_no_api_access(have_api_access)
-
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
     two_recent_nhgis_extracts <- get_extract_info(
       "nhgis",
@@ -466,7 +493,6 @@ test_that("Can limit number of recent extracts to get info on", {
       table = TRUE
     )
   })
-
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
   expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
 })
@@ -475,6 +501,13 @@ test_that("Can limit number of recent extracts to get info on", {
 
 test_that("tbl to list and list to tbl conversion works", {
   skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("recent-usa-extracts-tbl", {
+    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
+  })
+  vcr::use_cassette("recent-usa-extracts-list", {
+    recent_usa_extracts_list <- get_extract_info("usa", table = FALSE)
+  })
 
   converted_to_list <- extract_tbl_to_list(
     recent_usa_extracts_tbl,
@@ -489,6 +522,16 @@ test_that("tbl to list and list to tbl conversion works", {
 
 test_that("NHGIS tbl to list and list to tbl conversion works", {
   skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("submitted-nhgis-extract", {
+    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+  })
+  vcr::use_cassette("recent-nhgis-extracts-tbl", {
+    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
+  })
+  vcr::use_cassette("recent-nhgis-extracts-list", {
+    recent_nhgis_extracts_list <- get_extract_info("nhgis", table = FALSE)
+  })
 
   converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
   converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
@@ -521,6 +564,24 @@ test_that("NHGIS tbl to list and list to tbl conversion works", {
 })
 
 test_that("Shapefile-only can be converted from tbl to list", {
+  skip_if_no_api_access(have_api_access)
+
+  download_dir <- file.path(tempdir(), "ipums-api-downloads")
+
+  if (!dir.exists(download_dir)) {
+    dir.create(download_dir)
+  }
+
+  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
+
+  vcr::use_cassette("submitted-nhgis-extract-shp", {
+    submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+  })
+  vcr::use_cassette("ready-nhgis-extract-shp", {
+    ready_nhgis_extract_shp <- wait_for_extract(
+      c("nhgis", submitted_nhgis_extract_shp$number)
+    )
+  })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
     nhgis_extract_tbl_shp <- get_extract_info(
       "nhgis",
