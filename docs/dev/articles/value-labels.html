@@ -294,7 +294,7 @@ factors always assign values starting at 1:</p>
 like 85, 90, and 99 have been mapped to lower values:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">age85_factor</span> <span class="op">&lt;-</span> <span class="va">cps</span><span class="op">[</span><span class="va">cps</span><span class="op">$</span><span class="va">AGE</span> <span class="op">==</span> <span class="fl">85</span>, <span class="op">]</span><span class="op">$</span><span class="va">AGE_FACTOR</span>
-  
+
 <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">age85_factor</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] 82</span></code></pre></div>
 <p>These different representations lead to inconsistencies in calculated
@@ -458,7 +458,7 @@ reference the values and labels in this user-defined function:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Convert to NA using function that returns TRUE for all labelled values equal to 99999999</span>
 <span class="va">inctot_na</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span>
-  <span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span>, 
+  <span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span>,
   <span class="kw">function</span><span class="op">(</span><span class="va">.val</span>, <span class="va">.lbl</span><span class="op">)</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">99999999</span>
 <span class="op">)</span>
 
@@ -477,7 +477,7 @@ themselves:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Convert to NA for labels that contain "N.I.U."</span>
 <span class="va">inctot_na2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span>
-  <span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span>, 
+  <span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span>,
   <span class="kw">function</span><span class="op">(</span><span class="va">.val</span>, <span class="va">.lbl</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"N.I.U."</span>, <span class="va">.lbl</span><span class="op">)</span>
 <span class="op">)</span>
 
@@ -689,10 +689,10 @@ you’re not likely to need to add new labels, but if you do, use
 <span class="op">)</span>
 
 <span class="fu"><a href="../reference/lbl_add.html">lbl_add</a></span><span class="op">(</span>
-  <span class="va">x</span>, 
-  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"$100"</span><span class="op">)</span>, 
-  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">105</span>, <span class="st">"$105"</span><span class="op">)</span>, 
-  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">200</span>, <span class="st">"$200"</span><span class="op">)</span>, 
+  <span class="va">x</span>,
+  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"$100"</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">105</span>, <span class="st">"$105"</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">200</span>, <span class="st">"$200"</span><span class="op">)</span>,
   <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">230</span>, <span class="st">"$230"</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt; &lt;labelled&lt;double&gt;[6]&gt;</span>

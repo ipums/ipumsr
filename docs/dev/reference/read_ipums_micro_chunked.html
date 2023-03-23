@@ -107,7 +107,7 @@ See Data structrures below."><meta property="og:image" content="http://tech.popd
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Read data from an IPUMS extract by chunk</h1>
-    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/micro_read_chunked.r" class="external-link"><code>R/micro_read_chunked.r</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/micro_read_chunked.R" class="external-link"><code>R/micro_read_chunked.R</code></a></small>
     <div class="hidden name"><code>read_ipums_micro_chunked.Rd</code></div>
     </div>
 
@@ -330,7 +330,7 @@ extract.</p>
 <span class="r-in">        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span class="r-in">          INCTOT <span class="op">=</span> <span class="fu"><a href="lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span></span>
 <span class="r-in">            <span class="va">INCTOT</span>,</span>
-<span class="r-in">            <span class="op">~</span><span class="va">.lbl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Missing."</span>, <span class="st">"N.I.U. (Not in Universe)."</span><span class="op">)</span></span>
+<span class="r-in">            <span class="op">~</span> <span class="va">.lbl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Missing."</span>, <span class="st">"N.I.U. (Not in Universe)."</span><span class="op">)</span></span>
 <span class="r-in">          <span class="op">)</span></span>
 <span class="r-in">        <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">INCTOT</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -340,8 +340,8 @@ extract.</p>
 <span class="r-in">  <span class="op">)</span>,</span>
 <span class="r-in">  chunk_size <span class="op">=</span> <span class="fl">1000</span></span>
 <span class="r-in"><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STATEFIP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>avg_inc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">INCTOT_SUM</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STATEFIP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>avg_inc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">INCTOT_SUM</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   STATEFIP     avg_inc</span>
@@ -388,13 +388,13 @@ extract.</p>
 <span class="r-in">    <span class="va">INCTOT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="va">HEALTH</span>, <span class="co"># Model formula</span></span>
 <span class="r-in">    <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">      <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span class="r-in">        INCTOT <span class="op">=</span> <span class="fu"><a href="lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span></span>
-<span class="r-in">          <span class="va">INCTOT</span>,</span>
-<span class="r-in">          <span class="op">~</span><span class="va">.lbl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Missing."</span>, <span class="st">"N.I.U. (Not in Universe)."</span><span class="op">)</span></span>
-<span class="r-in">        <span class="op">)</span>,</span>
-<span class="r-in">        HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span></span>
-<span class="r-in">      <span class="op">)</span></span>
+<span class="r-in">        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span class="r-in">          INCTOT <span class="op">=</span> <span class="fu"><a href="lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span></span>
+<span class="r-in">            <span class="va">INCTOT</span>,</span>
+<span class="r-in">            <span class="op">~</span> <span class="va">.lbl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Missing."</span>, <span class="st">"N.I.U. (Not in Universe)."</span><span class="op">)</span></span>
+<span class="r-in">          <span class="op">)</span>,</span>
+<span class="r-in">          HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span></span>
+<span class="r-in">        <span class="op">)</span></span>
 <span class="r-in">    <span class="op">}</span></span>
 <span class="r-in">  <span class="op">)</span>,</span>
 <span class="r-in">  chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span>
