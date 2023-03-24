@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:28 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       etag: W/"5b1e24185904ca5cb92db89cbdfe51b2"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 17c074e7-b701-4277-a8c5-db12d6aa9f59
-      x-runtime: '0.006448'
+      x-request-id: 79603c1a-5a1e-4d9a-a681-7621bb22f3c2
+      x-runtime: '0.006402'
       x-xss-protection: '0'
       content-length: '99902'
     body:
@@ -527,7 +527,7 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2023-03-15 21:05:28 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -548,7 +548,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:28 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       etag: W/"f99017a9fed01dd751bd512e9b9a1b60"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -560,8 +560,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 1ddfcbc0-1dfc-4272-a727-ab8317c56ffa
-      x-runtime: '0.005982'
+      x-request-id: 0a57e57e-90ed-4746-8e9b-c4d69978888b
+      x-runtime: '0.005585'
       x-xss-protection: '0'
       content-length: '34572'
     body:
@@ -938,5 +938,5 @@ http_interactions:
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
         of Work]","sequence":6005}]'
-  recorded_at: 2023-03-15 21:05:28 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

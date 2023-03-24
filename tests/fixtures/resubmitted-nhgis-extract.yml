@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1015?collection=nhgis&version=v1
+    uri: https://api.ipums.org/extracts/1091?collection=nhgis&version=v1
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 16 Mar 2023 20:12:43 GMT
-      etag: W/"57745e744febbf627f0a81554adbf223"
+      date: Thu, 23 Mar 2023 20:05:05 GMT
+      etag: W/"01676b97fbbf38fafacfa582aae3385f"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,16 +30,16 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 03d0a900-b87a-4306-8098-43ccc4e204a9
-      x-runtime: '0.682978'
+      x-request-id: cee22604-28e6-48e9-a4f7-9f60f6e88631
+      x-runtime: '0.650737'
       x-xss-protection: '0'
       content-length: '895'
     body:
       encoding: ''
       file: no
       string: '{"data_format":"csv_no_header","description":"Extract for R client
-        testing","datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file","number":1015,"status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986389/nhgis1015_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986389/nhgis1015_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1986389/nhgis1015_shape.zip"}}'
-  recorded_at: 2023-03-16 20:12:44 GMT
+        testing","datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file","number":1091,"status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_shape.zip"}}'
+  recorded_at: 2023-03-23 20:05:06 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: post
@@ -61,8 +61,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 16 Mar 2023 20:12:44 GMT
-      etag: W/"222c31c559069e4eff37bb117c5d5fc9"
+      date: Thu, 23 Mar 2023 20:05:06 GMT
+      etag: W/"9513ba600dae259128f934f34903f57a"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -73,14 +73,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 30478484-f700-4e35-b3ee-b0a6ca020c7a
-      x-runtime: '0.403350'
+      x-request-id: 700c8ce7-75ec-49e6-9ce3-08577172ae32
+      x-runtime: '1.175649'
       x-xss-protection: '0'
       content-length: '594'
     body:
       encoding: ''
       file: no
       string: '{"data_format":"csv_no_header","description":"Extract for R client
-        testing","datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file","number":1016,"status":"queued","download_links":{}}'
-  recorded_at: 2023-03-16 20:12:44 GMT
+        testing","datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file","number":1093,"status":"queued","download_links":{}}'
+  recorded_at: 2023-03-23 20:05:06 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

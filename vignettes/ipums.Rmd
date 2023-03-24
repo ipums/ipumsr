@@ -210,7 +210,7 @@ ipums_val_labels(cps_data$STATEFIP)
 ```{r}
 # Combine North and South Dakota into a single value/label pair
 cps_data$STATEFIP <- lbl_relabel(
-  cps_data$STATEFIP, 
+  cps_data$STATEFIP,
   lbl("38_46", "Dakotas") ~ grepl("Dakota", .lbl)
 )
 

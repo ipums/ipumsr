@@ -46,8 +46,8 @@ install.packages("dbplyr")
 ```{r, include=FALSE}
 installed_biglm <- requireNamespace("biglm")
 
-installed_db_pkgs <- requireNamespace("DBI") & 
-  requireNamespace("RSQLite") & 
+installed_db_pkgs <- requireNamespace("DBI") &
+  requireNamespace("RSQLite") &
   requireNamespace("dbplyr")
 ```
 
@@ -197,7 +197,7 @@ read_ipums_micro(cps_ddi_file, data_file = cps_data_file, verbose = FALSE) %>%
     AT_WORK = as_factor(
       lbl_relabel(
         EMPSTAT,
-        lbl(1, "Yes") ~ .lbl == "At work", 
+        lbl(1, "Yes") ~ .lbl == "At work",
         lbl(0, "No") ~ .lbl != "At work"
       )
     )
@@ -223,13 +223,13 @@ we demonstrated above:
 
 ```{r}
 cb_function <- function(x, pos) {
-  x %>% 
+  x %>%
     mutate(
       HEALTH = as_factor(HEALTH),
-      AT_WORK =  as_factor(
+      AT_WORK = as_factor(
         lbl_relabel(
           EMPSTAT,
-          lbl(1, "Yes") ~ .lbl == "At work", 
+          lbl(1, "Yes") ~ .lbl == "At work",
           lbl(0, "No") ~ .lbl != "At work"
         )
       )
@@ -275,9 +275,9 @@ At this point, we're ready to load the data in chunks. We use
 
 ```{r}
 chunked_tabulations <- read_ipums_micro_chunked(
-  cps_ddi_file, 
-  data_file = cps_data_file, 
-  callback = cb, 
+  cps_ddi_file,
+  data_file = cps_data_file,
+  callback = cb,
   chunk_size = 1000,
   verbose = FALSE
 )
@@ -289,7 +289,7 @@ and work status one more time:
 
 ```{r}
 chunked_tabulations %>%
-  group_by(HEALTH, AT_WORK) %>% 
+  group_by(HEALTH, AT_WORK) %>%
   summarize(n = sum(n), .groups = "drop")
 ```
 
@@ -313,11 +313,11 @@ data and prepare the variables in our analysis for use in the model:
 data <- read_ipums_micro(cps_ddi_file, data_file = cps_data_file, verbose = FALSE) %>%
   mutate(
     HEALTH = as_factor(HEALTH),
-    AHRSWORKT = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)"),
-    AT_WORK =  as_factor(
+    AHRSWORKT = lbl_na_if(AHRSWORKT, ~ .lbl == "NIU (Not in universe)"),
+    AT_WORK = as_factor(
       lbl_relabel(
         EMPSTAT,
-        lbl(1, "Yes") ~ .lbl == "At work", 
+        lbl(1, "Yes") ~ .lbl == "At work",
         lbl(0, "No") ~ .lbl != "At work"
       )
     )
@@ -345,14 +345,14 @@ library(biglm)
 biglm_cb <- IpumsBiglmCallback$new(
   model = AHRSWORKT ~ AGE + I(AGE^2) + HEALTH,
   prep = function(x, pos) {
-    x %>% 
+    x %>%
       mutate(
         HEALTH = as_factor(HEALTH),
-        AHRSWORKT = lbl_na_if(AHRSWORKT, ~.lbl == "NIU (Not in universe)"),
-        AT_WORK =  as_factor(
+        AHRSWORKT = lbl_na_if(AHRSWORKT, ~ .lbl == "NIU (Not in universe)"),
+        AT_WORK = as_factor(
           lbl_relabel(
             EMPSTAT,
-            lbl(1, "Yes") ~ .lbl == "At work", 
+            lbl(1, "Yes") ~ .lbl == "At work",
             lbl(0, "No") ~ .lbl != "At work"
           )
         )
@@ -394,13 +394,13 @@ filtering the chunked data in the callback function:
 ```{r}
 # Subset only those in "Poor" health
 chunked_subset <- read_ipums_micro_chunked(
-  cps_ddi_file, 
-  data_file = cps_data_file, 
+  cps_ddi_file,
+  data_file = cps_data_file,
   callback = IpumsDataFrameCallback$new(
     function(x, pos) {
       filter(x, HEALTH == 5)
     }
-  ), 
+  ),
   chunk_size = 1000,
   verbose = FALSE
 )
@@ -436,8 +436,8 @@ First, we create the yield object with the function
 
 ```{r}
 data <- read_ipums_micro_yield(
-  cps_ddi_file, 
-  data_file = cps_data_file, 
+  cps_ddi_file,
+  data_file = cps_data_file,
   verbose = FALSE
 )
 ```
@@ -484,7 +484,7 @@ First, we create an empty placeholder tibble to store our results:
 
 ```{r}
 yield_results <- tibble(
-  HEALTH = factor(levels = c("Excellent", "Very good", "Good", "Fair", "Poor")), 
+  HEALTH = factor(levels = c("Excellent", "Very good", "Good", "Fair", "Poor")),
   AT_WORK = factor(levels = c("No", "Yes")),
   n = integer(0)
 )
@@ -496,27 +496,25 @@ will end when we've finished reading the entire file.
 
 ```{r}
 while (!data$is_done()) {
-  
   # Yield new data and process
-  new <- data$yield(n = 1000) %>% 
+  new <- data$yield(n = 1000) %>%
     mutate(
       HEALTH = as_factor(HEALTH),
       AT_WORK = as_factor(
         lbl_relabel(
           EMPSTAT,
-          lbl(1, "Yes") ~ .lbl == "At work", 
+          lbl(1, "Yes") ~ .lbl == "At work",
           lbl(0, "No") ~ .lbl != "At work"
         )
       )
     ) %>%
     group_by(HEALTH, AT_WORK) %>%
     summarize(n = n(), .groups = "drop")
-  
+
   # Combine the new yield with the previously processed yields
   yield_results <- bind_rows(yield_results, new) %>%
     group_by(HEALTH, AT_WORK) %>%
     summarize(n = sum(n), .groups = "drop")
-  
 }
 
 yield_results
@@ -544,16 +542,15 @@ object:
 
 ```{r}
 get_model_data <- function(reset) {
-  
   if (reset) {
     data$reset()
   } else {
     yield <- data$yield(n = 1000)
-    
+
     if (is.null(yield)) {
       return(yield)
     }
-    
+
     yield %>%
       mutate(
         HEALTH = as_factor(HEALTH),
@@ -561,13 +558,12 @@ get_model_data <- function(reset) {
         AT_WORK = as_factor(
           lbl_relabel(
             EMPSTAT,
-            lbl(1, "Yes") ~ .lbl == "At work", 
+            lbl(1, "Yes") ~ .lbl == "At work",
             lbl(0, "No") ~ .lbl != "At work"
           )
         )
       ) %>%
       filter(AT_WORK == "Yes")
-    
   }
 }
 ```
@@ -608,7 +604,7 @@ R has several tools that support database integration, including
 [sparklyr](https://spark.rstudio.com/),
 [sparkR](https://spark.apache.org/docs/latest/sparkr.html),
 [bigrquery](https://bigrquery.r-dbi.org/), and others. In this example,
-we'll use RSQLite to load the data into an in-memory databse. (We use
+we'll use RSQLite to load the data into an in-memory database. (We use
 RSQLite because it is easy to set up, but it is likely not efficient
 enough to fully resolve issues with large IPUMS data, so it may be wise
 to consider an alternative in practice.)
@@ -651,7 +647,6 @@ read_ipums_micro_chunked(
   chunk_size = 1000,
   verbose = FALSE
 )
-
 ```
 
 #### Connecting to a database with dbplyr

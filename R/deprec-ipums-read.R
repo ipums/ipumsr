@@ -16,7 +16,6 @@
 #'
 #' @export
 ipums_list_data <- function(file, data_layer = NULL) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "ipums_list_data()",
@@ -33,13 +32,11 @@ ipums_list_data <- function(file, data_layer = NULL) {
       multiple_ok = TRUE
     )
   )
-
 }
 
 #' @rdname ipums_list_data
 #' @export
 ipums_list_shape <- function(file, shape_layer = NULL) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "ipums_list_shape()",
@@ -56,13 +53,11 @@ ipums_list_shape <- function(file, shape_layer = NULL) {
       multiple_ok = TRUE
     )
   )
-
 }
 
 #' @rdname ipums_list_data
 #' @export
 ipums_list_raster <- function(file, raster_layer = NULL) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "ipums_list_raster()",
@@ -79,7 +74,6 @@ ipums_list_raster <- function(file, raster_layer = NULL) {
       multiple_ok = TRUE
     )
   )
-
 }
 
 #' Read metadata from an IPUMS Terra extract codebook file
@@ -96,7 +90,6 @@ ipums_list_raster <- function(file, raster_layer = NULL) {
 #'
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_ipums_codebook()",
@@ -115,6 +108,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
 
   if (path_is_zip_or_dir(cb_file)) {
     cb_name <- find_files_in(cb_file, "txt", multiple_ok = TRUE)
+
     # There are 2 formats for extracts, so we have to do some work here.
     # IPUMS Terra always(?) has 2 text files, one is a codebook for all files
     # in the extract and another with a name that ends in "info.txt" and
@@ -123,9 +117,11 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
       # First try to get rid of the "info" txt
       cb_name <- cb_name[!fostr_detect(cb_name, "info\\.txt$")]
 
-      # If we still have multiple, then we should try to use the data_layer filter
-      # because we're probably in a NHGIS extract
-      if (length(cb_name) > 1) cb_name <- find_files_in(cb_file, "txt", data_layer)
+      # If we still have multiple, then we should try to use the data_layer
+      # filter because we're probably in a NHGIS extract
+      if (length(cb_name) > 1) {
+        cb_name <- find_files_in(cb_file, "txt", data_layer)
+      }
     }
     if (length(cb_name) == 1) {
       if (file_is_zip(cb_file)) {
@@ -140,7 +136,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     cb_name <- cb_file
     if (file.exists(cb_name)) {
       cb <- readr::read_lines(cb_name, progress = FALSE)
-    }  else {
+    } else {
       cb <- NULL
     }
   }
@@ -148,13 +144,19 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   if (is.null(cb)) {
     rlang::abort("Could not find text codebook.")
   }
-  # Section markers are a line full of dashes (setting to 5+ to eliminate false positives)
+
+  # Section markers are a line full of dashes
+  # (setting to 5+ to eliminate false positives)
   section_markers <- which(fostr_detect(cb, "^[-]{5,}$"))
 
   # Second line tells if it is NHGIS or IPUMS Terra codebook
-  if (fostr_detect(cb[2], "IPUMS Terra")) type <- "IPUMS Terra"
-  else if (fostr_detect(cb[2], "NHGIS")) type <- "NHGIS"
-  else rlang::abort("Unknown codebook format.")
+  if (fostr_detect(cb[2], "IPUMS Terra")) {
+    type <- "IPUMS Terra"
+  } else if (fostr_detect(cb[2], "NHGIS")) {
+    type <- "NHGIS"
+  } else {
+    rlang::abort("Unknown codebook format.")
+  }
 
   # Get table names (var_desc) and variable labels (var_label)
   # from data dictionary section using messy string parsing code
@@ -162,7 +164,11 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
 
   if (type == "IPUMS Terra") {
     data_file_rows <- which(fostr_detect(dd, "^Data File:"))
-    data_file_sections <- purrr::map2(data_file_rows, c(data_file_rows[-1], length(dd)), ~seq(.x + 1, .y - 1))
+    data_file_sections <- purrr::map2(
+      data_file_rows,
+      c(data_file_rows[-1], length(dd)),
+      ~ seq(.x + 1, .y - 1)
+    )
     data_file_names <- fostr_named_capture_single(
       dd[data_file_rows],
       "Data File: (?<data_file>.+)"
@@ -172,14 +178,18 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     if (quo_is_null(data_layer)) {
       this_file <- seq_along(data_file_names)
     } else {
-      this_file <- which(data_file_names == tidyselect::vars_select(data_file_names, !!data_layer))
+      this_file <- which(
+        data_file_names == tidyselect::vars_select(data_file_names, !!data_layer)
+      )
     }
+
     if (length(this_file) > 1) {
       rlang::abort(paste0(
         "Multiple codebooks found, please specify which to use with the",
         "`data_layer` argument"
       ))
     }
+
     var_info <- dd[data_file_sections[[this_file]]]
     var_info <- fostr_named_capture(
       var_info,
@@ -199,6 +209,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
       "^Time series layout:[[:blank:]]+(?<ts_type>.+)$",
       only_matches = TRUE
     )
+
     if (length(time_series_type) > 0) {
       is_time_series <- TRUE
     } else {
@@ -219,44 +230,56 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     context_vars <- context_vars[!is.na(context_vars$var_name), ]
 
     table_name_rows <- which(fostr_detect(dd, "^[[:blank:]]*Table [0-9]+:"))
-    table_sections <- purrr::map2(table_name_rows, c(table_name_rows[-1], length(dd)), ~seq(.x, .y - 1))
+    table_sections <- purrr::map2(
+      table_name_rows,
+      c(table_name_rows[-1], length(dd)),
+      ~ seq(.x, .y - 1)
+    )
 
-    table_vars <- purrr::map_df(table_sections, function(rows) {
-      if (is_time_series) {
-        table_name_and_code <- fostr_named_capture(
-          dd[rows[1]],
-          "^[[:blank:]]*Table .+?:[[:blank:]]+\\((?<table_code>.+?)\\)[[:blank:]]+(?<table_name>.+)$"
-        )
-        nhgis_table_code <- table_name_and_code$table_code
-        table_name <- table_name_and_code$table_name
+    table_vars <- purrr::map_df(
+      table_sections,
+      function(rows) {
+        if (is_time_series) {
+          table_name_and_code <- fostr_named_capture(
+            dd[rows[1]],
+            "^[[:blank:]]*Table .+?:[[:blank:]]+\\((?<table_code>.+?)\\)[[:blank:]]+(?<table_name>.+)$"
+          )
+          nhgis_table_code <- table_name_and_code$table_code
+          table_name <- table_name_and_code$table_name
 
-        time_series_headers <- fostr_detect(dd[rows], "^[[:blank:]]+Time series")
-        vars <- dd[rows][!time_series_headers]
-        vars <- vars[-1] # First row was table name/code
-        vars <- fostr_named_capture(
-          vars,
-          "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
-          only_matches = TRUE
-        )
-        vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
-      } else {
-        table_name <- fostr_named_capture_single(
-          dd[rows[1]],
-          "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
-        )
-        nhgis_table_code <- fostr_named_capture_single(
-          dd[rows[4]],
-          "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
-        )
-        vars <- fostr_named_capture(
-          dd[rows[-1:-4]],
-          "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
-          only_matches = TRUE
-        )
-        vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+          time_series_headers <- fostr_detect(
+            dd[rows],
+            "^[[:blank:]]+Time series"
+          )
+
+          vars <- dd[rows][!time_series_headers]
+          vars <- vars[-1] # First row was table name/code
+          vars <- fostr_named_capture(
+            vars,
+            "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+            only_matches = TRUE
+          )
+          vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+        } else {
+          table_name <- fostr_named_capture_single(
+            dd[rows[1]],
+            "^[[:blank:]]*Table .+?:[[:blank:]]+(?<table_name>.+)$"
+          )
+          nhgis_table_code <- fostr_named_capture_single(
+            dd[rows[4]],
+            "^[[:blank:]]*NHGIS code:[[:blank:]]+(?<table_code>.+)$"
+          )
+          vars <- fostr_named_capture(
+            dd[rows[-1:-4]],
+            "(?<var_name>[[:alnum:]|[:punct:]]+):[[:blank:]]+(?<var_label>.+)$",
+            only_matches = TRUE
+          )
+          vars$var_desc <- paste0(table_name, " (", nhgis_table_code, ")")
+        }
+        vars
       }
-      vars
-    })
+    )
+
     var_info <- make_var_info_from_scratch(
       var_name = c(context_vars$var_name, table_vars$var_name),
       var_label = c(context_vars$var_label, table_vars$var_label),
@@ -265,19 +288,21 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
   }
 
   # Get License and Condition section
-  conditions_text <- find_cb_section(cb, "^Citation and Use of .+ Data", section_markers)
+  conditions_text <- find_cb_section(
+    cb,
+    "^Citation and Use of .+ Data",
+    section_markers
+  )
+
   conditions_text <- paste(conditions_text, collapse = "\n")
 
-
-  out <- new_ipums_ddi(
+  new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
     ipums_project = type,
     var_info = var_info,
     conditions = conditions_text
   )
-
-  out
 }
 
 
@@ -340,7 +365,6 @@ read_ipums_sp <- function(shape_file,
                           bind_multiple = TRUE,
                           add_layer_var = NULL,
                           verbose = TRUE) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_ipums_sp()",
@@ -402,52 +426,84 @@ read_ipums_sp <- function(shape_file,
   out <- careful_sp_rbind(out, add_layer_var)
 
   out
-
 }
 
-# Takes a list of SpatialPolygonsDataFrames, fills in empty columns for you and binds
-# them together.
+# Takes a list of SpatialPolygonsDataFrames, fills in empty columns for you and
+# binds them together.
 # Warns if types don't match and are coerced
 careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
-  if (is.null(add_layer_var)) add_layer_var <- length(sp_list) > 1
+  if (is.null(add_layer_var)) {
+    add_layer_var <- length(sp_list) > 1
+  }
+
   if (add_layer_var) {
-    sp_list <- purrr::imap(sp_list, function(.x, .y) {
-      .x@data[["layer"]] <- .y
-      .x
-    })
+    sp_list <- purrr::imap(
+      sp_list,
+      function(.x, .y) {
+        .x@data[["layer"]] <- .y
+        .x
+      }
+    )
   }
 
   if (length(sp_list) == 1) {
     return(sp_list[[1]])
   } else {
     # Get var info for all columns
-    all_var_info <- purrr::map_df(sp_list, .id = "id", function(x) {
-      tibble::tibble(name = names(x@data), type = purrr::map(x@data, ~class(.)))
-    })
+    all_var_info <- purrr::map_df(
+      sp_list,
+      .id = "id",
+      function(x) {
+        tibble::tibble(
+          name = names(x@data),
+          type = purrr::map(x@data, ~ class(.))
+        )
+      }
+    )
 
     all_var_info <- dplyr::group_by(all_var_info, .data$name)
-    var_type_check <- dplyr::summarize(all_var_info, check = length(unique(.data$type)))
+
+    var_type_check <- dplyr::summarize(
+      all_var_info,
+      check = length(unique(.data$type))
+    )
+
     if (any(var_type_check$check != 1)) {
       stop("Cannot combine shape files because variable types don't match.")
     }
+
     all_var_info <- dplyr::slice(all_var_info, 1)
     all_var_info <- dplyr::ungroup(all_var_info)
     all_var_info$id <- NULL
 
-    out <- purrr::map(sp_list, function(x) {
-      missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
-      if (length(missing_vars) == 0) return(x)
+    out <- purrr::map(
+      sp_list,
+      function(x) {
+        missing_vars <- dplyr::setdiff(all_var_info$name, names(x))
 
-      for (vn in missing_vars) {
-        vtype <- all_var_info$type[all_var_info$name == vn][[1]]
-        if (identical(vtype, "character")) x@data[[vn]] <- NA_character_
-        else if (identical(vtype, "numeric")) x@data[[vn]] <- NA_real_
-        else stop("Unexpected variable type in shape file.")
+        if (length(missing_vars) == 0) {
+          return(x)
+        }
+
+        for (vn in missing_vars) {
+          vtype <- all_var_info$type[all_var_info$name == vn][[1]]
+
+          if (identical(vtype, "character")) {
+            x@data[[vn]] <- NA_character_
+          } else if (identical(vtype, "numeric")) {
+            x@data[[vn]] <- NA_real_
+          } else {
+            stop("Unexpected variable type in shape file.")
+          }
+        }
+
+        x
       }
-      x
-    })
+    )
+
     out <- do.call(rbind, out)
   }
+
   out
 }
 
@@ -501,7 +557,6 @@ read_nhgis_sf <- function(data_file,
                           shape_encoding = "latin1",
                           verbose = TRUE,
                           var_attrs = c("val_labels", "var_label", "var_desc")) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_nhgis_sf()",
@@ -528,7 +583,11 @@ read_nhgis_sf <- function(data_file,
   )
 
   shape_layer <- enquo(shape_layer)
-  if (quo_text(shape_layer) == "data_layer") shape_layer <- data_layer
+
+  if (quo_text(shape_layer) == "data_layer") {
+    shape_layer <- data_layer
+  }
+
   if (verbose) cat("Reading geography...\n")
 
   tryCatch(
@@ -558,17 +617,26 @@ read_nhgis_sf <- function(data_file,
 
   # Avoid a warning by adding attributes from the join_vars in data to
   # join_vars in sf_data
-  purrr::walk(join_vars, function(vvv) {
-    attributes(sf_data[[vvv]]) <<- attributes(data[[vvv]])
-  })
+  purrr::walk(
+    join_vars,
+    function(vvv) {
+      attributes(sf_data[[vvv]]) <<- attributes(data[[vvv]])
+    }
+  )
 
   # Coerce to data.frame to avoid sf#414 (fixed in development version of sf)
-  data <- dplyr::full_join(as.data.frame(sf_data), as.data.frame(data), by = join_vars)
+  data <- dplyr::full_join(
+    as.data.frame(sf_data),
+    as.data.frame(data),
+    by = join_vars
+  )
+
   data <- sf::st_as_sf(tibble::as_tibble(data))
 
   # Check if any data rows are missing (merge failures where not in shape file)
   if (verbose) {
     missing_in_shape <- purrr::map_lgl(data$geometry, is.null)
+
     if (any(missing_in_shape)) {
       gis_join_failures <- data$GISJOIN[missing_in_shape]
       cat(paste(
@@ -589,6 +657,7 @@ read_nhgis_sf <- function(data_file,
       ))
     }
   }
+
   data
 }
 
@@ -602,7 +671,6 @@ read_nhgis_sp <- function(data_file,
                           shape_encoding = "latin1",
                           verbose = TRUE,
                           var_attrs = c("val_labels", "var_label", "var_desc")) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_nhgis_sp()",
@@ -667,8 +735,13 @@ read_nhgis_sp <- function(data_file,
       dplyr::select(out@data, one_of(join_vars)),
       by = join_vars
     )
+
     if (nrow(missing_in_shape) > 0) {
-      gis_join_failures <- purrr::pmap_chr(missing_in_shape, function(...) paste(..., sep = "-"))
+      gis_join_failures <- purrr::pmap_chr(
+        missing_in_shape,
+        function(...) paste(..., sep = "-")
+      )
+
       message(paste0(
         "There are ", nrow(missing_in_shape), " rows of data that ",
         "have data but no geography. This can happen because:\n  Shape files ",
@@ -678,6 +751,7 @@ read_nhgis_sp <- function(data_file,
       ))
     }
   }
+
   out
 }
 
@@ -709,7 +783,6 @@ make_ddi_from_scratch <- function(file_name = NULL,
                                   conditions = NULL,
                                   citation = NULL,
                                   file_encoding = NULL) {
-
   lifecycle::deprecate_warn(
     "0.6.0",
     "make_ddi_from_scratch()",
@@ -734,5 +807,4 @@ make_ddi_from_scratch <- function(file_name = NULL,
     citation = citation,
     file_encoding = file_encoding
   )
-
 }

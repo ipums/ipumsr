@@ -97,7 +97,7 @@ variable/value labeling for use with IPUMS microdata extracts."><meta property="
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Callback classes</h1>
-    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/callbacks.r" class="external-link"><code>R/callbacks.r</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/callbacks.R" class="external-link"><code>R/callbacks.R</code></a></small>
     <div class="hidden name"><code>ipums_callback.Rd</code></div>
     </div>
 
@@ -139,10 +139,10 @@ result from a single chunk.</p>
 using the biglm package.</p>
 <p>Initialize with a function that takes 2 arguments: The first argument
 should correspond to a <a href="https://rdrr.io/r/stats/formula.html" class="external-link">formula</a> specifying the regression
-model. The second should correspond to a function that prepares the data before
-running the regression analsis. This function follows the conventions
-of the functions used in other callbacks. Any additional arguments passed
-to this function are passed to biglm.</p></dd>
+model. The second should correspond to a function that prepares the data
+before running the regression analysis. This function follows the
+conventions of the functions used in other callbacks. Any additional
+arguments passed to this function are passed to biglm.</p></dd>
 
 <dt>IpumsChunkCallback</dt>
 <dd><p>(Advanced) Callback interface definition. All

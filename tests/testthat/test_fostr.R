@@ -1,6 +1,8 @@
-
 test_that("fostr_detect works as expected", {
-  expect_equal(ipumsr:::fostr_detect(c("abcdef", "xyz", "def abc"), "abc"), c(TRUE, FALSE, TRUE))
+  expect_equal(
+    ipumsr:::fostr_detect(c("abcdef", "xyz", "def abc"), "abc"),
+    c(TRUE, FALSE, TRUE)
+  )
 })
 
 test_that("fostr_named_capture works as expected", {
@@ -36,7 +38,7 @@ test_that("fostr_named_capture_single works as expected", {
       c("this is a bike", "this is cool", "these are fine"),
       "^this is( a)? (?<var>.+)$"
     ),
-     c("bike", "cool", "")
+    c("bike", "cool", "")
   )
 })
 
@@ -51,7 +53,10 @@ test_that("fostr_replace_all works as expected", {
 })
 
 test_that("fostr_split works as expected", {
-  expect_equal(ipumsr:::fostr_split("this is cool", " ")[[1]], c("this", "is", "cool"))
+  expect_equal(
+    ipumsr:::fostr_split("this is cool", " ")[[1]],
+    c("this", "is", "cool")
+  )
 })
 
 test_that("fostr_sub works as expected", {
@@ -61,7 +66,10 @@ test_that("fostr_sub works as expected", {
 })
 
 test_that("fostr_subset works as expected", {
-  expect_equal(ipumsr:::fostr_subset(c("abcdef", "xyz", "def abc"), "abc"), c("abcdef", "def abc"))
+  expect_equal(
+    ipumsr:::fostr_subset(c("abcdef", "xyz", "def abc"), "abc"),
+    c("abcdef", "def abc")
+  )
 })
 
 test_that("fostr_wrap works as expected", {

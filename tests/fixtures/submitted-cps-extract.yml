@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 16 Mar 2023 20:16:34 GMT
-      etag: W/"15b55218bd4fcf14679e1852e8ffc485"
+      date: Thu, 23 Mar 2023 19:55:34 GMT
+      etag: W/"0c56fbb6b0188937c3ad01d67175aaa8"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ad543942-5039-4ac2-9dbf-a8d2f0c13c38
-      x-runtime: '1.148462'
+      x-request-id: de3717a5-cd3d-4124-ada6-16312997a0da
+      x-runtime: '2.004724'
       x-xss-protection: '0'
       content-length: '507'
     body:
       encoding: ''
       file: no
       string: '{"version":1,"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"number":27,"status":"queued","download_links":{}}'
-  recorded_at: 2023-03-16 20:16:34 GMT
+        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"number":57,"status":"queued","download_links":{}}'
+  recorded_at: 2023-03-23 19:55:34 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

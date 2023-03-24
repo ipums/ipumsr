@@ -1,4 +1,3 @@
-
 # Generate sample fixed-width data for testing
 #
 # This script produces:

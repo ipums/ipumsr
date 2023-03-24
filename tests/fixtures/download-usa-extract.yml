@@ -1,0 +1,73 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1992253/usa_00159.xml
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="usa_00159.xml"; filename*=UTF-8''usa_00159.xml
+      content-type: application/xml
+      date: Thu, 23 Mar 2023 20:05:07 GMT
+      etag: '"641caeab-8bbc"'
+      last-modified: Thu, 23 Mar 2023 19:55:23 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=bj6m%2FYLBTXtjsknr0d3rKjhPeVcDXD%2FHpde0E%2F2ifnv00TkhQ9o8K6OIeQlKYbsVabkbo3EzfW02lbjBxJU4Hd3XWn9u4yK5VUX5sbcI3Da9mFOS68T%2BTQzdLCiGyair1IiZrupHwJ7Ru2zIVB5kMJLmvKgqU5osvSInk6xByfF%2BB516pPFE40b7JX0gj7NlfrwvWUW2Sg1ob1KiF2iUuuDe1xQZE9iTC7uixHfozxdPRpgPmYTslKVqKmuyxv0%3D--UVllZiITBVUqPrE2--%2BBKK7%2B2%2BdngB86q7Gug6sA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '35772'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/usa_00159.xml
+  recorded_at: 2023-03-23 20:05:07 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1992253/usa_00159.dat.gz
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="usa_00159.dat.gz"; filename*=UTF-8''usa_00159.dat.gz
+      content-type: application/gzip
+      date: Thu, 23 Mar 2023 20:05:07 GMT
+      etag: '"641caeac-28e61"'
+      last-modified: Thu, 23 Mar 2023 19:55:24 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=nuqaJVr70btwSUAbSWc2puXTAdF1cwohM1PswCRwcJmFeBSAPR2SzNL7Qit1mlG92ES3GPKMxG4lXIseY3URWawIrKmnjyq64njzHtpQFpfYFSdLrzRh5FPot57Ov%2BxiUerY7%2B9AbRnGj1wploN%2BgJvJ8YYi0V5iuE8KsPLlOjq%2FP7eINNnAFFSpwXgm%2F5QbaLdA9X%2BNK8n0l%2BeezKnVfelR4x923rl%2Bcta9xesItS7EpP%2BEZXArkiS%2FzZJ0gmc%3D--e47fSeEvqEPbgiXD--RppYcbRZ9aqu%2FPrqyoWSkg%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '167521'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/usa_00159.dat.gz
+  recorded_at: 2023-03-23 20:05:07 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

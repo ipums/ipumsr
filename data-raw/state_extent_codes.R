@@ -1,4 +1,3 @@
-
 # State-level geographic extents are provided with each dataset,
 # but are a consistent mapping between codes and state names.
 
@@ -33,7 +32,7 @@ name_lookup <- purrr::set_names(
   c(state_codes, tolower(state_abb))
 )
 
-abb_lookup  <- purrr::set_names(
+abb_lookup <- purrr::set_names(
   rep(state_abb, 2),
   c(state_codes, state_names)
 )
