@@ -303,7 +303,7 @@ group.</p>
     AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
       <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
         <span class="va">EMPSTAT</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
         <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
       <span class="op">)</span>
     <span class="op">)</span>
@@ -338,13 +338,13 @@ must always take both arguments.</p>
 that we demonstrated above:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cb_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
       HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-      AT_WORK <span class="op">=</span>  <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
+      AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
         <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
           <span class="va">EMPSTAT</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
           <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
         <span class="op">)</span>
       <span class="op">)</span>
@@ -385,9 +385,9 @@ callback object, simply use <code>$new()</code>:</p>
 chunk size:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chunked_tabulations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>, 
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>, 
-  callback <span class="op">=</span> <span class="va">cb</span>, 
+  <span class="va">cps_ddi_file</span>,
+  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
+  callback <span class="op">=</span> <span class="va">cb</span>,
   chunk_size <span class="op">=</span> <span class="fl">1000</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
@@ -396,7 +396,7 @@ within each chunk. To get the full table, we just need to sum by health
 and work status one more time:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">chunked_tabulations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
 <span class="co">#&gt;    HEALTH    AT_WORK     n</span>
@@ -431,11 +431,11 @@ model:</p>
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
     HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-    AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span><span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
-    AT_WORK <span class="op">=</span>  <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
+    AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
+    AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
       <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
         <span class="va">EMPSTAT</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
         <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
       <span class="op">)</span>
     <span class="op">)</span>
@@ -480,14 +480,14 @@ before running the regression:</p>
 <span class="va">biglm_cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsBiglmCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   model <span class="op">=</span> <span class="va">AHRSWORKT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>,
   prep <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
         HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-        AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span><span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
-        AT_WORK <span class="op">=</span>  <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
+        AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
+        AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
           <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
             <span class="va">EMPSTAT</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
             <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
           <span class="op">)</span>
         <span class="op">)</span>
@@ -535,13 +535,13 @@ function:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Subset only those in "Poor" health</span>
 <span class="va">chunked_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>, 
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>, 
+  <span class="va">cps_ddi_file</span>,
+  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
   callback <span class="op">=</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
     <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">HEALTH</span> <span class="op">==</span> <span class="fl">5</span><span class="op">)</span>
     <span class="op">}</span>
-  <span class="op">)</span>, 
+  <span class="op">)</span>,
   chunk_size <span class="op">=</span> <span class="fl">1000</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
@@ -590,8 +590,8 @@ example</a> from above using yields.</p>
 <code><a href="../reference/read_ipums_micro_yield.html">read_ipums_micro_yield()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_yield.html">read_ipums_micro_yield</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>, 
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>, 
+  <span class="va">cps_ddi_file</span>,
+  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 <p>This function returns an <code>R6</code> object which contains
@@ -656,7 +656,7 @@ our processing pipeline. First, we create an empty placeholder tibble to
 store our results:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  HEALTH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span><span class="op">)</span><span class="op">)</span>, 
+  HEALTH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span><span class="op">)</span><span class="op">)</span>,
   AT_WORK <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="st">"Yes"</span><span class="op">)</span><span class="op">)</span>,
   n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
@@ -665,27 +665,25 @@ processing the results as we did in the chunked example. The iteration
 will end when we’ve finished reading the entire file.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">data</span><span class="op">$</span><span class="fu">is_done</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  
   <span class="co"># Yield new data and process</span>
-  <span class="va">new</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="va">new</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
       HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
       AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
         <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
           <span class="va">EMPSTAT</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
           <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
         <span class="op">)</span>
       <span class="op">)</span>
     <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-  
+
   <span class="co"># Combine the new yield with the previously processed yields</span>
   <span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">yield_results</span>, <span class="va">new</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-  
 <span class="op">}</span>
 
 <span class="va">yield_results</span>
@@ -721,16 +719,15 @@ resets the data to the beginning. This is dictated by
 from the yield object:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">get_model_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span>
-  
   <span class="kw">if</span> <span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span>
   <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
     <span class="va">yield</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-    
+
     <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
       <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span>
     <span class="op">}</span>
-    
+
     <span class="va">yield</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
         HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
@@ -738,13 +735,12 @@ from the yield object:</p>
         AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
           <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
             <span class="va">EMPSTAT</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>, 
+            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
             <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
           <span class="op">)</span>
         <span class="op">)</span>
       <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span>
-    
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Finally we feed this function and a model specification to the
@@ -789,7 +785,7 @@ will be two general steps:</p>
 <li><p>Connecting the database to R</p></li>
 </ul>
 <p>R has several tools that support database integration, including <a href="https://dbi.r-dbi.org/" class="external-link">DBI</a>, <a href="https://dbplyr.tidyverse.org/" class="external-link">dbplyr</a>, <a href="https://spark.rstudio.com/" class="external-link">sparklyr</a>, <a href="https://spark.apache.org/docs/latest/sparkr.html" class="external-link">sparkR</a>, <a href="https://bigrquery.r-dbi.org/" class="external-link">bigrquery</a>, and others. In this
-example, we’ll use RSQLite to load the data into an in-memory databse.
+example, we’ll use RSQLite to load the data into an in-memory database.
 (We use RSQLite because it is easy to set up, but it is likely not
 efficient enough to fully resolve issues with large IPUMS data, so it
 may be wise to consider an alternative in practice.)</p>

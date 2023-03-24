@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:29 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -29,8 +29,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 2e8ae604-7b1d-46a7-8bc5-72e767b715c4
-      x-runtime: '0.009837'
+      x-request-id: 26d432bf-0bf4-4061-8829-724cd004d495
+      x-runtime: '0.008974'
       x-xss-protection: '0'
       content-length: '100'
     body:
@@ -38,7 +38,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -59,7 +59,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:29 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -70,8 +70,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 4d372e2e-d887-4b62-b844-6a3dade1ff7f
-      x-runtime: '0.009507'
+      x-request-id: 44836aa3-cbc8-4332-9bb9-8c76ac94fdd4
+      x-runtime: '0.008692'
       x-xss-protection: '0'
       content-length: '102'
     body:
@@ -79,7 +79,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -100,7 +100,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:29 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -111,8 +111,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 5d5242f7-db66-4960-a0fa-bec8f36db6db
-      x-runtime: '0.010268'
+      x-request-id: fd4b0938-2bd9-4eb9-8d00-9321f9298524
+      x-runtime: '0.010097'
       x-xss-protection: '0'
       content-length: '108'
     body:
@@ -120,7 +120,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0
 - request:
     method: get
@@ -141,7 +141,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 15 Mar 2023 21:05:29 GMT
+      date: Thu, 23 Mar 2023 20:07:03 GMT
       etag: W/"5b1e24185904ca5cb92db89cbdfe51b2"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -153,8 +153,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 76d408eb-a8e9-4aee-b1d8-677ede6e8041
-      x-runtime: '0.006083'
+      x-request-id: d986bd1b-f9c9-4f81-8b26-7f09e5d3f082
+      x-runtime: '0.005738'
       x-xss-protection: '0'
       content-length: '99902'
     body:
@@ -650,5 +650,5 @@ http_interactions:
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Nominal","sequence":10500.07,"years":["1970","1990","2000","2010"],"geog_levels":["state","county","tract","cty_sub","place"]},{"name":"CV9","description":"Occupied
         Housing Units by Tenure [2] by Household Size [7]","geographic_integration":"Standardized
         to 2010","sequence":10500.08,"years":["2000","2010","1990"],"geog_levels":["state","county","tract","blck_grp","cty_sub","place","cd111th","cbsa","urb_area","zcta"]}]'
-  recorded_at: 2023-03-15 21:05:29 GMT
+  recorded_at: 2023-03-23 20:07:03 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

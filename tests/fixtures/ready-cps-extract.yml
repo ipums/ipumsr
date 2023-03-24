@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/27?collection=cps&version=beta
+    uri: https://api.ipums.org/extracts/57?collection=cps&version=beta
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 16 Mar 2023 20:16:45 GMT
-      etag: W/"3e290cabae084d006e607fbf9f972094"
+      date: Thu, 23 Mar 2023 19:55:45 GMT
+      etag: W/"eaa93b734d726a1f249381e0961aabdd"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 68f90b2a-9b78-4678-bada-683b63380c39
-      x-runtime: '0.358371'
+      x-request-id: 5bbb5e06-5c62-4945-a12e-25fd93633308
+      x-runtime: '0.307500'
       x-xss-protection: '0'
       content-length: '1839'
     body:
       encoding: ''
       file: no
       string: '{"version":1,"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"number":27,"status":"completed","download_links":{"data":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.dat.gz","bytes":2440152,"sha256":"a23b17944b5dc635071a3983afb1bae270807b97674bc8e7c422c34c7fe4bd93"},"spss_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.sps","bytes":3894,"sha256":"dd1dd47d322dda6088f759f03d26513e6827aae6722adf22b2a2130ee9a3609d"},"stata_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.do","bytes":7764,"sha256":"e23f7b7cc7c99ae69683f9e4c9facd3dbd471466effb93db46a0fe7bf2f076b9"},"sas_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.sas","bytes":4045,"sha256":"e2e220f1a11c3c43902ff72fa06c138989825c6beba913c0479258457aca481f"},"ddi_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.xml","bytes":31667,"sha256":"392ca3ef350fa6e2e2bdec4d40b1f54cd86b3db497fcd55d1e972abd051dbe23"},"R_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.R","bytes":406,"sha256":"089ea7bd1a3cdf78c397c0e3f1dc5152f0aa2dc755112739f56d241e3ea2f2ca"},"basic_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1986398/cps_00027.cbk","bytes":5901,"sha256":"ca459dad97cb955add07430f384e5e8e691dd6bb56ddb0f9fb6b08b7a78816ad"}}}'
-  recorded_at: 2023-03-16 20:16:45 GMT
+        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"number":57,"status":"completed","download_links":{"sas_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.sas","bytes":4045,"sha256":"2cdd193b08c0b2efe8404a202d9b12f9e7974f78af807318e4af235a60d371da"},"R_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.R","bytes":406,"sha256":"437c0ce7e86fe1445fe8f4d71c9fae89803240f944c3155069e11e41ab43410d"},"spss_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.sps","bytes":3894,"sha256":"67f6341af3af9997312f662a8688105f870609d1640cff33c426032f80a6d39e"},"data":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.dat.gz","bytes":2440152,"sha256":"a23b17944b5dc635071a3983afb1bae270807b97674bc8e7c422c34c7fe4bd93"},"basic_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.cbk","bytes":5901,"sha256":"b32f7baf7139ab5799683602ec7302fed2f252fefa5cdfbff6f37f6e2e19a055"},"ddi_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.xml","bytes":31667,"sha256":"3cacecf4abcff37c264aabc6d9879e8e962585f1f857950721b5935aa7c8c1cf"},"stata_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/1992254/cps_00057.do","bytes":7764,"sha256":"6e97ecaaf160e7508b55c0cc94b70c12ddea3df4adc87fe7345b88eedb1df2b7"}}}'
+  recorded_at: 2023-03-23 19:55:45 GMT
   recorded_with: vcr/1.2.0, webmockr/0.8.0

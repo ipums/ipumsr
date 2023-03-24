@@ -19,9 +19,9 @@ We'll do our best to answer your question.
 We appreciate pull requests that follow these guidelines:
 1) Make sure that tests pass (and add new ones if possible). 
 
-2) Try to conform to the code style of the package, currently loosely
-based on the [tidyverse style guide](http://style.tidyverse.org/) 
-though it is not followed strictly (yet).
+2) Do your best to conform to the code style of the package, currently
+based on the [tidyverse style guide](http://style.tidyverse.org/). See the
+[styler](https://styler.r-lib.org/) package to easily catch stylistic errors.
 
 3) Please add you name and affiliation to the NOTICE.txt file.
 

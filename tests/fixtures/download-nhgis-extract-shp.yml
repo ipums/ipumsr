@@ -1,0 +1,119 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/1094?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 23 Mar 2023 20:06:32 GMT
+      etag: W/"f808442cb64080c0e114f845a0adde0e"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: e49989dd-fa48-4d69-89df-d5c0a54170da
+      x-runtime: '0.712695'
+      x-xss-protection: '0'
+      content-length: '113'
+    body:
+      encoding: ''
+      file: no
+      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1094,"status":"started","download_links":{}}'
+  recorded_at: 2023-03-23 20:06:35 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/1094?collection=nhgis&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Content-Type: application/json
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 23 Mar 2023 20:06:35 GMT
+      etag: W/"b577a28bcb9f082bde9f1026983eb2de"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 1345aaa0-9452-4145-b19a-707071baa5f1
+      x-runtime: '0.813073'
+      x-xss-protection: '0'
+      content-length: '209'
+    body:
+      encoding: ''
+      file: no
+      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1094,"status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992273/nhgis1094_shape.zip"}}'
+  recorded_at: 2023-03-23 20:06:35 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992273/nhgis1094_shape.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: private
+      content-disposition: attachment; filename="nhgis1094_shape.zip"; filename*=UTF-8''nhgis1094_shape.zip
+      content-type: application/zip
+      date: Thu, 23 Mar 2023 20:06:35 GMT
+      etag: '"641cb149-7ca81"'
+      last-modified: Thu, 23 Mar 2023 20:06:33 GMT
+      server: nginx/1.14.2
+      set-cookie: _session_id=8GOlTXrZ4RYRWom769RkIt%2BbCu38Ndc2V9CcK0UDKMuKLChc70ZuAuJ%2FWDGS%2FR14edWvFWmyB4l2dyQPJd7Ga%2Fqf69YgvphPKWCslAetjj3U7Ij6nXpBb1Y8UkJ1fJeXOg4F%2FnnPkkeQBVItWYu2leb4%2Bknr8SOy%2Fgbkm%2FgjSHojP2u9HFLUgjANyN%2BModFtHXYFCmwzTodcs%2FSiDxq066lifNT4T798JD5TOdvNgcZzqJoBuMnnX9Tl%2FBE%2FSmY%3D--mzapByzF3T3QSA0o--EjuYG4fUWgAmBliBJBUsBA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '510593'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/nhgis1094_shape.zip
+  recorded_at: 2023-03-23 20:06:35 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.8.0

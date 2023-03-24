@@ -45,7 +45,6 @@ check_cassette_names()
 modify_ready_extract_cassette_file <- function(cassette_file_name,
                                                fixture_path = NULL,
                                                n_requests = 1) {
-
   fixture_path <- fixture_path %||% vcr::vcr_test_path("fixtures")
 
   ready_extract_cassette_file <- file.path(
@@ -104,7 +103,7 @@ examples in this vignette:
 
 ```{r, message=FALSE}
 library(ipumsr)
-library(dplyr) 
+library(dplyr)
 library(purrr)
 ```
 
@@ -240,13 +239,13 @@ explicitly indicate which dataset should be associated with which
 subfield values:
 
 ```{r}
-# In this case, data_tables are matched to individual datasets, while 
+# In this case, data_tables are matched to individual datasets, while
 # geog_levels are recycled to all datasets
 define_extract_nhgis(
   description = "NHGIS extract with multiple datasets",
   datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
   data_tables = list(
-    "2016_2020_ACS5a" = "B01001", 
+    "2016_2020_ACS5a" = "B01001",
     "2017_2021_ACS5a" = "B01002"
   ),
   geog_levels = "state"
@@ -541,14 +540,14 @@ download_dir <- file.path(tempdir(), "ipums-api-vignette-downloads")
 dir.create(download_dir)
 
 download_extract(
-  submitted_nhgis_extract, 
+  submitted_nhgis_extract,
   download_dir = download_dir,
   wait = TRUE,
   overwrite = TRUE
 )
 
 nhgis_path <- list.files(
-  "fixtures", 
+  "fixtures",
   pattern = "nhgis[0-9]{4}_csv.zip",
   full.names = TRUE
 )
@@ -636,8 +635,8 @@ old_extract$variables
 
 ```{r}
 new_extract <- add_to_extract(
-  old_extract, 
-  samples = "us2020a", 
+  old_extract,
+  samples = "us2020a",
   variables = "RELATE",
   data_format = "sas9"
 )
@@ -707,7 +706,7 @@ extract request.
 ```{r}
 nhgis_extract_definition %>%
   add_to_extract(geog_levels = list(AV0 = "nation")) %>%
-  remove_from_extract(geog_levels = list(A00 = "state")) 
+  remove_from_extract(geog_levels = list(A00 = "state"))
 ```
 
 Note that it is possible to produce invalid extract definitions when
@@ -726,7 +725,7 @@ nhgis_extract_definition %>%
 # Add new values to extract definition first to avoid the error:
 nhgis_extract_definition %>%
   add_to_extract(geog_levels = "nation") %>%
-  remove_from_extract(geog_levels = c("county", "state")) 
+  remove_from_extract(geog_levels = c("county", "state"))
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -760,7 +759,7 @@ second-most-recent extract for resubmission:
 
 ```{r, eval=FALSE}
 revised_extract <- add_to_extract(
-  nhgis_extracts[[2]], 
+  nhgis_extracts[[2]],
   shapefiles = "us_nation_2010_tl2010"
 )
 ```
@@ -769,8 +768,8 @@ You could even download all recent extracts that have completed, using
 `purrr::keep()` and `purrr::map()`:
 
 ```{r, eval=FALSE}
-ddi_paths <- nhgis_extracts %>% 
-  keep(is_extract_ready) %>% 
+ddi_paths <- nhgis_extracts %>%
+  keep(is_extract_ready) %>%
   map(download_extract)
 ```
 
@@ -797,7 +796,7 @@ possible (and made easier with `purrr::map_lgl()`).
 
 ```{r}
 # Find extracts including a certain variable and convert to extract object
-usa_extract_tbl %>% 
+usa_extract_tbl %>%
   filter(map_lgl(variables, ~ "MARST" %in% .x))
 ```
 
@@ -816,7 +815,7 @@ This allows you to easily find old extract definitions and convert back
 to `ipums_extract` objects for resubmission.
 
 ```{r}
-usa_extract_tbl %>% 
+usa_extract_tbl %>%
   filter(map_lgl(variables, ~ "MARST" %in% .x)) %>%
   extract_tbl_to_list() %>%
   pluck(1)
@@ -835,10 +834,10 @@ expression:
 ```{r, eval=FALSE}
 data <- define_extract_usa(
   "USA extract for API vignette",
-  c("us2018a","us2019a"),
-  c("AGE","SEX","RACE","STATEFIP")
-) %>% 
-  submit_extract() %>% 
+  c("us2018a", "us2019a"),
+  c("AGE", "SEX", "RACE", "STATEFIP")
+) %>%
+  submit_extract() %>%
   download_extract(wait = TRUE) %>%
   read_ipums_micro()
 ```

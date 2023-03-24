@@ -1,4 +1,3 @@
-
 # Make simplified versions of GIS files from NHGIS extracts for use in
 # package examples and tests.
 #
