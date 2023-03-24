@@ -21,3 +21,5 @@
 ^src-i386
 ^\.github$
 ^CRAN-SUBMISSION$
+^.covrignore
+^\.covrignore$
