@@ -161,13 +161,10 @@ help facilitate some of the other options.</p>
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <p>The examples in this vignette will rely on the ipumsr, dplyr and
-biglm packages. Additionally, we’ll use data from the ipumsexamples
-package. If you haven’t already installed these packages, you can do so
-with:</p>
+biglm packages. If you haven’t already installed these packages, you can
+do so with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ipums/ipumsr/ipumsexamples"</span><span class="op">)</span>
-
-<span class="co"># To run the full vignette, you'll also need the following packages. If they</span>
+<code class="sourceCode R"><span class="co"># To run the full vignette, you'll also need the following packages. If they</span>
 <span class="co"># aren't installed already, do so with:</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"biglm"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DBI"</span><span class="op">)</span>
@@ -282,10 +279,13 @@ a function that will be applied to each data chunk and control how the
 results from these chunks are combined.</p>
 <p>Below, we’ll use chunking to outline solutions to three common
 use-cases for IPUMS data: tabulation, regression and case selection.</p>
-<p>First, we’ll load our example data:</p>
+<p>First, we’ll load our example data. <em>Note that we have
+down-sampled the data in this example for storage reasons; none of the
+output “results” reflected in this vignette should be considered
+legitimate!</em></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu">ipumsexamples</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ipumsexamples/man/ipums_extra_example.html" class="external-link">ipums_extra_example</a></span><span class="op">(</span><span class="st">"cps_00011.xml"</span><span class="op">)</span>
-<span class="va">cps_data_file</span> <span class="op">&lt;-</span> <span class="fu">ipumsexamples</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ipumsexamples/man/ipums_extra_example.html" class="external-link">ipums_extra_example</a></span><span class="op">(</span><span class="st">"cps_00011.dat.gz"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.xml"</span><span class="op">)</span>
+<span class="va">cps_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.dat.gz"</span><span class="op">)</span></code></pre></div>
 <div class="section level4">
 <h4 id="chunked-tab">Chunked tabulation<a class="anchor" aria-label="anchor" href="#chunked-tab"></a>
 </h4>
@@ -313,16 +313,16 @@ group.</p>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
 <span class="co">#&gt;    HEALTH    AT_WORK     n</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No      <span style="text-decoration: underline;">40</span>582</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes     <span style="text-decoration: underline;">28</span>071</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No      <span style="text-decoration: underline;">32</span>367</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes     <span style="text-decoration: underline;">32</span>947</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No      <span style="text-decoration: underline;">26</span>726</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes     <span style="text-decoration: underline;">22</span>483</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No      <span style="text-decoration: underline;">11</span>089</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes      <span style="text-decoration: underline;">4</span>520</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No       <span style="text-decoration: underline;">5</span>418</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes       780</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
 <p>For the sake of this example, let’s imagine we can only store 1,000
 rows in memory at a time. In this case, we need to use a
 <code>chunked</code> function, tabulate for each chunk, and then
@@ -401,16 +401,16 @@ and work status one more time:</p>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
 <span class="co">#&gt;    HEALTH    AT_WORK     n</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No      <span style="text-decoration: underline;">40</span>582</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes     <span style="text-decoration: underline;">28</span>071</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No      <span style="text-decoration: underline;">32</span>367</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes     <span style="text-decoration: underline;">32</span>947</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No      <span style="text-decoration: underline;">26</span>726</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes     <span style="text-decoration: underline;">22</span>483</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No      <span style="text-decoration: underline;">11</span>089</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes      <span style="text-decoration: underline;">4</span>520</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No       <span style="text-decoration: underline;">5</span>418</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes       780</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="chunked-reg">Chunked regression<a class="anchor" aria-label="anchor" href="#chunked-reg"></a>
@@ -451,23 +451,23 @@ model:</p>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Residuals:</span>
 <span class="co">#&gt;     Min      1Q  Median      3Q     Max </span>
-<span class="co">#&gt; -41.230  -4.949  -0.080   5.945  75.697 </span>
+<span class="co">#&gt; -41.217  -4.734  -0.077   5.957  63.994 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Coefficients:</span>
-<span class="co">#&gt;                  Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)      5.626953   0.367851  15.297  &lt; 2e-16 ***</span>
-<span class="co">#&gt; AGE              1.568287   0.017790  88.156  &lt; 2e-16 ***</span>
-<span class="co">#&gt; I(AGE^2)        -0.016798   0.000204 -82.338  &lt; 2e-16 ***</span>
-<span class="co">#&gt; HEALTHVery good -0.280826   0.104433  -2.689  0.00717 ** </span>
-<span class="co">#&gt; HEALTHGood      -1.275358   0.115861 -11.008  &lt; 2e-16 ***</span>
-<span class="co">#&gt; HEALTHFair      -3.614487   0.207121 -17.451  &lt; 2e-16 ***</span>
-<span class="co">#&gt; HEALTHPoor      -5.732656   0.465751 -12.308  &lt; 2e-16 ***</span>
+<span class="co">#&gt;                   Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)      5.2440289  1.1823985   4.435 9.31e-06 ***</span>
+<span class="co">#&gt; AGE              1.5868169  0.0573268  27.680  &lt; 2e-16 ***</span>
+<span class="co">#&gt; I(AGE^2)        -0.0170043  0.0006568 -25.888  &lt; 2e-16 ***</span>
+<span class="co">#&gt; HEALTHVery good -0.2550306  0.3276759  -0.778 0.436412    </span>
+<span class="co">#&gt; HEALTHGood      -0.9637395  0.3704123  -2.602 0.009289 ** </span>
+<span class="co">#&gt; HEALTHFair      -3.8899430  0.6629725  -5.867 4.58e-09 ***</span>
+<span class="co">#&gt; HEALTHPoor      -5.7597200  1.6197136  -3.556 0.000378 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Residual standard error: 12.8 on 88794 degrees of freedom</span>
-<span class="co">#&gt; Multiple R-squared:  0.08886,    Adjusted R-squared:  0.08879 </span>
-<span class="co">#&gt; F-statistic:  1443 on 6 and 88794 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
+<span class="co">#&gt; Residual standard error: 12.88 on 8950 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.08711,    Adjusted R-squared:  0.0865 </span>
+<span class="co">#&gt; F-statistic: 142.3 on 6 and 8950 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
 <p>To do the same regression, but with only 1,000 rows loaded at a time,
 we work in a similar manner.</p>
 <p>First we make an <code>IpumsBiglmCallback</code> callback object. We
@@ -509,15 +509,15 @@ just made.</p>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">chunked_model</span><span class="op">)</span>
 <span class="co">#&gt; Large data regression model: biglm(AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data, ...)</span>
-<span class="co">#&gt; Sample size =  88801 </span>
+<span class="co">#&gt; Sample size =  8957 </span>
 <span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span>
-<span class="co">#&gt; (Intercept)      5.6270  4.8913  6.3627 0.3679 0.0000</span>
-<span class="co">#&gt; AGE              1.5683  1.5327  1.6039 0.0178 0.0000</span>
-<span class="co">#&gt; I(AGE^2)        -0.0168 -0.0172 -0.0164 0.0002 0.0000</span>
-<span class="co">#&gt; HEALTHVery good -0.2808 -0.4897 -0.0720 0.1044 0.0072</span>
-<span class="co">#&gt; HEALTHGood      -1.2754 -1.5071 -1.0436 0.1159 0.0000</span>
-<span class="co">#&gt; HEALTHFair      -3.6145 -4.0287 -3.2002 0.2071 0.0000</span>
-<span class="co">#&gt; HEALTHPoor      -5.7327 -6.6642 -4.8012 0.4658 0.0000</span></code></pre></div>
+<span class="co">#&gt; (Intercept)      5.2440  2.8792  7.6088 1.1824 0.0000</span>
+<span class="co">#&gt; AGE              1.5868  1.4722  1.7015 0.0573 0.0000</span>
+<span class="co">#&gt; I(AGE^2)        -0.0170 -0.0183 -0.0157 0.0007 0.0000</span>
+<span class="co">#&gt; HEALTHVery good -0.2550 -0.9104  0.4003 0.3277 0.4364</span>
+<span class="co">#&gt; HEALTHGood      -0.9637 -1.7046 -0.2229 0.3704 0.0093</span>
+<span class="co">#&gt; HEALTHFair      -3.8899 -5.2159 -2.5640 0.6630 0.0000</span>
+<span class="co">#&gt; HEALTHPoor      -5.7597 -8.9991 -2.5203 1.6197 0.0004</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="chunked-case-selection">Chunked case selection<a class="anchor" aria-label="anchor" href="#chunked-case-selection"></a>
@@ -547,21 +547,22 @@ function:</p>
 <span class="op">)</span>
 
 <span class="va">chunked_subset</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6,198 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL HWTSUPP   CPSID ASECFLAG  FOODSTMP MONTH   PERNUM  CPSIDP WTSUPP</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011      7    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   519.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   254.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     12    527. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   527.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     14    533. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   533.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46    266. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     47    531. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   531.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     55    609. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   543.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    105    523. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   523.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011    235    576. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   576.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011    255    265. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   265.</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 6,188 more rows, and 4 more variables: AGE &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   EMPSTAT &lt;int+lbl&gt;, AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 668 × 14</span></span>
+<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   266.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011    289 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    528. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   528.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011    383 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    531. 2<span style="color: #949494;"> [Yes]</span>      2 2.01<span style="color: #949494;">e</span>13   531.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011    555 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    598. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   598.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    846 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    526. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   526.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    847 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    494. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   494.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    940 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    361. 2<span style="color: #949494;"> [Yes]</span>      2 0   <span style="color: #949494;"> </span>     285.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    942 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    289. 1<span style="color: #949494;"> [No]</span>       1 0   <span style="color: #949494;"> </span>     289.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>018 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    301. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   301.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>034 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    530. 2<span style="color: #949494;"> [Yes]</span>      1 2.01<span style="color: #949494;">e</span>13   530.</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 658 more rows, 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
 <p>This option may be particularly useful if you want to subset based on
 complex logic that would be hard to code into the IPUMS extract system
 or Unix tools.</p>
@@ -602,20 +603,21 @@ data:</p>
 <code class="sourceCode R"><span class="co"># Return the first 10 rows of data</span>
 <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL HWTSUPP   CPSID ASECFLAG  FOODSTMP MONTH   PERNUM  CPSIDP WTSUPP</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011      2    545. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   545.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011      3    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011      3    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011      4    548. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   548.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011      4    548. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   548.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011      5    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   298.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   298.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      3 2.01<span style="color: #949494;">e</span>13   352.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      4 2.01<span style="color: #949494;">e</span>13   404.</span>
+<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   308.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   217.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   249.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   266.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   266.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   265.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       4 2.01<span style="color: #949494;">e</span>13   296.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   241.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   241.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   278.</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
 <p>Note that the row position in the data is stored in the object, so
 running the same code again will produce <em>different</em> rows of
 data:</p>
@@ -623,20 +625,21 @@ data:</p>
 <code class="sourceCode R"><span class="co"># Return the next 10 rows of data</span>
 <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL HWTSUPP   CPSID ASECFLAG  FOODSTMP MONTH   PERNUM  CPSIDP WTSUPP</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      5 2.01<span style="color: #949494;">e</span>13   333.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011      7    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011      7    475. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   519.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011      8    527. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   527.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011      8    527. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  1<span style="color: #949494;"> [No]</span>   3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   527.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      1 2.01<span style="color: #949494;">e</span>13   254.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      2 2.01<span style="color: #949494;">e</span>13   254.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      3 2.01<span style="color: #949494;">e</span>13   285.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      4 2.01<span style="color: #949494;">e</span>13   265.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011      9    254. 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>  2<span style="color: #949494;"> [Yes]</span>  3<span style="color: #949494;"> [Mar…</span>      5 2.01<span style="color: #949494;">e</span>13   308.</span>
+<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       1 0   <span style="color: #949494;"> </span>     373.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       2 0   <span style="color: #949494;"> </span>     373.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       3 0   <span style="color: #949494;"> </span>     326.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     86 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    554. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   554.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   543.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   543.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    106 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   543.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   271.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   271.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   365.</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
 <p>Use <code>cur_pos</code> to get the current position in the data
 file:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -690,16 +693,16 @@ will end when we’ve finished reading the entire file.</p>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
 <span class="co">#&gt;    HEALTH    AT_WORK     n</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No      <span style="text-decoration: underline;">40</span>582</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes     <span style="text-decoration: underline;">28</span>071</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No      <span style="text-decoration: underline;">32</span>367</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes     <span style="text-decoration: underline;">32</span>947</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No      <span style="text-decoration: underline;">26</span>726</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes     <span style="text-decoration: underline;">22</span>483</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No      <span style="text-decoration: underline;">11</span>089</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes      <span style="text-decoration: underline;">4</span>520</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No       <span style="text-decoration: underline;">5</span>418</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes       780</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="yielded-glm-regression">Yielded GLM regression<a class="anchor" aria-label="anchor" href="#yielded-glm-regression"></a>
@@ -755,15 +758,15 @@ from the yield object:</p>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span>
 <span class="co">#&gt; Large data regression model: bigglm(WORK30PLUS ~ AGE + I(AGE^2) + HEALTH, family = binomial(link = "logit"), </span>
 <span class="co">#&gt;     data = get_model_data)</span>
-<span class="co">#&gt; Sample size =  88801 </span>
+<span class="co">#&gt; Sample size =  8957 </span>
 <span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span>
-<span class="co">#&gt; (Intercept)     -3.9623 -4.0956 -3.8290 0.0667 0.0000</span>
-<span class="co">#&gt; AGE              0.2677  0.2609  0.2744 0.0034 0.0000</span>
-<span class="co">#&gt; I(AGE^2)        -0.0029 -0.0030 -0.0028 0.0000 0.0000</span>
-<span class="co">#&gt; HEALTHVery good  0.0491  0.0043  0.0939 0.0224 0.0282</span>
-<span class="co">#&gt; HEALTHGood      -0.1248 -0.1737 -0.0760 0.0244 0.0000</span>
-<span class="co">#&gt; HEALTHFair      -0.6458 -0.7250 -0.5666 0.0396 0.0000</span>
-<span class="co">#&gt; HEALTHPoor      -0.9561 -1.1209 -0.7913 0.0824 0.0000</span></code></pre></div>
+<span class="co">#&gt; (Intercept)     -4.0021 -4.4297 -3.5744 0.2138 0.0000</span>
+<span class="co">#&gt; AGE              0.2714  0.2498  0.2930 0.0108 0.0000</span>
+<span class="co">#&gt; I(AGE^2)        -0.0029 -0.0032 -0.0027 0.0001 0.0000</span>
+<span class="co">#&gt; HEALTHVery good  0.0038 -0.1346  0.1423 0.0692 0.9557</span>
+<span class="co">#&gt; HEALTHGood      -0.1129 -0.2685  0.0426 0.0778 0.1465</span>
+<span class="co">#&gt; HEALTHFair      -0.6637 -0.9160 -0.4115 0.1261 0.0000</span>
+<span class="co">#&gt; HEALTHPoor      -0.7879 -1.3697 -0.2062 0.2909 0.0068</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -843,18 +846,18 @@ syntax we would use with dplyr:</p>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># Source:   SQL [?? x 14]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.40.1 []</span></span>
-<span class="co">#&gt;     YEAR SERIAL HWTSUPP   CPSID ASECFLAG FOODSTMP MONTH PERNUM  CPSIDP WTSUPP</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011      2    545. 2.01<span style="color: #949494;">e</span>13        1        1     3      1 2.01<span style="color: #949494;">e</span>13   545.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011      3    475. 2.01<span style="color: #949494;">e</span>13        1        1     3      1 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011      3    475. 2.01<span style="color: #949494;">e</span>13        1        1     3      2 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011      4    548. 2.01<span style="color: #949494;">e</span>13        1        1     3      1 2.01<span style="color: #949494;">e</span>13   548.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011      4    548. 2.01<span style="color: #949494;">e</span>13        1        1     3      2 2.01<span style="color: #949494;">e</span>13   548.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011      5    475. 2.01<span style="color: #949494;">e</span>13        1        1     3      1 2.01<span style="color: #949494;">e</span>13   475.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13        1        1     3      1 2.01<span style="color: #949494;">e</span>13   298.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13        1        1     3      2 2.01<span style="color: #949494;">e</span>13   298.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13        1        1     3      3 2.01<span style="color: #949494;">e</span>13   352.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011      6    298. 2.01<span style="color: #949494;">e</span>13        1        1     3      4 2.01<span style="color: #949494;">e</span>13   404.</span>
+<span class="co">#&gt;     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      1 2.01<span style="color: #949494;">e</span>13   308.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      2 2.01<span style="color: #949494;">e</span>13   217.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      3 2.01<span style="color: #949494;">e</span>13   249.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      1 2.01<span style="color: #949494;">e</span>13   266.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      2 2.01<span style="color: #949494;">e</span>13   266.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      3 2.01<span style="color: #949494;">e</span>13   265.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      4 2.01<span style="color: #949494;">e</span>13   296.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      1 2.01<span style="color: #949494;">e</span>13   241.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      2 2.01<span style="color: #949494;">e</span>13   241.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      3 2.01<span style="color: #949494;">e</span>13   278.</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with more rows, and 4 more variables: AGE &lt;int&gt;, EMPSTAT &lt;int&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl&gt;, HEALTH &lt;int&gt;</span></span></code></pre></div>
 <p>dbplyr shows us a nice preview of the first rows of the result of our

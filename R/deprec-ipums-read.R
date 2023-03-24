@@ -90,6 +90,7 @@ ipums_list_raster <- function(file, raster_layer = NULL) {
 #'
 #' @export
 read_ipums_codebook <- function(cb_file, data_layer = NULL) {
+  # nocov start
   lifecycle::deprecate_warn(
     "0.6.0",
     "read_ipums_codebook()",
@@ -303,6 +304,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
     var_info = var_info,
     conditions = conditions_text
   )
+  # nocov end
 }
 
 

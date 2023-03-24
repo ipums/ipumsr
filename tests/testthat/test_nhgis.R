@@ -408,31 +408,6 @@ test_that("Can read NHGIS codebook", {
   )
 })
 
-test_that("Can read Terra codebook", {
-  terra_area <- system.file(
-    "extdata",
-    "3485_bundle.zip",
-    package = "ipumsexamples"
-  )
-
-  if (!file.exists(terra_area)) {
-    skip("Couldn't find terra area ipumsexamples likely not installed.")
-  }
-
-  lifecycle::expect_deprecated(
-    cb <- read_ipums_codebook(terra_area)
-  )
-
-  expect_error(
-    read_ipums_codebook(
-      system.file("extdata", "2552_bundle.zip", package = "ipumsexamples")
-    ),
-    "`data_layer` argument"
-  )
-
-  expect_equal(dim(cb$var_info), c(4, 10))
-})
-
 test_that("Can read certain unzipped structures", {
   sps_tmpfile <- file.path(tempdir(), "test.sps")
   csv_tmpfile1 <- file.path(tempdir(), "test1.csv")
