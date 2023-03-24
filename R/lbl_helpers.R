@@ -421,7 +421,7 @@ lbl_add_vals <- function(x, labeller = as.character, vals = NULL) {
 
 #' Clean unused labels
 #'
-#' Remove labels that do not appear in the data. When converting lablled
+#' Remove labels that do not appear in the data. When converting labelled
 #' values to a factor, this avoids the creation of additional factor levels.
 #'
 #' @param x A [`labelled`][haven::labelled()] vector

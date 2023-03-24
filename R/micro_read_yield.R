@@ -23,7 +23,7 @@
 #'
 #' `read_ipums_micro_yield()` and `read_ipums_micro_list_yield()` differ
 #' in their handling of extracts that contain multiple record types.
-#' See *Data structrures* below.
+#' See *Data structures* below.
 #'
 #' Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
 #'

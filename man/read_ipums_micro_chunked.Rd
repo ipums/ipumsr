@@ -97,7 +97,7 @@ these files.
 
 \code{read_ipums_micro_chunked()} and \code{read_ipums_micro_list_chunked()} differ
 in their handling of extracts that contain multiple record types.
-See \emph{Data structrures} below.
+See \emph{Data structures} below.
 }
 \section{Data structures}{
 

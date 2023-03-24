@@ -617,7 +617,7 @@ R has several tools that support database integration, including
 [sparklyr](https://spark.rstudio.com/),
 [sparkR](https://spark.apache.org/docs/latest/sparkr.html),
 [bigrquery](https://bigrquery.r-dbi.org/), and others. In this example,
-we'll use RSQLite to load the data into an in-memory databse. (We use
+we'll use RSQLite to load the data into an in-memory database. (We use
 RSQLite because it is easy to set up, but it is likely not efficient
 enough to fully resolve issues with large IPUMS data, so it may be wise
 to consider an alternative in practice.)

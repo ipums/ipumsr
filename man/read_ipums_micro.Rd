@@ -87,7 +87,7 @@ See \emph{Downloading IPUMS files} below for more information about downloading
 these files.
 
 \code{read_ipums_micro()} and \code{read_ipums_micro_list()} differ in their handling
-of extracts that contain multiple record types. See \emph{Data structrures}
+of extracts that contain multiple record types. See \emph{Data structures}
 below.
 }
 \section{Data structures}{

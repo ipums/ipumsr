@@ -13,7 +13,7 @@ lbl_clean(x)
 A \code{\link[haven:labelled]{labelled}} vector
 }
 \description{
-Remove labels that do not appear in the data. When converting lablled
+Remove labels that do not appear in the data. When converting labelled
 values to a factor, this avoids the creation of additional factor levels.
 }
 \examples{

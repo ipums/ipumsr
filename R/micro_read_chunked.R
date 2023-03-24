@@ -22,7 +22,7 @@
 #'
 #' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
 #' in their handling of extracts that contain multiple record types.
-#' See *Data structrures* below.
+#' See *Data structures* below.
 #'
 #' @inheritSection read_ipums_micro Downloading IPUMS files
 #'

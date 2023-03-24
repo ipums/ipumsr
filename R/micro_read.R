@@ -17,7 +17,7 @@
 #' these files.
 #'
 #' `read_ipums_micro()` and `read_ipums_micro_list()` differ in their handling
-#' of extracts that contain multiple record types. See *Data structrures*
+#' of extracts that contain multiple record types. See *Data structures*
 #' below.
 #'
 #' @section Data structures:

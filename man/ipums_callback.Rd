@@ -50,7 +50,7 @@ using the biglm package.
 Initialize with a function that takes 2 arguments: The first argument
 should correspond to a \link[stats:formula]{formula} specifying the regression
 model. The second should correspond to a function that prepares the data
-before running the regression analsis. This function follows the
+before running the regression analysis. This function follows the
 conventions of the functions used in other callbacks. Any additional
 arguments passed to this function are passed to biglm.
 }

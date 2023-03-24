@@ -85,7 +85,7 @@ these files.
 
 \code{read_ipums_micro_yield()} and \code{read_ipums_micro_list_yield()} differ
 in their handling of extracts that contain multiple record types.
-See \emph{Data structrures} below.
+See \emph{Data structures} below.
 
 Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
 }

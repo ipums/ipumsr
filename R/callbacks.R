@@ -45,7 +45,7 @@
 #'    Initialize with a function that takes 2 arguments: The first argument
 #'    should correspond to a [formula][stats::formula] specifying the regression
 #'    model. The second should correspond to a function that prepares the data
-#'    before running the regression analsis. This function follows the
+#'    before running the regression analysis. This function follows the
 #'    conventions of the functions used in other callbacks. Any additional
 #'    arguments passed to this function are passed to biglm.
 #'  }
