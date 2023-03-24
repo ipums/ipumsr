@@ -31,7 +31,8 @@ facilitate some of the other options.
 ## Setup
 
 The examples in this vignette will rely on the ipumsr, dplyr and biglm
-packages. If you haven't already installed these packages, you can do so with:
+packages. If you haven't already installed these packages, you can do so
+with:
 
 ```{r, eval=FALSE}
 # To run the full vignette, you'll also need the following packages. If they
@@ -171,7 +172,9 @@ control how the results from these chunks are combined.
 Below, we'll use chunking to outline solutions to three common use-cases
 for IPUMS data: tabulation, regression and case selection.
 
-First, we'll load our example data:
+First, we'll load our example data. *Note that we have down-sampled the
+data in this example for storage reasons; none of the output "results"
+reflected in this vignette should be considered legitimate!*
 
 ```{r}
 cps_ddi_file <- ipums_example("cps_00097.xml")
