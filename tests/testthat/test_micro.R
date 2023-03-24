@@ -166,16 +166,8 @@ test_that("keyvar is loaded regardless of selection in hierarchical", {
 })
 
 
-test_that("atus doesn't get duplicated rectype vars in hier extracts (#43)", {
-  ddi_file <- system.file(
-    "extdata",
-    "atus_00025.xml",
-    package = "ipumsexamples"
-  )
-
-  if (!file.exists(ddi_file)) {
-    skip("Could not find ddi, ipumsexamples must not be installed")
-  }
+test_that("Don't duplicate rectype vars in ATUS hierarchical extracts (#43)", {
+  ddi_file <- ipums_example("atus_00025.xml")
   ddi <- read_ipums_ddi(ddi_file)
 
   data <- dplyr::tibble(
