@@ -17,7 +17,6 @@ cache:
 
 build_script:
   - travis-tool.sh install_deps
-  - Rscript -e "remotes::install_github('ipums/ipumsr/ipumsexamples')"
 
 test_script:
   - travis-tool.sh run_tests

@@ -90,15 +90,6 @@ IPUMS data:
 The [IPUMS support website](https://www.ipums.org/support/exercises)
 also houses many project-specific exercises.
 
-Note that if you have installed the development version of the package
-and want to use the vignettes within R, you’ll have to install the
-associated ipumsexamples package:
-
-``` r
-remotes::install_github("ipums/ipumsr/ipumsexamples")
-remotes::install_github("ipums/ipumsr", build_vignettes = TRUE)
-```
-
 ## Related Work
 
 - The [survey](http://r-survey.r-forge.r-project.org/survey/) and

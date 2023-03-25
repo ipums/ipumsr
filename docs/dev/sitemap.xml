@@ -19,19 +19,7 @@
     <loc>http://tech.popdata.org/ipumsr/articles/ipums-bigdata.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/articles/ipums-cps.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/articles/ipums-geography.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/articles/ipums-nhgis.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/articles/ipums-read.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/articles/ipums-terra.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/articles/ipums.html</loc>
@@ -73,9 +61,6 @@
     <loc>http://tech.popdata.org/ipumsr/reference/define_extract_from_json.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/define_extract_micro.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/define_extract_nhgis.html</loc>
   </url>
   <url>
@@ -85,19 +70,10 @@
     <loc>http://tech.popdata.org/ipumsr/reference/download_extract.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/dplyr_select_style.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/extract_list_to_tbl.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/extract_tbl_to_list.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/get_extract_info.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/get_last_extract_info.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/get_nhgis_metadata.html</loc>
@@ -119,9 +95,6 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_collect.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/ipums_conditions.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_data_collections.html</loc>
@@ -146,9 +119,6 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_shape_join.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/ipums_shape_left_join.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_var_info.html</loc>
@@ -176,9 +146,6 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/lbl_clean.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/lbl_collapse.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/lbl_define.html</loc>
@@ -242,15 +209,6 @@
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/remove_from_extract.usa_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/revise_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/revise_extract_micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/save_extract_as_json.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/selection_language.html</loc>

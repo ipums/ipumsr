@@ -487,33 +487,6 @@ path_is_zip_or_dir <- function(file) {
   ext == "zip" || ext == ""
 }
 
-release_questions <- function() {
-  installed_packages <- rownames(utils::installed.packages())
-
-  out <- c()
-
-  if (!"ipumsexamples" %in% installed_packages) {
-    out <- c(
-      out,
-      "It looks like you don't have ipumsexamples installed. Do ",
-      "you want to install it with `",
-      "remotes::install_github('ipums/ipumsr/ipumsexample')",
-      "` before you continue?"
-    )
-  }
-  if (!"terraexample" %in% installed_packages) {
-    out <- c(
-      out,
-      "It looks like you don't have terraexample installed. Do ",
-      "you want to install it with `",
-      "devtools::install_local('I:/programming/r_ipums/internal_packages/terraexample')",
-      "` before you continue?"
-    )
-  }
-
-  out
-}
-
 hipread_type_name_convert <- function(x) {
   ifelse(x == "numeric", "double", x)
 }
@@ -739,4 +712,12 @@ setdiff_null <- function(x, y) {
   }
 
   v
+}
+
+release_questions <- function() {
+  paste0(
+    "Have you scrubbed the package for remaining references to ipumsexamples?",
+    "\n(If ipumsexamples has been removed previously, this question is no ",
+    "longer relevant"
+  )
 }

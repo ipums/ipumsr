@@ -45,7 +45,6 @@ Suggests:
     DT,
     ggplot2,
     htmltools,
-    ipumsexamples,
     knitr,
     raster,
     rgdal,
@@ -63,8 +62,6 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Remotes:
-    ipums/ipumsr/ipumsexamples
 Contact: ipums@umn.edu
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
