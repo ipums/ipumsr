@@ -83,8 +83,8 @@ Use of the IPUMS API enables the adoption of a programmatic workflow
 that can help users to:
 
 -   Precisely reproduce the specifications of previous extract requests
--   Easily revise and resubmit previous extract requests to update
-    analyses with new data
+-   Easily revise previous extract requests to update analyses with new
+    data
 -   Save extract request definitions that can be shared with others
     without violating IPUMS conditions
 -   Integrate the extract download process with functions to load data
@@ -616,7 +616,7 @@ insert_cassette("revise-extract")
 It's not uncommon to find that you no longer need certain data or would
 like to update a familiar extract definition with different or more
 current data. ipumsr includes functions for revising a previous extract
-definition, facilitating a "revise and resubmit" workflow.
+definition to support this workflow.
 
 Let's say you decided you wanted to include the 2020 ACS sample as well
 as the `RELATE` variable to the data from a previous IPUMS USA extract.

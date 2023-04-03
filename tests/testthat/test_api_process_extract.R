@@ -167,19 +167,36 @@ test_that("Can resubmit an extract", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("resubmitted-nhgis-extract", {
-    resubmitted_nhgis_extract <- submit_extract(
+    resubmitted_nhgis_extract1 <- resubmit_extract(
       c("nhgis", submitted_nhgis_extract$number)
     )
   })
+  # Shouldn't fail when an extract object is passed to resubmit_extract()
+  vcr::use_cassette("resubmitted-nhgis-extract", {
+    resubmitted_nhgis_extract2 <- resubmit_extract(submitted_nhgis_extract)
+  })
 
   expect_s3_class(
-    resubmitted_nhgis_extract,
+    resubmitted_nhgis_extract1,
     c("nhgis_extract", "ipums_extract")
   )
   # Number, download links, etc. won't be same, but core extract will:
   expect_identical(
-    resubmitted_nhgis_extract[1:14],
+    resubmitted_nhgis_extract1[1:14],
     ready_nhgis_extract[1:14]
+  )
+  expect_identical(
+    resubmitted_nhgis_extract1,
+    resubmitted_nhgis_extract2
+  )
+
+  expect_error(
+    submit_extract(c("nhgis", submitted_nhgis_extract$number)),
+    "Expected `extract` to be an `ipums_extract` object"
+  )
+  expect_error(
+    resubmit_extract(test_nhgis_extract()),
+    "Cannot get info for an `ipums_extract` object with missing extract number"
   )
 })
 

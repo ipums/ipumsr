@@ -8,8 +8,10 @@
 * Adds API support for IPUMS NHGIS metadata. Use `get_nhgis_metadata()` to
   browse NHGIS data sources when creating an NHGIS extract request.
   
-* `submit_extract()` can now be used to resubmit an old extract request. Simply
-  provide the IPUMS collection and extract number to the `extract` argument.
+* Adds `resubmit_extract()`, which wraps `get_extract_info()` and
+  `submit_extract()` to quickly resubmit a previous extract request using its
+  extract identifier. This is useful for extracts that have expired and whose 
+  data are no longer available.
   
 * `get_recent_extracts_info()` replaces `get_recent_extracts_info_*()` functions.
   Set `table = TRUE` to get recent extract information in tabular format.

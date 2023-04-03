@@ -8,16 +8,25 @@
 #' Submit an extract request via the IPUMS API
 #'
 #' @description
-#' Submit an extract request via the IPUMS API and return an [ipums_extract]
+#' Submit an extract request via the IPUMS API and return an [`ipums_extract`]
 #' object containing the extract definition with a newly-assigned extract
 #' request number.
 #'
+#' `resubmit_extract()` is a simple wrapper of [get_extract_info()] and
+#' `submit_extract()` that supports the resubmission of previous extract
+#' definitions. This can be useful for expired extracts whose data have been
+#' removed from the IPUMS servers.
+#'
+#' Note that a resubmitted extract request is treated as a new
+#' submission and will receive a new extract request number, even if the extract
+#' definition is the same.
+#'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @param extract If submitting a new extract request, an
+#' @param extract For `submit_extract()`, an
 #'   [`ipums_extract`][ipums_extract-class] object.
 #'
-#'   If resubmitting an old request, one of:
+#'   For `resubmit_extract()`, one of:
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
@@ -64,15 +73,18 @@
 #'
 #' # Or have R check periodically and download when ready
 #' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+#'
+#' # Use an extract identifier to resubmit a previous (potentially expired)
+#' # extract definition:
+#' resubmit_extract("nhgis:10")
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
-  extract <- standardize_extract_identifier(extract)
 
   if (!inherits(extract, "ipums_extract")) {
-    extract <- get_extract_info(extract)
-  } else {
-    extract <- validate_ipums_extract(extract)
+    rlang::abort("Expected `extract` to be an `ipums_extract` object.")
   }
+
+  extract <- validate_ipums_extract(extract)
 
   response <- ipums_api_json_request(
     "POST",
@@ -97,6 +109,17 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   invisible(extract)
 }
 
+#' @rdname submit_extract
+#' @export
+resubmit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
+  extract <- get_extract_info(
+    standardize_extract_identifier(extract),
+    api_key = api_key
+  )
+
+  submit_extract(extract, api_key = api_key)
+}
+
 #' Wait for an extract request to finish processing
 #'
 #' @description
@@ -114,7 +137,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams submit_extract
 #' @param extract One of:
 #'
-#'  * An [`ipums_extract`][ipums_extract-class] object
+#'   * An [`ipums_extract`][ipums_extract-class] object
 #'   * The data collection and extract number formatted as a string of the
 #'     form `"collection:number"` or as a vector of the form
 #'     `c("collection", number)`
@@ -231,7 +254,7 @@ wait_for_extract <- function(extract,
         format_collection_for_printing(extract$collection),
         " extract ", extract$number, " has either expired or failed."
       ),
-      "i" = "Use `submit_extract()` to resubmit this extract definition."
+      "i" = "Use `resubmit_extract()` to resubmit this extract definition."
     )
   } else if (is_timed_out) {
     err_message <- c(
@@ -286,7 +309,7 @@ wait_for_extract <- function(extract,
 #'
 #' [get_extract_info()] to check the status of an extract request.
 #'
-#' [submit_extract()] to resubmit an expired extract request.
+#' [resubmit_extract()] to resubmit an expired extract request.
 #'
 #' @export
 #'
@@ -336,7 +359,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
           format_collection_for_printing(extract$collection),
           " extract ", extract$number, " has either expired or failed."
         ),
-        "i" = "Use `submit_extract()` to resubmit this extract definition."
+        "i" = "Use `resubmit_extract()` to resubmit this extract definition."
       )
     )
   }
@@ -460,7 +483,10 @@ download_extract <- function(extract,
         rlang::abort(
           c(
             err_msg,
-            "i" = "Use `submit_extract()` to resubmit this extract definition."
+            "i" = paste0(
+              "Use `resubmit_extract()` to resubmit ",
+              "this extract definition."
+            )
           )
         )
       }

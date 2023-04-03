@@ -78,5 +78,5 @@ is_extract_ready(1)
 
 \code{\link[=get_extract_info]{get_extract_info()}} to check the status of an extract request.
 
-\code{\link[=submit_extract]{submit_extract()}} to resubmit an expired extract request.
+\code{\link[=resubmit_extract]{resubmit_extract()}} to resubmit an expired extract request.
 }

@@ -53,8 +53,8 @@ previously-submitted extracts
 \section{Submitting an extract}{
 
 \itemize{
-\item Use \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing through
-the IPUMS API
+\item Use \code{\link[=submit_extract]{submit_extract()}} or \code{\link[=resubmit_extract]{resubmit_extract()}} to submit an extract request
+for processing through the IPUMS API
 \item \code{\link[=wait_for_extract]{wait_for_extract()}} will periodically check the status of a submitted
 extract request until it is ready to download
 \item Use \code{\link[=is_extract_ready]{is_extract_ready()}} to manually check whether a submitted extract

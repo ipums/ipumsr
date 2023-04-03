@@ -2,15 +2,18 @@
 % Please edit documentation in R/api_process_extract.R
 \name{submit_extract}
 \alias{submit_extract}
+\alias{resubmit_extract}
 \title{Submit an extract request via the IPUMS API}
 \usage{
 submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
+
+resubmit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{extract}{If submitting a new extract request, an
+\item{extract}{For \code{submit_extract()}, an
 \code{\link[=ipums_extract-class]{ipums_extract}} object.
 
-If resubmitting an old request, one of:
+For \code{resubmit_extract()}, one of:
 \itemize{
 \item The data collection and extract number formatted as a string of the
 form \code{"collection:number"} or as a vector of the form
@@ -29,9 +32,18 @@ extract definition and newly-assigned extract number of the submitted
 extract.
 }
 \description{
-Submit an extract request via the IPUMS API and return an \link{ipums_extract}
+Submit an extract request via the IPUMS API and return an \code{\link{ipums_extract}}
 object containing the extract definition with a newly-assigned extract
 request number.
+
+\code{resubmit_extract()} is a simple wrapper of \code{\link[=get_extract_info]{get_extract_info()}} and
+\code{submit_extract()} that supports the resubmission of previous extract
+definitions. This can be useful for expired extracts whose data have been
+removed from the IPUMS servers.
+
+Note that a resubmitted extract request is treated as a new
+submission and will receive a new extract request number, even if the extract
+definition is the same.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -60,6 +72,10 @@ is_extract_ready(submitted_extract)
 
 # Or have R check periodically and download when ready
 downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+
+# Use an extract identifier to resubmit a previous (potentially expired)
+# extract definition:
+resubmit_extract("nhgis:10")
 }
 }
 \seealso{

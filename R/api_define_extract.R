@@ -45,8 +45,8 @@
 #'   previously-submitted extracts
 #'
 #' @section Submitting an extract:
-#' * Use [submit_extract()] to submit an extract request for processing through
-#'   the IPUMS API
+#' * Use [submit_extract()] or [resubmit_extract()] to submit an extract request
+#'   for processing through the IPUMS API
 #' * [wait_for_extract()] will periodically check the status of a submitted
 #'   extract request until it is ready to download
 #' * Use [is_extract_ready()] to manually check whether a submitted extract
