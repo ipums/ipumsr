@@ -9,16 +9,12 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' Functionality for accessing recent extract information has been moved to
-#' [`get_extract_info()`].
+#' [`get_recent_extracts_info()`].
 #'
 #' Please use that function instead.
 #'
 #' @keywords internal
 #'
-#' @name get_recent_extracts_info
-NULL
-
-#' @rdname get_recent_extracts_info
 #' @export
 get_recent_extracts_info_list <- function(collection = NULL,
                                           how_many = 10,
@@ -26,17 +22,17 @@ get_recent_extracts_info_list <- function(collection = NULL,
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_list()",
-    "get_extract_info()"
+    "get_recent_extracts_info()"
   )
 
-  get_extract_info(
-    extract = collection,
+  get_recent_extracts_info(
+    collection = collection,
     how_many = how_many,
     api_key = api_key
   )
 }
 
-#' @rdname get_recent_extracts_info
+#' @rdname get_recent_extracts_info_list
 #' @export
 get_recent_extracts_info_tbl <- function(collection = NULL,
                                          how_many = 10,
@@ -44,11 +40,11 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_tbl()",
-    details = "Please use `get_extract_info()` with `table = TRUE` instead."
+    details = "Please use `get_recent_extracts_info()` with `table = TRUE` instead."
   )
 
-  get_extract_info(
-    extract = collection,
+  get_recent_extracts_info(
+    collection = collection,
     how_many = how_many,
     table = TRUE,
     api_key = api_key

@@ -11,10 +11,8 @@
 * `submit_extract()` can now be used to resubmit an old extract request. Simply
   provide the IPUMS collection and extract number to the `extract` argument.
   
-* The `extract` argument of  `get_extract_info()` now accepts an IPUMS 
-  collection, which can be used to get recent extract information. 
+* `get_recent_extracts_info()` replaces `get_recent_extracts_info_*()` functions.
   Set `table = TRUE` to get recent extract information in tabular format.
-  This replaces `get_recent_extracts_info_*()` functions.
   
 * Adds `combine_extracts()` to allow for the merging of multiple extract
   definitions.
@@ -79,7 +77,7 @@
   remain unchanged.
   
 * `get_recent_extracts_info_list()` and `get_recent_extracts_info_tbl()` have
-  been deprecated. This functionality has been included in `get_extract_info()`.
+  been deprecated in favor of `get_recent_extracts_info()`.
   
 * `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
   `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular

@@ -967,11 +967,8 @@ ipums_api_json_request <- function(verb,
     } else if (status == 404) {
       if (fostr_detect(path, "^extracts/\\d+$")) {
         extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract <- get_extract_info(
-          collection,
-          how_many = 1
-        )
-        most_recent_extract_number <- most_recent_extract[[1]]$number
+        most_recent_extract_number <- get_last_extract_info(collection)$number
+
         if (extract_number > most_recent_extract_number) {
           coll <- format_collection_for_printing(collection)
           rlang::abort(

@@ -164,6 +164,10 @@ test_that("Cannot check status for an extract with no number", {
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number"
   )
+  expect_error(
+    get_extract_info("nhgis"),
+    "Invalid `extract` argument"
+  )
 })
 
 test_that("We avoid superflous checks when getting extract status", {
@@ -252,7 +256,7 @@ test_that("Can get extract info for default collection", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_info("nhgis")
+    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
   })
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
@@ -270,7 +274,7 @@ test_that("Can get extract info for default collection", {
     })
 
     vcr::use_cassette("recent-nhgis-extracts-list", {
-      recent_nhgis_extracts_list_default <- get_extract_info()
+      recent_nhgis_extracts_list_default <- get_recent_extracts_info()
     })
 
     expect_identical(
@@ -281,7 +285,7 @@ test_that("Can get extract info for default collection", {
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = NA), {
     expect_error(
-      get_extract_info(),
+      get_recent_extracts_info(),
       "No default collection set"
     )
   })
@@ -291,7 +295,7 @@ test_that("Can parse API errors on bad requests", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_info("nhgis")
+    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
   })
 
   bad_extract <- new_ipums_extract(
@@ -307,12 +311,9 @@ test_that("Can parse API errors on bad requests", {
       "API Key is either missing or invalid"
     )
     expect_error(
-      get_extract_info(
-        c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)
-      ),
+      get_extract_info(c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)),
       paste0(
-        "number ",
-        recent_nhgis_extracts_list[[1]]$number + 1,
+        "number ", recent_nhgis_extracts_list[[1]]$number + 1,
         " does not exist"
       )
     )
@@ -335,7 +336,7 @@ test_that("Tibble of recent USA extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
   })
 
   expected_columns <- c(
@@ -352,7 +353,7 @@ test_that("Tibble of recent CPS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_extract_info("cps", table = TRUE)
+    recent_cps_extracts_tbl <- get_recent_extracts_info("cps", table = TRUE)
   })
 
   expected_columns <- c(
@@ -378,7 +379,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -446,21 +447,21 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 test_that("Can get specific number of recent extracts in tibble format", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_extract_info(
+    two_recent_usa_extracts <- get_recent_extracts_info(
       "usa",
       how_many = 2,
       table = TRUE
     )
   })
   vcr::use_cassette("recent-cps-extracts-tbl-five", {
-    five_recent_cps_extracts <- get_extract_info(
+    five_recent_cps_extracts <- get_recent_extracts_info(
       "cps",
       how_many = 5,
       table = TRUE
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_extract_info(
+    two_recent_nhgis_extracts <- get_recent_extracts_info(
       "nhgis",
       how_many = 2,
       table = TRUE
@@ -482,10 +483,10 @@ test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_info("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
   })
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_extract_info("usa", table = FALSE)
+    recent_usa_extracts_list <- get_recent_extracts_info("usa", table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(
@@ -506,10 +507,10 @@ test_that("NHGIS tbl/list conversion works", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_info("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_info("nhgis", table = FALSE)
+    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis", table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
@@ -556,7 +557,7 @@ test_that("NHGIS shapefile-only tbl/list conversion works", {
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    nhgis_extract_tbl_shp <- get_extract_info(
+    nhgis_extract_tbl_shp <- get_recent_extracts_info(
       "nhgis",
       how_many = 1,
       table = TRUE

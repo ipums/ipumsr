@@ -14,7 +14,7 @@ extract_list_to_tbl(extract_list)
 \code{\link[base:data.frame]{data.frame}}) containing the specifications for one
 or more \code{\link[=ipums_extract-class]{ipums_extract}} objects.
 
-Use \code{\link[=get_extract_info]{get_extract_info()}} with \code{table = TRUE} to produce such an object.}
+Use \code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}} with \code{table = TRUE} to produce such an object.}
 
 \item{validate}{Logical value indicating whether to
 check that each of the output \code{ipums_extract}
@@ -37,14 +37,15 @@ Convert a \code{\link[tibble:tbl_df-class]{tibble}} of extract definition
 specifications to a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
 or vice versa.
 
-Use \code{\link[=get_extract_info]{get_extract_info()}} to obtain information on recent extracts.
+Use \code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}} to obtain definitions of recently-submitted
+extracts.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 \dontrun{
 # Get tibble of recent extracts
-tbl_of_last_10_extracts <- get_extract_info("usa", table = TRUE)
+tbl_of_last_10_extracts <- get_recent_extracts_info("usa", table = TRUE)
 
 # Filter down to extracts with "income" in the description
 description_mentions_income <- grepl(
@@ -66,11 +67,13 @@ revised_income_extract <- add_to_extract(
 submitted_revised_income_extract <- submit_extract(revised_income_extract)
 
 # Get list of recent extracts
-list_of_last_10_extracts <- get_extract_info("usa")
+list_of_last_10_extracts <- get_recent_extracts_info("usa")
 
 # Print the extract number for extracts that are downloadable:
 for (extract in list_of_last_10_extracts) {
-  if (is_extract_ready(extract)) print(extract$number)
+  if (is_extract_ready(extract)) {
+    print(extract$number)
+  }
 }
 
 # Convert list of extracts to tibble of extracts to view in a tabular format

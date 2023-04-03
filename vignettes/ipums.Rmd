@@ -45,8 +45,8 @@ with the IPUMS API.
 
 To create a new extract request, navigate to the extract interface for
 the IPUMS project of interest by clicking **Select Data** in the heading
-of the project website. This leads to that project's extract interface,
-which allows you to specify the data you'd like to download. The data
+of the project website. The project extract interface allows you to specify the
+data you'd like to download. The data
 selection parameters will differ across projects; see each project's
 documentation for more details on the available options. If you've never
 created an extract for the project you're interested in, start by
@@ -57,7 +57,7 @@ watching the project-specific video on creating extracts hosted on the
 
 Once your extract is ready, click the green **Download** button to
 download the data file. Then, right-click the **DDI** link in the
-codebook column, and select **Save as...** (see below).
+codebook column, and select **Save Link As...** (see below).
 
 Note that some browsers may display different text, but there should be
 an option to download the DDI file as .xml. For instance, on Safari,
@@ -106,7 +106,7 @@ You can also access previous extract requests, even if they weren't made
 with the API:
 
 ```{r, eval=FALSE}
-past_extracts <- get_extract_info("nhgis")
+past_extracts <- get_recent_extracts_info("nhgis")
 ```
 
 See the associated [vignette](ipums-api.html) for more details about how
