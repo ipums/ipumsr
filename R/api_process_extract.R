@@ -521,25 +521,25 @@ extract_to_request_json.nhgis_extract <- function(
   request_list <- list(
     datasets = format_nhgis_field_for_json(
       datasets = extract$datasets,
-      data_tables = extract$data_tables[extract$datasets],
-      geog_levels = extract$geog_levels[extract$datasets],
+      dataTables = extract$data_tables[extract$datasets],
+      geogLevels = extract$geog_levels[extract$datasets],
       years = extract$years[extract$datasets],
-      breakdown_values = extract$breakdown_values[extract$datasets]
+      breakdownValues = extract$breakdown_values[extract$datasets]
     ),
-    time_series_tables = format_nhgis_field_for_json(
-      time_series_tables = extract$time_series_tables,
-      geog_levels = extract$geog_levels[extract$time_series_tables]
+    timeSeriesTables = format_nhgis_field_for_json(
+      timeSeriesTables = extract$time_series_tables,
+      geogLevels = extract$geog_levels[extract$time_series_tables]
     ),
     shapefiles = extract$shapefiles,
-    data_format = jsonlite::unbox(extract$data_format),
+    dataFormat = jsonlite::unbox(extract$data_format),
     description = jsonlite::unbox(extract$description),
-    breakdown_and_data_type_layout = jsonlite::unbox(
+    breakdownAndDataTypeLayout = jsonlite::unbox(
       extract$breakdown_and_data_type_layout
     ),
-    time_series_table_layout = jsonlite::unbox(
+    timeSeriesTableLayout = jsonlite::unbox(
       extract$tst_layout
     ),
-    geographic_extents = geog_extent_lookup(
+    geographicExtents = geog_extent_lookup(
       extract$geographic_extents,
       state_geog_lookup$codes
     )
@@ -553,7 +553,7 @@ extract_to_request_json.nhgis_extract <- function(
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = jsonlite::unbox(extract$collection),
-      api_version = jsonlite::unbox(ipums_api_version(extract$collection))
+      version = jsonlite::unbox(ipums_api_version(extract$collection))
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -575,11 +575,11 @@ extract_to_request_json.usa_extract <- function(
 
   request_list <- list(
     description = extract$description,
-    data_structure = format_data_structure_for_json(
+    dataStructure = format_data_structure_for_json(
       extract$data_structure,
       extract$rectangular_on
     ),
-    data_format = extract$data_format,
+    dataFormat = extract$data_format,
     samples = format_samples_for_json(extract$samples),
     variables = format_variables_for_json(extract$variables)
   )
@@ -587,7 +587,7 @@ extract_to_request_json.usa_extract <- function(
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = extract$collection,
-      api_version = ipums_api_version(extract$collection)
+      version = ipums_api_version(extract$collection)
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -608,11 +608,11 @@ extract_to_request_json.cps_extract <- function(extract,
 
   request_list <- list(
     description = extract$description,
-    data_structure = format_data_structure_for_json(
+    dataStructure = format_data_structure_for_json(
       extract$data_structure,
       extract$rectangular_on
     ),
-    data_format = extract$data_format,
+    dataFormat = extract$data_format,
     samples = format_samples_for_json(extract$samples),
     variables = format_variables_for_json(extract$variables)
   )
@@ -620,7 +620,7 @@ extract_to_request_json.cps_extract <- function(extract,
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = extract$collection,
-      api_version = ipums_api_version(extract$collection)
+      version = ipums_api_version(extract$collection)
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -762,7 +762,7 @@ ipums_extract_specific_download.usa_extract <- function(extract,
                                                         download_dir,
                                                         overwrite,
                                                         api_key) {
-  ddi_url <- extract$download_links$ddi_codebook$url
+  ddi_url <- extract$download_links$ddiCodebook$url
   data_url <- extract$download_links$data$url
 
   ddi_file_path <- normalizePath(
@@ -795,7 +795,7 @@ ipums_extract_specific_download.cps_extract <- function(extract,
                                                         download_dir,
                                                         overwrite,
                                                         api_key) {
-  ddi_url <- extract$download_links$ddi_codebook$url
+  ddi_url <- extract$download_links$ddiCodebook$url
   data_url <- extract$download_links$data$url
 
   ddi_file_path <- normalizePath(
@@ -828,8 +828,8 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
                                                           api_key) {
-  table_url <- extract$download_links$table_data
-  gis_url <- extract$download_links$gis_data
+  table_url <- extract$download_links$tableData$url
+  gis_url <- extract$download_links$gisData$url
 
   urls <- purrr::compact(
     list(
@@ -1032,7 +1032,7 @@ extract_is_completed_and_has_links.usa_extract <- function(extract) {
     return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
   }
 
-  status == "completed" && has_url(download_links, "ddi_codebook") &&
+  status == "completed" && has_url(download_links, "ddiCodebook") &&
     has_url(download_links, "data")
 }
 
@@ -1045,7 +1045,7 @@ extract_is_completed_and_has_links.cps_extract <- function(extract) {
     return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
   }
 
-  status == "completed" && has_url(download_links, "ddi_codebook") &&
+  status == "completed" && has_url(download_links, "ddiCodebook") &&
     has_url(download_links, "data")
 }
 

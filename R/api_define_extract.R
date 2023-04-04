@@ -2691,52 +2691,68 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
   purrr::map(
     list_of_extract_info,
     function(x) {
-      no_datasets <- is.null(x$datasets)
-      no_tsts <- is.null(x$time_series_tables)
+      # extractDefinition won't exist if it is from a saved JSON file
+      def <- x$extractDefinition %||% x
+
+      no_datasets <- is.null(def$datasets)
+      no_tsts <- is.null(def$timeSeriesTables)
+
+      if (no_datasets) {
+        data_tables <- NULL
+        years <- NULL
+        breakdown_values <- NULL
+      } else {
+        data_tables <- purrr::map(def$datasets, ~ unlist(.x$dataTables))
+        years <- purrr::map(def$datasets, ~ unlist(.x$years))
+        breakdown_values <- purrr::map(
+          def$datasets,
+          ~ unlist(.x$breakdownValues)
+        )
+      }
+
+      if (no_datasets && no_tsts) {
+        geog_levels <- NULL
+      } else {
+        geog_levels <- purrr::map(
+          c(def$datasets, def$timeSeriesTables),
+          ~ unlist(.x$geogLevels)
+        )
+      }
+
+      if ("number" %in% names(x)) {
+        submitted <- TRUE
+        number <- x$number
+      } else {
+        submitted <- FALSE
+        number <- NA_integer_
+      }
 
       out <- new_ipums_extract(
         collection = "nhgis",
-        description = x$description,
-        datasets = names(x$datasets),
-        data_tables = if (no_datasets) {
-          NULL
-        } else {
-          purrr::map(x$datasets, ~ unlist(.x$data_tables))
-        },
-        time_series_tables = names(x$time_series_tables),
-        geog_levels = if (no_datasets && no_tsts) {
-          NULL
-        } else {
-          purrr::map(
-            c(x$datasets, x$time_series_tables),
-            ~ unlist(.x$geog_levels)
-          )
-        },
-        years = if (no_datasets) {
-          NULL
-        } else {
-          purrr::map(x$datasets, ~ unlist(.x$years))
-        },
-        breakdown_values = if (no_datasets) {
-          NULL
-        } else {
-          purrr::map(x$datasets, ~ unlist(.x$breakdown_values))
-        },
+        description = def$description,
+        datasets = names(def$datasets),
+        data_tables = data_tables,
+        time_series_tables = names(def$timeSeriesTables),
+        geog_levels = geog_levels,
+        years = years,
+        breakdown_values = breakdown_values,
         geographic_extents = geog_extent_lookup(
-          unlist(x$geographic_extents),
+          unlist(def$geographicExtents),
           state_geog_lookup$abbs
         ),
-        shapefiles = unlist(x$shapefiles),
-        breakdown_and_data_type_layout = x$breakdown_and_data_type_layout,
-        tst_layout = x$time_series_table_layout,
-        data_format = x$data_format,
-        submitted = ifelse("number" %in% names(x), TRUE, FALSE),
-        download_links = x$download_links %||% EMPTY_NAMED_LIST,
-        number = ifelse("number" %in% names(x), x$number, NA_integer_),
+        shapefiles = unlist(def$shapefiles),
+        breakdown_and_data_type_layout = def$breakdownAndDataTypeLayout,
+        tst_layout = def$timeSeriesTableLayout,
+        data_format = def$dataFormat,
+        submitted = submitted,
+        download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
+        number = number,
         status = x$status %||% "unsubmitted"
       )
 
-      if (validate) validate_ipums_extract(out)
+      if (validate) {
+        out <- validate_ipums_extract(out)
+      }
 
       out
     }
@@ -2762,28 +2778,39 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
   purrr::map(
     list_of_extract_info,
     function(x) {
+      # extractDefinition won't exist if it is from a saved JSON file
+      def <- x$extractDefinition %||% x
+
+      if ("number" %in% names(x)) {
+        submitted <- TRUE
+        number <- x$number
+      } else {
+        submitted <- FALSE
+        number <- NA_integer_
+      }
+
       out <- new_ipums_extract(
         collection = "usa",
-        description = x$description,
-        data_structure = names(x$data_structure),
+        description = def$description,
+        data_structure = names(def$dataStructure),
         rectangular_on = ifelse(
-          names(x$data_structure) == "rectangular",
-          x$data_structure$rectangular$on,
+          names(def$dataStructure) == "rectangular",
+          def$dataStructure$rectangular$on,
           NA_character_
         ),
-        data_format = x$data_format,
-        samples = names(x$samples),
-        variables = names(x$variables),
-        submitted = ifelse("number" %in% names(x), TRUE, FALSE),
-        download_links = if ("download_links" %in% names(x)) {
-          x$download_links
-        } else {
-          EMPTY_NAMED_LIST
-        },
-        number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status = ifelse("status" %in% names(x), x$status, "unsubmitted")
+        data_format = def$dataFormat,
+        samples = names(def$samples),
+        variables = names(def$variables),
+        submitted = submitted,
+        download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
+        number = number,
+        status = x$status %||% "unsubmitted"
       )
-      if (validate) validate_ipums_extract(out)
+
+      if (validate) {
+        out <- validate_ipums_extract(out)
+      }
+
       out
     }
   )
@@ -2809,28 +2836,39 @@ extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
   purrr::map(
     list_of_extract_info,
     function(x) {
+      # extractDefinition won't exist if it is from a saved JSON file
+      def <- x$extractDefinition %||% x
+
+      if ("number" %in% names(x)) {
+        submitted <- TRUE
+        number <- x$number
+      } else {
+        submitted <- FALSE
+        number <- NA_integer_
+      }
+
       out <- new_ipums_extract(
         collection = "cps",
-        description = x$description,
-        data_structure = names(x$data_structure),
+        description = def$description,
+        data_structure = names(def$dataStructure),
         rectangular_on = ifelse(
-          names(x$data_structure) == "rectangular",
-          x$data_structure$rectangular$on,
+          names(def$dataStructure) == "rectangular",
+          def$dataStructure$rectangular$on,
           NA_character_
         ),
-        data_format = x$data_format,
-        samples = names(x$samples),
-        variables = names(x$variables),
-        submitted = ifelse("number" %in% names(x), TRUE, FALSE),
-        download_links = if ("download_links" %in% names(x)) {
-          x$download_links
-        } else {
-          EMPTY_NAMED_LIST
-        },
-        number = ifelse("number" %in% names(x), x$number, NA_integer_),
-        status = ifelse("status" %in% names(x), x$status, "unsubmitted")
+        data_format = def$dataFormat,
+        samples = names(def$samples),
+        variables = names(def$variables),
+        submitted = submitted,
+        download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
+        number = number,
+        status = x$status %||% "unsubmitted"
       )
-      if (validate) validate_ipums_extract(out)
+
+      if (validate) {
+        out <- validate_ipums_extract(out)
+      }
+
       out
     }
   )

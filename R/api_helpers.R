@@ -26,10 +26,10 @@
 ipums_data_collections <- function() {
   tibble::tribble(
     ~collection_name, ~code_for_api, ~api_support,
-    "IPUMS USA", "usa", "beta",
-    "IPUMS CPS", "cps", "beta",
-    "IPUMS International", "ipumsi", "none",
-    "IPUMS NHGIS", "nhgis", "v1",
+    "IPUMS USA", "usa", "2",
+    "IPUMS CPS", "cps", "2",
+    "IPUMS International", "ipumsi", "2",
+    "IPUMS NHGIS", "nhgis", "2",
     "IPUMS AHTUS", "ahtus", "none",
     "IPUMS MTUS", "mtus", "none",
     "IPUMS ATUS", "atus", "none",
@@ -847,7 +847,7 @@ api_version_from_json <- function(extract_json) {
     extract_json,
     simplifyVector = FALSE
   )
-  extract$api_version
+  extract$version
 }
 
 EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))

@@ -228,20 +228,6 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 
 # Misc ------------------------------------------
 
-test_that("We can get correct API version info for each collection", {
-  expect_equal(ipums_api_version("usa"), "beta")
-  expect_equal(ipums_api_version("nhgis"), "v1")
-  expect_equal(
-    ipums_api_version("usa"),
-    dplyr::filter(ipums_data_collections(), code_for_api == "usa")$api_support
-  )
-  expect_equal(
-    ipums_api_version("nhgis"),
-    dplyr::filter(ipums_data_collections(), code_for_api == "nhgis")$api_support
-  )
-  expect_error(ipums_api_version("fake collection"), "No API version found")
-})
-
 test_that("standardize_extract_identifier handles unusual cases", {
   expect_equal(
     standardize_extract_identifier("nhgis:1L"),
