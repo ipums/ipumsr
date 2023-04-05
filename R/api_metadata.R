@@ -246,7 +246,7 @@ get_nhgis_metadata <- function(type = NULL,
     )
   } else {
     api_url <- metadata_request_url(
-      .base_url = nhgis_api_metadata_url(),
+      .base_url = api_metadata_url("nhgis"),
       datasets = dataset,
       data_tables = data_table,
       time_series_tables = time_series_table
@@ -282,7 +282,7 @@ get_nhgis_summary_metadata <- function(type,
   }
 
   metadata <- ipums_api_metadata_request(
-    metadata_request_url(.base_url = nhgis_api_metadata_url(), type),
+    metadata_request_url(.base_url = api_metadata_url("nhgis"), type),
     api_key
   )
 
@@ -482,10 +482,6 @@ filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
   }
 
   .data[matches, ]
-}
-
-nhgis_api_metadata_url <- function() {
-  "https://api.ipums.org/metadata/nhgis"
 }
 
 #' Convert all data.frames in a nested list/data.frame into tibbles

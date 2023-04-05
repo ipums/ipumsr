@@ -264,3 +264,40 @@ test_that("standardize_extract_identifier handles unusual cases", {
     list(collection = "nhgis", number = NA)
   )
 })
+
+test_that("Can toggle demo API URL", {
+  skip_if_not_installed("withr")
+
+  withr::with_envvar(c("IPUMS_API_INSTANCE" = NA), {
+    expect_equal(
+      api_extract_url(),
+      "https://api.ipums.org/extracts/"
+    )
+    expect_equal(
+      api_metadata_url("nhgis"),
+      "https://api.ipums.org/metadata/nhgis"
+    )
+  })
+
+  withr::with_envvar(c("IPUMS_API_INSTANCE" = "demo"), {
+    expect_equal(
+      api_extract_url(),
+      "https://demo.api.ipums.org/extracts/"
+    )
+    expect_equal(
+      api_metadata_url("usa"),
+      "https://demo.api.ipums.org/metadata/usa"
+    )
+  })
+
+  withr::with_envvar(c("IPUMS_API_INSTANCE" = "foobar"), {
+    expect_equal(
+      api_extract_url(),
+      "https://api.ipums.org/extracts/"
+    )
+    expect_equal(
+      api_metadata_url("nhgis"),
+      "https://api.ipums.org/metadata/nhgis"
+    )
+  })
+})

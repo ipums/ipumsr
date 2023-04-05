@@ -114,7 +114,7 @@ get_extract_info <- function(extract,
   response <- ipums_api_json_request(
     "GET",
     collection = tolower(extract$collection),
-    path = paste0(api_extracts_path(), "/", extract$number),
+    path = paste0(basename(api_extract_url()), "/", extract$number),
     queries = NULL,
     api_key = api_key
   )

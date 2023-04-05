@@ -921,7 +921,7 @@ ipums_api_json_request <- function(verb,
   }
 
   api_url <- httr::modify_url(
-    api_base_url(),
+    api_extract_url(),
     path = path,
     query = c(
       list(collection = collection, version = ipums_api_version(collection)),

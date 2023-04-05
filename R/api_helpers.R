@@ -749,16 +749,59 @@ copy_ipums_extract <- function(extract) {
   extract
 }
 
-api_base_url <- function() {
-  api_url <- Sys.getenv("IPUMS_API_URL")
-  if (api_url == "") {
-    return("https://api.ipums.org/extracts/")
+api_extract_url <- function() {
+  api_instance <- active_api_instance()
+
+  if (api_instance == "") {
+    url <- "https://api.ipums.org/extracts/"
+  } else {
+    url <- paste0("https://", api_instance, ".api.ipums.org/extracts/")
   }
-  api_url
+
+  url
 }
 
-api_extracts_path <- function() {
-  basename(api_base_url())
+api_metadata_url <- function(collection = NULL) {
+  api_instance <- active_api_instance()
+
+  if (api_instance == "") {
+    url <- "https://api.ipums.org/metadata/"
+  } else {
+    url <- paste0("https://", api_instance, ".api.ipums.org/metadata/")
+  }
+
+  paste0(url, collection)
+}
+
+#' Get the active API instance to use for API requests
+#'
+#' @description
+#' Edit the IPUMS_API_INSTANCE environment variable to test in-development
+#' API functionality that has not yet been deployed to live. Development
+#' features will typically be present on the `"demo"` instance.
+#'
+#' Note that non-live instances require their own unique API keys.
+#'
+#' @details
+#' Set the IPUMS_API_INSTANCE envvar to `"demo"` to test in-development API
+#' work.
+#'
+#' Note that `"internal"` is an accepted instance, but may have a different URL
+#' construction and therefore may still produce invalid requests.
+#'
+#' Any invalid IPUMS_API_INSTANCE values are coerced to the standard live URL.
+#'
+#' Also note that ipumsr tests assume that the live API is active, not demo.
+#'
+#' @noRd
+active_api_instance <- function() {
+  api_instance <- Sys.getenv("IPUMS_API_INSTANCE")
+
+  if (!api_instance %in% c("", "demo", "internal")) {
+    api_instance <- ""
+  }
+
+  api_instance
 }
 
 #' Get the current API verison for a specified IPUMS collection
