@@ -2674,19 +2674,13 @@ extract_list_from_json <- function(extract_json, validate) {
 
 #' @export
 extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
-  list_of_extract_info <- jsonlite::fromJSON(
-    extract_json,
-    simplifyVector = FALSE
-  )
+  extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
 
-  # The response only has names when it contains info on a single extract. In
-  #   that case, we want to make sure this function returns an unnamed list of
-  #   length one, to ensure consistency in the structure of the return value.
-  list_contains_info_on_single_extract <- !is.null(names(list_of_extract_info))
-
-  if (list_contains_info_on_single_extract) {
-    list_of_extract_info <- list(list_of_extract_info)
-  }
+  # If the response if from a paginated endpoint (i.e. recent extracts)
+  # it will include a "data" field containing the extract definitions.
+  # Otherwise, we are dealing with a single extract, which needs to be
+  # converted to list for consistency with paginated responses.
+  list_of_extract_info <- extract_info$data %||% list(extract_info)
 
   purrr::map(
     list_of_extract_info,
@@ -2761,19 +2755,13 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 
 #' @export
 extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
-  list_of_extract_info <- jsonlite::fromJSON(
-    extract_json,
-    simplifyVector = FALSE
-  )
+  extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
 
-  # The response only has names when it contains info on a single extract. In
-  #   that case, we want to make sure this function returns an unnamed list of
-  #   length one, to ensure consistency in the structure of the return value.
-  list_contains_info_on_single_extract <- !is.null(names(list_of_extract_info))
-
-  if (list_contains_info_on_single_extract) {
-    list_of_extract_info <- list(list_of_extract_info)
-  }
+  # If the response if from a paginated endpoint (i.e. recent extracts)
+  # it will include a "data" field containing the extract definitions.
+  # Otherwise, we are dealing with a single extract, which needs to be
+  # converted to list for consistency with paginated responses.
+  list_of_extract_info <- extract_info$data %||% list(extract_info)
 
   purrr::map(
     list_of_extract_info,
@@ -2819,19 +2807,13 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
 
 #' @export
 extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
-  list_of_extract_info <- jsonlite::fromJSON(
-    extract_json,
-    simplifyVector = FALSE
-  )
+  extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
 
-  # The response only has names when it contains info on a single extract. In
-  #   that case, we want to make sure this function returns an unnamed list of
-  #   length one, to ensure consistency in the structure of the return value.
-  list_contains_info_on_single_extract <- !is.null(names(list_of_extract_info))
-
-  if (list_contains_info_on_single_extract) {
-    list_of_extract_info <- list(list_of_extract_info)
-  }
+  # If the response if from a paginated endpoint (i.e. recent extracts)
+  # it will include a "data" field containing the extract definitions.
+  # Otherwise, we are dealing with a single extract, which needs to be
+  # converted to list for consistency with paginated responses.
+  list_of_extract_info <- extract_info$data %||% list(extract_info)
 
   purrr::map(
     list_of_extract_info,

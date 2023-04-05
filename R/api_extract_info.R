@@ -144,7 +144,7 @@ get_recent_extracts_info <- function(collection = NULL,
     "GET",
     collection = collection %||% get_default_collection(),
     path = NULL,
-    queries = list(limit = how_many),
+    queries = list(pageNumber = 1, pageSize = how_many),
     api_key = api_key
   )
 
