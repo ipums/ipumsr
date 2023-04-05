@@ -16,13 +16,6 @@ on.exit(
       )
     )
 
-    # Retain multiple requests here to enable test that checks that
-    # `download_extract()` with `wait = TRUE` works
-    modify_ready_extract_cassette_file(
-      "download-nhgis-extract-shp.yml",
-      n_requests = 3
-    )
-
     # Convert paths in download fixtures to relative
     download_fixtures <- list.files(
       vcr::vcr_test_path("fixtures"),
@@ -385,7 +378,9 @@ test_that("Can download extract with collection and number as string", {
   expect_true(file.exists(gis_data_file_path))
 })
 
-test_that("Can wait for completion during download", {
+# TODO: may want to update this fixture to use smaller data to test
+# that an extract with a single download file type still works...
+test_that("Can download shapefile-only extract", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -396,17 +391,17 @@ test_that("Can wait for completion during download", {
 
   on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
-  vcr::use_cassette("submitted-nhgis-extract-shp-for-download", {
+  vcr::use_cassette("submitted-nhgis-extract-shp", {
     submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+  })
+  vcr::use_cassette("ready-nhgis-extract-shp", {
+    ready_nhgis_extract_shp <- wait_for_extract(submitted_nhgis_extract_shp)
   })
 
   expect_message(
     vcr::use_cassette("download-nhgis-extract-shp", {
       file_paths <- download_extract(
-        submitted_nhgis_extract_shp,
-        wait = TRUE,
-        initial_delay_seconds = 1,
-        max_delay_seconds = 2,
+        ready_nhgis_extract_shp,
         download_dir = download_dir,
         overwrite = TRUE
       )

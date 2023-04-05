@@ -49,7 +49,7 @@ submitted_extract <- get_last_extract_info("usa")
 is_extract_ready(submitted_extract)
 
 # Or have R check periodically and download when ready
-downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+downloadable_extract <- wait_for_extract(submitted_extract)
 }
 }
 \seealso{

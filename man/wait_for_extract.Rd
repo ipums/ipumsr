@@ -85,9 +85,8 @@ downloadable_extract <- wait_for_extract("usa:1")
 set_ipums_default_collection("usa")
 downloadable_extract <- wait_for_extract(1)
 
-# If you want to subsequently download your completed extract, you can
-# use `download_extract()` directly:
-download_extract(1, wait = TRUE)
+# Use `download_extract()` to download the completed extract:
+files <- download_extract(downloadable_extract)
 }
 }
 \seealso{

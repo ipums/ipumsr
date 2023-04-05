@@ -113,7 +113,8 @@ the new files:
 
 ```{r, eval=FALSE}
 data <- submit_extract(new_cps_extract) %>%
-  download_extract(wait = TRUE) %>%
+  wait_for_extract() %>%
+  download_extract() %>%
   read_ipums_micro()
 ```
 

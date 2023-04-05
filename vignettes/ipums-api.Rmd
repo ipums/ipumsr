@@ -519,19 +519,16 @@ micro_data <- read_ipums_micro(ddi)
 ```
 
 If your extract request has not finished processing, you'll receive an
-error when attempting to download. If you want to ensure that you wait
-until the extract is ready before attempting to download, set
-`wait = TRUE`. If the extract request is not yet ready, R will poll the
-API regularly (each interval will increase by 10 seconds) until
-processing has completed. (To wait for extract completion *without*
-downloading, use `wait_for_extract()`.)
+error when attempting to download. To wait until the extract is ready
+before attempting to download, use `wait_for_extract()`. If the extract
+request is not yet ready, R will poll the API regularly (each interval
+will increase by 10 seconds) until processing has completed.
 
-Note that setting `wait = TRUE` will tie up your R session until the
+Note that `wait_for_extract()` will tie up your R session until the
 extract is ready to download. This may be undesirable behavior for large
 extracts that take a long time to produce or when the IPUMS servers are
 busy. You can set a maximum wait time and adjust other API polling
-parameters in `wait_for_extract()` and `download_extract()`. See
-`?wait_for_extract` for details.
+parameters in `wait_for_extract()`. See `?wait_for_extract` for details.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("download-nhgis")
@@ -540,9 +537,8 @@ download_dir <- file.path(tempdir(), "ipums-api-vignette-downloads")
 dir.create(download_dir)
 
 download_extract(
-  submitted_nhgis_extract,
+  wait_for_extract(submitted_nhgis_extract),
   download_dir = download_dir,
-  wait = TRUE,
   overwrite = TRUE
 )
 
@@ -555,8 +551,8 @@ nhgis_path <- list.files(
 eject_cassette("download-nhgis")
 
 # Remove extra `get_extract_info()` requests from fixture for faster processing
-# when re-knitting. Must keep at least 1 `get_extract_info()` request so `vcr`
-# can correctly mock `download_extract()`, hence `n_requests = 2`
+# when re-knitting. Must keep 2 requests so we correctly mock the use of both
+# wait_for_extract() and download_extract() in this cassette.
 modify_ready_extract_cassette_file(
   "download-nhgis.yml",
   fixture_path = "fixtures",
@@ -565,7 +561,8 @@ modify_ready_extract_cassette_file(
 ```
 
 ```{r, eval=FALSE}
-nhgis_path <- download_extract(submitted_nhgis_extract, wait = TRUE)
+downloadable_extract <- wait_for_extract(submitted_nhgis_extract)
+nhgis_path <- download_extract(downloadable_extract)
 ```
 
 ```{r}
@@ -838,7 +835,8 @@ data <- define_extract_usa(
   c("AGE", "SEX", "RACE", "STATEFIP")
 ) %>%
   submit_extract() %>%
-  download_extract(wait = TRUE) %>%
+  wait_for_extract() %>%
+  download_extract() %>%
   read_ipums_micro()
 ```
 

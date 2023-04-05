@@ -45,13 +45,13 @@ with the IPUMS API.
 
 To create a new extract request, navigate to the extract interface for
 the IPUMS project of interest by clicking **Select Data** in the heading
-of the project website. The project extract interface allows you to specify the
-data you'd like to download. The data
-selection parameters will differ across projects; see each project's
-documentation for more details on the available options. If you've never
-created an extract for the project you're interested in, start by
-watching the project-specific video on creating extracts hosted on the
-[IPUMS Tutorials page](https://www.ipums.org/support/tutorials).
+of the project website. The project extract interface allows you to
+specify the data you'd like to download. The data selection parameters
+will differ across projects; see each project's documentation for more
+details on the available options. If you've never created an extract for
+the project you're interested in, start by watching the project-specific
+video on creating extracts hosted on the [IPUMS Tutorials
+page](https://www.ipums.org/support/tutorials).
 
 #### For microdata projects
 
@@ -86,8 +86,8 @@ following collections:
 
 The workflow for requesting and downloading data via API is
 straightforward: first, define the parameters of your extract, then
-submit the extract. When it's completed, you can download the files
-directly to your local machine without ever having to leave R:
+submit the extract. After waiting for it to complete, you can download
+the files directly to your local machine without ever having to leave R:
 
 ```{r, eval=FALSE}
 extract_request <- define_extract_nhgis(
@@ -98,8 +98,8 @@ extract_request <- define_extract_nhgis(
 )
 
 submitted_extract <- submit_extract(extract_request)
-
-data_files <- download_extract(submitted_extract, wait = TRUE)
+downloadable_extract <- wait_for_extract(submitted_extract)
+data_files <- download_extract(downloadable_extract)
 ```
 
 You can also access previous extract requests, even if they weren't made

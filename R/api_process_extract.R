@@ -55,7 +55,7 @@
 #' is_extract_ready(submitted_extract)
 #'
 #' # Or have R check periodically and download when ready
-#' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+#' downloadable_extract <- wait_for_extract(submitted_extract)
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   if (!inherits(extract, "ipums_extract")) {
@@ -162,9 +162,8 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' set_ipums_default_collection("usa")
 #' downloadable_extract <- wait_for_extract(1)
 #'
-#' # If you want to subsequently download your completed extract, you can
-#' # use `download_extract()` directly:
-#' download_extract(1, wait = TRUE)
+#' # Use `download_extract()` to download the completed extract:
+#' files <- download_extract(downloadable_extract)
 #' }
 wait_for_extract <- function(extract,
                              initial_delay_seconds = 0,
@@ -175,7 +174,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-    timeout_seconds > 0)
+              timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -357,11 +356,6 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   Defaults to current working directory.
 #' @param overwrite Logical value indicating whether to overwrite any files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
-#' @param wait Logical value indicating whether to wait for the completion of
-#'   the specified `extract` if it is not yet ready for download. Defaults to
-#'   `FALSE`. See [`wait_for_extract()`].
-#' @param ... Further arguments passed to [`wait_for_extract()`]. Only used if
-#'   `wait = TRUE`.
 #'
 #' @return The path(s) to the files required to read the data
 #'   requested in the extract, invisibly.
@@ -422,9 +416,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
-                             wait = FALSE,
-                             api_key = Sys.getenv("IPUMS_API_KEY"),
-                             ...) {
+                             api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
 
   # Make sure we get latest extract status, but also make sure we don't check
@@ -459,21 +451,15 @@ download_extract <- function(extract,
         )
       }
 
-      if (!wait) {
-        rlang::abort(
-          c(
-            err_msg,
-            "i" = paste0(
-              "Set `wait = TRUE` to wait for extract ",
-              "completion and reattempt download."
-            )
+      rlang::abort(
+        c(
+          err_msg,
+          "i" = paste0(
+            "Use `wait_for_extract()` to wait for extract ",
+            "completion, then reattempt download."
           )
         )
-      } else {
-        message(err_msg)
-        extract <- wait_for_extract(extract, ...)
-        is_downloadable <- extract_is_completed_and_has_links(extract)
-      }
+      )
     }
   }
 

@@ -14,10 +14,6 @@
 * Adds `combine_extracts()` to allow for the merging of multiple extract
   definitions.
   
-* `download_extract()` now includes a logical `wait` argument indicating
-  whether to wait for extract completion when attempting to download an
-  in-progress extract request.  
-  
 * Allows users to set a default IPUMS collection using
   `set_ipums_default_collection()`. Users with a default collection do not 
   need to specify the IPUMS collection in functions that require it; instead,
