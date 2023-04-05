@@ -833,3 +833,19 @@ geog_extent_lookup <- function(values, lookup_key) {
 
   recoded
 }
+
+resubmission_hint <- function(is_extract) {
+  if (!is_extract) {
+    hint <- paste0(
+      "Use `get_extract_info()` and `submit_extract()` to resubmit this ",
+      "extract definition as a new extract request."
+    )
+  } else {
+    hint <- paste0(
+      "Use `submit_extract()` to resubmit this extract definition ",
+      "as a new extract request."
+    )
+  }
+
+  hint
+}

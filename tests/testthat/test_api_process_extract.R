@@ -167,9 +167,7 @@ test_that("Can resubmit an extract", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("resubmitted-nhgis-extract", {
-    resubmitted_nhgis_extract <- submit_extract(
-      c("nhgis", submitted_nhgis_extract$number)
-    )
+    resubmitted_nhgis_extract <- submit_extract(ready_nhgis_extract)
   })
 
   expect_s3_class(
@@ -180,6 +178,11 @@ test_that("Can resubmit an extract", {
   expect_identical(
     resubmitted_nhgis_extract[1:14],
     ready_nhgis_extract[1:14]
+  )
+
+  expect_error(
+    submit_extract("nhgis:1"),
+    "Expected `extract` to be an `ipums_extract` object"
   )
 })
 

@@ -14,15 +14,7 @@
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @param extract If submitting a new extract request, an
-#'   [`ipums_extract`][ipums_extract-class] object.
-#'
-#'   If resubmitting an old request, one of:
-#'   * The data collection and extract number formatted as a string of the
-#'     form `"collection:number"` or as a vector of the form
-#'     `c("collection", number)`
-#'   * An extract number to be associated with your default IPUMS
-#'     collection. See [set_ipums_default_collection()]
+#' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param api_key API key associated with your user account. Defaults to the
 #'   value of the `IPUMS_API_KEY` environment variable. See
 #'   [set_ipums_api_key()].
@@ -66,13 +58,11 @@
 #' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
-  extract <- standardize_extract_identifier(extract)
-
   if (!inherits(extract, "ipums_extract")) {
-    extract <- get_extract_info(extract)
-  } else {
-    extract <- validate_ipums_extract(extract)
+    rlang::abort("Expected `extract` to be an `ipums_extract` object.")
   }
+
+  extract <- validate_ipums_extract(extract)
 
   response <- ipums_api_json_request(
     "POST",
@@ -231,7 +221,7 @@ wait_for_extract <- function(extract,
         format_collection_for_printing(extract$collection),
         " extract ", extract$number, " has either expired or failed."
       ),
-      "i" = "Use `submit_extract()` to resubmit this extract definition."
+      "i" = resubmission_hint(is_extract)
     )
   } else if (is_timed_out) {
     err_message <- c(
@@ -336,7 +326,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
           format_collection_for_printing(extract$collection),
           " extract ", extract$number, " has either expired or failed."
         ),
-        "i" = "Use `submit_extract()` to resubmit this extract definition."
+        "i" = resubmission_hint(is_extract)
       )
     )
   }
@@ -439,9 +429,9 @@ download_extract <- function(extract,
 
   # Make sure we get latest extract status, but also make sure we don't check
   # the status twice
-  is_ipums_extract_object <- inherits(extract, "ipums_extract")
+  is_extract <- inherits(extract, "ipums_extract")
 
-  if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
+  if (is_extract && extract_is_completed_and_has_links(extract)) {
     extract <- validate_ipums_extract(extract)
     is_downloadable <- TRUE
   } else {
@@ -452,7 +442,11 @@ download_extract <- function(extract,
     err_msg <- paste0(
       format_collection_for_printing(extract$collection),
       " extract ", extract$number,
-      ifelse(is_expired, " has expired.", " is not ready to download.")
+      ifelse(
+        is_expired,
+        " has expired and its files have been deleted.",
+        " is not ready to download."
+      )
     )
 
     if (!is_downloadable) {
@@ -460,7 +454,7 @@ download_extract <- function(extract,
         rlang::abort(
           c(
             err_msg,
-            "i" = "Use `submit_extract()` to resubmit this extract definition."
+            "i" = resubmission_hint(is_extract)
           )
         )
       }
