@@ -170,7 +170,7 @@ test_that("Cannot check status for an extract with no number", {
   )
 })
 
-test_that("We avoid superflous checks when getting extract status", {
+test_that("We avoid superfluous checks when getting extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract", {
@@ -196,11 +196,24 @@ test_that("We avoid superflous checks when getting extract status", {
 
   expect_warning(
     ready_extract <- is_extract_ready(ready_nhgis_extract, api_key = NULL),
-    "IPUMS NHGIS extract.+has either expired or failed."
+    "IPUMS NHGIS extract.+has expired"
   )
   expect_error(
     wait_for_extract(ready_nhgis_extract, api_key = NULL),
-    "IPUMS NHGIS extract.+has either expired or failed"
+    "IPUMS NHGIS extract.+has expired"
+  )
+
+  # Simulate a failed extract:
+  ready_nhgis_extract$status <- "failed"
+  ready_nhgis_extract$download_links <- EMPTY_NAMED_LIST
+
+  expect_warning(
+    ready_extract <- is_extract_ready(ready_nhgis_extract, api_key = NULL),
+    "IPUMS NHGIS extract.+has failed"
+  )
+  expect_error(
+    wait_for_extract(ready_nhgis_extract, api_key = NULL),
+    "IPUMS NHGIS extract.+has failed"
   )
 
   expect_false(ready_extract)

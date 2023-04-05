@@ -19,11 +19,11 @@ http_interactions:
       cache-control: private
       content-disposition: attachment; filename="nhgis1092_shape.zip"; filename*=UTF-8''nhgis1092_shape.zip
       content-type: application/zip
-      date: Wed, 05 Apr 2023 20:22:27 GMT
+      date: Wed, 05 Apr 2023 21:58:47 GMT
       etag: '"641cb0e6-7ca81"'
       last-modified: Thu, 23 Mar 2023 20:04:54 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=nXS9dk6Wz6q8oOL%2F%2FCzBYEc6TnbcdL2BfhaSsRkmpJRfeH%2Bp8QA%2Fh%2FiRr%2Fg8Bui%2BxHYKdZbc6hoZ4JK1nZBLY50xrSb5yUyVstLV96qZA2h%2FH8gk1KDv9CwEsF%2ByTW5z35Ejxic3hdhXROn1rI7RKJeUehz7LZqsn3jJFrXKTZZMT0D%2FQ4dY8xA%2FuffxHetmQ0s5dMXJFVrNT9yz1wtjCsku2p%2Bv14Hj%2F48JfosxXCBxq66fh0rudHWOzoSXTr4%3D--Knc623pe3nR5lxH2--1ri7qVZ1CQyR5cLp8LT7jQ%3D%3D;
+      set-cookie: _session_id=nIM4L5TKUXpB28HyFcHqEkNt3ZDQhRyqOq24fSjCbD8M3m%2Btha03GKnCn16TIupuw4uYBioxoC%2BLbOZdYoAcBRvbQRAoGfUDYsDoukKIwWR94Da53Xt893sZTje4T40ZhwvtLIovWVAAv0%2Fwuaf1fEgTG2z1HQRRDkau3rxJjFhf5V%2FwFt72jJcbby0yOVdjDf7o2mqYU1aDf9mLocOKnox1LYKcU1ZCTe2j6uDm21Heimw%2FFhHw%2FFBpwB3qTLg%3D--CH2N3VMWrkT82jaZ--M4BMzV9T1kLO6dfFlKDQmQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -33,5 +33,5 @@ http_interactions:
       encoding: ''
       file: yes
       string: ../fixtures/nhgis1092_shape.zip
-  recorded_at: 2023-04-05 20:22:27 GMT
+  recorded_at: 2023-04-05 21:58:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

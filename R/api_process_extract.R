@@ -181,56 +181,61 @@ wait_for_extract <- function(extract,
   is_extract <- inherits(extract, "ipums_extract")
 
   is_ready <- is_extract && extract_is_completed_and_has_links(extract)
-  is_error_state <- is_extract &&
-    !is_ready &&
-    extract$status %in% c("canceled", "failed", "completed")
+  is_expired <- is_extract && !is_ready && extract$status == "completed"
+  is_failed <- is_extract && extract$status %in% c("canceled", "failed")
   is_timed_out <- FALSE
 
   current_delay <- max(initial_delay_seconds, 0)
-  err_message <- "Unknown Error"
 
   wait_start <- Sys.time()
 
-  while (!is_timed_out && !is_ready && !is_error_state) {
+  while (!is_ready && !is_timed_out && !is_failed && !is_expired) {
     if (current_delay > 0) {
       if (verbose) {
         message(paste("Waiting", current_delay, "seconds..."))
+        Sys.sleep(current_delay)
+        message("Checking extract status...")
+      } else {
+        Sys.sleep(current_delay)
       }
-      Sys.sleep(current_delay)
-    }
-
-    if (verbose) {
-      message("Checking extract status...")
     }
 
     extract <- get_extract_info(extract, api_key = api_key)
 
     is_ready <- extract_is_completed_and_has_links(extract)
-    is_error_state <- !is_ready &&
-      extract$status %in% c("canceled", "failed", "completed")
+    is_expired <- !is_ready && extract$status == "completed"
+    is_failed <- extract$status %in% c("canceled", "failed")
     is_timed_out <- !is.null(timeout_seconds) &&
       as.numeric(Sys.time() - wait_start, units = "secs") > timeout_seconds
 
     current_delay <- min(c(current_delay + 10, max_delay_seconds))
   }
 
-  if (is_error_state) {
-    err_message <- c(
+  if (is_expired) {
+    rlang::abort(c(
       paste0(
-        format_collection_for_printing(extract$collection),
-        " extract ", extract$number, " has either expired or failed."
+        format_collection_for_printing(extract$collection), " extract ",
+        extract$number, " has expired and its files have been deleted."
       ),
       "i" = resubmission_hint(is_extract)
-    )
+    ))
+  } else if (is_failed) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection), " extract ",
+        extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
   } else if (is_timed_out) {
-    err_message <- c(
+    rlang::abort(c(
       "Extract did not complete within the specified timeout limit.",
       "i" = "Use `is_extract_ready()` to check extract status manually."
-    )
+    ))
   }
 
   if (!is_ready) {
-    rlang::abort(err_message)
+    rlang::abort("Unknown error")
   } else if (verbose) {
     message(
       paste0(
@@ -306,28 +311,35 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   is_extract <- inherits(extract, "ipums_extract")
 
   is_ready <- is_extract && extract_is_completed_and_has_links(extract)
-  is_expired <- is_extract &&
-    !is_ready &&
-    extract$status %in% c("canceled", "failed", "completed")
+  is_expired <- is_extract && !is_ready && extract$status == "completed"
+  is_failed <- is_extract && extract$status %in% c("failed", "canceled")
 
   # No need to get updated info if the extract is expired or already ready
-  if (!is_expired && !is_ready) {
+  if (!is_expired && !is_failed && !is_ready) {
     extract <- get_extract_info(extract, api_key = api_key)
+
     is_ready <- extract_is_completed_and_has_links(extract)
-    is_expired <- !is_ready &&
-      extract$status %in% c("canceled", "failed", "completed")
+    is_expired <- !is_ready && extract$status == "completed"
+    is_failed <- extract$status %in% c("failed", "canceled")
   }
 
   if (is_expired) {
-    rlang::warn(
-      c(
-        paste0(
-          format_collection_for_printing(extract$collection),
-          " extract ", extract$number, " has either expired or failed."
-        ),
-        "i" = resubmission_hint(is_extract)
-      )
-    )
+    rlang::warn(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has expired ",
+        "and its files have been deleted."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (is_failed) {
+    rlang::warn(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
   }
 
   is_ready
@@ -418,55 +430,57 @@ download_extract <- function(extract,
                              overwrite = FALSE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
-
-  # Make sure we get latest extract status, but also make sure we don't check
-  # the status twice
   is_extract <- inherits(extract, "ipums_extract")
 
-  if (is_extract && extract_is_completed_and_has_links(extract)) {
+  if (is_extract) {
     extract <- validate_ipums_extract(extract)
-    is_downloadable <- TRUE
+    is_ready <- extract_is_completed_and_has_links(extract)
+
+    # If not downloadable, check latest status, since we haven't done so yet.
+    if (!is_ready) {
+      extract <- get_extract_info(extract, api_key = api_key)
+    }
   } else {
     extract <- get_extract_info(extract, api_key = api_key)
-    is_downloadable <- extract_is_completed_and_has_links(extract)
-    is_expired <- !extract$status %in% c("queued", "started", "produced")
+    is_ready <- extract_is_completed_and_has_links(extract)
+  }
 
-    err_msg <- paste0(
-      format_collection_for_printing(extract$collection),
-      " extract ", extract$number,
-      ifelse(
-        is_expired,
-        " has expired and its files have been deleted.",
-        " is not ready to download."
+  is_expired <- !is_ready && extract$status == "completed"
+  is_failed <- extract$status %in% c("canceled", "failed")
+
+  if (is_expired) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has expired ",
+        "and its files have been deleted."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (is_failed) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (!is_ready) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " is not ready to download."
+      ),
+      "i" = paste0(
+        "Use `wait_for_extract()` to wait for extract ",
+        "completion, then reattempt download."
       )
-    )
-
-    if (!is_downloadable) {
-      if (is_expired) {
-        rlang::abort(
-          c(
-            err_msg,
-            "i" = resubmission_hint(is_extract)
-          )
-        )
-      }
-
-      rlang::abort(
-        c(
-          err_msg,
-          "i" = paste0(
-            "Use `wait_for_extract()` to wait for extract ",
-            "completion, then reattempt download."
-          )
-        )
-      )
-    }
+    ))
   }
 
   download_dir <- normalizePath(download_dir, winslash = "/", mustWork = FALSE)
-  download_dir_doesnt_exist <- !dir.exists(download_dir)
 
-  if (download_dir_doesnt_exist) {
+  if (!dir.exists(download_dir)) {
     rlang::abort(
       paste0("The directory `", download_dir, "` does not exist.")
     )

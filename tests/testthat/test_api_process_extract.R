@@ -421,6 +421,18 @@ test_that("Can download shapefile-only extract", {
   expect_true(file.exists(gis_data_file_path))
 })
 
+test_that("Download extract errors", {
+  vcr::use_cassette("download-extract-errors", {
+    expect_error(
+      download_extract(submit_extract(test_usa_extract())),
+      "not ready to download.+Use `wait_for_extract\\(\\)`"
+    )
+  })
+  # TODO: test errors for expired and failed extracts?
+  # This is tougher because get_extract_info() will always update status
+  # before attempting download
+})
+
 # Read downloaded files ------------------
 
 test_that("Can read downloaded files with ipumsr readers", {
