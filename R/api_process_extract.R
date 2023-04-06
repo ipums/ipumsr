@@ -14,15 +14,7 @@
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @param extract If submitting a new extract request, an
-#'   [`ipums_extract`][ipums_extract-class] object.
-#'
-#'   If resubmitting an old request, one of:
-#'   * The data collection and extract number formatted as a string of the
-#'     form `"collection:number"` or as a vector of the form
-#'     `c("collection", number)`
-#'   * An extract number to be associated with your default IPUMS
-#'     collection. See [set_ipums_default_collection()]
+#' @param extract An [`ipums_extract`][ipums_extract-class] object.
 #' @param api_key API key associated with your user account. Defaults to the
 #'   value of the `IPUMS_API_KEY` environment variable. See
 #'   [set_ipums_api_key()].
@@ -63,16 +55,14 @@
 #' is_extract_ready(submitted_extract)
 #'
 #' # Or have R check periodically and download when ready
-#' downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+#' downloadable_extract <- wait_for_extract(submitted_extract)
 #' }
 submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
-  extract <- standardize_extract_identifier(extract)
-
   if (!inherits(extract, "ipums_extract")) {
-    extract <- get_extract_info(extract)
-  } else {
-    extract <- validate_ipums_extract(extract)
+    rlang::abort("Expected `extract` to be an `ipums_extract` object.")
   }
+
+  extract <- validate_ipums_extract(extract)
 
   response <- ipums_api_json_request(
     "POST",
@@ -172,9 +162,8 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' set_ipums_default_collection("usa")
 #' downloadable_extract <- wait_for_extract(1)
 #'
-#' # If you want to subsequently download your completed extract, you can
-#' # use `download_extract()` directly:
-#' download_extract(1, wait = TRUE)
+#' # Use `download_extract()` to download the completed extract:
+#' files <- download_extract(downloadable_extract)
 #' }
 wait_for_extract <- function(extract,
                              initial_delay_seconds = 0,
@@ -185,24 +174,22 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-    timeout_seconds > 0)
+              timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
   is_extract <- inherits(extract, "ipums_extract")
 
   is_ready <- is_extract && extract_is_completed_and_has_links(extract)
-  is_error_state <- is_extract &&
-    !is_ready &&
-    extract$status %in% c("canceled", "failed", "completed")
+  is_expired <- is_extract && !is_ready && extract$status == "completed"
+  is_failed <- is_extract && extract$status %in% c("canceled", "failed")
   is_timed_out <- FALSE
 
   current_delay <- max(initial_delay_seconds, 0)
-  err_message <- "Unknown Error"
 
   wait_start <- Sys.time()
 
-  while (!is_timed_out && !is_ready && !is_error_state) {
+  while (!is_ready && !is_timed_out && !is_failed && !is_expired) {
     if (current_delay > 0) {
       if (verbose) {
         message(paste("Waiting", current_delay, "seconds..."))
@@ -217,31 +204,39 @@ wait_for_extract <- function(extract,
     extract <- get_extract_info(extract, api_key = api_key)
 
     is_ready <- extract_is_completed_and_has_links(extract)
-    is_error_state <- !is_ready &&
-      extract$status %in% c("canceled", "failed", "completed")
+    is_expired <- !is_ready && extract$status == "completed"
+    is_failed <- extract$status %in% c("canceled", "failed")
     is_timed_out <- !is.null(timeout_seconds) &&
       as.numeric(Sys.time() - wait_start, units = "secs") > timeout_seconds
 
     current_delay <- min(c(current_delay + 10, max_delay_seconds))
   }
 
-  if (is_error_state) {
-    err_message <- c(
+  if (is_expired) {
+    rlang::abort(c(
       paste0(
-        format_collection_for_printing(extract$collection),
-        " extract ", extract$number, " has either expired or failed."
+        format_collection_for_printing(extract$collection), " extract ",
+        extract$number, " has expired and its files have been deleted."
       ),
-      "i" = "Use `submit_extract()` to resubmit this extract definition."
-    )
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (is_failed) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection), " extract ",
+        extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
   } else if (is_timed_out) {
-    err_message <- c(
+    rlang::abort(c(
       "Extract did not complete within the specified timeout limit.",
       "i" = "Use `is_extract_ready()` to check extract status manually."
-    )
+    ))
   }
 
   if (!is_ready) {
-    rlang::abort(err_message)
+    rlang::abort("Unknown error")
   } else if (verbose) {
     message(
       paste0(
@@ -317,28 +312,35 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   is_extract <- inherits(extract, "ipums_extract")
 
   is_ready <- is_extract && extract_is_completed_and_has_links(extract)
-  is_expired <- is_extract &&
-    !is_ready &&
-    extract$status %in% c("canceled", "failed", "completed")
+  is_expired <- is_extract && !is_ready && extract$status == "completed"
+  is_failed <- is_extract && extract$status %in% c("failed", "canceled")
 
   # No need to get updated info if the extract is expired or already ready
-  if (!is_expired && !is_ready) {
+  if (!is_expired && !is_failed && !is_ready) {
     extract <- get_extract_info(extract, api_key = api_key)
+
     is_ready <- extract_is_completed_and_has_links(extract)
-    is_expired <- !is_ready &&
-      extract$status %in% c("canceled", "failed", "completed")
+    is_expired <- !is_ready && extract$status == "completed"
+    is_failed <- extract$status %in% c("failed", "canceled")
   }
 
   if (is_expired) {
-    rlang::warn(
-      c(
-        paste0(
-          format_collection_for_printing(extract$collection),
-          " extract ", extract$number, " has either expired or failed."
-        ),
-        "i" = "Use `submit_extract()` to resubmit this extract definition."
-      )
-    )
+    rlang::warn(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has expired ",
+        "and its files have been deleted."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (is_failed) {
+    rlang::warn(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
   }
 
   is_ready
@@ -367,11 +369,6 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   Defaults to current working directory.
 #' @param overwrite Logical value indicating whether to overwrite any files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
-#' @param wait Logical value indicating whether to wait for the completion of
-#'   the specified `extract` if it is not yet ready for download. Defaults to
-#'   `FALSE`. See [`wait_for_extract()`].
-#' @param ... Further arguments passed to [`wait_for_extract()`]. Only used if
-#'   `wait = TRUE`.
 #'
 #' @return The path(s) to the files required to read the data
 #'   requested in the extract, invisibly.
@@ -432,61 +429,59 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
-                             wait = FALSE,
-                             api_key = Sys.getenv("IPUMS_API_KEY"),
-                             ...) {
+                             api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
+  is_extract <- inherits(extract, "ipums_extract")
 
-  # Make sure we get latest extract status, but also make sure we don't check
-  # the status twice
-  is_ipums_extract_object <- inherits(extract, "ipums_extract")
-
-  if (is_ipums_extract_object && extract_is_completed_and_has_links(extract)) {
+  if (is_extract) {
     extract <- validate_ipums_extract(extract)
-    is_downloadable <- TRUE
+    is_ready <- extract_is_completed_and_has_links(extract)
+
+    # If not downloadable, check latest status, since we haven't done so yet.
+    if (!is_ready) {
+      extract <- get_extract_info(extract, api_key = api_key)
+    }
   } else {
     extract <- get_extract_info(extract, api_key = api_key)
-    is_downloadable <- extract_is_completed_and_has_links(extract)
-    is_expired <- !extract$status %in% c("queued", "started", "produced")
+    is_ready <- extract_is_completed_and_has_links(extract)
+  }
 
-    err_msg <- paste0(
-      format_collection_for_printing(extract$collection),
-      " extract ", extract$number,
-      ifelse(is_expired, " has expired.", " is not ready to download.")
-    )
+  is_expired <- !is_ready && extract$status == "completed"
+  is_failed <- extract$status %in% c("canceled", "failed")
 
-    if (!is_downloadable) {
-      if (is_expired) {
-        rlang::abort(
-          c(
-            err_msg,
-            "i" = "Use `submit_extract()` to resubmit this extract definition."
-          )
-        )
-      }
-
-      if (!wait) {
-        rlang::abort(
-          c(
-            err_msg,
-            "i" = paste0(
-              "Set `wait = TRUE` to wait for extract ",
-              "completion and reattempt download."
-            )
-          )
-        )
-      } else {
-        message(err_msg)
-        extract <- wait_for_extract(extract, ...)
-        is_downloadable <- extract_is_completed_and_has_links(extract)
-      }
-    }
+  if (is_expired) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has expired ",
+        "and its files have been deleted."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (is_failed) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " has failed."
+      ),
+      "i" = resubmission_hint(is_extract)
+    ))
+  } else if (!is_ready) {
+    rlang::abort(c(
+      paste0(
+        format_collection_for_printing(extract$collection),
+        " extract ", extract$number, " is not ready to download."
+      ),
+      "i" = paste0(
+        "Use `wait_for_extract()` to wait for extract ",
+        "completion, then reattempt download."
+      )
+    ))
   }
 
   download_dir <- normalizePath(download_dir, winslash = "/", mustWork = FALSE)
-  download_dir_doesnt_exist <- !dir.exists(download_dir)
 
-  if (download_dir_doesnt_exist) {
+  if (!dir.exists(download_dir)) {
     rlang::abort(
       paste0("The directory `", download_dir, "` does not exist.")
     )
@@ -967,11 +962,8 @@ ipums_api_json_request <- function(verb,
     } else if (status == 404) {
       if (fostr_detect(path, "^extracts/\\d+$")) {
         extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract <- get_extract_info(
-          collection,
-          how_many = 1
-        )
-        most_recent_extract_number <- most_recent_extract[[1]]$number
+        most_recent_extract_number <- get_last_extract_info(collection)$number
+
         if (extract_number > most_recent_extract_number) {
           coll <- format_collection_for_printing(collection)
           rlang::abort(

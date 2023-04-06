@@ -43,8 +43,10 @@ underlying list
 \item Create an \code{ipums_extract} object from scratch with the appropriate
 \link{define_extract} function. These functions take the form
 \verb{define_extract_\{collection\}}
-\item Use \code{\link[=get_extract_info]{get_extract_info()}} to retrieve information about previously-submitted
-extract requests
+\item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
+request
+\item Use \code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}} to obtain the extract definitions of
+previously-submitted extracts
 }
 }
 

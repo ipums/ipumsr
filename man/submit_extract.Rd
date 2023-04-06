@@ -7,17 +7,7 @@
 submit_extract(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
-\item{extract}{If submitting a new extract request, an
-\code{\link[=ipums_extract-class]{ipums_extract}} object.
-
-If resubmitting an old request, one of:
-\itemize{
-\item The data collection and extract number formatted as a string of the
-form \code{"collection:number"} or as a vector of the form
-\code{c("collection", number)}
-\item An extract number to be associated with your default IPUMS
-collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
-}}
+\item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See
@@ -59,7 +49,7 @@ submitted_extract <- get_last_extract_info("usa")
 is_extract_ready(submitted_extract)
 
 # Or have R check periodically and download when ready
-downloadable_extract <- download_extract(submitted_extract, wait = TRUE)
+downloadable_extract <- wait_for_extract(submitted_extract)
 }
 }
 \seealso{

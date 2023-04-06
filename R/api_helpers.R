@@ -137,6 +137,8 @@ set_ipums_api_key <- function(api_key,
 #' \dontrun{
 #' # Extract info will now be retrieved for the default collection:
 #' get_last_extract_info()
+#' get_recent_extracts_info()
+#'
 #' is_extract_ready(1)
 #' get_extract_info(1)
 #'
@@ -830,4 +832,20 @@ geog_extent_lookup <- function(values, lookup_key) {
   recoded <- toupper(dplyr::recode(values_lower, !!!lookup_key))
 
   recoded
+}
+
+resubmission_hint <- function(is_extract) {
+  if (!is_extract) {
+    hint <- paste0(
+      "Use `get_extract_info()` and `submit_extract()` to resubmit this ",
+      "extract definition as a new extract request."
+    )
+  } else {
+    hint <- paste0(
+      "Use `submit_extract()` to resubmit this extract definition ",
+      "as a new extract request."
+    )
+  }
+
+  hint
 }
