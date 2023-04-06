@@ -892,3 +892,11 @@ resubmission_hint <- function(is_extract) {
 
   hint
 }
+
+# Helper to convert metadata camelCase names to snake_case
+# for consistency with ipums_extract object naming.
+to_snake_case <- function(x) {
+  x <- tolower(gsub("([A-Z])","\\_\\1", x))
+  x <- gsub("_{2,}", "_", x)
+  gsub("^_", "", x)
+}

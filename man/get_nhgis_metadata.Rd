@@ -12,6 +12,7 @@ get_nhgis_metadata(
   ...,
   match_all = TRUE,
   match_case = FALSE,
+  n_records = NULL,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
@@ -48,6 +49,12 @@ Defaults to \code{TRUE}.}
 
 \item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
 the expressions provided in \code{...}. Defaults to \code{FALSE}.}
+
+\item{n_records}{For summary metadata, the number of records to retrieve,
+starting from the first record. If \code{NULL}, obtains all records for the
+given \code{type}. Maximum allowed value is 2500.
+
+Only used if \code{type} is provided.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See

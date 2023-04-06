@@ -146,6 +146,11 @@
 #'   Defaults to `TRUE`.
 #' @param match_case If `TRUE`, use case-sensitive matching when interpreting
 #'   the expressions provided in `...`. Defaults to `FALSE`.
+#' @param n_records For summary metadata, the number of records to retrieve,
+#'   starting from the first record. If `NULL`, obtains all records for the
+#'   given `type`. Maximum allowed value is 2500.
+#'
+#'   Only used if `type` is provided.
 #'
 #' @return If `type` is provided, a [`tibble`][tibble::tbl_df-class] of
 #'   summary metadata for all data sources of the provided `type`.
@@ -190,6 +195,7 @@ get_nhgis_metadata <- function(type = NULL,
                                ...,
                                match_all = TRUE,
                                match_case = FALSE,
+                               n_records = NULL,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
   summary_req <- !is.null(type)
   ds_req <- !is.null(dataset)
@@ -236,23 +242,32 @@ get_nhgis_metadata <- function(type = NULL,
   }
 
   if (summary_req) {
-    metadata <- get_nhgis_summary_metadata(type = type, api_key = api_key)
+    metadata <- get_nhgis_summary_metadata(
+      type,
+      n_records = n_records,
+      api_key = api_key
+    )
 
-    metadata <- filter_multi_col(
+    metadata <- filter_df_cols(
       metadata,
       ...,
       match_all = match_all,
       match_case = match_case
     )
   } else {
-    api_url <- metadata_request_url(
-      .base_url = api_metadata_url("nhgis"),
-      datasets = dataset,
-      data_tables = data_table,
-      time_series_tables = time_series_table
+    metadata <- ipums_api_metadata_request(
+      url = metadata_request_url(
+        collection = "nhgis",
+        path = list(
+          datasets = dataset,
+          data_tables = data_table,
+          time_series_tables = time_series_table
+        )
+      ),
+      api_key = api_key
     )
 
-    metadata <- ipums_api_metadata_request(api_url, api_key)
+    metadata <- nested_df_to_tbl(metadata)
   }
 
   metadata
@@ -266,76 +281,79 @@ get_nhgis_metadata <- function(type = NULL,
 #' time series tables, or shapefiles. Handles data table caching and updating.
 #'
 #' @inheritParams get_nhgis_metadata
+#' @param get_all_records Logical indicating whether all records should be
+#'   retrieved by iterating through the paginated API response. This is only
+#'   needed to enable unit testing of page iteration without producing very
+#'   large cassette files. Users can trigger iterative behavior by leaving
+#'   `n_records = NULL` in `get_nhgis_metadata()`.
 #'
 #' @return Tibble of summary metadata for the requested `type`
 #'
 #' @noRd
 get_nhgis_summary_metadata <- function(type,
-                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
-  if (!type %in% c("datasets", "time_series_tables", "shapefiles")) {
+                                       n_records,
+                                       api_key = Sys.getenv("IPUMS_API_KEY"),
+                                       get_all_records = is_null(n_records)) {
+  valid_types <- c(
+    "datasets",
+    "data_tables",
+    "time_series_tables",
+    "shapefiles"
+  )
+
+  if (!type %in% valid_types) {
     rlang::abort(
       paste0(
-        "`type` must be one of \"datasets\", ",
+        "`type` must be one of \"datasets\", \"data_tables\", ",
         "\"time_series_tables\", or \"shapefiles\""
       )
     )
   }
 
   metadata <- ipums_api_metadata_request(
-    metadata_request_url(.base_url = api_metadata_url("nhgis"), type),
-    api_key
+    url = metadata_request_url(
+      collection = "nhgis",
+      path = list(type),
+      queries = list(pageNumber = 1, pageSize = n_records %||% 2500)
+    ),
+    api_key = api_key
   )
 
-  metadata
-}
+  out <- list(metadata)
 
-#' Generate a URL to submit to the NHGIS metadata API
-#'
-#' @param .base_url Base url to which arguments passed to `...` will be
-#'   appended.
-#' @param ... Arbitrary number of arguments. Arguments will be appended
-#'   to the `.base_url` in the format `argument_name/argument_value`. Arguments
-#'   without names will be appended with `/` padding
-#'
-#' @return A character with the URL corresponding to the metadata API request
-#'   for the provided values of `...`
-#'
-#' @noRd
-metadata_request_url <- function(.base_url, ...) {
-  dots <- purrr::compact(rlang::list2(...))
-  fields <- names(dots)
+  # get_all_records used to enable dev to trigger looping in tests, but is
+  # not exposed to the user and is instead triggered by `n_records = NULL`
+  if (get_all_records) {
+    while (!is.null(metadata$links$nextPage)) {
+      metadata <- ipums_api_metadata_request(
+        url = metadata$links$nextPage,
+        api_key = api_key
+      )
 
-  url_split <- strsplit(.base_url, split = "/")[[1]]
-  collection <- url_split[length(url_split)]
+      out <- c(out, list(metadata))
+    }
+  }
 
-  args <- c(.base_url, rbind(fields, unlist(dots)))
-  args <- args[which(args != "")]
+  metadata <- purrr::map_dfr(out, ~ .x$data)
 
-  url <- paste(args, collapse = "/")
-
-  api_url <- httr::modify_url(
-    url = url,
-    query = paste0("version=", ipums_api_version(collection))
-  )
-
-  api_url
+  nested_df_to_tbl(metadata)
 }
 
 #' Submit a request to the IPUMS metadata API and parse response
 #'
-#' @param request_url URL for the request
+#' @param url URL for the request
 #' @param api_key API key
 #'
 #' @return Either a tibble/data.frame or list object with the metadata for the
 #'   provided URL
 #'
 #' @noRd
-ipums_api_metadata_request <- function(request_url,
+ipums_api_metadata_request <- function(url,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
   tryCatch(
     {
       res <- httr::GET(
-        url = request_url,
+        url = url,
         httr::user_agent(
           paste0(
             "https://github.com/ipums/ipumsr ",
@@ -374,9 +392,58 @@ ipums_api_metadata_request <- function(request_url,
     )
   }
 
-  metadata <- nested_df_to_tbl(content)
+  content
+}
 
-  metadata
+#' Generate a URL to submit to the NHGIS metadata API
+#'
+#' @param collection IPUMS collection for the request
+#' @param path List of components that should be added to the path of the
+#'   request URL. Elements will be collapsed in order and separated with `/` to
+#'   form the path of the URL.
+#'
+#'   Unnamed elements will be inserted as-is. Named elements will be constructed
+#'   in the format `name/value`. However, named elements with value `NULL` will
+#'   have both name and value omitted from the path. Therefore, optional
+#'   elements can be provided with a name if they evaluate to `NULL` when not
+#'   used.
+#' @param queries Queries to add to the request URL. For metadata endpoints,
+#'   this typically corresponds to pageSize and pageNumber.
+#'
+#' @return A character the constructed request URL
+#'
+#' @noRd
+metadata_request_url <- function(collection, path, queries = NULL) {
+  queries_is_null_or_named_list <- is.null(queries) ||
+    is.list(queries) && !is.null(names(queries)) && !any(names(queries) == "")
+
+  if (!queries_is_null_or_named_list) {
+    rlang::abort("`queries` argument must be `NULL` or a named list")
+  }
+
+  api_url <- httr::modify_url(
+    api_metadata_url(),
+    path = metadata_request_path(collection, path),
+    query = c(
+      list(version = ipums_api_version(collection)),
+      queries
+    )
+  )
+
+  api_url
+}
+
+# Helper to construct path for `metadata_request_url`
+metadata_request_path <- function(collection, path) {
+  path <- purrr::compact(path)
+  fields <- names(path)
+
+  args <- c("metadata", collection, rbind(fields, unlist(path)))
+
+  # Avoids extra `/` for unnamed args in `...`
+  args <- args[which(args != "")]
+
+  paste(args, collapse = "/")
 }
 
 #' Identify list elements that match provided regular expressions
@@ -446,7 +513,7 @@ filter_list <- function(l, match_vals, match_all = FALSE, match_case = FALSE) {
 #'   columns remain unmodified.
 #'
 #' @noRd
-filter_multi_col <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
+filter_df_cols <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
   dots <- purrr::compact(rlang::list2(...))
 
   missing_names <- setdiff(names(dots), colnames(.data))
@@ -504,8 +571,13 @@ nested_df_to_tbl <- function(l) {
         }
       )
     )
+
+    # Convert from API's camelCase to snake_case for consistency with
+    # ipums_extract objects
+    colnames(l) <- to_snake_case(colnames(l))
   } else if (rlang::is_list(l)) {
     l <- purrr::map(l, nested_df_to_tbl)
+    names(l) <- to_snake_case(names(l))
   }
 
   l
