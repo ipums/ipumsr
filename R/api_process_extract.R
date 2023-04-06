@@ -193,11 +193,12 @@ wait_for_extract <- function(extract,
     if (current_delay > 0) {
       if (verbose) {
         message(paste("Waiting", current_delay, "seconds..."))
-        Sys.sleep(current_delay)
-        message("Checking extract status...")
-      } else {
-        Sys.sleep(current_delay)
       }
+      Sys.sleep(current_delay)
+    }
+
+    if (verbose) {
+      message("Checking extract status...")
     }
 
     extract <- get_extract_info(extract, api_key = api_key)
