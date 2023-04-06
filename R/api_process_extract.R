@@ -67,7 +67,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   response <- ipums_api_json_request(
     "POST",
     collection = extract$collection,
-    path = NULL,
+    path = "extracts/",
     body = extract_to_request_json(extract),
     api_key = api_key
   )
@@ -921,7 +921,7 @@ ipums_api_json_request <- function(verb,
   }
 
   api_url <- httr::modify_url(
-    api_extract_url(),
+    api_base_url(),
     path = path,
     query = c(
       list(collection = collection, version = ipums_api_version(collection)),

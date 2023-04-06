@@ -749,28 +749,16 @@ copy_ipums_extract <- function(extract) {
   extract
 }
 
-api_extract_url <- function() {
+api_base_url <- function() {
   api_instance <- active_api_instance()
 
   if (api_instance == "") {
-    url <- "https://api.ipums.org/extracts/"
+    url <- "https://api.ipums.org/"
   } else {
-    url <- paste0("https://", api_instance, ".api.ipums.org/extracts/")
+    url <- paste0("https://", api_instance, ".api.ipums.org/")
   }
 
   url
-}
-
-api_metadata_url <- function(collection = NULL) {
-  api_instance <- active_api_instance()
-
-  if (api_instance == "") {
-    url <- "https://api.ipums.org/metadata/"
-  } else {
-    url <- paste0("https://", api_instance, ".api.ipums.org/metadata/")
-  }
-
-  paste0(url, collection)
 }
 
 #' Get the active API instance to use for API requests

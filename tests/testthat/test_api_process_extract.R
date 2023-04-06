@@ -505,7 +505,7 @@ test_that("We parse API errors on bad requests", {
       ipums_api_json_request(
         "POST",
         collection = "usa",
-        path = NULL,
+        path = "extracts/",
         body = extract_to_request_json(bad_extract),
         api_key = Sys.getenv("IPUMS_API_KEY")
       ),

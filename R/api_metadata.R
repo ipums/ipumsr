@@ -422,7 +422,7 @@ metadata_request_url <- function(collection, path, queries = NULL) {
   }
 
   api_url <- httr::modify_url(
-    api_metadata_url(),
+    api_base_url(),
     path = metadata_request_path(collection, path),
     query = c(
       list(version = ipums_api_version(collection)),

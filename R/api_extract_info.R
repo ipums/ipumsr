@@ -114,7 +114,7 @@ get_extract_info <- function(extract,
   response <- ipums_api_json_request(
     "GET",
     collection = tolower(extract$collection),
-    path = paste0(basename(api_extract_url()), "/", extract$number),
+    path = paste0("extracts/", extract$number),
     queries = NULL,
     api_key = api_key
   )
@@ -143,7 +143,7 @@ get_recent_extracts_info <- function(collection = NULL,
   response <- ipums_api_json_request(
     "GET",
     collection = collection %||% get_default_collection(),
-    path = NULL,
+    path = "extracts/",
     queries = list(pageNumber = 1, pageSize = how_many),
     api_key = api_key
   )
