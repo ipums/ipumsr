@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1992253/usa_00159.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2002402/usa_00207.xml
     body:
       encoding: ''
       string: ''
@@ -17,27 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00159.xml"; filename*=UTF-8''usa_00159.xml
+      content-disposition: attachment; filename="usa_00207.xml"; filename*=UTF-8''usa_00207.xml
       content-type: application/xml
-      date: Thu, 23 Mar 2023 20:05:07 GMT
-      etag: '"641caeab-8bbc"'
-      last-modified: Thu, 23 Mar 2023 19:55:23 GMT
+      date: Thu, 06 Apr 2023 22:51:30 GMT
+      etag: '"642f484f-8bba"'
+      last-modified: Thu, 06 Apr 2023 22:31:43 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=bj6m%2FYLBTXtjsknr0d3rKjhPeVcDXD%2FHpde0E%2F2ifnv00TkhQ9o8K6OIeQlKYbsVabkbo3EzfW02lbjBxJU4Hd3XWn9u4yK5VUX5sbcI3Da9mFOS68T%2BTQzdLCiGyair1IiZrupHwJ7Ru2zIVB5kMJLmvKgqU5osvSInk6xByfF%2BB516pPFE40b7JX0gj7NlfrwvWUW2Sg1ob1KiF2iUuuDe1xQZE9iTC7uixHfozxdPRpgPmYTslKVqKmuyxv0%3D--UVllZiITBVUqPrE2--%2BBKK7%2B2%2BdngB86q7Gug6sA%3D%3D;
+      set-cookie: _session_id=4uFUIYYpgiO2ylXGBYkzzFnjRAENLNUus7MIIPp01048IMgo9kX5%2BD2K6giLwrHWUI4QeGjgp6N3BWf2cFcAxEaTncGazO46NZqlP78m4SCKYVhNfoJOfJIranahijQRtoTIAH2lRUms0RUis4ppCiK042RxO4zLRdwJLIRYJiCaGXSjHu6p11oH98rZP2lf5EZCRZrjQf7NC%2BR0HHELI%2FVlBl%2F3p7jzafaIM5iiryAX%2FATgEji1FCMmtMu%2BNOY%3D--E5kv5AhHc0GMYG55--xRIdMbLkDxX3zhoo82c9sg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '35772'
+      content-length: '35770'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00159.xml
-  recorded_at: 2023-03-23 20:05:07 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/usa_00207.xml
+  recorded_at: 2023-04-06 22:51:31 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/1992253/usa_00159.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2002402/usa_00207.dat.gz
     body:
       encoding: ''
       string: ''
@@ -53,13 +53,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="usa_00159.dat.gz"; filename*=UTF-8''usa_00159.dat.gz
+      content-disposition: attachment; filename="usa_00207.dat.gz"; filename*=UTF-8''usa_00207.dat.gz
       content-type: application/gzip
-      date: Thu, 23 Mar 2023 20:05:07 GMT
-      etag: '"641caeac-28e61"'
-      last-modified: Thu, 23 Mar 2023 19:55:24 GMT
+      date: Thu, 06 Apr 2023 22:51:31 GMT
+      etag: '"642f4851-28e61"'
+      last-modified: Thu, 06 Apr 2023 22:31:45 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=nuqaJVr70btwSUAbSWc2puXTAdF1cwohM1PswCRwcJmFeBSAPR2SzNL7Qit1mlG92ES3GPKMxG4lXIseY3URWawIrKmnjyq64njzHtpQFpfYFSdLrzRh5FPot57Ov%2BxiUerY7%2B9AbRnGj1wploN%2BgJvJ8YYi0V5iuE8KsPLlOjq%2FP7eINNnAFFSpwXgm%2F5QbaLdA9X%2BNK8n0l%2BeezKnVfelR4x923rl%2Bcta9xesItS7EpP%2BEZXArkiS%2FzZJ0gmc%3D--e47fSeEvqEPbgiXD--RppYcbRZ9aqu%2FPrqyoWSkg%3D%3D;
+      set-cookie: _session_id=zEkKmLVrtXcfao8FHLEe5Hxxz2erZgL5ENO%2F5apa0VWuJ7Z4Ho7%2FA6d%2BgTpg7e2K0%2FjWNKzwGPdSi6c3lKe%2Fe5SgozOQq6RghUhbm4MhrS1e7vQLIGs%2BgRgPC%2BJEqqxqA38BDTAkq8%2FSDimh0MRrwLrMacbC%2BMHFeFL6c%2B6gRyK9BBk%2FwveI61H6T1BZBaR7xImq5Gq4wB9%2FuycmGyvb9xX8c1QmL0YSNxn%2FNPfhM4wzSbXMnMY4WF4rUV8MKik%3D--FSGNs%2FF2%2Bw3ko35p--dvYQU3rGPpei7VT8vfznRw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -68,6 +68,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00159.dat.gz
-  recorded_at: 2023-03-23 20:05:07 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/usa_00207.dat.gz
+  recorded_at: 2023-04-06 22:51:31 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

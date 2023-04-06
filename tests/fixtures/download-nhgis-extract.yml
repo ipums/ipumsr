@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_csv.zip
     body:
       encoding: ''
       string: ''
@@ -17,27 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1091_csv.zip"; filename*=UTF-8''nhgis1091_csv.zip
+      content-disposition: attachment; filename="nhgis1154_csv.zip"; filename*=UTF-8''nhgis1154_csv.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:09 GMT
-      etag: '"641caf19-16293f"'
-      last-modified: Thu, 23 Mar 2023 19:57:13 GMT
+      date: Thu, 06 Apr 2023 22:51:31 GMT
+      etag: '"642f495d-16293e"'
+      last-modified: Thu, 06 Apr 2023 22:36:13 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=mmbfABEl%2Bcp5susDXPX6FTmqw8bhNgyyd4dNwK3KNgliIeMpjFkZVGzkWUwQtW1EpMVMC2bzNIiPARTLua5gfmcrzRbOcXQXRWTHp1K3zh0PuZ6NPCkP7f50s5yqkaIeGthRM5aWWfxsWud%2BnFYdKS5yqtYRLTv2NM1qqeXvkfvAd0bQpgtcOgFf%2FrS4o1uFwMR76CQKgusYIlL6KUO%2BJXPW%2Bj2GhFHF1BhHgVVsJkVEd9VcegBTmzI3QvoD6dw%3D--Y4oU0SW%2FurRgIKMa--g0oxg2sltgPddUKgBDEnFQ%3D%3D;
+      set-cookie: _session_id=V1KMCCXhzk66MRYhF7HSAANdlkb15MIz6XkV8IKqKs9K9%2B%2Bd4q6rp5cbAuQZp5xEK7173a0EcxHzZsJB2CedAcdIXPNgK3g%2Fje5xPd1tPcKxBOYvc5ba1mG4DJOThuTsBtYBpT7C2h6l1UytX6moDpNZVNBE88g76BZgCsR3IpUY84SfVporLHM0bxyuWb2WMeQfld%2BXo63gPluP1YKtIalHcSRfOd0AMWQphDVqHCRIcSRlh84nGRUmgFxQAwI%3D--eepLJk5fcQXm2ZAQ--jFDxmgvc4%2FufnPsv0PFriA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '1452351'
+      content-length: '1452350'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_csv.zip
-  recorded_at: 2023-03-23 20:05:10 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1154_csv.zip
+  recorded_at: 2023-04-06 22:51:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_shape.zip
     body:
       encoding: ''
       string: ''
@@ -53,13 +53,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1091_shape.zip"; filename*=UTF-8''nhgis1091_shape.zip
+      content-disposition: attachment; filename="nhgis1154_shape.zip"; filename*=UTF-8''nhgis1154_shape.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:10 GMT
-      etag: '"641caecb-7ca81"'
-      last-modified: Thu, 23 Mar 2023 19:55:55 GMT
+      date: Thu, 06 Apr 2023 22:51:31 GMT
+      etag: '"642f4870-7ca81"'
+      last-modified: Thu, 06 Apr 2023 22:32:16 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=T4N3gBkeW94LcnZox79N8mPuogWZxvvJipzmniuvRhi4b3yc7kAGjdXipf7kpiuVio1ltt9mhlTupU4FLLKqtvx4cVblQS5XQEWgSqXQEXPSLcJsRwA9bnVRji1cdEF0TokXBomX0u9wM1N5fWWBmCclO%2BRjKjiBJogH2MYnC0fByQsdCxsSgWMpGycgk9GWYbub6LgZoWr5lYNqQgig7AbcWVAs%2Faf68Q1Q6eQQq%2BKGbKw0ZGQTph%2FJY1KNz0s%3D--MboE8tv56oQrdSfA--1KRXoGM0LZdzOvLKLoLRhA%3D%3D;
+      set-cookie: _session_id=XK8cPzjHJRlrYw4MkCx3Ue5gsrf47BCyES1t4cn4lDSS7LYXEfYSSLcgFecF0GN0F4JFWYuDCMu0amzoBVRhDSFYqVmQ4P2%2B6BeD4dBw1BLWpsrrDaptHGdWq%2FRt%2FcIM%2BXzEFHZ08V2YmPmSoXo%2BHPv0C4kU6QH7%2FaK4LNd6tsHhyhIsHwnQealBr5zVl%2FmCdSyxJ%2FKpZpNxFtoj%2FRrkJLvipKVRgoIKPeiqY%2BHEDmcoBc783%2Bb2Cx2UNXdASKw%3D--Ms8juPIC%2BNCOSpSj--j16HympnO0JL0trC%2FoZEbA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -68,6 +68,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_shape.zip
-  recorded_at: 2023-03-23 20:05:10 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1154_shape.zip
+  recorded_at: 2023-04-06 22:51:32 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

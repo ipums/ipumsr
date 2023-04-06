@@ -199,7 +199,7 @@ Community Survey (ACS):
 usa_extract_definition <- define_extract_usa(
   description = "USA extract for API vignette",
   samples = c("us2018a", "us2019a"),
-  variables = c("AGE", "SEX", "RACE", "STATEFIP")
+  variables = c("AGE", "SEX", "RACE", "STATEFIP", "MARST")
 )
 
 usa_extract_definition
@@ -331,7 +331,7 @@ used to determine the name used by the API to reference a data source of
 interest.
 
 ```{r}
-get_nhgis_metadata(type = "time_series_tables") %>%
+get_nhgis_metadata(type = "datasets") %>%
   head()
 ```
 
@@ -784,7 +784,7 @@ to find one with particular details.
 ```{r}
 # Look for a description containing specific term
 usa_extract_tbl %>%
-  filter(grepl("marital status", description))
+  filter(grepl("vignette", description))
 ```
 
 Filtering on properties such as "samples" or "variables" is a little

@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992271/nhgis1092_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002419/nhgis1155_shape.zip
     body:
       encoding: ''
       string: ''
@@ -17,13 +17,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1092_shape.zip"; filename*=UTF-8''nhgis1092_shape.zip
+      content-disposition: attachment; filename="nhgis1155_shape.zip"; filename*=UTF-8''nhgis1155_shape.zip
       content-type: application/zip
-      date: Wed, 05 Apr 2023 21:58:47 GMT
-      etag: '"641cb0e6-7ca81"'
-      last-modified: Thu, 23 Mar 2023 20:04:54 GMT
+      date: Thu, 06 Apr 2023 22:51:35 GMT
+      etag: '"642f4ce5-7ca81"'
+      last-modified: Thu, 06 Apr 2023 22:51:17 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=nIM4L5TKUXpB28HyFcHqEkNt3ZDQhRyqOq24fSjCbD8M3m%2Btha03GKnCn16TIupuw4uYBioxoC%2BLbOZdYoAcBRvbQRAoGfUDYsDoukKIwWR94Da53Xt893sZTje4T40ZhwvtLIovWVAAv0%2Fwuaf1fEgTG2z1HQRRDkau3rxJjFhf5V%2FwFt72jJcbby0yOVdjDf7o2mqYU1aDf9mLocOKnox1LYKcU1ZCTe2j6uDm21Heimw%2FFhHw%2FFBpwB3qTLg%3D--CH2N3VMWrkT82jaZ--M4BMzV9T1kLO6dfFlKDQmQ%3D%3D;
+      set-cookie: _session_id=3NlbjKQah5w2fOWRSI80EeqTAIyQp1GlLzvCAV0zsuXDqrZqVJWuvHjqM74BiL8tFsZnOPeQjQI1ixYihfJLzygO43yxEMtJijjwM4%2BZFsMrkvNfb%2BPXGjxNyiqm44HW%2FvtHaHp%2BJn1m30i016R%2BXMc5xyLFJqE95tVshmXfpRLy9AIw7Oqbh8w%2B3MakgymhrmqgfUHMGeEyI1Z9J88lcKcVsvEXvC86K0L16bSXjDiJwP0ArJl3EY3IIaUD8dk%3D--ELP%2B%2BZHUsoUtAAot--%2B2bOy1bB8ctnQDAUOrZudA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -32,6 +32,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1092_shape.zip
-  recorded_at: 2023-04-05 21:58:47 GMT
+      string: ../fixtures/nhgis1155_shape.zip
+  recorded_at: 2023-04-06 22:51:35 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

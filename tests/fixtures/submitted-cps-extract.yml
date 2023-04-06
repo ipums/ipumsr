@@ -1,10 +1,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=cps&version=beta
+    uri: https://api.ipums.org/extracts/?collection=cps&version=2
     body:
       encoding: ''
-      string: '{"description":"Compare age-sex-race breakdowns 1976","data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{},"MISH":{},"CPSIDP":{},"AGE":{},"SEX":{},"RACE":{},"UH_SEX_B1":{}}}'
+      string: '{"description":"Compare age-sex-race breakdowns 1976","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{},"MISH":{},"CPSIDP":{},"AGE":{},"SEX":{},"RACE":{},"UH_SEX_B1":{}}}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 19:55:34 GMT
-      etag: W/"0c56fbb6b0188937c3ad01d67175aaa8"
+      date: Thu, 06 Apr 2023 22:31:52 GMT
+      etag: W/"732bc874ce645a8b090acd87c62f020d"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: de3717a5-cd3d-4124-ada6-16312997a0da
-      x-runtime: '2.004724'
+      x-request-id: 34086b80-b49e-47e3-93ae-2356e07bf14e
+      x-runtime: '0.488023'
       x-xss-protection: '0'
-      content-length: '507'
+      content-length: '602'
     body:
       encoding: ''
       file: no
-      string: '{"version":1,"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"number":57,"status":"queued","download_links":{}}'
-  recorded_at: 2023-03-23 19:55:34 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: '{"number":72,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"collection":"cps"}}'
+  recorded_at: 2023-04-06 22:31:52 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

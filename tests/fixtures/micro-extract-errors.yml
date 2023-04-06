@@ -1,10 +1,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=usa&version=beta
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2
     body:
       encoding: ''
-      string: '{"description":"","data_structure":{},"data_format":"","samples":{"foo":{}},"variables":[]}'
+      string: '{"description":"","dataStructure":{},"dataFormat":"","samples":{"foo":{}},"variables":[]}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 20:06:40 GMT
+      date: Thu, 06 Apr 2023 22:51:38 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -29,16 +29,16 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: db873d15-bdcf-4215-bf1f-bcad97af0f5e
-      x-runtime: '0.064427'
+      x-request-id: a2ffa1e6-70da-4678-8486-37091d1c8a0a
+      x-runtime: '0.052247'
       x-xss-protection: '0'
-      content-length: '257'
+      content-length: '256'
     body:
       encoding: ''
       file: no
       string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
-        Request"},"detail":["The property ''#/data_structure'' did not contain a minimum
+        Request"},"detail":["The property ''#/dataStructure'' did not contain a minimum
         number of properties 1.","The property ''#/variables'' of type array did not
         match the following type: object."]}'
-  recorded_at: 2023-03-23 20:06:40 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+  recorded_at: 2023-04-06 22:51:38 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

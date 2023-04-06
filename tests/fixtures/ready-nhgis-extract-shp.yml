@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1092?collection=nhgis&version=v1
+    uri: https://api.ipums.org/extracts/1155?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 20:05:02 GMT
-      etag: W/"fc5e6998baa3ccd5de64125b6fba4108"
+      date: Thu, 06 Apr 2023 22:51:24 GMT
+      etag: W/"52c36416421aa580493b5fd0294bee9d"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,13 +30,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 6772c98e-3dff-42e9-ad53-14620f7c36e0
-      x-runtime: '0.651068'
+      x-request-id: 82430b83-5d5d-4413-b6fd-6bfd2463b75a
+      x-runtime: '0.568716'
       x-xss-protection: '0'
-      content-length: '209'
+      content-length: '326'
     body:
       encoding: ''
       file: no
-      string: '{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1092,"status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992271/nhgis1092_shape.zip"}}'
-  recorded_at: 2023-03-23 20:05:02 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: '{"number":1155,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002419/nhgis1155_shape.zip","bytes":510593,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
+  recorded_at: 2023-04-06 22:51:24 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

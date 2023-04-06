@@ -1,10 +1,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=usa&version=beta
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2
     body:
       encoding: ''
-      string: '{"description":"Test extract","data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","samples":{"us2017b":{}},"variables":{"YEAR":{}}}'
+      string: '{"description":"Test extract","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us2017b":{}},"variables":{"YEAR":{}}}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 19:55:19 GMT
-      etag: W/"898e6ca70a42965bed036d08a3fc7efd"
+      date: Thu, 06 Apr 2023 22:31:39 GMT
+      etag: W/"37c42982b12855dd75b8cd97e3d97dc2"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ae8df158-6662-4f34-9f26-b46a8e58b2e7
-      x-runtime: '0.561666'
+      x-request-id: 7b1e8ab2-4c3f-4de3-8b4e-0b3373bc3966
+      x-runtime: '0.520858'
       x-xss-protection: '0'
-      content-length: '437'
+      content-length: '532'
     body:
       encoding: ''
       file: no
-      string: '{"version":1,"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"Test
-        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"number":159,"status":"queued","download_links":{}}'
-  recorded_at: 2023-03-23 19:55:20 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: '{"number":207,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
+        extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"collection":"usa"}}'
+  recorded_at: 2023-04-06 22:31:39 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
