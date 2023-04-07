@@ -495,20 +495,16 @@ download_extract <- function(extract,
 #' Convert an `ipums_extract` object to a JSON string for API submission
 #'
 #' @param extract An `ipums_extract` object
-#' @param include_endpoint_info Logical indicating whether to include
-#'   collection and API version information in the JSON object
-#'
+
 #' @return A JSON string containing the formatted extract definition
 #'
 #' @noRd
-extract_to_request_json <- function(extract, include_endpoint_info) {
+extract_to_request_json <- function(extract) {
   UseMethod("extract_to_request_json")
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
+extract_to_request_json.nhgis_extract <- function(extract) {
   extract$years <- purrr::map(
     extract$years,
     ~ if (!is.null(.x)) as.character(.x)
@@ -542,7 +538,9 @@ extract_to_request_json.nhgis_extract <- function(
     geographicExtents = geog_extent_lookup(
       extract$geographic_extents,
       state_geog_lookup$codes
-    )
+    ),
+    collection = jsonlite::unbox(extract$collection),
+    version = jsonlite::unbox(ipums_api_version())
   )
 
   request_list <- purrr::keep(
@@ -550,21 +548,11 @@ extract_to_request_json.nhgis_extract <- function(
     ~ !(any(is.na(.x)) || is_empty(.x))
   )
 
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = jsonlite::unbox(extract$collection),
-      version = jsonlite::unbox(ipums_api_version())
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
-
   jsonlite::toJSON(request_list)
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
+extract_to_request_json.usa_extract <- function(extract) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -581,23 +569,16 @@ extract_to_request_json.usa_extract <- function(
     ),
     dataFormat = extract$data_format,
     samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables)
+    variables = format_variables_for_json(extract$variables),
+    collection = extract$collection,
+    version = ipums_api_version()
   )
-
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = extract$collection,
-      version = ipums_api_version()
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
 #' @export
-extract_to_request_json.cps_extract <- function(extract,
-                                                include_endpoint_info = FALSE) {
+extract_to_request_json.cps_extract <- function(extract) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -614,24 +595,16 @@ extract_to_request_json.cps_extract <- function(extract,
     ),
     dataFormat = extract$data_format,
     samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables)
+    variables = format_variables_for_json(extract$variables),
+    collection = extract$collection,
+    version = ipums_api_version()
   )
-
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = extract$collection,
-      version = ipums_api_version()
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
 #' @export
-extract_to_request_json.ipums_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
+extract_to_request_json.ipums_extract <- function(extract) {
   if (is_na(extract$description)) {
     extract$description <- ""
   }

@@ -709,10 +709,7 @@ define_extract_from_json <- function(extract_json) {
 #' @rdname define_extract_from_json
 #' @export
 save_extract_as_json <- function(extract, file) {
-  extract_as_json <- extract_to_request_json(
-    extract,
-    include_endpoint_info = TRUE
-  )
+  extract_as_json <- extract_to_request_json(extract)
   writeLines(jsonlite::prettify(extract_as_json), con = file)
   invisible(file)
 }
