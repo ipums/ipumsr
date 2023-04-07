@@ -110,9 +110,9 @@ citation information for a recently loaded dataset.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ipums_file_info</span><span class="op">(</span><span class="va">object</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">ipums_conditions</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ipums_file_info</span><span class="op">(</span><span class="va">object</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_conditions</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -139,9 +139,9 @@ information. Otherwise, a string containing the requested information.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">ipums_file_info</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">ipums_file_info</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ipums_project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "IPUMS-CPS"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

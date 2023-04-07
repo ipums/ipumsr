@@ -116,12 +116,12 @@ IPUMS DDI codebook files.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_ipums_ddi</span><span class="op">(</span>
-  <span class="va">ddi_file</span>,
-  file_select <span class="op">=</span> <span class="cn">NULL</span>,
-  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>,
-  data_layer <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_ddi</span><span class="op">(</span></span>
+<span>  <span class="va">ddi_file</span>,</span>
+<span>  file_select <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  data_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -182,17 +182,17 @@ returns the path to the codebook file.</p></li>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example codebook file</span></span>
-<span class="r-in"><span class="va">ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Load data into an `ipums_ddi` obj</span></span>
-<span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_ddi</span><span class="op">(</span><span class="va">ddi_file</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Use the object to load its associated data</span></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example codebook file</span></span></span>
+<span class="r-in"><span><span class="va">ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Load data into an `ipums_ddi` obj</span></span></span>
+<span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_ddi</span><span class="op">(</span><span class="va">ddi_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use the object to load its associated data</span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    YEAR SERIAL HWTSUPP STATEFIP       MONTH     PERNUM WTSUPP INCTOT            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>         </span>
@@ -202,41 +202,40 @@ returns the path to the codebook file.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375          </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Or get metadata information directly</span></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or get metadata information directly</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   var_name var_la…¹ var_d…² val_la…³ code_…⁴ start   end imp_d…⁵ var_t…⁶ recty…⁷</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> YEAR     Survey … <span style="color: #949494;">"</span>YEAR … &lt;tibble&gt; <span style="color: #949494;">"</span>\nYEA…     1     4       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> SERIAL   Househo… <span style="color: #949494;">"</span>SERIA… &lt;tibble&gt; <span style="color: #949494;">"</span>\nSER…     5     9       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> HWTSUPP  Househo… <span style="color: #949494;">"</span>HWTSU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nHWT…    10    19       4 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> STATEFIP State (… <span style="color: #949494;">"</span>STATE… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        20    21       0 integer <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> MONTH    Month    <span style="color: #949494;">"</span>MONTH… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        22    23       0 integer <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> PERNUM   Person … <span style="color: #949494;">"</span>PERNU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nPER…    24    25       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> WTSUPP   Supplem… <span style="color: #949494;">"</span>WTSUP… &lt;tibble&gt; <span style="color: #949494;">"</span>\nWTS…    26    35       4 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> INCTOT   Total p… <span style="color: #949494;">"</span>INCTO… &lt;tibble&gt; <span style="color: #949494;">"</span>\n999…    36    43       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​var_label, ²​var_desc, ³​val_labels,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​code_instr, ⁵​imp_decim, ⁶​var_type, ⁷​rectypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ipums_file_info.html">ipums_file_info</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   var_name var_label        var_desc val_labels code_instr start   end imp_decim</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> YEAR     Survey year      <span style="color: #949494;">"</span>YEAR r… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nYEAR i…     1     4         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> SERIAL   Household seria… <span style="color: #949494;">"</span>SERIAL… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nSERIAL…     5     9         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> HWTSUPP  Household weigh… <span style="color: #949494;">"</span>HWTSUP… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nHWTSUP…    10    19         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> STATEFIP State (FIPS cod… <span style="color: #949494;">"</span>STATEF… <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #BB0000;">NA</span>           20    21         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> MONTH    Month            <span style="color: #949494;">"</span>MONTH … <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #BB0000;">NA</span>           22    23         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> PERNUM   Person number i… <span style="color: #949494;">"</span>PERNUM… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nPERNUM…    24    25         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> WTSUPP   Supplement Weig… <span style="color: #949494;">"</span>WTSUPP… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nWTSUPP…    26    35         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> INCTOT   Total personal … <span style="color: #949494;">"</span>INCTOT… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\n999999…    36    43         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: var_type &lt;chr&gt;, rectypes &lt;lgl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_file_info.html">ipums_file_info</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ipums_project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "IPUMS-CPS"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $extract_date</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2017-08-02"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># If variable metadata have been lost from a data source, reattach from</span></span>
-<span class="r-in"><span class="co"># its corresponding `ipums_ddi` object:</span></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="zap_ipums_attributes.html">zap_ipums_attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If variable metadata have been lost from a data source, reattach from</span></span></span>
+<span class="r-in"><span><span class="co"># its corresponding `ipums_ddi` object:</span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="zap_ipums_attributes.html">zap_ipums_attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">cps</span>, <span class="va">ddi</span><span class="op">$</span><span class="va">var_info</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">cps</span>, <span class="va">ddi</span><span class="op">$</span><span class="va">var_info</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "State (FIPS code)"</span>
 </code></pre></div>
     </div>

@@ -106,17 +106,17 @@ an IPUMS extract into an <code>sf</code> object from the
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_ipums_sf</span><span class="op">(</span>
-  <span class="va">shape_file</span>,
-  file_select <span class="op">=</span> <span class="cn">NULL</span>,
-  vars <span class="op">=</span> <span class="cn">NULL</span>,
-  encoding <span class="op">=</span> <span class="cn">NULL</span>,
-  bind_multiple <span class="op">=</span> <span class="cn">FALSE</span>,
-  add_layer_var <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>,
-  verbose <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,
-  shape_layer <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_sf</span><span class="op">(</span></span>
+<span>  <span class="va">shape_file</span>,</span>
+<span>  file_select <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  encoding <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bind_multiple <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add_layer_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  shape_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -205,9 +205,9 @@ an IPUMS extract.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example shapefile from NHGIS</span></span>
-<span class="r-in"><span class="va">shape_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example shapefile from NHGIS</span></span></span>
+<span class="r-in"><span><span class="va">shape_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">71</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">25</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span>
@@ -218,12 +218,12 @@ an IPUMS extract.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">shape_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0712_shape_small.zip"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sf_data</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_sf</span><span class="op">(</span><span class="va">shape_ex1</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sf_data</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">shape_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0712_shape_small.zip"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sf_data</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_sf</span><span class="op">(</span><span class="va">shape_ex1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sf_data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 8 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
@@ -242,11 +242,12 @@ an IPUMS extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 5190  5602    70      G5190   5190      <span style="text-decoration: underline;">2</span>939<span style="text-decoration: underline;">483</span>018.   <span style="text-decoration: underline;">872</span>897. G56025190</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1125  2082    34      G1125   1125      <span style="text-decoration: underline;">1</span>946<span style="text-decoration: underline;">034</span>315.   <span style="text-decoration: underline;">199</span>097. G20821125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1120  1122    07      G1120   1120      <span style="text-decoration: underline;">4</span>715<span style="text-decoration: underline;">670</span>489.   <span style="text-decoration: underline;">922</span>769. G11221120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 61 more rows, and 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Shapefiles are provided in .zip archives that may contain multiple</span></span>
-<span class="r-in"><span class="co"># files. Select a single file with `file_select`:</span></span>
-<span class="r-in"><span class="fu">read_ipums_sf</span><span class="op">(</span><span class="va">shape_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"us_pmsa_1990"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 61 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Shapefiles are provided in .zip archives that may contain multiple</span></span></span>
+<span class="r-in"><span><span class="co"># files. Select a single file with `file_select`:</span></span></span>
+<span class="r-in"><span><span class="fu">read_ipums_sf</span><span class="op">(</span><span class="va">shape_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"us_pmsa_1990"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 8 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
@@ -265,69 +266,70 @@ an IPUMS extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 5190  5602    70      G5190   5190      <span style="text-decoration: underline;">2</span>939<span style="text-decoration: underline;">483</span>018.   <span style="text-decoration: underline;">872</span>897. G56025190</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1125  2082    34      G1125   1125      <span style="text-decoration: underline;">1</span>946<span style="text-decoration: underline;">034</span>315.   <span style="text-decoration: underline;">199</span>097. G20821125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1120  1122    07      G1120   1120      <span style="text-decoration: underline;">4</span>715<span style="text-decoration: underline;">670</span>489.   <span style="text-decoration: underline;">922</span>769. G11221120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 61 more rows, and 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Or row-bind files with `bind_multiple`</span></span>
-<span class="r-in"><span class="co"># (Useful for files of the same geographic level that cover different</span></span>
-<span class="r-in"><span class="co"># extents)</span></span>
-<span class="r-in"><span class="fu">read_ipums_sf</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">shape_ex2</span>,</span>
-<span class="r-in">  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"us_pmsa"</span><span class="op">)</span>,</span>
-<span class="r-in">  bind_multiple <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 61 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or row-bind files with `bind_multiple`</span></span></span>
+<span class="r-in"><span><span class="co"># (Useful for files of the same geographic level that cover different</span></span></span>
+<span class="r-in"><span><span class="co"># extents)</span></span></span>
+<span class="r-in"><span><span class="fu">read_ipums_sf</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">shape_ex2</span>,</span></span>
+<span class="r-in"><span>  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"us_pmsa"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  bind_multiple <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 144 features and 9 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -2336182 ymin: -1247086 xmax: 2075339 ymax: 1493412</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 144 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    layer        PMSA  MSACMSA ALTCMSA GISJOIN GISJOIN2 SHAPE_A…¹ SHAPE…² GISJO…³</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> US_pmsa_1990 3280  3282    41      G3280   3280       2.84<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">320</span>921. G32823…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> US_pmsa_1990 5760  5602    70      G5760   5760       2.37<span style="color: #949494;">e</span> 8 <span style="text-decoration: underline;">126</span>226. G56025…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> US_pmsa_1990 1145  3362    42      G1145   1145       3.73<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">489</span>789. G33621…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> US_pmsa_1990 1920  1922    31      G1920   1920       1.21<span style="color: #949494;">e</span>10 <span style="text-decoration: underline;">543</span>164. G19221…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> US_pmsa_1990 0080  1692    28      G0080   0080       2.40<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">218</span>892. G16920…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> US_pmsa_1990 1640  1642    21      G1640   1640       5.61<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">415</span>671. G16421…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> US_pmsa_1990 2960  1602    14      G2960   2960       2.39<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">241</span>350. G16022…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> US_pmsa_1990 5190  5602    70      G5190   5190       2.94<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">872</span>897. G56025…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> US_pmsa_1990 1125  2082    34      G1125   1125       1.95<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">199</span>097. G20821…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> US_pmsa_1990 1120  1122    07      G1120   1120       4.72<span style="color: #949494;">e</span> 9 <span style="text-decoration: underline;">922</span>769. G11221…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 134 more rows, 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​SHAPE_AREA, ²​SHAPE_LEN, ³​GISJOIN3</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># To combine spatial data with tabular data without losing the attributes</span></span>
-<span class="r-in"><span class="co"># included in the tabular data, use an ipums shape join:</span></span>
-<span class="r-in"><span class="fu"><a href="ipums_shape_join.html">ipums_shape_full_join</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">data_ex1</span>,</span>
-<span class="r-in">  <span class="va">sf_data</span>,</span>
-<span class="r-in">  by <span class="op">=</span> <span class="st">"GISJOIN"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    layer    PMSA  MSACMSA ALTCMSA GISJOIN GISJOIN2 SHAPE_AREA SHAPE_LEN GISJOIN3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> US_pmsa… 3280  3282    41      G3280   3280        2.84<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">320</span>921. G328232…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> US_pmsa… 5760  5602    70      G5760   5760        2.37<span style="color: #949494;">e</span> 8   <span style="text-decoration: underline;">126</span>226. G560257…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> US_pmsa… 1145  3362    42      G1145   1145        3.73<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">489</span>789. G336211…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> US_pmsa… 1920  1922    31      G1920   1920        1.21<span style="color: #949494;">e</span>10   <span style="text-decoration: underline;">543</span>164. G192219…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> US_pmsa… 0080  1692    28      G0080   0080        2.40<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">218</span>892. G169200…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> US_pmsa… 1640  1642    21      G1640   1640        5.61<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">415</span>671. G164216…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> US_pmsa… 2960  1602    14      G2960   2960        2.39<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">241</span>350. G160229…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> US_pmsa… 5190  5602    70      G5190   5190        2.94<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">872</span>897. G560251…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> US_pmsa… 1125  2082    34      G1125   1125        1.95<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">199</span>097. G208211…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> US_pmsa… 1120  1122    07      G1120   1120        4.72<span style="color: #949494;">e</span> 9   <span style="text-decoration: underline;">922</span>769. G112211…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 134 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To combine spatial data with tabular data without losing the attributes</span></span></span>
+<span class="r-in"><span><span class="co"># included in the tabular data, use an ipums shape join:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_shape_join.html">ipums_shape_full_join</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">data_ex1</span>,</span></span>
+<span class="r-in"><span>  <span class="va">sf_data</span>,</span></span>
+<span class="r-in"><span>  by <span class="op">=</span> <span class="st">"GISJOIN"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 71 features and 32 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -2336182 ymin: -1247086 xmax: 2075339 ymax: 1476544</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 71 × 33</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN  YEAR STUSAB CMSA  DIVIS…¹ MSA_C…² PMSA  PMSAA REGIONA STATEA AREAL…³</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G3280    <span style="text-decoration: underline;">1</span>990 CT     41    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">3</span>282 Hart… 3280  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000278…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G5760    <span style="text-decoration: underline;">1</span>990 CT     70    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">5</span>602 Norw… 5760  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000023…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G1145    <span style="text-decoration: underline;">1</span>990 TX     42    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">3</span>362 Braz… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000359…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G1920    <span style="text-decoration: underline;">1</span>990 TX     31    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">1</span>922 Dall… 1920  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     001157…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">1</span>692 Akro… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000234…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G1640    <span style="text-decoration: underline;">1</span>990 ##     21    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">1</span>642 Cinc… 1640  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000550…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G2960    <span style="text-decoration: underline;">1</span>990 IN     14    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">1</span>602 Gary… 2960  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000237…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G5190    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">5</span>602 Monm… 5190  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000287…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G1125    <span style="text-decoration: underline;">1</span>990 CO     34    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">2</span>082 Boul… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000192…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G1120    <span style="text-decoration: underline;">1</span>990 MA     07    <span style="color: #BB0000;">NA</span>         <span style="text-decoration: underline;">1</span>122 Bost… 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     000455…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 61 more rows, 22 more variables: AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G3280    <span style="text-decoration: underline;">1</span>990 CT     41    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">3</span>282 Hartford… 3280  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G5760    <span style="text-decoration: underline;">1</span>990 CT     70    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">5</span>602 Norwalk,… 5760  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G1145    <span style="text-decoration: underline;">1</span>990 TX     42    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">3</span>362 Brazoria… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G1920    <span style="text-decoration: underline;">1</span>990 TX     31    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">1</span>922 Dallas, … 1920  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">1</span>692 Akron, O… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G1640    <span style="text-decoration: underline;">1</span>990 ##     21    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">1</span>642 Cincinna… 1640  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G2960    <span style="text-decoration: underline;">1</span>990 IN     14    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">1</span>602 Gary--Ha… 2960  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G5190    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">5</span>602 Monmouth… 5190  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G1125    <span style="text-decoration: underline;">1</span>990 CO     34    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">2</span>082 Boulder-… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G1120    <span style="text-decoration: underline;">1</span>990 MA     07    <span style="color: #BB0000;">NA</span>             <span style="text-decoration: underline;">1</span>122 Boston, … 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 61 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 23 more variables: AREALAND &lt;chr&gt;, AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;, PMSASHAPE &lt;chr&gt;, MSACMSA &lt;chr&gt;, ALTCMSA &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   GISJOIN2 &lt;chr&gt;, SHAPE_AREA &lt;dbl&gt;, SHAPE_LEN &lt;dbl&gt;, GISJOIN3 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   geometry &lt;MULTIPOLYGON [m]&gt;, and abbreviated variable names ¹​DIVISIONA,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​MSA_CMSAA, ³​AREALAND</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   geometry &lt;MULTIPOLYGON [m]&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

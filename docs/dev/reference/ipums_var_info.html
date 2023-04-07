@@ -116,13 +116,13 @@ specific metadata for a single variable.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ipums_var_info</span><span class="op">(</span><span class="va">object</span>, vars <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">ipums_var_label</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">ipums_var_desc</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">ipums_val_labels</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ipums_var_info</span><span class="op">(</span><span class="va">object</span>, vars <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_var_label</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_var_desc</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_val_labels</span><span class="op">(</span><span class="va">object</span>, var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -176,32 +176,31 @@ attributes from data frame-like objects.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Info for all variables in a data source</span></span>
-<span class="r-in"><span class="fu">ipums_var_info</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Info for all variables in a data source</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_var_info</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   var_name var_la…¹ var_d…² val_la…³ code_…⁴ start   end imp_d…⁵ var_t…⁶ recty…⁷</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> YEAR     Survey … <span style="color: #949494;">"</span>YEAR … &lt;tibble&gt; <span style="color: #949494;">"</span>\nYEA…     1     4       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> SERIAL   Househo… <span style="color: #949494;">"</span>SERIA… &lt;tibble&gt; <span style="color: #949494;">"</span>\nSER…     5     9       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> HWTSUPP  Househo… <span style="color: #949494;">"</span>HWTSU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nHWT…    10    19       4 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> STATEFIP State (… <span style="color: #949494;">"</span>STATE… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        20    21       0 integer <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> MONTH    Month    <span style="color: #949494;">"</span>MONTH… &lt;tibble&gt;  <span style="color: #BB0000;">NA</span>        22    23       0 integer <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> PERNUM   Person … <span style="color: #949494;">"</span>PERNU… &lt;tibble&gt; <span style="color: #949494;">"</span>\nPER…    24    25       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> WTSUPP   Supplem… <span style="color: #949494;">"</span>WTSUP… &lt;tibble&gt; <span style="color: #949494;">"</span>\nWTS…    26    35       4 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> INCTOT   Total p… <span style="color: #949494;">"</span>INCTO… &lt;tibble&gt; <span style="color: #949494;">"</span>\n999…    36    43       0 numeric <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​var_label, ²​var_desc, ³​val_labels,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​code_instr, ⁵​imp_decim, ⁶​var_type, ⁷​rectypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Metadata for individual variables</span></span>
-<span class="r-in"><span class="fu">ipums_var_desc</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   var_name var_label        var_desc val_labels code_instr start   end imp_decim</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> YEAR     Survey year      <span style="color: #949494;">"</span>YEAR r… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nYEAR i…     1     4         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> SERIAL   Household seria… <span style="color: #949494;">"</span>SERIAL… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nSERIAL…     5     9         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> HWTSUPP  Household weigh… <span style="color: #949494;">"</span>HWTSUP… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nHWTSUP…    10    19         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> STATEFIP State (FIPS cod… <span style="color: #949494;">"</span>STATEF… <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #BB0000;">NA</span>           20    21         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> MONTH    Month            <span style="color: #949494;">"</span>MONTH … <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #BB0000;">NA</span>           22    23         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> PERNUM   Person number i… <span style="color: #949494;">"</span>PERNUM… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nPERNUM…    24    25         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> WTSUPP   Supplement Weig… <span style="color: #949494;">"</span>WTSUPP… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\nWTSUPP…    26    35         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> INCTOT   Total personal … <span style="color: #949494;">"</span>INCTOT… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">"</span>\n999999…    36    43         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: var_type &lt;chr&gt;, rectypes &lt;lgl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Metadata for individual variables</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_var_desc</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MONTH indicates the calendar month of the CPS interview."</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">ipums_var_label</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">ipums_var_label</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Month"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">ipums_val_labels</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">ipums_val_labels</span><span class="op">(</span><span class="va">ddi</span>, <span class="va">MONTH</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      val lbl      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>

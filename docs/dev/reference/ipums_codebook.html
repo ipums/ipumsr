@@ -110,12 +110,12 @@ fields will not be populated.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_nhgis_codebook</span><span class="op">(</span>
-  <span class="va">cb_file</span>,
-  file_select <span class="op">=</span> <span class="cn">NULL</span>,
-  raw <span class="op">=</span> <span class="cn">FALSE</span>,
-  data_layer <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_nhgis_codebook</span><span class="op">(</span></span>
+<span>  <span class="va">cb_file</span>,</span>
+<span>  file_select <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  raw <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  data_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -165,50 +165,50 @@ line of the given <code>cb_file</code>.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example file</span></span>
-<span class="r-in"><span class="va">nhgis_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read codebook as an `ipums_ddi` object:</span></span>
-<span class="r-in"><span class="va">codebook</span> <span class="op">&lt;-</span> <span class="fu">read_nhgis_codebook</span><span class="op">(</span><span class="va">nhgis_file</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Variable-level metadata about the contents of the data file:</span></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">codebook</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example file</span></span></span>
+<span class="r-in"><span><span class="va">nhgis_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read codebook as an `ipums_ddi` object:</span></span></span>
+<span class="r-in"><span><span class="va">codebook</span> <span class="op">&lt;-</span> <span class="fu">read_nhgis_codebook</span><span class="op">(</span><span class="va">nhgis_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Variable-level metadata about the contents of the data file:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">codebook</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 25 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    var_name var_l…¹ var_d…² val_la…³ code_…⁴ start end   imp_d…⁵ var_t…⁶ recty…⁷</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GISJOIN  GIS Jo… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> YEAR     Data F… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> STUSAB   State/… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CMSA     Consol… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> DIVISIO… Divisi… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> MSA_CMS… Metrop… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> PMSA     Primar… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PMSAA    Primar… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> REGIONA  Region… <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> STATEA   State … <span style="color: #949494;">""</span>      &lt;tibble&gt; <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>          0 <span style="color: #949494;">""</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 15 more rows, and abbreviated variable names ¹​var_label, ²​var_desc,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​val_labels, ⁴​code_instr, ⁵​imp_decim, ⁶​var_type, ⁷​rectypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">codebook</span>, <span class="st">"PMSA"</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    var_name  var_label      var_desc val_labels code_instr start end   imp_decim</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GISJOIN   GIS Join Matc… <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> YEAR      Data File Year <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> STUSAB    State/US Abbr… <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CMSA      Consolidated … <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> DIVISIONA Division Code  <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> MSA_CMSAA Metropolitan … <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> PMSA      Primary Metro… <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PMSAA     Primary Metro… <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> REGIONA   Region Code    <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> STATEA    State Code     <span style="color: #949494;">""</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: var_type &lt;chr&gt;, rectypes &lt;lgl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">codebook</span>, <span class="st">"PMSA"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Primary Metropolitan Statistical Area Name"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># If variable metadata have been lost from a data source, reattach from</span></span>
-<span class="r-in"><span class="co"># the corresponding `ipums_ddi` object:</span></span>
-<span class="r-in"><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="zap_ipums_attributes.html">zap_ipums_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If variable metadata have been lost from a data source, reattach from</span></span></span>
+<span class="r-in"><span><span class="co"># the corresponding `ipums_ddi` object:</span></span></span>
+<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="zap_ipums_attributes.html">zap_ipums_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span>, <span class="va">codebook</span><span class="op">$</span><span class="va">var_info</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span>, <span class="va">codebook</span><span class="op">$</span><span class="va">var_info</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Primary Metropolitan Statistical Area Name"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># You can also load the codebook in raw format to display in the console</span></span>
-<span class="r-in"><span class="va">codebook_raw</span> <span class="op">&lt;-</span> <span class="fu">read_nhgis_codebook</span><span class="op">(</span><span class="va">nhgis_file</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Use `cat` for human-readable output</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">codebook_raw</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can also load the codebook in raw format to display in the console</span></span></span>
+<span class="r-in"><span><span class="va">codebook_raw</span> <span class="op">&lt;-</span> <span class="fu">read_nhgis_codebook</span><span class="op">(</span><span class="va">nhgis_file</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use `cat` for human-readable output</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">codebook_raw</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Codebook for NHGIS data file 'nhgis0972_ds135_1990_pmsa'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>

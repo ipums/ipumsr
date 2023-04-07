@@ -104,7 +104,7 @@ descriptions) from a data frame or vector.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -134,23 +134,23 @@ descriptions) from a data frame or vector.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $label</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Survey year"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $var_desc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "YEAR reports the year in which the survey was conducted.  YEARP is repeated on person records."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">zap_ipums_attributes</span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">YEAR</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">INCTOT</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 </code></pre></div>
     </div>

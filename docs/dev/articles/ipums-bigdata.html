@@ -164,15 +164,15 @@ help facilitate some of the other options.</p>
 biglm packages. If you haven’t already installed these packages, you can
 do so with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># To run the full vignette, you'll also need the following packages. If they</span>
-<span class="co"># aren't installed already, do so with:</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"biglm"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DBI"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RSQLite"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"dbplyr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># To run the full vignette, you'll also need the following packages. If they</span></span>
+<span><span class="co"># aren't installed already, do so with:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"biglm"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DBI"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RSQLite"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"dbplyr"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org" class="external-link">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org" class="external-link">ipumsr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <!-- TODO: These data could be updated: certain weighting variable codes -->
 <!-- have changed -->
 </div>
@@ -202,28 +202,29 @@ API (for projects that are supported).</p>
 <p>If using the API, use <code><a href="../reference/remove_from_extract.html">remove_from_extract()</a></code> to easily
 remove unneeded extract values:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sample_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_cps.html">define_extract_cps</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"Sample extract for big data vignette"</span>,
-  samples <span class="op">=</span> <span class="st">"cps2011_03s"</span>,
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PERNUM"</span>, <span class="st">"FOODSTMP"</span>, <span class="st">"AGE"</span>, <span class="st">"EMPSTAT"</span>, <span class="st">"AHRSWORKT"</span>, <span class="st">"HEALTH"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">new_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>
-  <span class="va">sample_cps_extract</span>,
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EMPSTAT"</span>, <span class="st">"HEALTH"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">new_cps_extract</span>
-<span class="co">#&gt; Unsubmitted IPUMS CPS extract </span>
-<span class="co">#&gt; Description: Sample extract for big data vignette</span>
-<span class="co">#&gt; Samples: (1 total) cps2011_03s</span>
-<span class="co">#&gt; Variables: (4 total) PERNUM, FOODSTMP, AGE, AHRSWORKT</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sample_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_cps.html">define_extract_cps</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"Sample extract for big data vignette"</span>,</span>
+<span>  samples <span class="op">=</span> <span class="st">"cps2011_03s"</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PERNUM"</span>, <span class="st">"FOODSTMP"</span>, <span class="st">"AGE"</span>, <span class="st">"EMPSTAT"</span>, <span class="st">"AHRSWORKT"</span>, <span class="st">"HEALTH"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span></span>
+<span>  <span class="va">sample_cps_extract</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EMPSTAT"</span>, <span class="st">"HEALTH"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_cps_extract</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS CPS extract </span></span>
+<span><span class="co">#&gt; Description: Sample extract for big data vignette</span></span>
+<span><span class="co">#&gt; Samples: (1 total) cps2011_03s</span></span>
+<span><span class="co">#&gt; Variables: (4 total) PERNUM, FOODSTMP, AGE, AHRSWORKT</span></span></code></pre></div>
 <p>To obtain the updated data, resubmit the extract request and download
 the new files:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">new_cps_extract</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span>wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">new_cps_extract</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Use <code><a href="../articles/ipums-api.html">vignette("ipums-api")</a></code> to get more information about
 using the IPUMS API to make extract requests.</p>
 </div>
@@ -284,8 +285,8 @@ down-sampled the data in this example for storage reasons; none of the
 output “results” reflected in this vignette should be considered
 legitimate!</em></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.xml"</span><span class="op">)</span>
-<span class="va">cps_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.dat.gz"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.xml"</span><span class="op">)</span></span>
+<span><span class="va">cps_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00097.dat.gz"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="chunked-tab">Chunked tabulation<a class="anchor" aria-label="anchor" href="#chunked-tab"></a>
 </h4>
@@ -297,32 +298,32 @@ variable into a binary variable (see
 <code><a href="../articles/value-labels.html">vignette("value-labels")</a></code>), and count the people in each
 group.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-    HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-    AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-      <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-        <span class="va">EMPSTAT</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-      <span class="op">)</span>
-    <span class="op">)</span>
-  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
-<span class="co">#&gt;    HEALTH    AT_WORK     n</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>    AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>        <span class="va">EMPSTAT</span>,</span>
+<span>        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span></span>
+<span><span class="co">#&gt;    HEALTH    AT_WORK     n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></span></code></pre></div>
 <p>For the sake of this example, let’s imagine we can only store 1,000
 rows in memory at a time. In this case, we need to use a
 <code>chunked</code> function, tabulate for each chunk, and then
@@ -337,21 +338,21 @@ must always take both arguments.</p>
 <p>In this case, the callback will implement the same processing steps
 that we demonstrated above:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cb_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-      HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-      AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-        <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-          <span class="va">EMPSTAT</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-        <span class="op">)</span>
-      <span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cb_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>      HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>      AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>          <span class="va">EMPSTAT</span>,</span>
+<span>          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Next, we need to create a callback object, which will determine how
 we want to combine the ultimate results for each chunk. ipumsr provides
 three main types of callback objects that preserve variable
@@ -379,38 +380,38 @@ regression models discussed <a href="#chunked-reg">below</a>).</p>
 don’t need to be familiar with R6 to use them<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. To initialize a
 callback object, simply use <code>$new()</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">cb_function</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">cb_function</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, we’re ready to load the data in chunks. We use
 <code><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked()</a></code> to specify the callback and
 chunk size:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">chunked_tabulations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>,
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
-  callback <span class="op">=</span> <span class="va">cb</span>,
-  chunk_size <span class="op">=</span> <span class="fl">1000</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chunked_tabulations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span></span>
+<span>  <span class="va">cps_ddi_file</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,</span>
+<span>  callback <span class="op">=</span> <span class="va">cb</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Now we have a data frame with the counts by health and work status
 within each chunk. To get the full table, we just need to sum by health
 and work status one more time:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">chunked_tabulations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
-<span class="co">#&gt;    HEALTH    AT_WORK     n</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chunked_tabulations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span></span>
+<span><span class="co">#&gt;    HEALTH    AT_WORK     n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="chunked-reg">Chunked regression<a class="anchor" aria-label="anchor" href="#chunked-reg"></a>
@@ -428,96 +429,96 @@ that should be addressed in real analyses.)</p>
 our data and prepare the variables in our analysis for use in the
 model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-    HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-    AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
-    AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-      <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-        <span class="va">EMPSTAT</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-      <span class="op">)</span>
-    <span class="op">)</span>
-  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, data_file <span class="op">=</span> <span class="va">cps_data_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>    AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,</span>
+<span>    AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>        <span class="va">EMPSTAT</span>,</span>
+<span>        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>        <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span></span></code></pre></div>
 <p>Then, we’d provide our model formula and data to <code>lm</code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">AHRSWORKT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; lm(formula = AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data = data)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Residuals:</span>
-<span class="co">#&gt;     Min      1Q  Median      3Q     Max </span>
-<span class="co">#&gt; -41.217  -4.734  -0.077   5.957  63.994 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Coefficients:</span>
-<span class="co">#&gt;                   Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)      5.2440289  1.1823985   4.435 9.31e-06 ***</span>
-<span class="co">#&gt; AGE              1.5868169  0.0573268  27.680  &lt; 2e-16 ***</span>
-<span class="co">#&gt; I(AGE^2)        -0.0170043  0.0006568 -25.888  &lt; 2e-16 ***</span>
-<span class="co">#&gt; HEALTHVery good -0.2550306  0.3276759  -0.778 0.436412    </span>
-<span class="co">#&gt; HEALTHGood      -0.9637395  0.3704123  -2.602 0.009289 ** </span>
-<span class="co">#&gt; HEALTHFair      -3.8899430  0.6629725  -5.867 4.58e-09 ***</span>
-<span class="co">#&gt; HEALTHPoor      -5.7597200  1.6197136  -3.556 0.000378 ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Residual standard error: 12.88 on 8950 degrees of freedom</span>
-<span class="co">#&gt; Multiple R-squared:  0.08711,    Adjusted R-squared:  0.0865 </span>
-<span class="co">#&gt; F-statistic: 142.3 on 6 and 8950 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">AHRSWORKT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; lm(formula = AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data = data)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Residuals:</span></span>
+<span><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span><span class="co">#&gt; -41.217  -4.734  -0.077   5.957  63.994 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt;                   Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">#&gt; (Intercept)      5.2440289  1.1823985   4.435 9.31e-06 ***</span></span>
+<span><span class="co">#&gt; AGE              1.5868169  0.0573268  27.680  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; I(AGE^2)        -0.0170043  0.0006568 -25.888  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; HEALTHVery good -0.2550306  0.3276759  -0.778 0.436412    </span></span>
+<span><span class="co">#&gt; HEALTHGood      -0.9637395  0.3704123  -2.602 0.009289 ** </span></span>
+<span><span class="co">#&gt; HEALTHFair      -3.8899430  0.6629725  -5.867 4.58e-09 ***</span></span>
+<span><span class="co">#&gt; HEALTHPoor      -5.7597200  1.6197136  -3.556 0.000378 ***</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Residual standard error: 12.88 on 8950 degrees of freedom</span></span>
+<span><span class="co">#&gt; Multiple R-squared:  0.08711,    Adjusted R-squared:  0.0865 </span></span>
+<span><span class="co">#&gt; F-statistic: 142.3 on 6 and 8950 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>To do the same regression, but with only 1,000 rows loaded at a time,
 we work in a similar manner.</p>
 <p>First we make an <code>IpumsBiglmCallback</code> callback object. We
 provide the model formula as well as the code used to process the data
 before running the regression:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biglm</span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: DBI</span>
-
-<span class="va">biglm_cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsBiglmCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  model <span class="op">=</span> <span class="va">AHRSWORKT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>,
-  prep <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-        HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-        AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,
-        AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-          <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-            <span class="va">EMPSTAT</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-          <span class="op">)</span>
-        <span class="op">)</span>
-      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biglm</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: DBI</span></span>
+<span></span>
+<span><span class="va">biglm_cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsBiglmCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="va">AHRSWORKT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>,</span>
+<span>  prep <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>        HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>        AHRSWORKT <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span>,</span>
+<span>        AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>          <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>            <span class="va">EMPSTAT</span>,</span>
+<span>            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>          <span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>And then we read the data using
 <code><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked()</a></code>, passing the callback that we
 just made.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">chunked_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>,
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
-  callback <span class="op">=</span> <span class="va">biglm_cb</span>,
-  chunk_size <span class="op">=</span> <span class="fl">1000</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">chunked_model</span><span class="op">)</span>
-<span class="co">#&gt; Large data regression model: biglm(AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data, ...)</span>
-<span class="co">#&gt; Sample size =  8957 </span>
-<span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span>
-<span class="co">#&gt; (Intercept)      5.2440  2.8792  7.6088 1.1824 0.0000</span>
-<span class="co">#&gt; AGE              1.5868  1.4722  1.7015 0.0573 0.0000</span>
-<span class="co">#&gt; I(AGE^2)        -0.0170 -0.0183 -0.0157 0.0007 0.0000</span>
-<span class="co">#&gt; HEALTHVery good -0.2550 -0.9104  0.4003 0.3277 0.4364</span>
-<span class="co">#&gt; HEALTHGood      -0.9637 -1.7046 -0.2229 0.3704 0.0093</span>
-<span class="co">#&gt; HEALTHFair      -3.8899 -5.2159 -2.5640 0.6630 0.0000</span>
-<span class="co">#&gt; HEALTHPoor      -5.7597 -8.9991 -2.5203 1.6197 0.0004</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chunked_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span></span>
+<span>  <span class="va">cps_ddi_file</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,</span>
+<span>  callback <span class="op">=</span> <span class="va">biglm_cb</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">chunked_model</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Large data regression model: biglm(AHRSWORKT ~ AGE + I(AGE^2) + HEALTH, data, ...)</span></span>
+<span><span class="co">#&gt; Sample size =  8957 </span></span>
+<span><span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span></span>
+<span><span class="co">#&gt; (Intercept)      5.2440  2.8792  7.6088 1.1824 0.0000</span></span>
+<span><span class="co">#&gt; AGE              1.5868  1.4722  1.7015 0.0573 0.0000</span></span>
+<span><span class="co">#&gt; I(AGE^2)        -0.0170 -0.0183 -0.0157 0.0007 0.0000</span></span>
+<span><span class="co">#&gt; HEALTHVery good -0.2550 -0.9104  0.4003 0.3277 0.4364</span></span>
+<span><span class="co">#&gt; HEALTHGood      -0.9637 -1.7046 -0.2229 0.3704 0.0093</span></span>
+<span><span class="co">#&gt; HEALTHFair      -3.8899 -5.2159 -2.5640 0.6630 0.0000</span></span>
+<span><span class="co">#&gt; HEALTHPoor      -5.7597 -8.9991 -2.5203 1.6197 0.0004</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="chunked-case-selection">Chunked case selection<a class="anchor" aria-label="anchor" href="#chunked-case-selection"></a>
@@ -533,36 +534,36 @@ commands <code>awk</code> and <code>sed</code>.</p>
 functionality by filtering the chunked data in the callback
 function:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Subset only those in "Poor" health</span>
-<span class="va">chunked_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>,
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
-  callback <span class="op">=</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">HEALTH</span> <span class="op">==</span> <span class="fl">5</span><span class="op">)</span>
-    <span class="op">}</span>
-  <span class="op">)</span>,
-  chunk_size <span class="op">=</span> <span class="fl">1000</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="va">chunked_subset</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 668 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011    289 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    528. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   528.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011    383 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    531. 2<span style="color: #949494;"> [Yes]</span>      2 2.01<span style="color: #949494;">e</span>13   531.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011    555 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    598. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   598.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    846 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    526. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   526.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    847 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    494. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   494.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    940 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    361. 2<span style="color: #949494;"> [Yes]</span>      2 0   <span style="color: #949494;"> </span>     285.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    942 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    289. 1<span style="color: #949494;"> [No]</span>       1 0   <span style="color: #949494;"> </span>     289.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>018 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    301. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   301.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>034 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    530. 2<span style="color: #949494;"> [Yes]</span>      1 2.01<span style="color: #949494;">e</span>13   530.</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 658 more rows, 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Subset only those in "Poor" health</span></span>
+<span><span class="va">chunked_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span></span>
+<span>  <span class="va">cps_ddi_file</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,</span>
+<span>  callback <span class="op">=</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">HEALTH</span> <span class="op">==</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chunked_subset</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 668 × 14</span></span></span>
+<span><span class="co">#&gt;     YEAR SERIAL MONTH      CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   266.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011    289 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    528. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   528.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011    383 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    531. 2<span style="color: #949494;"> [Yes]</span>       2 2.01<span style="color: #949494;">e</span>13   531.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011    555 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    598. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   598.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    846 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    526. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   526.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    847 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    494. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   494.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    940 3<span style="color: #949494;"> [Marc…</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    361. 2<span style="color: #949494;"> [Yes]</span>       2 0   <span style="color: #949494;"> </span>     285.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    942 3<span style="color: #949494;"> [Marc…</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    289. 1<span style="color: #949494;"> [No]</span>        1 0   <span style="color: #949494;"> </span>     289.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>018 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    301. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   301.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011   <span style="text-decoration: underline;">1</span>034 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    530. 2<span style="color: #949494;"> [Yes]</span>       1 2.01<span style="color: #949494;">e</span>13   530.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 658 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;, AHRSWORKT &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   HEALTH &lt;int+lbl&gt;</span></span></span></code></pre></div>
 <p>This option may be particularly useful if you want to subset based on
 complex logic that would be hard to code into the IPUMS extract system
 or Unix tools.</p>
@@ -590,119 +591,117 @@ example</a> from above using yields.</p>
 <p>First, we create the yield object with the function
 <code><a href="../reference/read_ipums_micro_yield.html">read_ipums_micro_yield()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_yield.html">read_ipums_micro_yield</a></span><span class="op">(</span>
-  <span class="va">cps_ddi_file</span>,
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro_yield.html">read_ipums_micro_yield</a></span><span class="op">(</span></span>
+<span>  <span class="va">cps_ddi_file</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>This function returns an <code>R6</code> object which contains
 methods for reading the data. The most important method is the
 <code>yield()</code> method which will return <code>n</code> rows of
 data:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Return the first 10 rows of data</span>
-<span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   308.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   217.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   249.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   265.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>       4 2.01<span style="color: #949494;">e</span>13   296.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   241.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   241.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   278.</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Return the first 10 rows of data</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span></span>
+<span><span class="co">#&gt;     YEAR SERIAL MONTH      CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   308.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   217.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    308. 1<span style="color: #949494;"> [No]</span>        3 2.01<span style="color: #949494;">e</span>13   249.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   266.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   266.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>        3 2.01<span style="color: #949494;">e</span>13   265.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    266. 1<span style="color: #949494;"> [No]</span>        4 2.01<span style="color: #949494;">e</span>13   296.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   241.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   241.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    241. 1<span style="color: #949494;"> [No]</span>        3 2.01<span style="color: #949494;">e</span>13   278.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;, AHRSWORKT &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   HEALTH &lt;int+lbl&gt;</span></span></span></code></pre></div>
 <p>Note that the row position in the data is stored in the object, so
 running the same code again will produce <em>different</em> rows of
 data:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Return the next 10 rows of data</span>
-<span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span>
-<span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG ASECWTH FOODS…¹ PERNUM  CPSIDP ASECWT</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+l&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       1 0   <span style="color: #949494;"> </span>     373.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       2 0   <span style="color: #949494;"> </span>     373.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [March]</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>       3 0   <span style="color: #949494;"> </span>     326.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     86 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    554. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   554.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   543.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   543.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    106 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   543.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       1 2.01<span style="color: #949494;">e</span>13   271.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       2 2.01<span style="color: #949494;">e</span>13   271.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [March]</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>       3 2.01<span style="color: #949494;">e</span>13   365.</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl+lbl&gt;, HEALTH &lt;int+lbl&gt;, and abbreviated variable name</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​FOODSTMP</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Return the next 10 rows of data</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 14</span></span></span>
+<span><span class="co">#&gt;     YEAR SERIAL MONTH      CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [Marc…</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>        1 0   <span style="color: #949494;"> </span>     373.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [Marc…</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>        2 0   <span style="color: #949494;"> </span>     373.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     82 3<span style="color: #949494;"> [Marc…</span> 0   <span style="color: #949494;"> </span>   1<span style="color: #949494;"> [ASEC]</span>    373. 1<span style="color: #949494;"> [No]</span>        3 0   <span style="color: #949494;"> </span>     326.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     86 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    554. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   554.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   543.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011    104 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   543.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011    106 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    543. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   543.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>        1 2.01<span style="color: #949494;">e</span>13   271.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>        2 2.01<span style="color: #949494;">e</span>13   271.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011    137 3<span style="color: #949494;"> [Marc…</span> 2.01<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>    271. 1<span style="color: #949494;"> [No]</span>        3 2.01<span style="color: #949494;">e</span>13   365.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: AGE &lt;int+lbl&gt;, EMPSTAT &lt;int+lbl&gt;, AHRSWORKT &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   HEALTH &lt;int+lbl&gt;</span></span></span></code></pre></div>
 <p>Use <code>cur_pos</code> to get the current position in the data
 file:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span><span class="op">$</span><span class="va">cur_pos</span>
-<span class="co">#&gt; [1] 21</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span><span class="op">$</span><span class="va">cur_pos</span></span>
+<span><span class="co">#&gt; [1] 21</span></span></code></pre></div>
 <p>The <code>is_done()</code> method tells us whether we have read the
 entire file yet:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span><span class="op">$</span><span class="fu">is_done</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] FALSE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span><span class="op">$</span><span class="fu">is_done</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>In preparation for our actual example, we’ll use <code>reset()</code>
 to reset to the beginning of the data:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Using <code>yield()</code> and <code>is_done()</code>, we can set up
 our processing pipeline. First, we create an empty placeholder tibble to
 store our results:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  HEALTH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span><span class="op">)</span><span class="op">)</span>,
-  AT_WORK <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="st">"Yes"</span><span class="op">)</span><span class="op">)</span>,
-  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  HEALTH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  AT_WORK <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="st">"Yes"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Then, we iterate through the data, yielding 1,000 rows at a time and
 processing the results as we did in the chunked example. The iteration
 will end when we’ve finished reading the entire file.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">data</span><span class="op">$</span><span class="fu">is_done</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="co"># Yield new data and process</span>
-  <span class="va">new</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-      HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-      AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-        <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-          <span class="va">EMPSTAT</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-        <span class="op">)</span>
-      <span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-
-  <span class="co"># Combine the new yield with the previously processed yields</span>
-  <span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">yield_results</span>, <span class="va">new</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="va">yield_results</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
-<span class="co">#&gt;    HEALTH    AT_WORK     n</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">data</span><span class="op">$</span><span class="fu">is_done</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># Yield new data and process</span></span>
+<span>  <span class="va">new</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>      HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>      AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>          <span class="va">EMPSTAT</span>,</span>
+<span>          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>          <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Combine the new yield with the previously processed yields</span></span>
+<span>  <span class="va">yield_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">yield_results</span>, <span class="va">new</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">HEALTH</span>, <span class="va">AT_WORK</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">yield_results</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span></span>
+<span><span class="co">#&gt;    HEALTH    AT_WORK     n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Excellent No       <span style="text-decoration: underline;">4</span>055</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Excellent Yes      <span style="text-decoration: underline;">2</span>900</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Very good No       <span style="text-decoration: underline;">3</span>133</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Very good Yes      <span style="text-decoration: underline;">3</span>371</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Good      No       <span style="text-decoration: underline;">2</span>480</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Good      Yes      <span style="text-decoration: underline;">2</span>178</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Fair      No       <span style="text-decoration: underline;">1</span>123</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Fair      Yes       443</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Poor      No        603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Poor      Yes        65</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="yielded-glm-regression">Yielded GLM regression<a class="anchor" aria-label="anchor" href="#yielded-glm-regression"></a>
@@ -713,7 +712,7 @@ the use of more complicated models.</p>
 <p>To run a logistic regression, we first need to reset our yield object
 from the previous example:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Next we make a function that takes a single argument:
 <code>reset</code>. When <code>reset</code> is <code>TRUE</code>, it
 resets the data to the beginning. This is dictated by
@@ -721,52 +720,52 @@ resets the data to the beginning. This is dictated by
 <p>To create this function, we use the the <code>reset()</code> method
 from the yield object:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">get_model_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="va">yield</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-
-    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span>
-    <span class="op">}</span>
-
-    <span class="va">yield</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-        HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,
-        WORK30PLUS <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">30</span>,
-        AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span>
-          <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span>
-            <span class="va">EMPSTAT</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,
-            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span>
-          <span class="op">)</span>
-        <span class="op">)</span>
-      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">get_model_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">reset</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">yield</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="fu">yield</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">yield</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="va">yield</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>        HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span>,</span>
+<span>        WORK30PLUS <span class="op">=</span> <span class="fu"><a href="../reference/lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span><span class="va">AHRSWORKT</span>, <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"NIU (Not in universe)"</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">30</span>,</span>
+<span>        AT_WORK <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span></span>
+<span>          <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<span>            <span class="va">EMPSTAT</span>,</span>
+<span>            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"At work"</span>,</span>
+<span>            <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"No"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.lbl</span> <span class="op">!=</span> <span class="st">"At work"</span></span>
+<span>          <span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AT_WORK</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Finally we feed this function and a model specification to the
 <code><a href="https://rdrr.io/pkg/biglm/man/bigglm.html" class="external-link">bigglm()</a></code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biglm/man/bigglm.html" class="external-link">bigglm</a></span><span class="op">(</span>
-  <span class="va">WORK30PLUS</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>,
-  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span>,
-  data <span class="op">=</span> <span class="va">get_model_data</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span>
-<span class="co">#&gt; Large data regression model: bigglm(WORK30PLUS ~ AGE + I(AGE^2) + HEALTH, family = binomial(link = "logit"), </span>
-<span class="co">#&gt;     data = get_model_data)</span>
-<span class="co">#&gt; Sample size =  8957 </span>
-<span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span>
-<span class="co">#&gt; (Intercept)     -4.0021 -4.4297 -3.5744 0.2138 0.0000</span>
-<span class="co">#&gt; AGE              0.2714  0.2498  0.2930 0.0108 0.0000</span>
-<span class="co">#&gt; I(AGE^2)        -0.0029 -0.0032 -0.0027 0.0001 0.0000</span>
-<span class="co">#&gt; HEALTHVery good  0.0038 -0.1346  0.1423 0.0692 0.9557</span>
-<span class="co">#&gt; HEALTHGood      -0.1129 -0.2685  0.0426 0.0778 0.1465</span>
-<span class="co">#&gt; HEALTHFair      -0.6637 -0.9160 -0.4115 0.1261 0.0000</span>
-<span class="co">#&gt; HEALTHPoor      -0.7879 -1.3697 -0.2062 0.2909 0.0068</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biglm/man/bigglm.html" class="external-link">bigglm</a></span><span class="op">(</span></span>
+<span>  <span class="va">WORK30PLUS</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">HEALTH</span>,</span>
+<span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">get_model_data</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Large data regression model: bigglm(WORK30PLUS ~ AGE + I(AGE^2) + HEALTH, family = binomial(link = "logit"), </span></span>
+<span><span class="co">#&gt;     data = get_model_data)</span></span>
+<span><span class="co">#&gt; Sample size =  8957 </span></span>
+<span><span class="co">#&gt;                    Coef    (95%     CI)     SE      p</span></span>
+<span><span class="co">#&gt; (Intercept)     -4.0021 -4.4297 -3.5744 0.2138 0.0000</span></span>
+<span><span class="co">#&gt; AGE              0.2714  0.2498  0.2930 0.0108 0.0000</span></span>
+<span><span class="co">#&gt; I(AGE^2)        -0.0029 -0.0032 -0.0027 0.0001 0.0000</span></span>
+<span><span class="co">#&gt; HEALTHVery good  0.0038 -0.1346  0.1423 0.0692 0.9557</span></span>
+<span><span class="co">#&gt; HEALTHGood      -0.1129 -0.2685  0.0426 0.0778 0.1465</span></span>
+<span><span class="co">#&gt; HEALTHFair      -0.6637 -0.9160 -0.4115 0.1261 0.0000</span></span>
+<span><span class="co">#&gt; HEALTHPoor      -0.7879 -1.3697 -0.2062 0.2909 0.0068</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -805,31 +804,31 @@ entire dataset in R.</p>
 “Hierarchical extracts” section of
 <code><a href="../articles/ipums-read.html">vignette("ipums-read")</a></code>.)</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsqlite.r-dbi.org" class="external-link">RSQLite</a></span><span class="op">)</span>
-
-<span class="co"># Connect to database</span>
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>, path <span class="op">=</span> <span class="st">":memory:"</span><span class="op">)</span>
-
-<span class="co"># Load file metadata</span>
-<span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span>
-
-<span class="co"># Write data to database in chunks</span>
-<span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span>
-  <span class="va">ddi</span>,
-  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,
-  <span class="fu">readr</span><span class="fu">::</span><span class="va"><a href="https://readr.tidyverse.org/reference/callback.html" class="external-link">SideEffectChunkCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span>
-      <span class="kw">if</span> <span class="op">(</span><span class="va">pos</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
-        <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span>, <span class="va">x</span><span class="op">)</span>
-      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-        <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span>, <span class="va">x</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, append <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">)</span>,
-  chunk_size <span class="op">=</span> <span class="fl">1000</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsqlite.r-dbi.org" class="external-link">RSQLite</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Connect to database</span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>, path <span class="op">=</span> <span class="st">":memory:"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load file metadata</span></span>
+<span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Write data to database in chunks</span></span>
+<span><span class="fu"><a href="../reference/read_ipums_micro_chunked.html">read_ipums_micro_chunked</a></span><span class="op">(</span></span>
+<span>  <span class="va">ddi</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="va">cps_data_file</span>,</span>
+<span>  <span class="fu">readr</span><span class="fu">::</span><span class="va"><a href="https://readr.tidyverse.org/reference/callback.html" class="external-link">SideEffectChunkCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">pos</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span>, <span class="va">x</span><span class="op">)</span></span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span>, <span class="va">x</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, append <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="connecting-to-a-database-with-dbplyr">Connecting to a database with dbplyr<a class="anchor" aria-label="anchor" href="#connecting-to-a-database-with-dbplyr"></a>
@@ -840,26 +839,26 @@ dbplyr, see <code><a href="https://dbplyr.tidyverse.org/articles/dbplyr.html" cl
 <p>To run a simple query for <code>AGE</code>, we can use the same
 syntax we would use with dplyr:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span><span class="op">)</span>
-
-<span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># Source:   SQL [?? x 14]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.40.1 []</span></span>
-<span class="co">#&gt;     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      1 2.01<span style="color: #949494;">e</span>13   308.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      2 2.01<span style="color: #949494;">e</span>13   217.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      3 2.01<span style="color: #949494;">e</span>13   249.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      1 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      2 2.01<span style="color: #949494;">e</span>13   266.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      3 2.01<span style="color: #949494;">e</span>13   265.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      4 2.01<span style="color: #949494;">e</span>13   296.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      1 2.01<span style="color: #949494;">e</span>13   241.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      2 2.01<span style="color: #949494;">e</span>13   241.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      3 2.01<span style="color: #949494;">e</span>13   278.</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with more rows, and 4 more variables: AGE &lt;int&gt;, EMPSTAT &lt;int&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   AHRSWORKT &lt;dbl&gt;, HEALTH &lt;int&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Source:   SQL [?? x 14]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.40.1 []</span></span></span>
+<span><span class="co">#&gt;     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      1 2.01<span style="color: #949494;">e</span>13   308.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      2 2.01<span style="color: #949494;">e</span>13   217.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      3 2.01<span style="color: #949494;">e</span>13   249.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      1 2.01<span style="color: #949494;">e</span>13   266.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      2 2.01<span style="color: #949494;">e</span>13   266.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      3 2.01<span style="color: #949494;">e</span>13   265.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      4 2.01<span style="color: #949494;">e</span>13   296.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      1 2.01<span style="color: #949494;">e</span>13   241.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      2 2.01<span style="color: #949494;">e</span>13   241.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      3 2.01<span style="color: #949494;">e</span>13   278.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: AGE &lt;int&gt;, EMPSTAT &lt;int&gt;, AHRSWORKT &lt;dbl&gt;, HEALTH &lt;int&gt;</span></span></span></code></pre></div>
 <p>dbplyr shows us a nice preview of the first rows of the result of our
 query, but the data still exist only in the database. You can use
 <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::collect()</a></code> to load the full results of the query into
@@ -867,38 +866,38 @@ the current R session. However, this would omit the variable metadata
 attached to IPUMS data, since the database doesn’t store this
 metadata:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Variable metadata is missing</span>
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Variable metadata is missing</span></span>
+<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></span></code></pre></div>
 <p>Instead, use <code><a href="../reference/ipums_collect.html">ipums_collect()</a></code>, which uses a provided
 <code>ipums_ddi</code> object to reattach the metadata while loading
 into the R environment:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/ipums_collect.html">ipums_collect</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span>
-<span class="co">#&gt;      val lbl      </span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 January  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2 February </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3 March    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4 April    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5 May      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6 June     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7 July     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8 August   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9 September</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10 October  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/ipums_collect.html">ipums_collect</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
+<span><span class="co">#&gt;      val lbl      </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 January  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2 February </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3 March    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4 April    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5 May      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6 June     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7 July     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8 August   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9 September</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10 October  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
 <p>For more about variable metadata in IPUMS data, see
 <code><a href="../articles/value-labels.html">vignette("value-labels")</a></code>.</p>
 </div>

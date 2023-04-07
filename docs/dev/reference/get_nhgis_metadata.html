@@ -128,16 +128,16 @@ the metadata provided for each data type.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_nhgis_metadata</span><span class="op">(</span>
-  type <span class="op">=</span> <span class="cn">NULL</span>,
-  dataset <span class="op">=</span> <span class="cn">NULL</span>,
-  data_table <span class="op">=</span> <span class="cn">NULL</span>,
-  time_series_table <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>,
-  match_all <span class="op">=</span> <span class="cn">TRUE</span>,
-  match_case <span class="op">=</span> <span class="cn">FALSE</span>,
-  api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dataset <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  time_series_table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  match_all <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_case <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -312,31 +312,31 @@ metadata API and extracts.</p></li>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Get summary metadata for all available sources of a given data type</span></span>
-<span class="r-in"><span class="fu">get_nhgis_metadata</span><span class="op">(</span><span class="st">"datasets"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Filter summary metadata to records that meet specific criteria.</span></span>
-<span class="r-in"><span class="co"># This returns records whose description includes both "Sex" and "Age" and</span></span>
-<span class="r-in"><span class="co"># whose years include 1990 and 2000:</span></span>
-<span class="r-in"><span class="fu">get_nhgis_metadata</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"time_series_tables"</span>,</span>
-<span class="r-in">  description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sex"</span>, <span class="st">"Age"</span><span class="op">)</span>,</span>
-<span class="r-in">  years <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990</span>, <span class="fl">2000</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Alternatively, return records whose description includes</span></span>
-<span class="r-in"><span class="co"># either "Sex" or "Age"</span></span>
-<span class="r-in"><span class="fu">get_nhgis_metadata</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"time_series_tables"</span>,</span>
-<span class="r-in">  description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sex"</span>, <span class="st">"Age"</span><span class="op">)</span>,</span>
-<span class="r-in">  match_all <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Get metadata for single data source</span></span>
-<span class="r-in"><span class="fu">get_nhgis_metadata</span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">get_nhgis_metadata</span><span class="op">(</span>data_table <span class="op">=</span> <span class="st">"NP1"</span>, dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Get summary metadata for all available sources of a given data type</span></span></span>
+<span class="r-in"><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span><span class="st">"datasets"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Filter summary metadata to records that meet specific criteria.</span></span></span>
+<span class="r-in"><span><span class="co"># This returns records whose description includes both "Sex" and "Age" and</span></span></span>
+<span class="r-in"><span><span class="co"># whose years include 1990 and 2000:</span></span></span>
+<span class="r-in"><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"time_series_tables"</span>,</span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sex"</span>, <span class="st">"Age"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  years <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990</span>, <span class="fl">2000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Alternatively, return records whose description includes</span></span></span>
+<span class="r-in"><span><span class="co"># either "Sex" or "Age"</span></span></span>
+<span class="r-in"><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"time_series_tables"</span>,</span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sex"</span>, <span class="st">"Age"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  match_all <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get metadata for single data source</span></span></span>
+<span class="r-in"><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_nhgis_metadata</span><span class="op">(</span>data_table <span class="op">=</span> <span class="st">"NP1"</span>, dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

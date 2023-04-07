@@ -184,9 +184,9 @@ API</li>
 <p>Before getting started, we’ll load the necessary packages for the
 examples in this vignette:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org" class="external-link">ipumsr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ipums.org" class="external-link">ipumsr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="api-availability">API Availability<a class="anchor" aria-label="anchor" href="#api-availability"></a>
 </h3>
@@ -206,22 +206,22 @@ API for the following collections:</p>
 future. You can check general API availability for all IPUMS collections
 with <code><a href="../reference/ipums_data_collections.html">ipums_data_collections()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ipums_data_collections.html">ipums_data_collections</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span>
-<span class="co">#&gt;    collection_name     code_for_api api_support</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> IPUMS USA           usa          beta       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> IPUMS CPS           cps          beta       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> IPUMS International ipumsi       none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> IPUMS NHGIS         nhgis        v1         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> IPUMS AHTUS         ahtus        none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> IPUMS MTUS          mtus         none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> IPUMS ATUS          atus         none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> IPUMS DHS           dhs          none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> IPUMS Higher Ed     highered     none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> IPUMS MEPS          meps         none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span> IPUMS NHIS          nhis         none       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span> IPUMS PMA           pma          none</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_data_collections.html">ipums_data_collections</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span></span>
+<span><span class="co">#&gt;    collection_name     code_for_api api_support</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> IPUMS USA           usa          beta       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> IPUMS CPS           cps          beta       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> IPUMS International ipumsi       none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> IPUMS NHGIS         nhgis        v1         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> IPUMS AHTUS         ahtus        none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> IPUMS MTUS          mtus         none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> IPUMS ATUS          atus         none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> IPUMS DHS           dhs          none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> IPUMS Higher Ed     highered     none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> IPUMS MEPS          meps         none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> IPUMS NHIS          nhis         none       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> IPUMS PMA           pma          none</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="note-new-features-currently-in-development">Note: New features currently in development<a class="anchor" aria-label="anchor" href="#note-new-features-currently-in-development"></a>
@@ -261,8 +261,8 @@ key for use in future sessions, set <code>save = TRUE</code>. This will
 add your API key to your <code>.Renviron</code> file in your user home
 directory.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Save key in .Renviron for use across sessions</span>
-<span class="fu"><a href="../reference/set_ipums_api_key.html">set_ipums_api_key</a></span><span class="op">(</span><span class="st">"paste-your-key-here"</span>, save <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Save key in .Renviron for use across sessions</span></span>
+<span><span class="fu"><a href="../reference/set_ipums_api_key.html">set_ipums_api_key</a></span><span class="op">(</span><span class="st">"paste-your-key-here"</span>, save <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The rest of this vignette assumes you have obtained an API key and
 stored it in the <code>IPUMS_API_KEY</code> environment variable.</p>
 </div>
@@ -287,83 +287,83 @@ included in the extract and indicate the desired format and layout.</p>
 <code>STATEFIP</code> variables from the 2018 and 2019 American
 Community Survey (ACS):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usa_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"USA extract for API vignette"</span>,
-  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2018a"</span>, <span class="st">"us2019a"</span><span class="op">)</span>,
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"RACE"</span>, <span class="st">"STATEFIP"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">usa_extract_definition</span>
-<span class="co">#&gt; Unsubmitted IPUMS USA extract </span>
-<span class="co">#&gt; Description: USA extract for API vignette</span>
-<span class="co">#&gt; Samples: (2 total) us2018a, us2019a</span>
-<span class="co">#&gt; Variables: (4 total) AGE, SEX, RACE, STATEFIP</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">usa_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"USA extract for API vignette"</span>,</span>
+<span>  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2018a"</span>, <span class="st">"us2019a"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"RACE"</span>, <span class="st">"STATEFIP"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">usa_extract_definition</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS USA extract </span></span>
+<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
+<span><span class="co">#&gt; Samples: (2 total) us2018a, us2019a</span></span>
+<span><span class="co">#&gt; Variables: (4 total) AGE, SEX, RACE, STATEFIP</span></span></code></pre></div>
 <p>Similarly, the following would produce an NHGIS extract definition
 for tables P1 and P2 from the 2010 SF1a census file at the state
 level:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"NHGIS extract for API vignette"</span>,
-  datasets <span class="op">=</span> <span class="st">"2010_SF1a"</span>,
-  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P1"</span>, <span class="st">"P2"</span><span class="op">)</span>,
-  geog_levels <span class="op">=</span> <span class="st">"state"</span>
-<span class="op">)</span>
-
-<span class="va">nhgis_extract_definition</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: NHGIS extract for API vignette</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nhgis_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"NHGIS extract for API vignette"</span>,</span>
+<span>  datasets <span class="op">=</span> <span class="st">"2010_SF1a"</span>,</span>
+<span>  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P1"</span>, <span class="st">"P2"</span><span class="op">)</span>,</span>
+<span>  geog_levels <span class="op">=</span> <span class="st">"state"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nhgis_extract_definition</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: NHGIS extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span></code></pre></div>
 <p>Note that in NHGIS extract definitions, certain fields, like
 <code>data_tables</code> and <code>geog_levels</code>, are associated
 with a particular dataset. For an extract with multiple datasets, these
 subfields will be applied to all <code>datasets</code> in the extract
 definition:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"NHGIS extract with multiple datasets"</span>,
-  datasets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016_2020_ACS5a"</span>, <span class="st">"2017_2021_ACS5a"</span><span class="op">)</span>,
-  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B01001"</span>, <span class="st">"B01002"</span><span class="op">)</span>,
-  geog_levels <span class="op">=</span> <span class="st">"state"</span>
-<span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: NHGIS extract with multiple datasets</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2016_2020_ACS5a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001, B01002</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2017_2021_ACS5a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001, B01002</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"NHGIS extract with multiple datasets"</span>,</span>
+<span>  datasets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016_2020_ACS5a"</span>, <span class="st">"2017_2021_ACS5a"</span><span class="op">)</span>,</span>
+<span>  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B01001"</span>, <span class="st">"B01002"</span><span class="op">)</span>,</span>
+<span>  geog_levels <span class="op">=</span> <span class="st">"state"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: NHGIS extract with multiple datasets</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2016_2020_ACS5a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001, B01002</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2017_2021_ACS5a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001, B01002</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span></code></pre></div>
 <p>To specify unique values for a subfield for each dataset, use a named
 list instead of a vector in the subfield argument. This allows you to
 explicitly indicate which dataset should be associated with which
 subfield values:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># In this case, data_tables are matched to individual datasets, while</span>
-<span class="co"># geog_levels are recycled to all datasets</span>
-<span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"NHGIS extract with multiple datasets"</span>,
-  datasets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016_2020_ACS5a"</span>, <span class="st">"2017_2021_ACS5a"</span><span class="op">)</span>,
-  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    <span class="st">"2016_2020_ACS5a"</span> <span class="op">=</span> <span class="st">"B01001"</span>,
-    <span class="st">"2017_2021_ACS5a"</span> <span class="op">=</span> <span class="st">"B01002"</span>
-  <span class="op">)</span>,
-  geog_levels <span class="op">=</span> <span class="st">"state"</span>
-<span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: NHGIS extract with multiple datasets</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2016_2020_ACS5a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2017_2021_ACS5a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01002</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># In this case, data_tables are matched to individual datasets, while</span></span>
+<span><span class="co"># geog_levels are recycled to all datasets</span></span>
+<span><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"NHGIS extract with multiple datasets"</span>,</span>
+<span>  datasets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016_2020_ACS5a"</span>, <span class="st">"2017_2021_ACS5a"</span><span class="op">)</span>,</span>
+<span>  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="st">"2016_2020_ACS5a"</span> <span class="op">=</span> <span class="st">"B01001"</span>,</span>
+<span>    <span class="st">"2017_2021_ACS5a"</span> <span class="op">=</span> <span class="st">"B01002"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  geog_levels <span class="op">=</span> <span class="st">"state"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: NHGIS extract with multiple datasets</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2016_2020_ACS5a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01001</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2017_2021_ACS5a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>B01002</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span></code></pre></div>
 <p>NHGIS time series tables also have similar behavior for
 <code>geog_levels</code>. See <code><a href="../reference/define_extract_nhgis.html">?define_extract_nhgis</a></code> for
 more information.</p>
@@ -376,32 +376,32 @@ by other API functions (see <code><a href="../reference/ipums_extract-class.html
 these objects will have a subclass for the particular collection with
 which they are associated.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">)</span>
-<span class="co">#&gt; [1] "usa_extract"   "ipums_extract"</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span><span class="op">)</span>
-<span class="co">#&gt; [1] "nhgis_extract" "ipums_extract"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "usa_extract"   "ipums_extract"</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "nhgis_extract" "ipums_extract"</span></span></code></pre></div>
 <p>While <code>ipums_extract</code> objects for different collections
 have slightly different structures, they all support the same API
 workflow.</p>
 <p>The specifications for a given extract request object can be accessed
 using standard list-indexing syntax:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">samples</span>
-<span class="co">#&gt; [1] "us2018a" "us2019a"</span>
-
-<span class="va">nhgis_extract_definition</span><span class="op">[[</span><span class="st">"data_tables"</span><span class="op">]</span><span class="op">]</span>
-<span class="co">#&gt; $`2010_SF1a`</span>
-<span class="co">#&gt; [1] "P1" "P2"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">samples</span></span>
+<span><span class="co">#&gt; [1] "us2018a" "us2019a"</span></span>
+<span></span>
+<span><span class="va">nhgis_extract_definition</span><span class="op">[[</span><span class="st">"data_tables"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; $`2010_SF1a`</span></span>
+<span><span class="co">#&gt; [1] "P1" "P2"</span></span></code></pre></div>
 <p><code>ipums_extract</code> objects also contain information about the
 extract request’s status. This extract hasn’t yet been submitted, and
 therefore has no extract request number:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">status</span>
-<span class="co">#&gt; [1] "unsubmitted"</span>
-
-<span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">number</span>
-<span class="co">#&gt; [1] NA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">status</span></span>
+<span><span class="co">#&gt; [1] "unsubmitted"</span></span>
+<span></span>
+<span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">number</span></span>
+<span><span class="co">#&gt; [1] NA</span></span></code></pre></div>
 <p>An extract request will receive a number once it has been submitted
 to the API for processing.</p>
 </div>
@@ -433,19 +433,17 @@ produces a <code>tibble</code> of information about each available data
 source and is best used to determine the name used by the API to
 reference a data source of interest.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"time_series_tables"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span>
-<span class="co">#&gt;   name  description                       geographic_int…¹ seque…² years geog_…³</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> A00   Total Population                  Nominal             0.01 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AV0   Total Population                  Nominal             0.02 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> B78   Total Population                  Nominal             0.03 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> CL8   Total Population                  Standardized to…    0.04 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> A57   Persons by Urban/Rural Status [4] Nominal             5.01 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> A59   Persons by Urban/Rural Status [4] Nominal             5.02 &lt;chr&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​geographic_integration, ²​sequence,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ³​geog_levels</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"time_series_tables"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
+<span><span class="co">#&gt;   name  description            geographic_integration sequence years geog_levels</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> A00   Total Population       Nominal                    0.01 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [2]&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AV0   Total Population       Nominal                    0.02 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [5]&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> B78   Total Population       Nominal                    0.03 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> CL8   Total Population       Standardized to 2010       0.04 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [10]&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> A57   Persons by Urban/Rura… Nominal                    5.01 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [4]&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> A59   Persons by Urban/Rura… Nominal                    5.02 <span style="color: #949494;">&lt;chr&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span></span></span></code></pre></div>
 <p>To get details on a particular data source, pass its name to the
 associated argument of <code><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata()</a></code>. Use this to
 determine the codes and descriptions of various subfields for a given
@@ -455,15 +453,15 @@ a dataset or time series table, etc.).</p>
 included in the extract request above (P1 and P2) correspond to total
 population counts and urban/rural population counts, respectively:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ds_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"2010_SF1a"</span><span class="op">)</span>
-
-<span class="va">ds_meta</span><span class="op">$</span><span class="va">data_tables</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P1"</span>, <span class="st">"P2"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt;   name  nhgis_code description      sequence</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P1    H7V        Total Population        1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P2    H7W        Urban and Rural         2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ds_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"2010_SF1a"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ds_meta</span><span class="op">$</span><span class="va">data_tables</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P1"</span>, <span class="st">"P2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   name  nhgis_code description      sequence</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P1    H7V        Total Population        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P2    H7W        Urban and Rural         2</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -476,18 +474,18 @@ extract request will be returned with its assigned number and status.
 Storing the returned object can be useful for checking the extract
 request’s status later.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">)</span>
-<span class="co">#&gt; Successfully submitted IPUMS USA extract number 92</span>
-
-<span class="va">submitted_nhgis_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span><span class="op">)</span>
-<span class="co">#&gt; Successfully submitted IPUMS NHGIS extract number 960</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Successfully submitted IPUMS USA extract number 92</span></span>
+<span></span>
+<span><span class="va">submitted_nhgis_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Successfully submitted IPUMS NHGIS extract number 960</span></span></code></pre></div>
 <p>The extract number will be stored in the returned object:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">number</span>
-<span class="co">#&gt; [1] 92</span>
-
-<span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">status</span>
-<span class="co">#&gt; [1] "queued"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">number</span></span>
+<span><span class="co">#&gt; [1] 92</span></span>
+<span></span>
+<span><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">status</span></span>
+<span><span class="co">#&gt; [1] "queued"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="check">Check the status of an extract<a class="anchor" aria-label="anchor" href="#check"></a>
@@ -505,19 +503,19 @@ extract definition with the most current <code>status</code>. The
 <code>download_links</code> field will be populated with any extract
 files that are available for download.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span>
-
-<span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">status</span>
-<span class="co">#&gt; [1] "queued"</span>
-
-<span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">download_links</span>
-<span class="co">#&gt; named list()</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">status</span></span>
+<span><span class="co">#&gt; [1] "queued"</span></span>
+<span></span>
+<span><span class="va">submitted_usa_extract</span><span class="op">$</span><span class="va">download_links</span></span>
+<span><span class="co">#&gt; named list()</span></span></code></pre></div>
 <p>If you forget to capture the return value of
 <code><a href="../reference/submit_extract.html">submit_extract()</a></code>, you can use the
 <code><a href="../reference/get_extract_info.html">get_last_extract_info()</a></code> helper to request the information
 for your most recent extract request for a given collection:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">submitted_usa_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span></code></pre></div>
 <p>You can also request the information for any single extract request
 by passing the collection and extract number to
 <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>. These can be provided either as a
@@ -527,9 +525,9 @@ functions also support this syntax. Note that there is no need to
 include the padded zeroes that are included in extract file names
 (e.g. 00010).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># These are equivalent:</span>
-<span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"cps:10"</span><span class="op">)</span>
-<span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps"</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># These are equivalent:</span></span>
+<span><span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"cps:10"</span><span class="op">)</span></span>
+<span><span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps"</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>If you regularly use only a single IPUMS collection, you can save
 yourself some typing by setting that collection as your default.
 <code><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection()</a></code> will save a specified
@@ -538,32 +536,32 @@ environment variable. If you have a default collection set, API
 functions will use that collection in all requests, assuming no other
 collection is specified.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"cps"</span><span class="op">)</span> <span class="co"># Set `save = TRUE` to store across sessions</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"cps"</span><span class="op">)</span> <span class="co"># Set `save = TRUE` to store across sessions</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Check the default collection:</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_DEFAULT_COLLECTION"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "cps"</span>
-
-<span class="co"># Most recent CPS extract:</span>
-<span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Submitted IPUMS CPS extract number 15</span>
-<span class="co">#&gt; Description: Compare age-sex-race breakdowns 1976</span>
-<span class="co">#&gt; Samples: (2 total) cps1976_01s, cps1976_02b</span>
-<span class="co">#&gt; Variables: (12 total) YEAR, SERIAL, MONTH, CPSID, MISH, PERNUM, WTFINL, CPSID...</span>
-
-<span class="co"># Request info on extract request "cps:10"</span>
-<span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; Submitted IPUMS CPS extract number 10</span>
-<span class="co">#&gt; Description: Compare age-sex-race breakdowns 1976</span>
-<span class="co">#&gt; Samples: (2 total) cps1976_01s, cps1976_02b</span>
-<span class="co">#&gt; Variables: (12 total) YEAR, SERIAL, MONTH, CPSID, MISH, PERNUM, WTFINL, CPSID...</span>
-
-<span class="co"># You can still request other collections as usual:</span>
-<span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:10"</span><span class="op">)</span>
-<span class="co">#&gt; Submitted IPUMS USA extract number 10</span>
-<span class="co">#&gt; Description: testing</span>
-<span class="co">#&gt; Samples: (1 total) us2019a</span>
-<span class="co">#&gt; Variables: (14 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER, STATEFIP...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Check the default collection:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_DEFAULT_COLLECTION"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "cps"</span></span>
+<span></span>
+<span><span class="co"># Most recent CPS extract:</span></span>
+<span><span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Submitted IPUMS CPS extract number 15</span></span>
+<span><span class="co">#&gt; Description: Compare age-sex-race breakdowns 1976</span></span>
+<span><span class="co">#&gt; Samples: (2 total) cps1976_01s, cps1976_02b</span></span>
+<span><span class="co">#&gt; Variables: (12 total) YEAR, SERIAL, MONTH, CPSID, MISH, PERNUM, WTFINL, CPSID...</span></span>
+<span></span>
+<span><span class="co"># Request info on extract request "cps:10"</span></span>
+<span><span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Submitted IPUMS CPS extract number 10</span></span>
+<span><span class="co">#&gt; Description: Compare age-sex-race breakdowns 1976</span></span>
+<span><span class="co">#&gt; Samples: (2 total) cps1976_01s, cps1976_02b</span></span>
+<span><span class="co">#&gt; Variables: (12 total) YEAR, SERIAL, MONTH, CPSID, MISH, PERNUM, WTFINL, CPSID...</span></span>
+<span></span>
+<span><span class="co"># You can still request other collections as usual:</span></span>
+<span><span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:10"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 10</span></span>
+<span><span class="co">#&gt; Description: testing</span></span>
+<span><span class="co">#&gt; Samples: (1 total) us2019a</span></span>
+<span><span class="co">#&gt; Variables: (14 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER, STATEFIP...</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="download">Download an extract<a class="anchor" aria-label="anchor" href="#download"></a>
@@ -576,8 +574,8 @@ time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).</p>
 <p>You can check whether an extract is ready for download with
 <code><a href="../reference/is_extract_ready.html">is_extract_ready()</a></code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/is_extract_ready.html">is_extract_ready</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/is_extract_ready.html">is_extract_ready</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>This function will also warn you if your extract has expired and
 needs to be resubmitted.</p>
 <p>If your extract is ready to download, you can use
@@ -592,59 +590,58 @@ requested data files or shapefiles. If both data and shapefiles are
 requested, <code><a href="../reference/download_extract.html">download_extract()</a></code> will return a length-2 vector
 of paths to each, with data files first.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># By default, downloads to your current working directory</span>
-<span class="va">ddi_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># By default, downloads to your current working directory</span></span>
+<span><span class="va">ddi_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">submitted_usa_extract</span><span class="op">)</span></span></code></pre></div>
 <p>The files produced by download_extract can be passed directly into
 the reader functions provided by ipumsr.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">ddi_path</span><span class="op">)</span>
-<span class="va">micro_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">ddi_path</span><span class="op">)</span></span>
+<span><span class="va">micro_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></code></pre></div>
 <p>If your extract request has not finished processing, you’ll receive
-an error when attempting to download. If you want to ensure that you
-wait until the extract is ready before attempting to download, set
-<code>wait = TRUE</code>. If the extract request is not yet ready, R
-will poll the API regularly (each interval will increase by 10 seconds)
-until processing has completed. (To wait for extract completion
-<em>without</em> downloading, use <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>.)</p>
-<p>Note that setting <code>wait = TRUE</code> will tie up your R session
+an error when attempting to download. To wait until the extract is ready
+before attempting to download, use <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>. If
+the extract request is not yet ready, R will poll the API regularly
+(each interval will increase by 10 seconds) until processing has
+completed.</p>
+<p>Note that <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code> will tie up your R session
 until the extract is ready to download. This may be undesirable behavior
 for large extracts that take a long time to produce or when the IPUMS
 servers are busy. You can set a maximum wait time and adjust other API
-polling parameters in <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code> and
-<code><a href="../reference/download_extract.html">download_extract()</a></code>. See <code><a href="../reference/wait_for_extract.html">?wait_for_extract</a></code> for
-details.</p>
+polling parameters in <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>. See
+<code><a href="../reference/wait_for_extract.html">?wait_for_extract</a></code> for details.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">submitted_nhgis_extract</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">downloadable_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="va">submitted_nhgis_extract</span><span class="op">)</span></span>
+<span><span class="va">nhgis_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">downloadable_extract</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_path</span><span class="op">)</span>
-<span class="co">#&gt; Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">52</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">64</span></span>
-<span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span>
-<span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span>
-<span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (7): GISJOIN, STUSAB, STATE, STATEA, NAME, FUNCSTAT, LSADC</span>
-<span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (14): YEAR, REGIONA, DIVISIONA, AREALAND, AREAWATR, INTPTLAT, INTPTLON, ...</span>
-<span class="co">#&gt; <span style="color: #BBBB00;">lgl</span> (43): COUNTYA, COUSUBA, COUSUBCC, PLACEA, PLACECC, TRACTA, BLKGRPA, BLOC...</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 64</span></span>
-<span class="co">#&gt;   GISJOIN  YEAR STUSAB REGIONA DIVISIONA STATE    STATEA COUNTYA COUSUBA COUSU…¹</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> G010     <span style="text-decoration: underline;">2</span>010 AL           3         6 Alabama  01     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> G020     <span style="text-decoration: underline;">2</span>010 AK           4         9 Alaska   02     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> G040     <span style="text-decoration: underline;">2</span>010 AZ           4         8 Arizona  04     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> G050     <span style="text-decoration: underline;">2</span>010 AR           3         7 Arkansas 05     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> G060     <span style="text-decoration: underline;">2</span>010 CA           4         9 Califor… 06     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> G080     <span style="text-decoration: underline;">2</span>010 CO           4         8 Colorado 08     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 54 more variables: PLACEA &lt;lgl&gt;, PLACECC &lt;lgl&gt;, TRACTA &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   BLKGRPA &lt;lgl&gt;, BLOCKA &lt;lgl&gt;, CONCITA &lt;lgl&gt;, AIANHHA &lt;lgl&gt;, RES_ONLYA &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   TRUSTA &lt;lgl&gt;, AIANHHCC &lt;lgl&gt;, AITSCEA &lt;lgl&gt;, AITS &lt;lgl&gt;, TTRACTA &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   TBLKGRPA &lt;lgl&gt;, ANRCA &lt;lgl&gt;, CBSAA &lt;lgl&gt;, METDIVA &lt;lgl&gt;, CSAA &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   NECTAA &lt;lgl&gt;, NECTADIVA &lt;lgl&gt;, CNECTAA &lt;lgl&gt;, CBSAPCI &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   NECTAPCI &lt;lgl&gt;, UAA &lt;lgl&gt;, UATYPE &lt;lgl&gt;, URA &lt;lgl&gt;, CDA &lt;lgl&gt;, SLDUA &lt;lgl&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   SLDLA &lt;lgl&gt;, VTD &lt;lgl&gt;, VTDI &lt;lgl&gt;, ZCTA5A &lt;lgl&gt;, SUBMCDA &lt;lgl&gt;, …</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_path</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">52</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">64</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (7): GISJOIN, STUSAB, STATE, STATEA, NAME, FUNCSTAT, LSADC</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (14): YEAR, REGIONA, DIVISIONA, AREALAND, AREAWATR, INTPTLAT, INTPTLON, ...</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">lgl</span> (43): COUNTYA, COUSUBA, COUSUBCC, PLACEA, PLACECC, TRACTA, BLKGRPA, BLOC...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 64</span></span></span>
+<span><span class="co">#&gt;   GISJOIN  YEAR STUSAB REGIONA DIVISIONA STATE   STATEA COUNTYA COUSUBA COUSUBCC</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> G010     <span style="text-decoration: underline;">2</span>010 AL           3         6 Alabama 01     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> G020     <span style="text-decoration: underline;">2</span>010 AK           4         9 Alaska  02     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> G040     <span style="text-decoration: underline;">2</span>010 AZ           4         8 Arizona 04     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> G050     <span style="text-decoration: underline;">2</span>010 AR           3         7 Arkans… 05     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> G060     <span style="text-decoration: underline;">2</span>010 CA           4         9 Califo… 06     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> G080     <span style="text-decoration: underline;">2</span>010 CO           4         8 Colora… 08     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 54 more variables: PLACEA &lt;lgl&gt;, PLACECC &lt;lgl&gt;, TRACTA &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   BLKGRPA &lt;lgl&gt;, BLOCKA &lt;lgl&gt;, CONCITA &lt;lgl&gt;, AIANHHA &lt;lgl&gt;, RES_ONLYA &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   TRUSTA &lt;lgl&gt;, AIANHHCC &lt;lgl&gt;, AITSCEA &lt;lgl&gt;, AITS &lt;lgl&gt;, TTRACTA &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   TBLKGRPA &lt;lgl&gt;, ANRCA &lt;lgl&gt;, CBSAA &lt;lgl&gt;, METDIVA &lt;lgl&gt;, CSAA &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   NECTAA &lt;lgl&gt;, NECTADIVA &lt;lgl&gt;, CNECTAA &lt;lgl&gt;, CBSAPCI &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   NECTAPCI &lt;lgl&gt;, UAA &lt;lgl&gt;, UATYPE &lt;lgl&gt;, URA &lt;lgl&gt;, CDA &lt;lgl&gt;, SLDUA &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   SLDLA &lt;lgl&gt;, VTD &lt;lgl&gt;, VTDI &lt;lgl&gt;, ZCTA5A &lt;lgl&gt;, SUBMCDA &lt;lgl&gt;, …</span></span></span></code></pre></div>
 <p>See the collection-specific vignettes for more information about
 loading IPUMS data into R.</p>
 </div>
@@ -662,15 +659,15 @@ don’t prohibit sharing data extract definitions.</p>
 <code>ipums_extract</code> objects to and from a standardized
 JSON-formatted file.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"cps:10"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/define_extract_from_json.html">save_extract_as_json</a></span><span class="op">(</span><span class="va">cps_extract_10</span>, file <span class="op">=</span> <span class="st">"cps_extract_10.json"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"cps:10"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/define_extract_from_json.html">save_extract_as_json</a></span><span class="op">(</span><span class="va">cps_extract_10</span>, file <span class="op">=</span> <span class="st">"cps_extract_10.json"</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, you can send <code>cps_extract_10.json</code> to
 another user to allow them to create a duplicate
 <code>ipums_extract</code> object, which they can load and submit to the
 API themselves.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">clone_of_cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_from_json.html">define_extract_from_json</a></span><span class="op">(</span><span class="st">"cps_extract_10.json"</span><span class="op">)</span>
-<span class="va">submitted_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">clone_of_cps_extract_10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">clone_of_cps_extract_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_from_json.html">define_extract_from_json</a></span><span class="op">(</span><span class="st">"cps_extract_10.json"</span><span class="op">)</span></span>
+<span><span class="va">submitted_cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">clone_of_cps_extract_10</span><span class="op">)</span></span></code></pre></div>
 <p>(Note that the code in the previous chunk assumes that the file is
 saved in the current working directory. If it’s saved somewhere else,
 replace <code>"cps_extract_10.json"</code> with the full path to the
@@ -691,36 +688,36 @@ any parameters that can be passed to a collection’s
 <code>define_extract_</code> function can also be provided to
 <code><a href="../reference/add_to_extract.html">add_to_extract()</a></code>.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">old_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:33"</span><span class="op">)</span>
-
-<span class="va">old_extract</span><span class="op">$</span><span class="va">samples</span>
-<span class="co">#&gt; [1] "us2017b"</span>
-
-<span class="va">old_extract</span><span class="op">$</span><span class="va">variables</span>
-<span class="co">#&gt; [1] "YEAR"     "SAMPLE"   "SERIAL"   "CBSERIAL" "HHWT"     "GQ"       "PERNUM"  </span>
-<span class="co">#&gt; [8] "PERWT"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">old_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:33"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">old_extract</span><span class="op">$</span><span class="va">samples</span></span>
+<span><span class="co">#&gt; [1] "us2017b"</span></span>
+<span></span>
+<span><span class="va">old_extract</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; [1] "YEAR"     "SAMPLE"   "SERIAL"   "CBSERIAL" "HHWT"     "GQ"       "PERNUM"  </span></span>
+<span><span class="co">#&gt; [8] "PERWT"</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>
-  <span class="va">old_extract</span>,
-  samples <span class="op">=</span> <span class="st">"us2020a"</span>,
-  variables <span class="op">=</span> <span class="st">"RELATE"</span>,
-  data_format <span class="op">=</span> <span class="st">"sas9"</span>
-<span class="op">)</span>
-
-<span class="va">new_extract</span><span class="op">$</span><span class="va">samples</span>
-<span class="co">#&gt; [1] "us2017b" "us2020a"</span>
-
-<span class="va">new_extract</span><span class="op">$</span><span class="va">variables</span>
-<span class="co">#&gt; [1] "YEAR"     "SAMPLE"   "SERIAL"   "CBSERIAL" "HHWT"     "GQ"       "PERNUM"  </span>
-<span class="co">#&gt; [8] "PERWT"    "RELATE"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
+<span>  <span class="va">old_extract</span>,</span>
+<span>  samples <span class="op">=</span> <span class="st">"us2020a"</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"RELATE"</span>,</span>
+<span>  data_format <span class="op">=</span> <span class="st">"sas9"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_extract</span><span class="op">$</span><span class="va">samples</span></span>
+<span><span class="co">#&gt; [1] "us2017b" "us2020a"</span></span>
+<span></span>
+<span><span class="va">new_extract</span><span class="op">$</span><span class="va">variables</span></span>
+<span><span class="co">#&gt; [1] "YEAR"     "SAMPLE"   "SERIAL"   "CBSERIAL" "HHWT"     "GQ"       "PERNUM"  </span></span>
+<span><span class="co">#&gt; [8] "PERWT"    "RELATE"</span></span></code></pre></div>
 <p>The new extract contains the contents of the original extract
 definition for USA 33 along with the new sample, variable, and format
 selections. For fields that take a single value, like
 <code>data_format</code>, the new value will automatically replace the
 existing one:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">new_extract</span><span class="op">$</span><span class="va">data_format</span>
-<span class="co">#&gt; [1] "sas9"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">new_extract</span><span class="op">$</span><span class="va">data_format</span></span>
+<span><span class="co">#&gt; [1] "sas9"</span></span></code></pre></div>
 <p>Note that because the returned <code>ipums_extract</code> object
 represents a new extract definition, it will have been reset to an
 unsubmitted status and its extract number and download links will have
@@ -728,215 +725,211 @@ been removed.</p>
 <p>To submit this updated extract definition, just use
 <code><a href="../reference/submit_extract.html">submit_extract()</a></code> again:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">updated_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">new_extract</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">updated_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">new_extract</span><span class="op">)</span></span></code></pre></div>
 <p>On the other hand, if there are values that you no longer want to
 include in your extract request, use
 <code><a href="../reference/remove_from_extract.html">remove_from_extract()</a></code>:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">new_extract</span>, samples <span class="op">=</span> <span class="st">"us2020a"</span><span class="op">)</span>
-
-<span class="va">new_extract</span><span class="op">$</span><span class="va">samples</span>
-<span class="co">#&gt; [1] "us2017b"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">new_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">new_extract</span>, samples <span class="op">=</span> <span class="st">"us2020a"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_extract</span><span class="op">$</span><span class="va">samples</span></span>
+<span><span class="co">#&gt; [1] "us2017b"</span></span></code></pre></div>
 <p>For NHGIS extracts, removing a dataset or time series table will
 remove all its associated subfields:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span>
-  description <span class="op">=</span> <span class="st">"Extract request with multiple TSTs"</span>,
-  time_series_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A00"</span>, <span class="st">"AV0"</span><span class="op">)</span>,
-  geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">nhgis_extract_definition</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: Extract request with multiple TSTs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span>
-
-<span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span>, time_series_tables <span class="op">=</span> <span class="st">"A00"</span><span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: Extract request with multiple TSTs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nhgis_extract_definition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"Extract request with multiple TSTs"</span>,</span>
+<span>  time_series_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A00"</span>, <span class="st">"AV0"</span><span class="op">)</span>,</span>
+<span>  geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nhgis_extract_definition</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: Extract request with multiple TSTs</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span>, time_series_tables <span class="op">=</span> <span class="st">"A00"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: Extract request with multiple TSTs</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state</span></span></code></pre></div>
 <p>In contrast, removing a subfield value will remove it from all
 datasets or time series tables in the extract:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span>, geog_levels <span class="op">=</span> <span class="st">"state"</span><span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: Extract request with multiple TSTs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">nhgis_extract_definition</span>, geog_levels <span class="op">=</span> <span class="st">"state"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: Extract request with multiple TSTs</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span></span></code></pre></div>
 <p>To selectively modify subfields from particular datasets or time
 series tables, pass a list to the argument instead of a vector. This
 allows you to indicate which parent field should have the subfield
 modified. This is analogous to the syntax that can be used when defining
 an NHGIS extract request.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>AV0 <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A00 <span class="op">=</span> <span class="st">"state"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: Extract request with multiple TSTs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state, nation</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>AV0 <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A00 <span class="op">=</span> <span class="st">"state"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: Extract request with multiple TSTs</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, state, nation</span></span></code></pre></div>
 <p>Note that it is possible to produce invalid extract definitions when
 revising an extract. If you want to <em>replace</em> values in a
 definition, it is usually best to use <code><a href="../reference/add_to_extract.html">add_to_extract()</a></code>
 before <code><a href="../reference/remove_from_extract.html">remove_from_extract()</a></code> to limit the possibility of
 removing required extract fields.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Throws error because all time series tables must have geog levels:</span>
-<span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `validate_ipums_extract()`:</span></span>
-<span class="co">#&gt; <span style="color: #BBBB00;">!</span> Invalid `nhgis_extract` object:</span>
-<span class="co">#&gt; <span style="color: #BB0000;">✖</span> `geog_levels` must not contain missing values for any of the provided `datasets` or `time_series_tables`.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Throws error because all time series tables must have geog levels:</span></span>
+<span><span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `validate_ipums_extract()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Invalid `nhgis_extract` object:</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> `geog_levels` must not contain missing values for any of the provided `datasets` or `time_series_tables`.</span></span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Add new values to extract definition first to avoid the error:</span>
-<span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span>
-<span class="co">#&gt; Description: Extract request with multiple TSTs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>nation</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>nation</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Add new values to extract definition first to avoid the error:</span></span>
+<span><span class="va">nhgis_extract_definition</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="st">"nation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span>geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unsubmitted IPUMS NHGIS extract </span></span>
+<span><span class="co">#&gt; Description: Extract request with multiple TSTs</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>nation</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>AV0</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>nation</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="recent">Get info on past extracts<a class="anchor" aria-label="anchor" href="#recent"></a>
 </h2>
 <p>If you know you made a specific extract definition in the past, but
 you can’t remember the exact number, you can use
-<code><a href="../reference/get_extract_info.html">get_extract_info()</a></code> to peruse your recent extract requests.
-Just provide a collection to the <code>extract</code> argument instead
-of a collection with an extract number.</p>
+<code><a href="../reference/get_extract_info.html">get_recent_extracts_info()</a></code> to peruse your recent extract
+requests for a particular collection.</p>
 <p>By default, this returns your 10 most recent extract requests as a
 list of <code>ipums_extract</code> objects. You can adjust how many
 requests to retrieve with the <code>how_many</code> argument:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nhgis_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"nhgis"</span>, how_many <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-
-<span class="va">nhgis_extracts</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; Submitted IPUMS NHGIS extract number 960</span>
-<span class="co">#&gt; Description: NHGIS extract for API vignette</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; Submitted IPUMS NHGIS extract number 959</span>
-<span class="co">#&gt; Description: NHGIS extract for API vignette</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; Submitted IPUMS NHGIS extract number 958</span>
-<span class="co">#&gt; Description: NHGIS extract for API vignette</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nhgis_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_recent_extracts_info</a></span><span class="op">(</span><span class="st">"nhgis"</span>, how_many <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nhgis_extracts</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS NHGIS extract number 960</span></span>
+<span><span class="co">#&gt; Description: NHGIS extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS NHGIS extract number 959</span></span>
+<span><span class="co">#&gt; Description: NHGIS extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS NHGIS extract number 958</span></span>
+<span><span class="co">#&gt; Description: NHGIS extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>2010_SF1a</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>P1, P2</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span>
+<span><span class="co">#&gt;   <span style="font-weight: bold;">Breakdowns: </span>bs32.ge00</span></span></code></pre></div>
 <p>Because this is a list of <code>ipums_extract</code> objects, you can
 operate on them with the familiar API functions. For instance, to revise
 your second-most-recent extract for resubmission:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span>
-  <span class="va">nhgis_extracts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,
-  shapefiles <span class="op">=</span> <span class="st">"us_nation_2010_tl2010"</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
+<span>  <span class="va">nhgis_extracts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  shapefiles <span class="op">=</span> <span class="st">"us_nation_2010_tl2010"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>You could even download all recent extracts that have completed,
 using <code><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">purrr::keep()</a></code> and <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ddi_paths</span> <span class="op">&lt;-</span> <span class="va">nhgis_extracts</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">is_extract_ready</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">download_extract</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ddi_paths</span> <span class="op">&lt;-</span> <span class="va">nhgis_extracts</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">is_extract_ready</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">download_extract</span><span class="op">)</span></span></code></pre></div>
 <p>Set <code>table = TRUE</code> to get the same information in a
 tabular format:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usa_extract_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span>, how_many <span class="op">=</span> <span class="fl">5</span>, table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">usa_extract_tbl</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 11</span></span>
-<span class="co">#&gt;   collect…¹ descr…² data_…³ recta…⁴ data_…⁵ samples varia…⁶ submi…⁷ download_l…⁸</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa       Extrac… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> usa       My fav… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> usa       USA ex… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> usa       USA ex… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> usa       USA ex… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: number &lt;int&gt;, status &lt;chr&gt;, and abbreviated variable</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   names ¹​collection, ²​description, ³​data_structure, ⁴​rectangular_on,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​data_format, ⁶​variables, ⁷​submitted, ⁸​download_links</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">usa_extract_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_recent_extracts_info</a></span><span class="op">(</span><span class="st">"usa"</span>, how_many <span class="op">=</span> <span class="fl">5</span>, table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">usa_extract_tbl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 11</span></span></span>
+<span><span class="co">#&gt;   collection description       data_structure rectangular_on data_format samples</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa        Extract with mar… rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> usa        My favorite extr… rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> usa        USA extract for … rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> usa        USA extract for … rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> usa        USA extract for … rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: variables &lt;list&gt;, submitted &lt;lgl&gt;, download_links &lt;list&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   number &lt;int&gt;, status &lt;chr&gt;</span></span></span></code></pre></div>
 <p>This can be useful if you want to filter through your previous
 extracts to find one with particular details.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Look for a description containing specific term</span>
-<span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"marital status"</span>, <span class="va">description</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span>
-<span class="co">#&gt;   collect…¹ descr…² data_…³ recta…⁴ data_…⁵ samples varia…⁶ submi…⁷ download_l…⁸</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa       Extrac… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: number &lt;int&gt;, status &lt;chr&gt;, and abbreviated variable</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   names ¹​collection, ²​description, ³​data_structure, ⁴​rectangular_on,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​data_format, ⁶​variables, ⁷​submitted, ⁸​download_links</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Look for a description containing specific term</span></span>
+<span><span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"marital status"</span>, <span class="va">description</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt;   collection description       data_structure rectangular_on data_format samples</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa        Extract with mar… rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: variables &lt;list&gt;, submitted &lt;lgl&gt;, download_links &lt;list&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   number &lt;int&gt;, status &lt;chr&gt;</span></span></span></code></pre></div>
 <p>Filtering on properties such as “samples” or “variables” is a little
 more complex, because these are stored in list columns, but it is
 possible (and made easier with <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map_lgl()</a></code>).</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Find extracts including a certain variable and convert to extract object</span>
-<span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">variables</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span>
-<span class="co">#&gt;   collect…¹ descr…² data_…³ recta…⁴ data_…⁵ samples varia…⁶ submi…⁷ download_l…⁸</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa       Extrac… rectan… P       fixed_… &lt;chr&gt;   &lt;chr&gt;   TRUE    &lt;named list&gt;</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: number &lt;int&gt;, status &lt;chr&gt;, and abbreviated variable</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   names ¹​collection, ²​description, ³​data_structure, ⁴​rectangular_on,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​data_format, ⁶​variables, ⁷​submitted, ⁸​download_links</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Find extracts including a certain variable and convert to extract object</span></span>
+<span><span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">variables</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt;   collection description       data_structure rectangular_on data_format samples</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> usa        Extract with mar… rectangular    P              fixed_width <span style="color: #949494;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: variables &lt;list&gt;, submitted &lt;lgl&gt;, download_links &lt;list&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   number &lt;int&gt;, status &lt;chr&gt;</span></span></span></code></pre></div>
 <p>To convert between these two representations, ipumsr provides the
 functions <code><a href="../reference/extract_tbl_to_list.html">extract_list_to_tbl()</a></code> and
 <code><a href="../reference/extract_tbl_to_list.html">extract_tbl_to_list()</a></code>, such that the following holds:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/extract_tbl_to_list.html">extract_list_to_tbl</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span>, table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/extract_tbl_to_list.html">extract_list_to_tbl</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_extract_info.html">get_recent_extracts_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/get_extract_info.html">get_recent_extracts_info</a></span><span class="op">(</span><span class="st">"usa"</span>, table <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>This allows you to easily find old extract definitions and convert
 back to <code>ipums_extract</code> objects for resubmission.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">variables</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/extract_tbl_to_list.html">extract_tbl_to_list</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; Submitted IPUMS USA extract number 94</span>
-<span class="co">#&gt; Description: Extract with marital status</span>
-<span class="co">#&gt; Samples: (1 total) us2019a</span>
-<span class="co">#&gt; Variables: (15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER, STATEFIP...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">usa_extract_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">variables</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/extract_tbl_to_list.html">extract_tbl_to_list</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 94</span></span>
+<span><span class="co">#&gt; Description: Extract with marital status</span></span>
+<span><span class="co">#&gt; Samples: (1 total) us2019a</span></span>
+<span><span class="co">#&gt; Variables: (15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER, STATEFIP...</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="putting-it-all-together">Putting it all together<a class="anchor" aria-label="anchor" href="#putting-it-all-together"></a>
@@ -945,14 +938,15 @@ back to <code>ipums_extract</code> objects for resubmission.</p>
 <code>ipums_extract</code> object, we can easily pipe them together in
 one expression:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span>
-  <span class="st">"USA extract for API vignette"</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2018a"</span>, <span class="st">"us2019a"</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"RACE"</span>, <span class="st">"STATEFIP"</span><span class="op">)</span>
-<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span>wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span>
+<span>  <span class="st">"USA extract for API vignette"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2018a"</span>, <span class="st">"us2019a"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"RACE"</span>, <span class="st">"STATEFIP"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Not only does this pipeline allow you to obtain IPUMS data without
 ever leaving your R environment, but it also allows you to retain a
 reproducible record of your process. This makes it much easier to

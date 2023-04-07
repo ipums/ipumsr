@@ -106,7 +106,7 @@ it has finished processing and is ready for download.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">is_extract_ready</span><span class="op">(</span><span class="va">extract</span>, api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">is_extract_ready</span><span class="op">(</span><span class="va">extract</span>, api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -159,26 +159,26 @@ must be resubmitted.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span>
-<span class="r-in">  description <span class="op">=</span> <span class="st">"2013-2014 ACS Data"</span>,</span>
-<span class="r-in">  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2013a"</span>, <span class="st">"us2014a"</span><span class="op">)</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGE"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Check the extract request associated with a given `ipums_extract` object</span></span>
-<span class="r-in"><span class="fu">is_extract_ready</span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Or by supplying the collection and extract number</span></span>
-<span class="r-in"><span class="fu">is_extract_ready</span><span class="op">(</span><span class="st">"usa:1"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">is_extract_ready</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"usa"</span>, <span class="st">"1"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># If you have a default collection, you can use the extract number alone:</span></span>
-<span class="r-in"><span class="fu"><a href="set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">is_extract_ready</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="st">"2013-2014 ACS Data"</span>,</span></span>
+<span class="r-in"><span>  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2013a"</span>, <span class="st">"us2014a"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGE"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check the extract request associated with a given `ipums_extract` object</span></span></span>
+<span class="r-in"><span><span class="fu">is_extract_ready</span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or by supplying the collection and extract number</span></span></span>
+<span class="r-in"><span><span class="fu">is_extract_ready</span><span class="op">(</span><span class="st">"usa:1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">is_extract_ready</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"usa"</span>, <span class="st">"1"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If you have a default collection, you can use the extract number alone:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">is_extract_ready</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

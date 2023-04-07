@@ -106,15 +106,15 @@ the variable's page on the IPUMS website.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ipums_website</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">var</span>,
-  project <span class="op">=</span> <span class="cn">NULL</span>,
-  launch <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  var_label <span class="op">=</span> <span class="cn">NULL</span>,
-  homepage_if_missing <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ipums_website</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">var</span>,</span>
+<span>  project <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  launch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  var_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  homepage_if_missing <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -169,19 +169,19 @@ extract creation process.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Get URL for information about a particular variable</span></span>
-<span class="r-in"><span class="fu">ipums_website</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"MONTH"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get URL for information about a particular variable</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_website</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"MONTH"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://cps.ipums.org/cps-action/variables/MONTH"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Launch webpage for particular variable</span></span>
-<span class="r-in"><span class="fu">ipums_website</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"MONTH"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Can specify an IPUMS project instead of using an `ipums_ddi` object</span></span>
-<span class="r-in"><span class="fu">ipums_website</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"RECTYPE"</span>, project <span class="op">=</span> <span class="st">"IPUMS-CPS"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Launch webpage for particular variable</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_website</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"MONTH"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Can specify an IPUMS project instead of using an `ipums_ddi` object</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_website</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"RECTYPE"</span>, project <span class="op">=</span> <span class="st">"IPUMS-CPS"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://cps.ipums.org/cps-action/variables/RECTYPE"</span>
 </code></pre></div>
     </div>

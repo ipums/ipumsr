@@ -120,9 +120,9 @@ labels that already exist in the <code>labelled</code> vector.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="va">.fun</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="va">.fun</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -177,16 +177,16 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">11</span>, <span class="fl">20</span>, <span class="fl">21</span>, <span class="fl">30</span>, <span class="fl">99</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">    Yes <span class="op">=</span> <span class="fl">10</span>, `Yes - Logically Assigned` <span class="op">=</span> <span class="fl">11</span>,</span>
-<span class="r-in">    No <span class="op">=</span> <span class="fl">20</span>, Unlikely <span class="op">=</span> <span class="fl">21</span>, Maybe <span class="op">=</span> <span class="fl">30</span>, NIU <span class="op">=</span> <span class="fl">99</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Convert cases with value 11 to value 10 and associate with 10's label</span></span>
-<span class="r-in"><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fl">10</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">11</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">11</span>, <span class="fl">20</span>, <span class="fl">21</span>, <span class="fl">30</span>, <span class="fl">99</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    Yes <span class="op">=</span> <span class="fl">10</span>, `Yes - Logically Assigned` <span class="op">=</span> <span class="fl">11</span>,</span></span>
+<span class="r-in"><span>    No <span class="op">=</span> <span class="fl">20</span>, Unlikely <span class="op">=</span> <span class="fl">21</span>, Maybe <span class="op">=</span> <span class="fl">30</span>, NIU <span class="op">=</span> <span class="fl">99</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Convert cases with value 11 to value 10 and associate with 10's label</span></span></span>
+<span class="r-in"><span><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fl">10</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">11</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 10 10 20 21 30 99 30 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -197,13 +197,13 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21 Unlikely</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     30    Maybe</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     99      NIU</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># To relabel using new value/label pairs, use `lbl()` to define a new pair</span></span>
-<span class="r-in"><span class="fu">lbl_relabel</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">x</span>,</span>
-<span class="r-in">  <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Yes/Yes-ish"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">11</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"???"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">99</span> <span class="op">|</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"Maybe"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To relabel using new value/label pairs, use `lbl()` to define a new pair</span></span></span>
+<span class="r-in"><span><span class="fu">lbl_relabel</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">x</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Yes/Yes-ish"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">11</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"???"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">99</span> <span class="op">|</span> <span class="va">.lbl</span> <span class="op">==</span> <span class="st">"Maybe"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 10 10 20 21 90 90 90 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -213,10 +213,10 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 <span class="r-out co"><span class="r-pr">#&gt;</span>     20          No</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21    Unlikely</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     90         ???</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Use single argument in `lbl()` to update the label while leaving values</span></span>
-<span class="r-in"><span class="co"># unchanged</span></span>
-<span class="r-in"><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">11</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use single argument in `lbl()` to update the label while leaving values</span></span></span>
+<span class="r-in"><span><span class="co"># unchanged</span></span></span>
+<span class="r-in"><span><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="lbl.html">lbl</a></span><span class="op">(</span><span class="st">"Yes"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">11</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 10 10 20 21 30 99 30 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -227,9 +227,9 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21 Unlikely</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     30    Maybe</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     99      NIU</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Collapse labels to create new label groups</span></span>
-<span class="r-in"><span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="op">~</span> <span class="op">(</span><span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%/%</a></span> <span class="fl">10</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Collapse labels to create new label groups</span></span></span>
+<span class="r-in"><span><span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="op">~</span> <span class="op">(</span><span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%/%</a></span> <span class="fl">10</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 10 10 20 20 30 90 30 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -239,9 +239,9 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 <span class="r-out co"><span class="r-pr">#&gt;</span>     20    No</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     30 Maybe</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     90   NIU</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># These are equivalent</span></span>
-<span class="r-in"><span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">.val</span> <span class="op">==</span> <span class="fl">10</span>, <span class="fl">11</span>, <span class="va">.val</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># These are equivalent</span></span></span>
+<span class="r-in"><span><span class="fu">lbl_collapse</span><span class="op">(</span><span class="va">x</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">.val</span> <span class="op">==</span> <span class="fl">10</span>, <span class="fl">11</span>, <span class="va">.val</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 11 11 11 20 21 30 99 30 11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -252,7 +252,7 @@ Use <code>.lbl</code> to refer to the <em>label names</em> in the vector's value
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21                 Unlikely</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     30                    Maybe</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     99                      NIU</span>
-<span class="r-in"><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fl">11</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">lbl_relabel</span><span class="op">(</span><span class="va">x</span>, <span class="fl">11</span> <span class="op">~</span> <span class="va">.val</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 11 11 11 20 21 30 99 30 11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

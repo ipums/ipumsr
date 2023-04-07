@@ -108,14 +108,14 @@ to identify and obtain a particular set of data from the IPUMS CPS system.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">define_extract_cps</span><span class="op">(</span>
-  <span class="va">description</span>,
-  <span class="va">samples</span>,
-  <span class="va">variables</span>,
-  data_format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fixed_width"</span>, <span class="st">"csv"</span>, <span class="st">"stata"</span>, <span class="st">"spss"</span>, <span class="st">"sas9"</span><span class="op">)</span>,
-  data_structure <span class="op">=</span> <span class="st">"rectangular"</span>,
-  rectangular_on <span class="op">=</span> <span class="st">"P"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">define_extract_cps</span><span class="op">(</span></span>
+<span>  <span class="va">description</span>,</span>
+<span>  <span class="va">samples</span>,</span>
+<span>  <span class="va">variables</span>,</span>
+<span>  data_format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fixed_width"</span>, <span class="st">"csv"</span>, <span class="st">"stata"</span>, <span class="st">"spss"</span>, <span class="st">"sas9"</span><span class="op">)</span>,</span>
+<span>  data_structure <span class="op">=</span> <span class="st">"rectangular"</span>,</span>
+<span>  rectangular_on <span class="op">=</span> <span class="st">"P"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -174,22 +174,22 @@ revise an extract definition.</p></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu">define_extract_cps</span><span class="op">(</span></span>
-<span class="r-in">  description <span class="op">=</span> <span class="st">"Example CPS extract definition"</span>,</span>
-<span class="r-in">  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps2020_02s"</span>, <span class="st">"cps2020_03s"</span><span class="op">)</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">my_extract</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu">define_extract_cps</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="st">"Example CPS extract definition"</span>,</span></span>
+<span class="r-in"><span>  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps2020_02s"</span>, <span class="st">"cps2020_03s"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">my_extract</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS CPS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: Example CPS extract definition</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Samples: (2 total) cps2020_02s, cps2020_03s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variables: (3 total) AGE, SEX, YEAR</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Use the extract definition to submit an extract request to the API</span></span>
-<span class="r-in"><span class="fu"><a href="submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Use the extract definition to submit an extract request to the API</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

@@ -104,7 +104,7 @@ values to a factor, this avoids the creation of additional factor levels.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -132,12 +132,12 @@ values to a factor, this avoids the creation of additional factor levels.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Q1 <span class="op">=</span> <span class="fl">1</span>, Q2 <span class="op">=</span> <span class="fl">2</span>, Q3 <span class="op">=</span> <span class="fl">3</span>, Q4 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Q1 <span class="op">=</span> <span class="fl">1</span>, Q2 <span class="op">=</span> <span class="fl">2</span>, Q3 <span class="op">=</span> <span class="fl">3</span>, Q4 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;labelled&lt;double&gt;[9]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 2 3 1 2 3 1 2 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -146,13 +146,13 @@ values to a factor, this avoids the creation of additional factor levels.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      1    Q1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2    Q2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      3    Q3</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Compare the factor levels of the normal and cleaned labels after coercion</span></span>
-<span class="r-in"><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compare the factor levels of the normal and cleaned labels after coercion</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="fu">lbl_clean</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Q1 Q2 Q3 Q1 Q2 Q3 Q1 Q2 Q3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: Q1 Q2 Q3</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Q1 Q2 Q3 Q1 Q2 Q3 Q1 Q2 Q3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: Q1 Q2 Q3 Q4</span>
 </code></pre></div>

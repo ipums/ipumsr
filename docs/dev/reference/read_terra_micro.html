@@ -110,14 +110,14 @@ removed in a future release. For general handling of raster data in R, see the
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_terra_micro</span><span class="op">(</span>
-  <span class="va">data_file</span>,
-  ddi_file <span class="op">=</span> <span class="cn">NULL</span>,
-  data_layer <span class="op">=</span> <span class="cn">NULL</span>,
-  n_max <span class="op">=</span> <span class="cn">Inf</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_terra_micro</span><span class="op">(</span></span>
+<span>  <span class="va">data_file</span>,</span>
+<span>  ddi_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_layer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -166,9 +166,9 @@ data out of a microdata Terra extract.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">read_terra_micro</span><span class="op">(</span><span class="st">"2553_bundle.zip"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">read_terra_micro</span><span class="op">(</span><span class="st">"2553_bundle.zip"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

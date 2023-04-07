@@ -209,14 +209,14 @@ and <code>selection2</code></p></li>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cps_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Load 3 variables by name</span></span>
-<span class="r-in"><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">cps_file</span>,</span>
-<span class="r-in">  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"YEAR"</span>, <span class="st">"MONTH"</span>, <span class="st">"PERNUM"</span><span class="op">)</span>,</span>
-<span class="r-in">  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cps_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Load 3 variables by name</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">cps_file</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"YEAR"</span>, <span class="st">"MONTH"</span>, <span class="st">"PERNUM"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,668 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     YEAR MONTH     PERNUM</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -230,14 +230,14 @@ and <code>selection2</code></p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7,658 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># "Bare" variables are supported</span></span>
-<span class="r-in"><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">cps_file</span>,</span>
-<span class="r-in">  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">MONTH</span>, <span class="va">PERNUM</span><span class="op">)</span>,</span>
-<span class="r-in">  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,658 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># "Bare" variables are supported</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">cps_file</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">MONTH</span>, <span class="va">PERNUM</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,668 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     YEAR MONTH     PERNUM</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -251,10 +251,10 @@ and <code>selection2</code></p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7,658 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Standard tidyselect selectors are also supported</span></span>
-<span class="r-in"><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_file</span>, vars <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"WT"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,658 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Standard tidyselect selectors are also supported</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_file</span>, vars <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"WT"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,668 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    WTSUPP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -268,14 +268,14 @@ and <code>selection2</code></p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>386.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>629.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>432.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7,658 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Selection methods can be combined</span></span>
-<span class="r-in"><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">cps_file</span>,</span>
-<span class="r-in">  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">MONTH</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"INC"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,658 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Selection methods can be combined</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">cps_file</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">MONTH</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"INC"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,668 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     YEAR MONTH     INCTOT                              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>                           </span>
@@ -289,13 +289,13 @@ and <code>selection2</code></p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>        0                            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span>      600                            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>962 3<span style="color: #949494;"> [March]</span> 99<span style="text-decoration: underline;">999</span>999<span style="color: #949494;"> [N.I.U. (Not in Universe).]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7,658 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">cps_file</span>,</span>
-<span class="r-in">  vars <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"S"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"P"</span><span class="op">)</span>,</span>
-<span class="r-in">  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,658 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">cps_file</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"S"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"P"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,668 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    STATEFIP      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>     </span>
@@ -309,36 +309,36 @@ and <code>selection2</code></p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 19<span style="color: #949494;"> [Iowa]</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 19<span style="color: #949494;"> [Iowa]</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 19<span style="color: #949494;"> [Iowa]</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7,658 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Other selection arguments also support this syntax.</span></span>
-<span class="r-in"><span class="co"># For instance, load a particular file based on a tidyselect match:</span></span>
-<span class="r-in"><span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0731_csv.zip"</span><span class="op">)</span>,</span>
-<span class="r-in">  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"nominal_state"</span><span class="op">)</span>,</span>
-<span class="r-in">  show_col_types <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,658 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Other selection arguments also support this syntax.</span></span></span>
+<span class="r-in"><span><span class="co"># For instance, load a particular file based on a tidyselect match:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0731_csv.zip"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"nominal_state"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  show_col_types <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 84 × 28</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN STATE STATEFP STATENH A00AA…¹ A00AA…² A00AA…³ A00AA…⁴ A00AA…⁵ A00AA…⁶</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G010    Alab… 01      010          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  <span style="text-decoration: underline;">127</span>901  <span style="text-decoration: underline;">309</span>527  <span style="text-decoration: underline;">590</span>756</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G020    Alas… 02      020          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G025    Alas… <span style="color: #BB0000;">NA</span>      025          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G040    Ariz… 04      040          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G045    Ariz… <span style="color: #BB0000;">NA</span>      045          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G050    Arka… 05      050          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="text-decoration: underline;">97</span>574</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G055    Arka… <span style="color: #BB0000;">NA</span>      055          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="text-decoration: underline;">14</span>273   <span style="text-decoration: underline;">30</span>388      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G060    Cali… 06      060          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G080    Colo… 08      080          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G085    Colo… <span style="color: #BB0000;">NA</span>      085          <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 74 more rows, 18 more variables: A00AA1850 &lt;dbl&gt;, A00AA1860 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1870 &lt;dbl&gt;, A00AA1880 &lt;dbl&gt;, A00AA1890 &lt;dbl&gt;, A00AA1900 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1910 &lt;dbl&gt;, A00AA1920 &lt;dbl&gt;, A00AA1930 &lt;dbl&gt;, A00AA1940 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1950 &lt;dbl&gt;, A00AA1960 &lt;dbl&gt;, A00AA1970 &lt;dbl&gt;, A00AA1980 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1990 &lt;dbl&gt;, A00AA2000 &lt;dbl&gt;, A00AA2010 &lt;dbl&gt;, A00AA2020 &lt;dbl&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​A00AA1790, ²​A00AA1800, ³​A00AA1810, ⁴​A00AA1820,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁵​A00AA1830, ⁶​A00AA1840</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN STATE         STATEFP STATENH A00AA1790 A00AA1800 A00AA1810 A00AA1820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G010    Alabama       01      010            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>    <span style="text-decoration: underline;">127</span>901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G020    Alaska        02      020            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G025    Alaska Terri… <span style="color: #BB0000;">NA</span>      025            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G040    Arizona       04      040            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G045    Arizona Terr… <span style="color: #BB0000;">NA</span>      045            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G050    Arkansas      05      050            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G055    Arkansas Ter… <span style="color: #BB0000;">NA</span>      055            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>     <span style="text-decoration: underline;">14</span>273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G060    California    06      060            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G080    Colorado      08      080            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G085    Colorado Ter… <span style="color: #BB0000;">NA</span>      085            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 74 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more variables: A00AA1830 &lt;dbl&gt;, A00AA1840 &lt;dbl&gt;, A00AA1850 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1860 &lt;dbl&gt;, A00AA1870 &lt;dbl&gt;, A00AA1880 &lt;dbl&gt;, A00AA1890 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1900 &lt;dbl&gt;, A00AA1910 &lt;dbl&gt;, A00AA1920 &lt;dbl&gt;, A00AA1930 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1940 &lt;dbl&gt;, A00AA1950 &lt;dbl&gt;, A00AA1960 &lt;dbl&gt;, A00AA1970 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1980 &lt;dbl&gt;, A00AA1990 &lt;dbl&gt;, A00AA2000 &lt;dbl&gt;, A00AA2010 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA2020 &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

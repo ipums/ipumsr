@@ -126,23 +126,23 @@ contained in another extract definition, use <code><a href="combine_extracts.htm
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for nhgis_extract</span>
-<span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span>
-  <span class="va">extract</span>,
-  description <span class="op">=</span> <span class="cn">NULL</span>,
-  datasets <span class="op">=</span> <span class="cn">NULL</span>,
-  data_tables <span class="op">=</span> <span class="cn">NULL</span>,
-  time_series_tables <span class="op">=</span> <span class="cn">NULL</span>,
-  geog_levels <span class="op">=</span> <span class="cn">NULL</span>,
-  years <span class="op">=</span> <span class="cn">NULL</span>,
-  breakdown_values <span class="op">=</span> <span class="cn">NULL</span>,
-  geographic_extents <span class="op">=</span> <span class="cn">NULL</span>,
-  shapefiles <span class="op">=</span> <span class="cn">NULL</span>,
-  breakdown_and_data_type_layout <span class="op">=</span> <span class="cn">NULL</span>,
-  tst_layout <span class="op">=</span> <span class="cn">NULL</span>,
-  data_format <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for nhgis_extract</span></span>
+<span><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
+<span>  <span class="va">extract</span>,</span>
+<span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  datasets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_tables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  time_series_tables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geog_levels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  years <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breakdown_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geographic_extents <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shapefiles <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breakdown_and_data_type_layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tst_layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -317,41 +317,41 @@ extract request.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
-<span class="r-in">  datasets <span class="op">=</span> <span class="st">"1990_STF1"</span>,</span>
-<span class="r-in">  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NP1"</span>, <span class="st">"NP2"</span><span class="op">)</span>,</span>
-<span class="r-in">  geog_levels <span class="op">=</span> <span class="st">"county"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Modify existing datasets in extract:</span></span>
-<span class="r-in"><span class="va">extract2</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">extract</span>,</span>
-<span class="r-in">  data_tables <span class="op">=</span> <span class="st">"NP3"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">extract2</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  datasets <span class="op">=</span> <span class="st">"1990_STF1"</span>,</span></span>
+<span class="r-in"><span>  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NP1"</span>, <span class="st">"NP2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  geog_levels <span class="op">=</span> <span class="st">"county"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Modify existing datasets in extract:</span></span></span>
+<span class="r-in"><span><span class="va">extract2</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">extract</span>,</span></span>
+<span class="r-in"><span>  data_tables <span class="op">=</span> <span class="st">"NP3"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">extract2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS NHGIS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">Dataset: </span>1990_STF1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">Tables: </span>NP1, NP2, NP3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">Geog Levels: </span>county</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Add a new dataset or time series table. Fields that apply to each dataset</span></span>
-<span class="r-in"><span class="co"># or time series table are only applied to the newly added dataset or</span></span>
-<span class="r-in"><span class="co"># time series table:</span></span>
-<span class="r-in"><span class="va">extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">extract</span>,</span>
-<span class="r-in">  datasets <span class="op">=</span> <span class="st">"1980_STF1"</span>,</span>
-<span class="r-in">  data_tables <span class="op">=</span> <span class="st">"NT1A"</span>,</span>
-<span class="r-in">  geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">extract</span>,</span>
-<span class="r-in">  time_series_tables <span class="op">=</span> <span class="st">"A00"</span>,</span>
-<span class="r-in">  geog_levels <span class="op">=</span> <span class="st">"state"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add a new dataset or time series table. Fields that apply to each dataset</span></span></span>
+<span class="r-in"><span><span class="co"># or time series table are only applied to the newly added dataset or</span></span></span>
+<span class="r-in"><span><span class="co"># time series table:</span></span></span>
+<span class="r-in"><span><span class="va">extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">extract</span>,</span></span>
+<span class="r-in"><span>  datasets <span class="op">=</span> <span class="st">"1980_STF1"</span>,</span></span>
+<span class="r-in"><span>  data_tables <span class="op">=</span> <span class="st">"NT1A"</span>,</span></span>
+<span class="r-in"><span>  geog_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">extract</span>,</span></span>
+<span class="r-in"><span>  time_series_tables <span class="op">=</span> <span class="st">"A00"</span>,</span></span>
+<span class="r-in"><span>  geog_levels <span class="op">=</span> <span class="st">"state"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS NHGIS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -365,18 +365,18 @@ extract request.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>A00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">Geog Levels: </span>state</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># To modify existing datasets, use a named list to specify which datasets</span></span>
-<span class="r-in"><span class="co"># should be attached to which `data_tables` or `geog_levels`.</span></span>
-<span class="r-in"><span class="co"># Vector arguments are attached to all datasets.</span></span>
-<span class="r-in"><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">extract</span>,</span>
-<span class="r-in">  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="st">"1990_STF1"</span> <span class="op">=</span> <span class="st">"NP4"</span>,</span>
-<span class="r-in">    <span class="st">"1980_STF1"</span> <span class="op">=</span> <span class="st">"NT1B"</span></span>
-<span class="r-in">  <span class="op">)</span>,</span>
-<span class="r-in">  geog_levels <span class="op">=</span> <span class="st">"nation"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To modify existing datasets, use a named list to specify which datasets</span></span></span>
+<span class="r-in"><span><span class="co"># should be attached to which `data_tables` or `geog_levels`.</span></span></span>
+<span class="r-in"><span><span class="co"># Vector arguments are attached to all datasets.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">extract</span>,</span></span>
+<span class="r-in"><span>  data_tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"1990_STF1"</span> <span class="op">=</span> <span class="st">"NP4"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"1980_STF1"</span> <span class="op">=</span> <span class="st">"NT1B"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  geog_levels <span class="op">=</span> <span class="st">"nation"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS NHGIS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -387,13 +387,13 @@ extract request.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">Dataset: </span>1980_STF1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">Tables: </span>NT1A, NT1B</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">Geog Levels: </span>county, state, nation</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Values that can only take a single value are replaced</span></span>
-<span class="r-in"><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span><span class="va">extract</span>, data_format <span class="op">=</span> <span class="st">"fixed_width"</span><span class="op">)</span><span class="op">$</span><span class="va">data_format</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Values that can only take a single value are replaced</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span><span class="va">extract</span>, data_format <span class="op">=</span> <span class="st">"fixed_width"</span><span class="op">)</span><span class="op">$</span><span class="va">data_format</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fixed_width"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># You can also combine two extract requests together</span></span>
-<span class="r-in"><span class="fu"><a href="combine_extracts.html">combine_extracts</a></span><span class="op">(</span><span class="va">extract</span>, <span class="va">extract2</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can also combine two extract requests together</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="combine_extracts.html">combine_extracts</a></span><span class="op">(</span><span class="va">extract</span>, <span class="va">extract2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS NHGIS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

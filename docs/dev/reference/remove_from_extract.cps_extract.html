@@ -118,8 +118,8 @@ temporarily invalid extract specification.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for cps_extract</span>
-<span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">extract</span>, samples <span class="op">=</span> <span class="cn">NULL</span>, variables <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for cps_extract</span></span>
+<span><span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">extract</span>, samples <span class="op">=</span> <span class="cn">NULL</span>, variables <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -164,26 +164,26 @@ extract request.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_cps.html">define_extract_cps</a></span><span class="op">(</span></span>
-<span class="r-in">  description <span class="op">=</span> <span class="st">"CPS example"</span>,</span>
-<span class="r-in">  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps2019_03s"</span>, <span class="st">"cps2020_03s"</span><span class="op">)</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">cps_extract</span>,</span>
-<span class="r-in">  samples <span class="op">=</span> <span class="st">"cps2020_03s"</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cps_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_cps.html">define_extract_cps</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="st">"CPS example"</span>,</span></span>
+<span class="r-in"><span>  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cps2019_03s"</span>, <span class="st">"cps2020_03s"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">cps_extract</span>,</span></span>
+<span class="r-in"><span>  samples <span class="op">=</span> <span class="st">"cps2020_03s"</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS CPS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: CPS example</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Samples: (1 total) cps2019_03s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variables: (1 total) YEAR</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># To replace values, use add_to_extract() first to avoid invalid</span></span>
-<span class="r-in"><span class="co"># extract definitions:</span></span>
-<span class="r-in"><span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span><span class="va">cps_extract</span>, variables <span class="op">=</span> <span class="st">"MARST"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">revised_extract</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To replace values, use add_to_extract() first to avoid invalid</span></span></span>
+<span class="r-in"><span><span class="co"># extract definitions:</span></span></span>
+<span class="r-in"><span><span class="va">revised_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_to_extract.html">add_to_extract</a></span><span class="op">(</span><span class="va">cps_extract</span>, variables <span class="op">=</span> <span class="st">"MARST"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="remove_from_extract.html">remove_from_extract</a></span><span class="op">(</span><span class="va">revised_extract</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="st">"SEX"</span>, <span class="st">"YEAR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unsubmitted IPUMS CPS extract </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Description: CPS example</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Samples: (2 total) cps2019_03s, cps2020_03s</span>

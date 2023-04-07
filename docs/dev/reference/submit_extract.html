@@ -108,20 +108,13 @@ request number.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">submit_extract</span><span class="op">(</span><span class="va">extract</span>, api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">submit_extract</span><span class="op">(</span><span class="va">extract</span>, api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_API_KEY"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>extract</dt>
-<dd><p>If submitting a new extract request, an
-<code><a href="ipums_extract-class.html">ipums_extract</a></code> object.</p>
-<p>If resubmitting an old request, one of:</p><ul><li><p>The data collection and extract number formatted as a string of the
-form <code>"collection:number"</code> or as a vector of the form
-<code>c("collection", number)</code></p></li>
-<li><p>An extract number to be associated with your default IPUMS
-collection. See <code><a href="set_ipums_default_collection.html">set_ipums_default_collection()</a></code></p></li>
-</ul></dd>
+<dd><p>An <code><a href="ipums_extract-class.html">ipums_extract</a></code> object.</p></dd>
 
 
 <dt>api_key</dt>
@@ -147,31 +140,31 @@ extract request.</p></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span>
-<span class="r-in">  description <span class="op">=</span> <span class="st">"2013-2014 ACS Data"</span>,</span>
-<span class="r-in">  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2013a"</span>, <span class="st">"us2014a"</span><span class="op">)</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGE"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Store your submitted extract request to obtain the extract number</span></span>
-<span class="r-in"><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu">submit_extract</span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">submitted_extract</span><span class="op">$</span><span class="va">number</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># This is useful for checking the extract request status</span></span>
-<span class="r-in"><span class="fu"><a href="get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># You can always get the latest status, even if you forget to store the</span></span>
-<span class="r-in"><span class="co"># submitted extract request object</span></span>
-<span class="r-in"><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># You can also check if submitted extract is ready</span></span>
-<span class="r-in"><span class="fu"><a href="is_extract_ready.html">is_extract_ready</a></span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Or have R check periodically and download when ready</span></span>
-<span class="r-in"><span class="va">downloadable_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">submitted_extract</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="define_extract_usa.html">define_extract_usa</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="st">"2013-2014 ACS Data"</span>,</span></span>
+<span class="r-in"><span>  samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2013a"</span>, <span class="st">"us2014a"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGE"</span>, <span class="st">"YEAR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Store your submitted extract request to obtain the extract number</span></span></span>
+<span class="r-in"><span><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu">submit_extract</span><span class="op">(</span><span class="va">my_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">submitted_extract</span><span class="op">$</span><span class="va">number</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This is useful for checking the extract request status</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can always get the latest status, even if you forget to store the</span></span></span>
+<span class="r-in"><span><span class="co"># submitted extract request object</span></span></span>
+<span class="r-in"><span><span class="va">submitted_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can also check if submitted extract is ready</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="is_extract_ready.html">is_extract_ready</a></span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or have R check periodically and download when ready</span></span></span>
+<span class="r-in"><span><span class="va">downloadable_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="va">submitted_extract</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

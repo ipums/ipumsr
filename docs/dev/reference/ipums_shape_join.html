@@ -115,37 +115,37 @@ tabular data that emerge in some IPUMS files</p></li>
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ipums_shape_left_join</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">shape_data</span>,
-  <span class="va">by</span>,
-  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">ipums_shape_right_join</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">shape_data</span>,
-  <span class="va">by</span>,
-  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">ipums_shape_inner_join</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">shape_data</span>,
-  <span class="va">by</span>,
-  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">ipums_shape_full_join</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">shape_data</span>,
-  <span class="va">by</span>,
-  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ipums_shape_left_join</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">shape_data</span>,</span>
+<span>  <span class="va">by</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_shape_right_join</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">shape_data</span>,</span>
+<span>  <span class="va">by</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_shape_inner_join</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">shape_data</span>,</span>
+<span>  <span class="va">by</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ipums_shape_full_join</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">shape_data</span>,</span>
+<span>  <span class="va">by</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"SHAPE"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -186,16 +186,16 @@ unmatched during the join.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span>,</span>
-<span class="r-in">  show_col_types <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  show_col_types <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">joined_data</span> <span class="op">&lt;-</span> <span class="fu">ipums_shape_inner_join</span><span class="op">(</span><span class="va">data</span>, <span class="va">sf_data</span>, by <span class="op">=</span> <span class="st">"GISJOIN"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">joined_data</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">joined_data</span> <span class="op">&lt;-</span> <span class="fu">ipums_shape_inner_join</span><span class="op">(</span><span class="va">data</span>, <span class="va">sf_data</span>, by <span class="op">=</span> <span class="st">"GISJOIN"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">joined_data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "GISJOIN"    "YEAR"       "STUSAB"     "CMSA"       "DIVISIONA" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "MSA_CMSAA"  "PMSA"       "PMSAA"      "REGIONA"    "STATEA"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] "AREALAND"   "AREAWAT"    "ANPSADPI"   "FUNCSTAT"   "INTPTLAT"  </span>

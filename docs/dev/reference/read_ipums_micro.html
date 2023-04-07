@@ -121,25 +121,25 @@ below.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_ipums_micro</span><span class="op">(</span>
-  <span class="va">ddi</span>,
-  vars <span class="op">=</span> <span class="cn">NULL</span>,
-  n_max <span class="op">=</span> <span class="cn">Inf</span>,
-  data_file <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>,
-  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="fu">read_ipums_micro_list</span><span class="op">(</span>
-  <span class="va">ddi</span>,
-  vars <span class="op">=</span> <span class="cn">NULL</span>,
-  n_max <span class="op">=</span> <span class="cn">Inf</span>,
-  data_file <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>,
-  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_micro</span><span class="op">(</span></span>
+<span>  <span class="va">ddi</span>,</span>
+<span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>,</span>
+<span>  lower_vars <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">read_ipums_micro_list</span><span class="op">(</span></span>
+<span>  <span class="va">ddi</span>,</span>
+<span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  data_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>,</span>
+<span>  lower_vars <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -265,14 +265,14 @@ extract.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Codebook for rectangular example file</span></span>
-<span class="r-in"><span class="va">cps_rect_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Load data based on codebook file info</span></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">cps_rect_ddi_file</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Codebook for rectangular example file</span></span></span>
+<span class="r-in"><span><span class="va">cps_rect_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Load data based on codebook file info</span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">cps_rect_ddi_file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    YEAR SERIAL HWTSUPP STATEFIP       MONTH     PERNUM WTSUPP INCTOT            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>         </span>
@@ -282,18 +282,18 @@ extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375          </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Can also load data from a pre-existing `ipums_ddi` object</span></span>
-<span class="r-in"><span class="co"># (This may be useful to retain codebook metadata even if lost from data</span></span>
-<span class="r-in"><span class="co"># during processing)</span></span>
-<span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_rect_ddi_file</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Codebook for hierarchical example file</span></span>
-<span class="r-in"><span class="va">cps_hier_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00010.xml"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read in "long" format to get a single data frame</span></span>
-<span class="r-in"><span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Can also load data from a pre-existing `ipums_ddi` object</span></span></span>
+<span class="r-in"><span><span class="co"># (This may be useful to retain codebook metadata even if lost from data</span></span></span>
+<span class="r-in"><span><span class="co"># during processing)</span></span></span>
+<span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_rect_ddi_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Codebook for hierarchical example file</span></span></span>
+<span class="r-in"><span><span class="va">cps_hier_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00010.xml"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read in "long" format to get a single data frame</span></span></span>
+<span class="r-in"><span><span class="fu">read_ipums_micro</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 11,053 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    RECTYPE     YEAR SERIAL HWTSUPP STATEFIP MONTH    PERNUM WTSUPP INCTOT       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>    </span>
@@ -307,13 +307,13 @@ extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     83     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>707.  1.66<span style="color: #949494;">e</span>4      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Min…</span>  3<span style="color: #949494;"> [Mar…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     84     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>790.  6.38<span style="color: #949494;">e</span>3      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 11,043 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read in "list" format and you get a list of multiple data frames</span></span>
-<span class="r-in"><span class="va">cps_list</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro_list</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11,043 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read in "list" format and you get a list of multiple data frames</span></span></span>
+<span class="r-in"><span><span class="va">cps_list</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro_list</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_list</span><span class="op">$</span><span class="va">PERSON</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_list</span><span class="op">$</span><span class="va">PERSON</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   RECTYPE            YEAR SERIAL PERNUM WTSUPP INCTOT             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>          </span>
@@ -323,8 +323,8 @@ extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     82      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     83      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     84      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375           </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_list</span><span class="op">$</span><span class="va">HOUSEHOLD</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_list</span><span class="op">$</span><span class="va">HOUSEHOLD</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   RECTYPE               YEAR SERIAL HWTSUPP STATEFIP       MONTH    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span></span>
@@ -334,12 +334,12 @@ extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    107   <span style="text-decoration: underline;">4</span>355. 19<span style="color: #949494;"> [Iowa]</span>      3<span style="color: #949494;"> [March]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    108   <span style="text-decoration: underline;">1</span>479. 19<span style="color: #949494;"> [Iowa]</span>      3<span style="color: #949494;"> [March]</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Use the `%&lt;-%` operator from zeallot to unpack into separate objects</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">household</span>, <span class="va">person</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span> <span class="fu">read_ipums_micro_list</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use the `%&lt;-%` operator from zeallot to unpack into separate objects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">household</span>, <span class="va">person</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/zeallot/man/operator.html" class="external-link">%&lt;-%</a></span> <span class="fu">read_ipums_micro_list</span><span class="op">(</span><span class="va">cps_hier_ddi_file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">person</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">person</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   RECTYPE            YEAR SERIAL PERNUM WTSUPP INCTOT             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>          </span>
@@ -349,8 +349,8 @@ extract.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     82      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     83      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     84      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375           </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">household</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">household</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   RECTYPE               YEAR SERIAL HWTSUPP STATEFIP       MONTH    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span></span>
