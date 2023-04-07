@@ -367,7 +367,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
-#' @param overwrite Logical value indicating whether to overwrite any files that
+#' @param overwrite If `TRUE`, overwrite any files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
 #'
 #' @return The path(s) to the files required to read the data

@@ -614,8 +614,6 @@ define_extract_nhgis <- function(description = "",
 #' @inheritParams add_to_extract
 #' @param extract_json Path to a file containing a JSON-formatted
 #'   extract definition.
-#' @param file File path to which to write the JSON-formatted extract
-#'   definition.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
@@ -706,10 +704,23 @@ define_extract_from_json <- function(extract_json) {
   list_of_extracts[[1]]
 }
 
+#' @param file File path to which to write the JSON-formatted extract
+#'   definition.
+#' @param overwrite If `TRUE`, overwrite `file` if it already exists.
+#'   Defaults to `FALSE`.
+#'
 #' @rdname define_extract_from_json
 #' @export
-save_extract_as_json <- function(extract, file) {
+save_extract_as_json <- function(extract, file, overwrite = FALSE) {
   extract_as_json <- extract_to_request_json(extract)
+
+  if (file.exists(file) && !overwrite) {
+    rlang::abort(c(
+      paste0("File \"", file, "\" already exists."),
+      "i" = "To overwrite, set `overwrite = TRUE`."
+    ))
+  }
+
   writeLines(jsonlite::prettify(extract_as_json), con = file)
   invisible(file)
 }
@@ -1882,7 +1893,7 @@ combine_extracts.nhgis_extract <- function(...) {
       geographic_extents = .y$geographic_extents,
       breakdown_and_data_type_layout =
         .x$breakdown_and_data_type_layout %||%
-          .y$breakdown_and_data_type_layout,
+        .y$breakdown_and_data_type_layout,
       tst_layout = .x$tst_layout %||% .y$tst_layout,
       shapefiles = .y$shapefiles,
       data_format = .x$data_format %||% .y$data_format

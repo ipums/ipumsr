@@ -7,7 +7,7 @@
 \usage{
 define_extract_from_json(extract_json)
 
-save_extract_as_json(extract, file)
+save_extract_as_json(extract, file, overwrite = FALSE)
 }
 \arguments{
 \item{extract_json}{Path to a file containing a JSON-formatted
@@ -17,6 +17,9 @@ extract definition.}
 
 \item{file}{File path to which to write the JSON-formatted extract
 definition.}
+
+\item{overwrite}{If \code{TRUE}, overwrite \code{file} if it already exists.
+Defaults to \code{FALSE}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.

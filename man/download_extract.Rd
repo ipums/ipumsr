@@ -31,7 +31,7 @@ For a list of codes used to refer to each collection, see
 \item{download_dir}{Path to the directory where the files should be written.
 Defaults to current working directory.}
 
-\item{overwrite}{Logical value indicating whether to overwrite any files that
+\item{overwrite}{If \code{TRUE}, overwrite any files that
 already exist in \code{download_dir}. Defaults to \code{FALSE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the

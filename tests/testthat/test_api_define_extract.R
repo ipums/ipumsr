@@ -969,8 +969,19 @@ test_that("Can export to and import from JSON", {
 
   expect_identical(usa_extract, copy_of_usa_extract)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
-})
 
+  expect_error(
+    save_extract_as_json(nhgis_extract, json_tmpfile_usa),
+    "already exists"
+  )
+
+  save_extract_as_json(nhgis_extract, json_tmpfile_usa, overwrite = TRUE)
+
+  expect_identical(
+    copy_of_nhgis_extract,
+    define_extract_from_json(json_tmpfile_usa)
+  )
+})
 
 test_that("Throw error when defining from JSON with old API version", {
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")
