@@ -970,3 +970,21 @@ test_that("Can export to and import from JSON", {
   expect_identical(usa_extract, copy_of_usa_extract)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
 })
+
+
+test_that("Throw error when defining from JSON with old API version", {
+  json_tmpfile <- file.path(tempdir(), "usa_extract.json")
+  on.exit(unlink(json_tmpfile), add = TRUE, after = FALSE)
+
+  withr::with_envvar(c("IPUMS_API_VERSION" = "v1"), {
+    save_extract_as_json(test_usa_extract(), json_tmpfile)
+  })
+
+  expect_error(
+    define_extract_from_json(json_tmpfile),
+    paste0(
+      "`extract_json` was created with IPUMS API version \"v1\".+",
+      "As of ipumsr 0.6.0, only IPUMS API version 2 is supported"
+    )
+  )
+})

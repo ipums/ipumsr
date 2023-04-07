@@ -650,47 +650,57 @@ define_extract_from_json <- function(extract_json) {
   collection <- jsonlite::fromJSON(extract_json)$collection
 
   if (is.null(collection)) {
-    rlang::abort(
-      c(
-        paste0(
-          "Could not determine the collection associated with this extract ",
-          "definition."
-        ),
-        paste0(
-          "Ensure that the JSON file includes an element containing ",
-          "the IPUMS collection associated with the extract. ",
-          "(For example, `\"collection\": \"usa\"`)"
-        )
+    rlang::abort(c(
+      paste0(
+        "Could not determine the collection associated with this extract ",
+        "definition."
+      ),
+      paste0(
+        "Ensure that the JSON file includes an element containing ",
+        "the IPUMS collection associated with the extract. ",
+        "(For example, `\"collection\": \"usa\"`)"
       )
-    )
+    ))
   }
 
   extract_json <- new_ipums_json(extract_json, collection)
   json_api_version <- api_version_from_json(extract_json)
 
-  list_of_extracts <- extract_list_from_json(
-    extract_json,
-    validate = TRUE
-  )
+  if (is.null(json_api_version)) {
+    rlang::abort(c(
+      "Could not determine the IPUMS API version for `extract_json`.",
+      "*" = paste0(
+        "As of ipumsr 0.6.0, only IPUMS API version ", ipums_api_version(),
+        " is supported."
+      ),
+      "i" = paste0(
+        "Use `define_extract_", collection, "()` ",
+        "to recreate this extract definition"
+      )
+    ))
+  } else if (ipums_api_version() != json_api_version) {
+    rlang::abort(c(
+      paste0(
+        "`extract_json` was created with IPUMS API version \"",
+        json_api_version, "\"."
+      ),
+      "*" = paste0(
+        "As of ipumsr 0.6.0, only IPUMS API version ", ipums_api_version(),
+        " is supported."
+      ),
+      "i" = paste0(
+        "Use `define_extract_", collection, "()` ",
+        "to recreate this extract definition"
+      )
+    ))
+  }
+
+  list_of_extracts <- extract_list_from_json(extract_json, validate = TRUE)
 
   if (length(list_of_extracts) != 1) {
     rlang::abort(
-      "`extract_json` should only contain the definition for a single extract"
+      "`extract_json` should only contain the definition for a single extract."
     )
-  }
-
-  if (is.null(json_api_version)) {
-    rlang::warn(paste0(
-      "Could not determine the API version corresponding to the provided ",
-      "extract definition. ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(), "."
-    ))
-  } else if (ipums_api_version() != json_api_version) {
-    rlang::warn(paste0(
-      "The extract provided in `extract_json` was made using API version ",
-      json_api_version, ". ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(), "."
-    ))
   }
 
   list_of_extracts[[1]]

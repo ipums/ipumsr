@@ -836,7 +836,9 @@ api_version_from_json <- function(extract_json) {
     extract_json,
     simplifyVector = FALSE
   )
-  extract$version
+  # Handles inconsistency between old API version JSON defs, which include
+  # api_version, not version
+  extract$version %||% extract$api_version
 }
 
 EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))
