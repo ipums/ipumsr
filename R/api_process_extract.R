@@ -553,7 +553,7 @@ extract_to_request_json.nhgis_extract <- function(
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = jsonlite::unbox(extract$collection),
-      version = jsonlite::unbox(ipums_api_version(extract$collection))
+      version = jsonlite::unbox(ipums_api_version())
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -587,7 +587,7 @@ extract_to_request_json.usa_extract <- function(
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = extract$collection,
-      version = ipums_api_version(extract$collection)
+      version = ipums_api_version()
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -620,7 +620,7 @@ extract_to_request_json.cps_extract <- function(extract,
   if (include_endpoint_info) {
     endpoint_info <- list(
       collection = extract$collection,
-      version = ipums_api_version(extract$collection)
+      version = ipums_api_version()
     )
     request_list <- append(request_list, endpoint_info)
   }
@@ -924,7 +924,7 @@ ipums_api_json_request <- function(verb,
     api_base_url(),
     path = path,
     query = c(
-      list(collection = collection, version = ipums_api_version(collection)),
+      list(collection = collection, version = ipums_api_version()),
       queries
     )
   )

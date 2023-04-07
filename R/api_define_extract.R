@@ -683,13 +683,13 @@ define_extract_from_json <- function(extract_json) {
     rlang::warn(paste0(
       "Could not determine the API version corresponding to the provided ",
       "extract definition. ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(collection), "."
+      "requests using API version ", ipums_api_version(), "."
     ))
-  } else if (ipums_api_version(collection) != json_api_version) {
+  } else if (ipums_api_version() != json_api_version) {
     rlang::warn(paste0(
       "The extract provided in `extract_json` was made using API version ",
       json_api_version, ". ipumsr is currently configured to submit extract ",
-      "requests using API version ", ipums_api_version(collection), "."
+      "requests using API version ", ipums_api_version(), "."
     ))
   }
 
@@ -2294,7 +2294,7 @@ validate_ipums_extract.ipums_extract <- function(x) {
   }
 
   # Throw error if no API for collection
-  ipums_api_version(x$collection)
+  check_api_support(x$collection)
 
   x
 }

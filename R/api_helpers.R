@@ -26,18 +26,18 @@
 ipums_data_collections <- function() {
   tibble::tribble(
     ~collection_name, ~code_for_api, ~api_support,
-    "IPUMS USA", "usa", "2",
-    "IPUMS CPS", "cps", "2",
-    "IPUMS International", "ipumsi", "2",
-    "IPUMS NHGIS", "nhgis", "2",
-    "IPUMS AHTUS", "ahtus", "none",
-    "IPUMS MTUS", "mtus", "none",
-    "IPUMS ATUS", "atus", "none",
-    "IPUMS DHS", "dhs", "none",
-    "IPUMS Higher Ed", "highered", "none",
-    "IPUMS MEPS", "meps", "none",
-    "IPUMS NHIS", "nhis", "none",
-    "IPUMS PMA", "pma", "none"
+    "IPUMS USA", "usa", TRUE,
+    "IPUMS CPS", "cps", TRUE,
+    "IPUMS International", "ipumsi", FALSE,
+    "IPUMS NHGIS", "nhgis", TRUE,
+    "IPUMS AHTUS", "ahtus", FALSE,
+    "IPUMS MTUS", "mtus", FALSE,
+    "IPUMS ATUS", "atus", FALSE,
+    "IPUMS DHS", "dhs", FALSE,
+    "IPUMS Higher Ed", "highered", FALSE,
+    "IPUMS MEPS", "meps", FALSE,
+    "IPUMS NHIS", "nhis", FALSE,
+    "IPUMS PMA", "pma", FALSE
   )
 }
 
@@ -163,7 +163,7 @@ set_ipums_default_collection <- function(collection = NULL,
     collection <- tolower(collection)
 
     # Error if collection is not currently available for API
-    ipums_api_version(collection)
+    check_api_support(collection)
 
     collection <- set_ipums_envvar(
       IPUMS_DEFAULT_COLLECTION = collection,
@@ -234,7 +234,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
             )
           )
         } else {
-          ipums_api_version(extract)
+          check_api_support(extract)
           return(list(collection = extract, number = NA))
         }
       }
@@ -267,7 +267,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
     )
   }
 
-  ipums_api_version(collection)
+  check_api_support(collection)
 
   if (number != round(number)) {
     rlang::abort(
@@ -800,11 +800,18 @@ active_api_instance <- function() {
 #' @param collection IPUMS collection
 #'
 #' @noRd
-ipums_api_version <- function(collection) {
-  versions <- dplyr::filter(
-    ipums_data_collections(),
-    .data$api_support != "none"
-  )
+ipums_api_version <- function() {
+  api_version <- Sys.getenv("IPUMS_API_VERSION")
+
+  if (api_version == "") {
+    2
+  } else {
+    api_version
+  }
+}
+
+check_api_support <- function(collection) {
+  versions <- dplyr::filter(ipums_data_collections(), .data$api_support)
 
   if (!collection %in% versions$code_for_api) {
     rlang::abort(
@@ -818,13 +825,7 @@ ipums_api_version <- function(collection) {
     )
   }
 
-  api_version <- Sys.getenv("IPUMS_API_VERSION")
-
-  if (api_version == "") {
-    versions[[which(versions$code_for_api == collection), "api_support"]]
-  } else {
-    api_version
-  }
+  invisible(collection)
 }
 
 #' Get API version from a JSON file

@@ -163,7 +163,7 @@ get_last_extract_info <- function(collection = NULL,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
   collection <- collection %||% get_default_collection()
 
-  ipums_api_version(collection)
+  check_api_support(collection)
 
   get_recent_extracts_info(collection, how_many = 1, api_key = api_key)[[1]]
 }
