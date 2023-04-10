@@ -524,7 +524,8 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     ),
     timeSeriesTables = format_nhgis_field_for_json(
       timeSeriesTables = extract$time_series_tables,
-      geogLevels = extract$geog_levels[extract$time_series_tables]
+      geogLevels = extract$geog_levels[extract$time_series_tables],
+      years = extract$years[extract$time_series_tables],
     ),
     shapefiles = extract$shapefiles,
     dataFormat = jsonlite::unbox(extract$data_format),

@@ -62,7 +62,8 @@ test_that("Can define an NHGIS extract", {
     nhgis_extract$years,
     list(
       "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
+      "2015_2019_ACS5a" = NULL,
+      "CW3" = "1990"
     )
   )
   expect_equal(
@@ -441,7 +442,14 @@ test_that("Can add new parent fields to an NHGIS extract", {
   )
   expect_equal(
     revised$years,
-    c(nhgis_extract$years, list(New = "Y1"))
+    list(
+      `2014_2018_ACS5a` = NULL,
+      `2015_2019_ACS5a` = NULL,
+      New = "Y1",
+      CW3 = "1990",
+      CW4 = "Y1",
+      CW5 = "Y1"
+    )
   )
   expect_equal(
     revised$time_series_tables,
@@ -463,7 +471,7 @@ test_that("Can add subfields to existing NHGIS extract parent fields", {
       CW3 = "G1",
       CW4 = "G2"
     ),
-    years = list("Y1", "Y2")
+    years = list(CW3 = "Y1", `2015_2019_ACS5a` = "Y2")
   )
 
   expect_equal(revised$datasets, nhgis_extract$datasets)
@@ -487,8 +495,10 @@ test_that("Can add subfields to existing NHGIS extract parent fields", {
   expect_equal(
     revised$years,
     list(
-      `2014_2018_ACS5a` = "Y1",
-      `2015_2019_ACS5a` = "Y2"
+      `2014_2018_ACS5a` = NULL,
+      `2015_2019_ACS5a` = "Y2",
+      CW3 = c(1990, "Y1"),
+      CW4 = NULL
     )
   )
 
@@ -500,9 +510,9 @@ test_that("Can add subfields to existing NHGIS extract parent fields", {
       geog_levels = "C"
     )$geog_levels,
     list(
-      "2014_2018_ACS5a" = "nation",
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = c("state", "C")
+      `2014_2018_ACS5a` = "nation",
+      `2015_2019_ACS5a` = "blck_grp",
+      CW3 = c("state", "C")
     )
   )
   expect_equal(
@@ -595,6 +605,7 @@ test_that("Can remove subfields from existing NHGIS extract parent fields", {
       `2014_2018_ACS5a` = "nation",
       CW3 = c("state", "blck_grp")
     ),
+    years = "1990",
     geographic_extents = "420"
   )
 
@@ -614,6 +625,10 @@ test_that("Can remove subfields from existing NHGIS extract parent fields", {
       `2015_2019_ACS5a` = "blck_grp",
       CW3 = "tract"
     )
+  )
+  expect_equal(
+    revised$years,
+    list(`2014_2018_ACS5a` = NULL, `2015_2019_ACS5a` = NULL, CW3 = NULL)
   )
   expect_equal(revised$geographic_extents, "DC")
 })

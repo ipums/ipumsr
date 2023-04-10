@@ -17,7 +17,7 @@ http_interactions:
       message: 'Client error: (403) Forbidden'
     headers:
       content-type: application/json
-      date: Thu, 06 Apr 2023 22:46:21 GMT
+      date: Mon, 10 Apr 2023 14:58:44 GMT
       vary: Origin
       x-generator: tyk.io
       content-length: '57'
@@ -28,11 +28,11 @@ http_interactions:
         {
             "error": "Access to this API has been disallowed"
         }
-  recorded_at: 2023-04-06 22:46:23 GMT
+  recorded_at: 2023-04-10 14:58:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1155?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts/1171?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -48,20 +48,20 @@ http_interactions:
       message: 'Client error: (404) Not Found'
     headers:
       content-type: text/html; charset=UTF-8
-      date: Thu, 06 Apr 2023 22:46:22 GMT
+      date: Mon, 10 Apr 2023 14:58:45 GMT
       server: nginx/1.18.0
       vary: Origin
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ee6e02fa-8d00-4997-b14d-a2de2cbbf50c
-      x-runtime: '0.556985'
+      x-request-id: a1f4a952-e299-4328-b530-00c59803124e
+      x-runtime: '0.508209'
       content-length: '0'
     body:
       encoding: ''
       file: no
       string: ''
-  recorded_at: 2023-04-06 22:46:23 GMT
+  recorded_at: 2023-04-10 14:58:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
@@ -82,8 +82,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:46:23 GMT
-      etag: W/"e6ec3113941e68a03f81a8e7df271335"
+      date: Mon, 10 Apr 2023 14:58:46 GMT
+      etag: W/"84e511481d919aaf22048747e7c8099d"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -94,23 +94,23 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 92f6c5ff-8911-48f1-acce-26a87dc31df2
-      x-runtime: '0.525376'
+      x-request-id: 45b4cba0-4911-4965-9f50-7eba5baed5df
+      x-runtime: '0.529017'
       x-xss-protection: '0'
-      content-length: '1264'
+      content-length: '1280'
     body:
       encoding: ''
       file: no
-      string: '{"data":[{"number":1154,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_csv_PREVIEW.zip","bytes":10007,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_csv.zip","bytes":1452350,"sha256":null},"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_shape.zip","bytes":510593,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
-        for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["110","420"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}],"totalCount":1154,"pageNumber":1,"pageSize":1,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/extracts/?collection=nhgis\u0026pageNumber=2\u0026pageSize=1\u0026version=2"}}'
-  recorded_at: 2023-04-06 22:46:23 GMT
+      string: '{"data":[{"number":1170,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv_PREVIEW.zip","bytes":8537,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv.zip","bytes":1436460,"sha256":null},"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_shape.zip","bytes":510593,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
+        for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["110","420"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}],"totalCount":1170,"pageNumber":1,"pageSize":1,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/extracts/?collection=nhgis\u0026pageNumber=2\u0026pageSize=1\u0026version=2"}}'
+  recorded_at: 2023-04-10 14:58:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: post
     uri: https://api.ipums.org/extracts/?collection=nhgis&version=2
     body:
       encoding: ''
-      string: '{"datasets":{"foo":{"dataTables":[null],"geogLevels":[null]}}}'
+      string: '{"datasets":{"foo":{"dataTables":[null],"geogLevels":[null]}},"collection":"nhgis","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -124,7 +124,7 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:46:23 GMT
+      date: Mon, 10 Apr 2023 14:58:47 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -135,8 +135,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 920aef75-7c54-4038-b847-0b26d4988e27
-      x-runtime: '0.069472'
+      x-request-id: b94699c0-db06-4e58-9612-dbec54048e51
+      x-runtime: '0.060584'
       x-xss-protection: '0'
       content-length: '208'
     body:
@@ -145,5 +145,5 @@ http_interactions:
       string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
         Request"},"detail":["Datasets invalid: ''foo''","Data format invalid: '''';
         valid options include ''csv_no_header'', ''csv_header'', ''fixed_width''"]}'
-  recorded_at: 2023-04-06 22:46:23 GMT
+  recorded_at: 2023-04-10 14:58:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

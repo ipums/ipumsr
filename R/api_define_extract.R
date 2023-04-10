@@ -327,12 +327,12 @@ define_extract_cps <- function(
 #'
 #' The following arguments are applied to the requested `datasets`:
 #' - `data_tables`
-#' - `years`
 #' - `breakdown_values`
 #'
 #' The following arguments are applied to the requested `datasets` *and*
 #' `time_series_tables`:
 #' - `geog_levels`
+#' - `years`
 #'
 #' To apply the values of these arguments to *all* of the `datasets` and/or
 #' `time_series_tables` in the extract definition, pass the values as a vector:
@@ -390,7 +390,9 @@ define_extract_cps <- function(
 #'   See Details section for syntax options when an extract
 #'   definition has multiple `datasets` and/or `time_series_tables`.
 #' @param years Years for which to obtain the data contained in the requested
-#'   `datasets`. Use `"*"` to select all available years for a given dataset.
+#'   `datasets` or `time_series_tables`. Use `"*"` to select all available
+#'   years for a given dataset or time series table.
+#'
 #'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
 #'
 #'   See Details section for syntax options when an extract definition has
@@ -551,8 +553,7 @@ define_extract_nhgis <- function(description = "",
 
   if (n_tsts > 0) {
     data_format <- data_format %||% "csv_no_header"
-    tst_layout <- tst_layout %||%
-      "time_by_column_layout"
+    tst_layout <- tst_layout %||% "time_by_column_layout"
   }
 
   if (is.list(geographic_extents)) {
@@ -578,7 +579,7 @@ define_extract_nhgis <- function(description = "",
     ),
     years = recycle_extract_subfield(
       years,
-      datasets
+      c(datasets, time_series_tables)
     ),
     breakdown_values = recycle_extract_subfield(
       breakdown_values,
@@ -998,12 +999,12 @@ add_to_extract.cps_extract <- function(extract,
 #'
 #' The following arguments are applied to an extract definition's `datasets`:
 #' - `data_tables`
-#' - `years`
 #' - `breakdown_values`
 #'
 #' The following arguments are applied to an extract definition's `datasets`
 #' *and* `time_series_tables`:
 #' - `geog_levels`
+#' - `years`
 #'
 #' To add the values of these arguments to *multiple* `datasets` and/or
 #' `time_series_tables` in the extract definition, pass the values as a vector.
@@ -1056,14 +1057,15 @@ add_to_extract.cps_extract <- function(extract,
 #'   See Details section for syntax options when an extract definition has
 #'   multiple `datasets` or `time_series_tables`.
 #' @param years Years for which to obtain the data contained in the requested
-#'   `datasets`. If no `datasets` are provided, applies to those that
+#'   `datasets` or `time_series_tables`. If no `datasets` or
+#'   `time_series_tables` are provided, applies to those that
 #'   already exist in the extract definition.
 #'
 #'   Use `"*"` to select all available years for a given dataset.
 #'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
 #'
 #'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
+#'   multiple `datasets` or `time_series_tables`.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to to apply to the requested `datasets`. If no `datasets` are provided,
@@ -1225,9 +1227,9 @@ add_to_extract.nhgis_extract <- function(extract,
     years = reduce_list_by_name(
       c(
         extract$years,
-        recycle_extract_subfield(years, new_ds)
+        recycle_extract_subfield(years, new_ds_tst)
       ),
-      name_order = all_ds
+      name_order = c(all_ds, all_tst)
     ),
     breakdown_values = reduce_list_by_name(
       c(
@@ -1498,12 +1500,12 @@ remove_from_extract.cps_extract <- function(extract,
 #'
 #' The following arguments are removed from the extract definition's `datasets`:
 #' - `data_tables`
-#' - `years`
 #' - `breakdown_values`
 #'
 #' The following arguments are removed from the extract definition's `datasets`
 #' *and* `time_series_tables`:
 #' - `geog_levels`
+#' - `years`
 #'
 #' To remove the values of these arguments from *all* of the `datasets` and/or
 #' `time_series_tables` in the extract definition, pass the values as a vector.
@@ -1562,10 +1564,11 @@ remove_from_extract.cps_extract <- function(extract,
 #'
 #'   See Details section for syntax options when an extract definition has
 #'   multiple `datasets` or `time_series_tables`.
-#' @param years Years to remove from the `datasets` in the extract definition.
+#' @param years Years to remove from the `datasets` or `time_series_tables`
+#'   in the extract definition.
 #'
 #'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
+#'   multiple `datasets` or `time_Series_tables`
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to remove from the `datasets` in the extract definition.
@@ -1693,12 +1696,12 @@ remove_from_extract.nhgis_extract <- function(extract,
 
   ds_args <- list(
     data_tables = data_tables,
-    years = years,
     breakdown_values = breakdown_values
   )
 
   ds_tst_args <- list(
-    geog_levels = geog_levels
+    geog_levels = geog_levels,
+    years = years
   )
 
   ds_args <- purrr::set_names(
@@ -1744,7 +1747,7 @@ remove_from_extract.nhgis_extract <- function(extract,
     data_tables = ds_args$data_tables,
     time_series_tables = new_tst,
     geog_levels = ds_tst_args$geog_levels,
-    years = ds_args$years,
+    years = ds_tst_args$years,
     breakdown_values = ds_args$breakdown_values,
     geographic_extents = geographic_extents,
     shapefiles = setdiff_null(extract$shapefiles, unlist(shapefiles)),
@@ -2046,7 +2049,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     list(
       field = "years",
       type = "list",
-      parent_field = "datasets"
+      parent_field = c("datasets", "time_series_tables")
     ),
     list(
       field = "breakdown_values",
@@ -2711,11 +2714,9 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 
       if (no_datasets) {
         data_tables <- NULL
-        years <- NULL
         breakdown_values <- NULL
       } else {
         data_tables <- purrr::map(def$datasets, ~ unlist(.x$dataTables))
-        years <- purrr::map(def$datasets, ~ unlist(.x$years))
         breakdown_values <- purrr::map(
           def$datasets,
           ~ unlist(.x$breakdownValues)
@@ -2724,10 +2725,15 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 
       if (no_datasets && no_tsts) {
         geog_levels <- NULL
+        years <- NULL
       } else {
         geog_levels <- purrr::map(
           c(def$datasets, def$timeSeriesTables),
           ~ unlist(.x$geogLevels)
+        )
+        years <- purrr::map(
+          c(def$datasets, def$timeSeriesTables),
+          ~ unlist(.x$years)
         )
       }
 

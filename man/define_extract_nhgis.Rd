@@ -43,7 +43,9 @@ See Details section for syntax options when an extract
 definition has multiple \code{datasets} and/or \code{time_series_tables}.}
 
 \item{years}{Years for which to obtain the data contained in the requested
-\code{datasets}. Use \code{"*"} to select all available years for a given dataset.
+\code{datasets} or \code{time_series_tables}. Use \code{"*"} to select all available
+years for a given dataset or time series table.
+
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.
 
 See Details section for syntax options when an extract definition has
@@ -142,7 +144,6 @@ table.
 The following arguments are applied to the requested \code{datasets}:
 \itemize{
 \item \code{data_tables}
-\item \code{years}
 \item \code{breakdown_values}
 }
 
@@ -150,6 +151,7 @@ The following arguments are applied to the requested \code{datasets} \emph{and}
 \code{time_series_tables}:
 \itemize{
 \item \code{geog_levels}
+\item \code{years}
 }
 
 To apply the values of these arguments to \emph{all} of the \code{datasets} and/or

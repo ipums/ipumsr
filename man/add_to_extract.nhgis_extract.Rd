@@ -51,14 +51,15 @@ See Details section for syntax options when an extract definition has
 multiple \code{datasets} or \code{time_series_tables}.}
 
 \item{years}{Years for which to obtain the data contained in the requested
-\code{datasets}. If no \code{datasets} are provided, applies to those that
+\code{datasets} or \code{time_series_tables}. If no \code{datasets} or
+\code{time_series_tables} are provided, applies to those that
 already exist in the extract definition.
 
 Use \code{"*"} to select all available years for a given dataset.
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.
 
 See Details section for syntax options when an extract definition has
-multiple \code{datasets}.}
+multiple \code{datasets} or \code{time_series_tables}.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
 to to apply to the requested \code{datasets}. If no \code{datasets} are provided,
@@ -157,7 +158,6 @@ table.
 The following arguments are applied to an extract definition's \code{datasets}:
 \itemize{
 \item \code{data_tables}
-\item \code{years}
 \item \code{breakdown_values}
 }
 
@@ -165,6 +165,7 @@ The following arguments are applied to an extract definition's \code{datasets}
 \emph{and} \code{time_series_tables}:
 \itemize{
 \item \code{geog_levels}
+\item \code{years}
 }
 
 To add the values of these arguments to \emph{multiple} \code{datasets} and/or

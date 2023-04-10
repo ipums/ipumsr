@@ -398,7 +398,11 @@ extract_to_tbl.nhgis_extract <- function(x) {
       name = unlist(x$time_series_tables) %||% NA_character_,
       data_tables = list(NULL),
       geog_levels = unname(x$geog_levels[x$time_series_tables]),
-      years = list(NULL),
+      years = if (is_empty(x$years)) {
+        list(NULL)
+      } else {
+        unname(purrr::map(x$years, ~.x)[x$time_series_tables])
+      },
       breakdown_values = list(NULL)
     ),
     base_vars
@@ -474,7 +478,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        c("data_tables", "years", "breakdown_values"),
+        c("data_tables", "breakdown_values"),
         ~ ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
@@ -486,7 +490,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        "geog_levels",
+        c("geog_levels", "years"),
         ~ ifelse(is_null(unlist(.x)), .x, list(.x))
       )
     ) %>%
@@ -518,7 +522,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
     ) %>%
     dplyr::mutate(
       dplyr::across(
-        c("data_tables", "years", "breakdown_values"),
+        c("data_tables", "breakdown_values"),
         function(d) {
           purrr::map2(
             d,
@@ -528,7 +532,7 @@ collapse_nhgis_extract_tbl <- function(extract_tbl) {
         }
       ),
       dplyr::across(
-        "geog_levels",
+        c("geog_levels", "years"),
         function(d) {
           purrr::map2(
             d,

@@ -41,10 +41,11 @@ associated  with the specified \code{time_series_tables} will also be removed.}
 See Details section for syntax options when an extract definition has
 multiple \code{datasets} or \code{time_series_tables}.}
 
-\item{years}{Years to remove from the \code{datasets} in the extract definition.
+\item{years}{Years to remove from the \code{datasets} or \code{time_series_tables}
+in the extract definition.
 
 See Details section for syntax options when an extract definition has
-multiple \code{datasets}.}
+multiple \code{datasets} or \code{time_Series_tables}}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
 to remove from the \code{datasets} in the extract definition.
@@ -95,7 +96,6 @@ table.
 The following arguments are removed from the extract definition's \code{datasets}:
 \itemize{
 \item \code{data_tables}
-\item \code{years}
 \item \code{breakdown_values}
 }
 
@@ -103,6 +103,7 @@ The following arguments are removed from the extract definition's \code{datasets
 \emph{and} \code{time_series_tables}:
 \itemize{
 \item \code{geog_levels}
+\item \code{years}
 }
 
 To remove the values of these arguments from \emph{all} of the \code{datasets} and/or

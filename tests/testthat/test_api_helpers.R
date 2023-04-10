@@ -30,6 +30,7 @@ test_that("NHGIS print method works", {
       "\n",
       "\nTime Series Table: CW3",
       "\n  Geog Levels: state",
+      "\n  Years: 1990",
       "\n",
       "\nShapefiles: 110_blck_grp_2019_tl2019"
     )

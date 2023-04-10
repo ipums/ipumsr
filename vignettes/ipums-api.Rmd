@@ -252,8 +252,8 @@ define_extract_nhgis(
 )
 ```
 
-NHGIS time series tables also have similar behavior for `geog_levels`.
-See `?define_extract_nhgis` for more information.
+NHGIS time series tables also have similar behavior for `geog_levels` and 
+`years`. See `?define_extract_nhgis` for more information.
 
 ### Extract request objects
 

@@ -556,7 +556,8 @@ print.nhgis_extract <- function(x, ...) {
     ~ format_field_for_printing(
       parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
       subfields = list(
-        "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]]
+        "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]],
+        "Years: " = x$years[x$time_series_tables][[.x]]
       ),
       parent_style = extract_field_styler(
         nhgis_print_color("time_series_table"),

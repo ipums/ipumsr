@@ -24,6 +24,7 @@ test_nhgis_extract <- function() {
     data_tables = c("B01001", "B01002"),
     time_series_table = "CW3",
     geog_levels = list("nation", "blck_grp", "state"),
+    years = list(CW3 = "1990"),
     geographic_extents = c("110", "Pennsylvania"),
     tst_layout = "time_by_row_layout",
     shapefiles = "110_blck_grp_2019_tl2019",

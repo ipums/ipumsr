@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv.zip
     body:
       encoding: ''
       string: ''
@@ -17,27 +17,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1154_csv.zip"; filename*=UTF-8''nhgis1154_csv.zip
+      content-disposition: attachment; filename="nhgis1170_csv.zip"; filename*=UTF-8''nhgis1170_csv.zip
       content-type: application/zip
-      date: Thu, 06 Apr 2023 22:51:31 GMT
-      etag: '"642f495d-16293e"'
-      last-modified: Thu, 06 Apr 2023 22:36:13 GMT
+      date: Mon, 10 Apr 2023 15:01:09 GMT
+      etag: '"6434233a-15eb2c"'
+      last-modified: Mon, 10 Apr 2023 14:54:50 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=V1KMCCXhzk66MRYhF7HSAANdlkb15MIz6XkV8IKqKs9K9%2B%2Bd4q6rp5cbAuQZp5xEK7173a0EcxHzZsJB2CedAcdIXPNgK3g%2Fje5xPd1tPcKxBOYvc5ba1mG4DJOThuTsBtYBpT7C2h6l1UytX6moDpNZVNBE88g76BZgCsR3IpUY84SfVporLHM0bxyuWb2WMeQfld%2BXo63gPluP1YKtIalHcSRfOd0AMWQphDVqHCRIcSRlh84nGRUmgFxQAwI%3D--eepLJk5fcQXm2ZAQ--jFDxmgvc4%2FufnPsv0PFriA%3D%3D;
+      set-cookie: _session_id=MfZXm%2FE6c8Gz7Hgs9PbGmQGKEpIoV1GePAnqMP2DTZNgTZhrrIctlGuItB%2FMHHZOOuLsCv1brQeWN3%2BW5iCjNgPvxB7yGX2GA86k%2B3pz%2F60nj7hTsS73ab8TCZS427Zp8IgHpvmfujZV2A2wPODBBQSQ5aX7nDBKREW%2FPfduKrz7dD22zjVzUeM8aW8bCycCBbnjVqko0Ii9AcGcFgP9jKnvZ0%2BWkYMLAdG0K6%2FD%2FVwganmHcILvFAo6tedeS2o%3D--Y3hQwD7GJDY2Qogm--KfZ%2F8GBA%2F7VAqKQzV7swTQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '1452350'
+      content-length: '1436460'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1154_csv.zip
-  recorded_at: 2023-04-06 22:51:32 GMT
+      string: ../fixtures/nhgis1170_csv.zip
+  recorded_at: 2023-04-10 15:01:09 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002404/nhgis1154_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_shape.zip
     body:
       encoding: ''
       string: ''
@@ -53,13 +53,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1154_shape.zip"; filename*=UTF-8''nhgis1154_shape.zip
+      content-disposition: attachment; filename="nhgis1170_shape.zip"; filename*=UTF-8''nhgis1170_shape.zip
       content-type: application/zip
-      date: Thu, 06 Apr 2023 22:51:31 GMT
-      etag: '"642f4870-7ca81"'
-      last-modified: Thu, 06 Apr 2023 22:32:16 GMT
+      date: Mon, 10 Apr 2023 15:01:09 GMT
+      etag: '"643422f6-7ca81"'
+      last-modified: Mon, 10 Apr 2023 14:53:42 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=XK8cPzjHJRlrYw4MkCx3Ue5gsrf47BCyES1t4cn4lDSS7LYXEfYSSLcgFecF0GN0F4JFWYuDCMu0amzoBVRhDSFYqVmQ4P2%2B6BeD4dBw1BLWpsrrDaptHGdWq%2FRt%2FcIM%2BXzEFHZ08V2YmPmSoXo%2BHPv0C4kU6QH7%2FaK4LNd6tsHhyhIsHwnQealBr5zVl%2FmCdSyxJ%2FKpZpNxFtoj%2FRrkJLvipKVRgoIKPeiqY%2BHEDmcoBc783%2Bb2Cx2UNXdASKw%3D--Ms8juPIC%2BNCOSpSj--j16HympnO0JL0trC%2FoZEbA%3D%3D;
+      set-cookie: _session_id=OWUcLuy8XOgeKG069ewBIxCoiTG%2FYJAyzvE5CQ4VKoUQxxJS84du4FT9ZFikEhbbhYWWeLLmGILBfRUOQI%2BFMNiYMmqhcfewKQgPjSS8vVGMZtKDL8gQ3sZKm6g%2BjjJDc%2FXqbakMU4LsqBtnpUMu3Bzf8pD7feugxwLcrPRmxoC9lg9%2FFyAuYGPi0cVgb2MHTsHOwxVNd8Kb3zFsdLAQyDKwH1AiMd85VIe7YWOijVUrcw5PqDar1NvxsHWqK7M%3D--tkv1GjEl8y7t09Wx--ir0z12nf4F8yhQG3xPxvzw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -68,6 +68,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1154_shape.zip
-  recorded_at: 2023-04-06 22:51:32 GMT
+      string: ../fixtures/nhgis1170_shape.zip
+  recorded_at: 2023-04-10 15:01:09 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
