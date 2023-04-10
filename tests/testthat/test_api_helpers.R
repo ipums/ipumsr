@@ -145,6 +145,7 @@ test_that("set_ipums_envvar sets environment variable", {
 test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
   skip_if_not_installed("withr")
 
+  current_ipums_default_collection <- Sys.getenv("IPUMS_DEFAULT_COLLECTION")
   current_ipums_api_key <- Sys.getenv("IPUMS_API_KEY")
   current_home_dir <- Sys.getenv("HOME")
   temp_renviron_file <- file.path(tempdir(), ".Renviron")
@@ -152,6 +153,9 @@ test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
   # Reset envvars to original state upon test completion
   withr::defer(Sys.setenv(HOME = current_home_dir))
   withr::defer(Sys.setenv(IPUMS_API_KEY = current_ipums_api_key))
+  withr::defer(
+    Sys.setenv(IPUMS_DEFAULT_COLLECTION = current_ipums_default_collection)
+  )
   withr::defer(file.remove(temp_renviron_file))
 
   Sys.setenv(IPUMS_API_KEY = "")
