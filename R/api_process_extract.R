@@ -436,12 +436,10 @@ download_extract <- function(extract,
   if (is_extract) {
     extract <- validate_ipums_extract(extract)
     is_ready <- extract_is_completed_and_has_links(extract)
+  }
 
-    # If not downloadable, check latest status, since we haven't done so yet.
-    if (!is_ready) {
-      extract <- get_extract_info(extract, api_key = api_key)
-    }
-  } else {
+  # If not downloadable, check latest status, since we haven't done so yet.
+  if (!is_extract || !is_ready) {
     extract <- get_extract_info(extract, api_key = api_key)
     is_ready <- extract_is_completed_and_has_links(extract)
   }
