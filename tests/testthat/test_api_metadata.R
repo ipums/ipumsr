@@ -163,7 +163,7 @@ test_that("We can get metadata for specific data sources", {
 })
 
 test_that("We throw errors on bad metadata requests", {
-  skip_if_no_api_access(have_api_access)
+  # skip_if_no_api_access(have_api_access)
 
   # Only one source per metadata request
   expect_error(
