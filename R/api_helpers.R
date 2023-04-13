@@ -289,7 +289,7 @@ get_default_collection <- function() {
 
   versions <- dplyr::filter(
     ipums_data_collections(),
-    .data$api_support != "none"
+    .data$api_support
   )
 
   if (!collection %in% versions$code_for_api) {
