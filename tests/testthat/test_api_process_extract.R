@@ -88,32 +88,34 @@ test_that("Can submit an NHGIS extract of multiple types", {
   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(submitted_nhgis_extract$collection, "nhgis")
   expect_equal(
-    submitted_nhgis_extract$datasets,
+    purrr::map_chr(submitted_nhgis_extract$datasets, ~ .x$name),
     c("2014_2018_ACS5a", "2015_2019_ACS5a")
   )
   expect_equal(
-    submitted_nhgis_extract$data_tables,
+    purrr::map(submitted_nhgis_extract$datasets, ~ .x$data_tables),
     list(
-      "2014_2018_ACS5a" = c("B01001", "B01002"),
-      "2015_2019_ACS5a" = c("B01001", "B01002")
+      c("B01001", "B01002"),
+      c("B01001", "B01002")
     )
   )
   expect_equal(
-    submitted_nhgis_extract$breakdown_values,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
-    )
+    purrr::map(submitted_nhgis_extract$datasets, ~ .x$geog_levels),
+    list("nation", "blck_grp")
   )
-  expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
   expect_equal(
-    submitted_nhgis_extract$geog_levels,
-    list(
-      "2014_2018_ACS5a" = "nation",
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = "state"
-    )
+    purrr::map(submitted_nhgis_extract$datasets, ~ .x$breakdown_values),
+    list(NULL, NULL)
   )
+
+  expect_equal(
+    purrr::map_chr(submitted_nhgis_extract$time_series_tables, ~ .x$name),
+    "CW3"
+  )
+  expect_equal(
+    purrr::map(submitted_nhgis_extract$time_series_tables, ~ .x$geog_levels),
+    list("state")
+  )
+
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
   expect_true(submitted_nhgis_extract$submitted)
@@ -167,10 +169,16 @@ test_that("Can resubmit an extract", {
     resubmitted_nhgis_extract,
     c("nhgis_extract", "ipums_extract")
   )
+
   # Number, download links, etc. won't be same, but core extract will:
+  idx <- which(
+    !names(resubmitted_nhgis_extract) %in%
+      c("download_links", "number", "status")
+  )
+
   expect_identical(
-    resubmitted_nhgis_extract[1:14],
-    ready_nhgis_extract[1:14]
+    resubmitted_nhgis_extract[idx],
+    ready_nhgis_extract[idx]
   )
 
   expect_error(

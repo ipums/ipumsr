@@ -55,17 +55,12 @@ remove_from_extract(
 )
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  time_series_tables = "A00",
-  geog_levels = "county"
+  datasets = new_dataset("1990_STF1", c("NP1", "NP2", "NP3"), "county"),
+  time_series_tables = new_tst("A00", geog_levels = "county")
 )
 
-# Remove a table from existing datasets:
-remove_from_extract(nhgis_extract, data_tables = "NP3")
-
-# Remove an entire dataset/time series table
-remove_from_extract(nhgis_extract, time_series_tables = "A00")
+# Remove an existing dataset
+remove_from_extract(nhgis_extract, datasets = "1990_STF1")
 }
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} or \code{\link[=combine_extracts]{combine_extracts()}} to add values to an extract

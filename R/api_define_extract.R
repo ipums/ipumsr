@@ -278,10 +278,7 @@ define_extract_cps <- function(description,
 #' to obtain a particular set of data from the IPUMS NHGIS system.
 #'
 #' Use [get_nhgis_metadata()] to browse and identify data sources for use
-#' in NHGIS extract definitions.
-#'
-#' See Details section for information about creating valid extract
-#' definitions. For general information, see the NHGIS
+#' in NHGIS extract definitions. For general information, see the NHGIS
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
 #'
@@ -289,104 +286,38 @@ define_extract_cps <- function(description,
 #'
 #' @details
 #' An NHGIS extract definition must include at least one dataset, time series
-#' table, or shapefile. For extract definitions that include any `datasets`,
-#' corresponding `data_tables` and `geog_levels` must be specified. For
-#' extract definitions that include any `time_series_tables`, corresponding
-#' `geog_levels` must be specified.
+#' table, or shapefile specification.
 #'
-#' NHGIS extract definitions may contain multiple `datasets` or
-#' `time_series_tables.` Each dataset or time series table is associated with
-#' several subfields that apply only to that particular dataset or time series
-#' table.
+#' - Create an NHGIS dataset specification with `new_dataset()`. Each dataset
+#' must be associated with a selection of `data_tables` and `geog_levels`. Some
+#' datasets also support the selection of `years` and `breakdown_values`.
+#' - Create an NHGIS time series table specification with `new_tst()`. Each time
+#' series table must be associated with a selection of `geog_levels` and
+#' optionally with a selection of `years`.
 #'
-#' The following arguments are applied to the requested `datasets`:
-#' - `data_tables`
-#' - `breakdown_values`
-#'
-#' The following arguments are applied to the requested `datasets` *and*
-#' `time_series_tables`:
-#' - `geog_levels`
-#' - `years`
-#'
-#' To apply the values of these arguments to *all* of the `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a vector:
-#'
-#' ```{r}
-#' define_extract_nhgis(
-#'   datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
-#'   data_tables = "B01001",
-#'   geog_levels = c("county", "state")
-#' )
-#' ```
-#'
-#' To apply the values of these arguments to *specific* `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a named
-#' list. In this case, names should correspond to the `datasets` and/or
-#' `time_series_tables` and their associated values will only be applied to
-#' the indicated dataset or time series table:
-#'
-#' ```{r}
-#' define_extract_nhgis(
-#'   datasets = "2016_2020_ACS5a",
-#'   data_tables = "B01001",
-#'   time_series_tables = "A00",
-#'   geog_levels = list(
-#'     "2016_2020_ACS5a" = "county",
-#'     "A00" = "state"
-#'   )
-#' )
-#' ```
-#'
-#' Note that while it is possible to match elements to `datasets` and/or
-#' `time_series_tables` by index by providing an unnamed list, we recommend
-#' using names to explicitly specify the values that should be applied to each
-#' of the request's `datasets` and `time_series_tables`.
-#'
-#' Alternatively, you can create multiple extract definitions and combine
-#' them with [combine_extracts()].
+#' See examples for more details about specifying datasets and time series
+#' tables in an NHGIS extract definition.
 #'
 #' @param description Description of the extract.
-#' @param datasets [Datasets](https://www.nhgis.org/overview-nhgis-datasets)
-#'   to include in the extract request.
-#' @param data_tables Summary tables to retrieve for each of the requested
-#'   `datasets`. Required for all `datasets` in the extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
-#' @param time_series_tables
-#'   [Time series tables](https://www.nhgis.org/time-series-tables)
-#'   to include in the extract request.
-#' @param geog_levels Geographic levels (e.g. `"county"` or `"state"`)
-#'   at which to obtain data for the requested `datasets` or
-#'   `time_series_tables`. Required for all `datasets` and `time_series_tables`
-#'   in the extract definition.
-#'
-#'   See Details section for syntax options when an extract
-#'   definition has multiple `datasets` and/or `time_series_tables`.
-#' @param years Years for which to obtain the data contained in the requested
-#'   `datasets` or `time_series_tables`. Use `"*"` to select all available
-#'   years for a given dataset or time series table.
-#'
-#'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
-#' @param breakdown_values [Breakdown
-#'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to apply to the requested `datasets`.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
+#' @param datasets List of `ipums_dataset` objects created by `new_dataset()`
+#'   containing the specifications
+#'   for the [datasets](https://www.nhgis.org/overview-nhgis-datasets)
+#'   to include in the extract request. See examples.
+#' @param time_series_tables List of `nhgis_tst` objects created by `new_tst()`
+#'   containing the specifications for the
+#'   [time series tables](https://www.nhgis.org/time-series-tables)
+#'   to include in the extract request. See examples.
+#' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to include
+#'   in the extract request.
 #' @param geographic_extents Vector of geographic extents to use for
 #'   all of the `datasets` in the extract definition (for instance, to obtain
 #'   data within a particular state). Use `"*"` to select all available extents.
 #'
-#'   Required when the extract definition includes any `geog_levels` that
-#'   require extent selection. See [get_nhgis_metadata()] to determine if a
-#'   geographic level requires extent selection. At the time of writing, NHGIS
-#'   supports extent selection only for blocks and block groups.
-#' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to include
-#'   in the extract request.
+#'   Required when any of the `datasets` included in the extract definition
+#'   include `geog_levels` that require extent selection. See
+#'   [get_nhgis_metadata()] to determine if a geographic level requires extent
+#'   selection. At the time of writing, NHGIS supports extent selection only
+#'   for blocks and block groups.
 #' @param breakdown_and_data_type_layout The desired layout
 #'   of any `datasets` that have multiple data types or breakdown values.
 #'
@@ -444,60 +375,44 @@ define_extract_cps <- function(description,
 #'
 #' @examples
 #' # Extract definition for tables from an NHGIS dataset
-#' my_extract <- define_extract_nhgis(
+#' # Use `new_dataset()` to create an NHGIS dataset specification
+#' my_extract_def <- define_extract_nhgis(
 #'   description = "Example NHGIS extract",
-#'   datasets = "1990_STF3",
-#'   data_tables = "NP57",
-#'   geog_levels = c("county", "tract")
+#'   datasets = new_dataset(
+#'     "1990_STF3",
+#'     data_tables = "NP57",
+#'     geog_levels = c("county", "tract")
+#'   )
 #' )
 #'
-#' my_extract
+#' my_extract_def
 #'
-#' # Extract definition for an NHGIS time series table
+#' # Use `new_tst()` to create an NHGIS time series table specification
 #' define_extract_nhgis(
 #'   description = "Example NHGIS extract",
-#'   time_series_tables = "CL8",
-#'   geog_levels = "county"
+#'   time_series_tables = new_tst("CL8", geog_levels = "county"),
+#'   tst_layout = "time_by_row_layout"
 #' )
 #'
-#' # Use get_nhgis_metadata() to identify data source names
-#' \dontrun{
-#' get_nhgis_metadata("time_series_tables")
-#' }
-#'
-#' # Fields that are attached to specific datasets/time series tables
-#' # are recycled to all datasets/time series tables in an extract by default
+#' # To request multiple datasets, provide a list of `ipums_dataset` objects
+#' # to the `datasets` argument
 #' define_extract_nhgis(
 #'   description = "Extract definition with multiple datasets",
-#'   datasets = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
-#'   data_tables = "B01001",
-#'   geog_levels = c("state", "county")
+#'   datasets = list(
+#'     new_dataset("2014_2018_ACS5a", "B01001", c("state", "county")),
+#'     new_dataset("2015_2019_ACS5a", "B01001", c("state", "county"))
+#'   )
 #' )
 #'
-#' # To instead attach specific values to each dataset or time series table,
-#' # use a named list instead of a vector:
-#' define_extract_nhgis(
-#'   description = "Extract with multiple time series tables",
-#'   time_series_tables = c("CW3", "CW5"),
-#'   geog_levels = list(CW5 = "county", CW3 = "state")
-#' )
-#'
-#' # For extracts with datasets and time series tables,
-#' # geog_levels are matched to both sources:
-#' define_extract_nhgis(
-#'   description = "Extract with datasets and time series tables",
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2"),
-#'   time_series_tables = "CL6",
-#'   geog_levels = "state"
-#' )
+#' # You can store dataset and time series table specs outside of a definition
+#' ds <- new_dataset("1990_STF1", c("NP1", "NP2"), "county")
+#' tst <- new_tst("CL6", "state")
 #'
 #' define_extract_nhgis(
 #'   description = "Extract with datasets and time series tables",
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2"),
-#'   time_series_tables = "CL6",
-#'   geog_levels = list("1990_STF1" = "county", "CL6" = "state")
+#'   datasets = ds,
+#'   time_series_tables = tst,
+#'   shapefiles = "us_county_1990_tl2008"
 #' )
 #'
 #' \dontrun{
@@ -506,59 +421,36 @@ define_extract_cps <- function(description,
 #' }
 define_extract_nhgis <- function(description = "",
                                  datasets = NULL,
-                                 data_tables = NULL,
                                  time_series_tables = NULL,
-                                 geog_levels = NULL,
-                                 years = NULL,
-                                 breakdown_values = NULL,
-                                 geographic_extents = NULL,
                                  shapefiles = NULL,
+                                 geographic_extents = NULL,
                                  breakdown_and_data_type_layout = NULL,
                                  tst_layout = NULL,
                                  data_format = NULL) {
-  n_datasets <- length(datasets)
-  n_tsts <- length(time_series_tables)
-
-  if (n_datasets > 0) {
+  if (!is_null(datasets)) {
     data_format <- data_format %||% "csv_no_header"
     breakdown_and_data_type_layout <- breakdown_and_data_type_layout %||%
       "single_file"
   }
 
-  if (n_tsts > 0) {
+  if (!is_null(time_series_tables)) {
     data_format <- data_format %||% "csv_no_header"
     tst_layout <- tst_layout %||% "time_by_column_layout"
   }
 
-  if (is.list(geographic_extents)) {
-    rlang::warn(paste0(
-      "`geographic_extents` was provided as a list, but this parameter ",
-      "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be applied to all datasets."
-    ))
+  if (inherits(datasets, "ipums_dataset")) {
+    datasets <- list(datasets)
+  }
+
+  if (inherits(time_series_tables, "ipums_tst")) {
+    time_series_tables <- list(time_series_tables)
   }
 
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description,
-    datasets = unlist(datasets),
-    data_tables = recycle_extract_subfield(
-      data_tables,
-      datasets
-    ),
-    time_series_tables = unlist(time_series_tables),
-    geog_levels = recycle_extract_subfield(
-      geog_levels,
-      c(datasets, time_series_tables)
-    ),
-    years = recycle_extract_subfield(
-      years,
-      c(datasets, time_series_tables)
-    ),
-    breakdown_values = recycle_extract_subfield(
-      breakdown_values,
-      datasets
-    ),
+    datasets = datasets,
+    time_series_tables = time_series_tables,
     geographic_extents = geog_extent_lookup(
       unlist(geographic_extents),
       state_geog_lookup$abbs
@@ -572,6 +464,58 @@ define_extract_nhgis <- function(description = "",
   extract <- validate_ipums_extract(extract)
 
   extract
+}
+
+#' @param name Name of the dataset or time series table to include in this
+#'   specification.
+#' @param data_tables Vector of summary tables to retrieve for this dataset.
+#' @param geog_levels Geographic levels (e.g. `"county"` or `"state"`)
+#'   at which to obtain data for this dataset or time series table.
+#' @param years Years for which to obtain the data for this dataset or time
+#'   series table. Use `"*"` to select all available years.
+#'
+#'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
+#' @param breakdown_values [Breakdown
+#'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
+#'   to apply to this dataset.
+#'
+#' @export
+#'
+#' @rdname define_extract_nhgis
+new_dataset <- function(name,
+                        data_tables,
+                        geog_levels,
+                        years = NULL,
+                        breakdown_values = NULL) {
+  dataset <- new_nested_field(
+    name,
+    data_tables = data_tables,
+    geog_levels = geog_levels,
+    years = years,
+    breakdown_values = breakdown_values,
+    class = "ipums_dataset"
+  )
+
+  dataset <- validate_ipums_extract(dataset)
+
+  dataset
+}
+
+#' @export
+#' @rdname define_extract_nhgis
+new_tst <- function(name,
+                    geog_levels,
+                    years = NULL) {
+  tst <- new_nested_field(
+    name,
+    geog_levels = geog_levels,
+    years = years,
+    class = "ipums_tst"
+  )
+
+  tst <- validate_ipums_extract(tst)
+
+  tst
 }
 
 #' Store an extract definition in JSON format
@@ -758,21 +702,28 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
 #'
 #' nhgis_extract <- define_extract_nhgis(
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2"),
-#'   geog_levels = "county"
+#'   datasets = new_dataset(
+#'     "1990_STF1",
+#'     data_tables = c("NP1", "NP2"),
+#'     geog_levels = "county"
+#'   )
 #' )
 #'
 #' # Add a new dataset/time series table
 #' add_to_extract(
 #'   nhgis_extract,
-#'   datasets = "1980_STF1",
-#'   data_tables = "NT1A",
-#'   geog_levels = c("county", "state")
+#'   datasets = new_dataset(
+#'     "1980_STF1",
+#'     data_tables = "NT1A",
+#'     geog_levels = c("county", "state")
+#'   )
 #' )
 #'
 #' # Add to existing datasets/time series tables
-#' add_to_extract(nhgis_extract, geog_levels = "state")
+#' add_to_extract(
+#'   nhgis_extract,
+#'   datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "state")
+#' )
 #'
 #' # Values that can only take a single value are replaced
 #' add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
@@ -950,58 +901,20 @@ add_to_extract.cps_extract <- function(extract,
 #' the supplied value.
 #'
 #' In general, adding to an extract follows the same syntax conventions as used
-#' in [define_extract_nhgis()]. See Details section for more
-#' information on how values passed to dataset and time series table subfields
-#' are interpreted.
+#' in [define_extract_nhgis()]. Use `new_dataset()` and `new_tst()` to create
+#' dataset and time series table specifications.
 #'
 #' To remove existing values from an IPUMS NHGIS extract definition, use
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract]. To add values
-#' contained in another extract definition, use [combine_extracts()].
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
-#' For extract definitions that include any `datasets`,
-#' corresponding `data_tables` and `geog_levels` must be specified. For
-#' extract definitions that include any `time_series_tables`, corresponding
-#' `geog_levels` must be specified.
-#'
-#' NHGIS extract definitions may contain multiple `datasets` or
-#' `time_series_tables.` Each dataset or time series table is associated with
-#' several subfields that apply only to that particular dataset or time series
-#' table.
-#'
-#' The following arguments are applied to an extract definition's `datasets`:
-#' - `data_tables`
-#' - `breakdown_values`
-#'
-#' The following arguments are applied to an extract definition's `datasets`
-#' *and* `time_series_tables`:
-#' - `geog_levels`
-#' - `years`
-#'
-#' To add the values of these arguments to *multiple* `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a vector.
-#' In this case, if any values are
-#' provided in the `datasets` or `time_series_tables` arguments, subfield values
-#' will only be applied to those `datasets` and/or `time_series_tables`.
-#' Otherwise, they will be applied to all `datasets` and/or
-#' `time_series_tables` that exist in the extract definition.
-#'
-#' To add the values of these arguments to *specific* `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a named
-#' list. In this case, names should correspond to the `datasets` and/or
-#' `time_series_tables` and their associated values will only be added to
-#' the indicated dataset or time series table. Values can be added for new
-#' `datasets` and `time_series_tables` or those that already exist in the
-#' extract definition.
-#'
-#' See examples for demonstrations of this syntax.
-#'
-#' Note that while it is possible to match elements to `datasets` and/or
-#' `time_series_tables` by index by providing an unnamed list, we recommend
-#' using names to explicitly specify the values that should be added to each
-#' of the request's `datasets` and `time_series_tables`.
+#' If any of the specifications provided to `datasets` or `time_series_tables`
+#' reference dataset or time series table names that already exist in the
+#' extract definition, their specifications will be merged with those present
+#' in the definition. An extract will never contain two records for the same
+#' dataset or time series table name. See examples.
 #'
 #' For extract fields that take a single value, `add_to_extract()` will
 #' replace the existing value with the new value provided for that field.
@@ -1014,39 +927,6 @@ add_to_extract.cps_extract <- function(extract,
 #'
 #' @inheritParams define_extract_nhgis
 #' @inheritParams add_to_extract
-#' @param data_tables Summary tables to retrieve for each of the requested
-#'   `datasets`. If no `datasets` are provided, applies to those that
-#'   already exist in the extract definition. Required if any new `datasets`
-#'   are specified.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
-#' @param geog_levels Geographic levels (for example, `"county"` or `"state"`)
-#'   at which to obtain data for the requested `datasets` and
-#'   `time_series_tables`. If no `datasets` and/or `time_series_tables` are
-#'   provided, applies to those that already
-#'   exist in the extract definition. Required if any new `datasets` or
-#'   `time_series_tables` are specified.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets` or `time_series_tables`.
-#' @param years Years for which to obtain the data contained in the requested
-#'   `datasets` or `time_series_tables`. If no `datasets` or
-#'   `time_series_tables` are provided, applies to those that
-#'   already exist in the extract definition.
-#'
-#'   Use `"*"` to select all available years for a given dataset.
-#'   Use [get_nhgis_metadata()] to determine if a dataset allows year selection.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets` or `time_series_tables`.
-#' @param breakdown_values [Breakdown
-#'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to to apply to the requested `datasets`. If no `datasets` are provided,
-#'   applies to those that already exist in the extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
@@ -1059,83 +939,48 @@ add_to_extract.cps_extract <- function(extract,
 #'
 #' [combine_extracts()] to combine multiple extract definitions.
 #'
+#' [define_extract_nhgis()] to create a new extract definition.
+#'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
-#'
-#' [define_extract_nhgis()] to create a new extract definition.
 #'
 #' @export
 #'
 #' @examples
 #' extract <- define_extract_nhgis(
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2"),
-#'   geog_levels = "county"
+#'   datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "county")
 #' )
 #'
-#' # Modify existing datasets in extract:
-#' extract2 <- add_to_extract(
+#' # Add a new dataset or time series table to the extract
+#' add_to_extract(
 #'   extract,
-#'   data_tables = "NP3"
-#' )
-#'
-#' extract2
-#'
-#' # Add a new dataset or time series table. Fields that apply to each dataset
-#' # or time series table are only applied to the newly added dataset or
-#' # time series table:
-#' extract <- add_to_extract(
-#'   extract,
-#'   datasets = "1980_STF1",
-#'   data_tables = "NT1A",
-#'   geog_levels = c("county", "state")
+#'   datasets = new_dataset("1990_STF2a", "NPA1", "county")
 #' )
 #'
 #' add_to_extract(
 #'   extract,
-#'   time_series_tables = "A00",
-#'   geog_levels = "state"
+#'   time_series_tables = new_tst("A00", "state")
 #' )
 #'
-#' # To modify existing datasets, use a named list to specify which datasets
-#' # should be attached to which `data_tables` or `geog_levels`.
-#' # Vector arguments are attached to all datasets.
+#' # If a dataset/time series table name already exists in the definition
+#' # its specification will be modified
 #' add_to_extract(
 #'   extract,
-#'   data_tables = list(
-#'     "1990_STF1" = "NP4",
-#'     "1980_STF1" = "NT1B"
-#'   ),
-#'   geog_levels = "nation"
+#'   datasets = new_dataset("1990_STF1", "NP4", "nation")
 #' )
 #'
 #' # Values that can only take a single value are replaced
 #' add_to_extract(extract, data_format = "fixed_width")$data_format
-#'
-#' # You can also combine two extract requests together
-#' combine_extracts(extract, extract2)
 add_to_extract.nhgis_extract <- function(extract,
                                          description = NULL,
                                          datasets = NULL,
-                                         data_tables = NULL,
                                          time_series_tables = NULL,
-                                         geog_levels = NULL,
-                                         years = NULL,
-                                         breakdown_values = NULL,
                                          geographic_extents = NULL,
                                          shapefiles = NULL,
                                          breakdown_and_data_type_layout = NULL,
                                          tst_layout = NULL,
                                          data_format = NULL,
                                          ...) {
-  if (is.list(geographic_extents)) {
-    rlang::warn(paste0(
-      "`geographic_extents` was provided as a list, but this parameter ",
-      "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be applied to all datasets."
-    ))
-  }
-
   dots <- rlang::list2(...)
 
   if (length(dots) > 0) {
@@ -1148,16 +993,96 @@ add_to_extract.nhgis_extract <- function(extract,
     ))
   }
 
-  # We will only recycle the child fields for the newly-specified parent fields
-  # but want all of the parent fields in the final extract.
-  all_ds <- union(extract$datasets, unlist(datasets))
-  all_tst <- union(extract$time_series_tables, unlist(time_series_tables))
+  if (inherits(datasets, "ipums_dataset")) {
+    datasets <- list(datasets)
+  }
 
-  new_ds <- datasets %||% all_ds
-  new_ds_tst <- c(datasets, time_series_tables) %||% c(all_ds, all_tst)
+  if (inherits(time_series_tables, "ipums_tst")) {
+    time_series_tables <- list(time_series_tables)
+  }
+
+  if (!all(purrr::map_lgl(datasets, ~ inherits(.x, "ipums_dataset")))) {
+    rlang::abort(paste0(
+      "Expected `datasets` to be an `ipums_dataset` object ",
+      "or a list of `ipums_dataset` objects."
+    ))
+  } else {
+    purrr::walk(datasets, validate_ipums_extract)
+  }
+
+  if (!all(purrr::map_lgl(time_series_tables, ~ inherits(.x, "ipums_tst")))) {
+    rlang::abort(paste0(
+      "Expected `time_series_tables` to be an `ipums_tst` object ",
+      "or a list of `ipums_tst` objects."
+    ))
+  } else {
+    purrr::walk(time_series_tables, validate_ipums_extract)
+  }
+
+  new_ds <- purrr::map_chr(datasets, ~ .x$name)
+  old_ds <- purrr::map_chr(extract$datasets, ~ .x$name)
+
+  new_tst <- purrr::map_chr(time_series_tables, ~ .x$name)
+  old_tst <- purrr::map_chr(extract$time_series_tables, ~ .x$name)
+
+  if (anyDuplicated(new_ds) != 0) {
+    rlang::abort("Cannot add two `ipums_dataset` objects of same name.")
+  }
+
+  if (anyDuplicated(new_tst) != 0) {
+    rlang::abort("Cannot add two `ipums_tst` objects of same name.")
+  }
+
+  if (!is_null(extract$datasets)) {
+    extract$datasets <- purrr::map(
+      extract$datasets,
+      function(x) {
+        name_exists <- x$name %in% new_ds
+
+        if (any(name_exists)) {
+          i <- which(x$name == new_ds)
+          new_dataset(
+            name = x$name,
+            data_tables = union(x$data_tables, datasets[[i]]$data_tables),
+            geog_levels = union(x$geog_levels, datasets[[i]]$geog_levels),
+            years = union(x$years, datasets[[i]]$years),
+            breakdown_values = union(x$breakdown_values, datasets[[i]]$breakdown_values)
+          )
+        } else {
+          x
+        }
+      }
+    )
+  }
+
+  if (!is_null(extract$time_series_tables)) {
+    extract$time_series_tables <- purrr::map(
+      extract$time_series_tables,
+      function(x) {
+        name_exists <- x$name %in% new_tst
+
+        if (any(name_exists)) {
+          i <- which(x$name == new_tst)
+          new_tst(
+            name = x$name,
+            geog_levels = union(x$geog_levels, time_series_tables[[i]]$geog_levels),
+            years = union(x$years, time_series_tables[[i]]$years)
+          )
+        } else {
+          x
+        }
+      }
+    )
+  }
+
+  new_datasets <- datasets[which(!new_ds %in% old_ds)]
+  new_tsts <- time_series_tables[which(!new_tst %in% old_tst)]
+
+  datasets <- unique(c(extract$datasets, new_datasets))
+  time_series_tables <- unique(c(extract$time_series_tables, new_tsts))
 
   # Set defaults for extracts that may not already have them included
-  if (!is.null(all_ds)) {
+  if (!is.null(datasets)) {
     data_format <- data_format %||%
       extract$data_format %||%
       "csv_no_header"
@@ -1167,7 +1092,7 @@ add_to_extract.nhgis_extract <- function(extract,
       "single_file"
   }
 
-  if (!is.null(all_tst)) {
+  if (!is.null(time_series_tables)) {
     data_format <- data_format %||%
       extract$data_format %||%
       "csv_no_header"
@@ -1177,41 +1102,11 @@ add_to_extract.nhgis_extract <- function(extract,
       "time_by_column_layout"
   }
 
-  # Construct extract, recycling new child fields to new parent fields and
-  # combining with existing parent/child fields
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = description %||% extract$description,
-    datasets = all_ds,
-    data_tables = reduce_list_by_name(
-      c(
-        extract$data_tables,
-        recycle_extract_subfield(data_tables, new_ds)
-      ),
-      name_order = all_ds
-    ),
-    time_series_tables = all_tst,
-    geog_levels = reduce_list_by_name(
-      c(
-        extract$geog_levels,
-        recycle_extract_subfield(geog_levels, new_ds_tst)
-      ),
-      name_order = c(all_ds, all_tst)
-    ),
-    years = reduce_list_by_name(
-      c(
-        extract$years,
-        recycle_extract_subfield(years, new_ds_tst)
-      ),
-      name_order = c(all_ds, all_tst)
-    ),
-    breakdown_values = reduce_list_by_name(
-      c(
-        extract$breakdown_values,
-        recycle_extract_subfield(breakdown_values, new_ds)
-      ),
-      name_order = all_ds
-    ),
+    datasets = datasets,
+    time_series_tables = time_series_tables,
     geographic_extents = geog_extent_lookup(
       union(extract$geographic_extents, unlist(geographic_extents)),
       state_geog_lookup$abbs
@@ -1286,17 +1181,12 @@ add_to_extract.nhgis_extract <- function(extract,
 #' )
 #'
 #' nhgis_extract <- define_extract_nhgis(
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2", "NP3"),
-#'   time_series_tables = "A00",
-#'   geog_levels = "county"
+#'   datasets = new_dataset("1990_STF1", c("NP1", "NP2", "NP3"), "county"),
+#'   time_series_tables = new_tst("A00", geog_levels = "county")
 #' )
 #'
-#' # Remove a table from existing datasets:
-#' remove_from_extract(nhgis_extract, data_tables = "NP3")
-#'
-#' # Remove an entire dataset/time series table
-#' remove_from_extract(nhgis_extract, time_series_tables = "A00")
+#' # Remove an existing dataset
+#' remove_from_extract(nhgis_extract, datasets = "1990_STF1")
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
 }
@@ -1448,107 +1338,31 @@ remove_from_extract.cps_extract <- function(extract,
 #' fields are optional, and if omitted, will be unchanged.
 #'
 #' In general, removing from an extract follows the same syntax conventions as
-#' used in [`define_extract_nhgis()`][define_extract_nhgis]. See Details section
-#' for more information on how values passed to dataset and time series table
-#' subfields are interpreted.
+#' used in [`define_extract_nhgis()`][define_extract_nhgis].
 #'
 #' To add new values to an IPUMS NHGIS extract definition, use
-#' [`add_to_extract()`][add_to_extract.nhgis_extract]. When replacing values,
-#' it is best to first add new values using
-#' `add_to_extract()` before removing values with
-#' `remove_from_extract()`. This limits the possibility of producing a
-#' temporarily invalid extract specification.
+#' [`add_to_extract()`][add_to_extract.nhgis_extract].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @details
-#' For extract definitions that include any `datasets`,
-#' corresponding `data_tables` and `geog_levels` must be specified. For
-#' extract definitions that include any `time_series_tables`, corresponding
-#' `geog_levels` must be specified.
-#'
-#' NHGIS extract definitions may contain multiple `datasets` or
-#' `time_series_tables.` Each dataset or time series table is associated with
-#' several subfields that apply only to that particular dataset or time series
-#' table.
-#'
-#' The following arguments are removed from the extract definition's `datasets`:
-#' - `data_tables`
-#' - `breakdown_values`
-#'
-#' The following arguments are removed from the extract definition's `datasets`
-#' *and* `time_series_tables`:
-#' - `geog_levels`
-#' - `years`
-#'
-#' To remove the values of these arguments from *all* of the `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a vector.
-#'
-#' To remove the values of these arguments to *specific* `datasets` and/or
-#' `time_series_tables` in the extract definition, pass the values as a named
-#' list. In this case, names should correspond to the `datasets` and/or
-#' `time_series_tables` and their associated values will only be removed from
-#' the indicated dataset or time series table.
-#'
-#' Note that subfields are modified *after* the removal of any `datasets`
-#' and `time_series_tables` specified in `datasets` or
-#' `time_series_tables` arguments.
-#'
-#' While while it is possible to match
-#' elements to `datasets` and/or
-#' `time_series_tables` by index by providing an unnamed list, we recommend
-#' using names to explicitly specify the values that should be removed from each
-#' of the request's `datasets` and `time_series_tables`.
-#'
 #' Any extract fields that are rendered irrelevant after modifying the extract
 #' will be automatically removed. (For instance, if all `time_series_tables`
 #' are removed from an extract, `tst_layout` will also be
 #' removed.) Thus, it is not necessary to explicitly remove these values.
 #'
-#' Note that it is possible to produce invalid extracts using
-#' `remove_from_extract()` (for instance, an extract that includes a
-#' time series table without associated geographic levels). This can occur if
-#' you intend to replace the existing values for a required extract field.
-#' If the goal is not to remove values but to replace them,
-#' it is best to first use `add_to_extract()`,
-#' then `remove_from_extract()`, as this will avoid the possibility
-#' of temporarily producing an invalid extract.
-#'
 #' If the supplied extract definition comes from
 #' a previously submitted extract request, this function will reset the
 #' definition to an unsubmitted state.
 #'
-#' @inheritParams define_extract_nhgis
 #' @inheritParams remove_from_extract
-#' @param datasets [Datasets](https://www.nhgis.org/overview-nhgis-datasets)
+#' @param datasets Names of the datasets
 #'   to remove from the extract definition. All `data_tables`, `geog_levels`,
 #'   `years`, and `breakdown_values` associated with the specified
 #'   `datasets` will also be removed.
-#' @param data_tables Summary tables to remove from the `datasets` in the
-#'   extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`.
-#' @param time_series_tables
-#'   [Time series tables](https://www.nhgis.org/time-series-tables)
-#'   to remove from the extract definition. All `geog_levels`
+#' @param time_series_tables Names of the time series tables
+#'   to remove from the extract definition. All `geog_levels` and `years`
 #'   associated  with the specified `time_series_tables` will also be removed.
-#' @param geog_levels Geographic levels to remove from the `datasets` and/or
-#'   `time_series_tables` in the extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets` or `time_series_tables`.
-#' @param years Years to remove from the `datasets` or `time_series_tables`
-#'   in the extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets` or `time_Series_tables`
-#' @param breakdown_values [Breakdown
-#'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
-#'   to remove from the `datasets` in the extract definition.
-#'
-#'   See Details section for syntax options when an extract definition has
-#'   multiple `datasets`..
 #' @param geographic_extents Geographic extents to remove from the extract
 #'   definition.
 #' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to remove
@@ -1574,43 +1388,29 @@ remove_from_extract.cps_extract <- function(extract,
 #'
 #' @examples
 #' extract <- define_extract_nhgis(
-#'   datasets = "1990_STF1",
-#'   data_tables = c("NP1", "NP2", "NP3"),
-#'   geog_levels = "county"
+#'   datasets = new_dataset(
+#'     "1990_STF1",
+#'     data_tables = c("NP1", "NP2", "NP3"),
+#'     geog_levels = "county"
+#'   ),
+#'   time_series_tables = list(
+#'     new_tst("CW3", c("state", "county")),
+#'     new_tst("CW5", c("state", "county"))
+#'   )
 #' )
 #'
-#' # Remove a table from existing datasets:
-#' remove_from_extract(extract, data_tables = "NP3")
-#'
-#' extract2 <- define_extract_nhgis(
-#'   time_series_tables = c("CW3", "CW5"),
-#'   geog_levels = c("state", "county")
-#' )
-#'
-#' # Remove an entire time series table
 #' remove_from_extract(
-#'   extract2,
-#'   time_series_tables = "CW3"
+#'   extract,
+#'   time_series_tables = c("CW3", "CW5")
 #' )
 #'
-#' # Use a named list to remove values from specific datasets or time
-#' # series tables:
 #' remove_from_extract(
-#'   extract2,
-#'   geog_levels = list(CW5 = "state", CW3 = "county")
+#'   extract,
+#'   datasets = "1990_STF1"
 #' )
-#'
-#' # Replace values by using `add_to_extract()` first to avoid invalid
-#' # extract definitions
-#' revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
-#' remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
 remove_from_extract.nhgis_extract <- function(extract,
                                               datasets = NULL,
-                                              data_tables = NULL,
                                               time_series_tables = NULL,
-                                              geog_levels = NULL,
-                                              years = NULL,
-                                              breakdown_values = NULL,
                                               geographic_extents = NULL,
                                               shapefiles = NULL,
                                               ...) {
@@ -1630,22 +1430,34 @@ remove_from_extract.nhgis_extract <- function(extract,
     ))
   }
 
-  if (is.list(geographic_extents)) {
-    rlang::warn(paste0(
-      "`geographic_extents` was provided as a list, but this parameter ",
-      "applies to all datasets in an NHGIS extract. The provided values will ",
-      "be removed from all datasets."
+  ds_to_remove <- unlist(
+    purrr::compact(purrr::map(
+      datasets,
+      function(d) {
+        which(purrr::map_lgl(extract$datasets, ~ .x$name == d))
+      }
     ))
-  }
+  )
 
-  new_ds <- setdiff_null(extract$datasets, datasets)
-  new_tst <- setdiff_null(extract$time_series_tables, time_series_tables)
+  ts_to_remove <- unlist(
+    purrr::compact(purrr::map(
+      time_series_tables,
+      function(d) {
+        which(purrr::map_lgl(extract$time_series_tables, ~ .x$name == d))
+      }
+    ))
+  )
+
+  no_ds <- length(ds_to_remove) == length(extract$datasets)
+  no_ts <- length(ts_to_remove) == length(extract$time_series_tables)
 
   # If removal results in extract with no ds/tst, remove irrelevant values
-  if (is_null(new_ds)) {
+  if (no_ds) {
+    datasets <- NULL
     breakdown_and_data_type_layout <- NULL
     geographic_extents <- NULL
   } else {
+    datasets <- extract$datasets[setdiff(seq_along(extract$datasets), ds_to_remove)]
     breakdown_and_data_type_layout <- extract$breakdown_and_data_type_layout
     geographic_extents <- setdiff_null(
       extract$geographic_extents,
@@ -1656,73 +1468,25 @@ remove_from_extract.nhgis_extract <- function(extract,
     )
   }
 
-  if (is_null(new_tst)) {
+  if (no_ts) {
+    time_series_tables <- NULL
     tst_layout <- NULL
   } else {
+    time_series_tables <- extract$time_series_tables[setdiff(seq_along(extract$time_series_tables), ts_to_remove)]
     tst_layout <- extract$tst_layout
   }
 
-  if (is_null(new_ds) && is_null(new_tst)) {
+  if (no_ds && no_ts) {
     data_format <- NULL
   } else {
     data_format <- extract$data_format
   }
 
-  ds_args <- list(
-    data_tables = data_tables,
-    breakdown_values = breakdown_values
-  )
-
-  ds_tst_args <- list(
-    geog_levels = geog_levels,
-    years = years
-  )
-
-  ds_args <- purrr::set_names(
-    purrr::map(
-      names(ds_args),
-      ~ if (is_null(extract[[.x]])) {
-        ds_args[.x] <- NULL
-      } else {
-        ds_args[[.x]] <- reduce_list_by_name(
-          c(
-            extract[[.x]][new_ds],
-            recycle_extract_subfield(ds_args[[.x]], new_ds)
-          ),
-          setdiff_null
-        )
-      }
-    ),
-    names(ds_args)
-  )
-
-  ds_tst_args <- purrr::set_names(
-    purrr::map(
-      names(ds_tst_args),
-      ~ if (is_null(extract[[.x]])) {
-        ds_tst_args[.x] <- NULL
-      } else {
-        ds_tst_args[[.x]] <- reduce_list_by_name(
-          c(
-            extract[[.x]][c(new_ds, new_tst)],
-            recycle_extract_subfield(ds_tst_args[[.x]], c(new_ds, new_tst))
-          ),
-          setdiff_null
-        )
-      }
-    ),
-    names(ds_tst_args)
-  )
-
   extract <- new_ipums_extract(
     collection = "nhgis",
     description = extract$description,
-    datasets = new_ds,
-    data_tables = ds_args$data_tables,
-    time_series_tables = new_tst,
-    geog_levels = ds_tst_args$geog_levels,
-    years = ds_tst_args$years,
-    breakdown_values = ds_args$breakdown_values,
+    datasets = datasets,
+    time_series_tables = time_series_tables,
     geographic_extents = geographic_extents,
     shapefiles = setdiff_null(extract$shapefiles, unlist(shapefiles)),
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
@@ -1778,15 +1542,18 @@ remove_from_extract.nhgis_extract <- function(extract,
 #'
 #' @examples
 #' ext1 <- define_extract_nhgis(
-#'   datasets = "2011_2015_ACS5a",
-#'   data_tables = "B00001",
-#'   geog_levels = "county"
+#'   datasets = new_dataset(
+#'     "2011_2015_ACS5a",
+#'     data_tables = "B00001",
+#'     geog_levels = "county"
+#'   )
 #' )
 #'
 #' ext2 <- define_extract_nhgis(
-#'   datasets = c("2011_2015_ACS5a", "2012_2016_ACS5a"),
-#'   data_tables = c("B00002", "B01001"),
-#'   geog_levels = "county"
+#'   datasets = list(
+#'     new_dataset("2011_2015_ACS5a", c("B00002", "B01001"), "county"),
+#'     new_dataset("2012_2016_ACS5a", c("B00002", "B01001"), "county")
+#'   )
 #' )
 #'
 #' combine_extracts(ext1, ext2)
@@ -1862,11 +1629,7 @@ combine_extracts.nhgis_extract <- function(...) {
       .x,
       description = .x$description,
       datasets = .y$datasets,
-      data_tables = .y$data_tables,
       time_series_tables = .y$time_series_tables,
-      geog_levels = .y$geog_levels,
-      years = .y$years,
-      breakdown_values = .y$breakdown_values,
       geographic_extents = .y$geographic_extents,
       breakdown_and_data_type_layout =
         .x$breakdown_and_data_type_layout %||%
@@ -1946,6 +1709,18 @@ new_ipums_json <- function(json, collection) {
   )
 }
 
+new_nested_field <- function(name, ..., class) {
+  nested_field <- c(
+    list(name = name),
+    purrr::compact(rlang::list2(...))
+  )
+
+  structure(
+    nested_field,
+    class = c(class, "ipums_nested", class(nested_field))
+  )
+}
+
 #' Validate the structure of an IPUMS extract object
 #'
 #' @description
@@ -1968,11 +1743,11 @@ validate_ipums_extract <- function(x) {
 #' @export
 validate_ipums_extract.nhgis_extract <- function(x) {
   # Call base .ipums_extract method
-  NextMethod(x)
+  NextMethod()
 
-  includes_ds <- !is.null(x$datasets) && !is_na(x$datasets)
-  includes_tst <- !is.null(x$time_series_tables) && !is_na(x$time_series_tables)
-  includes_shp <- !is.null(x$shapefiles) && !is_na(x$shapefiles)
+  includes_ds <- !is_empty(x$datasets) && !is_na(x$datasets)
+  includes_tst <- !is_empty(x$time_series_tables) && !is_na(x$time_series_tables)
+  includes_shp <- !is_empty(x$shapefiles) && !is_na(x$shapefiles)
 
   if (!any(includes_ds, includes_tst, includes_shp)) {
     rlang::abort(
@@ -1983,53 +1758,26 @@ validate_ipums_extract.nhgis_extract <- function(x) {
     )
   }
 
-  has_no_data_sources <- any(is.na(x$datasets)) ||
-    any(is.na(x$time_series_tables)) ||
-    any(is.na(x$shapefiles))
-
-  if (has_no_data_sources) {
-    rlang::abort(
-      paste0(
-        "None of `datasets`, `time_series_tables`, or `shapefiles` ",
-        "can contain missing values."
-      )
-    )
+  if (!all(purrr::map_lgl(x$datasets, ~ inherits(.x, "ipums_dataset")))) {
+    rlang::abort(paste0(
+      "Expected `datasets` to be an `ipums_dataset` object ",
+      "or a list of `ipums_dataset` objects."
+    ))
+  } else {
+    purrr::walk(x$datasets, validate_ipums_extract)
   }
 
-  if (length(intersect(x$datasets, x$time_series_tables)) > 0) {
-    rlang::abort(
-      "No `datasets` and `time_series_tables` can share the same names."
-    )
+  if (!all(purrr::map_lgl(x$time_series_tables, ~ inherits(.x, "ipums_tst")))) {
+    rlang::abort(paste0(
+      "Expected `time_series_tables` to be an `ipums_tst` object ",
+      "or a list of `ipums_tst` objects."
+    ))
+  } else {
+    purrr::walk(x$time_series_tables, validate_ipums_extract)
   }
 
   # Specify the validation requirements for each extract field
   extract_field_spec <- list(
-    list(
-      field = "datasets",
-      type = "character"
-    ),
-    list(
-      field = "data_tables",
-      required = includes_ds,
-      type = "list",
-      parent_field = "datasets"
-    ),
-    list(
-      field = "geog_levels",
-      required = includes_ds || includes_tst,
-      type = "list",
-      parent_field = c("datasets", "time_series_tables")
-    ),
-    list(
-      field = "years",
-      type = "list",
-      parent_field = c("datasets", "time_series_tables")
-    ),
-    list(
-      field = "breakdown_values",
-      type = "list",
-      parent_field = "datasets"
-    ),
     list(
       field = "geographic_extents",
       allowed = includes_ds,
@@ -2039,12 +1787,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       field = "breakdown_and_data_type_layout",
       allowed = includes_ds,
       choices = c("single_file", "separate_files"),
-      match_length = 1,
+      length = 1,
       must_be_missing_msg = " when no `datasets` are specified"
-    ),
-    list(
-      field = "time_series_tables",
-      type = "character"
     ),
     list(
       field = "tst_layout",
@@ -2054,7 +1798,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
         "time_by_row_layout", "time_by_column_layout",
         "time_by_file_layout"
       ),
-      match_length = 1,
+      length = 1,
       must_be_missing_msg = " when no `time_series_tables` are specified",
       must_be_present_msg = " when any `time_series_tables` are specified"
     ),
@@ -2067,7 +1811,7 @@ validate_ipums_extract.nhgis_extract <- function(x) {
       required = includes_ds || includes_tst,
       allowed = includes_ds || includes_tst,
       choices = c("csv_header", "csv_no_header", "fixed_width"),
-      match_length = 1,
+      length = 1,
       must_be_missing_msg =
         " when no `datasets` or `time_series_tables` are specified",
       must_be_present_msg =
@@ -2110,7 +1854,7 @@ validate_ipums_extract.usa_extract <- function(x) {
       field = "data_structure",
       required = TRUE,
       choices = c("rectangular", "hierarchical"),
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
@@ -2120,14 +1864,14 @@ validate_ipums_extract.usa_extract <- function(x) {
       choices = c("P", "H"),
       must_be_present_msg = " when `data_structure == \"rectangular\"`",
       must_be_missing_msg = " when `data_structure != \"rectangular\"`",
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
       field = "data_format",
       required = TRUE,
       choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
@@ -2175,7 +1919,7 @@ validate_ipums_extract.cps_extract <- function(x) {
       field = "data_structure",
       required = TRUE,
       choices = c("rectangular", "hierarchical"),
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
@@ -2185,14 +1929,14 @@ validate_ipums_extract.cps_extract <- function(x) {
       choices = c("P", "H"),
       must_be_present_msg = " when `data_structure == \"rectangular\"`",
       must_be_missing_msg = " when `data_structure != \"rectangular\"`",
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
       field = "data_format",
       required = TRUE,
       choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
@@ -2238,12 +1982,12 @@ validate_ipums_extract.ipums_extract <- function(x) {
       field = "collection",
       required = TRUE,
       type = "character",
-      match_length = 1
+      length = 1
     ),
     list(
       field = "description",
       required = TRUE,
-      match_length = 1,
+      length = 1,
       type = "character"
     ),
     list(
@@ -2252,7 +1996,7 @@ validate_ipums_extract.ipums_extract <- function(x) {
         "unsubmitted", "queued", "started", "produced",
         "canceled", "failed", "completed"
       ),
-      match_length = 1
+      length = 1
     ),
     list(
       field = "download_links",
@@ -2260,7 +2004,7 @@ validate_ipums_extract.ipums_extract <- function(x) {
     ),
     list(
       field = "number",
-      match_length = 1,
+      length = 1,
       type = c("character", "integer", "double")
     )
   )
@@ -2292,6 +2036,138 @@ validate_ipums_extract.ipums_extract <- function(x) {
   check_api_support(x$collection)
 
   x
+}
+
+#' @export
+validate_ipums_extract.ipums_dataset <- function(x) {
+  unexpected_names <- names(x)[!names(x) %in% c(
+    "name",
+    "data_tables",
+    "geog_levels",
+    "years",
+    "breakdown_values"
+  )]
+
+  if (length(unexpected_names) > 0) {
+    rlang::abort(c(
+      "Invalid `ipums_dataset` object:",
+      "x" = paste0(
+        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      ))
+    )
+  }
+
+  spec <- list(
+    list(
+      field = "name",
+      required = TRUE,
+      length = 1,
+      type = "character"
+    ),
+    list(
+      field = "data_tables",
+      required = TRUE,
+      type = "character"
+    ),
+    list(
+      field = "geog_levels",
+      required = TRUE,
+      type = "character"
+    ),
+    list(
+      field = "years",
+      required = FALSE,
+      type = "character"
+    ),
+    list(
+      field = "breakdown_values",
+      required = FALSE,
+      type = "character"
+    )
+  )
+
+  # Validate based on each argument's validation specifications
+  # Collect errors and display together.
+  extract_issues <- purrr::map(
+    spec,
+    ~ tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        conditionMessage(cnd)
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `ipums_dataset` object:",
+        purrr::set_names(extract_issues, "x")
+      )
+    )
+  }
+
+  invisible(x)
+}
+
+#' @export
+validate_ipums_extract.ipums_tst <- function(x) {
+  unexpected_names <- names(x)[!names(x) %in% c("name", "geog_levels", "years")]
+
+  if (length(unexpected_names) > 0) {
+    rlang::abort(c(
+      "Invalid `ipums_tst` object:",
+      "x" = paste0(
+        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      ))
+    )
+  }
+
+  spec <- list(
+    list(
+      field = "name",
+      required = TRUE,
+      length = 1,
+      type = "character"
+    ),
+    list(
+      field = "geog_levels",
+      required = TRUE,
+      type = "character"
+    ),
+    list(
+      field = "years",
+      required = FALSE,
+      type = "character"
+    )
+  )
+
+  # Validate based on each argument's validation specifications
+  # Collect errors and display together.
+  extract_issues <- purrr::map(
+    spec,
+    ~ tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        conditionMessage(cnd)
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    rlang::abort(
+      c(
+        "Invalid `ipums_tst` object: ",
+        purrr::set_names(extract_issues, "x")
+      )
+    )
+  }
+
+  invisible(x)
 }
 
 #' Validate the structure of a single field in an IPUMS extract
@@ -2330,52 +2206,16 @@ validate_extract_field <- function(extract,
                                    allowed = TRUE,
                                    choices = NULL,
                                    type = NULL,
-                                   match_length = NULL,
+                                   length = NULL,
                                    must_be_present_msg = NULL,
-                                   must_be_missing_msg = NULL,
-                                   parent_field = NULL) {
-  if (!is_null(parent_field)) {
-    # Child field is only allowed when its parent field is provided.
-    allowed <- any(purrr::map_lgl(
-      parent_field,
-      ~ !is_null(extract[[.x]])
-    ))
-
-    # Child field messages default to use parent_field for convenience
-    must_be_present_msg <- must_be_present_msg %||%
-      paste0(
-        " for any of the provided `",
-        paste0(parent_field, collapse = "` or `"),
-        "`"
-      )
-
-    must_be_missing_msg <- must_be_missing_msg %||%
-      paste0(
-        " when no `",
-        paste0(parent_field, collapse = "` or `"),
-        "` are specified"
-      )
-  }
+                                   must_be_missing_msg = NULL) {
 
   if (required) {
     allowed <- TRUE
   }
 
-  # Check that field has correct names if names are required
-  # (e.g. for nested fields)
-  validate_subfield_names(
-    extract,
-    field,
-    parent_field = parent_field,
-    required = required
-  )
-
   # Check that the correct number of field values are provided
-  validate_length(
-    extract,
-    field,
-    match_length = match_length %||% parent_field
-  )
+  validate_length(extract, field, length = length)
 
   # Check that field exists if required or is missing if not allowed
   validate_exists(
@@ -2388,18 +2228,10 @@ validate_extract_field <- function(extract,
   )
 
   # Check that field value is in the list of accepted choices
-  validate_choices(
-    extract,
-    field,
-    choices = choices
-  )
+  validate_choices(extract, field, choices = choices)
 
   # Check that field is of the correct data type
-  validate_type(
-    extract,
-    field,
-    type = type
-  )
+  validate_type(extract, field, type = type)
 
   invisible(NULL)
 }
@@ -2474,56 +2306,25 @@ validate_exists <- function(extract,
 #' @param extract An object inheriting from `ipums_extract`.
 #' @param field Character of length 1 containing the name of the extract field
 #'   to check for validity.
-#' @param match_length Numeric or character value indicating the number
+#' @param length Numeric or character value indicating the number
 #'   of values expected in the given `field`. If a character value is provided,
 #'   it should reference the name of another extract field. The length of the
 #'   given `field` is then expected to be the same length as the field provided
-#'   to `match_length`.
+#'   to `length`.
 #'
 #' @return `NULL`, invisibly
 #'
 #' @noRd
-validate_length <- function(extract,
-                            field,
-                            match_length = NULL) {
+validate_length <- function(extract, field, length = NULL) {
   values <- extract[[field]]
 
-  if (is_character(match_length)) {
-    match_field <- match_length
-
-    match_length <- sum(
-      purrr::map_dbl(
-        match_length,
-        ~ length(extract[[.x]])
-      )
-    )
-
-    if (length(values) > match_length) {
-      length_msg <- paste0(
-        "The number of values in `", field,
-        "` must not be greater than the number of `",
-        paste0(match_field, collapse = "` + `"), "`"
-      )
-    } else if (length(values) < match_length) {
-      length_msg <- paste0(
-        "The number of values in `", field,
-        "` must not be less than the number of `",
-        paste0(match_field, collapse = "` + `"), "`"
-      )
-    }
-  } else {
-    length_msg <- paste0("`", field, "` must be length ", match_length, ".")
-  }
-
   empty_field <- is_null(values) || length(values) == 0 ||
-    is_null(match_length) || match_length == 0
+    is_null(length) || length == 0
 
-  if (empty_field) {
-    return(invisible(NULL))
-  }
-
-  if (!is.null(match_length) && length(values) != match_length) {
-    rlang::abort(length_msg)
+  if (!empty_field) {
+    if (!is.null(length) && length(values) != length) {
+      rlang::abort(paste0("`", field, "` must be length ", length, "."))
+    }
   }
 
   invisible(NULL)
@@ -2546,15 +2347,13 @@ validate_length <- function(extract,
 validate_choices <- function(extract, field, choices = NULL) {
   values <- extract[[field]]
 
-  if (is_null(choices) || is_null(values)) {
-    return(invisible(NULL))
-  }
-
-  if (!all(values %in% choices)) {
-    rlang::abort(paste0(
-      "`", field, "` must be one of \"",
-      paste0(choices, collapse = "\", \""), "\""
-    ))
+  if (!is_null(choices) && !is_null(values)) {
+    if (!all(values %in% choices)) {
+      rlang::abort(paste0(
+        "`", field, "` must be one of \"",
+        paste0(choices, collapse = "\", \""), "\""
+      ))
+    }
   }
 
   invisible(NULL)
@@ -2578,75 +2377,15 @@ validate_choices <- function(extract, field, choices = NULL) {
 validate_type <- function(extract, field, type = NULL) {
   values <- extract[[field]]
 
-  if (is_null(type) || is_null(values)) {
-    return(invisible(NULL))
-  }
-
-  if (!typeof(values) %in% type) {
-    rlang::abort(
-      paste0(
-        "`", field, "` must be of type `", paste0(type, collapse = "` or `"),
-        "`, not `", typeof(values), "`."
+  if (!is_null(type) && !is_null(values)) {
+    if (!typeof(values) %in% type) {
+      rlang::abort(
+        paste0(
+          "`", field, "` must be of type `", paste0(type, collapse = "` or `"),
+          "`, not `", typeof(values), "`."
+        )
       )
-    )
-  }
-
-  invisible(NULL)
-}
-
-#' Check whether an extract subfield is consistent with its parent field
-#'
-#' An extract field that is a child of a given parent field must be a list
-#' whose names are identical to the values provided in that field's parent
-#' field. The list must also be the same length as the parent field.
-#'
-#' @param extract An object inheriting from `ipums_extract`.
-#' @param field Character of length 1 containing the name of the extract field
-#'   to check for validity.
-#' @param parent_field Character indicating the name of the extract field that
-#'   serves as the parent field to `field`. The values in `field` are expected
-#'   to be lists with the same length and names as the extract's `parent_field`.
-#' @param required Logical indicating whether this field is required to be
-#'   present in the extract.
-#'
-#' @return `NULL`, invisibly
-#'
-#' @noRd
-validate_subfield_names <- function(extract,
-                                    field,
-                                    parent_field = NULL,
-                                    required = FALSE) {
-  values <- extract[[field]]
-
-  parent_values <- unlist(purrr::map(
-    parent_field,
-    ~ extract[[.x]]
-  ))
-
-  parent_field <- paste0("`", paste0(parent_field, collapse = "`, `"), "`")
-
-  if (is_null(parent_values) || is_null(values)) {
-    return(invisible(NULL))
-  }
-
-  non_na_names <- names(values)[!is.na(names(values))]
-
-  if (!all(non_na_names %in% parent_values)) {
-    rlang::abort(
-      paste0(
-        "All names in `", field, "` must be present in this extract's ",
-        parent_field, "."
-      )
-    )
-  }
-
-  if (!all(parent_values %in% names(values))) {
-    rlang::abort(
-      paste0(
-        "All ", parent_field, " must be associated with a value in `",
-        field, "`."
-      )
-    )
+    }
   }
 
   invisible(NULL)
@@ -2669,7 +2408,7 @@ extract_list_from_json <- function(extract_json, validate) {
 
 #' @export
 extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
-  extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
+  extract_info <- jsonlite::fromJSON(extract_json, simplifyDataFrame = FALSE)
 
   # If the response if from a paginated endpoint (i.e. recent extracts)
   # it will include a "data" field containing the extract definitions.
@@ -2683,51 +2422,39 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
       # extractDefinition won't exist if it is from a saved JSON file
       def <- x$extractDefinition %||% x
 
-      no_datasets <- is.null(def$datasets)
-      no_tsts <- is.null(def$timeSeriesTables)
-
-      if (no_datasets) {
-        data_tables <- NULL
-        breakdown_values <- NULL
+      if (is_null(names(def$datasets))) {
+        datasets <- NULL
       } else {
-        data_tables <- purrr::map(def$datasets, ~ unlist(.x$dataTables))
-        breakdown_values <- purrr::map(
-          def$datasets,
-          ~ unlist(.x$breakdownValues)
+        datasets <- purrr::map(
+          names(def$datasets),
+          ~ new_dataset(
+            .x,
+            data_tables = def$datasets[[.x]]$dataTables,
+            geog_levels = def$datasets[[.x]]$geogLevels,
+            years = def$datasets[[.x]]$years,
+            breakdown_values = def$datasets[[.x]]$breakdownValues
+          )
         )
       }
 
-      if (no_datasets && no_tsts) {
-        geog_levels <- NULL
-        years <- NULL
+      if (is_null(names(def$timeSeriesTables))) {
+        time_series_tables <- NULL
       } else {
-        geog_levels <- purrr::map(
-          c(def$datasets, def$timeSeriesTables),
-          ~ unlist(.x$geogLevels)
+        time_series_tables <- purrr::map(
+          names(def$timeSeriesTables),
+          ~ new_tst(
+            .x,
+            geog_levels = def$timeSeriesTables[[.x]]$geogLevels,
+            years = def$timeSeriesTables[[.x]]$years
+          )
         )
-        years <- purrr::map(
-          c(def$datasets, def$timeSeriesTables),
-          ~ unlist(.x$years)
-        )
-      }
-
-      if ("number" %in% names(x)) {
-        submitted <- TRUE
-        number <- x$number
-      } else {
-        submitted <- FALSE
-        number <- NA_integer_
       }
 
       out <- new_ipums_extract(
         collection = "nhgis",
         description = def$description,
-        datasets = names(def$datasets),
-        data_tables = data_tables,
-        time_series_tables = names(def$timeSeriesTables),
-        geog_levels = geog_levels,
-        years = years,
-        breakdown_values = breakdown_values,
+        datasets = datasets,
+        time_series_tables = time_series_tables,
         geographic_extents = geog_extent_lookup(
           unlist(def$geographicExtents),
           state_geog_lookup$abbs
@@ -2736,9 +2463,9 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         breakdown_and_data_type_layout = def$breakdownAndDataTypeLayout,
         tst_layout = def$timeSeriesTableLayout,
         data_format = def$dataFormat,
-        submitted = submitted,
+        submitted = "number" %in% names(x),
         download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
-        number = number,
+        number = ifelse("number" %in% names(x), x$number, NA_integer_),
         status = x$status %||% "unsubmitted"
       )
 
@@ -2937,123 +2664,4 @@ remove_from_extract_micro <- function(extract,
   extract <- validate_ipums_extract(extract)
 
   extract
-}
-
-#' Combine values in a named list by common names
-#'
-#' For named lists that have multiple entries with identical names, combine the
-#' values in these list entries into a single entry with the common name.
-#'
-#' @param l Named list
-#' @param f Function used to combine the elements of l that have common names.
-#'   The function should take two arguments and be compatible with
-#'   [purrr::reduce()]. Defaults to `union()`.
-#' @param name_order Vector of names by which to order the resulting output
-#'   list. If names exist in the output list that are not found in `name_order`,
-#'   they will be placed at the end of the output list.
-#'
-#' @return Named list with a single entry for each unique name found in `l`
-#'
-#' @noRd
-reduce_list_by_name <- function(l, f = ~ union(.x, .y), name_order = NULL) {
-  if (is_empty(l)) {
-    return(NULL)
-  }
-
-  if (!any(have_name(l))) {
-    return(l)
-  }
-
-  labs <- unique(names(l))
-
-  l <- purrr::map(
-    labs,
-    ~ purrr::reduce(l[.x == names(l)], f)
-  )
-
-  l <- purrr::set_names(l, labs)
-
-  if (!is_null(name_order)) {
-    missing_idx <- which(!names(l) %in% name_order)
-    l <- c(l[name_order], l[missing_idx])
-  }
-
-  l
-}
-
-#' Recycle values to a named list
-#'
-#' For use in recycling values for nested extract fields.
-#'
-#' @details
-#' This function supports the syntax currently used in `define_extract_nhgis()`
-#' for nested extract fields (e.g. each values of `datasets` must be associated
-#' with at least one value of `data_tables`). Users can input values for
-#' child fields in one of three ways:
-#'   * If `l` is a vector, creates a list whose elements each consist of
-#'     that vector and whose names correspond to the values of `names`.
-#'   * If `l` is an unnamed list, attaches `names` to `l` in index
-#'     order. In the case of a length mismatch between `l` and `names`,
-#'     unmatched names receive a value of `NULL` and values with unmatched
-#'     names receive a name of `NA`
-#'   * If `l` is a named list, returns `l` ordered by `names`.
-#'     If multiple elements of the same name are found, they
-#'     are collapsed into a single entry with the union of their associated
-#'     values. Unmatched names in `names` receive a value of
-#'     `NULL`. If `l` includes elements with names not found in `names`, these
-#'     elements are included in the output list after the values associated with
-#'     the names provided in `names`.
-#'
-#' @param l List or vector to recycle. Typically corresponds to user-input list
-#'   in subfields in extract functions.
-#' @param names Character vector of names for the entries in the output list.
-#'
-#' @return A list of recycled values. See Details section.
-#'
-#' @noRd
-recycle_extract_subfield <- function(l, names) {
-  if (is_null(names)) {
-    return(l)
-  }
-
-  if (any(have_name(l))) {
-    l <- as.list(l)
-  }
-
-  # EMPTY_NAMED_LIST is special case?
-  if (is_list(l) && is_empty(l) && is_named(l)) {
-    l <- rep(list(l), length(names))
-  } else if (!is_list(l)) { # But otherwise we don't want to recycle lists
-    l <- rep(list(l), length(names))
-  }
-
-  if (any(have_name(l))) {
-    # If list is named, consolidate any entries with duplicate names
-    if (any(duplicated(names(l)))) {
-      labs <- unique(names(l))
-      l <- purrr::map(labs, ~ unlist(l[.x == names(l)], use.names = FALSE))
-      names(l) <- labs
-    }
-  } else {
-    # If list is unnamed, attach names in index order
-    names(l) <- names[seq_len(length(l))]
-  }
-
-  # Add NULL entries for any names that are not present in l
-  null_list <- purrr::set_names(
-    rep(list(NULL), length(names)),
-    names
-  )
-
-  l_sub <- purrr::set_names(
-    purrr::map(
-      names,
-      ~ union(null_list[[.x]], l[[.x]])
-    ),
-    names
-  )
-
-  l <- c(l_sub, l[!names(l) %in% names])
-
-  l
 }

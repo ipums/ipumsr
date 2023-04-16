@@ -401,9 +401,11 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' nhgis_extract <- define_extract_nhgis(
 #'   description = "Example NHGIS extract",
-#'   datasets = "1990_STF3",
-#'   data_tables = "NP57",
-#'   geog_levels = c("county", "tract")
+#'   datasets = new_dataset(
+#'     "1990_STF3",
+#'     data_tables = "NP57",
+#'     geog_levels = c("county", "tract")
+#'   )
 #' )
 #'
 #' \dontrun{
@@ -510,27 +512,16 @@ extract_to_request_json <- function(extract) {
 
 #' @export
 extract_to_request_json.nhgis_extract <- function(extract) {
-  extract$years <- purrr::map(
-    extract$years,
-    ~ if (!is.null(.x)) as.character(.x)
-  )
-
   if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
 
   request_list <- list(
-    datasets = format_nhgis_field_for_json(
-      datasets = extract$datasets,
-      dataTables = extract$data_tables[extract$datasets],
-      geogLevels = extract$geog_levels[extract$datasets],
-      years = extract$years[extract$datasets],
-      breakdownValues = extract$breakdown_values[extract$datasets]
+    datasets = purrr::flatten(
+      purrr::map(extract$datasets, format_for_json)
     ),
-    timeSeriesTables = format_nhgis_field_for_json(
-      timeSeriesTables = extract$time_series_tables,
-      geogLevels = extract$geog_levels[extract$time_series_tables],
-      years = extract$years[extract$time_series_tables],
+    timeSeriesTables = purrr::flatten(
+      purrr::map(extract$time_series_tables, format_for_json)
     ),
     shapefiles = extract$shapefiles,
     dataFormat = jsonlite::unbox(extract$data_format),
@@ -538,9 +529,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     breakdownAndDataTypeLayout = jsonlite::unbox(
       extract$breakdown_and_data_type_layout
     ),
-    timeSeriesTableLayout = jsonlite::unbox(
-      extract$tst_layout
-    ),
+    timeSeriesTableLayout = jsonlite::unbox(extract$tst_layout),
     geographicExtents = geog_extent_lookup(
       extract$geographic_extents,
       state_geog_lookup$codes
@@ -622,6 +611,22 @@ extract_to_request_json.ipums_extract <- function(extract) {
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
+format_for_json <- function(x) {
+  UseMethod("format_for_json")
+}
+
+#' @export
+format_for_json.ipums_nested <- function(x) {
+  # Assume first element is the name of the field
+  if (length(x) > 1) {
+    l <- purrr::compact(x[seq(2, length(x))])
+  } else {
+    l <- EMPTY_NAMED_LIST
+  }
+
+  names(l) <- to_camel_case(names(l))
+  purrr::set_names(list(l), x$name)
+}
 
 format_samples_for_json <- function(samples) {
   if (length(samples) == 1 && is.na(samples)) {
@@ -651,30 +656,6 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
   }
 }
 
-format_nhgis_field_for_json <- function(...) {
-  dots <- rlang::list2(...)
-
-  if (all(is.na(dots[[1]])) || is_empty(dots[[1]])) {
-    return(NULL)
-  }
-
-  supfields <- purrr::map(purrr::compact(dots[[1]]), c)
-  n_supfields <- length(supfields)
-
-  subfields <- dots[seq(2, length(dots))]
-
-  subfields_grp <- purrr::map(
-    1:n_supfields,
-    ~ purrr::map(subfields, .x)
-  )
-
-  subfields_formatted <- purrr::set_names(
-    purrr::map(subfields_grp, purrr::compact),
-    supfields
-  )
-
-  subfields_formatted
-}
 
 #' Collection-specific extract download
 #'

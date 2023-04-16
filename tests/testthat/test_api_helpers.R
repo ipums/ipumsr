@@ -47,11 +47,13 @@ test_that("NHGIS print method works", {
   expect_output(
     print(
       define_extract_nhgis(
-        datasets = "DS",
-        data_tables = "DT",
-        geog_levels = "DG",
-        years = "Y1",
-        breakdown_values = "B1"
+        datasets = new_dataset(
+          "DS",
+          data_tables = "DT",
+          geog_levels = "DG",
+          years = "Y1",
+          breakdown_values = "B1"
+        )
       )
     ),
     paste0(
@@ -281,9 +283,13 @@ test_that("Can parse API request error details in basic requests", {
         body = extract_to_request_json(
           new_ipums_extract(
             "nhgis",
-            datasets = "foo",
-            data_tables = "bar",
-            geog_levels = "baz"
+            datasets = list(
+              new_dataset(
+                "foo",
+                data_tables = "bar",
+                geog_levels = "baz"
+              )
+            )
           )
         ),
         api_key = Sys.getenv("IPUMS_API_KEY")

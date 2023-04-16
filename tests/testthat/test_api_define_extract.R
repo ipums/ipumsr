@@ -39,41 +39,47 @@ test_that("Can define an NHGIS extract", {
   expect_s3_class(nhgis_extract, "nhgis_extract")
   expect_s3_class(nhgis_extract, "ipums_extract")
 
+  expect_true(all(
+    purrr::map_lgl(nhgis_extract$datasets, ~ inherits(.x, "ipums_dataset")))
+  )
+  expect_true(all(
+    purrr::map_lgl(nhgis_extract$time_series_tables, ~ inherits(.x, "ipums_tst")))
+  )
+
   expect_equal(
-    nhgis_extract$datasets,
+    purrr::map_chr(nhgis_extract$datasets, ~ .x$name),
     c("2014_2018_ACS5a", "2015_2019_ACS5a")
   )
   expect_equal(
-    nhgis_extract$data_tables,
-    list(
-      "2014_2018_ACS5a" = c("B01001", "B01002"),
-      "2015_2019_ACS5a" = c("B01001", "B01002")
-    )
+    purrr::map(nhgis_extract$datasets, ~ .x$data_tables),
+    list(c("B01001", "B01002"), c("B01001", "B01002"))
   )
   expect_equal(
-    nhgis_extract$geog_levels,
-    list(
-      "2014_2018_ACS5a" = "nation",
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = "state"
-    )
+    purrr::map(nhgis_extract$datasets, ~ .x$geog_levels),
+    list("nation", "blck_grp")
   )
   expect_equal(
-    nhgis_extract$years,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL,
-      "CW3" = "1990"
-    )
+    purrr::map(nhgis_extract$datasets, ~ .x$years),
+    list(NULL, NULL)
   )
   expect_equal(
-    nhgis_extract$breakdown_values,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
-    )
+    purrr::map(nhgis_extract$datasets, ~ .x$breakdown_values),
+    list(NULL, NULL)
   )
-  expect_equal(nhgis_extract$time_series_tables, "CW3")
+
+  expect_equal(
+    purrr::map_chr(nhgis_extract$time_series_tables, ~ .x$name),
+    c("CW3")
+  )
+  expect_equal(
+    purrr::map(nhgis_extract$time_series_tables, ~ .x$geog_levels),
+    list("state")
+  )
+  expect_equal(
+    purrr::map(nhgis_extract$time_series_tables, ~ .x$years),
+    list("1990")
+  )
+
   expect_equal(nhgis_extract$tst_layout, "time_by_row_layout")
   expect_equal(nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(nhgis_extract$data_format, "csv_no_header")
@@ -94,15 +100,13 @@ test_that("NHGIS extract fields get correct default values", {
   expect_equal(nhgis_extract$breakdown_and_data_type_layout, "single_file")
   expect_equal(
     define_extract_nhgis(
-      time_series_tables = "A00",
-      geog_levels = "A1"
+      time_series_tables = new_tst("A00", "A1")
     )$tst_layout,
     "time_by_column_layout"
   )
   expect_equal(
     define_extract_nhgis(
-      time_series_tables = "A00",
-      geog_levels = "A1"
+      time_series_tables = new_tst("A00", "A1")
     )$data_format,
     "csv_no_header"
   )
@@ -230,7 +234,7 @@ test_that("Microdata validation methods work", {
   )
 })
 
-test_that("NHGIS validation method works", {
+test_that("Can validate `nhgis_extract` object", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
@@ -245,36 +249,84 @@ test_that("NHGIS validation method works", {
       new_ipums_extract(
         "nhgis",
         description = "",
-        datasets = c("A00", "A01"),
-        data_tables = NA,
-        geog_levels = list(NULL, "b"),
+        datasets = list(
+          new_nested_field(
+            "A00",
+            data_tables = NA,
+            geog_levels = list("A", "b"),
+            years = 1990,
+            class = "ipums_dataset"
+          )
+        )
       )
     ),
     paste0(
-      "All `datasets` must be associated with a value in `data_tables`.+",
-      "All `datasets`, `time_series_tables` must be associated with a value in",
-      " `geog_levels`.+",
-      "`data_format` must not contain missing values when any `datasets` ",
-      "or `time_series_tables` are specified."
+      "Invalid `ipums_dataset` object:.+",
+      "`data_tables` must not contain missing values.+",
+      "`geog_levels` must be of type `character`, not `list`.+",
+      "`years` must be of type `character`, not `double`"
     )
   )
   expect_error(
-    define_extract_nhgis(
-      description = "",
-      time_series_tables = "Test",
-      geog_levels = NA
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        time_series_tables = list(
+          new_nested_field(
+            "A00",
+            data_tables = NA,
+            geog_levels = list(NULL, "b"),
+            class = "ipums_tst"
+          )
+        )
+      )
     ),
     paste0(
-      "`geog_levels` must not contain missing values for any of the ",
-      "provided `datasets` or `time_series_tables`."
+      "Invalid `ipums_tst` object:.+",
+      "Unrecognized fields: `data_tables`"
     )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        time_series_tables = list(
+          new_nested_field(
+            NULL,
+            geog_levels = list(NULL, "b"),
+            class = "ipums_tst"
+          )
+        )
+      )
+    ),
+    paste0(
+      "Invalid `ipums_tst` object:.+",
+      "`name` must not contain missing values.+",
+      "`geog_levels` must not contain missing values"
+    )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "nhgis",
+        description = "",
+        time_series_tables = list(
+          new_nested_field(
+            c("A", "B"),
+            geog_levels = c("A", "B"),
+            class = "ipums_tst"
+          )
+        )
+      )
+    ),
+    "`name` must be length 1"
   )
   expect_error(
     define_extract_nhgis(
       description = "",
-      datasets = "Test",
-      data_tables = "Test",
-      geog_levels = "Test",
+      datasets = new_dataset("a", "b", "c"),
       data_format = "Test"
     ),
     "`data_format` must be one of"
@@ -288,28 +340,11 @@ test_that("NHGIS validation method works", {
       new_ipums_extract(
         "nhgis",
         description = "",
-        shapefiles = "Test",
-        geog_levels = "Test"
-      )
-    ),
-    paste0(
-      "`geog_levels` must be missing when no `datasets` or ",
-      "`time_series_tables` are specified"
-    )
-  )
-  expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = "",
-        time_series_tables = c("A00", "A01"),
-        geog_levels = list(A00 = "a", A01 = "b", A01 = "c"),
+        time_series_tables = list(new_tst("A00", "a")),
         data_format = "csv_no_header"
       )
     ),
     paste0(
-      "`geog_levels` must not be greater than the number of ",
-      "`datasets` \\+ `time_series_tables`.+",
       "`tst_layout` must not contain missing values when any ",
       "`time_series_tables` are specified."
     )
@@ -331,31 +366,27 @@ test_that("NHGIS validation method works", {
         "nhgis",
         description = "",
         datasets = NA,
-        time_series_tables = c("CW3", NA)
+        time_series_tables = list(new_tst("CW3", "A"))
       )
     ),
-    "None of `datasets`.+can contain missing values"
-  )
-  expect_error(
-    define_extract_nhgis(
-      time_series_tables = "A",
-      geog_levels = "A",
-      tst_layout = c("time_by_row_layout", "time_by_row_layout")
-    ),
-    "`tst_layout` must be length 1."
+    "Expected `datasets` to be an `ipums_dataset` object"
   )
   expect_error(
     validate_ipums_extract(
       new_ipums_extract(
         "nhgis",
         description = "",
-        datasets = "A",
-        data_tables = c(A = "A"),
-        geog_levels = list(A = "A"),
-        data_format = "csv_no_header"
+        time_series_tables = list("a", "b", "c")
       )
     ),
-    "`data_tables` must be of type `list`, not `character`"
+    "Expected `time_series_tables` to be an `ipums_tst` object"
+  )
+  expect_error(
+    define_extract_nhgis(
+      time_series_tables = new_tst("A", "B"),
+      tst_layout = c("time_by_row_layout", "time_by_row_layout")
+    ),
+    "`tst_layout` must be length 1."
   )
 })
 
@@ -439,51 +470,38 @@ test_that("Can add to a CPS extract", {
 
 test_that("Can add new parent fields to an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
+  nhgis_extract_shp <- test_nhgis_extract_shp()
+
+  new_ds <- new_dataset("New", c("T1", "T2"), "G1")
+  new_tst <- list(
+    new_tst("CW4", "G2", "Y1"),
+    new_tst("CW5", "G3", "Y1")
+  )
 
   revised <- add_to_extract(
     nhgis_extract,
-    datasets = "New",
-    data_tables = c("T1", "T2"),
-    time_series_tables = c("CW4", "CW5"),
-    geog_levels = list("G1", "G1", "G2"),
-    years = "Y1",
+    datasets = new_ds,
+    time_series_tables = new_tst,
     data_format = "csv_header",
     shapefiles = "New"
   )
 
-  expect_equal(revised$datasets, c(nhgis_extract$datasets, "New"))
-  expect_equal(
-    revised$data_tables,
-    c(nhgis_extract$data_tables, list(New = c("T1", "T2")))
+  revised_shp <- add_to_extract(
+    nhgis_extract_shp,
+    datasets = new_ds
   )
-  expect_equal(
-    revised$geog_levels,
-    list(
-      `2014_2018_ACS5a` = "nation",
-      `2015_2019_ACS5a` = "blck_grp",
-      New = "G1",
-      CW3 = "state",
-      CW4 = "G1",
-      CW5 = "G2"
-    )
-  )
-  expect_equal(
-    revised$years,
-    list(
-      `2014_2018_ACS5a` = NULL,
-      `2015_2019_ACS5a` = NULL,
-      New = "Y1",
-      CW3 = "1990",
-      CW4 = "Y1",
-      CW5 = "Y1"
-    )
-  )
+
+  expect_equal(revised$datasets, c(nhgis_extract$datasets, list(new_ds)))
   expect_equal(
     revised$time_series_tables,
-    c(nhgis_extract$time_series_tables, c("CW4", "CW5"))
+    c(nhgis_extract$time_series_tables, new_tst)
   )
   expect_equal(revised$data_format, "csv_header")
   expect_equal(revised$shapefiles, c(nhgis_extract$shapefiles, "New"))
+
+  expect_equal(revised_shp$datasets, list(new_ds))
+  expect_equal(revised_shp$shapefiles, nhgis_extract_shp$shapefiles)
+  expect_null(revised_shp$time_series_tables)
 })
 
 test_that("Can add subfields to existing NHGIS extract parent fields", {
@@ -491,69 +509,53 @@ test_that("Can add subfields to existing NHGIS extract parent fields", {
 
   revised <- add_to_extract(
     nhgis_extract,
-    data_tables = c("T1", "T2"),
-    time_series_tables = c("CW3", "CW4"),
-    geog_levels = list(
-      `2015_2019_ACS5a` = "G1",
-      CW3 = "G1",
-      CW4 = "G2"
+    datasets = list(
+      new_dataset("2014_2018_ACS5a", c("T1", "T2"), "nation"),
+      new_dataset("2015_2019_ACS5a", c("T1", "T2"), "G1", "Y2")
     ),
-    years = list(CW3 = "Y1", `2015_2019_ACS5a` = "Y2")
-  )
-
-  expect_equal(revised$datasets, nhgis_extract$datasets)
-  expect_equal(
-    revised$data_tables,
-    list(
-      `2014_2018_ACS5a` = c("B01001", "B01002", "T1", "T2"),
-      `2015_2019_ACS5a` = c("B01001", "B01002", "T1", "T2")
-    )
-  )
-  expect_equal(revised$time_series_tables, c("CW3", "CW4"))
-  expect_equal(
-    revised$geog_levels,
-    list(
-      `2014_2018_ACS5a` = c("nation"),
-      `2015_2019_ACS5a` = c("blck_grp", "G1"),
-      CW3 = c("state", "G1"),
-      CW4 = "G2"
-    )
-  )
-  expect_equal(
-    revised$years,
-    list(
-      `2014_2018_ACS5a` = NULL,
-      `2015_2019_ACS5a` = "Y2",
-      CW3 = c(1990, "Y1"),
-      CW4 = NULL
+    time_series_tables = list(
+      new_tst("CW3", "G1", "Y1"),
+      new_tst("CW4", "G2")
     )
   )
 
-  # Recycling handling for extracts with DS + TST
   expect_equal(
-    add_to_extract(
-      nhgis_extract,
-      time_series_tables = "CW3",
-      geog_levels = "C"
-    )$geog_levels,
+    purrr::map(revised$datasets, ~ .x$name),
+    purrr::map(nhgis_extract$datasets, ~ .x$name),
+  )
+  expect_equal(
+    purrr::map(revised$datasets, ~ .x$data_tables),
     list(
-      `2014_2018_ACS5a` = "nation",
-      `2015_2019_ACS5a` = "blck_grp",
-      CW3 = c("state", "C")
+      c("B01001", "B01002", "T1", "T2"),
+      c("B01001", "B01002", "T1", "T2")
     )
   )
   expect_equal(
-    add_to_extract(
-      nhgis_extract,
-      datasets = "2014_2018_ACS5a",
-      time_series_tables = "CW3",
-      geog_levels = "C"
-    )$geog_levels,
+    purrr::map(revised$datasets, ~ .x$geog_levels),
     list(
-      "2014_2018_ACS5a" = c("nation", "C"),
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = c("state", "C")
+      c("nation"),
+      c("blck_grp", "G1")
     )
+  )
+  expect_equal(
+    purrr::map(revised$datasets, ~ .x$years),
+    list(NULL, "Y2")
+  )
+
+  expect_equal(
+    purrr::map_chr(revised$time_series_tables, ~ .x$name),
+    c("CW3", "CW4")
+  )
+  expect_equal(
+    purrr::map(revised$time_series_tables, ~ .x$geog_levels),
+    list(
+      c("state", "G1"),
+      c("G2")
+    )
+  )
+  expect_equal(
+    purrr::map(revised$time_series_tables, ~ .x$years),
+    list(c("1990", "Y1"), NULL)
   )
 })
 
@@ -601,77 +603,65 @@ test_that("Can remove parent fields from an NHGIS extract", {
     geographic_extents = "DC"
   )
 
-  expect_equal(revised$datasets, "2014_2018_ACS5a")
-  expect_equal(
-    revised$data_tables,
-    list(`2014_2018_ACS5a` = c("B01001", "B01002"))
-  )
-  expect_equal(
-    revised$geog_levels,
-    list(`2014_2018_ACS5a` = c("nation"))
-  )
-  expect_equal(
-    revised$years,
-    list(`2014_2018_ACS5a` = NULL)
-  )
+  expect_equal(revised$datasets, nhgis_extract$datasets[1])
   expect_null(revised$time_series_tables)
   expect_null(revised$tst_layout)
   expect_equal(revised$geographic_extents, "PA")
 })
 
-test_that("Can remove subfields from existing NHGIS extract parent fields", {
-  nhgis_extract <- test_nhgis_extract()
+# test_that("Can remove subfields from existing NHGIS extract parent fields", {
+#   nhgis_extract <- test_nhgis_extract()
+#
+#   revised <- remove_from_extract(
+#     add_to_extract(
+#       nhgis_extract,
+#       geog_levels = list(`2014_2018_ACS5a` = "tract", CW3 = "tract"),
+#     ),
+#     data_tables = "B01001",
+#     geog_levels = list(
+#       `2014_2018_ACS5a` = "nation",
+#       CW3 = c("state", "blck_grp")
+#     ),
+#     years = "1990",
+#     geographic_extents = "420"
+#   )
+#
+#   expect_equal(revised$datasets, nhgis_extract$datasets)
+#   expect_equal(
+#     revised$data_tables,
+#     list(
+#       `2014_2018_ACS5a` = "B01002",
+#       `2015_2019_ACS5a` = "B01002"
+#     )
+#   )
+#   expect_equal(revised$time_series_tables, nhgis_extract$time_series_tables)
+#   expect_equal(
+#     revised$geog_levels,
+#     list(
+#       `2014_2018_ACS5a` = "tract",
+#       `2015_2019_ACS5a` = "blck_grp",
+#       CW3 = "tract"
+#     )
+#   )
+#   expect_equal(
+#     revised$years,
+#     list(`2014_2018_ACS5a` = NULL, `2015_2019_ACS5a` = NULL, CW3 = NULL)
+#   )
+#   expect_equal(revised$geographic_extents, "DC")
+# })
 
-  revised <- remove_from_extract(
-    add_to_extract(
-      nhgis_extract,
-      geog_levels = list(`2014_2018_ACS5a` = "tract", CW3 = "tract"),
-    ),
-    data_tables = "B01001",
-    geog_levels = list(
-      `2014_2018_ACS5a` = "nation",
-      CW3 = c("state", "blck_grp")
-    ),
-    years = "1990",
-    geographic_extents = "420"
-  )
-
-  expect_equal(revised$datasets, nhgis_extract$datasets)
-  expect_equal(
-    revised$data_tables,
-    list(
-      `2014_2018_ACS5a` = "B01002",
-      `2015_2019_ACS5a` = "B01002"
-    )
-  )
-  expect_equal(revised$time_series_tables, nhgis_extract$time_series_tables)
-  expect_equal(
-    revised$geog_levels,
-    list(
-      `2014_2018_ACS5a` = "tract",
-      `2015_2019_ACS5a` = "blck_grp",
-      CW3 = "tract"
-    )
-  )
-  expect_equal(
-    revised$years,
-    list(`2014_2018_ACS5a` = NULL, `2015_2019_ACS5a` = NULL, CW3 = NULL)
-  )
-  expect_equal(revised$geographic_extents, "DC")
-})
-
-test_that("Removing NHGIS parent fields occurs before removing subfields", {
-  nhgis_extract <- test_nhgis_extract()
-
-  revised <- remove_from_extract(
-    nhgis_extract,
-    datasets = "2014_2018_ACS5a",
-    data_tables = "B01001"
-  )
-
-  expect_equal(revised$datasets, "2015_2019_ACS5a")
-  expect_equal(revised$data_tables, list(`2015_2019_ACS5a` = "B01002"))
-})
+# test_that("Removing NHGIS parent fields occurs before removing subfields", {
+#   nhgis_extract <- test_nhgis_extract()
+#
+#   revised <- remove_from_extract(
+#     nhgis_extract,
+#     datasets = "2014_2018_ACS5a",
+#     data_tables = "B01001"
+#   )
+#
+#   expect_equal(revised$datasets, "2015_2019_ACS5a")
+#   expect_equal(revised$data_tables, list(`2015_2019_ACS5a` = "B01002"))
+# })
 
 test_that("Unused revisions do not alter USA extract", {
   usa_extract <- test_usa_extract()
@@ -709,9 +699,7 @@ test_that("Unused revisions do not alter NHGIS extract", {
 
   extract2 <- add_to_extract(
     extract1,
-    datasets = "Test",
-    data_tables = "Test",
-    geog_levels = "Test"
+    datasets = new_dataset("Test", "Test", "Test")
   )
 
   # Test on an extract of multiple types
@@ -785,41 +773,6 @@ test_that("Improper NHGIS extract revisions throw warnings or errors", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
-  expect_error(
-    remove_from_extract(
-      nhgis_extract,
-      datasets = "2014_2018_ACS5a",
-      data_tables = list("a", "b"),
-      geog_levels = list(
-        "2014_2018_ACS5a" = "a",
-        "not_in_extract" = "blck_grp"
-      ),
-      years = list(C = "c")
-    ),
-    paste0(
-      "`data_tables` must not be greater than the number of ",
-      "`datasets`.+",
-      "All names in `geog_levels` must be present in this extract\'s ",
-      "`datasets`, `time_series_tables`.+",
-      "All names in `years` must be present in this extract\'s `datasets`"
-    )
-  )
-  expect_error(
-    add_to_extract(
-      nhgis_extract,
-      datasets = c("New"),
-      data_tables = list("A", "B"),
-      geog_levels = list(New = "A", not_in_extract = "blck_grp"),
-      years = list(C = "c")
-    ),
-    paste0(
-      "`data_tables` must not be greater than the number of ",
-      "`datasets`.+",
-      "All names in `geog_levels` must be present in this extract\'s ",
-      "`datasets`, `time_series_tables`.+",
-      "All names in `years` must be present in this extract\'s `datasets`.+"
-    )
-  )
   expect_warning(
     remove_from_extract(
       nhgis_extract,
@@ -831,40 +784,12 @@ test_that("Improper NHGIS extract revisions throw warnings or errors", {
       "or cannot be removed:.+`description`, `bad_field`"
     )
   )
-  expect_warning(
-    add_to_extract(
-      nhgis_extract,
-      geographic_extents = list("A", "B")
-    ),
-    "`geographic_extents` was provided as a list, but this parameter"
-  )
   expect_silent(
     remove_from_extract(
       nhgis_extract,
       datasets = "DS",
       time_series_tables = "TST"
     )
-  )
-  expect_error(
-    remove_from_extract(
-      nhgis_extract,
-      geog_levels = "nation"
-    ),
-    "`geog_levels` must not contain missing values"
-  )
-  expect_error(
-    add_to_extract(
-      nhgis_extract_shp,
-      geog_levels = "nation"
-    ),
-    "`geog_levels` must be missing when no `datasets`"
-  )
-  expect_identical(
-    remove_from_extract(
-      nhgis_extract_shp,
-      geog_levels = "nation"
-    ),
-    nhgis_extract_shp
   )
   expect_warning(
     add_to_extract(nhgis_extract, vars = "var", number = 45),
@@ -887,6 +812,27 @@ test_that("Improper NHGIS extract revisions throw warnings or errors", {
   expect_error(
     add_to_extract(nhgis_extract, data_format = c("csv_header", "fixed_width")),
     "`data_format` must be length 1"
+  )
+
+  expect_error(
+    add_to_extract(
+      nhgis_extract,
+      datasets = list(
+        new_dataset("A", "A", "A"),
+        new_dataset("A", "B", "B")
+      )
+    ),
+    "Cannot add two `ipums_dataset` objects of same name"
+  )
+  expect_error(
+    add_to_extract(
+      nhgis_extract,
+      time_series_tables = list(
+        new_tst("A", "A", "A"),
+        new_tst("A", "B", "B")
+      )
+    ),
+    "Cannot add two `ipums_tst` objects of same name"
   )
 })
 
@@ -925,30 +871,33 @@ test_that("Can combine NHGIS extracts", {
   )
 
   x2 <- define_extract_nhgis(
-    datasets = c("A", "B"),
-    data_tables = list(c("D1", "D2"), "D3"),
-    time_series_tables = c("T1", "T2"),
-    geog_levels = "G1",
+    datasets = list(
+      new_dataset("A", c("D1", "D2"), "G1"),
+      new_dataset("B", "D3", "G2")
+    ),
+    time_series_tables = list(
+      new_tst("T1", "G1"),
+      new_tst("T2", "G1")
+    ),
     tst_layout = "time_by_file_layout"
   )
 
   x3 <- define_extract_nhgis(
-    datasets = "C",
-    data_tables = c("D2", "D4"),
-    geog_levels = c("G2", "G3"),
-    years = "Y1",
+    datasets = new_dataset("C", c("D2", "D4"), c("G2", "G3"), years = "Y1"),
     shapefiles = "S1",
-    data_format = "fixed_width",
+    data_format = "fixed_width"
   )
 
   x_target <- define_extract_nhgis(
     description = "Combining",
-    datasets = c("A", "B", "C"),
-    data_tables = list(c("D1", "D2"), "D3", c("D2", "D4")),
-    years = list(C = "Y1"),
-    time_series_tables = c("T1", "T2"),
-    geog_levels = list(
-      T1 = "G1", T2 = "G1", A = "G1", B = "G1", C = c("G2", "G3")
+    datasets = list(
+      new_dataset("A", c("D1", "D2"), "G1"),
+      new_dataset("B", "D3", "G2"),
+      new_dataset("C", c("D2", "D4"), c("G2", "G3"), "Y1")
+    ),
+    time_series_tables = list(
+      new_tst("T1", "G1"),
+      new_tst("T2", "G1")
     ),
     tst_layout = "time_by_file_layout",
     shapefiles = "S1",
@@ -963,6 +912,7 @@ test_that("Can combine NHGIS extracts", {
     "same collection"
   )
 })
+
 
 # JSON Conversion ----------------
 

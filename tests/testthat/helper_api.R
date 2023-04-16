@@ -21,11 +21,11 @@ test_cps_extract <- function() {
 test_nhgis_extract <- function() {
   define_extract_nhgis(
     description = "Extract for R client testing",
-    dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
-    data_tables = c("B01001", "B01002"),
-    time_series_table = "CW3",
-    geog_levels = list("nation", "blck_grp", "state"),
-    years = list(CW3 = "1990"),
+    datasets = list(
+      new_dataset("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
+      new_dataset("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
+    ),
+    time_series_tables = new_tst("CW3", "state", "1990"),
     geographic_extents = c("110", "Pennsylvania"),
     tst_layout = "time_by_row_layout",
     shapefiles = "110_blck_grp_2019_tl2019",

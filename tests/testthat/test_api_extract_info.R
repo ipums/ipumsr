@@ -157,9 +157,7 @@ test_that("Cannot check status for an extract with no number", {
   expect_error(
     get_extract_info(
       define_extract_nhgis(
-        datasets = "a",
-        data_tables = "B",
-        geog_levels = "C"
+        datasets = new_dataset("a", "B", "C")
       )
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number"
@@ -451,52 +449,50 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     "submitted", "download_links", "status"
   )
 
-  recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
+  recent_nhgis_extract_submitted_ds <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
             recent_nhgis_extracts_tbl$data_type == "datasets"),
   ]
 
-  row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)
+  recent_nhgis_extract_submitted_tst <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+            recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
+  ]
 
-  row_level_nhgis_tbl_submitted <- row_level_nhgis_tbl[
-    which(row_level_nhgis_tbl$number == submitted_number),
+  recent_nhgis_extract_submitted_shp <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+            recent_nhgis_extracts_tbl$data_type == "shapefiles"),
   ]
 
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
   expect_equal(length(unique(recent_numbers)), 10)
-  expect_equal(nrow(row_level_nhgis_tbl), 10)
 
   expect_equal(
-    recent_nhgis_extract_submitted$name,
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$name,
+    purrr::map_chr(ready_nhgis_extract$datasets, ~.x$name)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$datasets[[1]],
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$data_tables,
+    purrr::map(ready_nhgis_extract$datasets, ~.x$data_tables)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$data_tables[[1]],
-    ready_nhgis_extract$data_tables
+    recent_nhgis_extract_submitted_ds$geog_levels,
+    purrr::map(ready_nhgis_extract$datasets, ~.x$geog_levels)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$geog_levels[[1]],
-    ready_nhgis_extract$geog_levels
-  )
-  # When NULL, values are not recycled in the tbl format:
-  expect_equal(
-    row_level_nhgis_tbl_submitted$years[[1]],
-    ready_nhgis_extract$years
+    recent_nhgis_extract_submitted_ds$years,
+    purrr::map(ready_nhgis_extract$datasets, ~.x$years)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$breakdown_values[[1]],
-    ready_nhgis_extract$breakdown_values
+    recent_nhgis_extract_submitted_ds$breakdown_values,
+    purrr::map(ready_nhgis_extract$datasets, ~.x$breakdown_values)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$time_series_tables[[1]],
-    ready_nhgis_extract$time_series_tables
+    recent_nhgis_extract_submitted_tst$name,
+    purrr::map_chr(ready_nhgis_extract$time_series_tables, ~.x$name)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$shapefiles[[1]],
+    recent_nhgis_extract_submitted_shp$name,
     ready_nhgis_extract$shapefiles
   )
 })
@@ -523,7 +519,6 @@ test_that("Can get specific number of recent extracts in tibble format", {
   # NHGIS does not adhere to 1-row per extract, but only 2 should be
   # represented
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
-  expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
 })
 
 test_that("Error on invalid number of records", {
@@ -588,9 +583,9 @@ test_that("NHGIS tbl/list conversion works", {
   # `test_nhgis_extract()` does not include case where multiple DS with
   # different subfields. Including here for a test of this scenario:
   x <- define_extract_nhgis(
-    datasets = c("D1", "D2"),
-    data_tables = list("A", "B"),
-    geog_levels = "C"
+    datasets = list(
+      new_dataset("D1", "A", "C"), new_dataset("D2", "B", "C")
+    )
   )
 
   expect_identical(

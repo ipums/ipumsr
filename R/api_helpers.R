@@ -533,20 +533,24 @@ print.cps_extract <- function(x, ...) {
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
 
-  ds_to_cat <- purrr::map(
-    seq_along(x$datasets),
-    ~ format_field_for_printing(
-      parent_field = list("Dataset: " = x$datasets[[.x]]),
-      subfields = list(
-        "Tables: " = x$data_tables[x$datasets][[.x]],
-        "Geog Levels: " = x$geog_levels[x$datasets][[.x]],
-        "Years: " = x$years[x$datasets][[.x]],
-        "Breakdowns: " = x$breakdown_values[x$datasets][[.x]]
-      ),
-      parent_style = style_ds,
-      subfield_style = extract_field_styler("bold")
-    )
-  )
+  ds_to_cat <- purrr::compact(purrr::map(
+    x$datasets,
+    function(d) {
+      if (inherits(d, "ipums_dataset")) {
+        format_field_for_printing(
+          parent_field = list("Dataset: " = d$name),
+          subfields = list(
+            "Tables: " = d$data_tables,
+            "Geog Levels: " = d$geog_levels,
+            "Years: " = d$years,
+            "Breakdowns: " = d$breakdown_values
+          ),
+          parent_style = style_ds,
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
   ds_to_cat <- c(
     ds_to_cat,
@@ -556,21 +560,25 @@ print.nhgis_extract <- function(x, ...) {
     )
   )
 
-  tst_to_cat <- purrr::map(
-    seq_along(x$time_series_tables),
-    ~ format_field_for_printing(
-      parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
-      subfields = list(
-        "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]],
-        "Years: " = x$years[x$time_series_tables][[.x]]
-      ),
-      parent_style = extract_field_styler(
-        nhgis_print_color("time_series_table"),
-        "bold"
-      ),
-      subfield_style = extract_field_styler("bold")
-    )
-  )
+  tst_to_cat <- purrr::compact(purrr::map(
+    x$time_series_tables,
+    function(t) {
+      if (inherits(t, "ipums_tst")) {
+        format_field_for_printing(
+          parent_field = list("Time Series Table: " = t$name),
+          subfields = list(
+            "Geog Levels: " = t$geog_levels,
+            "Years: " = t$years
+          ),
+          parent_style = extract_field_styler(
+            nhgis_print_color("time_series_table"),
+            "bold"
+          ),
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
@@ -583,8 +591,8 @@ print.nhgis_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
     paste0(ds_to_cat, collapse = ""),
     paste0(tst_to_cat, collapse = ""),
     shp_to_cat,
@@ -632,7 +640,7 @@ format_field_for_printing <- function(parent_field = NULL,
                                       subfields = NULL,
                                       parent_style = NULL,
                                       subfield_style = NULL,
-                                      padding = 2) {
+                                      padding_top = 2) {
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -646,12 +654,8 @@ format_field_for_printing <- function(parent_field = NULL,
   style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    paste0(rep("\n", padding), collapse = ""),
-    print_truncated_vector(
-      parent_val,
-      style_field(parent_name),
-      FALSE
-    )
+    paste0(rep("\n", padding_top), collapse = ""),
+    print_truncated_vector(parent_val, style_field(parent_name), FALSE)
   )
 
   if (!is.null(subfields)) {
@@ -659,8 +663,7 @@ format_field_for_printing <- function(parent_field = NULL,
       names(subfields),
       ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
-          output,
-          "\n  ",
+          output, "\n  ",
           print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
         )
       }
@@ -691,9 +694,9 @@ nhgis_print_color <- function(type) {
   type <- match.arg(type, c("dataset", "time_series_table", "shapefile"))
 
   switch(type,
-    dataset = "blue",
-    time_series_table = "green",
-    shapefile = "yellow"
+         dataset = "blue",
+         time_series_table = "green",
+         shapefile = "yellow"
   )
 }
 
@@ -1234,4 +1237,8 @@ to_snake_case <- function(x) {
   x <- tolower(gsub("([A-Z])","\\_\\1", x))
   x <- gsub("_{2,}", "_", x)
   gsub("^_", "", x)
+}
+
+to_camel_case <- function(x) {
+  gsub('\\_(\\w?)', '\\U\\1', x, perl = TRUE)
 }

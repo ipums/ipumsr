@@ -37,15 +37,18 @@ To modify values in a single extract definition, see
 }
 \examples{
 ext1 <- define_extract_nhgis(
-  datasets = "2011_2015_ACS5a",
-  data_tables = "B00001",
-  geog_levels = "county"
+  datasets = new_dataset(
+    "2011_2015_ACS5a",
+    data_tables = "B00001",
+    geog_levels = "county"
+  )
 )
 
 ext2 <- define_extract_nhgis(
-  datasets = c("2011_2015_ACS5a", "2012_2016_ACS5a"),
-  data_tables = c("B00002", "B01001"),
-  geog_levels = "county"
+  datasets = list(
+    new_dataset("2011_2015_ACS5a", c("B00002", "B01001"), "county"),
+    new_dataset("2012_2016_ACS5a", c("B00002", "B01001"), "county")
+  )
 )
 
 combine_extracts(ext1, ext2)

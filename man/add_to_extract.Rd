@@ -53,21 +53,28 @@ add_to_extract(usa_extract, samples = "us2014a")
 add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2"),
-  geog_levels = "county"
+  datasets = new_dataset(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2"),
+    geog_levels = "county"
+  )
 )
 
 # Add a new dataset/time series table
 add_to_extract(
   nhgis_extract,
-  datasets = "1980_STF1",
-  data_tables = "NT1A",
-  geog_levels = c("county", "state")
+  datasets = new_dataset(
+    "1980_STF1",
+    data_tables = "NT1A",
+    geog_levels = c("county", "state")
+  )
 )
 
 # Add to existing datasets/time series tables
-add_to_extract(nhgis_extract, geog_levels = "state")
+add_to_extract(
+  nhgis_extract,
+  datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "state")
+)
 
 # Values that can only take a single value are replaced
 add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format

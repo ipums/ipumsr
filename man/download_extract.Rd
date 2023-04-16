@@ -69,9 +69,11 @@ usa_extract <- define_extract_usa(
 
 nhgis_extract <- define_extract_nhgis(
   description = "Example NHGIS extract",
-  datasets = "1990_STF3",
-  data_tables = "NP57",
-  geog_levels = c("county", "tract")
+  datasets = new_dataset(
+    "1990_STF3",
+    data_tables = "NP57",
+    geog_levels = c("county", "tract")
+  )
 )
 
 \dontrun{
