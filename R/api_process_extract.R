@@ -547,33 +547,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(extract) {
-  if (is.null(extract$description) || is.na(extract$description)) {
-    extract$description <- ""
-  }
-
-  if (is.null(extract$data_format) || is.na(extract$data_format)) {
-    extract$data_format <- ""
-  }
-
-  request_list <- list(
-    description = extract$description,
-    dataStructure = format_data_structure_for_json(
-      extract$data_structure,
-      extract$rectangular_on
-    ),
-    dataFormat = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables),
-    collection = extract$collection,
-    version = ipums_api_version()
-  )
-
-  jsonlite::toJSON(request_list, auto_unbox = TRUE)
-}
-
-#' @export
-extract_to_request_json.cps_extract <- function(extract) {
+extract_to_request_json.micro_extract <- function(extract) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -673,43 +647,10 @@ ipums_extract_specific_download <- function(extract,
 }
 
 #' @export
-ipums_extract_specific_download.usa_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
-  ddi_url <- extract$download_links$ddiCodebook$url
-  data_url <- extract$download_links$data$url
-
-  ddi_file_path <- normalizePath(
-    file.path(download_dir, basename(ddi_url)),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  data_file_path <- normalizePath(
-    file.path(download_dir, basename(data_url)),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
-  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
-
-  message(
-    paste0(
-      "DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
-      "to ", data_file_path
-    )
-  )
-
-  invisible(ddi_file_path)
-}
-
-#' @export
-ipums_extract_specific_download.cps_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
+ipums_extract_specific_download.micro_extract <- function(extract,
+                                                          download_dir,
+                                                          overwrite,
+                                                          api_key) {
   ddi_url <- extract$download_links$ddiCodebook$url
   data_url <- extract$download_links$data$url
 
@@ -818,20 +759,7 @@ extract_is_completed_and_has_links <- function(extract) {
 }
 
 #' @export
-extract_is_completed_and_has_links.usa_extract <- function(extract) {
-  status <- extract$status
-  download_links <- extract$download_links
-
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
-
-  status == "completed" && has_url(download_links, "ddiCodebook") &&
-    has_url(download_links, "data")
-}
-
-#' @export
-extract_is_completed_and_has_links.cps_extract <- function(extract) {
+extract_is_completed_and_has_links.micro_extract <- function(extract) {
   status <- extract$status
   download_links <- extract$download_links
 

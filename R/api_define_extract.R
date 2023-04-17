@@ -572,10 +572,9 @@ define_extract_from_json <- function(extract_json) {
         "Could not determine the collection associated with this extract ",
         "definition."
       ),
-      paste0(
-        "Ensure that the JSON file includes an element containing ",
-        "the IPUMS collection associated with the extract. ",
-        "(For example, `\"collection\": \"usa\"`)"
+      "*" = paste0(
+        "As of ipumsr 0.6.0, all JSON-formatted extract definitions must ",
+        "contain a `collection` field."
       )
     ))
   }
@@ -801,14 +800,7 @@ add_to_extract.usa_extract <- function(extract,
                                        variables = NULL,
                                        data_format = NULL,
                                        ...) {
-  add_to_extract_micro(
-    extract,
-    description = description,
-    samples = samples,
-    variables = variables,
-    data_format = data_format,
-    ...
-  )
+  NextMethod()
 }
 
 #' Add values to an existing IPUMS CPS extract definition
@@ -881,14 +873,7 @@ add_to_extract.cps_extract <- function(extract,
                                        variables = NULL,
                                        data_format = NULL,
                                        ...) {
-  add_to_extract_micro(
-    extract,
-    description = description,
-    samples = samples,
-    variables = variables,
-    data_format = data_format,
-    ...
-  )
+  NextMethod()
 }
 
 #' Add values to an existing IPUMS NHGIS extract definition
@@ -1122,6 +1107,57 @@ add_to_extract.nhgis_extract <- function(extract,
   extract
 }
 
+#' @export
+add_to_extract.micro_extract <- function(extract,
+                                         description = NULL,
+                                         samples = NULL,
+                                         variables = NULL,
+                                         data_format = NULL,
+                                         data_structure = NULL,
+                                         rectangular_on = NULL,
+                                         ...) {
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be modified: "
+      ),
+      paste0(paste0("`", names(dots), "`"), collapse = ", ")
+    ))
+  }
+
+  data_structure <- data_structure %||% extract$data_structure
+
+  if (data_structure == "rectangular") {
+    rectangular_on <- rectangular_on %||% extract$rectangular_on %||% "P"
+
+    if (rectangular_on != "P") {
+      rlang::abort(
+        paste0(
+          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
+          "in the future, the API will also support `rectangular_on = \"H\"."
+        )
+      )
+    }
+  }
+
+  extract <- new_ipums_extract(
+    collection = extract$collection,
+    description = description %||% extract$description,
+    data_structure = data_structure %||% extract$data_structure,
+    rectangular_on = rectangular_on,
+    data_format = data_format %||% extract$data_format,
+    samples = union(extract$samples, unlist(samples)),
+    variables = union(extract$variables, unlist(variables))
+  )
+
+  extract <- validate_ipums_extract(extract)
+
+  extract
+}
+
 #' Remove values from an existing IPUMS extract definition
 #'
 #' @description
@@ -1255,12 +1291,7 @@ remove_from_extract.usa_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
                                             ...) {
-  remove_from_extract_micro(
-    extract = extract,
-    samples = samples,
-    variables = variables,
-    ...
-  )
+  NextMethod()
 }
 
 #' Remove values from an existing IPUMS CPS extract definition
@@ -1323,12 +1354,7 @@ remove_from_extract.cps_extract <- function(extract,
                                             samples = NULL,
                                             variables = NULL,
                                             ...) {
-  remove_from_extract_micro(
-    extract = extract,
-    samples = samples,
-    variables = variables,
-    ...
-  )
+  NextMethod()
 }
 
 #' Remove values from an existing NHGIS extract definition
@@ -1499,6 +1525,42 @@ remove_from_extract.nhgis_extract <- function(extract,
   extract
 }
 
+#' @export
+remove_from_extract.micro_extract <- function(extract,
+                                              samples = NULL,
+                                              variables = NULL,
+                                              ...) {
+  dots <- rlang::list2(...)
+
+  if (length(dots) > 0) {
+    rlang::warn(c(
+      paste0(
+        "The following fields were either not found in the provided extract ",
+        "or cannot be removed: "
+      ),
+      "*" = paste0(paste0("`", names(dots), "`"), collapse = ", "),
+      "i" = paste0(
+        "Use `add_to_extract()` to replace existing values in valid extract ",
+        "fields."
+      )
+    ))
+  }
+
+  extract <- new_ipums_extract(
+    collection = extract$collection,
+    description = extract$description,
+    data_structure = extract$data_structure,
+    rectangular_on = extract$rectangular_on,
+    data_format = extract$data_format,
+    samples = setdiff_null(extract$samples, unlist(samples)),
+    variables = setdiff_null(extract$variables, unlist(variables))
+  )
+
+  extract <- validate_ipums_extract(extract)
+
+  extract
+}
+
 #' Combine multiple IPUMS extract definitions into one
 #'
 #' @description
@@ -1563,32 +1625,16 @@ combine_extracts <- function(...) {
 
 #' @export
 combine_extracts.usa_extract <- function(...) {
-  extracts <- rlang::list2(...)
-
-  collection <- purrr::map_chr(extracts, ~ .x$collection)
-
-  if (length(unique(collection)) != 1) {
-    rlang::abort("Can only combine extracts of the same collection.")
-  }
-
-  extract <- purrr::reduce(
-    extracts,
-    ~ add_to_extract(
-      .x,
-      description = .x$description,
-      samples = .y$samples,
-      variables = .y$variables,
-      data_format = .x$data_format %||% .y$data_format,
-      data_structure = .x$data_structure %||% .y$data_structure,
-      rectangular_on = .x$rectangular_on %||% .y$rectangular_on
-    )
-  )
-
-  extract
+  NextMethod()
 }
 
 #' @export
 combine_extracts.cps_extract <- function(...) {
+  NextMethod()
+}
+
+#' @export
+combine_extracts.micro_extract <- function(...) {
   extracts <- rlang::list2(...)
 
   collection <- purrr::map_chr(extracts, ~ .x$collection)
@@ -1686,7 +1732,12 @@ new_ipums_extract <- function(collection = NA_character_,
 
   structure(
     out,
-    class = c(paste0(collection, "_extract"), "ipums_extract")
+    class = c(
+      paste0(collection, "_extract"),
+      paste0(collection_type(collection), "_extract"),
+      "ipums_extract",
+      class(out)
+    )
   )
 }
 
@@ -1705,7 +1756,12 @@ new_ipums_extract <- function(collection = NA_character_,
 new_ipums_json <- function(json, collection) {
   structure(
     json,
-    class = c(paste0(collection, "_json"), "ipums_json", class(json))
+    class = c(
+      paste0(collection, "_json"),
+      paste0(collection_type(collection), "_json"),
+      "ipums_json",
+      class(json)
+    )
   )
 }
 
@@ -1846,8 +1902,8 @@ validate_ipums_extract.nhgis_extract <- function(x) {
 }
 
 #' @export
-validate_ipums_extract.usa_extract <- function(x) {
-  NextMethod(x)
+validate_ipums_extract.micro_extract <- function(x) {
+  NextMethod()
 
   extract_field_spec <- list(
     list(
@@ -1902,71 +1958,6 @@ validate_ipums_extract.usa_extract <- function(x) {
     rlang::abort(
       c(
         "Invalid `usa_extract` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
-  }
-
-  invisible(x)
-}
-
-#' @export
-validate_ipums_extract.cps_extract <- function(x) {
-  NextMethod(x)
-
-  extract_field_spec <- list(
-    list(
-      field = "data_structure",
-      required = TRUE,
-      choices = c("rectangular", "hierarchical"),
-      length = 1,
-      type = "character"
-    ),
-    list(
-      field = "rectangular_on",
-      required = isTRUE(x$data_structure == "rectangular"),
-      allowed = isTRUE(x$data_structure == "rectangular"),
-      choices = c("P", "H"),
-      must_be_present_msg = " when `data_structure == \"rectangular\"`",
-      must_be_missing_msg = " when `data_structure != \"rectangular\"`",
-      length = 1,
-      type = "character"
-    ),
-    list(
-      field = "data_format",
-      required = TRUE,
-      choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
-      length = 1,
-      type = "character"
-    ),
-    list(
-      field = "samples",
-      required = TRUE,
-      type = "character"
-    ),
-    list(
-      field = "variables",
-      required = TRUE,
-      type = "character"
-    )
-  )
-
-  extract_issues <- purrr::map(
-    extract_field_spec,
-    ~ tryCatch(
-      rlang::exec("validate_extract_field", !!!.x, extract = x),
-      error = function(cnd) {
-        conditionMessage(cnd)
-      }
-    )
-  )
-
-  extract_issues <- unlist(purrr::compact(extract_issues))
-
-  if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `cps_extract` object:",
         purrr::set_names(extract_issues, "x")
       )
     )
@@ -2451,7 +2442,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
       }
 
       out <- new_ipums_extract(
-        collection = "nhgis",
+        collection = def$collection,
         description = def$description,
         datasets = datasets,
         time_series_tables = time_series_tables,
@@ -2479,7 +2470,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
 }
 
 #' @export
-extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
+extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
   extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
 
   # If the response if from a paginated endpoint (i.e. recent extracts)
@@ -2503,7 +2494,7 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
       }
 
       out <- new_ipums_extract(
-        collection = "usa",
+        collection = def$collection,
         description = def$description,
         data_structure = names(def$dataStructure),
         rectangular_on = def$dataStructure$rectangular$on,
@@ -2523,145 +2514,4 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
       out
     }
   )
-}
-
-
-#' @export
-extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
-  extract_info <- jsonlite::fromJSON(extract_json, simplifyVector = FALSE)
-
-  # If the response if from a paginated endpoint (i.e. recent extracts)
-  # it will include a "data" field containing the extract definitions.
-  # Otherwise, we are dealing with a single extract, which needs to be
-  # converted to list for consistency with paginated responses.
-  list_of_extract_info <- extract_info$data %||% list(extract_info)
-
-  purrr::map(
-    list_of_extract_info,
-    function(x) {
-      # extractDefinition won't exist if it is from a saved JSON file
-      def <- x$extractDefinition %||% x
-
-      if ("number" %in% names(x)) {
-        submitted <- TRUE
-        number <- x$number
-      } else {
-        submitted <- FALSE
-        number <- NA_integer_
-      }
-
-      out <- new_ipums_extract(
-        collection = "cps",
-        description = def$description,
-        data_structure = names(def$dataStructure),
-        rectangular_on = def$dataStructure$rectangular$on,
-        data_format = def$dataFormat,
-        samples = names(def$samples),
-        variables = names(def$variables),
-        submitted = submitted,
-        download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
-        number = number,
-        status = x$status %||% "unsubmitted"
-      )
-
-      if (validate) {
-        out <- validate_ipums_extract(out)
-      }
-
-      out
-    }
-  )
-}
-
-#' Helper taking advantage of the fact that USA and CPS work the same way for
-#' now
-#'
-#' @noRd
-add_to_extract_micro <- function(extract,
-                                 description = NULL,
-                                 samples = NULL,
-                                 variables = NULL,
-                                 data_format = NULL,
-                                 data_structure = NULL,
-                                 rectangular_on = NULL,
-                                 ...) {
-  dots <- rlang::list2(...)
-
-  if (length(dots) > 0) {
-    rlang::warn(c(
-      paste0(
-        "The following fields were either not found in the provided extract ",
-        "or cannot be modified: "
-      ),
-      paste0(paste0("`", names(dots), "`"), collapse = ", ")
-    ))
-  }
-
-  data_structure <- data_structure %||% extract$data_structure
-
-  if (data_structure == "rectangular") {
-    rectangular_on <- rectangular_on %||% extract$rectangular_on %||% "P"
-
-    if (rectangular_on != "P") {
-      rlang::abort(
-        paste0(
-          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
-          "in the future, the API will also support `rectangular_on = \"H\"."
-        )
-      )
-    }
-  }
-
-  extract <- new_ipums_extract(
-    collection = extract$collection,
-    description = description %||% extract$description,
-    data_structure = data_structure %||% extract$data_structure,
-    rectangular_on = rectangular_on,
-    data_format = data_format %||% extract$data_format,
-    samples = union(extract$samples, unlist(samples)),
-    variables = union(extract$variables, unlist(variables))
-  )
-
-  extract <- validate_ipums_extract(extract)
-
-  extract
-}
-
-#' Helper taking advantage of the fact that USA and CPS work the same way for
-#' now
-#'
-#' @noRd
-remove_from_extract_micro <- function(extract,
-                                      samples = NULL,
-                                      variables = NULL,
-                                      ...) {
-  dots <- rlang::list2(...)
-
-  if (length(dots) > 0) {
-    rlang::warn(c(
-      paste0(
-        "The following fields were either not found in the provided extract ",
-        "or cannot be removed: "
-      ),
-      "*" = paste0(paste0("`", names(dots), "`"), collapse = ", "),
-      "i" = paste0(
-        "Use `add_to_extract()` to replace existing values in valid extract ",
-        "fields."
-      )
-    ))
-  }
-
-  extract <- new_ipums_extract(
-    collection = extract$collection,
-    description = extract$description,
-    data_structure = extract$data_structure,
-    rectangular_on = extract$rectangular_on,
-    data_format = extract$data_format,
-    samples = setdiff_null(extract$samples, unlist(samples)),
-    variables = setdiff_null(extract$variables, unlist(variables))
-  )
-
-  extract <- validate_ipums_extract(extract)
-
-  extract
 }

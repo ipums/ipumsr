@@ -498,18 +498,7 @@ extract_to_tbl <- function(x) {
 }
 
 #' @export
-extract_to_tbl.usa_extract <- function(x) {
-  if (is.character(x$samples)) x$samples <- list(x$samples)
-  if (is.character(x$variables)) x$variables <- list(x$variables)
-  x$download_links <- list(x$download_links)
-
-  unclassed_extract <- unclass(x)
-
-  do.call(tibble::tibble, unclassed_extract)
-}
-
-#' @export
-extract_to_tbl.cps_extract <- function(x) {
+extract_to_tbl.micro_extract <- function(x) {
   if (is.character(x$samples)) x$samples <- list(x$samples)
   if (is.character(x$variables)) x$variables <- list(x$variables)
   x$download_links <- list(x$download_links)
@@ -605,16 +594,7 @@ get_extract_tbl_fields.nhgis_extract <- function(x) {
 }
 
 #' @export
-get_extract_tbl_fields.usa_extract <- function(x) {
-  c(
-    "collection", "description", "samples", "variables",
-    "data_format", "data_structure", "rectangular_on",
-    "submitted", "download_links", "number", "status"
-  )
-}
-
-#' @export
-get_extract_tbl_fields.cps_extract <- function(x) {
+get_extract_tbl_fields.micro_extract <- function(x) {
   c(
     "collection", "description", "samples", "variables",
     "data_format", "data_structure", "rectangular_on",

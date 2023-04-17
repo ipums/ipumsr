@@ -25,19 +25,19 @@
 #' @export
 ipums_data_collections <- function() {
   tibble::tribble(
-    ~collection_name, ~code_for_api, ~api_support,
-    "IPUMS USA", "usa", TRUE,
-    "IPUMS CPS", "cps", TRUE,
-    "IPUMS International", "ipumsi", FALSE,
-    "IPUMS NHGIS", "nhgis", TRUE,
-    "IPUMS AHTUS", "ahtus", FALSE,
-    "IPUMS MTUS", "mtus", FALSE,
-    "IPUMS ATUS", "atus", FALSE,
-    "IPUMS DHS", "dhs", FALSE,
-    "IPUMS Higher Ed", "highered", FALSE,
-    "IPUMS MEPS", "meps", FALSE,
-    "IPUMS NHIS", "nhis", FALSE,
-    "IPUMS PMA", "pma", FALSE
+    ~collection_name, ~collection_type, ~code_for_api, ~api_support,
+    "IPUMS USA", "microdata", "usa", TRUE,
+    "IPUMS CPS", "microdata", "cps", TRUE,
+    "IPUMS International", "microdata", "ipumsi", FALSE,
+    "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
+    "IPUMS AHTUS", "microdata", "ahtus", FALSE,
+    "IPUMS MTUS", "microdata", "mtus", FALSE,
+    "IPUMS ATUS", "microdata", "atus", FALSE,
+    "IPUMS DHS", "microdata", "dhs", FALSE,
+    "IPUMS Higher Ed", "microdata", "highered", FALSE,
+    "IPUMS MEPS", "microdata", "meps", FALSE,
+    "IPUMS NHIS", "microdata", "nhis", FALSE,
+    "IPUMS PMA", "microdata", "pma", FALSE
   )
 }
 
@@ -496,24 +496,7 @@ print.ipums_extract <- function(x, ...) {
 }
 
 #' @export
-print.usa_extract <- function(x, ...) {
-  to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
-    "\n"
-  )
-
-  cat(to_cat)
-
-  invisible(x)
-}
-
-#' @export
-print.cps_extract <- function(x, ...) {
+print.micro_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
@@ -1173,6 +1156,24 @@ check_api_support <- function(collection) {
   }
 
   invisible(collection)
+}
+
+# Determine if a collection is considered microdata or aggregate data
+collection_type <- function(collection) {
+  if (is_empty(collection) || is_na(collection)) {
+    return("ipums")
+  }
+
+  collections <- ipums_data_collections()
+  type <- collections[collections$code_for_api == collection, ]$collection_type
+
+  if (type == "microdata") {
+    collection_type <- "micro"
+  } else {
+    collection_type <- "agg"
+  }
+
+  collection_type
 }
 
 #' Get API version from a JSON file
