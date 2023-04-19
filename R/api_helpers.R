@@ -892,3 +892,64 @@ to_snake_case <- function(x) {
   x <- gsub("_{2,}", "_", x)
   gsub("^_", "", x)
 }
+
+#' Helper function to retrieve paginated data via API
+#'
+#' @param collection The IPUMS data collection for the extract.
+#' @param path Extensions to add to the base url.
+#' @param page_size An integer for the number of items to retrieve for each page.
+#'   Default is 1500. This is also the maximum allowed page size.
+#'
+#' @return A list of items retrieved from the specified collection/path endpoints.
+#'
+#' @noRd
+get_pages <- function(collection,
+                      path,
+                      page_size=1500){
+  # max allowed page size is 1500
+  if (page_size > 1500) {
+    rlang::abort("The maximum allowed page size is 1500.")
+  }
+
+  request_str <- ipums_api_json_request("GET",
+                                        collection,
+                                        path,
+                                        queries = list(pageSize = page_size))
+
+  api_response <- jsonlite::fromJSON(request_str[1], simplifyVector = FALSE)
+  extracts <- extract_list_from_json(request_str)
+  while (!is.null(api_response$links$nextPage)){
+    # get the next page
+    next_page_str <- api_request("GET", api_response$links$nextPage)
+    # make it a json
+    api_response <- jsonlite::fromJSON(next_page_str[1], simplifyVector = FALSE)
+    # get extracts from this page
+    this_page_extracts <- extract_list_from_json(new_ipums_json(next_page_str,
+                                                                collection=collection))
+    extracts <- c(extracts, this_page_extracts)
+  }
+  extracts
+}
+
+#' Helper function to retrieve extract history for a specified
+#'   IPUMS data collection
+#'
+#' @param collection The IPUMS data collection for the extract.
+#'
+#' @return A table of extract definitions
+#' @export
+#'
+#' @examples
+#' my_extracts <- get_extract_history("cps")
+#'
+#' \dontrun{
+#' # Retrieve your extract history as a data frame
+#' my_extracts <- get_extract_history("cps")
+#'
+#' # Now you can filter for extract contents/features
+#' statefip_extracts <- filter(my_extracts, str_detect(variables, "STATEFIP"))
+#' }
+get_extract_history <- function(collection){
+  extract_history <- get_pages(collection, "extracts/")
+  extract_histry_tbl <- extract_list_to_tbl(extract_history)
+}

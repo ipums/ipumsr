@@ -294,3 +294,18 @@ test_that("Can toggle demo API URL", {
     )
   })
 })
+
+# Pagination ----
+test_that("Extract history works", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("extract-history", {
+    extracts <- get_pages("cps", "extracts/", page_size = 100)
+  })
+
+  expect_equal(length(extracts), 440)
+
+  # fail if you ask for an un-allowed page size
+  expect_error(get_pages("cps", "extracts/", page_size = 2501))
+})
+

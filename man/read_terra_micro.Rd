@@ -47,7 +47,7 @@ Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 
 Support for IPUMS Terra has been discontinued. This function will be
 removed in a future release. For general handling of raster data in R, see the
-\link[terra:terra-package]{terra} package.
+\link[terra:terra]{terra} package.
 }
 \examples{
 \dontrun{

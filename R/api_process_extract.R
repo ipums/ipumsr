@@ -865,6 +865,94 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   invisible(file_paths)
 }
 
+#' A generalized helper function to submit and receive JSON responses from the IPUMS API
+#'
+#' @param verb `"GET"` or `"POST"`
+#' @param url Full IPUMS API url, including query parameters.
+#' @param body The body of the request (e.g. the extract definition), if
+#'   relevant. Defaults to `FALSE`, which creates a body-less request.
+#'
+#' @return If the request returns a JSON response, this function returns a
+#'   length-one character vector containing the response from the API
+#'   formatted as JSON. Otherwise, the function throws an error.
+#'
+#' @noRd
+api_request <- function(verb, url, body=FALSE, api_key=Sys.getenv("IPUMS_API_KEY")){
+  res <- httr::VERB(
+    verb = verb,
+    url = url,
+    body = body,
+    httr::user_agent(
+      paste0(
+        "https://github.com/ipums/ipumsr ",
+        as.character(utils::packageVersion("ipumsr"))
+      )
+    ),
+    httr::content_type_json(),
+    add_user_auth_header(api_key)
+  )
+
+  if (httr::http_status(res)$category != "Success") {
+    status <- httr::status_code(res)
+
+    if (status == 400) {
+      tryCatch(
+        error_details <- parse_400_error(res),
+        error = function(cond) {
+          rlang::abort(
+            paste0(
+              "Received error from server (status code 400), but could not ",
+              "parse response for more details."
+            )
+          )
+        }
+      )
+      rlang::abort(error_details)
+    } else if (status == 404) {
+      if (fostr_detect(url, "extracts/")) {
+        #extract_number <- as.numeric(fostr_split(url, "/")[[1]][[2]])
+        url_parts <- fostr_split(url, "/")[[1]]
+        url_tail <- url_parts[length(url_parts)]
+        extract_number <- as.numeric(fostr_split(url_tail, "\\?")[[1]][[1]])
+          rlang::abort(
+            c(
+              paste0(
+                " extract number ",
+                extract_number, " does not exist for this collection."
+              )
+            )
+          )
+        }
+      rlang::abort("URL not found")
+    } else if (status %in% c(401, 403)) {
+      rlang::abort(c(
+        "The provided API Key is either missing or invalid.",
+        "i" = paste0(
+          "Please provide your API key to the `api_key` argument ",
+          "or request a key at https://account.ipums.org/api_keys"
+        ),
+        "i" = "Use `set_ipums_api_key() to save your key for future use."
+      ))
+    } else { # other non-success codes, e.g. 300s + 500s
+      rlang::abort(c(
+        paste0(
+          "Extract API request failed with status ",
+          httr::status_code(res)
+        ),
+        paste0("URL: ", url),
+        paste0("Content: ", httr::content(res, "text"))
+      ))
+    }
+  }
+
+  if (httr::http_type(res) != "application/json") {
+    rlang::abort("Extract API did not return json")
+  }
+
+  httr::content(res, "text")
+
+}
+
 #' Helper function to form, submit, and receive responses of requests expecting
 #'   a JSON response.
 #'
@@ -903,85 +991,9 @@ ipums_api_json_request <- function(verb,
     )
   )
 
-  res <- httr::VERB(
-    verb = verb,
-    url = api_url,
-    body = body,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
-    ),
-    httr::content_type_json(),
-    add_user_auth_header(api_key)
-  )
-
-  if (httr::http_status(res)$category != "Success") {
-    status <- httr::status_code(res)
-
-    if (status == 400) {
-      tryCatch(
-        error_details <- parse_400_error(res),
-        error = function(cond) {
-          rlang::abort(
-            paste0(
-              "Received error from server (status code 400), but could not ",
-              "parse response for more details."
-            )
-          )
-        }
-      )
-      rlang::abort(error_details)
-    } else if (status == 404) {
-      if (fostr_detect(path, "^extracts/\\d+$")) {
-        extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract_number <- get_last_extract_info(collection)$number
-
-        if (extract_number > most_recent_extract_number) {
-          coll <- format_collection_for_printing(collection)
-          rlang::abort(
-            c(
-              paste0(
-                coll, " extract number ",
-                extract_number, " does not exist."
-              ),
-              paste0(
-                "Most recent extract number: ",
-                most_recent_extract_number
-              )
-            )
-          )
-        }
-      }
-      rlang::abort("URL not found")
-    } else if (status %in% c(401, 403)) {
-      rlang::abort(c(
-        "The provided API Key is either missing or invalid.",
-        "i" = paste0(
-          "Please provide your API key to the `api_key` argument ",
-          "or request a key at https://account.ipums.org/api_keys"
-        ),
-        "i" = "Use `set_ipums_api_key() to save your key for future use."
-      ))
-    } else { # other non-success codes, e.g. 300s + 500s
-      rlang::abort(c(
-        paste0(
-          "Extract API request failed with status ",
-          httr::status_code(res)
-        ),
-        paste0("URL: ", api_url),
-        paste0("Content: ", httr::content(res, "text"))
-      ))
-    }
-  }
-
-  if (httr::http_type(res) != "application/json") {
-    rlang::abort("Extract API did not return json")
-  }
-
+  api_response = api_request(verb, api_url, body=body, api_key=Sys.getenv("IPUMS_API_KEY"))
   new_ipums_json(
-    httr::content(res, "text"),
+    api_response,
     collection = collection
   )
 }
