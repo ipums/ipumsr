@@ -67,49 +67,6 @@ test_that("Can check USA extract status", {
   expect_true(is_ready && is_ready_id1 && is_ready_id2)
 })
 
-test_that("Can check CPS extract status", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(test_cps_extract())
-  })
-
-  extract_number <- submitted_cps_extract$number
-
-  vcr::use_cassette("ready-cps-extract", {
-    wait_for_extract(submitted_cps_extract)
-  })
-
-  vcr::use_cassette("get-cps-extract-info", {
-    extract <- get_extract_info(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id1 <- get_extract_info(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id2 <- get_extract_info(paste0("cps:", extract_number))
-  })
-
-  expect_s3_class(extract, "cps_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
-
-  expect_identical(extract, extract_id1)
-  expect_identical(extract, extract_id2)
-
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready <- is_extract_ready(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id1 <- is_extract_ready(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id2 <- is_extract_ready(paste0("cps:", extract_number))
-  })
-
-  expect_true(is_ready && is_ready_id1 && is_ready_id2)
-})
-
 test_that("Can check NHGIS extract status", {
   skip_if_no_api_access(have_api_access)
 
@@ -387,38 +344,72 @@ test_that("Can get extract history for more records than page size", {
   )
 })
 
-test_that("Tibble of recent USA extracts has expected structure", {
+test_that("Tibble of recent micro extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
+
+  usa_extract <- test_usa_extract()
+
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(usa_extract)
+  })
+
+  submitted_number <- submitted_usa_extract$number
+
+  vcr::use_cassette("ready-usa-extract", {
+    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+  })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
     recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
   })
-
-  expected_columns <- c(
-    "collection", "description", "data_structure",
-    "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
-  )
-
-  expect_equal(nrow(recent_usa_extracts_tbl), 10)
-  expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
-})
-
-test_that("Tibble of recent CPS extracts has expected structure", {
-  skip_if_no_api_access(have_api_access)
-
   vcr::use_cassette("recent-cps-extracts-tbl", {
     recent_cps_extracts_tbl <- get_extract_history("cps", as_table = TRUE)
   })
 
+  recent_numbers <- recent_usa_extracts_tbl$number
+
+  single_usa_extract_tbl <- recent_usa_extracts_tbl[
+    recent_numbers == submitted_number,
+  ]
+
   expected_columns <- c(
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
+    "case_selections", "case_selection_type", "attached_characteristics",
+    "data_quality_flags", "preselected", "submitted", "download_links", "number", "status"
   )
 
+  expect_equal(nrow(recent_usa_extracts_tbl), 10)
   expect_equal(nrow(recent_cps_extracts_tbl), 10)
+
+  expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
   expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
+
+  expect_equal(single_usa_extract_tbl$number, ready_usa_extract$number)
+  expect_equal(
+    single_usa_extract_tbl$variables[[1]],
+    names(ready_usa_extract$variables)
+  )
+  expect_equal(
+    single_usa_extract_tbl$samples[[1]],
+    names(ready_usa_extract$samples)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selections[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selections)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selection_type[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selection_type)
+  )
+  expect_equal(
+    single_usa_extract_tbl$attached_characteristics[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$attached_characteristics)
+  )
+  expect_equal(
+    single_usa_extract_tbl$data_quality_flags[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$data_quality_flags)
+  )
 })
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {
@@ -456,12 +447,12 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 
   recent_nhgis_extract_submitted_tst <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-            recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
+      recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
   ]
 
   recent_nhgis_extract_submitted_shp <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-            recent_nhgis_extracts_tbl$data_type == "shapefiles"),
+      recent_nhgis_extracts_tbl$data_type == "shapefiles"),
   ]
 
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
@@ -469,27 +460,27 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 
   expect_equal(
     recent_nhgis_extract_submitted_ds$name,
-    purrr::map_chr(ready_nhgis_extract$datasets, ~.x$name)
+    names(ready_nhgis_extract$datasets)
   )
   expect_equal(
     recent_nhgis_extract_submitted_ds$data_tables,
-    purrr::map(ready_nhgis_extract$datasets, ~.x$data_tables)
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$data_tables))
   )
   expect_equal(
     recent_nhgis_extract_submitted_ds$geog_levels,
-    purrr::map(ready_nhgis_extract$datasets, ~.x$geog_levels)
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$geog_levels))
   )
   expect_equal(
     recent_nhgis_extract_submitted_ds$years,
-    purrr::map(ready_nhgis_extract$datasets, ~.x$years)
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$years))
   )
   expect_equal(
     recent_nhgis_extract_submitted_ds$breakdown_values,
-    purrr::map(ready_nhgis_extract$datasets, ~.x$breakdown_values)
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$breakdown_values))
   )
   expect_equal(
     recent_nhgis_extract_submitted_tst$name,
-    purrr::map_chr(ready_nhgis_extract$time_series_tables, ~.x$name)
+    names(ready_nhgis_extract$time_series_tables)
   )
   expect_equal(
     recent_nhgis_extract_submitted_shp$name,

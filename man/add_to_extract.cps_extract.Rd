@@ -18,13 +18,18 @@
 
 \item{description}{Description of the extract.}
 
-\item{samples}{Character vector of samples to add to the extract.
-Values should correspond to IPUMS CPS
-\href{https://cps.ipums.org/cps-action/samples/sample_ids}{sample ID values}}
+\item{samples}{Character vector of sample names to include in the extract.
+Samples should be specified using IPUMS CPS
+\href{https://cps.ipums.org/cps-action/samples/sample_ids}{sample ID values}.}
 
-\item{variables}{Character vector of variables to add to the extract.}
+\item{variables}{Character vector of variable names or a list of
+\code{ipums_variable} objects created by \code{\link[=new_variable]{new_variable()}}
+containing specifications for all variables to include in the extract.
 
-\item{data_format}{The desired format of the extract data file. One of
+If a variable already exists in the extract, its specifications
+will be added to those that already exist for that variable.}
+
+\item{data_format}{Format for the output extract data file. One of
 \code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
 
 \item{...}{Ignored}

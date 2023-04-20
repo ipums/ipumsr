@@ -10,10 +10,7 @@ remove_from_extract(extract, ...)
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{...}{Additional arguments specifying the extract fields and values to
-remove from the extract definition.
-
-All arguments available in a collection's \link{define_extract} function can be
-passed to \code{add_to_extract()}.}
+remove from the extract definition.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
@@ -31,11 +28,6 @@ subclass (i.e. collection) of the extract being modified.
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
 }
-
-In general, for a given collection, the arguments to
-\code{remove_from_extract()} are identical to those used when defining an
-extract for that collection. For more about defining an extract, click
-\link[=define_extract]{here}.
 
 To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract()}}.
 
@@ -55,7 +47,11 @@ remove_from_extract(
 )
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = new_dataset("1990_STF1", c("NP1", "NP2", "NP3"), "county"),
+  datasets = new_dataset(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "county"
+  ),
   time_series_tables = new_tst("A00", geog_levels = "county")
 )
 

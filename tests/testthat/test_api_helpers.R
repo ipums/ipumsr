@@ -1,19 +1,31 @@
 # Print extract ------------------------
 
-test_that("Microdata print methods work", {
-  usa_extract <- test_usa_extract()
-  cps_extract <- test_cps_extract()
-
-  expect_output(print(usa_extract), "Unsubmitted IPUMS USA extract")
-  expect_output(print(cps_extract), "Unsubmitted IPUMS CPS extract")
+test_that("Can print microdata extracts", {
+  expect_output(
+    print(test_usa_extract()),
+    paste0(
+      "Unsubmitted IPUMS USA extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
+  expect_output(
+    print(test_cps_extract()),
+    paste0(
+      "Unsubmitted IPUMS CPS extract.+",
+      "Description: Compare.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
 })
 
-test_that("NHGIS print method works", {
-  nhgis_extract <- test_nhgis_extract()
-  nhgis_extract_shp <- test_nhgis_extract_shp()
-
+test_that("Can print NHGIS extracts", {
   expect_output(
-    print(nhgis_extract),
+    print(test_nhgis_extract()),
     paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
@@ -36,35 +48,12 @@ test_that("NHGIS print method works", {
     )
   )
   expect_output(
-    print(nhgis_extract_shp),
+    print(test_nhgis_extract_shp()),
     paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: ",
       "\n",
       "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
-  )
-  expect_output(
-    print(
-      define_extract_nhgis(
-        datasets = new_dataset(
-          "DS",
-          data_tables = "DT",
-          geog_levels = "DG",
-          years = "Y1",
-          breakdown_values = "B1"
-        )
-      )
-    ),
-    paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: ",
-      "\n",
-      "\nDataset: DS",
-      "\n  Tables: DT",
-      "\n  Geog Levels: DG",
-      "\n  Years: Y1",
-      "\n  Breakdowns: B1"
     )
   )
 })
@@ -414,15 +403,9 @@ test_that("We catch invalid collection specifications during requests", {
 # Misc ------------------------------------------
 
 test_that("We can get correct API version info for each collection", {
-  has_support <- dplyr::filter(
-    ipums_data_collections(),
-    .data$api_support
-  )
+  has_support <- dplyr::filter(ipums_data_collections(), .data$api_support)
 
-  expect_equal(
-    has_support$code_for_api,
-    c("usa", "cps", "nhgis")
-  )
+  expect_equal(has_support$code_for_api, c("usa", "cps", "nhgis"))
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(

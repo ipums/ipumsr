@@ -25,10 +25,7 @@ collections:
 
 These functions produce an \code{\link[=ipums_extract-class]{ipums_extract}} object
 with a subclass based on the collection corresponding to the extract request.
-For instance, an IPUMS NHGIS extract created with
-\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} will return an object of classes
-\code{nhgis_extract} and \code{ipums_extract}. These objects are compatible
-with the rest of the API functionality provided by ipumsr.
+The core ipumsr API client tools are designed to handle these objects.
 }
 
 \keyword{internal}

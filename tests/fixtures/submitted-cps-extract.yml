@@ -4,7 +4,7 @@ http_interactions:
     uri: https://api.ipums.org/extracts/?collection=cps&version=2
     body:
       encoding: ''
-      string: '{"description":"Compare age-sex-race breakdowns 1976","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{},"MISH":{},"CPSIDP":{},"AGE":{},"SEX":{},"RACE":{},"UH_SEX_B1":{}},"collection":"cps","version":2}'
+      string: '{"description":"Compare age-sex-race breakdowns 1976","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","father"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"collection":"cps","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Content-Type: application/json
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Tue, 11 Apr 2023 19:40:31 GMT
-      etag: W/"718bd849f55e158df6e66cc89e338e7e"
+      date: Thu, 20 Apr 2023 19:52:18 GMT
+      etag: W/"121fd1eb2f4d0325244828f7049c6395"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 5bd770d1-c4d4-46bd-b2a8-92178a08ad36
-      x-runtime: '0.636691'
+      x-request-id: 6f9f6dd7-5985-4c22-8406-e2db9d1c362e
+      x-runtime: '0.964046'
       x-xss-protection: '0'
-      content-length: '608'
+      content-length: '852'
     body:
       encoding: ''
       file: no
-      string: '{"number":76,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"collection":"cps"}}'
-  recorded_at: 2023-04-11 19:40:31 GMT
+      string: '{"number":90,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"ASECFLAG":{"preselected":true},"ASECWTH":{"preselected":true},"PERNUM":{"preselected":true},"CPSIDP":{"preselected":true},"ASECWT":{"preselected":true},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","mother2","father","father2"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"collection":"cps"}}'
+  recorded_at: 2023-04-20 19:52:18 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

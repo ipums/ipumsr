@@ -36,7 +36,7 @@ In general, for a given collection, the arguments to \code{add_to_extract()}
 are identical to those used when defining an extract for that collection. For
 more information about defining an extract, click \link[=define_extract]{here}.
 
-To remove existing values from an extract definition,use
+To remove existing values from an extract definition, use
 \code{\link[=remove_from_extract]{remove_from_extract()}}. To add values
 contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
 
@@ -49,9 +49,6 @@ usa_extract <- define_extract_usa(
   variables = c("SEX", "AGE", "YEAR")
 )
 
-add_to_extract(usa_extract, samples = "us2014a")
-add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
-
 nhgis_extract <- define_extract_nhgis(
   datasets = new_dataset(
     "1990_STF1",
@@ -60,7 +57,20 @@ nhgis_extract <- define_extract_nhgis(
   )
 )
 
-# Add a new dataset/time series table
+# Add new samples and variables
+add_to_extract(
+  usa_extract,
+  samples = c("us2014a", "us2015a"),
+  variables = new_variable("MARST", data_quality_flags = TRUE)
+)
+
+# Update existing variables
+add_to_extract(
+  usa_extract,
+  variables = new_variable("SEX", case_selections = "1")
+)
+
+# Add a new dataset or time series table
 add_to_extract(
   nhgis_extract,
   datasets = new_dataset(
@@ -70,7 +80,7 @@ add_to_extract(
   )
 )
 
-# Add to existing datasets/time series tables
+# Update existing datasets/time series tables
 add_to_extract(
   nhgis_extract,
   datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "state")

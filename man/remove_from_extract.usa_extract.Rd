@@ -9,9 +9,10 @@
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
-\item{samples}{Character vector of samples to remove from the extract.}
+\item{samples}{Character vector of sample names to remove from the extract.}
 
-\item{variables}{Character vector of variables to remove from the extract.}
+\item{variables}{Names of the variables to remove from the extract. All
+variable-specific fields for the indicated variables will also be removed.}
 
 \item{...}{Ignored}
 }
@@ -23,11 +24,7 @@ Remove existing values from an IPUMS USA extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
 To add new values to an IPUMS USA extract definition, see
-\code{\link[=add_to_extract.usa_extract]{add_to_extract()}}. When replacing values,
-it is best to first add new values using
-\code{add_to_extract()} before removing values with
-\code{remove_from_extract()}. This limits the possibility of producing a
-temporarily invalid extract specification.
+\code{\link[=add_to_extract.usa_extract]{add_to_extract()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -35,24 +32,26 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
+
+To retain a variable while modifying its particular specifications, first
+remove that variable, then add a new specification using \code{add_to_extract()}.
 }
 \examples{
 usa_extract <- define_extract_usa(
   description = "USA example",
   samples = c("us2013a", "us2014a"),
-  variables = c("AGE", "SEX", "YEAR")
+  variables = list(
+    new_variable("AGE", data_quality_flags = TRUE),
+    new_variable("SEX", case_selections = "1"),
+    "RACE"
+  )
 )
 
 remove_from_extract(
   usa_extract,
   samples = "us2014a",
-  variables = c("AGE", "SEX")
+  variables = c("AGE", "RACE")
 )
-
-# To replace values, use add_to_extract() first to avoid invalid
-# extract definitions:
-revised_extract <- add_to_extract(usa_extract, samples = "us2015a")
-remove_from_extract(revised_extract, samples = c("us2013a", "us2014a"))
 }
 \seealso{
 \code{\link[=add_to_extract.usa_extract]{add_to_extract()}} to add values

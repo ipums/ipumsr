@@ -16,50 +16,103 @@ define_extract_usa(
 \arguments{
 \item{description}{Description of the extract.}
 
-\item{samples}{Character vector of samples to include in the extract. Samples
-should be specified using IPUMS USA
+\item{samples}{Character vector of sample names to include in the extract.
+Samples should be specified using IPUMS USA
 \href{https://usa.ipums.org/usa-action/samples/sample_ids}{sample ID values}.}
 
-\item{variables}{Character vector of variables to include in the extract.}
+\item{variables}{Character vector of variable names or a list of
+\code{ipums_variable} objects created by \code{\link[=new_variable]{new_variable()}}
+containing specifications for all variables to include in the extract.}
 
-\item{data_format}{The desired format of the extract data file. One of
-\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
+\item{data_format}{Format for the output extract data file. One of
+\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}. Defaults to
+\code{"fixed_width"}.}
 
-\item{data_structure}{The desired structure of the extract data.
+\item{data_structure}{Data structure for the output the extract data.
 
 \code{"rectangular"} provides person records with all requested household
 information attached to respective household members.
 
 \code{"hierarchical"} provides household records followed by person records.}
 
-\item{rectangular_on}{Records on which to rectangularize. \code{"P"}
-rectangularizes on person records. \code{"H"} provides household-only records.
+\item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
+records on which to rectangularize. Currently only \code{"P"} (person records)
+is supported.
 
-Currently, only \code{"P"} is supported.}
+Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
+otherwise.}
 }
 \value{
 An object of class \code{\link[=ipums_extract-class]{usa_extract}} containing
 the extract definition.
 }
 \description{
-Define an IPUMS USA extract request to be submitted via the IPUMS
-API. An extract request contains the specifications required
-to identify and obtain a particular set of data from the IPUMS USA system.
+Define the parameters of an IPUMS USA extract request to be submitted via the
+IPUMS API.
+
+Use the \code{\link[=new_variable]{new_variable()}} helper to generate detailed variable-level
+specifications for an extract.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa(
+usa_extract <- define_extract_usa(
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")
 )
 
-my_extract
+usa_extract
+
+# Use `new_variable()` to created detailed variable specifications:
+usa_extract <- define_extract_usa(
+  description = "Example USA extract definition",
+  samples = c("us2013a", "us2014a"),
+  variables = new_variable(
+    "SEX",
+    case_selections = "2",
+    attached_characteristics = c("mother", "father")
+  )
+)
+
+# For multiple variables, provide a list of `ipums_variable` objects and/or
+# variable names:
+usa_extract <- define_extract_usa(
+  description = "Example USA extract definition",
+  samples = c("us2013a", "us2014a"),
+  variables = list(
+    new_variable("AGE", data_quality_flags = TRUE),
+    new_variable("SEX", case_selections = "2"),
+    "RACE"
+  )
+)
+
+# To recycle specifications to many variables, it may be useful to
+# create variable specifications prior to defining the extract:
+var_names <- c("AGE", "SEX")
+
+var_spec <- purrr::map(
+  var_names,
+  ~ new_variable(.x, data_quality_flags = TRUE)
+)
+
+define_extract_usa(
+  description = "Extract definition with predefined variables",
+  samples = c("us2013a", "us2014a"),
+  variables = var_spec
+)
+
+# Extract specifications can be indexed in the resulting `ipums_extract`
+# object:
+names(usa_extract$samples)
+
+names(usa_extract$variables)
+
+usa_extract$variables$AGE
 
 \dontrun{
 # Use the extract definition to submit an extract request to the API
-submit_extract(my_extract)
+submit_extract(usa_extract)
 }
 }
 \seealso{

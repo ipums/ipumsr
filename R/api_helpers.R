@@ -497,13 +497,46 @@ print.ipums_extract <- function(x, ...) {
 
 #' @export
 print.micro_extract <- function(x, ...) {
+  styler <- extract_field_styler("bold")
+
+  samps_to_cat <- purrr::compact(
+    purrr::map(
+      x$samples,
+      function(x) {
+        if (inherits(x, "ipums_sample")) {
+          x$name
+        }
+      }
+    )
+  )
+
+  vars_to_cat <- purrr::compact(
+    purrr::map(
+      x$variables,
+      function(x) {
+        if (inherits(x, "ipums_variable")) {
+          x$name
+        }
+      }
+    )
+  )
+
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
+    "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
+    "\n\n",
+    print_truncated_vector(
+      samps_to_cat,
+      styler("Samples: ")
+    ),
+    "\n",
+    print_truncated_vector(
+      vars_to_cat,
+      styler("Variables: ")
+    ),
     "\n"
   )
 
@@ -515,7 +548,6 @@ print.micro_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
-
   ds_to_cat <- purrr::compact(purrr::map(
     x$datasets,
     function(d) {
@@ -677,9 +709,9 @@ nhgis_print_color <- function(type) {
   type <- match.arg(type, c("dataset", "time_series_table", "shapefile"))
 
   switch(type,
-         dataset = "blue",
-         time_series_table = "green",
-         shapefile = "yellow"
+    dataset = "blue",
+    time_series_table = "green",
+    shapefile = "yellow"
   )
 }
 
@@ -1235,11 +1267,11 @@ resubmission_hint <- function(is_extract) {
 # Helper to convert metadata camelCase names to snake_case
 # for consistency with ipums_extract object naming.
 to_snake_case <- function(x) {
-  x <- tolower(gsub("([A-Z])","\\_\\1", x))
+  x <- tolower(gsub("([A-Z])", "\\_\\1", x))
   x <- gsub("_{2,}", "_", x)
   gsub("^_", "", x)
 }
 
 to_camel_case <- function(x) {
-  gsub('\\_(\\w?)', '\\U\\1', x, perl = TRUE)
+  gsub("\\_(\\w?)", "\\U\\1", x, perl = TRUE)
 }

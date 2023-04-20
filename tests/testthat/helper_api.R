@@ -1,18 +1,42 @@
 # Sample extracts for use in api unit testing
 test_usa_extract <- function() {
   define_extract_usa(
-    samples = "us2017b",
-    variables = "YEAR",
-    description = "Test extract",
+    description = "Test USA extract",
+    samples = new_sample("us2017b"),
+    variables = list(
+      new_variable(
+        "RACE",
+        case_selections = c("801", "802"),
+        case_selection_type = "detailed",
+        preselected = FALSE
+      ),
+      "YEAR"
+    ),
     data_format = "fixed_width"
   )
 }
 
 test_cps_extract <- function() {
   define_extract_cps(
-    samples = c("cps1976_01s", "cps1976_02b"),
-    variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1"),
     description = "Compare age-sex-race breakdowns 1976",
+    samples = c("cps2018_03s", "cps2019_03s"),
+    variables = list(
+      new_variable(
+        "AGE",
+        attached_characteristics = "head",
+        data_quality_flags = TRUE
+      ),
+      new_variable(
+        "SEX",
+        case_selections = "2",
+        attached_characteristics = c("mother", "father")
+      ),
+      new_variable(
+        "RACE",
+        case_selections = c("810", "811", "812"),
+        case_selection_type = "general"
+      )
+    ),
     data_format = "fixed_width",
     data_structure = "hierarchical"
   )

@@ -277,7 +277,7 @@ get_last_extract_info <- function(collection = NULL,
 #'
 #'   For [extract_list_to_tbl()], a [`tibble`][tibble::tbl_df-class]
 #'   representing the specifications for each of the extract requests
-#'   represented in `extract_list`. Each column corresponds to an extract field.
+#'   represented in `extract_list`.
 #'
 #' @export
 #'
@@ -346,9 +346,10 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     )
   }
 
+  # TODO: This conversion process is incredibly fragile. Extracts
+  # are not designed to be represented in tabular form. I think we should
+  # consider deprecating this functionality entirely.
   if (collection == "nhgis") {
-    # This is about the jankiest code I've ever written. We should deprecate this
-    # functionality to be honest.
     if (!requireNamespace("tidyr", quietly = TRUE)) {
       rlang::abort(
         paste0(
@@ -361,17 +362,20 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     ds <- extract_tbl %>%
       dplyr::filter(.data$data_type == "datasets")
 
+    # If any datasets, coerce to ipums_dataset objects
     if (nrow(ds) > 0) {
       ds <- ds %>%
         dplyr::rowwise() %>%
         dplyr::mutate(
-          "datasets" = list(
-            new_dataset(
-              .data$name,
-              .data$data_tables,
-              .data$geog_levels,
-              .data$years,
-              .data$breakdown_values
+          "datasets" = set_nested_names(
+            list(
+              new_dataset(
+                .data$name,
+                .data$data_tables,
+                .data$geog_levels,
+                .data$years,
+                .data$breakdown_values
+              )
             )
           )
         )
@@ -380,22 +384,33 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     tst <- extract_tbl %>%
       dplyr::filter(.data$data_type == "time_series_tables")
 
+    # If any tsts, coerce to ipums_tst objects
     if (nrow(tst) > 0) {
       tst <- tst %>%
         dplyr::rowwise() %>%
         dplyr::mutate(
-          "time_series_tables" = list(
-            new_tst(.data$name, .data$geog_levels, .data$years)
+          "time_series_tables" = set_nested_names(
+            list(
+              new_tst(.data$name, .data$geog_levels, .data$years)
+            )
           )
         )
     }
 
+    # Relabel shapefiles as `shapefiles` instead of `name`
     shp <- extract_tbl %>%
       dplyr::filter(.data$data_type == "shapefiles") %>%
       dplyr::rename("shapefiles" = "name")
 
+    # For each extract number, produce a single row containing all
+    # datasets, time series tables, and shapefiles. This requires additional
+    # handling to ensure that we create NULL objects for missing fields rather
+    # than throwing errors.
     extract_tbl <- dplyr::bind_rows(ds, tst, shp) %>%
-      dplyr::select(-c("data_type", "name", "data_tables", "geog_levels", "years", "breakdown_values")) %>%
+      dplyr::select(-c(
+        "data_type", "name", "data_tables", "geog_levels",
+        "years", "breakdown_values"
+      )) %>%
       dplyr::group_by(.data$number) %>%
       dplyr::mutate(
         "datasets" = tryCatch(
@@ -405,13 +420,23 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
         "time_series_tables" = tryCatch(
           purrr::map(list(.data$time_series_tables), purrr::compact),
           error = function(cnd) list(NULL)
+        ),
+        "datasets" = purrr::map(
+          .data$datasets,
+          empty_to_null
+        ),
+        "time_series_tables" = purrr::map(
+          .data$time_series_tables,
+          empty_to_null
         )
       ) %>%
       tidyr::fill("shapefiles", .direction = "downup") %>%
       dplyr::distinct() %>%
-      dplyr::arrange(dplyr::desc(.data$number))
+      dplyr::arrange(dplyr::desc(.data$number)) %>%
+      dplyr::ungroup()
 
-    var_sort <- c(
+    # Names of output columns to be used
+    out_vars <- c(
       "collection", "number",
       "description", "datasets", "time_series_tables",
       "geographic_extents", "shapefiles",
@@ -419,26 +444,68 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
       "tst_layout", "data_format",
       "submitted", "download_links", "status"
     )
-
-    extract_tbl <- extract_tbl %>% dplyr::select(dplyr::any_of(var_sort))
-    numbers <- extract_tbl$number
-
-    extract_tbl <- purrr::map(
-      extract_tbl[, setdiff(var_sort, "number")],
-      function(c) {
-        purrr::map(
-          c,
-          ~ if ((is_empty(.x) && !is_named(.x)) || is_na(.x)) {
-            NULL
-          } else {
-            .x
-          }
+  } else {
+    # Convert samples and variables to ipums_sample and ipums_variable objects
+    # based on associated values in other tbl columns
+    extract_tbl <- extract_tbl %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(
+        samples = list(
+          set_nested_names(
+            purrr::map(
+              .data$samples,
+              ~ new_sample(name = .x)
+            )
+          )
+        ),
+        variables = list(
+          set_nested_names(
+            purrr::map(
+              .data$variables,
+              ~ new_variable(
+                name = .x,
+                case_selections = .data$case_selections[[.x]],
+                case_selection_type = .data$case_selection_type[[.x]],
+                data_quality_flags = .data$data_quality_flags[[.x]],
+                attached_characteristics = .data$attached_characteristics[[.x]],
+                preselected = .data$preselected[[.x]]
+              )
+            )
+          )
         )
-      }
-    )
+      )
 
-    extract_tbl <- c(extract_tbl, list(number = numbers))
+    # Names of output columns to be used
+    out_vars <- c(
+      "collection", "number",
+      "description", "samples", "variables",
+      "data_structure", "rectangular_on", "data_format",
+      "submitted", "download_links", "status"
+    )
   }
+
+  extract_tbl <- dplyr::select(extract_tbl, dplyr::any_of(out_vars))
+
+  # Remove number because otherwise it is coerced to NULL in
+  # unsubmitted extracts
+  numbers <- extract_tbl$number
+
+  # Handling for fields that are NA in tbl but NULL in object
+  extract_tbl <- purrr::map(
+    extract_tbl[, setdiff(out_vars, "number")],
+    function(c) {
+      purrr::map(
+        c,
+        ~ if ((is_empty(.x) && !is_named(.x)) || is_na(.x)) {
+          NULL
+        } else {
+          .x
+        }
+      )
+    }
+  )
+
+  extract_tbl <- c(extract_tbl, list(number = numbers))
 
   extract_list <- purrr::pmap(extract_tbl, new_ipums_extract)
 
@@ -499,13 +566,46 @@ extract_to_tbl <- function(x) {
 
 #' @export
 extract_to_tbl.micro_extract <- function(x) {
-  if (is.character(x$samples)) x$samples <- list(x$samples)
-  if (is.character(x$variables)) x$variables <- list(x$variables)
-  x$download_links <- list(x$download_links)
+  base_vars <- tibble::tibble(
+    collection = x$collection,
+    description = x$description,
+    data_structure = x$data_structure,
+    rectangular_on = x$rectangular_on %||% NA_character_,
+    data_format = x$data_format,
+    submitted = x$submitted,
+    download_links = list(x$download_links),
+    number = x$number,
+    status = x$status
+  )
 
-  unclassed_extract <- unclass(x)
+  vars <- tibble::tibble(
+    number = x$number,
+    variables = list(names(x$variables)),
+    case_selections = list(purrr::map(x$variables, ~ .x$case_selections)),
+    attached_characteristics = list(purrr::map(x$variables, ~ .x$attached_characteristics)),
+    data_quality_flags = list(purrr::map(x$variables, ~ .x$data_quality_flags)),
+    case_selection_type = list(purrr::map(x$variables, ~ .x$case_selection_type)),
+    preselected = list(purrr::map(x$variables, ~ .x$preselected))
+  )
 
-  do.call(tibble::tibble, unclassed_extract)
+  samps <- tibble::tibble(
+    number = x$number,
+    samples = list(names(x$samples))
+  )
+
+  tbl <- purrr::reduce(
+    list(base_vars, vars, samps),
+    ~ dplyr::full_join(.x, .y, by = "number")
+  )
+
+  var_order <- c(
+    "collection", "number", "description", "samples",
+    "variables", "case_selections", "case_selection_type",
+    "attached_characteristics", "data_quality_flags", "preselected", "data_structure",
+    "rectangular_on", "data_format", "submitted", "download_links", "status"
+  )
+
+  tbl[, var_order]
 }
 
 #' @export
@@ -597,6 +697,8 @@ get_extract_tbl_fields.nhgis_extract <- function(x) {
 get_extract_tbl_fields.micro_extract <- function(x) {
   c(
     "collection", "description", "samples", "variables",
+    "case_selections", "case_selection_type", "attached_characteristics",
+    "data_quality_flags", "preselected",
     "data_format", "data_structure", "rectangular_on",
     "submitted", "download_links", "number", "status"
   )

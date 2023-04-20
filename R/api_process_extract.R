@@ -179,7 +179,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-              timeout_seconds > 0)
+    timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -563,8 +563,8 @@ extract_to_request_json.micro_extract <- function(extract) {
       extract$rectangular_on
     ),
     dataFormat = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables),
+    samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
+    variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
     collection = extract$collection,
     version = ipums_api_version()
   )
@@ -602,20 +602,32 @@ format_for_json.ipums_nested <- function(x) {
   purrr::set_names(list(l), x$name)
 }
 
-format_samples_for_json <- function(samples) {
-  if (length(samples) == 1 && is.na(samples)) {
-    return(EMPTY_NAMED_LIST)
+#' @export
+format_for_json.ipums_variable <- function(x) {
+  if (is_null(x$case_selections)) {
+    case_selections <- NULL
+  } else {
+    case_selections <- purrr::set_names(
+      list(as.list(x$case_selections)),
+      x$case_selection_type
+    )
   }
-  sample_spec <- purrr::map(seq_along(samples), ~EMPTY_NAMED_LIST)
-  purrr::set_names(sample_spec, samples)
+
+  l <- purrr::compact(
+    list(
+      dataQualityFlags = x$data_quality_flags,
+      caseSelections = case_selections,
+      attachedCharacteristics = as.list(x$attached_characteristics),
+      preselected = x$preselected
+    )
+  )
+
+  purrr::set_names(list(l), x$name)
 }
 
-format_variables_for_json <- function(variables) {
-  if (length(variables) == 1 && is.na(variables)) {
-    return(EMPTY_NAMED_LIST)
-  }
-  var_spec <- purrr::map(seq_along(variables), ~EMPTY_NAMED_LIST)
-  purrr::set_names(var_spec, variables)
+#' @export
+format_for_json.default <- function(x) {
+  x
 }
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {

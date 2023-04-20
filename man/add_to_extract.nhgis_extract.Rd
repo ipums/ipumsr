@@ -22,15 +22,22 @@
 
 \item{description}{Description of the extract.}
 
-\item{datasets}{List of \code{ipums_dataset} objects created by \code{new_dataset()}
+\item{datasets}{List of \code{ipums_dataset} objects created by \code{\link[=new_dataset]{new_dataset()}}
 containing the specifications
 for the \href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
-to include in the extract request. See examples.}
+to include in the extract request. See examples.
 
-\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{new_tst()}
+If a dataset already exists in the extract, its new specifications
+will be added to those that already exist for that dataset.}
+
+\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{\link[=new_tst]{new_tst()}}
 containing the specifications for the
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
-to include in the extract request. See examples.}
+to include in the extract request.
+
+If a time series table already exists in the extract, its new
+specifications will be added to those that already exist for that time
+series table.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
 all of the \code{datasets} in the extract definition (for instance, to obtain
@@ -60,7 +67,7 @@ multiple breakdown values specified. See \code{\link[=get_nhgis_metadata]{get_nh
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
-the extract definition. One of:
+the extract definition.
 \itemize{
 \item \code{"time_by_column_layout"} (wide format, default): rows correspond to
 geographic units, columns correspond to different times in the time
@@ -73,15 +80,16 @@ separate files
 
 Required when an extract definition includes any \code{time_series_tables}.}
 
-\item{data_format}{The desired format of the extract data file. One of:
+\item{data_format}{The desired format of the extract data file.
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
 row
 \item \code{"csv_header"} includes a second, more descriptive header row.
-(By default this header is removed when reading data with \code{\link[=read_nhgis]{read_nhgis()}},
-but it can be retained.)
 \item \code{"fixed_width"} provides data in a fixed width format
 }
+
+Note that \code{\link[=read_nhgis]{read_nhgis()}} removes the additional header row in
+\code{"csv_header"} files by default.
 
 Required when an extract definition includes any \code{datasets} or
 \code{time_series_tables}.}
@@ -108,12 +116,6 @@ To remove existing values from an IPUMS NHGIS extract definition, use
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
-If any of the specifications provided to \code{datasets} or \code{time_series_tables}
-reference dataset or time series table names that already exist in the
-extract definition, their specifications will be merged with those present
-in the definition. An extract will never contain two records for the same
-dataset or time series table name. See examples.
-
 For extract fields that take a single value, \code{add_to_extract()} will
 replace the existing value with the new value provided for that field.
 It is not necessary to first remove this value using
@@ -140,7 +142,8 @@ add_to_extract(
 )
 
 # If a dataset/time series table name already exists in the definition
-# its specification will be modified
+# its specification will be modified by adding the new specification to
+# the existing one
 add_to_extract(
   extract,
   datasets = new_dataset("1990_STF1", "NP4", "nation")

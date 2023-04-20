@@ -1,4 +1,3 @@
-
 # Make down-sampled version of a CPS extract for use in the big data vignette
 #
 # As part of our effort to remove the soft-dependence of ipumsr on the

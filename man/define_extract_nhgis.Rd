@@ -2,8 +2,6 @@
 % Please edit documentation in R/api_define_extract.R
 \name{define_extract_nhgis}
 \alias{define_extract_nhgis}
-\alias{new_dataset}
-\alias{new_tst}
 \title{Define an IPUMS NHGIS extract request}
 \usage{
 define_extract_nhgis(
@@ -16,26 +14,16 @@ define_extract_nhgis(
   tst_layout = NULL,
   data_format = NULL
 )
-
-new_dataset(
-  name,
-  data_tables,
-  geog_levels,
-  years = NULL,
-  breakdown_values = NULL
-)
-
-new_tst(name, geog_levels, years = NULL)
 }
 \arguments{
 \item{description}{Description of the extract.}
 
-\item{datasets}{List of \code{ipums_dataset} objects created by \code{new_dataset()}
+\item{datasets}{List of \code{ipums_dataset} objects created by \code{\link[=new_dataset]{new_dataset()}}
 containing the specifications
 for the \href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
 to include in the extract request. See examples.}
 
-\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{new_tst()}
+\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{\link[=new_tst]{new_tst()}}
 containing the specifications for the
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
 to include in the extract request. See examples.}
@@ -68,7 +56,7 @@ multiple breakdown values specified. See \code{\link[=get_nhgis_metadata]{get_nh
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
-the extract definition. One of:
+the extract definition.
 \itemize{
 \item \code{"time_by_column_layout"} (wide format, default): rows correspond to
 geographic units, columns correspond to different times in the time
@@ -81,43 +69,27 @@ separate files
 
 Required when an extract definition includes any \code{time_series_tables}.}
 
-\item{data_format}{The desired format of the extract data file. One of:
+\item{data_format}{The desired format of the extract data file.
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
 row
 \item \code{"csv_header"} includes a second, more descriptive header row.
-(By default this header is removed when reading data with \code{\link[=read_nhgis]{read_nhgis()}},
-but it can be retained.)
 \item \code{"fixed_width"} provides data in a fixed width format
 }
 
+Note that \code{\link[=read_nhgis]{read_nhgis()}} removes the additional header row in
+\code{"csv_header"} files by default.
+
 Required when an extract definition includes any \code{datasets} or
 \code{time_series_tables}.}
-
-\item{name}{Name of the dataset or time series table to include in this
-specification.}
-
-\item{data_tables}{Vector of summary tables to retrieve for this dataset.}
-
-\item{geog_levels}{Geographic levels (e.g. \code{"county"} or \code{"state"})
-at which to obtain data for this dataset or time series table.}
-
-\item{years}{Years for which to obtain the data for this dataset or time
-series table. Use \code{"*"} to select all available years.
-
-Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a dataset allows year selection.}
-
-\item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
-to apply to this dataset.}
 }
 \value{
 An object of class \code{\link[=ipums_extract-class]{nhgis_extract}} containing
 the extract definition.
 }
 \description{
-Define an IPUMS NHGIS request to be submitted via the IPUMS
-API. An extract request contains the specifications required
-to obtain a particular set of data from the IPUMS NHGIS system.
+Define the parameters of an IPUMS NHGIS extract request to be submitted via
+the IPUMS API.
 
 Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to browse and identify data sources for use
 in NHGIS extract definitions. For general information, see the NHGIS
@@ -129,14 +101,14 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 \details{
 An NHGIS extract definition must include at least one dataset, time series
 table, or shapefile specification.
-\itemize{
-\item Create an NHGIS dataset specification with \code{new_dataset()}. Each dataset
+
+Create an NHGIS dataset specification with \code{\link[=new_dataset]{new_dataset()}}. Each dataset
 must be associated with a selection of \code{data_tables} and \code{geog_levels}. Some
 datasets also support the selection of \code{years} and \code{breakdown_values}.
-\item Create an NHGIS time series table specification with \code{new_tst()}. Each time
+
+Create an NHGIS time series table specification with \code{\link[=new_tst]{new_tst()}}. Each time
 series table must be associated with a selection of \code{geog_levels} and
-optionally with a selection of \code{years}.
-}
+may optionally be associated with a selection of \code{years}.
 
 See examples for more details about specifying datasets and time series
 tables in an NHGIS extract definition.
@@ -144,7 +116,7 @@ tables in an NHGIS extract definition.
 \examples{
 # Extract definition for tables from an NHGIS dataset
 # Use `new_dataset()` to create an NHGIS dataset specification
-my_extract_def <- define_extract_nhgis(
+nhgis_extract <- define_extract_nhgis(
   description = "Example NHGIS extract",
   datasets = new_dataset(
     "1990_STF3",
@@ -153,7 +125,7 @@ my_extract_def <- define_extract_nhgis(
   )
 )
 
-my_extract_def
+nhgis_extract
 
 # Use `new_tst()` to create an NHGIS time series table specification
 define_extract_nhgis(
@@ -163,7 +135,6 @@ define_extract_nhgis(
 )
 
 # To request multiple datasets, provide a list of `ipums_dataset` objects
-# to the `datasets` argument
 define_extract_nhgis(
   description = "Extract definition with multiple datasets",
   datasets = list(
@@ -172,20 +143,42 @@ define_extract_nhgis(
   )
 )
 
-# You can store dataset and time series table specs outside of a definition
-ds <- new_dataset("1990_STF1", c("NP1", "NP2"), "county")
-tst <- new_tst("CL6", "state")
+# If you need to specify the same table or geographic level for
+# many datasets, you may want to make a set of datasets before defining
+# your extract request:
+dataset_names <- c("2014_2018_ACS5a", "2015_2019_ACS5a")
+
+dataset_spec <- purrr::map(
+  dataset_names,
+  ~ new_dataset(
+    .x,
+    data_tables = "B01001",
+    geog_levels = c("state", "county")
+  )
+)
 
 define_extract_nhgis(
+  description = "Extract definition with multiple datasets",
+  datasets = dataset_spec
+)
+
+# You can request datasets, time series tables, and shapefiles in the same
+# definition:
+define_extract_nhgis(
   description = "Extract with datasets and time series tables",
-  datasets = ds,
-  time_series_tables = tst,
+  datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "county"),
+  time_series_tables = new_tst("CL6", "state"),
   shapefiles = "us_county_1990_tl2008"
 )
 
+# Extract specifications can be indexed by name
+names(nhgis_extract$datasets)
+
+nhgis_extract$datasets[["1990_STF3"]]
+
 \dontrun{
 # Use the extract definition to submit an extract request to the API
-submit_extract(my_extract)
+submit_extract(nhgis_extract)
 }
 }
 \seealso{

@@ -40,9 +40,6 @@ A modified \code{nhgis_extract} object
 Remove existing values from an IPUMS NHGIS extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
-In general, removing from an extract follows the same syntax conventions as
-used in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
-
 To add new values to an IPUMS NHGIS extract definition, use
 \code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}.
 
@@ -57,6 +54,10 @@ removed.) Thus, it is not necessary to explicitly remove these values.
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
+
+To retain a dataset or time series table while modifying its particular
+specifications, first remove that dataset or time series table, then add a
+new specification using \code{add_to_extract()}.
 }
 \examples{
 extract <- define_extract_nhgis(
