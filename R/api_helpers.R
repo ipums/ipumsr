@@ -762,6 +762,33 @@ api_base_url <- function() {
   url
 }
 
+# Low-level function to make basic requests to the IPUMS API.
+#
+# A basic wrapper of httr::VERB to add ipumsr user agent and API key
+# authorization. This is wrapped in higher-level functions to attach
+# endpoint-specific behavior.
+ipums_api_request <- function(verb,
+                              url,
+                              body = FALSE,
+                              api_key = Sys.getenv("IPUMS_API_KEY"),
+                              ...) {
+  response <- httr::VERB(
+    verb = verb,
+    url = url,
+    body = body,
+    httr::user_agent(
+      paste0(
+        "https://github.com/ipums/ipumsr ",
+        as.character(utils::packageVersion("ipumsr"))
+      )
+    ),
+    add_user_auth_header(api_key),
+    ...
+  )
+
+  response
+}
+
 #' Get the active API instance to use for API requests
 #'
 #' @description
@@ -891,65 +918,4 @@ to_snake_case <- function(x) {
   x <- tolower(gsub("([A-Z])","\\_\\1", x))
   x <- gsub("_{2,}", "_", x)
   gsub("^_", "", x)
-}
-
-#' Helper function to retrieve paginated data via API
-#'
-#' @param collection The IPUMS data collection for the extract.
-#' @param path Extensions to add to the base url.
-#' @param page_size An integer for the number of items to retrieve for each page.
-#'   Default is 1500. This is also the maximum allowed page size.
-#'
-#' @return A list of items retrieved from the specified collection/path endpoints.
-#'
-#' @noRd
-get_pages <- function(collection,
-                      path,
-                      page_size=1500){
-  # max allowed page size is 1500
-  if (page_size > 1500) {
-    rlang::abort("The maximum allowed page size is 1500.")
-  }
-
-  request_str <- ipums_api_json_request("GET",
-                                        collection,
-                                        path,
-                                        queries = list(pageSize = page_size))
-
-  api_response <- jsonlite::fromJSON(request_str[1], simplifyVector = FALSE)
-  extracts <- extract_list_from_json(request_str)
-  while (!is.null(api_response$links$nextPage)){
-    # get the next page
-    next_page_str <- api_request("GET", api_response$links$nextPage)
-    # make it a json
-    api_response <- jsonlite::fromJSON(next_page_str[1], simplifyVector = FALSE)
-    # get extracts from this page
-    this_page_extracts <- extract_list_from_json(new_ipums_json(next_page_str,
-                                                                collection=collection))
-    extracts <- c(extracts, this_page_extracts)
-  }
-  extracts
-}
-
-#' Helper function to retrieve extract history for a specified
-#'   IPUMS data collection
-#'
-#' @param collection The IPUMS data collection for the extract.
-#'
-#' @return A table of extract definitions
-#' @export
-#'
-#' @examples
-#' my_extracts <- get_extract_history("cps")
-#'
-#' \dontrun{
-#' # Retrieve your extract history as a data frame
-#' my_extracts <- get_extract_history("cps")
-#'
-#' # Now you can filter for extract contents/features
-#' statefip_extracts <- filter(my_extracts, str_detect(variables, "STATEFIP"))
-#' }
-get_extract_history <- function(collection){
-  extract_history <- get_pages(collection, "extracts/")
-  extract_histry_tbl <- extract_list_to_tbl(extract_history)
 }

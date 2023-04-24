@@ -291,7 +291,7 @@ get_nhgis_metadata <- function(type = NULL,
 #'
 #' @noRd
 get_nhgis_summary_metadata <- function(type,
-                                       n_records,
+                                       n_records = NULL,
                                        api_key = Sys.getenv("IPUMS_API_KEY"),
                                        get_all_records = is_null(n_records)) {
   valid_types <- c(
@@ -352,16 +352,12 @@ ipums_api_metadata_request <- function(url,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
   tryCatch(
     {
-      res <- httr::GET(
+      res <- ipums_api_request(
+        "GET",
         url = url,
-        httr::user_agent(
-          paste0(
-            "https://github.com/ipums/ipumsr ",
-            as.character(utils::packageVersion("ipumsr"))
-          )
-        ),
-        httr::content_type_json(),
-        add_user_auth_header(api_key)
+        body = FALSE,
+        api_key = api_key,
+        httr::content_type_json()
       )
 
       content <- jsonlite::fromJSON(
@@ -440,7 +436,7 @@ metadata_request_path <- function(collection, path) {
 
   args <- c("metadata", collection, rbind(fields, unlist(path)))
 
-  # Avoids extra `/` for unnamed args in `...`
+  # Avoids extra `/` for unnamed args in `path`
   args <- args[which(args != "")]
 
   paste(args, collapse = "/")

@@ -11,6 +11,9 @@
 * `get_recent_extracts_info()` replaces `get_recent_extracts_info_*()` functions.
   Set `table = TRUE` to get recent extract information in tabular format.
   
+* Allows retrieval of full extract history in tabular format with 
+  `get_extract_history()`.
+  
 * Adds `combine_extracts()` to allow for the merging of multiple extract
   definitions.
   

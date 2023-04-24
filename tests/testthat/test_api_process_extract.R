@@ -502,10 +502,12 @@ test_that("We parse API errors on bad requests", {
 
   vcr::use_cassette("micro-extract-errors", {
     expect_error(
-      ipums_api_json_request(
+      ipums_api_extracts_request(
         "POST",
-        collection = "usa",
-        path = "extracts/",
+        url = ipums_extract_request_url(
+          collection = "usa",
+          path = "extracts/"
+        ),
         body = extract_to_request_json(bad_extract),
         api_key = Sys.getenv("IPUMS_API_KEY")
       ),

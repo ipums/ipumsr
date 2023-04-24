@@ -331,16 +331,39 @@ test_that("Can parse API errors on bad requests", {
       )
     )
     expect_error(
-      ipums_api_json_request(
+      ipums_api_extracts_request(
         "POST",
-        collection = "nhgis",
-        path = "extracts/",
+        url = ipums_extract_request_url(
+          collection = "nhgis",
+          path = "extracts/"
+        ),
         body = extract_to_request_json(bad_extract),
         api_key = Sys.getenv("IPUMS_API_KEY")
       ),
       "Datasets invalid"
     )
   })
+})
+
+# Paginated extract history -----------------
+
+test_that("Extract history works", {
+  skip_if_no_api_access(have_api_access)
+
+  # We test `get_extract_pages` rather than `get_extract_history` directly
+  # because the latter doesn't expose page_size option
+  vcr::use_cassette("extract-history", {
+    extracts <- get_extract_pages("cps", page_size = 100)
+  })
+
+  expect_equal(nrow(extracts), 440)
+  expect_equal(extracts[440, ][["number"]], 1)
+
+  # fail if you ask for an un-allowed page size
+  expect_error(
+    get_extract_pages("cps", page_size = 1501),
+    "maximum allowed page size is 1500"
+  )
 })
 
 # Recent extract tbl ------------------------

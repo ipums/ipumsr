@@ -89,7 +89,7 @@ Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 
 Support for IPUMS Terra has been discontinued. These functions will be
 removed in a future release. For general handling of raster data in R, see the
-\link[terra:terra]{terra} package.
+\link[terra:terra-package]{terra} package.
 }
 \examples{
 \dontrun{

@@ -5,19 +5,13 @@
 
 # Exported functions -----------------------------------------------------------
 
-#' Get information about submitted extract requests
+#' Retrieve the definition and latest status of an extract request
 #'
 #' @description
-#' Retrieve the definitions of your previously submitted extract requests.
+#' Retrieve the latest extract status of an extract request.
 #'
-#' Use `get_extract_info()` to retrieve the definition and current status of a
-#' specific extract request.
-#'
-#' Use `get_recent_extracts_info()` to retrieve the information for the most
-#' recent extract requests for a particular collection.
-#'
-#' `get_last_extract_info()` is a convenience function to retrieve the
-#' most recent extract request for a given collection.
+#' To browse definitions of your previously submitted extract requests, see
+#' [get_recent_extracts_info()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -37,14 +31,11 @@
 #' @inheritParams submit_extract
 #'
 #' @return
-#' For `get_extract_info()` and `get_last_extract_info()`, an
-#' [`ipums_extract`][ipums_extract-class] object.
-#'
-#' For `get_recent_extracts_info()`, a list of
-#' [`ipums_extract`][ipums_extract-class] objects (if `table = FALSE`) or
-#' a [`tibble`][tibble::tbl_df-class] (if `table = TRUE`).
+#' An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @seealso
+#' [get_recent_extracts_info()] to browse past extract definitions
+#'
 #' [submit_extract()] and [download_extract()] to
 #'   process and manage an extract request.
 #'
@@ -79,17 +70,9 @@
 #' get_extract_info("usa:1")
 #' get_extract_info(c("usa", "1"))
 #'
-#' # Get information for multiple recent requests by specifying a collection
-#' # with no number:
-#' get_recent_extracts_info("usa")
-#'
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("nhgis")
 #' get_extract_info(1)
-#'
-#' # Or omit the number to get information about recent extracts
-#' get_recent_extracts_info(how_many = 3, table = TRUE)
-#' get_last_extract_info()
 #' }
 get_extract_info <- function(extract,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
@@ -111,22 +94,39 @@ get_extract_info <- function(extract,
     )
   }
 
-  response <- ipums_api_json_request(
+  url <- ipums_extract_request_url(
+    collection = extract$collection,
+    path = paste0("extracts/", extract$number)
+  )
+
+  response <- ipums_api_extracts_request(
     "GET",
-    collection = tolower(extract$collection),
-    path = paste0("extracts/", extract$number),
-    queries = NULL,
+    collection = extract$collection,
+    url = url,
     api_key = api_key
   )
 
   extract_list_from_json(response, validate = TRUE)[[1]]
 }
 
-#' @param collection Character string of the IPUMS collection for which to
-#'   retrieve recent extract requests.
+#' Retrieve information about past extract requests
 #'
-#'   If `NULL`, uses the current default
-#'   collection, if it exists. See [set_ipums_default_collection()].
+#' @description
+#' Browse definitions of previously-submitted extract requests.
+#'
+#' `get_recent_extracts_info()` retrieves definitions for your most recently
+#' submitted extract requests, while `get_extract_history()` retrieves
+#' definitions for all of your extract requests for a given collection.
+#'
+#' `get_last_extract_info()` is a convenience function to retrieve the most
+#' recent extract for a given collection.
+#'
+#' To check the status of a particular extract request, use
+#' [get_extract_info()].
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @inheritParams get_extract_info
 #' @param how_many The number of recent extract requests for which to retrieve
 #'   information.
 #' @param table Logical value indicating whether to return recent extract
@@ -134,17 +134,57 @@ get_extract_info <- function(extract,
 #'   [`ipums_extract`][ipums_extract-class] objects (`FALSE`). Defaults to
 #'   `FALSE`.
 #'
-#' @rdname get_extract_info
+#' @return
+#' If `table = FALSE`, a list of [`ipums_extract`][ipums_extract-class] objects.
+#' If `table = TRUE`, a [`tibble`][tibble::tbl_df-class] containing the
+#' extract definitions.
+#'
+#' `get_extract_history()` always returns a `tibble` of extract definitions.
+#'
+#' `get_last_extract_info()` returns a single `ipums_extract` object.
+#'
+#' @seealso
+#' [get_extract_info()] to get the current status of a specific extract request.
+#'
+#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#'   revise an extract definition.
+#'
+#' [extract_tbl_to_list()] and [extract_list_to_tbl()] to manipulate information
+#' about recent extract requests.
+#'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Get information for most recent extract requests
+#' get_recent_extracts_info("usa")
+#'
+#' # Adjust the number to return and output format
+#' get_recent_extracts_info("cps", how_many = 3, table = TRUE)
+#'
+#' # Get information on all past extract requests
+#' get_extract_history("nhgis")
+#'
+#' # To get the most recent extract (for instance, if you have forgotten its
+#' # extract number), use `get_last_extract_info()`
+#' get_last_extract_info("nhgis")
+#' }
 get_recent_extracts_info <- function(collection = NULL,
                                      how_many = 10,
                                      table = FALSE,
                                      api_key = Sys.getenv("IPUMS_API_KEY")) {
-  response <- ipums_api_json_request(
-    "GET",
-    collection = collection %||% get_default_collection(),
+  collection <- collection %||% get_default_collection()
+
+  url <- ipums_extract_request_url(
+    collection = collection,
     path = "extracts/",
-    queries = list(pageNumber = 1, pageSize = how_many),
+    queries = list(pageNumber = 1, pageSize = how_many)
+  )
+
+  response <- ipums_api_extracts_request(
+    "GET",
+    collection = collection,
+    url = url,
     api_key = api_key
   )
 
@@ -157,7 +197,36 @@ get_recent_extracts_info <- function(collection = NULL,
   recent_extracts
 }
 
-#' @rdname get_extract_info
+#' @param sleep Logical indicating whether to add a brief delay between
+#'   API calls when retrieving extract history.
+#'
+#'   In general, this should not be needed. However, if you cannot
+#'   retrieve your entire extract history without hitting the API rate limit,
+#'   you may want to set this to `TRUE`.
+#'
+#' @export
+#'
+#' @rdname get_recent_extracts_info
+get_extract_history <- function(collection = NULL,
+                                sleep = FALSE,
+                                api_key = Sys.getenv("IPUMS_API_KEY")) {
+  collection <- collection %||% get_default_collection()
+
+  get_extract_pages(
+    collection = collection,
+    page_size = 1500,
+    sleep = sleep,
+    api_key = api_key
+  )
+}
+
+#' @param collection Character string of the IPUMS collection for which to
+#'   retrieve recent extract requests.
+#'
+#'   If `NULL`, uses the current default
+#'   collection, if it exists. See [set_ipums_default_collection()].
+#'
+#' @rdname get_recent_extracts_info
 #' @export
 get_last_extract_info <- function(collection = NULL,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
