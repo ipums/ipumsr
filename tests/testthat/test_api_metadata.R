@@ -66,8 +66,9 @@ test_that("We can restrict number of records to retrieve", {
 
 test_that("We can iterate through pages to get all records", {
   vcr::use_cassette("nhgis-metadata-summary-iterate", {
-    ds_meta <- get_nhgis_summary_metadata(
-      "datasets",
+    ds_meta <- get_summary_metadata(
+      collection = "nhgis",
+      type = "datasets",
       n_records = 100,
       get_all_records = TRUE # not exposed to user, only used in testing
     )
@@ -186,8 +187,7 @@ test_that("We throw errors on bad metadata requests", {
   )
 
   expect_error(
-    get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
-    "Unable to submit metadata request"
+    get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1")
   )
 })
 
@@ -220,14 +220,14 @@ test_that("API throws expected authorization errors", {
         new = c("IPUMS_API_KEY" = NA),
         get_nhgis_metadata("datasets")
       ),
-      "Authorization field missing"
+      "API key is either missing or invalid"
     )
     expect_error(
       withr::with_envvar(
         new = c("IPUMS_API_KEY" = "foobar"),
         get_nhgis_metadata("datasets")
       ),
-      "Access to this API has been disallowed"
+      "API key is either missing or invalid"
     )
   })
 })

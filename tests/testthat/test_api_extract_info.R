@@ -321,7 +321,7 @@ test_that("Can parse API errors on bad requests", {
   vcr::use_cassette("nhgis-extract-errors", {
     expect_error(
       get_last_extract_info("nhgis", api_key = "foobar"),
-      "API Key is either missing or invalid"
+      "API key is either missing or invalid"
     )
     expect_error(
       get_extract_info(c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)),
@@ -333,9 +333,9 @@ test_that("Can parse API errors on bad requests", {
     expect_error(
       ipums_api_extracts_request(
         "POST",
-        url = ipums_extract_request_url(
+        url = api_request_url(
           collection = "nhgis",
-          path = "extracts/"
+          path = extract_request_path()
         ),
         body = extract_to_request_json(bad_extract),
         api_key = Sys.getenv("IPUMS_API_KEY")
@@ -350,20 +350,47 @@ test_that("Can parse API errors on bad requests", {
 test_that("Extract history works", {
   skip_if_no_api_access(have_api_access)
 
-  # We test `get_extract_pages` rather than `get_extract_history` directly
-  # because the latter doesn't expose page_size option
+  # We reproduce the internal workings of `get_extract_history()`
+  # so we can update the page size parameter, which is otherwise not exposed.
   vcr::use_cassette("extract-history", {
-    extracts <- get_extract_pages("cps", page_size = 100)
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "cps",
+        path = extract_request_path(),
+        queries = list(pageSize = 100)
+      )
+    )
   })
+
+  extracts <- purrr::map(
+    responses,
+    function(res) {
+      extract_list_from_json(
+        new_ipums_json(
+          httr::content(res, "text"),
+          collection = "cps"
+        )
+      )
+    }
+  )
+
+  extracts <- extract_list_to_tbl(purrr::flatten(extracts))
 
   expect_equal(nrow(extracts), 440)
   expect_equal(extracts[440, ][["number"]], 1)
 
-  # fail if you ask for an un-allowed page size
-  expect_error(
-    get_extract_pages("cps", page_size = 1501),
-    "maximum allowed page size is 1500"
-  )
+  vcr::use_cassette("paged-extract-error", {
+    expect_error(
+      ipums_api_paged_request(
+        url = api_request_url(
+          collection = "nhgis",
+          path = extract_request_path(),
+          queries = list(pageSize = 3000)
+        )
+      ),
+      "Invalid pageSize: 3000"
+    )
+  })
 })
 
 # Recent extract tbl ------------------------
@@ -432,7 +459,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 
   recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-      recent_nhgis_extracts_tbl$data_type == "datasets"),
+            recent_nhgis_extracts_tbl$data_type == "datasets"),
   ]
 
   row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)

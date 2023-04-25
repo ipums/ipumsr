@@ -504,9 +504,9 @@ test_that("We parse API errors on bad requests", {
     expect_error(
       ipums_api_extracts_request(
         "POST",
-        url = ipums_extract_request_url(
+        url = api_request_url(
           collection = "usa",
-          path = "extracts/"
+          path = extract_request_path()
         ),
         body = extract_to_request_json(bad_extract),
         api_key = Sys.getenv("IPUMS_API_KEY")

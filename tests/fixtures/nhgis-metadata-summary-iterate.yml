@@ -1,13 +1,12 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?version=2&pageNumber=1&pageSize=100
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=100
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -18,7 +17,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Tue, 25 Apr 2023 21:20:51 GMT
       etag: W/"c63aabce6b18c5158336911c0a2ecc37"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +29,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 01b416a4-81f5-49af-8d6d-53223ba0569c
-      x-runtime: '0.004536'
+      x-request-id: 35cfd707-e013-445f-9ceb-652685865d58
+      x-runtime: '0.006793'
       x-xss-protection: '0'
       content-length: '13683'
     body:
@@ -175,7 +174,7 @@ http_interactions:
         Data [US, States, Counties]","sequence":3603},{"name":"1960_tPH","group":"1960
         Census","description":"Population \u0026 Housing Data [Tracts: Major Cities
         \u0026 Surrounds]","sequence":3604}],"pageNumber":1,"pageSize":100,"totalCount":253,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=2\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
@@ -185,7 +184,6 @@ http_interactions:
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -196,7 +194,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Tue, 25 Apr 2023 21:20:51 GMT
       etag: W/"5c33cc2fdd8e37e9729e5224e4bf6278"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -208,8 +206,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 88009d08-62dd-45c4-88eb-3677ddfc9f4d
-      x-runtime: '0.004539'
+      x-request-id: 163d263c-22b9-4caa-bfb4-3303d549664c
+      x-runtime: '0.007393'
       x-xss-protection: '0'
       content-length: '13719'
     body:
@@ -355,7 +353,7 @@ http_interactions:
         Larger Areas]","sequence":4904},{"name":"2007_2011_ACS5c","group":"2011 American
         Community Survey","description":"5-Year Data [2007-2011, Summary by Residence
         1 Year Ago]","sequence":4905}],"pageNumber":2,"pageSize":100,"totalCount":253,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=1\u0026pageSize=100\u0026version=2","nextPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=3\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
@@ -365,7 +363,6 @@ http_interactions:
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -376,7 +373,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Tue, 25 Apr 2023 21:20:51 GMT
       etag: W/"b56d756004ae83ff8d6acd919de6a535"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -388,8 +385,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 15e26133-72d6-4c64-85b6-a5093ff1f219
-      x-runtime: '0.004655'
+      x-request-id: 59524524-a628-4cb2-aae3-ee811d80d2c9
+      x-runtime: '0.007616'
       x-xss-protection: '0'
       content-length: '7834'
     body:
@@ -489,5 +486,5 @@ http_interactions:
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
         of Work]","sequence":6005}],"pageNumber":3,"pageSize":100,"totalCount":253,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=2\u0026pageSize=100\u0026version=2","nextPage":null}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

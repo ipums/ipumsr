@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/time_series_tables?version=2&pageNumber=1&pageSize=30
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis&version=2&pageNumber=1&pageSize=30
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:27 GMT
-      etag: W/"ac4348ab046b0945f0d51ad2ccca5f18"
+      date: Tue, 25 Apr 2023 21:20:50 GMT
+      etag: W/"df16716940407e8d0474f5b066780de7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,10 +30,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: de6a4dce-5857-4953-86b5-c16cd8ab369f
-      x-runtime: '0.006348'
+      x-request-id: 114b1cb0-8bbc-4e0c-8820-b63381b174c0
+      x-runtime: '0.008811'
       x-xss-protection: '0'
-      content-length: '96896'
+      content-length: '96918'
     body:
       encoding: ''
       file: no
@@ -913,18 +913,17 @@ http_interactions:
         Area","sequence":363}]},{"name":"AS0","description":"Median Age of Persons
         by Sex [2]","geographicIntegration":"Nominal","sequence":35.01,"timeSeries":[{"name":"AA","description":"Median
         age: Persons: Male","sequence":1},{"name":"AB","description":"Median age:
-        Persons: Female","sequence":2}],"years":[{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"nation","description":"Nation","sequence":1},{"name":"region","description":"Region","sequence":2},{"name":"division","description":"Division","sequence":3},{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25}]}],"pageNumber":1,"pageSize":30,"totalCount":384,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/time_series_tables?pageNumber=2\u0026pageSize=30\u0026version=2"}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+        Persons: Female","sequence":2}],"years":[{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"nation","description":"Nation","sequence":1},{"name":"region","description":"Region","sequence":2},{"name":"division","description":"Division","sequence":3},{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25}]}],"pageNumber":1,"pageSize":30,"totalCount":384,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis\u0026pageNumber=2\u0026pageSize=30\u0026version=2"}}'
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -935,7 +934,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Tue, 25 Apr 2023 21:20:50 GMT
       etag: W/"9fcbe25607d733017f7e4c7aa4b7824d"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -947,8 +946,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: afa41e6f-c81c-436b-b9a9-038132316313
-      x-runtime: '0.006051'
+      x-request-id: 7787203e-d28a-483c-92cc-c951f85b9d24
+      x-runtime: '0.008278'
       x-xss-protection: '0'
       content-length: '34675'
     body:
@@ -1325,5 +1324,5 @@ http_interactions:
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
         of Work]","sequence":6005}],"pageNumber":1,"pageSize":2500,"totalCount":253,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

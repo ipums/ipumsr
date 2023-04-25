@@ -177,6 +177,8 @@ set_ipums_default_collection <- function(collection = NULL,
 
 # Non-exported functions ---------------------------------------------------
 
+# Extract IDs ----------------
+
 #' Standardize accepted formats for identifying a particular extract request
 #'
 #' @description
@@ -327,6 +329,7 @@ get_default_collection <- function() {
   collection
 }
 
+# Environment variables -----------------
 
 #' Helper for setting IPUMS environmental variables
 #'
@@ -475,6 +478,8 @@ unset_ipums_envvar <- function(var_name) {
 
   invisible("")
 }
+
+# Print methods --------------
 
 #' @export
 print.ipums_extract <- function(x, ...) {
@@ -719,35 +724,105 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   untruncated
 }
 
-parse_400_error <- function(res) {
+# Request handlers --------------------
+
+# Helper to extract API-provided details for request errors.
+# Will error when handling a response with empty body, so best to wrap
+# in
+parse_response_error <- function(res) {
   response_content <- jsonlite::fromJSON(
-    httr::content(res, "text"),
+    # Avoid default encoding messages
+    suppressMessages(httr::content(res, "text")),
     simplifyVector = FALSE
   )
   response_detail <- response_content$detail
-  response_detail <- unlist(response_detail)
-  error_message <- c(
-    paste0(
-      "Received status code ",
-      res$status_code,
-      " with the following details:"
-    ),
-    purrr::set_names(response_detail, "x")
-  )
-  return(error_message)
+  unlist(response_detail)
+}
+
+# Helper to handle errors and warnings for API requests.
+# Called in ipums_api_request()
+validate_api_request <- function(res, call = caller_env()) {
+  is_downloads_request <- fostr_detect(res$url, "downloads/")
+  is_extract_request <- !is_downloads_request &&
+    fostr_detect(res$url, "extracts/")
+
+  status <- httr::status_code(res)
+
+  if (httr::http_status(res)$category != "Success") {
+    # Attempt to get details from response. NULL if response has empty body
+    error_details <- tryCatch(
+      purrr::set_names(parse_response_error(res), "x"),
+      error = function(cnd) {
+        NULL
+      }
+    )
+
+    # Standard error message
+    error_message <- paste0("API request failed with status ", status, ".")
+
+    # 401 or 403 are authorization errors
+    if (status %in% c(401, 403)) {
+      rlang::abort(
+        c(
+          "The provided API key is either missing or invalid.",
+          "i" = paste0(
+            "Please provide your API key to the `api_key` argument ",
+            "or request a key at https://account.ipums.org/api_keys"
+          ),
+          "i" = "Use `set_ipums_api_key() to save your key for future use."
+        ),
+        call = call
+      )
+    }
+
+    # If a downloads request, inform that download failed
+    if (is_downloads_request) {
+      rlang::abort(
+        c(
+          error_message,
+          "i" = paste0(
+            "The extract may have expired. Check its status ",
+            "with `get_extract_info()`"
+          )
+        ),
+        call = call
+      )
+    }
+
+    # 404 extract request with no details is an invalid extract number error
+    if (status == 404 && is_extract_request && is_null(error_details)) {
+      url_parts <- fostr_split(res$url, "/")[[1]]
+      url_tail <- url_parts[length(url_parts)]
+      number <- as.numeric(fostr_split(url_tail, "\\?")[[1]][[1]])
+
+      rlang::abort(
+        c(
+          error_message,
+          "x" = paste0(
+            "Extract number ", number, " does not exist for this collection."
+          )
+        ),
+        call = call
+      )
+    }
+
+    # Other errors should get the general message
+    rlang::abort(
+      c(error_message, error_details),
+      call = call
+    )
+  }
+
+  # Download requests do not return JSON by design
+  if (!is_downloads_request && httr::http_type(res) != "application/json") {
+    rlang::abort("API request did not return JSON", call = call)
+  }
+
+  invisible(res)
 }
 
 add_user_auth_header <- function(api_key) {
   httr::add_headers("Authorization" = api_key)
-}
-
-copy_ipums_extract <- function(extract) {
-  extract$submitted <- FALSE
-  extract$download_links <- EMPTY_NAMED_LIST
-  extract$number <- NA_integer_
-  extract$status <- "unsubmitted"
-
-  extract
 }
 
 api_base_url <- function() {
@@ -762,14 +837,107 @@ api_base_url <- function() {
   url
 }
 
-# Low-level function to make basic requests to the IPUMS API.
+#' Generate an API-compatible URL for extract endpoint requests
+#'
+#' Metadata URL handling is found in `metadata_request_url`.
+#'
+#' @param collection The IPUMS data collection for the extract.
+#' @param path Extensions to add to the base url.
+#' @param queries A named list of key value pairs to be added to the standard
+#'   query in the call to [httr::modify_url].
+#'
+#' @return A character containing the URL for a request to an IPUMS API extract
+#'   endpoint.
+#'
+#' @noRd
+api_request_url <- function(collection, path, queries = NULL) {
+  queries_is_null_or_named_list <- is.null(queries) ||
+    is.list(queries) && is_named(queries)
+
+  if (!queries_is_null_or_named_list) {
+    rlang::abort("`queries` argument must be `NULL` or a named list")
+  }
+
+  api_url <- httr::modify_url(
+    api_base_url(),
+    path = path,
+    query = c(
+      list(collection = collection, version = ipums_api_version()),
+      queries
+    )
+  )
+
+  api_url
+}
+
+#' Helper to construct URL paths for API extract endpoints
+#'
+#' @param number Number of the extract to include in the path. Used for
+#'   endpoints that request information for a single extract. If `NULL`, only
+#'   the base extract path is returned.
+#'
+#' @return Path to include in the URL for an API extract request.
+#'   This will be of the form `"extracts/{number}"` if `number` is provided.
+#'   Otherwise, it will return `"extracts"`.
+#'
+#' @noRd
+extract_request_path <- function(number = NULL) {
+  paste0("extracts/", number)
+}
+
+#' Helper to construct URL paths for API metadata endpoints
+#'
+#' @param collection Collection associated with the metadata endpoint
+#' @param path List of elements to add to the URL path. If list is named,
+#'   each element name is placed ahead of its associated value in the
+#'   resulting URL. Elements with `NULL` values are fully removed, allowing
+#'   for the specification of multiple possible path parameters that may
+#'   or may not be present. This is useful as some metadata endpoints include
+#'   multiple parameters (e.g. `data_tables` and `datasets` for NHGIS).
+#'
+#'   For instance, `list(datasets = "DS", data_tables = NULL)` would produce
+#'   a path `"metadata/{collection}/datasets/DS/"`.
+#'
+#'   Unnamed elements are inserted in the order that they are provided.
+#'
+#' @return Path to include in the URL for an API metadata request.
+#'
+#' @noRd
+metadata_request_path <- function(collection, ...) {
+  path_args <- purrr::compact(rlang::list2(...))
+  path_fields <- names(path_args)
+
+  path_args <- c("metadata", collection, rbind(path_fields, unlist(path_args)))
+
+  # Avoids extra `/` for unnamed args in `path`
+  path_args <- path_args[which(path_args != "")]
+
+  paste(path_args, collapse = "/")
+}
+
 #
-# A basic wrapper of httr::VERB to add ipumsr user agent and API key
-# authorization. This is wrapped in higher-level functions to attach
-# endpoint-specific behavior.
+#
+
+#' Low-level function to make basic requests to the IPUMS API.
+#'
+#' A basic wrapper of `httr::VERB()` to add ipumsr user agent and API key
+#' authorization and produce desired error messages on invalid responses.
+#' This is wrapped in higher-level functions to attach endpoint-specific
+#' behavior.
+#'
+#' @param verb `"GET"` or `"POST"`
+#' @param url API url for the request.
+#' @param body The body of the request (e.g. the extract definition), if
+#'   relevant. Defaults to `FALSE`, which creates a body-less request.
+#' @param api_key IPUMS API key
+#' @param ... Additional parameters passed to `httr::VERB()`
+#'
+#' @return An `httr::response()` object
+#'
+#' @noRd
 ipums_api_request <- function(verb,
                               url,
-                              body = FALSE,
+                              body,
                               api_key = Sys.getenv("IPUMS_API_KEY"),
                               ...) {
   response <- httr::VERB(
@@ -786,7 +954,117 @@ ipums_api_request <- function(verb,
     ...
   )
 
+  validate_api_request(response)
+
   response
+}
+
+#' Make requests to paginated API endpoints
+#'
+#' For a starting URL, makes an API request and continues requesting additional
+#' pages as long as they exist. Pages are stored in the `links$nextPage`
+#' field of the JSON response.
+#'
+#' @param url API url for the request
+#' @param sleep Logical indicating whether to add a 1 second delay between
+#'   requests for each page. In general should not be needed, but is used
+#'   to provide an option to avoid API rate limit, if needed.
+#' @param api_key IPUMS API key
+#'
+#' @return A list of `httr::response()` objects
+#'
+#' @noRd
+ipums_api_paged_request <- function(url,
+                                    sleep = FALSE,
+                                    api_key = Sys.getenv("IPUMS_API_KEY")) {
+  response <- ipums_api_request(
+    "GET",
+    url = url,
+    body = FALSE,
+    api_key = api_key
+  )
+
+  json_content <- jsonlite::fromJSON(
+    httr::content(response, "text"),
+    simplifyVector = FALSE
+  )
+
+  all_responses <- list(response)
+
+  while (!is.null(json_content$links$nextPage)) {
+    # Fallback in case someone hits the rate limit.
+    # Sleeping for 1 sec should avoid rate limit.
+    if (sleep) {
+      Sys.sleep(1L)
+    }
+
+    response <- ipums_api_request(
+      "GET",
+      url = json_content$links$nextPage,
+      body = FALSE,
+      api_key = api_key
+    )
+
+    json_content <- jsonlite::fromJSON(
+      httr::content(response, "text"),
+      simplifyVector = FALSE
+    )
+
+    all_responses <- c(all_responses, list(response))
+  }
+
+  all_responses
+}
+
+#' Convenience function to create an `ipums_json` from an API extract request.
+#'
+#' @noRd
+ipums_api_extracts_request <- function(verb,
+                                       collection,
+                                       url,
+                                       body = FALSE,
+                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
+  response <- ipums_api_request(
+    verb = verb,
+    url = url,
+    body = body,
+    api_key = api_key,
+    httr::content_type_json()
+  )
+
+  new_ipums_json(
+    httr::content(response, "text"),
+    collection = collection
+  )
+}
+
+#' Writes the given url to file_path. Returns the file path of the
+#' downloaded data.
+#'
+#' @noRd
+ipums_api_download_request <- function(url,
+                                       file_path,
+                                       overwrite,
+                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
+  if (file.exists(file_path) && !overwrite) {
+    rlang::abort(
+      c(
+        paste0("File `", file_path, "` already exists."),
+        "To overwrite, set `overwrite = TRUE`"
+      )
+    )
+  }
+
+  ipums_api_request(
+    "GET",
+    url = url,
+    body = FALSE,
+    api_key = api_key,
+    httr::write_disk(file_path, overwrite = TRUE),
+    httr::progress()
+  )
+
+  file_path
 }
 
 #' Get the active API instance to use for API requests
@@ -836,6 +1114,17 @@ ipums_api_version <- function() {
   } else {
     api_version
   }
+}
+
+# Misc ------------------
+
+copy_ipums_extract <- function(extract) {
+  extract$submitted <- FALSE
+  extract$download_links <- EMPTY_NAMED_LIST
+  extract$number <- NA_integer_
+  extract$status <- "unsubmitted"
+
+  extract
 }
 
 check_api_support <- function(collection) {

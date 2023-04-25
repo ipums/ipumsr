@@ -94,9 +94,9 @@ get_extract_info <- function(extract,
     )
   }
 
-  url <- ipums_extract_request_url(
+  url <- api_request_url(
     collection = extract$collection,
-    path = paste0("extracts/", extract$number)
+    path = extract_request_path(extract$number)
   )
 
   response <- ipums_api_extracts_request(
@@ -175,9 +175,9 @@ get_recent_extracts_info <- function(collection = NULL,
                                      api_key = Sys.getenv("IPUMS_API_KEY")) {
   collection <- collection %||% get_default_collection()
 
-  url <- ipums_extract_request_url(
+  url <- api_request_url(
     collection = collection,
-    path = "extracts/",
+    path = extract_request_path(),
     queries = list(pageNumber = 1, pageSize = how_many)
   )
 
@@ -212,12 +212,30 @@ get_extract_history <- function(collection = NULL,
                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
   collection <- collection %||% get_default_collection()
 
-  get_extract_pages(
+  url <- api_request_url(
     collection = collection,
-    page_size = 1500,
-    sleep = sleep,
-    api_key = api_key
+    path = extract_request_path(),
+    queries = list(pageSize = 1500)
   )
+
+  responses <- ipums_api_paged_request(url, sleep = sleep, api_key = api_key)
+
+  extract_history <- purrr::map(
+    responses,
+    function(res) {
+      extract_list_from_json(
+        new_ipums_json(
+          httr::content(res, "text"),
+          collection = collection
+        )
+      )
+    }
+  )
+
+  # Extracts will be in a list chunked by page, but we want a single-depth list
+  extract_history <- purrr::flatten(extract_history)
+
+  extract_list_to_tbl(extract_history)
 }
 
 #' @param collection Character string of the IPUMS collection for which to

@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/data_tables?version=2&pageNumber=1&pageSize=10
+    uri: https://api.ipums.org/metadata/nhgis/data_tables?collection=nhgis&version=2&pageNumber=1&pageSize=10
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Tue, 25 Apr 2023 21:20:51 GMT
       etag: W/"dab97f897e9685d58827af63c0b5e08a"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: cb678bc7-65ae-4e9f-8280-a91f99ca8454
-      x-runtime: '0.004964'
+      x-request-id: 94e7bd42-f6a9-40be-bec8-5f47f827f457
+      x-runtime: '0.007599'
       x-xss-protection: '0'
       content-length: '1866'
     body:
@@ -49,5 +49,5 @@ http_interactions:
         of Family Members","universe":"Families","nhgisCode":"AAB","sequence":8,"datasetName":"1790_cPop","nVariables":11},{"name":"NT12","description":"White
         Population by Nationality","universe":"White Persons","nhgisCode":"AAC","sequence":9,"datasetName":"1790_cPop","nVariables":8},{"name":"NT13","description":"Families
         by Slaveholding Status","universe":"Families","nhgisCode":"AAD","sequence":10,"datasetName":"1790_cPop","nVariables":2}],"pageNumber":1,"pageSize":10,"totalCount":46031,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/data_tables?pageNumber=2\u0026pageSize=10\u0026version=2"}}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-25 21:20:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
