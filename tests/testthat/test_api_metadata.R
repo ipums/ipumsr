@@ -50,6 +50,8 @@ test_that("We can filter summary metadata", {
 })
 
 test_that("We can restrict number of records to retrieve", {
+  skip_if_no_api_access(have_api_access)
+
   vcr::use_cassette("nhgis-metadata-summary-small", {
     dt_meta <- get_nhgis_metadata("data_tables", n_records = 10)
   })
@@ -65,6 +67,8 @@ test_that("We can restrict number of records to retrieve", {
 })
 
 test_that("We can iterate through pages to get all records", {
+  skip_if_no_api_access(have_api_access)
+
   vcr::use_cassette("nhgis-metadata-summary-iterate", {
     ds_meta <- get_summary_metadata(
       collection = "nhgis",
@@ -160,8 +164,6 @@ test_that("We can get metadata for single data table", {
 })
 
 test_that("We throw errors on bad metadata specs prior to making request", {
-  skip_if_no_api_access(have_api_access)
-
   # Only one source per metadata request
   expect_error(
     get_nhgis_metadata(dataset = c("A", "B")),

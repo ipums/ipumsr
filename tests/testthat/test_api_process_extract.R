@@ -437,6 +437,7 @@ test_that("Download extract errors on incomplete extract", {
 # Read downloaded files ------------------
 
 test_that("Can read downloaded files with ipumsr readers", {
+  skip_if_no_api_access(have_api_access)
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")

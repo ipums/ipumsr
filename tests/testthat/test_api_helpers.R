@@ -234,7 +234,6 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 
 test_that("We handle API auth errors for extract and metadata endpoints", {
   skip_if_no_api_access(have_api_access)
-  skip_if_not_installed("withr")
 
   vcr::use_cassette("api-errors-authorization", {
     expect_error(
@@ -252,7 +251,6 @@ test_that("We handle API auth errors for extract and metadata endpoints", {
 
 test_that("Can parse API request error details in basic requests", {
   skip_if_no_api_access(have_api_access)
-  skip_if_not_installed("withr")
 
   vcr::use_cassette("api-errors-invalid-extract", {
     expect_error(
@@ -328,7 +326,6 @@ test_that("Can parse API request error details in basic requests", {
 
 test_that("Can parse API request error details in paged requests", {
   skip_if_no_api_access(have_api_access)
-  skip_if_not_installed("withr")
 
   vcr::use_cassette("api-errors-paged-extract", {
     expect_error(
@@ -345,6 +342,8 @@ test_that("Can parse API request error details in paged requests", {
 })
 
 test_that("We inform user about invalid extract number request", {
+  skip_if_no_api_access(have_api_access)
+
   # API itself returns empty-bodied response for an invalid extract number
   # for a given collection, but we want to inform user that the error
   # resulted from their extract number not existing.
@@ -362,6 +361,8 @@ test_that("We inform user about invalid extract number request", {
 })
 
 test_that("We inform user about expired extract for invalid download request", {
+  skip_if_no_api_access(have_api_access)
+
   # Currently, the API downloads a file containing the 404 error, so for now
   # ensure that we only write this to a temp file.
   # TODO: In the future we will want to ensure we don't download on an erroneous
@@ -381,6 +382,8 @@ test_that("We inform user about expired extract for invalid download request", {
 })
 
 test_that("We catch invalid collection specifications during requests", {
+  skip_if_no_api_access(have_api_access)
+
   # Ideally we'd catch before request, as API message suggests all ipums
   # collections are available.
   expect_error(
