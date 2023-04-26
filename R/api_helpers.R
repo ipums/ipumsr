@@ -851,6 +851,8 @@ api_base_url <- function() {
 #'
 #' @noRd
 api_request_url <- function(collection, path, queries = NULL) {
+  check_api_support(collection)
+
   queries_is_null_or_named_list <- is.null(queries) ||
     is.list(queries) && is_named(queries)
 
@@ -914,9 +916,6 @@ metadata_request_path <- function(collection, ...) {
 
   paste(path_args, collapse = "/")
 }
-
-#
-#
 
 #' Low-level function to make basic requests to the IPUMS API.
 #'

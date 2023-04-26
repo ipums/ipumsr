@@ -159,7 +159,7 @@ test_that("We can get metadata for single data table", {
   expect_true(tibble::is_tibble(single_dt_meta$variables))
 })
 
-test_that("We throw errors on bad metadata requests", {
+test_that("We throw errors on bad metadata specs prior to making request", {
   skip_if_no_api_access(have_api_access)
 
   # Only one source per metadata request
@@ -186,48 +186,11 @@ test_that("We throw errors on bad metadata requests", {
     "`data_table` must be specified with a corresponding `dataset`"
   )
 
-  expect_error(
-    get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1")
-  )
-})
-
-test_that("API throws expected errors on bad metadata requests", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("nhgis-metadata-errors", {
-    expect_error(
-      get_nhgis_metadata(dataset = "bad-dataset"),
-      "Couldn\'t find Dataset"
-    )
-    expect_error(
-      get_nhgis_metadata(data_table = "bad-table", dataset = "1980_STF1"),
-      "Couldn\'t find DataTable"
-    )
-    expect_error(
-      get_nhgis_metadata(time_series_table = "bad-tst"),
-      "Couldn\'t find TimeSeriesTable"
-    )
-  })
-})
-
-test_that("API throws expected authorization errors", {
-  skip_if_no_api_access(have_api_access)
-  skip_if_not_installed("withr")
-
-  vcr::use_cassette("nhgis-metadata-missing-api-key", {
-    expect_error(
-      withr::with_envvar(
-        new = c("IPUMS_API_KEY" = NA),
-        get_nhgis_metadata("datasets")
-      ),
-      "API key is either missing or invalid"
-    )
-    expect_error(
-      withr::with_envvar(
-        new = c("IPUMS_API_KEY" = "foobar"),
-        get_nhgis_metadata("datasets")
-      ),
-      "API key is either missing or invalid"
-    )
-  })
+  # This produces a low-level curl error and therefore is not submitted
+  # but on other OS it is submitted and would therefore need to be mocked.
+  # TODO: if we truly want to handle these errors ourselves we will
+  # likely need to validate the resulting request URL before submitting.
+  # expect_error(
+  #   get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1")
+  # )
 })

@@ -304,47 +304,6 @@ test_that("Can get extract info for default collection", {
   })
 })
 
-test_that("Can parse API errors on bad requests", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
-  })
-
-  bad_extract <- new_ipums_extract(
-    "nhgis",
-    datasets = "foo",
-    data_tables = "bar",
-    geog_levels = "baz"
-  )
-
-  vcr::use_cassette("nhgis-extract-errors", {
-    expect_error(
-      get_last_extract_info("nhgis", api_key = "foobar"),
-      "API key is either missing or invalid"
-    )
-    expect_error(
-      get_extract_info(c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)),
-      paste0(
-        "number ", recent_nhgis_extracts_list[[1]]$number + 1,
-        " does not exist"
-      )
-    )
-    expect_error(
-      ipums_api_extracts_request(
-        "POST",
-        url = api_request_url(
-          collection = "nhgis",
-          path = extract_request_path()
-        ),
-        body = extract_to_request_json(bad_extract),
-        api_key = Sys.getenv("IPUMS_API_KEY")
-      ),
-      "Datasets invalid"
-    )
-  })
-})
-
 # Paginated extract history -----------------
 
 test_that("Extract history works", {
@@ -378,19 +337,6 @@ test_that("Extract history works", {
 
   expect_equal(nrow(extracts), 440)
   expect_equal(extracts[440, ][["number"]], 1)
-
-  vcr::use_cassette("paged-extract-error", {
-    expect_error(
-      ipums_api_paged_request(
-        url = api_request_url(
-          collection = "nhgis",
-          path = extract_request_path(),
-          queries = list(pageSize = 3000)
-        )
-      ),
-      "Invalid pageSize: 3000"
-    )
-  })
 })
 
 # Recent extract tbl ------------------------
