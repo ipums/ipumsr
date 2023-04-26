@@ -7,24 +7,18 @@ test_that("We can get summary metadata", {
 
   expect_true(tibble::is_tibble(shp_meta))
   expect_true(!is_empty(shp_meta))
-
-  # Should have more than default number of records for endpoints with
-  # more records and `n_records = NULL`
-  expect_true(nrow(shp_meta) > 500)
 })
 
 test_that("We can filter summary metadata", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("nhgis-metadata-filtered", {
+  vcr::use_cassette("nhgis-metadata-summary-filtered", {
     expect_warning(
-      tst_meta_filt <- get_nhgis_metadata(
-        "time_series_tables",
-        description = "Sex",
-        years = c("1990", "2000"),
-        geographic_integration = "Standard",
-        foo = "bar",
-        n_records = 30 # restrict to reduce cassette size
+      shp_meta_filt <- get_nhgis_metadata(
+        "shapefiles",
+        year = "1790",
+        geographic_level = "State",
+        foo = "bar"
       ),
       "unrecognized metadata variables"
     )
@@ -36,50 +30,49 @@ test_that("We can filter summary metadata", {
     )
   })
 
-  expect_true(all(grepl("[Ss]ex", tst_meta_filt$description)))
+  expect_true(all(grepl("1790", shp_meta_filt$year)))
   expect_true(
-    all(
-      purrr::map_lgl(
-        tst_meta_filt$years,
-        ~ all(c("1990", "2000") %in% .x$name)
-      )
-    )
+    all(shp_meta_filt$geographic_level == "State")
   )
-  expect_true(all(grepl("[Ss]tandard", tst_meta_filt$geographic_integration)))
   expect_equal(nrow(ds_meta_filt), 2)
-})
-
-test_that("We can restrict number of records to retrieve", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("nhgis-metadata-summary-small", {
-    dt_meta <- get_nhgis_metadata("data_tables", n_records = 10)
-  })
-
-  expect_equal(nrow(dt_meta), 10)
-  expect_equal(
-    colnames(dt_meta),
-    c(
-      "name", "description", "universe", "nhgis_code",
-      "sequence", "dataset_name", "n_variables"
-    )
-  )
 })
 
 test_that("We can iterate through pages to get all records", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("nhgis-metadata-summary-iterate", {
-    ds_meta <- get_summary_metadata(
-      collection = "nhgis",
-      type = "datasets",
-      n_records = 100,
-      get_all_records = TRUE # not exposed to user, only used in testing
+  page_size <- 100
+
+  vcr::use_cassette("nhgis-metadata-summary-paged", {
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "nhgis",
+        path = metadata_request_path("nhgis", "datasets"),
+        queries = list(pageNumber = 1, pageSize = page_size)
+      ),
+      max_pages = Inf
     )
   })
 
-  expect_true(tibble::is_tibble(ds_meta))
-  expect_true(nrow(ds_meta) > 100)
+  metadata <- nested_df_to_tbl(
+    purrr::map_dfr(
+      responses,
+      function(res) {
+        content <- jsonlite::fromJSON(
+          httr::content(res, "text"),
+          simplifyVector = TRUE
+        )
+
+        content$data
+      }
+    )
+  )
+
+  expect_true(tibble::is_tibble(metadata))
+  expect_true(!is_empty(metadata))
+
+  # Should have more records than the page_size if pagination worked
+  # as expected
+  expect_true(nrow(metadata) > page_size)
 })
 
 test_that("We can get metadata for single dataset", {

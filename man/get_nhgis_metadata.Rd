@@ -12,7 +12,7 @@ get_nhgis_metadata(
   ...,
   match_all = TRUE,
   match_case = FALSE,
-  n_records = NULL,
+  sleep = FALSE,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
@@ -50,9 +50,12 @@ Defaults to \code{TRUE}.}
 \item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
 the expressions provided in \code{...}. Defaults to \code{FALSE}.}
 
-\item{n_records}{For summary metadata, the number of records to retrieve,
-starting from the first record. If \code{NULL}, obtains all records for the
-given \code{type}. Maximum allowed value is 2500.
+\item{sleep}{Logical indicating whether to add a brief delay between
+API calls when retrieving summary metadata.
+
+This is highly unlikely to be needed. However, if you cannot
+retrieve all metadata records without hitting the API rate limit,
+you may want to set this to \code{TRUE}.
 
 Only used if \code{type} is provided.}
 

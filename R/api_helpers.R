@@ -137,7 +137,7 @@ set_ipums_api_key <- function(api_key,
 #' \dontrun{
 #' # Extract info will now be retrieved for the default collection:
 #' get_last_extract_info()
-#' get_recent_extracts_info()
+#' get_extract_history()
 #'
 #' is_extract_ready(1)
 #' get_extract_info(1)
@@ -969,18 +969,22 @@ ipums_api_request <- function(verb,
 #'   requests for each page. In general should not be needed, but is used
 #'   to provide an option to avoid API rate limit, if needed.
 #' @param api_key IPUMS API key
+#' @param ... Additional arguments passed to `httr::VERB()`
 #'
 #' @return A list of `httr::response()` objects
 #'
 #' @noRd
 ipums_api_paged_request <- function(url,
+                                    max_pages = Inf,
                                     sleep = FALSE,
-                                    api_key = Sys.getenv("IPUMS_API_KEY")) {
+                                    api_key = Sys.getenv("IPUMS_API_KEY"),
+                                    ...) {
   response <- ipums_api_request(
     "GET",
     url = url,
     body = FALSE,
-    api_key = api_key
+    api_key = api_key,
+    ...
   )
 
   json_content <- jsonlite::fromJSON(
@@ -989,8 +993,9 @@ ipums_api_paged_request <- function(url,
   )
 
   all_responses <- list(response)
+  page_no <- 1
 
-  while (!is.null(json_content$links$nextPage)) {
+  while (page_no < max_pages && !is.null(json_content$links$nextPage)) {
     # Fallback in case someone hits the rate limit.
     # Sleeping for 1 sec should avoid rate limit.
     if (sleep) {
@@ -1001,7 +1006,8 @@ ipums_api_paged_request <- function(url,
       "GET",
       url = json_content$links$nextPage,
       body = FALSE,
-      api_key = api_key
+      api_key = api_key,
+      ...
     )
 
     json_content <- jsonlite::fromJSON(
@@ -1010,6 +1016,7 @@ ipums_api_paged_request <- function(url,
     )
 
     all_responses <- c(all_responses, list(response))
+    page_no <- page_no + 1
   }
 
   all_responses
@@ -1064,6 +1071,20 @@ ipums_api_download_request <- function(url,
   )
 
   file_path
+}
+
+# Helper to set the page size limit for each
+# endpoint type. Currently, extract endpoints have a different
+# limits as it is more expensive to provide large numbers of extract
+# definitions than metadata records.
+api_page_limit <- function(type) {
+  if (type == "extracts") {
+    1500
+  } else if (type == "metadata") {
+    2500
+  } else {
+    rlang::abort("Unrecognized endpoint type.")
+  }
 }
 
 #' Get the active API instance to use for API requests

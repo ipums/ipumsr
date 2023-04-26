@@ -56,7 +56,7 @@ set_ipums_default_collection("nhgis")
 \dontrun{
 # Extract info will now be retrieved for the default collection:
 get_last_extract_info()
-get_recent_extracts_info()
+get_extract_history()
 
 is_extract_ready(1)
 get_extract_info(1)

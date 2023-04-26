@@ -146,9 +146,12 @@
 #'   Defaults to `TRUE`.
 #' @param match_case If `TRUE`, use case-sensitive matching when interpreting
 #'   the expressions provided in `...`. Defaults to `FALSE`.
-#' @param n_records For summary metadata, the number of records to retrieve,
-#'   starting from the first record. If `NULL`, obtains all records for the
-#'   given `type`. Maximum allowed value is 2500.
+#' @param sleep Logical indicating whether to add a brief delay between
+#'   API calls when retrieving summary metadata.
+#'
+#'   This is highly unlikely to be needed. However, if you cannot
+#'   retrieve all metadata records without hitting the API rate limit,
+#'   you may want to set this to `TRUE`.
 #'
 #'   Only used if `type` is provided.
 #'
@@ -195,7 +198,7 @@ get_nhgis_metadata <- function(type = NULL,
                                ...,
                                match_all = TRUE,
                                match_case = FALSE,
-                               n_records = NULL,
+                               sleep = FALSE,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
   summary_req <- !is.null(type)
   ds_req <- !is.null(dataset)
@@ -258,7 +261,7 @@ get_nhgis_metadata <- function(type = NULL,
     metadata <- get_summary_metadata(
       collection = "nhgis",
       type,
-      n_records = n_records,
+      sleep = sleep,
       api_key = api_key
     )
 
@@ -300,28 +303,20 @@ get_nhgis_metadata <- function(type = NULL,
 #' @noRd
 get_summary_metadata <- function(collection,
                                  type,
-                                 n_records = NULL,
-                                 api_key = Sys.getenv("IPUMS_API_KEY"),
-                                 get_all_records = is_null(n_records)) {
+                                 sleep = FALSE,
+                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
     path = metadata_request_path(collection, type),
-    queries = list(pageNumber = 1, pageSize = n_records %||% 2500)
+    queries = list(pageNumber = 1, pageSize = api_page_limit("metadata"))
   )
 
-  if (get_all_records) {
-    responses <- ipums_api_paged_request(url = url, api_key = api_key)
-  } else {
-    responses <- list(
-      ipums_api_request(
-        "GET",
-        url = url,
-        body = FALSE,
-        api_key = api_key,
-        httr::content_type_json()
-      )
-    )
-  }
+  responses <- ipums_api_paged_request(
+    url = url,
+    max_pages = Inf,
+    sleep = sleep,
+    api_key = api_key
+  )
 
   metadata <- purrr::map_dfr(
     responses,

@@ -737,7 +737,7 @@ insert_cassette("recent-extracts")
 
 If you know you made a specific extract definition in the past, but you
 can't remember the exact number, you can use
-`get_recent_extracts_info()` to peruse your recent extract requests for
+`get_extract_history()` to peruse your recent extract requests for
 a particular collection.
 
 By default, this returns your 10 most recent extract requests as a list
@@ -745,7 +745,7 @@ of `ipums_extract` objects. You can adjust how many requests to retrieve
 with the `how_many` argument:
 
 ```{r}
-nhgis_extracts <- get_recent_extracts_info("nhgis", how_many = 3)
+nhgis_extracts <- get_extract_history("nhgis", how_many = 3)
 
 nhgis_extracts
 ```
@@ -773,7 +773,7 @@ ddi_paths <- nhgis_extracts %>%
 Set `table = TRUE` to get the same information in a tabular format:
 
 ```{r}
-usa_extract_tbl <- get_recent_extracts_info("usa", how_many = 5, table = TRUE)
+usa_extract_tbl <- get_extract_history("usa", how_many = 5, table = TRUE)
 
 head(usa_extract_tbl)
 ```
@@ -803,8 +803,8 @@ the following holds:
 
 ```{r}
 identical(
-  extract_list_to_tbl(get_recent_extracts_info("usa")),
-  get_recent_extracts_info("usa", table = TRUE)
+  extract_list_to_tbl(get_extract_history("usa")),
+  get_extract_history("usa", table = TRUE)
 )
 ```
 

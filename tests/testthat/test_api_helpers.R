@@ -420,7 +420,7 @@ test_that("We can get correct API version info for each collection", {
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(
-    get_recent_extracts_info("fake-collection"),
+    get_extract_history("fake-collection"),
     "No API version found"
   )
 })

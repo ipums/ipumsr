@@ -2,9 +2,12 @@
 % Please edit documentation in R/api_extract_info.R
 \name{get_extract_info}
 \alias{get_extract_info}
+\alias{get_last_extract_info}
 \title{Retrieve the definition and latest status of an extract request}
 \usage{
 get_extract_info(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
+
+get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{extract}{One of:
@@ -26,6 +29,12 @@ For a list of codes used to refer to each collection, see
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
+
+\item{collection}{Character string of the IPUMS collection for which to
+retrieve recent extract requests.
+
+If \code{NULL}, uses the current default
+collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
@@ -33,8 +42,11 @@ An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 \description{
 Retrieve the latest extract status of an extract request.
 
+\code{get_last_extract_info()} is a convenience function to retrieve the most
+recent extract for a given collection.
+
 To browse definitions of your previously submitted extract requests, see
-\code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}}.
+\code{\link[=get_extract_history]{get_extract_history()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -62,7 +74,7 @@ get_extract_info(1)
 }
 }
 \seealso{
-\code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}} to browse past extract definitions
+\code{\link[=get_extract_history]{get_extract_history()}} to browse past extract definitions
 
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
 process and manage an extract request.

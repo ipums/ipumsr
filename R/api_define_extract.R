@@ -41,7 +41,7 @@
 #'   `define_extract_{collection}`
 #' * Use [get_extract_info()] to get the latest status of a submitted extract
 #'   request
-#' * Use [get_recent_extracts_info()] to obtain the extract definitions of
+#' * Use [get_extract_history()] to obtain the extract definitions of
 #'   previously-submitted extracts
 #'
 #' @section Submitting an extract:

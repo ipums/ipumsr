@@ -45,7 +45,7 @@ underlying list
 \verb{define_extract_\{collection\}}
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
 request
-\item Use \code{\link[=get_recent_extracts_info]{get_recent_extracts_info()}} to obtain the extract definitions of
+\item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of
 previously-submitted extracts
 }
 }

@@ -269,7 +269,7 @@ test_that("Can get extract info for default collection", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
+    recent_nhgis_extracts_list <- get_extract_history("nhgis")
   })
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
@@ -287,7 +287,7 @@ test_that("Can get extract info for default collection", {
     })
 
     vcr::use_cassette("recent-nhgis-extracts-list", {
-      recent_nhgis_extracts_list_default <- get_recent_extracts_info()
+      recent_nhgis_extracts_list_default <- get_extract_history()
     })
 
     expect_identical(
@@ -298,54 +298,100 @@ test_that("Can get extract info for default collection", {
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = NA), {
     expect_error(
-      get_recent_extracts_info(),
+      get_extract_history(),
       "No default collection set"
     )
   })
 })
 
-# Paginated extract history -----------------
+# Extract history ------------------------
 
-test_that("Extract history works", {
+test_that("Can get extract history for all records", {
   skip_if_no_api_access(have_api_access)
 
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.
-  vcr::use_cassette("extract-history", {
+  vcr::use_cassette("extract-history-all-records", {
     responses <- ipums_api_paged_request(
       url = api_request_url(
         collection = "cps",
         path = extract_request_path(),
-        queries = list(pageSize = 100)
-      )
+        queries = list(pageNumber = 1, pageSize = 30)
+      ),
+      max_pages = Inf
     )
   })
 
-  extracts <- purrr::map(
-    responses,
-    function(res) {
-      extract_list_from_json(
-        new_ipums_json(
-          httr::content(res, "text"),
-          collection = "cps"
+  extracts <- purrr::flatten(
+    purrr::map(
+      responses,
+      function(res) {
+        extract_list_from_json(
+          new_ipums_json(
+            httr::content(res, "text"),
+            collection = "cps"
+          )
         )
-      )
-    }
+      }
+    )
   )
 
-  extracts <- extract_list_to_tbl(purrr::flatten(extracts))
-
-  expect_equal(nrow(extracts), 440)
-  expect_equal(extracts[440, ][["number"]], 1)
+  expect_equal(length(extracts), 94)
+  expect_equal(extracts[[94]][["number"]], 1)
 })
 
-# Recent extract tbl ------------------------
+test_that("Can get extract history for more records than page size", {
+  skip_if_no_api_access(have_api_access)
+
+  # We reproduce the internal workings of `get_extract_history()`
+  # so we can update the page size parameter, which is otherwise not exposed.
+  how_many <- 91
+  page_limit <- 30
+
+  vcr::use_cassette("extract-history-multi-page-records", {
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "cps",
+        path = extract_request_path(),
+        queries = list(pageNumber = 1, pageSize = page_limit)
+      ),
+      max_pages = ceiling(how_many / page_limit)
+    )
+  })
+
+  extracts <- purrr::flatten(
+    purrr::map(
+      responses,
+      function(res) {
+        extract_list_from_json(
+          new_ipums_json(
+            httr::content(res, "text"),
+            collection = "cps"
+          )
+        )
+      }
+    )
+  )
+
+  if (length(extracts) > how_many) {
+    extracts <- extracts[seq_len(how_many)]
+  }
+
+  expect_equal(length(extracts), how_many)
+
+  # The appropriate last record number can be discerned on the most recent
+  # record and the number of records retrieved
+  expect_equal(
+    extracts[[how_many]]$number,
+    extracts[[1]]$number - how_many + 1
+  )
+})
 
 test_that("Tibble of recent USA extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_extract_history("usa", table = TRUE)
   })
 
   expected_columns <- c(
@@ -362,7 +408,7 @@ test_that("Tibble of recent CPS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_recent_extracts_info("cps", table = TRUE)
+    recent_cps_extracts_tbl <- get_extract_history("cps", table = TRUE)
   })
 
   expected_columns <- c(
@@ -388,7 +434,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", table = TRUE)
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -456,21 +502,14 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 test_that("Can get specific number of recent extracts in tibble format", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_recent_extracts_info(
+    two_recent_usa_extracts <- get_extract_history(
       "usa",
       how_many = 2,
       table = TRUE
     )
   })
-  vcr::use_cassette("recent-cps-extracts-tbl-five", {
-    five_recent_cps_extracts <- get_recent_extracts_info(
-      "cps",
-      how_many = 5,
-      table = TRUE
-    )
-  })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_recent_extracts_info(
+    two_recent_nhgis_extracts <- get_extract_history(
       "nhgis",
       how_many = 2,
       table = TRUE
@@ -478,12 +517,18 @@ test_that("Can get specific number of recent extracts in tibble format", {
   })
 
   expect_equal(nrow(two_recent_usa_extracts), 2)
-  expect_equal(nrow(five_recent_cps_extracts), 5)
 
   # NHGIS does not adhere to 1-row per extract, but only 2 should be
   # represented
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
   expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
+})
+
+test_that("Error on invalid number of records", {
+  expect_error(
+    get_extract_history("usa", how_many = 0),
+    "Number of records requested must be positive"
+  )
 })
 
 # Tibble <--> List conversion -------------------
@@ -492,10 +537,10 @@ test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_extract_history("usa", table = TRUE)
   })
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_recent_extracts_info("usa", table = FALSE)
+    recent_usa_extracts_list <- get_extract_history("usa", table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(
@@ -516,10 +561,10 @@ test_that("NHGIS tbl/list conversion works", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", table = TRUE)
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis", table = FALSE)
+    recent_nhgis_extracts_list <- get_extract_history("nhgis", table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
@@ -566,7 +611,7 @@ test_that("NHGIS shapefile-only tbl/list conversion works", {
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    nhgis_extract_tbl_shp <- get_recent_extracts_info(
+    nhgis_extract_tbl_shp <- get_extract_history(
       "nhgis",
       how_many = 1,
       table = TRUE

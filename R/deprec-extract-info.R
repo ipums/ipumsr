@@ -9,7 +9,7 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' Functionality for accessing recent extract information has been moved to
-#' [`get_recent_extracts_info()`].
+#' [`get_extract_history()`].
 #'
 #' Please use that function instead.
 #'
@@ -22,10 +22,10 @@ get_recent_extracts_info_list <- function(collection = NULL,
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_list()",
-    "get_recent_extracts_info()"
+    "get_extract_history()"
   )
 
-  get_recent_extracts_info(
+  get_extract_history(
     collection = collection,
     how_many = how_many,
     api_key = api_key
@@ -40,10 +40,10 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_tbl()",
-    details = "Please use `get_recent_extracts_info()` with `table = TRUE` instead."
+    details = "Please use `get_extract_history()` with `table = TRUE` instead."
   )
 
-  get_recent_extracts_info(
+  get_extract_history(
     collection = collection,
     how_many = how_many,
     table = TRUE,
