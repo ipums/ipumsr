@@ -8,9 +8,9 @@ define_extract_cps(
   description,
   samples,
   variables,
-  data_format = c("fixed_width", "csv", "stata", "spss", "sas9"),
+  data_format = "fixed_width",
   data_structure = "rectangular",
-  rectangular_on = "P"
+  rectangular_on = NULL
 )
 }
 \arguments{
@@ -30,9 +30,7 @@ should be specified using IPUMS CPS
 \code{"rectangular"} provides person records with all requested household
 information attached to respective household members.
 
-\code{"hierarchical"} provides household records followed by person records.
-
-Currently, only \code{"rectangular"} extracts are supported.}
+\code{"hierarchical"} provides household records followed by person records.}
 
 \item{rectangular_on}{Records on which to rectangularize. \code{"P"}
 rectangularizes on person records. \code{"H"} provides household-only records.

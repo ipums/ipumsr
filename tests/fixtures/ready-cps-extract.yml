@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/72?collection=cps&version=2
+    uri: https://api.ipums.org/extracts/76?collection=cps&version=2
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:32:03 GMT
-      etag: W/"3f47b4d535c8b00ed1b096b2631aaca4"
+      date: Tue, 11 Apr 2023 19:40:43 GMT
+      etag: W/"29a462ad9d40540eb69099a81d28e89d"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e4867f2c-95d4-4ade-a425-7b6d5c223ffe
-      x-runtime: '0.297528'
+      x-request-id: c908d3e7-106f-49c8-a3f9-4ee76a44b1bf
+      x-runtime: '0.357836'
       x-xss-protection: '0'
-      content-length: '1924'
+      content-length: '1930'
     body:
       encoding: ''
       file: no
-      string: '{"number":72,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"ddiCodebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.xml","bytes":31665,"sha256":"9a6fda4f4b2d70055b20d338669b5d47568814c8bb3fa016f4b763a7fdd17a1b"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.sas","bytes":4045,"sha256":"93ebaeb2e2b24e4fbc0f6750d69fc707f52451430d725093e45fb2327da12960"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.sps","bytes":3894,"sha256":"cc619085ff43b8c3e7973bb27692a2771eb53b2319c6269b9a11f5e8434fb238"},"rCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.R","bytes":406,"sha256":"40378ed179a3e368b72d16ccbbaaf82e8caf1290cfe435a3596f9681fd857c93"},"basicCodebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.cbk","bytes":5901,"sha256":"b32f7baf7139ab5799683602ec7302fed2f252fefa5cdfbff6f37f6e2e19a055"},"data":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.dat.gz","bytes":2440152,"sha256":"a23b17944b5dc635071a3983afb1bae270807b97674bc8e7c422c34c7fe4bd93"},"stataCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2002403/cps_00072.do","bytes":7764,"sha256":"2c4e2737abc46a1722bd97a071b4502cb01bad83bdc7fb4232101cdbd07c3b8c"}},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"collection":"cps"}}'
-  recorded_at: 2023-04-06 22:32:03 GMT
+      string: '{"number":76,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"stataCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.do","bytes":8333,"sha256":"1b38b2480fd25727752bedbc08977a9bf984a0524b74ba786b8260f620f97df0"},"basicCodebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.cbk","bytes":6194,"sha256":"e03afcf0660512254337459117bfdc0b5a42448f09ec286b5d730d99683c6c66"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.sps","bytes":4108,"sha256":"4ad89a5b7004f712848059911c72ec484343ebb50be4cfbe8e13ad58b7420787"},"data":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.dat.gz","bytes":2620445,"sha256":"c8f4ecfb17b81dcb184d65ca2ca1f09bc4da4a65c6cdd1132b254e67f601493c"},"ddiCodebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.xml","bytes":33259,"sha256":"0b0084d3994fa9aa63b5fcf32dc935419c8d5bbf5d8bdb0c62bed05266a34376"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.sas","bytes":4268,"sha256":"9ce43bfaf9cadebbdcaca8a940b0c63cf32963b2c698baa54c932a7ff7d7a5cc"},"rCommandFile":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2006300/cps_00076.R","bytes":406,"sha256":"75a1e780efa20311043d967a81571063c06755960ca4f520862fb1d9aeb2c12f"}},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps1976_01s":{},"cps1976_02b":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"MISH":{},"PERNUM":{"preselected":true},"WTFINL":{"preselected":true},"CPSIDP":{"preselected":true},"UH_SEX_B1":{},"AGE":{},"SEX":{},"RACE":{}},"collection":"cps"}}'
+  recorded_at: 2023-04-11 19:40:43 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

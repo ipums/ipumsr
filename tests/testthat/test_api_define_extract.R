@@ -23,8 +23,8 @@ test_that("Can define a CPS extract", {
   expect_s3_class(cps_extract, "ipums_extract")
 
   expect_equal(cps_extract$variables[[1]], "YEAR")
-  expect_equal(cps_extract$data_structure, "rectangular")
-  expect_equal(cps_extract$rectangular_on, "P")
+  expect_equal(cps_extract$data_structure, "hierarchical")
+  expect_null(cps_extract$rectangular_on)
 
   expect_identical(cps_extract$download_links, ipumsr:::EMPTY_NAMED_LIST)
   expect_false(cps_extract$submitted)
@@ -113,16 +113,7 @@ test_that("NHGIS extract fields get correct default values", {
 
 # Extract validation ------------------------
 
-test_that("Attempt to define a hierarchical extract throws an error", {
-  expect_error(
-    define_extract_usa(
-      "Test",
-      samples = "us2017b",
-      variables = "YEAR",
-      data_structure = "hierarchical"
-    ),
-    "must be equal to \"rectangular\""
-  )
+test_that("Attempt to define a rectangular_on = H throws error", {
   expect_error(
     define_extract_cps(
       "Test",
@@ -376,7 +367,8 @@ test_that("Can add to a USA extract", {
   revised_extract <- add_to_extract(
     usa_extract,
     samples = "us2014a",
-    variables = "RELATE"
+    variables = "RELATE",
+    data_structure = "hierarchical"
   )
 
   expect_true(revised_extract$status == "unsubmitted")
@@ -388,6 +380,18 @@ test_that("Can add to a USA extract", {
     revised_extract$variables,
     union(usa_extract$variables, "RELATE")
   )
+  expect_equal(revised_extract$data_structure, "hierarchical")
+  expect_null(revised_extract$rectangular_on)
+
+  expect_error(
+    add_to_extract(
+      usa_extract,
+      samples = "cps2019_03s",
+      variables = "RELATE",
+      rectangular_on = "H"
+    ),
+    "must be equal to \"P\""
+  )
 })
 
 test_that("Can add to a CPS extract", {
@@ -396,7 +400,8 @@ test_that("Can add to a CPS extract", {
   revised_extract <- add_to_extract(
     cps_extract,
     samples = "cps2019_03s",
-    variables = "RELATE"
+    variables = "RELATE",
+    data_structure = "rectangular"
   )
 
   expect_true(revised_extract$status == "unsubmitted")
@@ -407,6 +412,28 @@ test_that("Can add to a CPS extract", {
   expect_equal(
     revised_extract$variables,
     union(cps_extract$variables, "RELATE")
+  )
+  expect_equal(revised_extract$data_structure, "rectangular")
+  expect_equal(revised_extract$rectangular_on, "P")
+
+  expect_error(
+    add_to_extract(
+      cps_extract,
+      samples = "cps2019_03s",
+      variables = "RELATE",
+      data_structure = "rectangular",
+      rectangular_on = "H"
+    ),
+    "must be equal to \"P\""
+  )
+  expect_error(
+    add_to_extract(
+      cps_extract,
+      samples = "cps2019_03s",
+      variables = "RELATE",
+      rectangular_on = "H"
+    ),
+    "`rectangular_on` must be missing"
   )
 })
 

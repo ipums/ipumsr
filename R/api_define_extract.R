@@ -123,8 +123,6 @@ NULL
 #'   information attached to respective household members.
 #'
 #'   `"hierarchical"` provides household records followed by person records.
-#'
-#'   Currently, only `"rectangular"` extracts are supported.
 #' @param rectangular_on Records on which to rectangularize. `"P"`
 #'   rectangularizes on person records. `"H"` provides household-only records.
 #'
@@ -160,35 +158,23 @@ NULL
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(my_extract)
 #' }
-define_extract_usa <- function(
-    description,
-    samples,
-    variables,
-    data_format = c("fixed_width", "csv", "stata", "spss", "sas9"),
-    data_structure = "rectangular",
-    rectangular_on = "P") {
-  data_format <- match.arg(data_format)
+define_extract_usa <- function(description,
+                               samples,
+                               variables,
+                               data_format = "fixed_width",
+                               data_structure = "rectangular",
+                               rectangular_on = NULL) {
+  if (data_structure == "rectangular") {
+    rectangular_on <- rectangular_on %||% "P"
 
-  # Remove these once we allow for hierarchical and rectangular on H extracts
-  if (data_structure != "rectangular") {
-    rlang::abort(
-      paste0(
-        "Currently, the `data_structure` argument must be equal to ",
-        "\"rectangular\"; in the future, the API will also support ",
-        "\"hierarchical\" extracts."
+    if (rectangular_on != "P") {
+      rlang::abort(
+        paste0(
+          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
+          "in the future, the API will also support `rectangular_on = \"H\"."
+        ),
       )
-    )
-  }
-
-  # Note when hierarchical extracts are supported, default rectangular_on
-  # should be `NULL` as rectangular_on must be missing for hierarchical extracts
-  if (rectangular_on != "P") {
-    rlang::abort(
-      paste0(
-        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-        "the future, the API will also support `rectangular_on = \"H\"."
-      ),
-    )
+    }
   }
 
   extract <- new_ipums_extract(
@@ -250,35 +236,23 @@ define_extract_usa <- function(
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(my_extract)
 #' }
-define_extract_cps <- function(
-    description,
-    samples,
-    variables,
-    data_format = c("fixed_width", "csv", "stata", "spss", "sas9"),
-    data_structure = "rectangular",
-    rectangular_on = "P") {
-  data_format <- match.arg(data_format)
+define_extract_cps <- function(description,
+                               samples,
+                               variables,
+                               data_format = "fixed_width",
+                               data_structure = "rectangular",
+                               rectangular_on = NULL) {
+  if (data_structure == "rectangular") {
+    rectangular_on <- rectangular_on %||% "P"
 
-  # Remove these once we allow for hierarchical and rectangular on H extracts
-  if (data_structure != "rectangular") {
-    rlang::abort(
-      paste0(
-        "Currently, the `data_structure` argument must be equal to ",
-        "\"rectangular\"; in the future, the API will also support ",
-        "\"hierarchical\" extracts."
+    if (rectangular_on != "P") {
+      rlang::abort(
+        paste0(
+          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
+          "in the future, the API will also support `rectangular_on = \"H\"."
+        ),
       )
-    )
-  }
-
-  # Note when hierarchical extracts are supported, default rectangular_on
-  # should be `NULL` as rectangular_on must be missing for hierarchical extracts
-  if (rectangular_on != "P") {
-    rlang::abort(
-      paste0(
-        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-        "the future, the API will also support `rectangular_on = \"H\"."
-      ),
-    )
+    }
   }
 
   extract <- new_ipums_extract(
@@ -2805,11 +2779,7 @@ extract_list_from_json.usa_json <- function(extract_json, validate = FALSE) {
         collection = "usa",
         description = def$description,
         data_structure = names(def$dataStructure),
-        rectangular_on = ifelse(
-          names(def$dataStructure) == "rectangular",
-          def$dataStructure$rectangular$on,
-          NA_character_
-        ),
+        rectangular_on = def$dataStructure$rectangular$on,
         data_format = def$dataFormat,
         samples = names(def$samples),
         variables = names(def$variables),
@@ -2857,11 +2827,7 @@ extract_list_from_json.cps_json <- function(extract_json, validate = FALSE) {
         collection = "cps",
         description = def$description,
         data_structure = names(def$dataStructure),
-        rectangular_on = ifelse(
-          names(def$dataStructure) == "rectangular",
-          def$dataStructure$rectangular$on,
-          NA_character_
-        ),
+        rectangular_on = def$dataStructure$rectangular$on,
         data_format = def$dataFormat,
         samples = names(def$samples),
         variables = names(def$variables),
@@ -2904,31 +2870,26 @@ add_to_extract_micro <- function(extract,
     ))
   }
 
-  # Remove these once we allow for hierarchical and rectangular on H extracts
-  if (!is_null(data_structure) && data_structure != "rectangular") {
-    rlang::abort(
-      paste0(
-        "Currently, the `data_structure` argument must be equal to ",
-        "\"rectangular\"; in the future, the API will also support ",
-        "\"hierarchical\" extracts."
-      )
-    )
-  }
+  data_structure <- data_structure %||% extract$data_structure
 
-  if (!is_null(rectangular_on) && rectangular_on != "P") {
-    rlang::abort(
-      paste0(
-        "Currently, the `rectangular_on` argument must be equal to \"P\"; in ",
-        "the future, the API will also support `rectangular_on = \"H\"."
-      ),
-    )
+  if (data_structure == "rectangular") {
+    rectangular_on <- rectangular_on %||% extract$rectangular_on %||% "P"
+
+    if (rectangular_on != "P") {
+      rlang::abort(
+        paste0(
+          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
+          "in the future, the API will also support `rectangular_on = \"H\"."
+        )
+      )
+    }
   }
 
   extract <- new_ipums_extract(
     collection = extract$collection,
     description = description %||% extract$description,
     data_structure = data_structure %||% extract$data_structure,
-    rectangular_on = rectangular_on %||% extract$rectangular_on,
+    rectangular_on = rectangular_on,
     data_format = data_format %||% extract$data_format,
     samples = union(extract$samples, unlist(samples)),
     variables = union(extract$variables, unlist(variables))

@@ -13,7 +13,8 @@ test_cps_extract <- function() {
     samples = c("cps1976_01s", "cps1976_02b"),
     variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1"),
     description = "Compare age-sex-race breakdowns 1976",
-    data_format = "fixed_width"
+    data_format = "fixed_width",
+    data_structure = "hierarchical"
   )
 }
 
