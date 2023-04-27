@@ -7,41 +7,40 @@
 get_extract_history(
   collection = NULL,
   how_many = 10,
-  table = FALSE,
-  sleep = FALSE,
+  as_table = FALSE,
+  delay = 0,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
 \arguments{
 \item{collection}{Character string of the IPUMS collection for which to
-retrieve recent extract requests.
-
-If \code{NULL}, uses the current default
+retrieve extract history. Defaults to the current default
 collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.}
 
 \item{how_many}{The number of extract requests for which to retrieve
 information. Defaults to the 10 most recent extracts.}
 
-\item{table}{Logical value indicating whether to return recent extract
-information as a \code{\link[tibble:tbl_df-class]{tibble}} (\code{TRUE}) or a list of
-\code{\link[=ipums_extract-class]{ipums_extract}} objects (\code{FALSE}). Defaults to
-\code{FALSE}.}
+\item{as_table}{If \code{TRUE}, summarize extract history in a
+\code{\link[tibble:tbl_df-class]{tibble}}. Otherwise, provide extract history as a
+list of \code{\link[=ipums_extract-class]{ipums_extract}} objects.
+Defaults to \code{FALSE}.}
 
-\item{sleep}{Logical indicating whether to add a brief delay between
-API calls when retrieving extract history.
+\item{delay}{Number of seconds to delay between
+successive API requests, if multiple requests are needed to retrieve all
+records.
 
-This is highly unlikely to be needed. However, if you cannot
-retrieve your entire extract history without hitting the API rate limit,
-you may want to set this to \code{TRUE}.}
+A delay is highly unlikely to be necessary and is
+intended only as a fallback in the event that you cannot retrieve your
+extract history without exceeding the API rate limit.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
-If \code{table = FALSE}, a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects.
-If \code{table = TRUE}, a \code{\link[tibble:tbl_df-class]{tibble}} containing the
-extract definitions.
+Either a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects or
+a \code{\link[tibble:tbl_df-class]{tibble}} containing the extract definitions,
+depending on the value of \code{as_table}.
 }
 \description{
 Retrieve definitions of an arbitrary number of previously submitted extract
@@ -59,12 +58,12 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 get_extract_history("usa")
 
 # Adjust the number to return and output format
-get_extract_history("cps", how_many = 3, table = TRUE)
+get_extract_history("cps", how_many = 3, as_table = TRUE)
 
 # Setting `how_many` to `Inf` will retrieve your entire history.
-# You may want to set `table = TRUE` to consolidate output depending on
+# You may want to set `as_table = TRUE` to consolidate output depending on
 # the size of your extract history.
-get_extract_history("nhgis", how_many = Inf, table = TRUE)
+get_extract_history("nhgis", how_many = Inf, as_table = TRUE)
 
 # To get the most recent extract (for instance, if you have forgotten its
 # extract number), use `get_last_extract_info()`

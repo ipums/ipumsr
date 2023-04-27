@@ -9,7 +9,7 @@
   browse NHGIS data sources when creating an NHGIS extract request.
 
 * `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.
-  Set `table = TRUE` to get recent extract information in tabular format.
+  Set `as_table = TRUE` to get recent extract information in tabular format.
   
 * Adds `combine_extracts()` to allow for the merging of multiple extract
   definitions.

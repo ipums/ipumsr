@@ -391,7 +391,7 @@ test_that("Tibble of recent USA extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_history("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
   })
 
   expected_columns <- c(
@@ -408,7 +408,7 @@ test_that("Tibble of recent CPS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_extract_history("cps", table = TRUE)
+    recent_cps_extracts_tbl <- get_extract_history("cps", as_table = TRUE)
   })
 
   expected_columns <- c(
@@ -434,7 +434,7 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", as_table = TRUE)
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -505,14 +505,14 @@ test_that("Can get specific number of recent extracts in tibble format", {
     two_recent_usa_extracts <- get_extract_history(
       "usa",
       how_many = 2,
-      table = TRUE
+      as_table = TRUE
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
     two_recent_nhgis_extracts <- get_extract_history(
       "nhgis",
       how_many = 2,
-      table = TRUE
+      as_table = TRUE
     )
   })
 
@@ -537,10 +537,10 @@ test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_history("usa", table = TRUE)
+    recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
   })
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_extract_history("usa", table = FALSE)
+    recent_usa_extracts_list <- get_extract_history("usa", as_table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(
@@ -561,10 +561,10 @@ test_that("NHGIS tbl/list conversion works", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", table = TRUE)
+    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", as_table = TRUE)
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_history("nhgis", table = FALSE)
+    recent_nhgis_extracts_list <- get_extract_history("nhgis", as_table = FALSE)
   })
 
   converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
@@ -614,7 +614,7 @@ test_that("NHGIS shapefile-only tbl/list conversion works", {
     nhgis_extract_tbl_shp <- get_extract_history(
       "nhgis",
       how_many = 1,
-      table = TRUE
+      as_table = TRUE
     )
   })
 

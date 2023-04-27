@@ -31,9 +31,7 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 
 \item{collection}{Character string of the IPUMS collection for which to
-retrieve recent extract requests.
-
-If \code{NULL}, uses the current default
+retrieve extract history. Defaults to the current default
 collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.}
 }
 \value{

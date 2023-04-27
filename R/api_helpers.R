@@ -806,6 +806,13 @@ validate_api_request <- function(res, call = caller_env()) {
       )
     }
 
+    if (status == 429) {
+      rlang::abort(
+        c(error_message, "x" = "Rate limit exceeded."),
+        call = call
+      )
+    }
+
     # Other errors should get the general message
     rlang::abort(
       c(error_message, error_details),
@@ -965,9 +972,9 @@ ipums_api_request <- function(verb,
 #' field of the JSON response.
 #'
 #' @param url API url for the request
-#' @param sleep Logical indicating whether to add a 1 second delay between
-#'   requests for each page. In general should not be needed, but is used
-#'   to provide an option to avoid API rate limit, if needed.
+#' @param delay Number of seconds to delay between
+#'   successive API requests. This is highly unlikely to be needed and is
+#'   included only as a fallback for users to avoid hitting the rate limit.
 #' @param api_key IPUMS API key
 #' @param ... Additional arguments passed to `httr::VERB()`
 #'
@@ -976,7 +983,7 @@ ipums_api_request <- function(verb,
 #' @noRd
 ipums_api_paged_request <- function(url,
                                     max_pages = Inf,
-                                    sleep = FALSE,
+                                    delay = 0,
                                     api_key = Sys.getenv("IPUMS_API_KEY"),
                                     ...) {
   response <- ipums_api_request(
@@ -997,10 +1004,7 @@ ipums_api_paged_request <- function(url,
 
   while (page_no < max_pages && !is.null(json_content$links$nextPage)) {
     # Fallback in case someone hits the rate limit.
-    # Sleeping for 1 sec should avoid rate limit.
-    if (sleep) {
-      Sys.sleep(1L)
-    }
+    Sys.sleep(delay)
 
     response <- ipums_api_request(
       "GET",
@@ -1077,7 +1081,7 @@ ipums_api_download_request <- function(url,
 # endpoint type. Currently, extract endpoints have a different
 # limits as it is more expensive to provide large numbers of extract
 # definitions than metadata records.
-api_page_limit <- function(type) {
+api_page_size_limit <- function(type) {
   if (type == "extracts") {
     1500
   } else if (type == "metadata") {

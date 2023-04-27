@@ -28,6 +28,7 @@ get_recent_extracts_info_list <- function(collection = NULL,
   get_extract_history(
     collection = collection,
     how_many = how_many,
+    as_table = FALSE,
     api_key = api_key
   )
 }
@@ -40,13 +41,16 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
   lifecycle::deprecate_warn(
     "0.6.0",
     "get_recent_extracts_info_tbl()",
-    details = "Please use `get_extract_history()` with `table = TRUE` instead."
+    details = paste0(
+      "Please use `get_extract_history()` with `as_table = TRUE` ",
+      "instead."
+    )
   )
 
   get_extract_history(
     collection = collection,
     how_many = how_many,
-    table = TRUE,
+    as_table = TRUE,
     api_key = api_key
   )
 }

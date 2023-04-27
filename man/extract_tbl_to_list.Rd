@@ -14,7 +14,7 @@ extract_list_to_tbl(extract_list)
 \code{\link[base:data.frame]{data.frame}}) containing the specifications for one
 or more \code{\link[=ipums_extract-class]{ipums_extract}} objects.
 
-Use \code{\link[=get_extract_history]{get_extract_history()}} with \code{table = TRUE} to produce such an object.}
+Use \code{\link[=get_extract_history]{get_extract_history()}} with \code{as_table = TRUE} to produce such an object.}
 
 \item{validate}{Logical value indicating whether to
 check that each of the output \code{ipums_extract}
@@ -45,7 +45,7 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 \examples{
 \dontrun{
 # Get tibble of recent extracts
-tbl_of_last_10_extracts <- get_extract_history("usa", table = TRUE)
+tbl_of_last_10_extracts <- get_extract_history("usa", as_table = TRUE)
 
 # Filter down to extracts with "income" in the description
 description_mentions_income <- grepl(

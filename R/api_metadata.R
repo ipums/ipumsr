@@ -146,12 +146,13 @@
 #'   Defaults to `TRUE`.
 #' @param match_case If `TRUE`, use case-sensitive matching when interpreting
 #'   the expressions provided in `...`. Defaults to `FALSE`.
-#' @param sleep Logical indicating whether to add a brief delay between
-#'   API calls when retrieving summary metadata.
+#' @param delay Number of seconds to delay between
+#'   successive API requests, if multiple requests are needed to retrieve all
+#'   records.
 #'
-#'   This is highly unlikely to be needed. However, if you cannot
-#'   retrieve all metadata records without hitting the API rate limit,
-#'   you may want to set this to `TRUE`.
+#'   A delay is highly unlikely to be necessary and is intended only as a
+#'   fallback in the event that you cannot retrieve all metadata records without
+#'   exceeding the API rate limit.
 #'
 #'   Only used if `type` is provided.
 #'
@@ -198,7 +199,7 @@ get_nhgis_metadata <- function(type = NULL,
                                ...,
                                match_all = TRUE,
                                match_case = FALSE,
-                               sleep = FALSE,
+                               delay = 0,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
   summary_req <- !is.null(type)
   ds_req <- !is.null(dataset)
@@ -261,7 +262,7 @@ get_nhgis_metadata <- function(type = NULL,
     metadata <- get_summary_metadata(
       collection = "nhgis",
       type,
-      sleep = sleep,
+      delay = delay,
       api_key = api_key
     )
 
@@ -303,18 +304,18 @@ get_nhgis_metadata <- function(type = NULL,
 #' @noRd
 get_summary_metadata <- function(collection,
                                  type,
-                                 sleep = FALSE,
+                                 delay = 0,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
     path = metadata_request_path(collection, type),
-    queries = list(pageNumber = 1, pageSize = api_page_limit("metadata"))
+    queries = list(pageNumber = 1, pageSize = api_page_size_limit("metadata"))
   )
 
   responses <- ipums_api_paged_request(
     url = url,
     max_pages = Inf,
-    sleep = sleep,
+    delay = delay,
     api_key = api_key
   )
 
