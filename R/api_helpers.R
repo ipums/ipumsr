@@ -844,12 +844,12 @@ api_base_url <- function() {
   url
 }
 
-#' Generate an API-compatible URL for extract endpoint requests
-#'
-#' Metadata URL handling is found in `metadata_request_url`.
+#' Generate an URL for IPUMS API requests
 #'
 #' @param collection The IPUMS data collection for the extract.
-#' @param path Extensions to add to the base url.
+#' @param path Extensions to add to the base url. Helpers
+#'   `extract_request_path()` and `metadata_request_path()` can be used
+#'   to form URL paths for different endpoints.
 #' @param queries A named list of key value pairs to be added to the standard
 #'   query in the call to [httr::modify_url].
 #'
@@ -887,7 +887,7 @@ api_request_url <- function(collection, path, queries = NULL) {
 #'
 #' @return Path to include in the URL for an API extract request.
 #'   This will be of the form `"extracts/{number}"` if `number` is provided.
-#'   Otherwise, it will return `"extracts"`.
+#'   Otherwise, it will return `"extracts/"`.
 #'
 #' @noRd
 extract_request_path <- function(number = NULL) {
@@ -934,7 +934,7 @@ metadata_request_path <- function(collection, ...) {
 #' @param verb `"GET"` or `"POST"`
 #' @param url API url for the request.
 #' @param body The body of the request (e.g. the extract definition), if
-#'   relevant. Defaults to `FALSE`, which creates a body-less request.
+#'   relevant. Use `FALSE` for a body-less request.
 #' @param api_key IPUMS API key
 #' @param ... Additional parameters passed to `httr::VERB()`
 #'
@@ -967,9 +967,10 @@ ipums_api_request <- function(verb,
 
 #' Make requests to paginated API endpoints
 #'
-#' For a starting URL, makes an API request and continues requesting additional
-#' pages as long as they exist. Pages are stored in the `links$nextPage`
-#' field of the JSON response.
+#' For a starting URL, makes an API request and continue requesting additional
+#' pages until the provided `max_pages` is reached. Use `max_pages = Inf` to
+#' request all pages available. Pages are stored in the `links$nextPage` field
+#' of the JSON response.
 #'
 #' @param url API url for the request
 #' @param delay Number of seconds to delay between
@@ -1083,12 +1084,14 @@ ipums_api_download_request <- function(url,
 # definitions than metadata records.
 api_page_size_limit <- function(type) {
   if (type == "extracts") {
-    1500
+    limit <- 1500
   } else if (type == "metadata") {
-    2500
+    limit <- 2500
   } else {
     rlang::abort("Unrecognized endpoint type.")
   }
+
+  limit
 }
 
 #' Get the active API instance to use for API requests

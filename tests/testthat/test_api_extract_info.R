@@ -311,6 +311,7 @@ test_that("Can get extract history for all records", {
 
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.
+  # This enables us to ensure that multiple pages are requested.
   vcr::use_cassette("extract-history-all-records", {
     responses <- ipums_api_paged_request(
       url = api_request_url(
@@ -345,6 +346,7 @@ test_that("Can get extract history for more records than page size", {
 
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.
+  # This enables us to ensure that multiple pages are requested.
   how_many <- 91
   page_limit <- 30
 
@@ -527,7 +529,7 @@ test_that("Can get specific number of recent extracts in tibble format", {
 test_that("Error on invalid number of records", {
   expect_error(
     get_extract_history("usa", how_many = 0),
-    "Number of records requested must be positive"
+    "Must request a positive number of records."
   )
 })
 

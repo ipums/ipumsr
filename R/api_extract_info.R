@@ -181,7 +181,7 @@ get_extract_history <- function(collection = NULL,
                                 delay = 0,
                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
   if (how_many <= 0) {
-    rlang::abort("Number of records requested must be positive.")
+    rlang::abort("Must request a positive number of records.")
   }
 
   collection <- collection %||% get_default_collection()
