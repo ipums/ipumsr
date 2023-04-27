@@ -567,13 +567,15 @@ print.nhgis_extract <- function(x, ...) {
     }
   ))
 
-  ds_to_cat <- c(
-    ds_to_cat,
-    format_field_for_printing(
-      parent_field = list("Geographic extents: " = x$geographic_extents),
-      parent_style = style_ds
+  if (length(ds_to_cat) > 0) {
+    ds_to_cat <- c(
+      ds_to_cat,
+      format_field_for_printing(
+        parent_field = list("Geographic extents: " = x$geographic_extents),
+        parent_style = style_ds
+      )
     )
-  )
+  }
 
   tst_to_cat <- purrr::compact(purrr::map(
     x$time_series_tables,
