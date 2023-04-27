@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/CM0?version=2
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/CM0?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Wed, 26 Apr 2023 22:05:46 GMT
       etag: W/"41fb5dadabb4325e3e473a11d1b01f9b"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 46ee3f4a-6e07-4f6d-92d9-1902cca87141
-      x-runtime: '0.005417'
+      x-request-id: d4839388-0851-49b6-b554-56358ec0b685
+      x-runtime: '0.008525'
       x-xss-protection: '0'
       content-length: '1213'
     body:
@@ -47,5 +47,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
         Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":363}]}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-26 22:05:46 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

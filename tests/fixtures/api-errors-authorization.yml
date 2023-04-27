@@ -1,0 +1,62 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=2500
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: ''
+  response:
+    status:
+      status_code: 401
+      category: Client error
+      reason: Unauthorized
+      message: 'Client error: (401) Unauthorized'
+    headers:
+      content-type: application/json
+      date: Wed, 26 Apr 2023 18:26:43 GMT
+      vary: Origin
+      x-generator: tyk.io
+      content-length: '46'
+    body:
+      encoding: ''
+      file: no
+      string: |-
+        {
+            "error": "Authorization field missing"
+        }
+  recorded_at: 2023-04-26 18:26:43 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2&pageNumber=1&pageSize=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: foobar
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 403
+      category: Client error
+      reason: Forbidden
+      message: 'Client error: (403) Forbidden'
+    headers:
+      content-type: application/json
+      date: Wed, 26 Apr 2023 18:26:43 GMT
+      vary: Origin
+      x-generator: tyk.io
+      content-length: '57'
+    body:
+      encoding: ''
+      file: no
+      string: |-
+        {
+            "error": "Access to this API has been disallowed"
+        }
+  recorded_at: 2023-04-26 18:26:43 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

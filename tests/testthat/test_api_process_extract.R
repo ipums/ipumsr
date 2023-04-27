@@ -421,21 +421,23 @@ test_that("Can download shapefile-only extract", {
   expect_true(file.exists(gis_data_file_path))
 })
 
-test_that("Download extract errors", {
-  vcr::use_cassette("download-extract-errors", {
+test_that("Download extract errors on incomplete extract", {
+  vcr::use_cassette("download-extract-not-ready", {
     expect_error(
       download_extract(submit_extract(test_usa_extract())),
       "not ready to download.+Use `wait_for_extract\\(\\)`"
     )
   })
-  # TODO: test errors for expired and failed extracts?
+  # TODO: test behavior for expired and failed extracts
   # This is tougher because get_extract_info() will always update status
-  # before attempting download
+  # before attempting download. We test `ipums_api_download_request()` for this,
+  # but these errors may trigger errors before making the request.
 })
 
 # Read downloaded files ------------------
 
 test_that("Can read downloaded files with ipumsr readers", {
+  skip_if_no_api_access(have_api_access)
   skip_if_not_installed("sf")
   skip_if_not_installed("rgdal")
   skip_if_not_installed("sp")
@@ -470,9 +472,9 @@ test_that("Can read downloaded files with ipumsr readers", {
   expect_equal(nrow(data), 10190)
 })
 
-# Submit extract errors ------------------
+# Submitted extract validation ------------------
 
-test_that("We throw errors on attempted submission of invalid extract", {
+test_that("We validate extract before submission", {
   expect_error(
     submit_extract(ipumsr:::new_ipums_extract()),
     paste0(
@@ -495,23 +497,6 @@ test_that("We throw errors on attempted submission of invalid extract", {
       "`variables` must not contain missing values"
     )
   )
-})
-
-test_that("We parse API errors on bad requests", {
-  bad_extract <- new_ipums_extract("usa", samples = "foo")
-
-  vcr::use_cassette("micro-extract-errors", {
-    expect_error(
-      ipums_api_json_request(
-        "POST",
-        collection = "usa",
-        path = "extracts/",
-        body = extract_to_request_json(bad_extract),
-        api_key = Sys.getenv("IPUMS_API_KEY")
-      ),
-      "variables"
-    )
-  })
 })
 
 # Revise a submitted extract -------------

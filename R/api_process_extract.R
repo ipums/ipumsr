@@ -64,23 +64,28 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   extract <- validate_ipums_extract(extract)
 
-  response <- ipums_api_json_request(
+  url <- api_request_url(
+    collection = extract$collection,
+    path = extract_request_path()
+  )
+
+  response <- ipums_api_extracts_request(
     "POST",
     collection = extract$collection,
-    path = "extracts/",
+    url = url,
     body = extract_to_request_json(extract),
     api_key = api_key
   )
 
   # extract_list_from_json() always returns a list of extracts, but in
   # this case there is always only one, so pluck it out
-  extract <- extract_list_from_json(response, validate = TRUE)[[1]]
+  extract <- extract_list_from_json(response)[[1]]
 
   message(
-    sprintf(
-      "Successfully submitted %s extract number %d",
+    paste0(
+      "Successfully submitted ",
       format_collection_for_printing(extract$collection),
-      extract$number
+      " extract number ", extract$number
     )
   )
 
@@ -671,51 +676,6 @@ format_nhgis_field_for_json <- function(...) {
   subfields_formatted
 }
 
-#' Writes the given url to file_path. Returns the file path of the
-#' downloaded data. Raises an error if the request is not successful.
-#'
-#' @noRd
-ipums_api_download_request <- function(url,
-                                       file_path,
-                                       overwrite,
-                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
-  if (file.exists(file_path) && !overwrite) {
-    rlang::abort(
-      c(
-        paste0("File `", file_path, "` already exists."),
-        "To overwrite, set `overwrite = TRUE`"
-      )
-    )
-  }
-
-  response <- httr::GET(
-    url,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
-    ),
-    add_user_auth_header(api_key),
-    httr::write_disk(file_path, overwrite = TRUE),
-    httr::progress()
-  )
-
-  if (httr::http_status(response)$category != "Success") {
-    rlang::abort(
-      c(
-        "Failed to download extract files.",
-        "i" = paste0(
-          "The extract may have expired. ",
-          "Check its latest status with `get_extract_info()`"
-        )
-      )
-    )
-  }
-
-  return(file_path)
-}
-
 #' Collection-specific extract download
 #'
 #' S3 generic implementation to allow for collection-specific method dispatch
@@ -863,127 +823,6 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   }
 
   invisible(file_paths)
-}
-
-#' Helper function to form, submit, and receive responses of requests expecting
-#'   a JSON response.
-#'
-#' @param verb `"GET"` or `"POST"`
-#' @param collection The IPUMS data collection for the extract.
-#' @param path Extensions to add to the base url.
-#' @param body The body of the request (e.g. the extract definition), if
-#'   relevant. Defaults to `FALSE`, which creates a body-less request.
-#' @param queries A named list of key value pairs to be added to the standard
-#'   query in the call to [httr::modify_url].
-#'
-#' @return If the request returns a JSON response, this function returns a
-#'   length-one character vector containing the response from the API
-#'   formatted as JSON. Otherwise, the function throws an error.
-#'
-#' @noRd
-ipums_api_json_request <- function(verb,
-                                   collection,
-                                   path,
-                                   body = FALSE,
-                                   queries = NULL,
-                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
-  queries_is_null_or_named_list <- is.null(queries) ||
-    is.list(queries) && !is.null(names(queries)) && !any(names(queries) == "")
-
-  if (!queries_is_null_or_named_list) {
-    rlang::abort("`queries` argument must be `NULL` or a named list")
-  }
-
-  api_url <- httr::modify_url(
-    api_base_url(),
-    path = path,
-    query = c(
-      list(collection = collection, version = ipums_api_version()),
-      queries
-    )
-  )
-
-  res <- httr::VERB(
-    verb = verb,
-    url = api_url,
-    body = body,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
-    ),
-    httr::content_type_json(),
-    add_user_auth_header(api_key)
-  )
-
-  if (httr::http_status(res)$category != "Success") {
-    status <- httr::status_code(res)
-
-    if (status == 400) {
-      tryCatch(
-        error_details <- parse_400_error(res),
-        error = function(cond) {
-          rlang::abort(
-            paste0(
-              "Received error from server (status code 400), but could not ",
-              "parse response for more details."
-            )
-          )
-        }
-      )
-      rlang::abort(error_details)
-    } else if (status == 404) {
-      if (fostr_detect(path, "^extracts/\\d+$")) {
-        extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract_number <- get_last_extract_info(collection)$number
-
-        if (extract_number > most_recent_extract_number) {
-          coll <- format_collection_for_printing(collection)
-          rlang::abort(
-            c(
-              paste0(
-                coll, " extract number ",
-                extract_number, " does not exist."
-              ),
-              paste0(
-                "Most recent extract number: ",
-                most_recent_extract_number
-              )
-            )
-          )
-        }
-      }
-      rlang::abort("URL not found")
-    } else if (status %in% c(401, 403)) {
-      rlang::abort(c(
-        "The provided API Key is either missing or invalid.",
-        "i" = paste0(
-          "Please provide your API key to the `api_key` argument ",
-          "or request a key at https://account.ipums.org/api_keys"
-        ),
-        "i" = "Use `set_ipums_api_key() to save your key for future use."
-      ))
-    } else { # other non-success codes, e.g. 300s + 500s
-      rlang::abort(c(
-        paste0(
-          "Extract API request failed with status ",
-          httr::status_code(res)
-        ),
-        paste0("URL: ", api_url),
-        paste0("Content: ", httr::content(res, "text"))
-      ))
-    }
-  }
-
-  if (httr::http_type(res) != "application/json") {
-    rlang::abort("Extract API did not return json")
-  }
-
-  new_ipums_json(
-    httr::content(res, "text"),
-    collection = collection
-  )
 }
 
 #' Check if an extract is ready for download

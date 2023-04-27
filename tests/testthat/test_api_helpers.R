@@ -230,6 +230,180 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
   expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
 })
 
+# API Request Errors ----------------------------------------
+
+test_that("We handle API auth errors for extract and metadata endpoints", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("api-errors-authorization", {
+    expect_error(
+      withr::with_envvar(new = c("IPUMS_API_KEY" = NA), {
+        get_nhgis_metadata("datasets")
+      }),
+      "API key is either missing or invalid"
+    )
+    expect_error(
+      get_last_extract_info("usa", api_key = "foobar"),
+      "API key is either missing or invalid"
+    )
+  })
+})
+
+test_that("Can parse API request error details in basic requests", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("api-errors-invalid-extract", {
+    expect_error(
+      ipums_api_extracts_request(
+        "POST",
+        url = api_request_url(
+          collection = "usa",
+          path = extract_request_path()
+        ),
+        body = extract_to_request_json(
+          new_ipums_extract("usa", samples = "foo")
+        ),
+        api_key = Sys.getenv("IPUMS_API_KEY")
+      ),
+      paste0(
+        "API request failed.+",
+        "dataStructure.+did not contain.+",
+        "variables.+did not match"
+      )
+    )
+    expect_error(
+      ipums_api_extracts_request(
+        "POST",
+        url = api_request_url(
+          collection = "nhgis",
+          path = extract_request_path()
+        ),
+        body = extract_to_request_json(
+          new_ipums_extract(
+            "nhgis",
+            datasets = "foo",
+            data_tables = "bar",
+            geog_levels = "baz"
+          )
+        ),
+        api_key = Sys.getenv("IPUMS_API_KEY")
+      ),
+      paste0(
+        "API request failed.+",
+        "Datasets invalid.+",
+        "Data format invalid"
+      )
+    )
+    expect_error(
+      ipums_api_request(
+        "GET",
+        api_request_url("nhgis", "foo"),
+        body = FALSE
+      ),
+      "API request failed with status 404.$"
+    )
+  })
+
+  vcr::use_cassette("api-errors-invalid-metadata", {
+    expect_error(
+      get_summary_metadata("nhgis", type = "foo"),
+      "API request failed with status 404.$"
+    )
+    expect_error(
+      get_nhgis_metadata(dataset = "foo"),
+      "API request failed.+Couldn\'t find Dataset"
+    )
+    expect_error(
+      get_nhgis_metadata(data_table = "foo", dataset = "1980_STF1"),
+      "API request failed.+Couldn\'t find DataTable"
+    )
+    expect_error(
+      get_nhgis_metadata(time_series_table = "foo"),
+      "API request failed.+Couldn\'t find TimeSeriesTable"
+    )
+  })
+})
+
+test_that("Can parse API request error details in paged requests", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("api-errors-paged-extract", {
+    expect_error(
+      ipums_api_paged_request(
+        url = api_request_url(
+          collection = "nhgis",
+          path = extract_request_path(),
+          queries = list(pageSize = 3000)
+        )
+      ),
+      "API request failed.+Invalid pageSize: 3000"
+    )
+  })
+})
+
+test_that("We inform user about invalid extract number request", {
+  skip_if_no_api_access(have_api_access)
+
+  # API itself returns empty-bodied response for an invalid extract number
+  # for a given collection, but we want to inform user that the error
+  # resulted from their extract number not existing.
+  vcr::use_cassette("api-errors-invalid-extract-number", {
+    most_recent <- get_last_extract_info("nhgis")
+
+    expect_error(
+      get_extract_info(c("nhgis", most_recent$number + 1)),
+      paste0(
+        "number ", most_recent$number + 1,
+        " does not exist"
+      )
+    )
+  })
+})
+
+test_that("We inform user about expired extract for invalid download request", {
+  skip_if_no_api_access(have_api_access)
+
+  # Currently, the API downloads a file containing the 404 error, so for now
+  # ensure that we only write this to a temp file.
+  # TODO: In the future we will want to ensure we don't download on an erroneous
+  # request.
+  file <- file.path(tempdir(), "foo.zip")
+
+  on.exit(unlink(file), add = TRUE, after = FALSE)
+
+  expect_error(
+    ipums_api_download_request(
+      url = "https://api.ipums.org/downloads/nhgis/api/v1/extracts/foo.zip",
+      file_path =  file,
+      overwrite = TRUE
+    ),
+    "API request failed.+The extract may have expired"
+  )
+})
+
+test_that("We catch invalid collection specifications during requests", {
+  skip_if_no_api_access(have_api_access)
+
+  # Ideally we'd catch before request, as API message suggests all ipums
+  # collections are available.
+  expect_error(
+    api_request_url(collection = "foo", path = extract_request_path()),
+    "No API version found for collection \"foo\""
+  )
+
+  # But ensure that the error is still caught by the API if `api_request_url()`
+  # is not used to form URL.
+  vcr::use_cassette("api-errors-invalid-collection", {
+    expect_error(
+      ipums_api_request(
+        "GET",
+        url = "https://api.ipums.org/extracts/?collection=foo&version=2",
+        body = FALSE
+      ),
+      "API request failed.+The \'collection\' query parameter is invalid"
+    )
+  })
+})
 
 # Misc ------------------------------------------
 
@@ -244,9 +418,11 @@ test_that("We can get correct API version info for each collection", {
     c("usa", "cps", "nhgis")
   )
   expect_equal(ipums_api_version(), 2)
-
   expect_equal(check_api_support("nhgis"), "nhgis")
-  expect_error(check_api_support("fake collection"), "No API version found")
+  expect_error(
+    get_extract_history("fake-collection"),
+    "No API version found"
+  )
 })
 
 test_that("standardize_extract_identifier handles unusual cases", {

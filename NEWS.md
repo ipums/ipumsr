@@ -8,8 +8,8 @@
 * Adds API support for IPUMS NHGIS metadata. Use `get_nhgis_metadata()` to
   browse NHGIS data sources when creating an NHGIS extract request.
 
-* `get_recent_extracts_info()` replaces `get_recent_extracts_info_*()` functions.
-  Set `table = TRUE` to get recent extract information in tabular format.
+* `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.
+  Set `as_table = TRUE` to get recent extract information in tabular format.
   
 * Adds `combine_extracts()` to allow for the merging of multiple extract
   definitions.
@@ -70,7 +70,7 @@
   remain unchanged.
   
 * `get_recent_extracts_info_list()` and `get_recent_extracts_info_tbl()` have
-  been deprecated in favor of `get_recent_extracts_info()`.
+  been deprecated in favor of `get_extract_history()`.
   
 * `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
   `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular

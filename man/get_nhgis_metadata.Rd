@@ -12,7 +12,7 @@ get_nhgis_metadata(
   ...,
   match_all = TRUE,
   match_case = FALSE,
-  n_records = NULL,
+  delay = 0,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
@@ -50,9 +50,13 @@ Defaults to \code{TRUE}.}
 \item{match_case}{If \code{TRUE}, use case-sensitive matching when interpreting
 the expressions provided in \code{...}. Defaults to \code{FALSE}.}
 
-\item{n_records}{For summary metadata, the number of records to retrieve,
-starting from the first record. If \code{NULL}, obtains all records for the
-given \code{type}. Maximum allowed value is 2500.
+\item{delay}{Number of seconds to delay between
+successive API requests, if multiple requests are needed to retrieve all
+records.
+
+A delay is highly unlikely to be necessary and is intended only as a
+fallback in the event that you cannot retrieve all metadata records without
+exceeding the API rate limit.
 
 Only used if \code{type} is provided.}
 

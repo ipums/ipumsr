@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a/data_tables/P8?version=2
+    uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a/data_tables/P8?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:51:28 GMT
+      date: Wed, 26 Apr 2023 22:05:47 GMT
       etag: W/"79ddde730abc0266e0270ba2b33392b7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 3c7c2b57-73ac-4144-9412-0026695977af
-      x-runtime: '0.004707'
+      x-request-id: ea76c21a-22ed-4dec-acbf-dbd532c086b8
+      x-runtime: '0.008963'
       x-xss-protection: '0'
       content-length: '10240'
     body:
@@ -160,5 +160,5 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgisCode":"H72071"}]}'
-  recorded_at: 2023-04-06 22:51:28 GMT
+  recorded_at: 2023-04-26 22:05:47 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
