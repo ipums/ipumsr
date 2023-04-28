@@ -116,21 +116,30 @@ NULL
 #' @name define_extract
 NULL
 
-#' Define an IPUMS USA extract request
+#' Define an extract request for an IPUMS microdata collection
 #'
 #' @description
-#' Define the parameters of an IPUMS USA extract request to be submitted via the
-#' IPUMS API.
+#' Define the parameters of an IPUMS microdata extract request to be submitted
+#' via the IPUMS API.
+#'
+#' Currently supported microdata collections include:
+#' - **IPUMS USA**: `define_extract_usa()`
+#' - **IPUMS CPS**: `define_extract_cps()`
+#' - **IPUMS International**: `define_extract_ipumsi()`
 #'
 #' Use the [new_variable()] helper to generate detailed variable-level
-#' specifications for an extract.
+#' specifications for an extract request.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @param description Description of the extract.
 #' @param samples Character vector of sample names to include in the extract.
-#'   Samples should be specified using IPUMS USA
-#'   [sample ID values](https://usa.ipums.org/usa-action/samples/sample_ids).
+#'   Samples should be specified using the sample ID codes for the given
+#'   project:
+#'
+#'   - [IPUMS USA](https://usa.ipums.org/usa-action/samples/sample_ids)
+#'   - [IPUMS CPS](https://cps.ipums.org/cps-action/samples/sample_ids)
+#'   - [IPUMS International](https://international.ipums.org/international-action/samples/sample_ids)
 #' @param variables Character vector of variable names or a list of
 #'   `ipums_variable` objects created by [new_variable()]
 #'   containing specifications for all variables to include in the extract.
@@ -150,7 +159,7 @@ NULL
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
 #'
-#' @return An object of class [`usa_extract`][ipums_extract-class] containing
+#' @return An object of class [`micro_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
 #' @seealso
@@ -160,12 +169,13 @@ NULL
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [`add_to_extract()`][add_to_extract.usa_extract()],
-#' [`remove_from_extract()`][remove_from_extract.usa_extract()], and
-#' [combine_extracts()] to
-#'   revise an extract definition.
+#' [`add_to_extract()`][add_to_extract.micro_extract()],
+#' [`remove_from_extract()`][remove_from_extract.micro_extract()], and
+#' [combine_extracts()] to revise an extract definition.
 #'
 #' @export
+#'
+#' @name define_extract_micro
 #'
 #' @examples
 #' usa_extract <- define_extract_usa(
@@ -188,10 +198,10 @@ NULL
 #' )
 #'
 #' # For multiple variables, provide a list of `ipums_variable` objects and/or
-#' # variable names:
-#' usa_extract <- define_extract_usa(
-#'   description = "Example USA extract definition",
-#'   samples = c("us2013a", "us2014a"),
+#' # variable names.
+#' cps_extract <- define_extract_cps(
+#'   description = "Example CPS extract definition",
+#'   samples = c("cps2020_02s", "cps2020_03s"),
 #'   variables = list(
 #'     new_variable("AGE", data_quality_flags = TRUE),
 #'     new_variable("SEX", case_selections = "2"),
@@ -199,33 +209,38 @@ NULL
 #'   )
 #' )
 #'
+#' cps_extract
+#'
 #' # To recycle specifications to many variables, it may be useful to
-#' # create variable specifications prior to defining the extract:
+#' # create variables prior to defining the extract:
 #' var_names <- c("AGE", "SEX")
 #'
 #' var_spec <- purrr::map(
 #'   var_names,
-#'   ~ new_variable(.x, data_quality_flags = TRUE)
+#'   ~ new_variable(.x, attached_characteristics = "mother")
 #' )
 #'
-#' define_extract_usa(
+#' ipumsi_extract <- define_extract_ipumsi(
 #'   description = "Extract definition with predefined variables",
-#'   samples = c("us2013a", "us2014a"),
+#'   samples = c("br2010a", "cl2017a"),
 #'   variables = var_spec
 #' )
 #'
-#' # Extract specifications can be indexed in the resulting `ipums_extract`
-#' # object:
-#' names(usa_extract$samples)
+#' # Extract specifications can be indexed by name
+#' names(ipumsi_extract$samples)
 #'
-#' names(usa_extract$variables)
+#' names(ipumsi_extract$variables)
 #'
-#' usa_extract$variables$AGE
+#' ipumsi_extract$variables$AGE
 #'
 #' \dontrun{
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(usa_extract)
 #' }
+NULL
+
+#' @export
+#' @rdname define_extract_micro
 define_extract_usa <- function(description,
                                samples,
                                variables,
@@ -243,97 +258,8 @@ define_extract_usa <- function(description,
   )
 }
 
-#' Define an IPUMS CPS extract request
-#'
-#' @description
-#' Define the parameters of an IPUMS CPS extract request to be submitted via the
-#' IPUMS API.
-#'
-#' Use the [new_variable()] helper to generate detailed variable-level
-#' specifications for an extract.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @inheritParams define_extract_usa
-#' @param samples Character vector of sample names to include in the extract.
-#'   Samples should be specified using IPUMS CPS
-#'   [sample ID values](https://cps.ipums.org/cps-action/samples/sample_ids).
-#'
-#' @return An object of class [`cps_extract`][ipums_extract-class] containing
-#'   the extract definition.
-#'
-#' @seealso
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
-#'
-#' [save_extract_as_json()] and [define_extract_from_json()] to share an
-#'   extract definition.
-#'
-#' [`add_to_extract()`][add_to_extract.cps_extract()],
-#' [`remove_from_extract()`][remove_from_extract.cps_extract()], and
-#' [combine_extracts()] to
-#'   revise an extract definition.
-#'
 #' @export
-#'
-#' @examples
-#' cps_extract <- define_extract_cps(
-#'   description = "Example CPS extract definition",
-#'   samples = c("cps2020_02s", "cps2020_03s"),
-#'   variables = c("AGE", "SEX", "YEAR")
-#' )
-#'
-#' cps_extract
-#'
-#' # Use `new_variable()` to created detailed variable specifications:
-#' define_extract_cps(
-#'   description = "Example CPS extract definition",
-#'   samples = c("cps2020_02s", "cps2020_03s"),
-#'   variables = new_variable(
-#'     "SEX",
-#'     case_selections = "2",
-#'     attached_characteristics = c("mother", "father")
-#'   )
-#' )
-#'
-#' # For multiple variables, provide a list of `ipums_variable` objects and/or
-#' # variable names.
-#' cps_extract <- define_extract_cps(
-#'   description = "Example CPS extract definition",
-#'   samples = c("cps2020_02s", "cps2020_03s"),
-#'   variables = list(
-#'     new_variable("AGE", data_quality_flags = TRUE),
-#'     new_variable("SEX", case_selections = "2"),
-#'     "RACE"
-#'   )
-#' )
-#'
-#' # To recycle specifications to many variables, it may be useful to
-#' # create variables prior to defining the extract:
-#' var_names <- c("AGE", "SEX")
-#'
-#' var_spec <- purrr::map(
-#'   var_names,
-#'   ~ new_variable(.x, data_quality_flags = TRUE)
-#' )
-#'
-#' define_extract_cps(
-#'   description = "Extract definition with predefined variables",
-#'   samples = c("cps2020_02s", "cps2020_03s"),
-#'   variables = var_spec
-#' )
-#'
-#' # Extract specifications can be indexed by name
-#' names(cps_extract$samples)
-#'
-#' names(cps_extract$variables)
-#'
-#' cps_extract$variables$AGE
-#'
-#' \dontrun{
-#' # Use the extract definition to submit an extract request to the API
-#' submit_extract(cps_extract)
-#' }
+#' @rdname define_extract_micro
 define_extract_cps <- function(description,
                                samples,
                                variables,
@@ -351,108 +277,8 @@ define_extract_cps <- function(description,
   )
 }
 
-#' Define an IPUMS International extract request
-#'
-#' @description
-#' Define the parameters of an IPUMS International extract request to be
-#' submitted via the IPUMS API.
-#'
-#' Use the [new_variable()] helper to generate detailed variable-level
-#' specifications for an extract.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @inheritParams define_extract_usa
-#' @param samples Character vector of sample names to include in the extract.
-#'   Samples should be specified using IPUMS International
-#'   [sample ID values](https://international.ipums.org/international-action/samples/sample_ids).
-#'
-#' @return An object of class [`ipumsi_extract`][ipums_extract-class] containing
-#'   the extract definition.
-#'
-#' @seealso
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
-#'
-#' [save_extract_as_json()] and [define_extract_from_json()] to share an
-#'   extract definition.
-#'
-#' [`add_to_extract()`][add_to_extract.ipumsi_extract()],
-#' [`remove_from_extract()`][remove_from_extract.ipumsi_extract()], and
-#' [combine_extracts()] to
-#'   revise an extract definition.
-#'
 #' @export
-#'
-#' @examples
-#' ipumsi_extract <- define_extract_ipumsi(
-#'   description = "Example IPUMS-I extract definition",
-#'   samples = "eg2006a",
-#'   variables = c("AGE", "SEX", "YEAR")
-#' )
-#'
-#' ipumsi_extract
-#'
-#' # Use `new_variable()` to created detailed variable specifications:
-#' define_extract_ipumsi(
-#'   description = "Example IPUMS-I extract definition",
-#'   samples = "gh2010a",
-#'   variables = new_variable(
-#'     "SEX",
-#'     case_selections = "2",
-#'     attached_characteristics = c("mother", "father")
-#'   )
-#' )
-#'
-#' # For multiple variables, provide a list of `ipums_variable` objects and/or
-#' # variable names.
-#' ipumsi_extract <- define_extract_ipumsi(
-#'   description = "Example IPUMS-I extract definition",
-#'   samples = c("br2010a", "cl2017a"),
-#'   variables = list(
-#'     new_variable(
-#'       "AGE",
-#'       data_quality_flags = TRUE
-#'     ),
-#'     new_variable(
-#'       "RACE",
-#'       case_selections = c("21", "22", "23"),
-#'       case_selection_type = "detailed"
-#'     ),
-#'     new_variable(
-#'       "EDATTAIN",
-#'       attached_characteristics = "spouse"
-#'     ),
-#'     "GEOMIG1_5"
-#'   )
-#' )
-#'
-#' # To recycle specifications to many variables, it may be useful to
-#' # create variables prior to defining the extract:
-#' var_names <- c("AGE", "SEX")
-#'
-#' var_spec <- purrr::map(
-#'   var_names,
-#'   ~ new_variable(.x, attached_characteristics = "mother")
-#' )
-#'
-#' define_extract_ipumsi(
-#'   description = "Extract definition with predefined variables",
-#'   samples = c("br2010a", "cl2017a"),
-#'   variables = var_spec
-#' )
-#'
-#' # Extract specifications can be indexed by name
-#' names(ipumsi_extract$samples)
-#'
-#' names(ipumsi_extract$variables)
-#'
-#' ipumsi_extract$variables$AGE
-#'
-#' \dontrun{
-#' # Use the extract definition to submit an extract request to the API
-#' submit_extract(ipumsi_extract)
-#' }
+#' @rdname define_extract_micro
 define_extract_ipumsi <- function(description,
                                   samples,
                                   variables,
@@ -988,12 +814,11 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' This function is an S3 generic whose behavior will depend on the
 #' subclass (i.e. collection) of the extract being modified.
 #'
-#' - To add to an **IPUMS USA** extract definition, click
-#'   [here][add_to_extract.usa_extract]
-#' - To add to an **IPUMS CPS** extract definition, click
-#'   [here][add_to_extract.cps_extract]
-#' - To add to an **IPUMS International** extract definition, click
-#'   [here][add_to_extract.ipumsi_extract]
+#' - To add to an **IPUMS Microdata** extract definition, click
+#'   [here][add_to_extract.micro_extract]. This includes:
+#'     + IPUMS USA
+#'     + IPUMS CPS
+#'     + IPUMS International
 #' - To add to an **IPUMS NHGIS** extract definition, click
 #'   [here][add_to_extract.nhgis_extract]
 #'
@@ -1079,274 +904,6 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
-}
-
-#' Add values to an existing IPUMS USA extract definition
-#'
-#' @description
-#' Add new values or replace existing values in an IPUMS USA extract definition.
-#' All fields are optional, and if omitted, will be unchanged. Supplying a value
-#' for fields that take a single value, such as `description` and `data_format`,
-#' will replace the existing value with the supplied value.
-#'
-#' To remove existing values from an IPUMS USA extract definition, use
-#' [`remove_from_extract()`][remove_from_extract.usa_extract]. To add values
-#' contained in another extract definition, use [combine_extracts()].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To modify variable-specific parameters for variables that already exist
-#' in the extract, create a new variable specification with [new_variable()].
-#'
-#' @inheritParams define_extract_usa
-#' @inheritParams add_to_extract
-#' @param variables Character vector of variable names or a list of
-#'   `ipums_variable` objects created by [new_variable()]
-#'   containing specifications for all variables to include in the extract.
-#'
-#'   If a variable already exists in the extract, its specifications
-#'   will be added to those that already exist for that variable.
-#' @param data_format Format for the output extract data file. One of
-#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`.
-#' @param ... Ignored
-#'
-#' @return A modified `usa_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`remove_from_extract()`][remove_from_extract.usa_extract()] to remove values
-#' from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_usa()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' extract <- define_extract_usa(
-#'   description = "2013 ACS Data",
-#'   samples = "us2013a",
-#'   variables = c("SEX", "AGE", "YEAR")
-#' )
-#'
-#' add_to_extract(extract, samples = "us2014a")
-#'
-#' extract2 <- add_to_extract(
-#'   extract,
-#'   samples = "us2014a",
-#'   variables = c("MARST", "BIRTHYR")
-#' )
-#'
-#' # Add new variable-specific specifications as you would when defining
-#' # an extract, even to modify variables that already exist in the definition
-#' add_to_extract(
-#'   extract,
-#'   samples = "us2014a",
-#'   variables = new_variable("SEX", case_selections = "2")
-#' )
-#'
-#' # Values that only take a single value are replaced
-#' add_to_extract(extract, description = "New description")$description
-#'
-#' # You can also combine two separate extract requests together
-#' combine_extracts(extract, extract2)
-add_to_extract.usa_extract <- function(extract,
-                                       description = NULL,
-                                       samples = NULL,
-                                       variables = NULL,
-                                       data_format = NULL,
-                                       ...) {
-  NextMethod()
-}
-
-#' Add values to an existing IPUMS CPS extract definition
-#'
-#' @description
-#' Add new values or replace existing values in an IPUMS CPS extract definition.
-#' All fields are optional, and if omitted, will be unchanged. Supplying a value
-#' for fields that take a single value, such as `description` and `data_format`,
-#' will replace the existing value with the supplied value.
-#'
-#' To remove existing values from an IPUMS CPS extract definition, use
-#' [`remove_from_extract()`][remove_from_extract.cps_extract]. To add values
-#' contained in another extract definition, use [combine_extracts()].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To modify variable-specific parameters for variables that already exist
-#' in the extract, create a new variable specification with [new_variable()].
-#'
-#' @inheritParams define_extract_cps
-#' @inheritParams add_to_extract
-#' @param variables Character vector of variable names or a list of
-#'   `ipums_variable` objects created by [new_variable()]
-#'   containing specifications for all variables to include in the extract.
-#'
-#'   If a variable already exists in the extract, its specifications
-#'   will be added to those that already exist for that variable.
-#' @param data_format Format for the output extract data file. One of
-#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`.
-#' @param ... Ignored
-#'
-#' @return A modified `cps_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`remove_from_extract()`][remove_from_extract.cps_extract()] to remove values
-#' from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_cps()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' extract <- define_extract_cps(
-#'   description = "Example CPS extract definition",
-#'   samples = c("cps2020_02s", "cps2020_03s"),
-#'   variables = c("AGE", "SEX", "YEAR")
-#' )
-#'
-#' add_to_extract(extract, samples = "cps2021_03s")
-#'
-#' extract2 <- add_to_extract(
-#'   extract,
-#'   samples = "cps2021_03s",
-#'   variables = c("MARST", "BIRTHYR")
-#' )
-#'
-#' # Add new variable-specific specifications as you would when defining
-#' # an extract, even to modify variables that already exist in the definition
-#' add_to_extract(
-#'   extract,
-#'   samples = "cps2021_03s",
-#'   variables = new_variable("SEX", case_selections = "2")
-#' )
-#'
-#' # Values that only take a single value are replaced
-#' add_to_extract(extract, description = "New description")$description
-#'
-#' # You can also combine two separate extract requests together
-#' combine_extracts(extract, extract2)
-add_to_extract.cps_extract <- function(extract,
-                                       description = NULL,
-                                       samples = NULL,
-                                       variables = NULL,
-                                       data_format = NULL,
-                                       ...) {
-  NextMethod()
-}
-
-#' Add values to an existing IPUMS International extract definition
-#'
-#' @description
-#' Add new values or replace existing values in an IPUMS International extract
-#' definition. All fields are optional, and if omitted, will be unchanged.
-#' Supplying a value for fields that take a single value, such as
-#' `description` and `data_format`, will replace the existing value with the
-#' supplied value.
-#'
-#' To remove existing values from an IPUMS International extract definition, use
-#' [`remove_from_extract()`][remove_from_extract.ipumsi_extract]. To add values
-#' contained in another extract definition, use [combine_extracts()].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To modify variable-specific parameters for variables that already exist
-#' in the extract, create a new variable specification with [new_variable()].
-#'
-#' @inheritParams define_extract_ipumsi
-#' @inheritParams add_to_extract
-#' @param variables Character vector of variable names or a list of
-#'   `ipums_variable` objects created by [new_variable()]
-#'   containing specifications for all variables to include in the extract.
-#'
-#'   If a variable already exists in the extract, its specifications
-#'   will be added to those that already exist for that variable.
-#' @param data_format Format for the output extract data file. One of
-#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`.
-#' @param ... Ignored
-#'
-#' @return A modified `ipumsi_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`remove_from_extract()`][remove_from_extract.ipumsi_extract()] to remove
-#' values from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_ipumsi()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' extract <- define_extract_ipumsi(
-#'   description = "Example IPUMS-I extract definition",
-#'   samples = "eg2006a",
-#'   variables = c("AGE", "SEX", "YEAR")
-#' )
-#'
-#' add_to_extract(extract, samples = "bw2011a")
-#'
-#' extract2 <- add_to_extract(
-#'   extract,
-#'   samples = "bw2011a",
-#'   variables = c("MARST", "RELATE")
-#' )
-#'
-#' # Add new variable-specific specifications as you would when defining
-#' # an extract, even to modify variables that already exist in the definition
-#' add_to_extract(
-#'   extract,
-#'   samples = "bw2011a",
-#'   variables = list(
-#'     new_variable("MARST", attached_characteristics = "father"),
-#'     new_variable("SEX", case_selections = "2")
-#'   )
-#' )
-#'
-#' # Values that only take a single value are replaced
-#' add_to_extract(extract, description = "New description")$description
-#'
-#' # You can also combine two separate extract requests together
-#' combine_extracts(extract, extract2)
-add_to_extract.ipumsi_extract <- function(extract,
-                                          description = NULL,
-                                          samples = NULL,
-                                          variables = NULL,
-                                          data_format = NULL,
-                                          ...) {
-  NextMethod()
 }
 
 #' Add values to an existing IPUMS NHGIS extract definition
@@ -1590,7 +1147,94 @@ add_to_extract.nhgis_extract <- function(extract,
   extract
 }
 
+#' Add values to an existing extract definition for an IPUMS microdata
+#' collection
+#'
+#' @description
+#' Add new values or replace existing values in an IPUMS microdata extract
+#' definition.
+#'
+#' All fields are optional, and if omitted, will be unchanged. Supplying a value
+#' for fields that take a single value, such as `description` and `data_format`,
+#' will replace the existing value with the supplied value.
+#'
+#' To remove existing values from an IPUMS microdata extract definition, use
+#' [`remove_from_extract()`][remove_from_extract.micro_extract]. To add values
+#' contained in another extract definition, use [combine_extracts()].
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @details
+#' If the supplied extract definition comes from
+#' a previously submitted extract request, this function will reset the
+#' definition to an unsubmitted state.
+#'
+#' To modify variable-specific parameters for variables that already exist
+#' in the extract, create a new variable specification with [new_variable()].
+#'
+#' @inheritParams define_extract_micro
+#' @inheritParams add_to_extract
+#' @param variables Character vector of variable names or a list of
+#'   `ipums_variable` objects created by [new_variable()]
+#'   containing specifications for all variables to include in the extract.
+#'
+#'   If a variable already exists in the extract, its specifications
+#'   will be added to those that already exist for that variable.
+#' @param data_format Format for the output extract data file. One of
+#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`.
+#' @param ... Ignored
+#'
+#' @return A modified `micro_extract` object
+#'
+#' @keywords internal
+#'
+#' @seealso
+#' [`remove_from_extract()`][remove_from_extract.micro_extract()] to remove
+#'   values from an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [`define_extract_*()`][define_extract] to create a new extract definition
+#'   from scratch
+#'
 #' @export
+#'
+#' @name add_to_extract_micro
+#'
+#' @examples
+#' extract <- define_extract_usa(
+#'   description = "2013 ACS Data",
+#'   samples = "us2013a",
+#'   variables = c("SEX", "AGE", "YEAR")
+#' )
+#'
+#' add_to_extract(extract, samples = "us2014a")
+#'
+#' extract2 <- add_to_extract(
+#'   extract,
+#'   samples = "us2014a",
+#'   variables = c("MARST", "BIRTHYR")
+#' )
+#'
+#' # Add new variable-specific specifications as you would when defining
+#' # an extract, even to modify variables that already exist in the definition
+#' add_to_extract(
+#'   extract,
+#'   samples = "us2014a",
+#'   variables = list(
+#'     new_variable("RACE", attached_characteristics = "mother"),
+#'     new_variable("SEX", case_selections = "2")
+#'   )
+#' )
+#'
+#' # Values that only take a single value are replaced
+#' add_to_extract(extract, description = "New description")$description
+#'
+#' # You can also combine two separate extract requests together
+#' combine_extracts(extract, extract2)
 add_to_extract.micro_extract <- function(extract,
                                          description = NULL,
                                          samples = NULL,
@@ -1736,12 +1380,11 @@ add_to_extract.micro_extract <- function(extract,
 #' object. This function is an S3 generic whose behavior will depend on the
 #' subclass (i.e. collection) of the extract being modified.
 #'
-#' - To remove from an **IPUMS USA** extract definition, click
-#'   [here][remove_from_extract.usa_extract]
-#' - To remove from an **IPUMS CPS** extract definition, click
-#'   [here][remove_from_extract.cps_extract]
-#' - To remove from an **IPUMS International** extract definition, click
-#'   [here][remove_from_extract.cps_extract]
+#' - To remove from an **IPUMS Microdata** extract definition, click
+#'   [here][remove_from_extract.micro_extract]. This includes:
+#'     + IPUMS USA
+#'     + IPUMS CPS
+#'     + IPUMS International
 #' - To remove from an **IPUMS NHGIS** extract definition, click
 #'   [here][remove_from_extract.nhgis_extract]
 #'
@@ -1794,194 +1437,6 @@ add_to_extract.micro_extract <- function(extract,
 #' remove_from_extract(nhgis_extract, datasets = "1990_STF1")
 remove_from_extract <- function(extract, ...) {
   UseMethod("remove_from_extract")
-}
-
-#' Remove values from an existing IPUMS USA extract definition
-#'
-#' @description
-#' Remove existing values from an IPUMS USA extract definition. All
-#' fields are optional, and if omitted, will be unchanged.
-#'
-#' To add new values to an IPUMS USA extract definition, see
-#' [`add_to_extract()`][add_to_extract.usa_extract].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To retain a variable while modifying its particular specifications, first
-#' remove that variable, then add a new specification using `add_to_extract()`.
-#'
-#' @inheritParams define_extract_usa
-#' @inheritParams remove_from_extract
-#' @param samples Character vector of sample names to remove from the extract.
-#' @param variables Names of the variables to remove from the extract. All
-#'   variable-specific fields for the indicated variables will also be removed.
-#' @param ... Ignored
-#'
-#' @return A modified `usa_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`add_to_extract()`][add_to_extract.usa_extract()] to add values
-#' to an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_usa()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' usa_extract <- define_extract_usa(
-#'   description = "USA example",
-#'   samples = c("us2013a", "us2014a"),
-#'   variables = list(
-#'     new_variable("AGE", data_quality_flags = TRUE),
-#'     new_variable("SEX", case_selections = "1"),
-#'     "RACE"
-#'   )
-#' )
-#'
-#' remove_from_extract(
-#'   usa_extract,
-#'   samples = "us2014a",
-#'   variables = c("AGE", "RACE")
-#' )
-remove_from_extract.usa_extract <- function(extract,
-                                            samples = NULL,
-                                            variables = NULL,
-                                            ...) {
-  NextMethod()
-}
-
-#' Remove values from an existing IPUMS CPS extract definition
-#'
-#' @description
-#' Remove existing values from an IPUMS CPS extract definition. All
-#' fields are optional, and if omitted, will be unchanged.
-#'
-#' To add new values to an IPUMS CPS extract definition, see
-#' [`add_to_extract()`][add_to_extract.cps_extract].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To retain a variable while modifying its particular specifications, first
-#' remove that variable, then add a new specification using `add_to_extract()`.
-#'
-#' @inheritParams remove_from_extract.usa_extract
-#'
-#' @return A modified `cps_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`add_to_extract()`][add_to_extract.cps_extract()] to add values
-#' to an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_cps()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' cps_extract <- define_extract_cps(
-#'   description = "CPS example",
-#'   samples = c("cps2019_03s", "cps2020_03s"),
-#'   variables = list(
-#'     new_variable("AGE", data_quality_flags = TRUE),
-#'     new_variable("SEX", case_selections = "2"),
-#'     "YEAR"
-#'   )
-#' )
-#'
-#' remove_from_extract(
-#'   cps_extract,
-#'   samples = "cps2020_03s",
-#'   variables = c("AGE", "YEAR")
-#' )
-remove_from_extract.cps_extract <- function(extract,
-                                            samples = NULL,
-                                            variables = NULL,
-                                            ...) {
-  NextMethod()
-}
-
-#' Remove values from an existing IPUMS International extract definition
-#'
-#' @description
-#' Remove existing values from an IPUMS International extract definition. All
-#' fields are optional, and if omitted, will be unchanged.
-#'
-#' To add new values to an IPUMS International extract definition, see
-#' [`add_to_extract()`][add_to_extract.ipumsi_extract].
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' If the supplied extract definition comes from
-#' a previously submitted extract request, this function will reset the
-#' definition to an unsubmitted state.
-#'
-#' To retain a variable while modifying its particular specifications, first
-#' remove that variable, then add a new specification using `add_to_extract()`.
-#'
-#' @inheritParams remove_from_extract.usa_extract
-#'
-#' @return A modified `ipumsi_extract` object
-#'
-#' @keywords internal
-#'
-#' @seealso
-#' [`add_to_extract()`][add_to_extract.ipumsi_extract()] to add values
-#' to an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [define_extract_ipumsi()] to create a new extract definition.
-#'
-#' @export
-#'
-#' @examples
-#' ipumsi_extract <- define_extract_ipumsi(
-#'   description = "IPUMS-I example",
-#'   samples = c("bj2002a", "bj2013a"),
-#'   variables = list(
-#'     new_variable("AGE", data_quality_flags = TRUE),
-#'     new_variable("SEX", case_selections = "2"),
-#'     "YEAR"
-#'   )
-#' )
-#'
-#' remove_from_extract(
-#'   ipumsi_extract,
-#'   samples = "bj2013a",
-#'   variables = c("AGE", "YEAR")
-#' )
-remove_from_extract.ipumsi_extract <- function(extract,
-                                               samples = NULL,
-                                               variables = NULL,
-                                               ...) {
-  NextMethod()
 }
 
 #' Remove values from an existing NHGIS extract definition
@@ -2164,7 +1619,67 @@ remove_from_extract.nhgis_extract <- function(extract,
   extract
 }
 
+#' Remove values from an existing extract definition for an IPUMS microdata
+#' project
+#'
+#' @description
+#' Remove existing values from an IPUMS microdata extract definition. All
+#' fields are optional, and if omitted, will be unchanged.
+#'
+#' To add new values to an IPUMS microdata extract definition, see
+#' [`add_to_extract()`][add_to_extract.micro_extract].
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @details
+#' If the supplied extract definition comes from
+#' a previously submitted extract request, this function will reset the
+#' definition to an unsubmitted state.
+#'
+#' To retain a variable while modifying its particular specifications, first
+#' remove that variable, then add a new specification using `add_to_extract()`.
+#'
+#' @inheritParams define_extract_micro
+#' @inheritParams remove_from_extract
+#' @param samples Character vector of sample names to remove from the extract.
+#' @param variables Names of the variables to remove from the extract. All
+#'   variable-specific fields for the indicated variables will also be removed.
+#' @param ... Ignored
+#'
+#' @return A modified `micro_extract` object
+#'
+#' @keywords internal
+#'
+#' @seealso
+#' [`add_to_extract()`][add_to_extract.micro_extract()] to add values
+#' to an extract definition.
+#'
+#' [combine_extracts()] to combine multiple extract definitions.
+#'
+#' [submit_extract()] and [download_extract()] to submit and process an
+#'   extract request.
+#'
+#' [`define_extract_*()`][define_extract] to create a new extract definition
+#'   from scratch.
+#'
 #' @export
+#'
+#' @examples
+#' usa_extract <- define_extract_usa(
+#'   description = "USA example",
+#'   samples = c("us2013a", "us2014a"),
+#'   variables = list(
+#'     new_variable("AGE", data_quality_flags = TRUE),
+#'     new_variable("SEX", case_selections = "1"),
+#'     "RACE"
+#'   )
+#' )
+#'
+#' remove_from_extract(
+#'   usa_extract,
+#'   samples = "us2014a",
+#'   variables = c("AGE", "RACE")
+#' )
 remove_from_extract.micro_extract <- function(extract,
                                               samples = NULL,
                                               variables = NULL,
