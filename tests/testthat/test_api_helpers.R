@@ -400,6 +400,41 @@ test_that("We catch invalid collection specifications during requests", {
   })
 })
 
+test_that("We warn users about unsupported features detected in an extract", {
+  vcr::use_cassette("submitted-cps-extract", {
+    cps_extract <- submit_extract(test_cps_extract())
+  })
+
+  # Make request with version 1, as features included in our test CPS
+  # extract are not supported under version 1
+  vcr::use_cassette("api-warnings-unsupported", {
+    withr::with_envvar(c("IPUMS_API_VERSION" = "v1"), {
+      response <- ipums_api_extracts_request(
+        "GET",
+        collection = "cps",
+        url = api_request_url(
+          collection = "cps",
+          path = extract_request_path(cps_extract$number)
+        )
+      )
+    })
+  })
+
+  # Set `validate = FALSE` as this is a version 1 response, which
+  # cannot be converted to a valid ipums_extract object. However,
+  # we should still be able to provide warnings.
+  expect_warning(
+    extract_list_from_json(response, validate = FALSE)[[1]],
+    paste0(
+      "Extract number ", cps_extract$number,
+      " contains unsupported features.+",
+      "data quality flags is unsupported.+",
+      "case selection is unsupported.+",
+      "Attaching characteristics is unsupported"
+    )
+  )
+})
+
 # Misc ------------------------------------------
 
 test_that("We can get correct API version info for each collection", {

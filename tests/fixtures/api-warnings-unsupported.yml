@@ -1,0 +1,48 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/90?collection=cps&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Fri, 28 Apr 2023 15:44:41 GMT
+      etag: W/"245d5bc604222632d6bf3225de277dd6"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: ddad24ab-2312-4dfc-9fb5-33476c051487
+      x-runtime: '0.529656'
+      x-xss-protection: '0'
+      content-length: '958'
+    body:
+      encoding: ''
+      file: no
+      string: '{"version":1,"data_structure":{"hierarchical":{}},"data_format":"fixed_width","description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"ASECFLAG":{"preselected":true},"ASECWTH":{"preselected":true},"PERNUM":{"preselected":true},"CPSIDP":{"preselected":true},"ASECWT":{"preselected":true},"AGE":{},"SEX":{},"RACE":{},"QAGE":{}},"number":90,"status":"completed","download_links":{},"warnings":["Automatic
+        inclusion of data quality flags is unsupported in IPUMS API version 1. Please
+        use at least version 2 for access to this feature.","Variable case selection
+        is unsupported in IPUMS API version 1. Please use at least version 2 to access
+        this feature.","Attaching characteristics is unsupported in IPUMS API version
+        1. Please use at least version 2 to access this feature."]}'
+  recorded_at: 2023-04-28 15:44:42 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

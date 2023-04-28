@@ -848,6 +848,20 @@ validate_api_request <- function(res, call = caller_env()) {
   invisible(res)
 }
 
+api_extract_warnings <- function(extract_number, warnings) {
+  warnings <- unlist(warnings)
+
+  if (length(warnings) > 0) {
+    rlang::warn(c(
+      paste0(
+        "Extract number ", extract_number,
+        " contains unsupported features and has been modified:"
+      ),
+      warnings
+    ))
+  }
+}
+
 add_user_auth_header <- function(api_key) {
   httr::add_headers("Authorization" = api_key)
 }
@@ -963,7 +977,7 @@ metadata_request_path <- function(collection, ...) {
 #' @noRd
 ipums_api_request <- function(verb,
                               url,
-                              body,
+                              body = FALSE,
                               api_key = Sys.getenv("IPUMS_API_KEY"),
                               ...) {
   response <- httr::VERB(
