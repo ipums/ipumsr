@@ -22,7 +22,7 @@ on.exit(
 
 # Check extract status -----------------
 
-test_that("Can check USA extract status", {
+test_that("Can check microdata extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {

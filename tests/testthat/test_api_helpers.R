@@ -21,6 +21,16 @@ test_that("Can print microdata extracts", {
       "Variables: .+"
     )
   )
+  expect_output(
+    print(test_ipumsi_extract()),
+    paste0(
+      "Unsubmitted IPUMS International extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
 })
 
 test_that("Can print NHGIS extracts", {
@@ -440,7 +450,7 @@ test_that("We warn users about unsupported features detected in an extract", {
 test_that("We can get correct API version info for each collection", {
   has_support <- dplyr::filter(ipums_data_collections(), .data$api_support)
 
-  expect_equal(has_support$code_for_api, c("usa", "cps", "nhgis"))
+  expect_equal(has_support$code_for_api, c("usa", "cps", "ipumsi", "nhgis"))
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(

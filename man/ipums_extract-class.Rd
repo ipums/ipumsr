@@ -21,6 +21,7 @@ Currently supported collections are:
 \itemize{
 \item IPUMS USA (\code{"usa_extract"})
 \item IPUMS CPS (\code{"cps_extract"})
+\item IPUMS International (\code{"ipumsi_extract"})
 }
 \item IPUMS aggregate data (\code{"agg_extract"})
 \itemize{
@@ -63,8 +64,8 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 
 \itemize{
 \item Create an \code{ipums_extract} object from scratch with the appropriate
-\link{define_extract} function. These functions take the form
-\verb{define_extract_\{collection\}}.
+\code{\link[=define_extract]{define_extract_*()}} function. These functions take the
+form \verb{define_extract_\{collection\}}.
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
 request
 \item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of

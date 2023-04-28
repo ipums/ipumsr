@@ -74,6 +74,40 @@ test_that("Can define a CPS extract", {
   expect_equal(cps_extract$status, "unsubmitted")
 })
 
+test_that("Can define an IPUMSI extract", {
+  ipumsi_extract <- test_ipumsi_extract()
+
+  expect_identical(
+    ipumsi_extract$samples,
+    set_nested_names(list(new_sample("mx2015a"), new_sample("cl2017a")))
+  )
+  expect_identical(
+    ipumsi_extract$variables,
+    set_nested_names(
+      list(
+        new_variable(
+          "AGE",
+          case_selections = "010"
+        ),
+        new_variable(
+          "SEX",
+          attached_characteristics = "father"
+        ),
+        new_variable(
+          "EDATTAIN"
+        )
+      )
+    )
+  )
+
+  expect_equal(ipumsi_extract$data_structure, "rectangular")
+  expect_equal(ipumsi_extract$rectangular_on, "P")
+  expect_identical(ipumsi_extract$download_links, EMPTY_NAMED_LIST)
+  expect_false(ipumsi_extract$submitted)
+  expect_equal(ipumsi_extract$number, NA_integer_)
+  expect_equal(ipumsi_extract$status, "unsubmitted")
+})
+
 test_that("Can define an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()

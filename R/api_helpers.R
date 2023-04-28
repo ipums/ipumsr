@@ -14,6 +14,7 @@
 #'
 #' * IPUMS USA
 #' * IPUMS CPS
+#' * IPUMS International
 #' * IPUMS NHGIS
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -28,7 +29,7 @@ ipums_data_collections <- function() {
     ~collection_name, ~collection_type, ~code_for_api, ~api_support,
     "IPUMS USA", "microdata", "usa", TRUE,
     "IPUMS CPS", "microdata", "cps", TRUE,
-    "IPUMS International", "microdata", "ipumsi", FALSE,
+    "IPUMS International", "microdata", "ipumsi", TRUE,
     "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
     "IPUMS AHTUS", "microdata", "ahtus", FALSE,
     "IPUMS MTUS", "microdata", "mtus", FALSE,
@@ -1161,8 +1162,7 @@ active_api_instance <- function() {
 
 #' Get the current API verison for a specified IPUMS collection
 #'
-#' Get current API version for a collection or throw an error if that collection
-#' is not currently supported by API.
+#' Get current API version for a collection.
 #'
 #' @param collection IPUMS collection
 #'

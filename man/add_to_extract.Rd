@@ -12,7 +12,8 @@ add_to_extract(extract, ...)
 \item{...}{Additional arguments specifying the extract fields and values to
 add to the extract definition.
 
-All arguments available in a collection's \link{define_extract} function can be
+All arguments available in a collection's
+\code{\link[=define_extract]{define_extract_*()}} function can be
 passed to \code{add_to_extract()}.}
 }
 \value{
@@ -28,6 +29,8 @@ subclass (i.e. collection) of the extract being modified.
 \link[=add_to_extract.usa_extract]{here}
 \item To add to an \strong{IPUMS CPS} extract definition, click
 \link[=add_to_extract.cps_extract]{here}
+\item To add to an \strong{IPUMS International} extract definition, click
+\link[=add_to_extract.ipumsi_extract]{here}
 \item To add to an \strong{IPUMS NHGIS} extract definition, click
 \link[=add_to_extract.nhgis_extract]{here}
 }
@@ -97,6 +100,6 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract request from
+scratch.
 }

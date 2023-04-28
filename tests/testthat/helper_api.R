@@ -42,6 +42,19 @@ test_cps_extract <- function() {
   )
 }
 
+test_ipumsi_extract <- function() {
+  define_extract_ipumsi(
+    description = "Test IPUMSI extract",
+    samples = c("mx2015a", "cl2017a"),
+    variables = list(
+      new_variable("AGE", case_selections = "010"),
+      new_variable("SEX", attached_characteristics = "father"),
+      "EDATTAIN"
+    ),
+    data_format = "csv"
+  )
+}
+
 test_nhgis_extract <- function() {
   define_extract_nhgis(
     description = "Extract for R client testing",

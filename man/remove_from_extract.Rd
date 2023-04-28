@@ -25,6 +25,8 @@ subclass (i.e. collection) of the extract being modified.
 \link[=remove_from_extract.usa_extract]{here}
 \item To remove from an \strong{IPUMS CPS} extract definition, click
 \link[=remove_from_extract.cps_extract]{here}
+\item To remove from an \strong{IPUMS International} extract definition, click
+\link[=remove_from_extract.cps_extract]{here}
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
 }
@@ -65,6 +67,6 @@ definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
+from scratch.
 }

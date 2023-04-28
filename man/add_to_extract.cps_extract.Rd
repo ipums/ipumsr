@@ -53,6 +53,9 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
+
+To modify variable-specific parameters for variables that already exist
+in the extract, create a new variable specification with \code{\link[=new_variable]{new_variable()}}.
 }
 \examples{
 extract <- define_extract_cps(
@@ -66,7 +69,15 @@ add_to_extract(extract, samples = "cps2021_03s")
 extract2 <- add_to_extract(
   extract,
   samples = "cps2021_03s",
-  variables = c("MARST", "RELATE")
+  variables = c("MARST", "BIRTHYR")
+)
+
+# Add new variable-specific specifications as you would when defining
+# an extract, even to modify variables that already exist in the definition
+add_to_extract(
+  extract,
+  samples = "cps2021_03s",
+  variables = new_variable("SEX", case_selections = "2")
 )
 
 # Values that only take a single value are replaced

@@ -70,9 +70,11 @@ reference:
       - set_ipums_default_collection
       - define_extract_usa
       - define_extract_cps
+      - define_extract_ipumsi
       - define_extract_nhgis
       - submit_extract
       - get_extract_info
+      - get_extract_history
       - download_extract
       - wait_for_extract
       - is_extract_ready
