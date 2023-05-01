@@ -31,6 +31,7 @@ ipums_data_collections <- function() {
     "IPUMS CPS", "microdata", "cps", TRUE,
     "IPUMS International", "microdata", "ipumsi", TRUE,
     "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
+    "IPUMS IHGIS", "aggregate data", "ihgis", FALSE,
     "IPUMS AHTUS", "microdata", "ahtus", FALSE,
     "IPUMS MTUS", "microdata", "mtus", FALSE,
     "IPUMS ATUS", "microdata", "atus", FALSE,
