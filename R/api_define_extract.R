@@ -2111,20 +2111,8 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
     rlang::abort("Cannot add multiple `time_series_tables` of same name.")
   }
 
-  # if (length(x$geographic_extents) > 0 && !includes_ds) {
-  #   rlang::warn(paste0(
-  #     "Extract contains `geographic_extents` but no `datasets`. ",
-  #     "`geographic_extents` apply only to `datasets`."
-  #   ))
-  # }
-
   # Specify the validation requirements for each extract field
   extract_field_spec <- list(
-    # list(
-    #   field = "geographic_extents",
-    #   allowed = includes_ds,
-    #   must_be_missing_msg = " when no `datasets` are specified"
-    # ),
     list(
       field = "breakdown_and_data_type_layout",
       allowed = includes_ds,
