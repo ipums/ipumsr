@@ -62,8 +62,7 @@ nhgis_extract <- define_extract_nhgis(
 remove_from_extract(nhgis_extract, datasets = "1990_STF1")
 }
 \seealso{
-\code{\link[=add_to_extract]{add_to_extract()}} or \code{\link[=combine_extracts]{combine_extracts()}} to add values to an extract
-definition.
+\code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.

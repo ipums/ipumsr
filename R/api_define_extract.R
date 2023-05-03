@@ -76,8 +76,6 @@
 #' @section Revising an extract definition:
 #' * Modify values in an existing extract definition with [add_to_extract()] and
 #'   [remove_from_extract()].
-#' * Combine definitions from multiple extracts into a single extract with
-#'   [combine_extracts()].
 #'
 #' @section Saving an extract:
 #' * Save an extract to a JSON-formatted file with [save_extract_as_json()].
@@ -182,9 +180,9 @@ NULL
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [`add_to_extract()`][add_to_extract.micro_extract()],
-#' [`remove_from_extract()`][remove_from_extract.micro_extract()], and
-#' [combine_extracts()] to revise an extract definition.
+#' [`add_to_extract()`][add_to_extract.micro_extract()], and
+#' [`remove_from_extract()`][remove_from_extract.micro_extract()]
+#' to revise an extract definition.
 #'
 #' @export
 #'
@@ -419,10 +417,9 @@ define_extract_ipumsi <- function(description,
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [`add_to_extract()`][add_to_extract.nhgis_extract()],
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] and
-#' [combine_extracts()] to
-#'   revise an extract definition.
+#' [`add_to_extract()`][add_to_extract.nhgis_extract()] and
+#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()]
+#' to revise an extract definition.
 #'
 #' @export
 #'
@@ -732,7 +729,7 @@ tst_spec <- function(name,
 #' @seealso
 #' [`define_extract_*()`][define_extract] to define an extract request to save.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
 #'
 #' [submit_extract()], [download_extract()], and [get_extract_info()] to
@@ -855,8 +852,7 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' more information about defining an extract, click [here][define_extract].
 #'
 #' To remove existing values from an extract definition, use
-#' [remove_from_extract()]. To add values
-#' contained in another extract definition, use [combine_extracts()].
+#' [remove_from_extract()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -873,8 +869,6 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #'
 #' @seealso
 #' [remove_from_extract()] to remove values from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
 #'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
@@ -988,8 +982,6 @@ add_to_extract <- function(extract, ...) {
 #' @seealso
 #' [`remove_from_extract()`][remove_from_extract.nhgis_extract()] to remove
 #' values from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
 #'
 #' [define_extract_nhgis()] to create a new extract definition.
 #'
@@ -1187,8 +1179,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' will replace the existing value with the supplied value.
 #'
 #' To remove existing values from an IPUMS microdata extract definition, use
-#' [`remove_from_extract()`][remove_from_extract.micro_extract]. To add values
-#' contained in another extract definition, use [combine_extracts()].
+#' [`remove_from_extract()`][remove_from_extract.micro_extract].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -1219,8 +1210,6 @@ add_to_extract.nhgis_extract <- function(extract,
 #' @seealso
 #' [`remove_from_extract()`][remove_from_extract.micro_extract()] to remove
 #'   values from an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
 #'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
@@ -1260,9 +1249,6 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #' # Values that only take a single value are replaced
 #' add_to_extract(extract, description = "New description")$description
-#'
-#' # You can also combine two separate extract requests together
-#' combine_extracts(extract, extract2)
 add_to_extract.micro_extract <- function(extract,
                                          description = NULL,
                                          samples = NULL,
@@ -1432,8 +1418,7 @@ add_to_extract.micro_extract <- function(extract,
 #'   extract definition
 #'
 #' @seealso
-#' [add_to_extract()] or [combine_extracts()] to add values to an extract
-#'   definition.
+#' [add_to_extract()] to add values to an extract definition.
 #'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
@@ -1517,8 +1502,6 @@ remove_from_extract <- function(extract, ...) {
 #' @seealso
 #' [`add_to_extract()`][add_to_extract.nhgis_extract()] to add values
 #' to an extract definition.
-#'
-#' [combine_extracts()] to combine multiple extract definitions.
 #'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
@@ -1685,8 +1668,6 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' [`add_to_extract()`][add_to_extract.micro_extract()] to add values
 #' to an extract definition.
 #'
-#' [combine_extracts()] to combine multiple extract definitions.
-#'
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
@@ -1773,134 +1754,6 @@ remove_from_extract.micro_extract <- function(extract,
   )
 
   extract <- validate_ipums_extract(extract)
-
-  extract
-}
-
-#' Combine multiple IPUMS extract definitions into one
-#'
-#' @description
-#' Create a single extract definition that includes all of the
-#' specifications included in a set of `ipums_extract` objects of the same
-#' collection.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' Values that exist in more than one of the provided extract definitions will
-#' be de-duplicated such that only one entry for the duplicated specification is
-#' included in the final extract.
-#'
-#' Some extract fields can only take a single value. In the event that the
-#' definitions being combined each have different values for such a field, the
-#' value found in the first extract definition provided to `...` is retained in
-#' the final extract.
-#'
-#' To modify values in a single extract definition, see
-#' [`add_to_extract()`][add_to_extract] or
-#' [`remove_from_extract()`][remove_from_extract].
-#'
-#' @param ... Arbitrary number of `ipums_extract` objects to be combined. All
-#'   extracts must belong to the same collection.
-#'
-#' @return An `ipums_extract` object of the same collection as the extracts
-#'   provided in `...` containing the combined extract definition.
-#'
-#' @seealso
-#' [add_to_extract()] and [remove_from_extract()] to revise an extract
-#'   definition.
-#'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
-#' [`define_extract_*()`][define_extract] to create a new extract definition
-#' from scratch.
-#'
-#' @export
-#'
-#' @examples
-#' ext1 <- define_extract_nhgis(
-#'   datasets = ds_spec(
-#'     "2011_2015_ACS5a",
-#'     data_tables = "B00001",
-#'     geog_levels = "county"
-#'   )
-#' )
-#'
-#' ext2 <- define_extract_nhgis(
-#'   datasets = list(
-#'     ds_spec("2011_2015_ACS5a", c("B00002", "B01001"), "county"),
-#'     ds_spec("2012_2016_ACS5a", c("B00002", "B01001"), "county")
-#'   )
-#' )
-#'
-#' combine_extracts(ext1, ext2)
-combine_extracts <- function(...) {
-  UseMethod("combine_extracts")
-}
-
-#' @export
-combine_extracts.usa_extract <- function(...) {
-  NextMethod()
-}
-
-#' @export
-combine_extracts.cps_extract <- function(...) {
-  NextMethod()
-}
-
-#' @export
-combine_extracts.micro_extract <- function(...) {
-  extracts <- rlang::list2(...)
-
-  collection <- purrr::map_chr(extracts, ~ .x$collection)
-
-  if (length(unique(collection)) != 1) {
-    rlang::abort("Can only combine extracts of the same collection.")
-  }
-
-  extract <- purrr::reduce(
-    extracts,
-    ~ add_to_extract(
-      .x,
-      description = .x$description,
-      samples = .y$samples,
-      variables = .y$variables,
-      data_format = .x$data_format %||% .y$data_format,
-      data_structure = .x$data_structure %||% .y$data_structure,
-      rectangular_on = .x$rectangular_on %||% .y$rectangular_on
-    )
-  )
-
-  extract
-}
-
-#' @export
-combine_extracts.nhgis_extract <- function(...) {
-  extracts <- rlang::list2(...)
-
-  collection <- purrr::map_chr(extracts, ~ .x$collection)
-
-  if (length(unique(collection)) != 1) {
-    rlang::abort("Can only combine extracts of the same collection.")
-  }
-
-  extract <- purrr::reduce(
-    extracts,
-    ~ add_to_extract(
-      .x,
-      description = .x$description,
-      datasets = .y$datasets,
-      time_series_tables = .y$time_series_tables,
-      geographic_extents = .y$geographic_extents,
-      breakdown_and_data_type_layout =
-        .x$breakdown_and_data_type_layout %||%
-          .y$breakdown_and_data_type_layout,
-      tst_layout = .x$tst_layout %||% .y$tst_layout,
-      shapefiles = .y$shapefiles,
-      data_format = .x$data_format %||% .y$data_format
-    )
-  )
 
   extract
 }

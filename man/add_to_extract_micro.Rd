@@ -84,8 +84,7 @@ for fields that take a single value, such as \code{description} and \code{data_f
 will replace the existing value with the supplied value.
 
 To remove existing values from an IPUMS microdata extract definition, use
-\code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}. To add values
-contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
+\code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -125,15 +124,10 @@ add_to_extract(
 
 # Values that only take a single value are replaced
 add_to_extract(extract, description = "New description")$description
-
-# You can also combine two separate extract requests together
-combine_extracts(extract, extract2)
 }
 \seealso{
 \code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}} to remove
 values from an extract definition.
-
-\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
 
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.

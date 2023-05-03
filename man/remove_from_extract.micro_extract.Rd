@@ -60,8 +60,6 @@ remove_from_extract(
 \code{\link[=add_to_extract.micro_extract]{add_to_extract()}} to add values
 to an extract definition.
 
-\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
-
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 

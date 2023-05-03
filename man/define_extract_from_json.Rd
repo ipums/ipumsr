@@ -53,7 +53,7 @@ file.remove(extract_json_path)
 \seealso{
 \code{\link[=define_extract]{define_extract_*()}} to define an extract request to save.
 
-\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+\code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
 revise an extract definition.
 
 \code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to

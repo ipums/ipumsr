@@ -45,7 +45,7 @@
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
 #'
 #' [set_ipums_default_collection()] to set a default collection.
@@ -153,7 +153,7 @@ get_extract_info <- function(extract,
 #' @seealso
 #' [get_extract_info()] to get the current status of a specific extract request.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
 #'
 #' [extract_tbl_to_list()] and [extract_list_to_tbl()] to manipulate information
