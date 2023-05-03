@@ -32,7 +32,7 @@
 
 files <- define_extract_nhgis(
   description = "Reproducing nhgis0972 example data",
-  datasets = new_dataset("1990_SSTF09", "NH004", "pmsa"),
+  datasets = ds_spec("1990_SSTF09", "NH004", "pmsa"),
   shapefiles = "us_pmsa_1990_tl2000",
   data_format = "csv_header",
 ) %>%

@@ -50,12 +50,12 @@ remove_from_extract(
 )
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = new_dataset(
+  datasets = ds_spec(
     "1990_STF1",
     data_tables = c("NP1", "NP2", "NP3"),
     geog_levels = "county"
   ),
-  time_series_tables = new_tst("A00", geog_levels = "county")
+  time_series_tables = tst_spec("A00", geog_levels = "county")
 )
 
 # Remove an existing dataset

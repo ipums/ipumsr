@@ -13,12 +13,12 @@
 
 define_extract_nhgis(
   description = "Data for fixed-width testing",
-  datasets = new_dataset(
+  datasets = ds_spec(
     "2014_2018_ACS5a",
     data_tables = c("B01001", "B01002"),
     geog_levels = "nation"
   ),
-  time_series_tables = new_tst("A00", "state"),
+  time_series_tables = tst_spec("A00", "state"),
   data_format = "csv_no_header"
 ) %>%
   submit_extract() %>%

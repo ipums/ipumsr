@@ -8,19 +8,19 @@ test_that("Can define a USA extract", {
 
   expect_identical(
     usa_extract$samples,
-    set_nested_names(list(new_sample("us2017b")))
+    set_nested_names(list(samp_spec("us2017b")))
   )
   expect_identical(
     usa_extract$variables,
     set_nested_names(
       list(
-        new_variable(
+        var_spec(
           "RACE",
           case_selections = c("801", "802"),
           case_selection_type = "detailed",
           preselected = FALSE
         ),
-        new_variable("YEAR")
+        var_spec("YEAR")
       )
     )
   )
@@ -41,23 +41,23 @@ test_that("Can define a CPS extract", {
 
   expect_identical(
     cps_extract$samples,
-    set_nested_names(list(new_sample("cps2018_03s"), new_sample("cps2019_03s")))
+    set_nested_names(list(samp_spec("cps2018_03s"), samp_spec("cps2019_03s")))
   )
   expect_identical(
     cps_extract$variables,
     set_nested_names(
       list(
-        new_variable(
+        var_spec(
           "AGE",
           attached_characteristics = "head",
           data_quality_flags = TRUE
         ),
-        new_variable(
+        var_spec(
           "SEX",
           case_selections = "2",
           attached_characteristics = c("mother", "father")
         ),
-        new_variable(
+        var_spec(
           "RACE",
           case_selections = c("810", "811", "812"),
           case_selection_type = "general"
@@ -79,21 +79,21 @@ test_that("Can define an IPUMSI extract", {
 
   expect_identical(
     ipumsi_extract$samples,
-    set_nested_names(list(new_sample("mx2015a"), new_sample("cl2017a")))
+    set_nested_names(list(samp_spec("mx2015a"), samp_spec("cl2017a")))
   )
   expect_identical(
     ipumsi_extract$variables,
     set_nested_names(
       list(
-        new_variable(
+        var_spec(
           "AGE",
           case_selections = "010"
         ),
-        new_variable(
+        var_spec(
           "SEX",
           attached_characteristics = "father"
         ),
-        new_variable(
+        var_spec(
           "EDATTAIN"
         )
       )
@@ -119,8 +119,8 @@ test_that("Can define an NHGIS extract", {
     nhgis_extract$datasets,
     set_nested_names(
       list(
-        new_dataset("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
-        new_dataset("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
+        ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
+        ds_spec("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
       )
     )
   )
@@ -136,7 +136,7 @@ test_that("Can define an NHGIS extract", {
     nhgis_extract$time_series_tables,
     set_nested_names(
       list(
-        new_tst("CW3", "state", "1990")
+        tst_spec("CW3", "state", "1990")
       )
     )
   )
@@ -160,11 +160,11 @@ test_that("NHGIS extract fields get correct default values", {
 
   expect_equal(nhgis_extract$breakdown_and_data_type_layout, "single_file")
   expect_equal(
-    define_extract_nhgis(time_series_tables = new_tst("A00", "A1"))$tst_layout,
+    define_extract_nhgis(time_series_tables = tst_spec("A00", "A1"))$tst_layout,
     "time_by_column_layout"
   )
   expect_equal(
-    define_extract_nhgis(time_series_tables = new_tst("A00", "A1"))$data_format,
+    define_extract_nhgis(time_series_tables = tst_spec("A00", "A1"))$data_format,
     "csv_no_header"
   )
 
@@ -173,8 +173,8 @@ test_that("NHGIS extract fields get correct default values", {
 })
 
 test_that("Microdata variables get correct default values", {
-  var1 <- new_variable("SEX")
-  var2 <- new_variable("SEX", case_selections = "1")
+  var1 <- var_spec("SEX")
+  var2 <- var_spec("SEX", case_selections = "1")
 
   expect_equal(var1$name, "SEX")
   expect_null(var1$case_selections)
@@ -185,15 +185,15 @@ test_that("Microdata variables get correct default values", {
   expect_equal(var2$case_selection_type, "general")
 })
 
-test_that("We coerce variables and samples to `ipums_nested` objects", {
+test_that("We coerce variables and samples to `ipums_spec` objects", {
   x <- define_extract_cps(
     description = "",
     samples = "A",
     variables = list("B")
   )
 
-  expect_s3_class(x$samples[[1]], "ipums_sample")
-  expect_s3_class(x$variables[[1]], "ipums_variable")
+  expect_s3_class(x$samples[[1]], "samp_spec")
+  expect_s3_class(x$variables[[1]], "var_spec")
   expect_equal(names(x$samples), "A")
   expect_equal(names(x$variables), "B")
 
@@ -204,9 +204,9 @@ test_that("We coerce variables and samples to `ipums_nested` objects", {
     define_extract_cps(
       description = "",
       samples = "A",
-      variables = c(new_variable("A"), new_variable("B"))
+      variables = c(var_spec("A"), var_spec("B"))
     ),
-    "Expected `variables` to be an `ipums_variable`"
+    "Expected `variables` to be an `var_spec`"
   )
 })
 
@@ -263,8 +263,8 @@ test_that("Can validate core microdata extract fields", {
       new_ipums_extract(
         "cps",
         description = "Test",
-        samples = list(new_sample("Test")),
-        variables = list(new_variable("Test")),
+        samples = list(samp_spec("Test")),
+        variables = list(var_spec("Test")),
         data_format = "Test",
         data_structure = "Test"
       )
@@ -281,8 +281,8 @@ test_that("Can validate core microdata extract fields", {
         description = "",
         data_structure = "hierarchical",
         rectangular_on = "B",
-        samples = list(new_sample("Test")),
-        variables = list(new_variable("Test")),
+        samples = list(samp_spec("Test")),
+        variables = list(var_spec("Test")),
         data_format = "csv"
       )
     ),
@@ -297,8 +297,8 @@ test_that("Can validate core microdata extract fields", {
         "usa",
         description = "",
         data_structure = "rectangular",
-        samples = list(new_sample("Test")),
-        variables = list(new_variable("Test")),
+        samples = list(samp_spec("Test")),
+        variables = list(var_spec("Test")),
         data_format = "csv"
       )
     ),
@@ -317,7 +317,7 @@ test_that("Can validate core NHGIS extract fields", {
   expect_error(
     define_extract_nhgis(
       description = "",
-      datasets = new_dataset("a", "b", "c"),
+      datasets = ds_spec("a", "b", "c"),
       data_format = "Test"
     ),
     "`data_format` must be one of"
@@ -331,7 +331,7 @@ test_that("Can validate core NHGIS extract fields", {
       new_ipums_extract(
         "nhgis",
         description = "",
-        time_series_tables = list(new_tst("A00", "a")),
+        time_series_tables = list(tst_spec("A00", "a")),
         data_format = "csv_no_header"
       )
     ),
@@ -353,14 +353,14 @@ test_that("Can validate core NHGIS extract fields", {
   )
   expect_error(
     define_extract_nhgis(
-      time_series_tables = new_tst("A", "B"),
+      time_series_tables = tst_spec("A", "B"),
       tst_layout = c("time_by_row_layout", "time_by_row_layout")
     ),
     "`tst_layout` must be length 1."
   )
 })
 
-test_that("We require `ipums_*` objects in appropriate extract fields", {
+test_that("We require `*_spec` objects in appropriate extract fields", {
   expect_error(
     validate_ipums_extract(
       new_ipums_extract(
@@ -372,7 +372,7 @@ test_that("We require `ipums_*` objects in appropriate extract fields", {
         data_format = "csv"
       )
     ),
-    "Expected `samples` to be an `ipums_sample` object or a list of "
+    "Expected `samples` to be an `samp_spec` object or a list of "
   )
   expect_error(
     validate_ipums_extract(
@@ -380,12 +380,12 @@ test_that("We require `ipums_*` objects in appropriate extract fields", {
         "cps",
         description = "",
         data_structure = "hierarchical",
-        samples = list(new_sample("A")),
+        samples = list(samp_spec("A")),
         variables = list("B"),
         data_format = "csv"
       )
     ),
-    "Expected `variables` to be an `ipums_variable` object or a list of "
+    "Expected `variables` to be an `var_spec` object or a list of "
   )
   expect_error(
     validate_ipums_extract(
@@ -393,10 +393,10 @@ test_that("We require `ipums_*` objects in appropriate extract fields", {
         "nhgis",
         description = "",
         datasets = NA,
-        time_series_tables = list(new_tst("CW3", "A"))
+        time_series_tables = list(tst_spec("CW3", "A"))
       )
     ),
-    "Expected `datasets` to be an `ipums_dataset` object or a list of"
+    "Expected `datasets` to be a `ds_spec` object or a list of"
   )
   expect_error(
     validate_ipums_extract(
@@ -406,57 +406,41 @@ test_that("We require `ipums_*` objects in appropriate extract fields", {
         time_series_tables = list("a", "b", "c")
       )
     ),
-    "Expected `time_series_tables` to be an `ipums_tst` object or a list of"
+    "Expected `time_series_tables` to be a `tst_spec` object or a list of"
   )
 })
 
-test_that("Can validate `ipums_*` objects within extracts", {
+test_that("Can validate `*_spec` objects within extracts", {
+  samps <- samp_spec("A")
+
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "cps",
-        description = "",
-        samples = list(new_sample("A")),
-        variables = list(
-          new_nested_field(
-            "A",
-            case_selection_type = "general",
-            class = "ipums_variable"
-          )
-        )
-      )
+    define_extract_cps(
+      description = "",
+      samples = samps,
+      variables = var_spec("A", case_selection_type = "detailed")
     ),
     "`case_selection_type` must be missing when `case_selection` is not provided."
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "cps",
-        description = "",
-        samples = list(new_sample("A")),
-        variables = list(
-          new_nested_field(
-            "A",
-            case_selections = "1",
-            case_selection_type = "foobar",
-            class = "ipums_variable"
-          )
-        )
+    define_extract_cps(
+      description = "",
+      samples = samps,
+      variables = var_spec(
+        "A",
+        case_selections = "1",
+        case_selection_type = "foobar"
       )
     ),
     "`case_selection_type` must be one of \"general\", \"detailed\""
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "cps",
-        description = "",
-        samples = list(new_sample("A")),
-        variables = list(new_variable(
-          "A",
-          data_quality_flags = "foo",
-          attached_characteristics = TRUE
-        ))
+    define_extract_cps(
+      description = "",
+      samples = samps,
+      variables = var_spec(
+        "A",
+        data_quality_flags = "foo",
+        attached_characteristics = TRUE
       )
     ),
     paste0(
@@ -465,71 +449,47 @@ test_that("Can validate `ipums_*` objects within extracts", {
     )
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "cps",
-        description = "",
-        variables = new_variable("A"),
-        samples = list(new_nested_field("A", foo = "bar", class = "ipums_sample"))
-      )
+    define_extract_cps(
+      description = "",
+      variables = var_spec("A"),
+      samples = list(new_nested_field("A", foo = "bar", class = "samp_spec"))
     ),
-    "Invalid `ipums_sample` object:.+Unrecognized fields: `foo`"
+    "Invalid `samp_spec` object:.+Unrecognized fields: `foo`"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = "",
-        datasets = list(
-          new_nested_field(
-            "A00",
-            data_tables = NA,
-            geog_levels = list("A", "b"),
-            years = 1990,
-            class = "ipums_dataset"
-          )
-        )
+    define_extract_nhgis(
+      datasets = ds_spec(
+        "A00",
+        data_tables = NA,
+        geog_levels = list("A", "b"),
+        years = 1990
       )
     ),
     paste0(
-      "Invalid `ipums_dataset` object:.+",
+      "Invalid `ds_spec` object:.+",
       "`data_tables` must not contain missing values.+",
       "`geog_levels` must be of type `character`, not `list`.+",
       "`years` must be of type `character`, not `double`"
     )
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = "",
-        time_series_tables = list(
-          new_nested_field(
-            NULL,
-            geog_levels = list(NULL, "b"),
-            class = "ipums_tst"
-          )
-        )
+    define_extract_nhgis(
+      time_series_tables = tst_spec(
+        NULL,
+        geog_levels = list(NULL, "b")
       )
     ),
     paste0(
-      "Invalid `ipums_tst` object:.+",
+      "Invalid `tst_spec` object:.+",
       "`name` must not contain missing values.+",
       "`geog_levels` must not contain missing values"
     )
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = "",
-        time_series_tables = list(
-          new_nested_field(
-            c("A", "B"),
-            geog_levels = c("A", "B"),
-            class = "ipums_tst"
-          )
-        )
+    define_extract_nhgis(
+      time_series_tables = tst_spec(
+        c("A", "B"),
+        geog_levels = c("A", "B")
       )
     ),
     "`name` must be length 1"
@@ -539,7 +499,7 @@ test_that("Can validate `ipums_*` objects within extracts", {
 # We must avoid doing this because the API will only process one of them,
 # producing ambiguity for extracts that contain duplicates if their
 # subfield specifications are different.
-test_that("We avoid adding multiple `ipums_*` objects of same name", {
+test_that("We avoid adding multiple `*_spec` objects of same name", {
   expect_error(
     define_extract_usa(
       "",
@@ -558,13 +518,13 @@ test_that("We avoid adding multiple `ipums_*` objects of same name", {
   )
   expect_error(
     define_extract_nhgis(
-      datasets = list(new_dataset("A", "A", "A"), new_dataset("A", "B", "C"))
+      datasets = list(ds_spec("A", "A", "A"), ds_spec("A", "B", "C"))
     ),
     "Cannot add multiple `datasets` of same name"
   )
   expect_error(
     define_extract_nhgis(
-      time_series_tables = list(new_tst("A", "A", "A"), new_tst("A", "B"))
+      time_series_tables = list(tst_spec("A", "A", "A"), tst_spec("A", "B"))
     ),
     "Cannot add multiple `time_series_tables` of same name"
   )
@@ -577,10 +537,10 @@ test_that("Can add full fields to a microdata extract", {
 
   revised_extract <- add_to_extract(
     cps_extract,
-    samples = new_sample("cps2019_03s"),
+    samples = samp_spec("cps2019_03s"),
     variables = list(
-      new_variable("SEX", data_quality_flags = TRUE),
-      new_variable("RELATE", case_selections = c("1", "2"))
+      var_spec("SEX", data_quality_flags = TRUE),
+      var_spec("RELATE", case_selections = c("1", "2"))
     ),
     data_structure = "rectangular"
   )
@@ -609,16 +569,16 @@ test_that("Can add full fields to an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
-  new_ds <- new_dataset("New", c("T1", "T2"), "G1")
-  new_tst <- list(
-    new_tst("CW4", "G2", "Y1"),
-    new_tst("CW5", "G3", "Y1")
+  new_ds <- ds_spec("New", c("T1", "T2"), "G1")
+  tst_spec <- list(
+    tst_spec("CW4", "G2", "Y1"),
+    tst_spec("CW5", "G3", "Y1")
   )
 
   revised <- add_to_extract(
     nhgis_extract,
     datasets = new_ds,
-    time_series_tables = new_tst,
+    time_series_tables = tst_spec,
     data_format = "csv_header",
     shapefiles = "New"
   )
@@ -631,7 +591,7 @@ test_that("Can add full fields to an NHGIS extract", {
   expect_equal(revised$datasets, c(nhgis_extract$datasets, list(New = new_ds)))
   expect_equal(
     revised$time_series_tables,
-    c(nhgis_extract$time_series_tables, purrr::set_names(new_tst, c("CW4", "CW5")))
+    c(nhgis_extract$time_series_tables, purrr::set_names(tst_spec, c("CW4", "CW5")))
   )
   expect_equal(revised$data_format, "csv_header")
   expect_equal(revised$shapefiles, c(nhgis_extract$shapefiles, "New"))
@@ -648,18 +608,18 @@ test_that("Can add subfields to existing `ipums_*` fields", {
   nhgis_revised <- add_to_extract(
     nhgis_extract,
     datasets = list(
-      new_dataset("2014_2018_ACS5a", c("T1", "T2"), "nation"),
-      new_dataset("2015_2019_ACS5a", c("T1", "T2"), "G1", "Y2")
+      ds_spec("2014_2018_ACS5a", c("T1", "T2"), "nation"),
+      ds_spec("2015_2019_ACS5a", c("T1", "T2"), "G1", "Y2")
     ),
     time_series_tables = list(
-      new_tst("CW3", "G1", "Y1"),
-      new_tst("CW4", "G2")
+      tst_spec("CW3", "G1", "Y1"),
+      tst_spec("CW4", "G2")
     )
   )
 
   cps_revised <- add_to_extract(
     cps_extract,
-    variables = new_variable(
+    variables = var_spec(
       "RACE",
       case_selections = "813",
       case_selection_type = "detailed"
@@ -735,19 +695,19 @@ test_that("Can remove from a microdata extract", {
 
   expect_equal(
     revised_extract$samples,
-    list(us2014a = new_sample("us2014a"))
+    list(us2014a = samp_spec("us2014a"))
   )
   expect_equal(
     revised_extract$variables,
     list(
-      RACE = new_variable(
+      RACE = var_spec(
         "RACE",
         case_selections = c("801", "802"),
         case_selection_type = "detailed",
         preselected = FALSE
       ),
-      YEAR = new_variable("YEAR"),
-      RELATE = new_variable("RELATE")
+      YEAR = var_spec("YEAR"),
+      RELATE = var_spec("RELATE")
     )
   )
 })
@@ -797,7 +757,7 @@ test_that("Unused revisions do not alter unsubmitted extracts", {
 
   nhgis_extract2 <- add_to_extract(
     nhgis_extract1,
-    datasets = new_dataset("Test", "Test", "Test")
+    datasets = ds_spec("Test", "Test", "Test")
   )
 
   expect_null(nhgis_extract2$time_series_tables)
@@ -887,18 +847,18 @@ test_that("Improper extract revisions throw warnings or errors", {
     add_to_extract(
       nhgis_extract,
       datasets = list(
-        new_dataset("A", "A", "A"),
-        new_dataset("A", "B", "B")
+        ds_spec("A", "A", "A"),
+        ds_spec("A", "B", "B")
       )
     ),
-    "Cannot add two `ipums_dataset` objects of same name"
+    "Cannot add two `ds_spec` objects of same name"
   )
   expect_error(
     add_to_extract(
       usa_extract,
       variables = c("A", "A")
     ),
-    "Cannot add two `ipums_variable` objects of same name"
+    "Cannot add two `var_spec` objects of same name"
   )
 })
 
@@ -938,18 +898,18 @@ test_that("Can combine NHGIS extracts", {
 
   x2 <- define_extract_nhgis(
     datasets = list(
-      new_dataset("A", c("D1", "D2"), "G1"),
-      new_dataset("B", "D3", "G2")
+      ds_spec("A", c("D1", "D2"), "G1"),
+      ds_spec("B", "D3", "G2")
     ),
     time_series_tables = list(
-      new_tst("T1", "G1"),
-      new_tst("T2", "G1")
+      tst_spec("T1", "G1"),
+      tst_spec("T2", "G1")
     ),
     tst_layout = "time_by_file_layout"
   )
 
   x3 <- define_extract_nhgis(
-    datasets = new_dataset("C", c("D2", "D4"), c("G2", "G3"), years = "Y1"),
+    datasets = ds_spec("C", c("D2", "D4"), c("G2", "G3"), years = "Y1"),
     shapefiles = "S1",
     data_format = "fixed_width"
   )
@@ -957,13 +917,13 @@ test_that("Can combine NHGIS extracts", {
   x_target <- define_extract_nhgis(
     description = "Combining",
     datasets = list(
-      new_dataset("A", c("D1", "D2"), "G1"),
-      new_dataset("B", "D3", "G2"),
-      new_dataset("C", c("D2", "D4"), c("G2", "G3"), "Y1")
+      ds_spec("A", c("D1", "D2"), "G1"),
+      ds_spec("B", "D3", "G2"),
+      ds_spec("C", c("D2", "D4"), c("G2", "G3"), "Y1")
     ),
     time_series_tables = list(
-      new_tst("T1", "G1"),
-      new_tst("T2", "G1")
+      tst_spec("T1", "G1"),
+      tst_spec("T2", "G1")
     ),
     tst_layout = "time_by_file_layout",
     shapefiles = "S1",

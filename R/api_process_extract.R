@@ -401,7 +401,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' nhgis_extract <- define_extract_nhgis(
 #'   description = "Example NHGIS extract",
-#'   datasets = new_dataset(
+#'   datasets = ds_spec(
 #'     "1990_STF3",
 #'     data_tables = "NP57",
 #'     geog_levels = c("county", "tract")
@@ -590,7 +590,7 @@ format_for_json <- function(x) {
 }
 
 #' @export
-format_for_json.ipums_nested <- function(x) {
+format_for_json.ipums_spec <- function(x) {
   # Assume first element is the name of the field
   if (length(x) > 1) {
     l <- purrr::compact(x[seq(2, length(x))])
@@ -603,7 +603,7 @@ format_for_json.ipums_nested <- function(x) {
 }
 
 #' @export
-format_for_json.ipums_variable <- function(x) {
+format_for_json.var_spec <- function(x) {
   if (is_null(x$case_selections)) {
     case_selections <- NULL
   } else {

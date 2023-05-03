@@ -54,7 +54,7 @@ usa_extract <- define_extract_usa(
 )
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = new_dataset(
+  datasets = ds_spec(
     "1990_STF1",
     data_tables = c("NP1", "NP2"),
     geog_levels = "county"
@@ -65,19 +65,19 @@ nhgis_extract <- define_extract_nhgis(
 add_to_extract(
   usa_extract,
   samples = c("us2014a", "us2015a"),
-  variables = new_variable("MARST", data_quality_flags = TRUE)
+  variables = var_spec("MARST", data_quality_flags = TRUE)
 )
 
 # Update existing variables
 add_to_extract(
   usa_extract,
-  variables = new_variable("SEX", case_selections = "1")
+  variables = var_spec("SEX", case_selections = "1")
 )
 
 # Add a new dataset or time series table
 add_to_extract(
   nhgis_extract,
-  datasets = new_dataset(
+  datasets = ds_spec(
     "1980_STF1",
     data_tables = "NT1A",
     geog_levels = c("county", "state")
@@ -87,7 +87,7 @@ add_to_extract(
 # Update existing datasets/time series tables
 add_to_extract(
   nhgis_extract,
-  datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "state")
+  datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "state")
 )
 
 # Values that can only take a single value are replaced

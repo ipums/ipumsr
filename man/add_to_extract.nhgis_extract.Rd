@@ -22,7 +22,7 @@
 
 \item{description}{Description of the extract.}
 
-\item{datasets}{List of \code{ipums_dataset} objects created by \code{\link[=new_dataset]{new_dataset()}}
+\item{datasets}{List of \code{ds_spec} objects created by \code{\link[=ds_spec]{ds_spec()}}
 containing the specifications
 for the \href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
 to include in the extract request. See examples.
@@ -30,7 +30,7 @@ to include in the extract request. See examples.
 If a dataset already exists in the extract, its new specifications
 will be added to those that already exist for that dataset.}
 
-\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{\link[=new_tst]{new_tst()}}
+\item{time_series_tables}{List of \code{tst_spec} objects created by \code{\link[=tst_spec]{tst_spec()}}
 containing the specifications for the
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
 to include in the extract request.
@@ -49,8 +49,8 @@ include \code{geog_levels} that require extent selection. See
 selection. At the time of writing, NHGIS supports extent selection only
 for blocks and block groups.}
 
-\item{shapefiles}{\href{https://www.nhgis.org/gis-files}{Shapefiles} to include
-in the extract request.}
+\item{shapefiles}{Names of any \href{https://www.nhgis.org/gis-files}{shapefiles}
+to include in the extract request.}
 
 \item{breakdown_and_data_type_layout}{The desired layout
 of any \code{datasets} that have multiple data types or breakdown values.
@@ -107,7 +107,7 @@ Supplying a value for fields that take a single value, such as
 the supplied value.
 
 In general, adding to an extract follows the same syntax conventions as used
-in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. Use \code{new_dataset()} and \code{new_tst()} to create
+in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. Use \code{ds_spec()} and \code{tst_spec()} to create
 dataset and time series table specifications.
 
 To remove existing values from an IPUMS NHGIS extract definition, use
@@ -127,18 +127,18 @@ definition to an unsubmitted state.
 }
 \examples{
 extract <- define_extract_nhgis(
-  datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "county")
+  datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county")
 )
 
 # Add a new dataset or time series table to the extract
 add_to_extract(
   extract,
-  datasets = new_dataset("1990_STF2a", "NPA1", "county")
+  datasets = ds_spec("1990_STF2a", "NPA1", "county")
 )
 
 add_to_extract(
   extract,
-  time_series_tables = new_tst("A00", "state")
+  time_series_tables = tst_spec("A00", "state")
 )
 
 # If a dataset/time series table name already exists in the definition
@@ -146,7 +146,7 @@ add_to_extract(
 # the existing one
 add_to_extract(
   extract,
-  datasets = new_dataset("1990_STF1", "NP4", "nation")
+  datasets = ds_spec("1990_STF1", "NP4", "nation")
 )
 
 # Values that can only take a single value are replaced

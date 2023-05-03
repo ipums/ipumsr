@@ -504,7 +504,7 @@ print.micro_extract <- function(x, ...) {
     purrr::map(
       x$samples,
       function(x) {
-        if (inherits(x, "ipums_sample")) {
+        if (inherits(x, "samp_spec")) {
           x$name
         }
       }
@@ -515,7 +515,7 @@ print.micro_extract <- function(x, ...) {
     purrr::map(
       x$variables,
       function(x) {
-        if (inherits(x, "ipums_variable")) {
+        if (inherits(x, "var_spec")) {
           x$name
         }
       }
@@ -552,7 +552,7 @@ print.nhgis_extract <- function(x, ...) {
   ds_to_cat <- purrr::compact(purrr::map(
     x$datasets,
     function(d) {
-      if (inherits(d, "ipums_dataset")) {
+      if (inherits(d, "ds_spec")) {
         format_field_for_printing(
           parent_field = list("Dataset: " = d$name),
           subfields = list(
@@ -581,7 +581,7 @@ print.nhgis_extract <- function(x, ...) {
   tst_to_cat <- purrr::compact(purrr::map(
     x$time_series_tables,
     function(t) {
-      if (inherits(t, "ipums_tst")) {
+      if (inherits(t, "tst_spec")) {
         format_field_for_printing(
           parent_field = list("Time Series Table: " = t$name),
           subfields = list(

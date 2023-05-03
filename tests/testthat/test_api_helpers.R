@@ -283,7 +283,7 @@ test_that("Can parse API request error details in basic requests", {
           new_ipums_extract(
             "nhgis",
             datasets = list(
-              new_dataset(
+              ds_spec(
                 "foo",
                 data_tables = "bar",
                 geog_levels = "baz"

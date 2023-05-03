@@ -2,9 +2,9 @@
 test_usa_extract <- function() {
   define_extract_usa(
     description = "Test USA extract",
-    samples = new_sample("us2017b"),
+    samples = samp_spec("us2017b"),
     variables = list(
-      new_variable(
+      var_spec(
         "RACE",
         case_selections = c("801", "802"),
         case_selection_type = "detailed",
@@ -21,17 +21,17 @@ test_cps_extract <- function() {
     description = "Compare age-sex-race breakdowns 1976",
     samples = c("cps2018_03s", "cps2019_03s"),
     variables = list(
-      new_variable(
+      var_spec(
         "AGE",
         attached_characteristics = "head",
         data_quality_flags = TRUE
       ),
-      new_variable(
+      var_spec(
         "SEX",
         case_selections = "2",
         attached_characteristics = c("mother", "father")
       ),
-      new_variable(
+      var_spec(
         "RACE",
         case_selections = c("810", "811", "812"),
         case_selection_type = "general"
@@ -47,8 +47,8 @@ test_ipumsi_extract <- function() {
     description = "Test IPUMSI extract",
     samples = c("mx2015a", "cl2017a"),
     variables = list(
-      new_variable("AGE", case_selections = "010"),
-      new_variable("SEX", attached_characteristics = "father"),
+      var_spec("AGE", case_selections = "010"),
+      var_spec("SEX", attached_characteristics = "father"),
       "EDATTAIN"
     ),
     data_format = "csv"
@@ -59,10 +59,10 @@ test_nhgis_extract <- function() {
   define_extract_nhgis(
     description = "Extract for R client testing",
     datasets = list(
-      new_dataset("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
-      new_dataset("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
+      ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
+      ds_spec("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
     ),
-    time_series_tables = new_tst("CW3", "state", "1990"),
+    time_series_tables = tst_spec("CW3", "state", "1990"),
     geographic_extents = c("110", "Pennsylvania"),
     tst_layout = "time_by_row_layout",
     shapefiles = "110_blck_grp_2019_tl2019",

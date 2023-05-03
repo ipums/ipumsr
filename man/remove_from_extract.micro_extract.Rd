@@ -42,8 +42,8 @@ usa_extract <- define_extract_usa(
   description = "USA example",
   samples = c("us2013a", "us2014a"),
   variables = list(
-    new_variable("AGE", data_quality_flags = TRUE),
-    new_variable("SEX", case_selections = "1"),
+    var_spec("AGE", data_quality_flags = TRUE),
+    var_spec("SEX", case_selections = "1"),
     "RACE"
   )
 )

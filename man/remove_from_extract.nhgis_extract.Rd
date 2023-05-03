@@ -61,14 +61,14 @@ new specification using \code{add_to_extract()}.
 }
 \examples{
 extract <- define_extract_nhgis(
-  datasets = new_dataset(
+  datasets = ds_spec(
     "1990_STF1",
     data_tables = c("NP1", "NP2", "NP3"),
     geog_levels = "county"
   ),
   time_series_tables = list(
-    new_tst("CW3", c("state", "county")),
-    new_tst("CW5", c("state", "county"))
+    tst_spec("CW3", c("state", "county")),
+    tst_spec("CW5", c("state", "county"))
   )
 )
 

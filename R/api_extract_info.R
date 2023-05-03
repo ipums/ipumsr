@@ -362,14 +362,14 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     ds <- extract_tbl %>%
       dplyr::filter(.data$data_type == "datasets")
 
-    # If any datasets, coerce to ipums_dataset objects
+    # If any datasets, coerce to ds_spec objects
     if (nrow(ds) > 0) {
       ds <- ds %>%
         dplyr::rowwise() %>%
         dplyr::mutate(
           "datasets" = set_nested_names(
             list(
-              new_dataset(
+              ds_spec(
                 .data$name,
                 .data$data_tables,
                 .data$geog_levels,
@@ -384,14 +384,14 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     tst <- extract_tbl %>%
       dplyr::filter(.data$data_type == "time_series_tables")
 
-    # If any tsts, coerce to ipums_tst objects
+    # If any tsts, coerce to tst_spec objects
     if (nrow(tst) > 0) {
       tst <- tst %>%
         dplyr::rowwise() %>%
         dplyr::mutate(
           "time_series_tables" = set_nested_names(
             list(
-              new_tst(.data$name, .data$geog_levels, .data$years)
+              tst_spec(.data$name, .data$geog_levels, .data$years)
             )
           )
         )
@@ -445,7 +445,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
       "submitted", "download_links", "status"
     )
   } else {
-    # Convert samples and variables to ipums_sample and ipums_variable objects
+    # Convert samples and variables to samp_spec and var_spec objects
     # based on associated values in other tbl columns
     extract_tbl <- extract_tbl %>%
       dplyr::rowwise() %>%
@@ -454,7 +454,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
           set_nested_names(
             purrr::map(
               .data$samples,
-              ~ new_sample(name = .x)
+              ~ samp_spec(name = .x)
             )
           )
         ),
@@ -462,7 +462,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
           set_nested_names(
             purrr::map(
               .data$variables,
-              ~ new_variable(
+              ~ var_spec(
                 name = .x,
                 case_selections = .data$case_selections[[.x]],
                 case_selection_type = .data$case_selection_type[[.x]],

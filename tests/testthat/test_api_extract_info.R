@@ -114,7 +114,7 @@ test_that("Cannot check status for an extract with no number", {
   expect_error(
     get_extract_info(
       define_extract_nhgis(
-        datasets = new_dataset("a", "B", "C")
+        datasets = ds_spec("a", "B", "C")
       )
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number"
@@ -575,7 +575,7 @@ test_that("NHGIS tbl/list conversion works", {
   # different subfields. Including here for a test of this scenario:
   x <- define_extract_nhgis(
     datasets = list(
-      new_dataset("D1", "A", "C"), new_dataset("D2", "B", "C")
+      ds_spec("D1", "A", "C"), ds_spec("D2", "B", "C")
     )
   )
 

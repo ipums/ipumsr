@@ -32,7 +32,7 @@ project:
 }}
 
 \item{variables}{Character vector of variable names or a list of
-\code{ipums_variable} objects created by \code{\link[=new_variable]{new_variable()}}
+\code{var_spec} objects created by \code{\link[=var_spec]{var_spec()}}
 containing specifications for all variables to include in the extract.
 
 If a variable already exists in the extract, its specifications
@@ -80,7 +80,7 @@ a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
 
 To modify variable-specific parameters for variables that already exist
-in the extract, create a new variable specification with \code{\link[=new_variable]{new_variable()}}.
+in the extract, create a new variable specification with \code{\link[=var_spec]{var_spec()}}.
 }
 \examples{
 extract <- define_extract_usa(
@@ -103,8 +103,8 @@ add_to_extract(
   extract,
   samples = "us2014a",
   variables = list(
-    new_variable("RACE", attached_characteristics = "mother"),
-    new_variable("SEX", case_selections = "2")
+    var_spec("RACE", attached_characteristics = "mother"),
+    var_spec("SEX", case_selections = "2")
   )
 )
 

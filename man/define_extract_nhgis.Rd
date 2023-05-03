@@ -18,18 +18,19 @@ define_extract_nhgis(
 \arguments{
 \item{description}{Description of the extract.}
 
-\item{datasets}{List of \code{ipums_dataset} objects created by \code{\link[=new_dataset]{new_dataset()}}
-containing the specifications
-for the \href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
-to include in the extract request. See examples.}
+\item{datasets}{List of dataset specifications for any
+\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets}
+to include in the extract request. Use \code{\link[=ds_spec]{ds_spec()}} to create a
+\code{ds_spec} object containing a dataset specification. See examples.}
 
-\item{time_series_tables}{List of \code{nhgis_tst} objects created by \code{\link[=new_tst]{new_tst()}}
-containing the specifications for the
+\item{time_series_tables}{List of time series table specifications for any
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
-to include in the extract request. See examples.}
+to include in the extract request. Use \code{\link[=tst_spec]{tst_spec()}} to create a
+\code{tst_spec} object containing a time series table specification. See
+examples.}
 
-\item{shapefiles}{\href{https://www.nhgis.org/gis-files}{Shapefiles} to include
-in the extract request.}
+\item{shapefiles}{Names of any \href{https://www.nhgis.org/gis-files}{shapefiles}
+to include in the extract request.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
 all of the \code{datasets} in the extract definition (for instance, to obtain
@@ -102,11 +103,11 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 An NHGIS extract definition must include at least one dataset, time series
 table, or shapefile specification.
 
-Create an NHGIS dataset specification with \code{\link[=new_dataset]{new_dataset()}}. Each dataset
+Create an NHGIS dataset specification with \code{\link[=ds_spec]{ds_spec()}}. Each dataset
 must be associated with a selection of \code{data_tables} and \code{geog_levels}. Some
 datasets also support the selection of \code{years} and \code{breakdown_values}.
 
-Create an NHGIS time series table specification with \code{\link[=new_tst]{new_tst()}}. Each time
+Create an NHGIS time series table specification with \code{\link[=tst_spec]{tst_spec()}}. Each time
 series table must be associated with a selection of \code{geog_levels} and
 may optionally be associated with a selection of \code{years}.
 
@@ -115,10 +116,10 @@ tables in an NHGIS extract definition.
 }
 \examples{
 # Extract definition for tables from an NHGIS dataset
-# Use `new_dataset()` to create an NHGIS dataset specification
+# Use `ds_spec()` to create an NHGIS dataset specification
 nhgis_extract <- define_extract_nhgis(
   description = "Example NHGIS extract",
-  datasets = new_dataset(
+  datasets = ds_spec(
     "1990_STF3",
     data_tables = "NP57",
     geog_levels = c("county", "tract")
@@ -127,19 +128,19 @@ nhgis_extract <- define_extract_nhgis(
 
 nhgis_extract
 
-# Use `new_tst()` to create an NHGIS time series table specification
+# Use `tst_spec()` to create an NHGIS time series table specification
 define_extract_nhgis(
   description = "Example NHGIS extract",
-  time_series_tables = new_tst("CL8", geog_levels = "county"),
+  time_series_tables = tst_spec("CL8", geog_levels = "county"),
   tst_layout = "time_by_row_layout"
 )
 
-# To request multiple datasets, provide a list of `ipums_dataset` objects
+# To request multiple datasets, provide a list of `ds_spec` objects
 define_extract_nhgis(
   description = "Extract definition with multiple datasets",
   datasets = list(
-    new_dataset("2014_2018_ACS5a", "B01001", c("state", "county")),
-    new_dataset("2015_2019_ACS5a", "B01001", c("state", "county"))
+    ds_spec("2014_2018_ACS5a", "B01001", c("state", "county")),
+    ds_spec("2015_2019_ACS5a", "B01001", c("state", "county"))
   )
 )
 
@@ -150,7 +151,7 @@ dataset_names <- c("2014_2018_ACS5a", "2015_2019_ACS5a")
 
 dataset_spec <- purrr::map(
   dataset_names,
-  ~ new_dataset(
+  ~ ds_spec(
     .x,
     data_tables = "B01001",
     geog_levels = c("state", "county")
@@ -166,8 +167,8 @@ define_extract_nhgis(
 # definition:
 define_extract_nhgis(
   description = "Extract with datasets and time series tables",
-  datasets = new_dataset("1990_STF1", c("NP1", "NP2"), "county"),
-  time_series_tables = new_tst("CL6", "state"),
+  datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county"),
+  time_series_tables = tst_spec("CL6", "state"),
   shapefiles = "us_county_1990_tl2008"
 )
 

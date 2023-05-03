@@ -46,9 +46,10 @@ project:
 \item \href{https://international.ipums.org/international-action/samples/sample_ids}{IPUMS International}
 }}
 
-\item{variables}{Character vector of variable names or a list of
-\code{ipums_variable} objects created by \code{\link[=new_variable]{new_variable()}}
-containing specifications for all variables to include in the extract.}
+\item{variables}{Character vector of variable names or a list of detailed
+variable specifications for all variables in the extract request. Use
+\code{\link[=var_spec]{var_spec()}} to create a \code{var_spec} object containing a detailed variable
+specification. See examples.}
 
 \item{data_format}{Format for the output extract data file. One of
 \code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}. Defaults to
@@ -83,7 +84,7 @@ Currently supported microdata collections include:
 \item \strong{IPUMS International}: \code{define_extract_ipumsi()}
 }
 
-Use the \code{\link[=new_variable]{new_variable()}} helper to generate detailed variable-level
+Use the \code{\link[=var_spec]{var_spec()}} helper to generate detailed variable-level
 specifications for an extract request.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
@@ -97,25 +98,25 @@ usa_extract <- define_extract_usa(
 
 usa_extract
 
-# Use `new_variable()` to created detailed variable specifications:
+# Use `var_spec()` to created detailed variable specifications:
 usa_extract <- define_extract_usa(
   description = "Example USA extract definition",
   samples = c("us2013a", "us2014a"),
-  variables = new_variable(
+  variables = var_spec(
     "SEX",
     case_selections = "2",
     attached_characteristics = c("mother", "father")
   )
 )
 
-# For multiple variables, provide a list of `ipums_variable` objects and/or
+# For multiple variables, provide a list of `var_spec` objects and/or
 # variable names.
 cps_extract <- define_extract_cps(
   description = "Example CPS extract definition",
   samples = c("cps2020_02s", "cps2020_03s"),
   variables = list(
-    new_variable("AGE", data_quality_flags = TRUE),
-    new_variable("SEX", case_selections = "2"),
+    var_spec("AGE", data_quality_flags = TRUE),
+    var_spec("SEX", case_selections = "2"),
     "RACE"
   )
 )
@@ -128,7 +129,7 @@ var_names <- c("AGE", "SEX")
 
 var_spec <- purrr::map(
   var_names,
-  ~ new_variable(.x, attached_characteristics = "mother")
+  ~ var_spec(.x, attached_characteristics = "mother")
 )
 
 ipumsi_extract <- define_extract_ipumsi(
