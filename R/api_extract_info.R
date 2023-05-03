@@ -234,6 +234,10 @@ get_extract_history <- function(collection = NULL,
     extracts <- extract_list_to_tbl(extracts)
   }
 
+  if (length(extracts) == 0) {
+    rlang::abort("No past extracts were found for this collection.")
+  }
+
   extracts
 }
 

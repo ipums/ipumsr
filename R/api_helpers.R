@@ -784,8 +784,18 @@ validate_api_request <- function(res, call = caller_env()) {
     # Standard error message
     error_message <- paste0("API request failed with status ", status, ".")
 
-    # 401 or 403 are authorization errors
+    # Authorization errors could be related to invalid registration or key
     if (status %in% c(401, 403)) {
+      # The API provides details for invalid registration cases, so check
+      # if any error details exist.
+      if (length(error_details) > 0) {
+        rlang::abort(
+          c("Invalid IPUMS registration.", error_details),
+          call = call
+        )
+      }
+
+      # Otherwise we should be dealing with a valid registration but invalid key
       rlang::abort(
         c(
           "The provided API key is either missing or invalid.",
@@ -799,7 +809,7 @@ validate_api_request <- function(res, call = caller_env()) {
       )
     }
 
-    # If a downloads request, inform that download failed
+    # If a downloads request, add hint to inform of possible issue
     if (is_downloads_request) {
       rlang::abort(
         c(
