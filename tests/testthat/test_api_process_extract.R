@@ -45,8 +45,10 @@ on.exit(
 test_that("Can submit a USA extract", {
   skip_if_no_api_access(have_api_access)
 
+  usa_extract <- test_usa_extract()
+
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    submitted_usa_extract <- submit_extract(usa_extract)
   })
 
   expect_s3_class(submitted_usa_extract, "usa_extract")
@@ -54,17 +56,50 @@ test_that("Can submit a USA extract", {
   expect_equal(submitted_usa_extract$collection, "usa")
   expect_true(submitted_usa_extract$submitted)
   expect_equal(submitted_usa_extract$status, "queued")
-  expect_identical(
-    submitted_usa_extract$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
+  expect_identical(submitted_usa_extract$download_links, EMPTY_NAMED_LIST)
+
+  expect_identical(submitted_usa_extract$samples, usa_extract$samples)
+
+  usa_vars <- names(usa_extract$variables)
+
+  # Extra preselected vars will be returned as well
+  expect_true(
+    all(usa_vars %in% names(submitted_usa_extract$variables))
+  )
+
+  purrr::walk(
+    usa_vars,
+    function(var) {
+      expect_equal(
+        submitted_usa_extract[[var]]$case_selections,
+        usa_extract[[var]]$case_selections
+      )
+      expect_equal(
+        submitted_usa_extract[[var]]$case_selection_type,
+        usa_extract[[var]]$case_selection_type
+      )
+      # Some additional attached char names will be returned by server
+      expect_true(
+        all(
+          submitted_usa_extract[[var]]$attached_characteristics %in%
+            usa_extract[[var]]$attached_characteristics
+        )
+      )
+      expect_equal(
+        submitted_usa_extract[[var]]$data_quality_flags,
+        usa_extract[[var]]$data_quality_flags
+      )
+    }
   )
 })
 
 test_that("Can submit a CPS extract", {
   skip_if_no_api_access(have_api_access)
 
+  cps_extract <- test_cps_extract()
+
   vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(test_cps_extract())
+    submitted_cps_extract <- submit_extract(cps_extract)
   })
 
   expect_s3_class(submitted_cps_extract, "cps_extract")
@@ -72,63 +107,70 @@ test_that("Can submit a CPS extract", {
   expect_equal(submitted_cps_extract$collection, "cps")
   expect_true(submitted_cps_extract$submitted)
   expect_equal(submitted_cps_extract$status, "queued")
-  expect_identical(
-    submitted_cps_extract$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
+  expect_identical(submitted_cps_extract$download_links, EMPTY_NAMED_LIST)
+
+  expect_identical(submitted_cps_extract$samples, cps_extract$samples)
+
+  cps_vars <- names(cps_extract$variables)
+
+  # Extra preselected vars will be returned as well
+  expect_true(
+    all(cps_vars %in% names(submitted_cps_extract$variables))
+  )
+
+  purrr::walk(
+    cps_vars,
+    function(var) {
+      expect_equal(
+        submitted_cps_extract[[var]]$case_selections,
+        cps_extract[[var]]$case_selections
+      )
+      expect_equal(
+        submitted_cps_extract[[var]]$case_selection_type,
+        cps_extract[[var]]$case_selection_type
+      )
+      # Some additional attached char names will be returned by server
+      expect_true(
+        all(
+          submitted_cps_extract[[var]]$attached_characteristics %in%
+            cps_extract[[var]]$attached_characteristics
+        )
+      )
+      expect_equal(
+        submitted_cps_extract[[var]]$data_quality_flags,
+        cps_extract[[var]]$data_quality_flags
+      )
+    }
   )
 })
 
 test_that("Can submit an NHGIS extract of multiple types", {
   skip_if_no_api_access(have_api_access)
 
+  nhgis_extract <- test_nhgis_extract()
+
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    submitted_nhgis_extract <- submit_extract(nhgis_extract)
   })
 
   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
   expect_equal(submitted_nhgis_extract$collection, "nhgis")
-  expect_equal(
-    submitted_nhgis_extract$datasets,
-    c("2014_2018_ACS5a", "2015_2019_ACS5a")
-  )
-  expect_equal(
-    submitted_nhgis_extract$data_tables,
-    list(
-      "2014_2018_ACS5a" = c("B01001", "B01002"),
-      "2015_2019_ACS5a" = c("B01001", "B01002")
-    )
-  )
-  expect_equal(
-    submitted_nhgis_extract$breakdown_values,
-    list(
-      "2014_2018_ACS5a" = NULL,
-      "2015_2019_ACS5a" = NULL
-    )
-  )
-  expect_equal(submitted_nhgis_extract$time_series_tables, "CW3")
-  expect_equal(
-    submitted_nhgis_extract$geog_levels,
-    list(
-      "2014_2018_ACS5a" = "nation",
-      "2015_2019_ACS5a" = "blck_grp",
-      "CW3" = "state"
-    )
-  )
+  expect_identical(submitted_nhgis_extract$datasets, nhgis_extract$datasets)
+  expect_identical(submitted_nhgis_extract$time_series_tables, nhgis_extract$time_series_tables)
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
   expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
   expect_true(submitted_nhgis_extract$submitted)
   expect_equal(submitted_nhgis_extract$status, "queued")
-  expect_identical(
-    submitted_nhgis_extract$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
-  )
+  expect_identical(submitted_nhgis_extract$download_links, EMPTY_NAMED_LIST)
 })
 
 test_that("Can submit an NHGIS extract of a single type", {
   skip_if_no_api_access(have_api_access)
 
+  nhgis_extract_shp <- test_nhgis_extract_shp()
+
   vcr::use_cassette("submitted-nhgis-extract-shp", {
-    submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+    submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
   })
 
   expect_s3_class(
@@ -140,14 +182,11 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_true(is.null(submitted_nhgis_extract_shp$time_series_table))
   expect_equal(
     submitted_nhgis_extract_shp$shapefiles,
-    "110_blck_grp_2019_tl2019"
+    nhgis_extract_shp$shapefiles
   )
   expect_true(submitted_nhgis_extract_shp$submitted)
   expect_equal(submitted_nhgis_extract_shp$status, "queued")
-  expect_identical(
-    submitted_nhgis_extract_shp$download_links,
-    ipumsr:::EMPTY_NAMED_LIST
-  )
+  expect_identical(submitted_nhgis_extract_shp$download_links, EMPTY_NAMED_LIST)
 })
 
 test_that("Can resubmit an extract", {
@@ -163,25 +202,25 @@ test_that("Can resubmit an extract", {
     resubmitted_nhgis_extract <- submit_extract(ready_nhgis_extract)
   })
 
+  # Number, download links, etc. won't be same, but core extract will:
+  idx <- which(
+    !names(resubmitted_nhgis_extract) %in%
+      c("download_links", "number", "status")
+  )
+
   expect_s3_class(
     resubmitted_nhgis_extract,
     c("nhgis_extract", "ipums_extract")
   )
-  # Number, download links, etc. won't be same, but core extract will:
   expect_identical(
-    resubmitted_nhgis_extract[1:14],
-    ready_nhgis_extract[1:14]
-  )
-
-  expect_error(
-    submit_extract("nhgis:1"),
-    "Expected `extract` to be an `ipums_extract` object"
+    resubmitted_nhgis_extract[idx],
+    ready_nhgis_extract[idx]
   )
 })
 
 # Download extract ---------------------
 
-test_that("Can download USA extract by supplying extract object", {
+test_that("Can download microdata extract with extract object", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -219,10 +258,10 @@ test_that("Can download USA extract by supplying extract object", {
   expect_true(file.exists(ddi_file_path))
 
   data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-  expect_equal(nrow(data), 20972)
+  expect_equal(dim(data), c(787, 10))
 })
 
-test_that("Can download NHGIS extract by supplying extract object", {
+test_that("Can download NHGIS extract with extract object", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -280,7 +319,7 @@ test_that("Can download NHGIS extract by supplying extract object", {
   expect_true(file.exists(gis_data_file_path))
 })
 
-test_that("Can download extract with collection and number as vector", {
+test_that("Can download extract with extract id", {
   skip_if_no_api_access(have_api_access)
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
@@ -300,7 +339,7 @@ test_that("Can download extract with collection and number as vector", {
 
   expect_message(
     vcr::use_cassette("download-usa-extract-collection-number", {
-      ddi_file_path <- download_extract(
+      ddi_file_path1 <- download_extract(
         c("usa", ready_usa_extract$number),
         download_dir = download_dir,
         overwrite = TRUE
@@ -309,73 +348,29 @@ test_that("Can download extract with collection and number as vector", {
     "DDI codebook file saved to"
   )
 
-  ddi_file_path <- file.path(
-    vcr::vcr_test_path("fixtures"),
-    basename(ddi_file_path)
-  )
-
-  expect_match(ddi_file_path, "\\.xml$")
-  expect_true(file.exists(ddi_file_path))
-
-  data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-  expect_equal(nrow(data), 20972)
-})
-
-test_that("Can download extract with collection and number as string", {
-  skip_if_no_api_access(have_api_access)
-
-  download_dir <- file.path(tempdir(), "ipums-api-downloads")
-
-  if (!dir.exists(download_dir)) {
-    dir.create(download_dir)
-  }
-
-  on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
-
-  vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
-  })
-  vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
-  })
-
   expect_message(
-    vcr::use_cassette("download-nhgis-extract-collection-number", {
-      file_paths <- download_extract(
-        paste0("nhgis:", ready_nhgis_extract$number),
+    vcr::use_cassette("download-usa-extract-collection-number", {
+      ddi_file_path2 <- download_extract(
+        paste0("usa:", ready_usa_extract$number),
         download_dir = download_dir,
         overwrite = TRUE
       )
     }),
-    "Data file saved to "
+    "DDI codebook file saved to"
   )
 
-  expect_error(
-    download_extract(
-      ready_nhgis_extract,
-      download_dir = vcr::vcr_test_path("fixtures"),
-      overwrite = FALSE
-    ),
-    "The following files already exist: "
-  )
+  expect_identical(ddi_file_path1, ddi_file_path2)
 
-  expect_equal(length(file_paths), 2)
-
-  table_data_file_path <- file.path(
+  ddi_file_path1 <- file.path(
     vcr::vcr_test_path("fixtures"),
-    basename(file_paths[1])
+    basename(ddi_file_path1)
   )
 
-  gis_data_file_path <- file.path(
-    vcr::vcr_test_path("fixtures"),
-    basename(file_paths[2])
-  )
+  expect_match(ddi_file_path1, "\\.xml$")
+  expect_true(file.exists(ddi_file_path1))
 
-  expect_match(table_data_file_path, "_csv\\.zip$")
-  expect_match(gis_data_file_path, "_shape\\.zip$")
-
-  expect_true(file.exists(table_data_file_path))
-  expect_true(file.exists(gis_data_file_path))
+  data <- read_ipums_micro(ddi_file_path1, verbose = FALSE)
+  expect_equal(dim(data), c(787, 10))
 })
 
 # TODO: may want to update this fixture to use smaller data to test
@@ -476,26 +471,21 @@ test_that("Can read downloaded files with ipumsr readers", {
 
 test_that("We validate extract before submission", {
   expect_error(
-    submit_extract(ipumsr:::new_ipums_extract()),
+    submit_extract(new_ipums_extract()),
     paste0(
       "`collection` must not contain missing.+",
       "`description` must not contain missing"
     )
   )
   expect_error(
-    submit_extract(ipumsr:::new_ipums_extract(collection = "usa")),
+    submit_extract(new_ipums_extract(collection = "usa")),
     "`description` must not contain missing values"
   )
   expect_error(
     submit_extract(
-      ipumsr:::new_ipums_extract(collection = "usa", description = "Test")
+      new_ipums_extract(collection = "usa", description = "Test")
     ),
-    paste0(
-      "`data_structure` must not contain missing values.+",
-      "`data_format` must not contain missing values.+",
-      "`samples` must not contain missing values.+",
-      "`variables` must not contain missing values"
-    )
+    "A `usa_extract` must contain values for `samples`"
   )
 })
 
@@ -511,24 +501,24 @@ test_that("Can add to a submitted extract", {
   revised_extract <- add_to_extract(
     submitted_usa_extract,
     samples = c("us2014a", "us2015a"),
-    variables = list("RELATE", "AGE", "SEX", "SEX")
+    variables = list("RELATE", "AGE", "SEX")
   )
 
   expect_true(revised_extract$status == "unsubmitted")
   expect_equal(
-    revised_extract$samples,
-    union(submitted_usa_extract$samples, c("us2014a", "us2015a"))
+    names(revised_extract$samples),
+    union(names(submitted_usa_extract$samples), c("us2014a", "us2015a"))
   )
   expect_equal(
-    revised_extract$variables,
-    union(submitted_usa_extract$variables, c("RELATE", "AGE", "SEX"))
+    names(revised_extract$variables),
+    union(names(submitted_usa_extract$variables), c("RELATE", "AGE", "SEX"))
   )
 })
 
 # Save a submitted extract as JSON -------
 
 test_that("We can export to and import from JSON, submitted extract", {
-  skip_if_no_api_access(have_api_access)
+  # skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
     submitted_usa_extract <- submit_extract(test_usa_extract())
@@ -541,7 +531,7 @@ test_that("We can export to and import from JSON, submitted extract", {
   copy_of_submitted_usa_extract <- define_extract_from_json(json_tmpfile)
 
   expect_identical(
-    ipumsr:::copy_ipums_extract(submitted_usa_extract),
+    copy_ipums_extract(submitted_usa_extract),
     copy_of_submitted_usa_extract
   )
 })

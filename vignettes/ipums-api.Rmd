@@ -150,7 +150,9 @@ collections below:
 -   [IPUMS
     CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
 -   [IPUMS
-    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fcps-action%2Fmenu)
+    International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
+-   [IPUMS
+    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
 
 Once you're registered, you'll be able to [create an API
 key](https://account.ipums.org/api_keys).

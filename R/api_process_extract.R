@@ -179,7 +179,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-              timeout_seconds > 0)
+    timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -401,9 +401,11 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' nhgis_extract <- define_extract_nhgis(
 #'   description = "Example NHGIS extract",
-#'   datasets = "1990_STF3",
-#'   data_tables = "NP57",
-#'   geog_levels = c("county", "tract")
+#'   datasets = ds_spec(
+#'     "1990_STF3",
+#'     data_tables = "NP57",
+#'     geog_levels = c("county", "tract")
+#'   )
 #' )
 #'
 #' \dontrun{
@@ -510,27 +512,16 @@ extract_to_request_json <- function(extract) {
 
 #' @export
 extract_to_request_json.nhgis_extract <- function(extract) {
-  extract$years <- purrr::map(
-    extract$years,
-    ~ if (!is.null(.x)) as.character(.x)
-  )
-
   if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
 
   request_list <- list(
-    datasets = format_nhgis_field_for_json(
-      datasets = extract$datasets,
-      dataTables = extract$data_tables[extract$datasets],
-      geogLevels = extract$geog_levels[extract$datasets],
-      years = extract$years[extract$datasets],
-      breakdownValues = extract$breakdown_values[extract$datasets]
+    datasets = purrr::flatten(
+      purrr::map(extract$datasets, format_for_json)
     ),
-    timeSeriesTables = format_nhgis_field_for_json(
-      timeSeriesTables = extract$time_series_tables,
-      geogLevels = extract$geog_levels[extract$time_series_tables],
-      years = extract$years[extract$time_series_tables],
+    timeSeriesTables = purrr::flatten(
+      purrr::map(extract$time_series_tables, format_for_json)
     ),
     shapefiles = extract$shapefiles,
     dataFormat = jsonlite::unbox(extract$data_format),
@@ -538,9 +529,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
     breakdownAndDataTypeLayout = jsonlite::unbox(
       extract$breakdown_and_data_type_layout
     ),
-    timeSeriesTableLayout = jsonlite::unbox(
-      extract$tst_layout
-    ),
+    timeSeriesTableLayout = jsonlite::unbox(extract$tst_layout),
     geographicExtents = geog_extent_lookup(
       extract$geographic_extents,
       state_geog_lookup$codes
@@ -558,7 +547,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(extract) {
+extract_to_request_json.micro_extract <- function(extract) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -574,34 +563,8 @@ extract_to_request_json.usa_extract <- function(extract) {
       extract$rectangular_on
     ),
     dataFormat = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables),
-    collection = extract$collection,
-    version = ipums_api_version()
-  )
-
-  jsonlite::toJSON(request_list, auto_unbox = TRUE)
-}
-
-#' @export
-extract_to_request_json.cps_extract <- function(extract) {
-  if (is.null(extract$description) || is.na(extract$description)) {
-    extract$description <- ""
-  }
-
-  if (is.null(extract$data_format) || is.na(extract$data_format)) {
-    extract$data_format <- ""
-  }
-
-  request_list <- list(
-    description = extract$description,
-    dataStructure = format_data_structure_for_json(
-      extract$data_structure,
-      extract$rectangular_on
-    ),
-    dataFormat = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables),
+    samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
+    variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
     collection = extract$collection,
     version = ipums_api_version()
   )
@@ -622,21 +585,49 @@ extract_to_request_json.ipums_extract <- function(extract) {
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
-
-format_samples_for_json <- function(samples) {
-  if (length(samples) == 1 && is.na(samples)) {
-    return(EMPTY_NAMED_LIST)
-  }
-  sample_spec <- purrr::map(seq_along(samples), ~EMPTY_NAMED_LIST)
-  purrr::set_names(sample_spec, samples)
+format_for_json <- function(x) {
+  UseMethod("format_for_json")
 }
 
-format_variables_for_json <- function(variables) {
-  if (length(variables) == 1 && is.na(variables)) {
-    return(EMPTY_NAMED_LIST)
+#' @export
+format_for_json.ipums_spec <- function(x) {
+  # Assume first element is the name of the field
+  if (length(x) > 1) {
+    l <- purrr::compact(x[seq(2, length(x))])
+  } else {
+    l <- EMPTY_NAMED_LIST
   }
-  var_spec <- purrr::map(seq_along(variables), ~EMPTY_NAMED_LIST)
-  purrr::set_names(var_spec, variables)
+
+  names(l) <- to_camel_case(names(l))
+  purrr::set_names(list(l), x$name)
+}
+
+#' @export
+format_for_json.var_spec <- function(x) {
+  if (is_null(x$case_selections)) {
+    case_selections <- NULL
+  } else {
+    case_selections <- purrr::set_names(
+      list(as.list(x$case_selections)),
+      x$case_selection_type
+    )
+  }
+
+  l <- purrr::compact(
+    list(
+      dataQualityFlags = x$data_quality_flags,
+      caseSelections = case_selections,
+      attachedCharacteristics = as.list(x$attached_characteristics),
+      preselected = x$preselected
+    )
+  )
+
+  purrr::set_names(list(l), x$name)
+}
+
+#' @export
+format_for_json.default <- function(x) {
+  x
 }
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
@@ -651,30 +642,6 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
   }
 }
 
-format_nhgis_field_for_json <- function(...) {
-  dots <- rlang::list2(...)
-
-  if (all(is.na(dots[[1]])) || is_empty(dots[[1]])) {
-    return(NULL)
-  }
-
-  supfields <- purrr::map(purrr::compact(dots[[1]]), c)
-  n_supfields <- length(supfields)
-
-  subfields <- dots[seq(2, length(dots))]
-
-  subfields_grp <- purrr::map(
-    1:n_supfields,
-    ~ purrr::map(subfields, .x)
-  )
-
-  subfields_formatted <- purrr::set_names(
-    purrr::map(subfields_grp, purrr::compact),
-    supfields
-  )
-
-  subfields_formatted
-}
 
 #' Collection-specific extract download
 #'
@@ -692,43 +659,10 @@ ipums_extract_specific_download <- function(extract,
 }
 
 #' @export
-ipums_extract_specific_download.usa_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
-  ddi_url <- extract$download_links$ddiCodebook$url
-  data_url <- extract$download_links$data$url
-
-  ddi_file_path <- normalizePath(
-    file.path(download_dir, basename(ddi_url)),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  data_file_path <- normalizePath(
-    file.path(download_dir, basename(data_url)),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
-  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
-
-  message(
-    paste0(
-      "DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
-      "to ", data_file_path
-    )
-  )
-
-  invisible(ddi_file_path)
-}
-
-#' @export
-ipums_extract_specific_download.cps_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
+ipums_extract_specific_download.micro_extract <- function(extract,
+                                                          download_dir,
+                                                          overwrite,
+                                                          api_key) {
   ddi_url <- extract$download_links$ddiCodebook$url
   data_url <- extract$download_links$data$url
 
@@ -837,20 +771,7 @@ extract_is_completed_and_has_links <- function(extract) {
 }
 
 #' @export
-extract_is_completed_and_has_links.usa_extract <- function(extract) {
-  status <- extract$status
-  download_links <- extract$download_links
-
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
-
-  status == "completed" && has_url(download_links, "ddiCodebook") &&
-    has_url(download_links, "data")
-}
-
-#' @export
-extract_is_completed_and_has_links.cps_extract <- function(extract) {
+extract_is_completed_and_has_links.micro_extract <- function(extract) {
   status <- extract$status
   download_links <- extract$download_links
 

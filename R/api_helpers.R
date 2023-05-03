@@ -14,6 +14,7 @@
 #'
 #' * IPUMS USA
 #' * IPUMS CPS
+#' * IPUMS International
 #' * IPUMS NHGIS
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -25,19 +26,19 @@
 #' @export
 ipums_data_collections <- function() {
   tibble::tribble(
-    ~collection_name, ~code_for_api, ~api_support,
-    "IPUMS USA", "usa", TRUE,
-    "IPUMS CPS", "cps", TRUE,
-    "IPUMS International", "ipumsi", FALSE,
-    "IPUMS NHGIS", "nhgis", TRUE,
-    "IPUMS AHTUS", "ahtus", FALSE,
-    "IPUMS MTUS", "mtus", FALSE,
-    "IPUMS ATUS", "atus", FALSE,
-    "IPUMS DHS", "dhs", FALSE,
-    "IPUMS Higher Ed", "highered", FALSE,
-    "IPUMS MEPS", "meps", FALSE,
-    "IPUMS NHIS", "nhis", FALSE,
-    "IPUMS PMA", "pma", FALSE
+    ~collection_name, ~collection_type, ~code_for_api, ~api_support,
+    "IPUMS USA", "microdata", "usa", TRUE,
+    "IPUMS CPS", "microdata", "cps", TRUE,
+    "IPUMS International", "microdata", "ipumsi", TRUE,
+    "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
+    "IPUMS AHTUS", "microdata", "ahtus", FALSE,
+    "IPUMS MTUS", "microdata", "mtus", FALSE,
+    "IPUMS ATUS", "microdata", "atus", FALSE,
+    "IPUMS DHS", "microdata", "dhs", FALSE,
+    "IPUMS Higher Ed", "microdata", "highered", FALSE,
+    "IPUMS MEPS", "microdata", "meps", FALSE,
+    "IPUMS NHIS", "microdata", "nhis", FALSE,
+    "IPUMS PMA", "microdata", "pma", FALSE
   )
 }
 
@@ -496,31 +497,47 @@ print.ipums_extract <- function(x, ...) {
 }
 
 #' @export
-print.usa_extract <- function(x, ...) {
-  to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
-    "\n"
+print.micro_extract <- function(x, ...) {
+  styler <- extract_field_styler("bold")
+
+  samps_to_cat <- purrr::compact(
+    purrr::map(
+      x$samples,
+      function(x) {
+        if (inherits(x, "samp_spec")) {
+          x$name
+        }
+      }
+    )
   )
 
-  cat(to_cat)
+  vars_to_cat <- purrr::compact(
+    purrr::map(
+      x$variables,
+      function(x) {
+        if (inherits(x, "var_spec")) {
+          x$name
+        }
+      }
+    )
+  )
 
-  invisible(x)
-}
-
-#' @export
-print.cps_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
+    "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
+    "\n\n",
+    print_truncated_vector(
+      samps_to_cat,
+      styler("Samples: ")
+    ),
+    "\n",
+    print_truncated_vector(
+      vars_to_cat,
+      styler("Variables: ")
+    ),
     "\n"
   )
 
@@ -532,45 +549,54 @@ print.cps_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
+  ds_to_cat <- purrr::compact(purrr::map(
+    x$datasets,
+    function(d) {
+      if (inherits(d, "ds_spec")) {
+        format_field_for_printing(
+          parent_field = list("Dataset: " = d$name),
+          subfields = list(
+            "Tables: " = d$data_tables,
+            "Geog Levels: " = d$geog_levels,
+            "Years: " = d$years,
+            "Breakdowns: " = d$breakdown_values
+          ),
+          parent_style = style_ds,
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
-  ds_to_cat <- purrr::map(
-    seq_along(x$datasets),
-    ~ format_field_for_printing(
-      parent_field = list("Dataset: " = x$datasets[[.x]]),
-      subfields = list(
-        "Tables: " = x$data_tables[x$datasets][[.x]],
-        "Geog Levels: " = x$geog_levels[x$datasets][[.x]],
-        "Years: " = x$years[x$datasets][[.x]],
-        "Breakdowns: " = x$breakdown_values[x$datasets][[.x]]
-      ),
-      parent_style = style_ds,
-      subfield_style = extract_field_styler("bold")
+  if (length(ds_to_cat) > 0) {
+    ds_to_cat <- c(
+      ds_to_cat,
+      format_field_for_printing(
+        parent_field = list("Geographic extents: " = x$geographic_extents),
+        parent_style = style_ds
+      )
     )
-  )
+  }
 
-  ds_to_cat <- c(
-    ds_to_cat,
-    format_field_for_printing(
-      parent_field = list("Geographic extents: " = x$geographic_extents),
-      parent_style = style_ds
-    )
-  )
-
-  tst_to_cat <- purrr::map(
-    seq_along(x$time_series_tables),
-    ~ format_field_for_printing(
-      parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
-      subfields = list(
-        "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]],
-        "Years: " = x$years[x$time_series_tables][[.x]]
-      ),
-      parent_style = extract_field_styler(
-        nhgis_print_color("time_series_table"),
-        "bold"
-      ),
-      subfield_style = extract_field_styler("bold")
-    )
-  )
+  tst_to_cat <- purrr::compact(purrr::map(
+    x$time_series_tables,
+    function(t) {
+      if (inherits(t, "tst_spec")) {
+        format_field_for_printing(
+          parent_field = list("Time Series Table: " = t$name),
+          subfields = list(
+            "Geog Levels: " = t$geog_levels,
+            "Years: " = t$years
+          ),
+          parent_style = extract_field_styler(
+            nhgis_print_color("time_series_table"),
+            "bold"
+          ),
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
@@ -583,8 +609,8 @@ print.nhgis_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
     paste0(ds_to_cat, collapse = ""),
     paste0(tst_to_cat, collapse = ""),
     shp_to_cat,
@@ -632,7 +658,7 @@ format_field_for_printing <- function(parent_field = NULL,
                                       subfields = NULL,
                                       parent_style = NULL,
                                       subfield_style = NULL,
-                                      padding = 2) {
+                                      padding_top = 2) {
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -646,12 +672,8 @@ format_field_for_printing <- function(parent_field = NULL,
   style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    paste0(rep("\n", padding), collapse = ""),
-    print_truncated_vector(
-      parent_val,
-      style_field(parent_name),
-      FALSE
-    )
+    paste0(rep("\n", padding_top), collapse = ""),
+    print_truncated_vector(parent_val, style_field(parent_name), FALSE)
   )
 
   if (!is.null(subfields)) {
@@ -659,8 +681,7 @@ format_field_for_printing <- function(parent_field = NULL,
       names(subfields),
       ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
-          output,
-          "\n  ",
+          output, "\n  ",
           print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
         )
       }
@@ -828,6 +849,20 @@ validate_api_request <- function(res, call = caller_env()) {
   invisible(res)
 }
 
+api_extract_warnings <- function(extract_number, warnings) {
+  warnings <- unlist(warnings)
+
+  if (length(warnings) > 0) {
+    rlang::warn(c(
+      paste0(
+        "Extract number ", extract_number,
+        " contains unsupported features and has been modified:"
+      ),
+      warnings
+    ))
+  }
+}
+
 add_user_auth_header <- function(api_key) {
   httr::add_headers("Authorization" = api_key)
 }
@@ -943,7 +978,7 @@ metadata_request_path <- function(collection, ...) {
 #' @noRd
 ipums_api_request <- function(verb,
                               url,
-                              body,
+                              body = FALSE,
                               api_key = Sys.getenv("IPUMS_API_KEY"),
                               ...) {
   response <- httr::VERB(
@@ -1127,8 +1162,7 @@ active_api_instance <- function() {
 
 #' Get the current API verison for a specified IPUMS collection
 #'
-#' Get current API version for a collection or throw an error if that collection
-#' is not currently supported by API.
+#' Get current API version for a collection.
 #'
 #' @param collection IPUMS collection
 #'
@@ -1170,6 +1204,24 @@ check_api_support <- function(collection) {
   }
 
   invisible(collection)
+}
+
+# Determine if a collection is considered microdata or aggregate data
+collection_type <- function(collection) {
+  if (is_empty(collection) || is_na(collection)) {
+    return("ipums")
+  }
+
+  collections <- ipums_data_collections()
+  type <- collections[collections$code_for_api == collection, ]$collection_type
+
+  if (type == "microdata") {
+    collection_type <- "micro"
+  } else {
+    collection_type <- "agg"
+  }
+
+  collection_type
 }
 
 #' Get API version from a JSON file
@@ -1231,7 +1283,11 @@ resubmission_hint <- function(is_extract) {
 # Helper to convert metadata camelCase names to snake_case
 # for consistency with ipums_extract object naming.
 to_snake_case <- function(x) {
-  x <- tolower(gsub("([A-Z])","\\_\\1", x))
+  x <- tolower(gsub("([A-Z])", "\\_\\1", x))
   x <- gsub("_{2,}", "_", x)
   gsub("^_", "", x)
+}
+
+to_camel_case <- function(x) {
+  gsub("\\_(\\w?)", "\\U\\1", x, perl = TRUE)
 }

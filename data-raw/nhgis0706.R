@@ -32,9 +32,11 @@
 
 files <- define_extract_nhgis(
   description = "Reproducing nhgis0024 example data",
-  datasets = "2010_SF1a",
-  data_tables = "P13",
-  geog_levels = "block",
+  datasets = ds_spec(
+    "2010_SF1a",
+    data_tables = "P13",
+    geog_levels = "block"
+  ),
   geographic_extents = c("090", "440"),
   shapefiles = c(
     "090_block_2010_tl2010",

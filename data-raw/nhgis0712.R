@@ -20,9 +20,10 @@
 
 files <- define_extract_nhgis(
   description = "New ipumsr example data: multiple datasets and shapefiles",
-  datasets = c("1990_SSTF09", "1990_SSTF10"),
-  data_tables = "NP001",
-  geog_levels = "pmsa",
+  datasets = list(
+    ds_spec("1990_SSTF09", "NP001", "pmsa"),
+    ds_spec("1990_SSTF10", "NP001", "pmsa")
+  ),
   shapefiles = c(
     "us_pmsa_1990_tl2000",
     "us_pmsa_2000_tl2000",

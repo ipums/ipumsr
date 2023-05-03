@@ -714,6 +714,14 @@ setdiff_null <- function(x, y) {
   v
 }
 
+empty_to_null <- function(x) {
+  if (is_empty(x)) {
+    NULL
+  } else {
+    x
+  }
+}
+
 release_questions <- function() {
   paste0(
     "Have you scrubbed the package for remaining references to ipumsexamples?",

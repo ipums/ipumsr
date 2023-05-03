@@ -20,6 +20,7 @@ Currently, ipumsr supports extract definitions for the following collections:
 \itemize{
 \item IPUMS USA
 \item IPUMS CPS
+\item IPUMS International
 \item IPUMS NHGIS
 }
 

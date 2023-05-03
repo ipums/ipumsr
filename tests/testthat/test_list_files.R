@@ -52,4 +52,3 @@ test_that("Listing files from nhgis shape zip works", {
     expect_equal(nrow(raster_files), 0)
   })
 })
-

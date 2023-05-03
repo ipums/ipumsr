@@ -19,8 +19,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 10 Apr 2023 15:01:08 GMT
-      etag: W/"1bb7b974c438a73af24c24bc6edc5799"
+      date: Thu, 20 Apr 2023 19:52:20 GMT
+      etag: W/"56feb4db2ccf8a7ea20b8b18309f6e20"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -31,14 +31,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 01768c10-227a-4aa7-b7cc-4754f0f0d043
-      x-runtime: '0.400875'
+      x-request-id: 326ca11b-f62c-40bd-bbe4-6763ae08a8f1
+      x-runtime: '1.211529'
       x-xss-protection: '0'
       content-length: '674'
     body:
       encoding: ''
       file: no
-      string: '{"number":1172,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
+      string: '{"number":1194,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
         for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["110","420"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-04-10 15:01:08 GMT
+  recorded_at: 2023-04-20 19:52:20 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

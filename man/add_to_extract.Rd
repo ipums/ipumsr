@@ -12,7 +12,8 @@ add_to_extract(extract, ...)
 \item{...}{Additional arguments specifying the extract fields and values to
 add to the extract definition.
 
-All arguments available in a collection's \link{define_extract} function can be
+All arguments available in a collection's
+\code{\link[=define_extract]{define_extract_*()}} function can be
 passed to \code{add_to_extract()}.}
 }
 \value{
@@ -24,10 +25,13 @@ Add or replace values in an existing \code{ipums_extract} object.
 This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To add to an \strong{IPUMS USA} extract definition, click
-\link[=add_to_extract.usa_extract]{here}
-\item To add to an \strong{IPUMS CPS} extract definition, click
-\link[=add_to_extract.cps_extract]{here}
+\item To add to an \strong{IPUMS Microdata} extract definition, click
+\link[=add_to_extract.micro_extract]{here}. This includes:
+\itemize{
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS International
+}
 \item To add to an \strong{IPUMS NHGIS} extract definition, click
 \link[=add_to_extract.nhgis_extract]{here}
 }
@@ -36,7 +40,7 @@ In general, for a given collection, the arguments to \code{add_to_extract()}
 are identical to those used when defining an extract for that collection. For
 more information about defining an extract, click \link[=define_extract]{here}.
 
-To remove existing values from an extract definition,use
+To remove existing values from an extract definition, use
 \code{\link[=remove_from_extract]{remove_from_extract()}}. To add values
 contained in another extract definition, use \code{\link[=combine_extracts]{combine_extracts()}}.
 
@@ -49,25 +53,42 @@ usa_extract <- define_extract_usa(
   variables = c("SEX", "AGE", "YEAR")
 )
 
-add_to_extract(usa_extract, samples = "us2014a")
-add_to_extract(usa_extract, variables = c("MARST", "INCTOT"))
-
 nhgis_extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2"),
-  geog_levels = "county"
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2"),
+    geog_levels = "county"
+  )
 )
 
-# Add a new dataset/time series table
+# Add new samples and variables
+add_to_extract(
+  usa_extract,
+  samples = c("us2014a", "us2015a"),
+  variables = var_spec("MARST", data_quality_flags = TRUE)
+)
+
+# Update existing variables
+add_to_extract(
+  usa_extract,
+  variables = var_spec("SEX", case_selections = "1")
+)
+
+# Add a new dataset or time series table
 add_to_extract(
   nhgis_extract,
-  datasets = "1980_STF1",
-  data_tables = "NT1A",
-  geog_levels = c("county", "state")
+  datasets = ds_spec(
+    "1980_STF1",
+    data_tables = "NT1A",
+    geog_levels = c("county", "state")
+  )
 )
 
-# Add to existing datasets/time series tables
-add_to_extract(nhgis_extract, geog_levels = "state")
+# Update existing datasets/time series tables
+add_to_extract(
+  nhgis_extract,
+  datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "state")
+)
 
 # Values that can only take a single value are replaced
 add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
@@ -80,6 +101,6 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract request from
+scratch.
 }

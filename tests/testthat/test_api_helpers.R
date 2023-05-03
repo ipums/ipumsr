@@ -1,19 +1,41 @@
 # Print extract ------------------------
 
-test_that("Microdata print methods work", {
-  usa_extract <- test_usa_extract()
-  cps_extract <- test_cps_extract()
-
-  expect_output(print(usa_extract), "Unsubmitted IPUMS USA extract")
-  expect_output(print(cps_extract), "Unsubmitted IPUMS CPS extract")
+test_that("Can print microdata extracts", {
+  expect_output(
+    print(test_usa_extract()),
+    paste0(
+      "Unsubmitted IPUMS USA extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
+  expect_output(
+    print(test_cps_extract()),
+    paste0(
+      "Unsubmitted IPUMS CPS extract.+",
+      "Description: Compare.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
+  expect_output(
+    print(test_ipumsi_extract()),
+    paste0(
+      "Unsubmitted IPUMS International extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+"
+    )
+  )
 })
 
-test_that("NHGIS print method works", {
-  nhgis_extract <- test_nhgis_extract()
-  nhgis_extract_shp <- test_nhgis_extract_shp()
-
+test_that("Can print NHGIS extracts", {
   expect_output(
-    print(nhgis_extract),
+    print(test_nhgis_extract()),
     paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: Extract for R client testing",
@@ -36,33 +58,12 @@ test_that("NHGIS print method works", {
     )
   )
   expect_output(
-    print(nhgis_extract_shp),
+    print(test_nhgis_extract_shp()),
     paste0(
       "Unsubmitted IPUMS NHGIS extract ",
       "\nDescription: ",
       "\n",
       "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
-  )
-  expect_output(
-    print(
-      define_extract_nhgis(
-        datasets = "DS",
-        data_tables = "DT",
-        geog_levels = "DG",
-        years = "Y1",
-        breakdown_values = "B1"
-      )
-    ),
-    paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: ",
-      "\n",
-      "\nDataset: DS",
-      "\n  Tables: DT",
-      "\n  Geog Levels: DG",
-      "\n  Years: Y1",
-      "\n  Breakdowns: B1"
     )
   )
 })
@@ -281,9 +282,13 @@ test_that("Can parse API request error details in basic requests", {
         body = extract_to_request_json(
           new_ipums_extract(
             "nhgis",
-            datasets = "foo",
-            data_tables = "bar",
-            geog_levels = "baz"
+            datasets = list(
+              ds_spec(
+                "foo",
+                data_tables = "bar",
+                geog_levels = "baz"
+              )
+            )
           )
         ),
         api_key = Sys.getenv("IPUMS_API_KEY")
@@ -405,18 +410,47 @@ test_that("We catch invalid collection specifications during requests", {
   })
 })
 
+test_that("We warn users about unsupported features detected in an extract", {
+  vcr::use_cassette("submitted-cps-extract", {
+    cps_extract <- submit_extract(test_cps_extract())
+  })
+
+  # Make request with version 1, as features included in our test CPS
+  # extract are not supported under version 1
+  vcr::use_cassette("api-warnings-unsupported", {
+    withr::with_envvar(c("IPUMS_API_VERSION" = "v1"), {
+      response <- ipums_api_extracts_request(
+        "GET",
+        collection = "cps",
+        url = api_request_url(
+          collection = "cps",
+          path = extract_request_path(cps_extract$number)
+        )
+      )
+    })
+  })
+
+  # Set `validate = FALSE` as this is a version 1 response, which
+  # cannot be converted to a valid ipums_extract object. However,
+  # we should still be able to provide warnings.
+  expect_warning(
+    extract_list_from_json(response, validate = FALSE)[[1]],
+    paste0(
+      "Extract number ", cps_extract$number,
+      " contains unsupported features.+",
+      "data quality flags is unsupported.+",
+      "case selection is unsupported.+",
+      "Attaching characteristics is unsupported"
+    )
+  )
+})
+
 # Misc ------------------------------------------
 
 test_that("We can get correct API version info for each collection", {
-  has_support <- dplyr::filter(
-    ipums_data_collections(),
-    .data$api_support
-  )
+  has_support <- dplyr::filter(ipums_data_collections(), .data$api_support)
 
-  expect_equal(
-    has_support$code_for_api,
-    c("usa", "cps", "nhgis")
-  )
+  expect_equal(has_support$code_for_api, c("usa", "cps", "ipumsi", "nhgis"))
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(

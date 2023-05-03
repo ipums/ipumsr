@@ -37,15 +37,18 @@ To modify values in a single extract definition, see
 }
 \examples{
 ext1 <- define_extract_nhgis(
-  datasets = "2011_2015_ACS5a",
-  data_tables = "B00001",
-  geog_levels = "county"
+  datasets = ds_spec(
+    "2011_2015_ACS5a",
+    data_tables = "B00001",
+    geog_levels = "county"
+  )
 )
 
 ext2 <- define_extract_nhgis(
-  datasets = c("2011_2015_ACS5a", "2012_2016_ACS5a"),
-  data_tables = c("B00002", "B01001"),
-  geog_levels = "county"
+  datasets = list(
+    ds_spec("2011_2015_ACS5a", c("B00002", "B01001"), "county"),
+    ds_spec("2012_2016_ACS5a", c("B00002", "B01001"), "county")
+  )
 )
 
 combine_extracts(ext1, ext2)
@@ -57,6 +60,6 @@ definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
+from scratch.
 }

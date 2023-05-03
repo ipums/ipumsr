@@ -30,7 +30,7 @@ extracts represented in \code{extract_tbl}.
 
 For \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}}, a \code{\link[tibble:tbl_df-class]{tibble}}
 representing the specifications for each of the extract requests
-represented in \code{extract_list}. Each column corresponds to an extract field.
+represented in \code{extract_list}.
 }
 \description{
 Convert a \code{\link[tibble:tbl_df-class]{tibble}} of extract definition

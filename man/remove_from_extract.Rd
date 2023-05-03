@@ -10,10 +10,7 @@ remove_from_extract(extract, ...)
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{...}{Additional arguments specifying the extract fields and values to
-remove from the extract definition.
-
-All arguments available in a collection's \link{define_extract} function can be
-passed to \code{add_to_extract()}.}
+remove from the extract definition.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
@@ -24,18 +21,16 @@ Remove values for specific fields in an existing \code{ipums_extract}
 object. This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To remove from an \strong{IPUMS USA} extract definition, click
-\link[=remove_from_extract.usa_extract]{here}
-\item To remove from an \strong{IPUMS CPS} extract definition, click
-\link[=remove_from_extract.cps_extract]{here}
+\item To remove from an \strong{IPUMS Microdata} extract definition, click
+\link[=remove_from_extract.micro_extract]{here}. This includes:
+\itemize{
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS International
+}
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
 }
-
-In general, for a given collection, the arguments to
-\code{remove_from_extract()} are identical to those used when defining an
-extract for that collection. For more about defining an extract, click
-\link[=define_extract]{here}.
 
 To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract()}}.
 
@@ -55,17 +50,16 @@ remove_from_extract(
 )
 
 nhgis_extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  time_series_tables = "A00",
-  geog_levels = "county"
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "county"
+  ),
+  time_series_tables = tst_spec("A00", geog_levels = "county")
 )
 
-# Remove a table from existing datasets:
-remove_from_extract(nhgis_extract, data_tables = "NP3")
-
-# Remove an entire dataset/time series table
-remove_from_extract(nhgis_extract, time_series_tables = "A00")
+# Remove an existing dataset
+remove_from_extract(nhgis_extract, datasets = "1990_STF1")
 }
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} or \code{\link[=combine_extracts]{combine_extracts()}} to add values to an extract
@@ -74,6 +68,6 @@ definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
+from scratch.
 }

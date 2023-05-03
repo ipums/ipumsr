@@ -22,7 +22,7 @@ on.exit(
 
 # Check extract status -----------------
 
-test_that("Can check USA extract status", {
+test_that("Can check microdata extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
@@ -62,49 +62,6 @@ test_that("Can check USA extract status", {
   })
   vcr::use_cassette("get-usa-extract-info", {
     is_ready_id2 <- is_extract_ready(paste0("usa:", extract_number))
-  })
-
-  expect_true(is_ready && is_ready_id1 && is_ready_id2)
-})
-
-test_that("Can check CPS extract status", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(test_cps_extract())
-  })
-
-  extract_number <- submitted_cps_extract$number
-
-  vcr::use_cassette("ready-cps-extract", {
-    wait_for_extract(submitted_cps_extract)
-  })
-
-  vcr::use_cassette("get-cps-extract-info", {
-    extract <- get_extract_info(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id1 <- get_extract_info(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id2 <- get_extract_info(paste0("cps:", extract_number))
-  })
-
-  expect_s3_class(extract, "cps_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
-
-  expect_identical(extract, extract_id1)
-  expect_identical(extract, extract_id2)
-
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready <- is_extract_ready(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id1 <- is_extract_ready(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id2 <- is_extract_ready(paste0("cps:", extract_number))
   })
 
   expect_true(is_ready && is_ready_id1 && is_ready_id2)
@@ -157,9 +114,7 @@ test_that("Cannot check status for an extract with no number", {
   expect_error(
     get_extract_info(
       define_extract_nhgis(
-        datasets = "a",
-        data_tables = "B",
-        geog_levels = "C"
+        datasets = ds_spec("a", "B", "C")
       )
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number"
@@ -389,38 +344,72 @@ test_that("Can get extract history for more records than page size", {
   )
 })
 
-test_that("Tibble of recent USA extracts has expected structure", {
+test_that("Tibble of recent micro extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
+
+  usa_extract <- test_usa_extract()
+
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(usa_extract)
+  })
+
+  submitted_number <- submitted_usa_extract$number
+
+  vcr::use_cassette("ready-usa-extract", {
+    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+  })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
     recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
   })
-
-  expected_columns <- c(
-    "collection", "description", "data_structure",
-    "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
-  )
-
-  expect_equal(nrow(recent_usa_extracts_tbl), 10)
-  expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
-})
-
-test_that("Tibble of recent CPS extracts has expected structure", {
-  skip_if_no_api_access(have_api_access)
-
   vcr::use_cassette("recent-cps-extracts-tbl", {
     recent_cps_extracts_tbl <- get_extract_history("cps", as_table = TRUE)
   })
 
+  recent_numbers <- recent_usa_extracts_tbl$number
+
+  single_usa_extract_tbl <- recent_usa_extracts_tbl[
+    recent_numbers == submitted_number,
+  ]
+
   expected_columns <- c(
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
+    "case_selections", "case_selection_type", "attached_characteristics",
+    "data_quality_flags", "preselected", "submitted", "download_links", "number", "status"
   )
 
+  expect_equal(nrow(recent_usa_extracts_tbl), 10)
   expect_equal(nrow(recent_cps_extracts_tbl), 10)
+
+  expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
   expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
+
+  expect_equal(single_usa_extract_tbl$number, ready_usa_extract$number)
+  expect_equal(
+    single_usa_extract_tbl$variables[[1]],
+    names(ready_usa_extract$variables)
+  )
+  expect_equal(
+    single_usa_extract_tbl$samples[[1]],
+    names(ready_usa_extract$samples)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selections[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selections)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selection_type[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selection_type)
+  )
+  expect_equal(
+    single_usa_extract_tbl$attached_characteristics[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$attached_characteristics)
+  )
+  expect_equal(
+    single_usa_extract_tbl$data_quality_flags[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$data_quality_flags)
+  )
 })
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {
@@ -451,52 +440,50 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     "submitted", "download_links", "status"
   )
 
-  recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
+  recent_nhgis_extract_submitted_ds <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
             recent_nhgis_extracts_tbl$data_type == "datasets"),
   ]
 
-  row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)
+  recent_nhgis_extract_submitted_tst <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+      recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
+  ]
 
-  row_level_nhgis_tbl_submitted <- row_level_nhgis_tbl[
-    which(row_level_nhgis_tbl$number == submitted_number),
+  recent_nhgis_extract_submitted_shp <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+      recent_nhgis_extracts_tbl$data_type == "shapefiles"),
   ]
 
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
   expect_equal(length(unique(recent_numbers)), 10)
-  expect_equal(nrow(row_level_nhgis_tbl), 10)
 
   expect_equal(
-    recent_nhgis_extract_submitted$name,
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$name,
+    names(ready_nhgis_extract$datasets)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$datasets[[1]],
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$data_tables,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$data_tables))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$data_tables[[1]],
-    ready_nhgis_extract$data_tables
+    recent_nhgis_extract_submitted_ds$geog_levels,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$geog_levels))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$geog_levels[[1]],
-    ready_nhgis_extract$geog_levels
-  )
-  # When NULL, values are not recycled in the tbl format:
-  expect_equal(
-    row_level_nhgis_tbl_submitted$years[[1]],
-    ready_nhgis_extract$years
+    recent_nhgis_extract_submitted_ds$years,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$years))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$breakdown_values[[1]],
-    ready_nhgis_extract$breakdown_values
+    recent_nhgis_extract_submitted_ds$breakdown_values,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$breakdown_values))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$time_series_tables[[1]],
-    ready_nhgis_extract$time_series_tables
+    recent_nhgis_extract_submitted_tst$name,
+    names(ready_nhgis_extract$time_series_tables)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$shapefiles[[1]],
+    recent_nhgis_extract_submitted_shp$name,
     ready_nhgis_extract$shapefiles
   )
 })
@@ -523,7 +510,6 @@ test_that("Can get specific number of recent extracts in tibble format", {
   # NHGIS does not adhere to 1-row per extract, but only 2 should be
   # represented
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
-  expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
 })
 
 test_that("Error on invalid number of records", {
@@ -588,9 +574,9 @@ test_that("NHGIS tbl/list conversion works", {
   # `test_nhgis_extract()` does not include case where multiple DS with
   # different subfields. Including here for a test of this scenario:
   x <- define_extract_nhgis(
-    datasets = c("D1", "D2"),
-    data_tables = list("A", "B"),
-    geog_levels = "C"
+    datasets = list(
+      ds_spec("D1", "A", "C"), ds_spec("D2", "B", "C")
+    )
   )
 
   expect_identical(

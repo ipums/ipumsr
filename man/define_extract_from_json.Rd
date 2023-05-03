@@ -51,8 +51,7 @@ identical(my_extract, copy_of_my_extract)
 file.remove(extract_json_path)
 }
 \seealso{
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to define an extract request to save.
+\code{\link[=define_extract]{define_extract_*()}} to define an extract request to save.
 
 \code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
 revise an extract definition.

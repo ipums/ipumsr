@@ -601,7 +601,7 @@ read_nhgis_codebook <- function(cb_file,
     if (any(fostr_detect(cb, "^Time series layout:"))) {
       table_vars <- purrr::map_dfr(
         table_sections,
-        ~ read_nhgis_tst_tables(dd, .x)
+        ~ read_tst_spec_tables(dd, .x)
       )
     } else {
       table_vars <- purrr::map2_dfr(
@@ -624,7 +624,7 @@ read_nhgis_codebook <- function(cb_file,
     if (any(fostr_detect(cb, "^Time series layout:"))) {
       table_vars <- purrr::map_dfr(
         table_sections,
-        ~ read_nhgis_tst_tables(dd, .x)
+        ~ read_tst_spec_tables(dd, .x)
       )
     } else {
       table_vars <- purrr::map_dfr(
@@ -703,7 +703,7 @@ parse_breakdown <- function(bkdown_lines) {
 #' @return tibble of variable information
 #'
 #' @noRd
-read_nhgis_tst_tables <- function(dd, table_rows) {
+read_tst_spec_tables <- function(dd, table_rows) {
   table_name_and_code <- fostr_named_capture(
     dd[table_rows[1]],
     paste0(
