@@ -358,15 +358,6 @@ load_sf_namespace <- function() {
   }
 }
 
-load_rgdal_namespace <- function() {
-  if (!requireNamespace("rgdal", quietly = TRUE)) {
-    rlang::abort(c(
-      "The `rgdal` package is required to read IPUMS boundary files.",
-      "i" = "Install it with `install.packages(\"rgdal\")`"
-    ))
-  }
-}
-
 file_is_zip <- function(file) {
   ipums_file_ext(file) == ".zip"
 }

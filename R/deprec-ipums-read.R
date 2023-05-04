@@ -810,3 +810,12 @@ make_ddi_from_scratch <- function(file_name = NULL,
     file_encoding = file_encoding
   )
 }
+
+load_rgdal_namespace <- function() {
+  if (!requireNamespace("rgdal", quietly = TRUE)) {
+    rlang::abort(c(
+      "The `rgdal` package is required to read IPUMS boundary files.",
+      "i" = "Install it with `install.packages(\"rgdal\")`"
+    ))
+  }
+}
