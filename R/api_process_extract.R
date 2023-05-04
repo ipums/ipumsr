@@ -670,7 +670,7 @@ ipums_extract_specific_download.micro_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
                                                           api_key) {
-  ddi_url <- extract$download_links$ddiCodebook$url
+  ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
 
   ddi_file_path <- normalizePath(
@@ -703,8 +703,8 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
                                                           api_key) {
-  table_url <- extract$download_links$tableData$url
-  gis_url <- extract$download_links$gisData$url
+  table_url <- extract$download_links$table_data$url
+  gis_url <- extract$download_links$gis_data$url
 
   urls <- purrr::compact(
     list(
@@ -779,21 +779,22 @@ extract_is_completed_and_has_links <- function(extract) {
 
 #' @export
 extract_is_completed_and_has_links.micro_extract <- function(extract) {
-  status <- extract$status
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
+  has_codebook <- has_url(download_links, "ddi_codebook")
+  has_data <-  has_url(download_links, "data")
 
-  status == "completed" && has_url(download_links, "ddiCodebook") &&
-    has_url(download_links, "data")
+  is_complete && has_codebook && has_data
 }
 
 #' @export
 extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
-  status <- extract$status
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  status == "completed" && length(download_links) > 0
+  has_table_data <- has_url(download_links, "table_data")
+  has_gis_data <- has_url(download_links, "gis_data")
+
+  is_complete && (has_table_data || has_gis_data)
 }

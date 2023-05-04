@@ -277,6 +277,16 @@ test_that("Can download microdata extract with extract object", {
     ready_usa_extract <- wait_for_extract(submitted_usa_extract)
   })
 
+  expect_equal(
+    names(ready_usa_extract$download_links),
+    c("r_command_file", "basic_codebook", "data", "stata_command_file",
+      "sas_command_file", "spss_command_file", "ddi_codebook")
+  )
+  expect_equal(
+    names(ready_usa_extract$download_links$data),
+    c("url", "bytes", "sha256")
+  )
+
   expect_message(
     vcr::use_cassette("download-usa-extract", {
       ddi_file_path <- download_extract(
@@ -317,6 +327,15 @@ test_that("Can download NHGIS extract with extract object", {
   vcr::use_cassette("ready-nhgis-extract", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
+
+  expect_equal(
+    names(ready_nhgis_extract$download_links),
+    c("codebook_preview", "table_data", "gis_data")
+  )
+  expect_equal(
+    names(ready_nhgis_extract$download_links$table_data),
+    c("url", "bytes", "sha256")
+  )
 
   expect_message(
     vcr::use_cassette("download-nhgis-extract", {

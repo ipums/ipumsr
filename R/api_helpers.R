@@ -1304,3 +1304,8 @@ to_snake_case <- function(x) {
 to_camel_case <- function(x) {
   gsub("\\_(\\w?)", "\\U\\1", x, perl = TRUE)
 }
+
+# Helper to check whether a given URL exists in an extract's download links
+has_url <- function(links, name) {
+  is.list(links[[name]]) && is.character(links[[name]][["url"]])
+}

@@ -2801,6 +2801,10 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         )
       }
 
+      if (!is_empty(x$downloadLinks)) {
+        names(x$downloadLinks) <- to_snake_case(names(x$downloadLinks))
+      }
+
       out <- new_ipums_extract(
         collection = def$collection,
         description = def$description,
@@ -2863,6 +2867,10 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
           preselected = def$variables[[.x]]$preselected
         )
       )
+
+      if (!is_empty(x$downloadLinks)) {
+        names(x$downloadLinks) <- to_snake_case(names(x$downloadLinks))
+      }
 
       out <- new_ipums_extract(
         collection = def$collection,
