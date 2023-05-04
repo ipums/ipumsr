@@ -1104,6 +1104,7 @@ ipums_api_extracts_request <- function(verb,
 ipums_api_download_request <- function(url,
                                        file_path,
                                        overwrite,
+                                       progress = TRUE,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
   if (file.exists(file_path) && !overwrite) {
     rlang::abort(
@@ -1114,13 +1115,19 @@ ipums_api_download_request <- function(url,
     )
   }
 
+  if (progress) {
+    progress <- httr::progress()
+  } else {
+    progress <- NULL
+  }
+
   ipums_api_request(
     "GET",
     url = url,
     body = FALSE,
     api_key = api_key,
     httr::write_disk(file_path, overwrite = TRUE),
-    httr::progress()
+    progress
   )
 
   file_path

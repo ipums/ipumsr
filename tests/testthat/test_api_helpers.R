@@ -380,7 +380,8 @@ test_that("We inform user about expired extract for invalid download request", {
     ipums_api_download_request(
       url = "https://api.ipums.org/downloads/nhgis/api/v1/extracts/foo.zip",
       file_path =  file,
-      overwrite = TRUE
+      overwrite = TRUE,
+      progress = FALSE
     ),
     "API request failed.+The extract may have expired"
   )
