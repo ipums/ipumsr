@@ -565,8 +565,15 @@ extract_to_request_json.micro_extract <- function(extract) {
     dataFormat = extract$data_format,
     samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
     variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
+    caseSelectWho = extract$case_select_who,
+    dataQualityFlags = extract$data_quality_flags,
     collection = extract$collection,
     version = ipums_api_version()
+  )
+
+  request_list <- purrr::keep(
+    request_list,
+    ~ !(any(is.na(.x)) || is_empty(.x))
   )
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)

@@ -376,7 +376,8 @@ test_that("Tibble of recent micro extracts has expected structure", {
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
     "case_selections", "case_selection_type", "attached_characteristics",
-    "data_quality_flags", "preselected", "submitted", "download_links", "number", "status"
+    "var_data_quality_flags", "preselected", "data_quality_flags",
+    "case_select_who", "submitted", "download_links", "number", "status"
   )
 
   expect_equal(nrow(recent_usa_extracts_tbl), 10)
@@ -407,7 +408,7 @@ test_that("Tibble of recent micro extracts has expected structure", {
     purrr::map(ready_usa_extract$variables, ~ .x$attached_characteristics)
   )
   expect_equal(
-    single_usa_extract_tbl$data_quality_flags[[1]],
+    single_usa_extract_tbl$var_data_quality_flags[[1]],
     purrr::map(ready_usa_extract$variables, ~ .x$data_quality_flags)
   )
 })

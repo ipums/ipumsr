@@ -154,6 +154,23 @@ NULL
 #'
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
+#' @param case_select_who Indication of how to interpret any case selections
+#'   included for variables in the extract.
+#'
+#'   `"individuals"` includes records for all individuals who match the
+#'   specified case selections.
+#'
+#'   `"households"` includes records for all members of each household that
+#'    contains an individual who matches the specified case selections.
+#'
+#'   Defaults to `"individuals"`. Use [var_spec()] to add case selections for
+#'   specific variables.
+#' @param data_quality_flags Set to `TRUE` to include data quality
+#'   flags for all applicable variables in the extract definition. This will
+#'   override the `data_quality_flags` specification for individual variables
+#'   in the definition.
+#'
+#'   Use [var_spec()] to add data quality flags for specific variables.
 #'
 #' @return An object of class [`micro_extract`][ipums_extract-class] containing
 #'   the extract definition.
@@ -242,7 +259,9 @@ define_extract_usa <- function(description,
                                variables,
                                data_format = "fixed_width",
                                data_structure = "rectangular",
-                               rectangular_on = NULL) {
+                               rectangular_on = NULL,
+                               case_select_who = "individuals",
+                               data_quality_flags = NULL) {
   define_extract_micro(
     collection = "usa",
     description = description,
@@ -250,7 +269,9 @@ define_extract_usa <- function(description,
     variables = variables,
     data_format = data_format,
     data_structure = data_structure,
-    rectangular_on = rectangular_on
+    rectangular_on = rectangular_on,
+    case_select_who = case_select_who,
+    data_quality_flags = data_quality_flags
   )
 }
 
@@ -261,7 +282,9 @@ define_extract_cps <- function(description,
                                variables,
                                data_format = "fixed_width",
                                data_structure = "rectangular",
-                               rectangular_on = NULL) {
+                               rectangular_on = NULL,
+                               case_select_who = "individuals",
+                               data_quality_flags = NULL) {
   define_extract_micro(
     collection = "cps",
     description = description,
@@ -269,7 +292,9 @@ define_extract_cps <- function(description,
     variables = variables,
     data_format = data_format,
     data_structure = data_structure,
-    rectangular_on = rectangular_on
+    rectangular_on = rectangular_on,
+    case_select_who = case_select_who,
+    data_quality_flags = data_quality_flags
   )
 }
 
@@ -280,7 +305,9 @@ define_extract_ipumsi <- function(description,
                                   variables,
                                   data_format = "fixed_width",
                                   data_structure = "rectangular",
-                                  rectangular_on = NULL) {
+                                  rectangular_on = NULL,
+                                  case_select_who = "individuals",
+                                  data_quality_flags = NULL) {
   define_extract_micro(
     collection = "ipumsi",
     description = description,
@@ -288,7 +315,9 @@ define_extract_ipumsi <- function(description,
     variables = variables,
     data_format = data_format,
     data_structure = data_structure,
-    rectangular_on = rectangular_on
+    rectangular_on = rectangular_on,
+    case_select_who = case_select_who,
+    data_quality_flags = data_quality_flags
   )
 }
 
@@ -1241,6 +1270,8 @@ add_to_extract.micro_extract <- function(extract,
                                          data_format = NULL,
                                          data_structure = NULL,
                                          rectangular_on = NULL,
+                                         case_select_who = NULL,
+                                         data_quality_flags = NULL,
                                          ...) {
   dots <- rlang::list2(...)
 
@@ -1362,9 +1393,11 @@ add_to_extract.micro_extract <- function(extract,
     description = description %||% extract$description,
     samples = set_nested_names(samples),
     variables = set_nested_names(variables),
+    data_format = data_format %||% extract$data_format,
     data_structure = data_structure %||% extract$data_structure,
     rectangular_on = rectangular_on,
-    data_format = data_format %||% extract$data_format
+    case_select_who = case_select_who %||% extract$case_select_who,
+    data_quality_flags = data_quality_flags %||% extract$data_quality_flags
   )
 
   extract <- validate_ipums_extract(extract)
@@ -1637,9 +1670,11 @@ remove_from_extract.nhgis_extract <- function(extract,
 #'
 #' @inheritParams define_extract_micro
 #' @inheritParams remove_from_extract
-#' @param samples Character vector of sample names to remove from the extract.
-#' @param variables Names of the variables to remove from the extract. All
-#'   variable-specific fields for the indicated variables will also be removed.
+#' @param samples Character vector of sample names to remove from the extract
+#'   definition.
+#' @param variables Names of the variables to remove from the extract
+#'   definition. All variable-specific fields for the indicated variables
+#'   will also be removed.
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1730,9 +1765,11 @@ remove_from_extract.micro_extract <- function(extract,
     description = extract$description,
     samples = samples,
     variables = variables,
+    data_format = extract$data_format,
     data_structure = extract$data_structure,
     rectangular_on = extract$rectangular_on,
-    data_format = extract$data_format
+    case_select_who = extract$case_select_who,
+    data_quality_flags = extract$data_quality_flags
   )
 
   extract <- validate_ipums_extract(extract)
@@ -1926,7 +1963,9 @@ define_extract_micro <- function(collection,
                                  variables,
                                  data_format = "fixed_width",
                                  data_structure = "rectangular",
-                                 rectangular_on = NULL) {
+                                 rectangular_on = NULL,
+                                 case_select_who = "individuals",
+                                 data_quality_flags = NULL) {
   if (data_structure == "rectangular") {
     rectangular_on <- rectangular_on %||% "P"
   }
@@ -1956,9 +1995,11 @@ define_extract_micro <- function(collection,
     description = description,
     samples = set_nested_names(samples),
     variables = set_nested_names(variables),
+    data_format = data_format,
     data_structure = data_structure,
     rectangular_on = rectangular_on,
-    data_format = data_format
+    case_select_who = case_select_who,
+    data_quality_flags = data_quality_flags
   )
 
   extract <- validate_ipums_extract(extract)
@@ -2263,6 +2304,17 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
       choices = c("fixed_width", "csv", "stata", "spss", "sas9"),
       length = 1,
       type = "character"
+    ),
+    list(
+      field = "case_select_who",
+      choices = c("individuals", "households"),
+      length = 1,
+      type = "character"
+    ),
+    list(
+      field = "data_quality_flags",
+      length = 1,
+      type = "logical"
     )
   )
 
@@ -2964,9 +3016,11 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
         description = def$description,
         samples = set_nested_names(samples),
         variables = set_nested_names(variables),
+        data_format = def$dataFormat,
         data_structure = names(def$dataStructure),
         rectangular_on = def$dataStructure$rectangular$on,
-        data_format = def$dataFormat,
+        case_select_who = def$caseSelectWho,
+        data_quality_flags = def$dataQualityFlags,
         submitted = "number" %in% names(x),
         download_links = x$downloadLinks %||% EMPTY_NAMED_LIST,
         number = ifelse("number" %in% names(x), x$number, NA_integer_),

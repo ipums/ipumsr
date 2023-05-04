@@ -27,6 +27,8 @@ test_that("Can define a USA extract", {
 
   expect_equal(usa_extract$data_structure, "rectangular")
   expect_equal(usa_extract$rectangular_on, "P")
+  expect_equal(usa_extract$case_select_who, "households")
+  expect_null(usa_extract$data_quality_flags)
   expect_identical(usa_extract$download_links, EMPTY_NAMED_LIST)
   expect_false(usa_extract$submitted)
   expect_equal(usa_extract$number, NA_integer_)
@@ -50,7 +52,7 @@ test_that("Can define a CPS extract", {
         var_spec(
           "AGE",
           attached_characteristics = "head",
-          data_quality_flags = TRUE
+          data_quality_flags = FALSE
         ),
         var_spec(
           "SEX",
@@ -68,6 +70,8 @@ test_that("Can define a CPS extract", {
 
   expect_equal(cps_extract$data_structure, "hierarchical")
   expect_null(cps_extract$rectangular_on)
+  expect_equal(cps_extract$case_select_who, "individuals")
+  expect_equal(cps_extract$data_quality_flags, TRUE)
   expect_identical(cps_extract$download_links, EMPTY_NAMED_LIST)
   expect_false(cps_extract$submitted)
   expect_equal(cps_extract$number, NA_integer_)
@@ -102,6 +106,8 @@ test_that("Can define an IPUMSI extract", {
 
   expect_equal(ipumsi_extract$data_structure, "rectangular")
   expect_equal(ipumsi_extract$rectangular_on, "P")
+  expect_equal(ipumsi_extract$case_select_who, "individuals")
+  expect_null(ipumsi_extract$data_quality_flags)
   expect_identical(ipumsi_extract$download_links, EMPTY_NAMED_LIST)
   expect_false(ipumsi_extract$submitted)
   expect_equal(ipumsi_extract$number, NA_integer_)
@@ -266,12 +272,16 @@ test_that("Can validate core microdata extract fields", {
         samples = list(samp_spec("Test")),
         variables = list(var_spec("Test")),
         data_format = "Test",
-        data_structure = "Test"
+        data_structure = "Test",
+        case_select_who = "Test",
+        data_quality_flags = c(TRUE, FALSE)
       )
     ),
     paste0(
       "`data_structure` must be one of.+",
-      "`data_format` must be one of "
+      "`data_format` must be one of.+",
+      "`case_select_who` must be one of.+",
+      "`data_quality_flags` must be length"
     )
   )
   expect_error(
@@ -542,7 +552,9 @@ test_that("Can add full fields to a microdata extract", {
       var_spec("SEX", data_quality_flags = TRUE),
       var_spec("RELATE", case_selections = c("1", "2"))
     ),
-    data_structure = "rectangular"
+    data_structure = "rectangular",
+    case_select_who = "households",
+    data_quality_flags = FALSE
   )
 
   expect_equal(
@@ -563,6 +575,8 @@ test_that("Can add full fields to a microdata extract", {
   )
   expect_equal(revised_extract$data_structure, "rectangular")
   expect_equal(revised_extract$rectangular_on, "P")
+  expect_equal(revised_extract$case_select_who, "households")
+  expect_false(revised_extract$data_quality_flags)
 })
 
 test_that("Can add full fields to an NHGIS extract", {
@@ -767,26 +781,6 @@ test_that("Unused revisions do not alter unsubmitted extracts", {
     suppressWarnings(add_to_extract(nhgis_extract, vars = "var")),
     nhgis_extract
   )
-})
-
-test_that("Revisions update status of submitted extract", {
-  vcr::use_cassette("recent-usa-extracts-list", {
-    usa_extracts <- get_extract_history("usa")
-  })
-
-  last_extract <- usa_extracts[[1]]
-
-  revised <- add_to_extract(last_extract)
-
-  expect_false(last_extract$status == revised$status)
-  expect_equal(revised$status, "unsubmitted")
-  expect_true(is.na(revised$number))
-  expect_false(revised$submitted)
-  expect_true(is_empty(revised$download_links))
-
-  # Should still leave specifications untouched
-  expect_identical(last_extract$samples, revised$samples)
-  expect_identical(last_extract$variables, revised$variables)
 })
 
 test_that("Improper extract revisions throw warnings or errors", {

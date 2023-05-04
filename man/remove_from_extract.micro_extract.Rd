@@ -10,10 +10,12 @@ project}
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
-\item{samples}{Character vector of sample names to remove from the extract.}
+\item{samples}{Character vector of sample names to remove from the extract
+definition.}
 
-\item{variables}{Names of the variables to remove from the extract. All
-variable-specific fields for the indicated variables will also be removed.}
+\item{variables}{Names of the variables to remove from the extract
+definition. All variable-specific fields for the indicated variables
+will also be removed.}
 
 \item{...}{Ignored}
 }

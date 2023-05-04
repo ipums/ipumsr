@@ -60,6 +60,15 @@ test_that("Can submit a USA extract", {
 
   expect_identical(submitted_usa_extract$samples, usa_extract$samples)
 
+  expect_equal(
+    submitted_usa_extract$case_select_who,
+    usa_extract$case_select_who
+  )
+  expect_equal(
+    submitted_usa_extract$data_quality_flags,
+    usa_extract$data_quality_flags
+  )
+
   usa_vars <- names(usa_extract$variables)
 
   # Extra preselected vars will be returned as well
@@ -110,6 +119,15 @@ test_that("Can submit a CPS extract", {
   expect_identical(submitted_cps_extract$download_links, EMPTY_NAMED_LIST)
 
   expect_identical(submitted_cps_extract$samples, cps_extract$samples)
+
+  expect_equal(
+    submitted_cps_extract$case_select_who,
+    cps_extract$case_select_who
+  )
+  expect_equal(
+    submitted_cps_extract$data_quality_flags,
+    cps_extract$data_quality_flags
+  )
 
   cps_vars <- names(cps_extract$variables)
 
@@ -218,6 +236,27 @@ test_that("Can resubmit an extract", {
   )
 })
 
+test_that("Revisions update status of submitted extract", {
+  vcr::use_cassette("recent-usa-extracts-list", {
+    usa_extracts <- get_extract_history("usa")
+  })
+
+  last_extract <- usa_extracts[[1]]
+
+  revised <- add_to_extract(last_extract)
+
+  expect_false(last_extract$status == revised$status)
+  expect_equal(revised$status, "unsubmitted")
+  expect_true(is.na(revised$number))
+  expect_false(revised$submitted)
+  expect_true(is_empty(revised$download_links))
+
+  # Should still leave specifications untouched
+  expect_identical(last_extract$samples, revised$samples)
+  expect_identical(last_extract$variables, revised$variables)
+})
+
+
 # Download extract ---------------------
 
 test_that("Can download microdata extract with extract object", {
@@ -258,7 +297,7 @@ test_that("Can download microdata extract with extract object", {
   expect_true(file.exists(ddi_file_path))
 
   data <- read_ipums_micro(ddi_file_path, verbose = FALSE)
-  expect_equal(dim(data), c(787, 10))
+  expect_equal(dim(data), c(910, 10))
 })
 
 test_that("Can download NHGIS extract with extract object", {
@@ -370,7 +409,7 @@ test_that("Can download extract with extract id", {
   expect_true(file.exists(ddi_file_path1))
 
   data <- read_ipums_micro(ddi_file_path1, verbose = FALSE)
-  expect_equal(dim(data), c(787, 10))
+  expect_equal(dim(data), c(910, 10))
 })
 
 # TODO: may want to update this fixture to use smaller data to test

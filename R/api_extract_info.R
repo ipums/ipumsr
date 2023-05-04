@@ -469,7 +469,7 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
                 name = .x,
                 case_selections = .data$case_selections[[.x]],
                 case_selection_type = .data$case_selection_type[[.x]],
-                data_quality_flags = .data$data_quality_flags[[.x]],
+                data_quality_flags = .data$var_data_quality_flags[[.x]],
                 attached_characteristics = .data$attached_characteristics[[.x]],
                 preselected = .data$preselected[[.x]]
               )
@@ -481,9 +481,9 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
     # Names of output columns to be used
     out_vars <- c(
       "collection", "number",
-      "description", "samples", "variables",
-      "data_structure", "rectangular_on", "data_format",
-      "submitted", "download_links", "status"
+      "description", "samples", "variables", "data_format",
+      "data_structure", "rectangular_on", "case_select_who",
+      "data_quality_flags", "submitted", "download_links", "status"
     )
   }
 
@@ -575,6 +575,8 @@ extract_to_tbl.micro_extract <- function(x) {
     data_structure = x$data_structure,
     rectangular_on = x$rectangular_on %||% NA_character_,
     data_format = x$data_format,
+    case_select_who = x$case_select_who %||% "individuals",
+    data_quality_flags = x$data_quality_flags %||% NA,
     submitted = x$submitted,
     download_links = list(x$download_links),
     number = x$number,
@@ -586,7 +588,7 @@ extract_to_tbl.micro_extract <- function(x) {
     variables = list(names(x$variables)),
     case_selections = list(purrr::map(x$variables, ~ .x$case_selections)),
     attached_characteristics = list(purrr::map(x$variables, ~ .x$attached_characteristics)),
-    data_quality_flags = list(purrr::map(x$variables, ~ .x$data_quality_flags)),
+    var_data_quality_flags = list(purrr::map(x$variables, ~ .x$data_quality_flags)),
     case_selection_type = list(purrr::map(x$variables, ~ .x$case_selection_type)),
     preselected = list(purrr::map(x$variables, ~ .x$preselected))
   )
@@ -604,8 +606,8 @@ extract_to_tbl.micro_extract <- function(x) {
   var_order <- c(
     "collection", "number", "description", "samples",
     "variables", "case_selections", "case_selection_type",
-    "attached_characteristics", "data_quality_flags", "preselected", "data_structure",
-    "rectangular_on", "data_format", "submitted", "download_links", "status"
+    "attached_characteristics", "var_data_quality_flags", "preselected", "data_structure",
+    "rectangular_on", "data_format", "case_select_who", "data_quality_flags", "submitted", "download_links", "status"
   )
 
   tbl[, var_order]
@@ -701,8 +703,9 @@ get_extract_tbl_fields.micro_extract <- function(x) {
   c(
     "collection", "description", "samples", "variables",
     "case_selections", "case_selection_type", "attached_characteristics",
-    "data_quality_flags", "preselected",
+    "var_data_quality_flags", "preselected",
     "data_format", "data_structure", "rectangular_on",
+    "data_quality_flags", "case_select_who",
     "submitted", "download_links", "number", "status"
   )
 }

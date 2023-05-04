@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/243?collection=usa&version=2
+    uri: https://api.ipums.org/extracts/301?collection=usa&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 20 Apr 2023 19:52:22 GMT
-      etag: W/"233255cb3ad59eccfc4a8b0430fc8dba"
+      date: Thu, 04 May 2023 21:48:19 GMT
+      etag: W/"dae349b5d38457c76b897adf50b24af3"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,20 +30,20 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: f87dd9e2-a5da-4e76-87d4-21b29b3f0065
-      x-runtime: '0.460329'
+      x-request-id: 72a6934c-70fd-408f-8cc8-5c497241e170
+      x-runtime: '0.726554'
       x-xss-protection: '0'
-      content-length: '1912'
+      content-length: '1911'
     body:
       encoding: ''
       file: no
-      string: '{"number":243,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"rCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.R","bytes":406,"sha256":"22bd0201d5a5ff43aa3645366713d8dea41d96bdddf168dac38206eb42052f7c"},"basicCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.cbk","bytes":19307,"sha256":"038fb8fc1e9e0dae0563a9cb1bb9d633f8e292277c00a0f995d017a2d9d667e7"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.dat.gz","bytes":7276,"sha256":"99ddd6ab708cdf2ac7229f0e48c5093ba126dd57efb14d40ccd14b2e99d427ef"},"stataCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.do","bytes":25920,"sha256":"fcc5f5acadcbeaee831efd07d17d102ab25d8f963ada1ac1504e577b6316e4e4"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.sas","bytes":14716,"sha256":"7012188f296d551a8a7551c19a1ef20a3369055af780fbc79a2c1f1e89981ccb"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.sps","bytes":15065,"sha256":"400867280219e69ad2234e67790e6b2fed76a12f4c95a5bd31863f7956effc5e"},"ddiCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.xml","bytes":68513,"sha256":"7682beeb553afdbbbeed4e8a3b627146ab132e42e32706f39d720a7b8cd446cc"}},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
+      string: '{"number":301,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"rCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.R","bytes":406,"sha256":"07ae1fe5a06c8cc48e53f2d960ddd41c3b17a1380cf138c89960d19ce836376a"},"basicCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.cbk","bytes":19307,"sha256":"038fb8fc1e9e0dae0563a9cb1bb9d633f8e292277c00a0f995d017a2d9d667e7"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.dat.gz","bytes":8119,"sha256":"e2cf8d47abe03223e024be8fea7464eb404658df974f4ec76ae96c05d548adf3"},"stataCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.do","bytes":25920,"sha256":"9e866f636e2b5ceed7238b542943f0ac50271527e5fa2acd111b1f02e40b3898"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.sas","bytes":14716,"sha256":"2586f1107eb8539fdf939388a987471e7dad2334808169bf548ca9441045fd67"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.sps","bytes":15065,"sha256":"00ad824f434843119058ca1d67f01580d6ce49a2350d65eec8b64d3929f85707"},"ddiCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.xml","bytes":68507,"sha256":"d2c1e87b2f43adc621ff1594e0a12e6fe489cb0c7cc0d92250a1d838ad670a7c"}},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"households","description":"Test
         USA extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"RACE":{"caseSelections":{"detailed":["801","802"]}}},"collection":"usa"}}'
-  recorded_at: 2023-04-20 19:52:23 GMT
+  recorded_at: 2023-05-04 21:48:20 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.xml
     body:
       encoding: ''
       string: ''
@@ -59,27 +59,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: no-cache
-      content-disposition: attachment; filename="usa_00243.xml"; filename*=UTF-8''usa_00243.xml
+      content-disposition: attachment; filename="usa_00301.xml"; filename*=UTF-8''usa_00301.xml
       content-type: application/xml
-      date: Thu, 20 Apr 2023 19:52:22 GMT
-      etag: '"644197cc-10ba1"'
-      last-modified: Thu, 20 Apr 2023 19:51:40 GMT
+      date: Thu, 04 May 2023 21:48:20 GMT
+      etag: '"645427ee-10b9b"'
+      last-modified: Thu, 04 May 2023 21:47:26 GMT
       server: nginx/1.18.0
-      set-cookie: _session_id=pX4hgi1IinAmrvOoD65RFvhDFZS3nC0Xvm5G03ecp8y0E2SBKAm4lcICdZKPc4L4%2BTcS8eAAaieSzPw79AtKHT9DIhl3sp9LLAVqz%2BjnOuuxJwEE4NkgHz9Vi0SANiG%2BSJdtMMB0XBEc7fSsdZs6MMJILbG3hfJwNN4yQ27GKFCtPYDSiW%2FgKVJ8tkv9rbTL%2B54w0j91dytLYO2GI8BB00Oj76coP0jDGxPTFWxdjt3gJfjxhAACrrEzsYn5SeI%3D--PRbVpZUILPSab%2F5L--fIbTYTTds36CJiZ1HPSl5w%3D%3D;
+      set-cookie: _session_id=rzJE2MbQ8UQeWyTqOURGKfOajAVjXPHDvGZES6gg3DnTp54Vxocjy%2Byxij6GBt6f%2FQel8c4RyqPJyeKZ2GQN88bUDLGeIi4FGQvMPfLzyb2aHh8CzB%2FmNTL22UUWkzpi7%2F8PId%2BscXBU2sgYYZRKJliPGx1a2a9NaAuaYFP6bEUoVV9%2F8kfKuugUPnRCY3IJiMSXo179g2dId8z8OGAxsTsL7T%2B3zKIwZ7CJ5tj3ZV81BJ%2Bj5uP%2Bkh4ZOMSZVBQ%3D--uEeD4cW4Jx%2BKs5Kr--7awrRtmtXC0czBjkzEGXIA%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '68513'
+      content-length: '68507'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00243.xml
-  recorded_at: 2023-04-20 19:52:23 GMT
+      string: ../fixtures/usa_00301.xml
+  recorded_at: 2023-05-04 21:48:20 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2014033/usa_00243.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.dat.gz
     body:
       encoding: ''
       string: ''
@@ -95,21 +95,21 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: no-cache
-      content-disposition: attachment; filename="usa_00243.dat.gz"; filename*=UTF-8''usa_00243.dat.gz
+      content-disposition: attachment; filename="usa_00301.dat.gz"; filename*=UTF-8''usa_00301.dat.gz
       content-type: application/gzip
-      date: Thu, 20 Apr 2023 19:52:23 GMT
-      etag: '"644197ce-1c6c"'
-      last-modified: Thu, 20 Apr 2023 19:51:42 GMT
+      date: Thu, 04 May 2023 21:48:20 GMT
+      etag: '"645427f0-1fb7"'
+      last-modified: Thu, 04 May 2023 21:47:28 GMT
       server: nginx/1.18.0
-      set-cookie: _session_id=u12kbtVeAhp%2FhS%2Fj9HVxkegPpuXhraGHs6d%2BX%2B2yGX8p6xfTSiP0jXPNcGFCaTwyOJlEzr6%2FwnMa4lhSySL8%2BhUtO%2FPWYe8Bw9IM7xnKUDzzp0JboyK7E6PU2sxKco3IDPXDWkrie00kN5cDc%2FeaZbcEbpTLfIN2pnkkfSfOuGFvTtxP4tHprw0k6mTeE6V9A91JEtsekyedZRv25MkVMxTGzwVTy9hD79pvt2Ov67U04GSozT681hmEuex4aRk%3D--B%2Foq7eRCTvuc1ely--OY%2B0J8OsJo7KAR3Fc4KUAQ%3D%3D;
+      set-cookie: _session_id=rTgC%2FtaYQFtqcZZ%2F4GGc3xpwqKniImRGKEvNE5dGrzIqwRHYcoFhCUXFyIbpke4XN7KR4zvkkxhSYqbsU8rPM2yVil6QvnoNUporVsJGHx5aciXc3DpOHUNznuasQ3vxvzF8ppqIeo51xhM7KI%2FlI5TMAg7fpvHrGtXdL%2BJMDf7RNXa7j66v9YjJdAmhGoEz%2BOd3cVi1QTH%2FuHhVvxLdnrwwWDeshYVwxswzrMnkjbOqhk71i5Dmt5wF7yTmhs4%3D--V3OUJ4KmtRQO2xP0--qzKm6aCS66jP6ThmsbxWhg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '7276'
+      content-length: '8119'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00243.dat.gz
-  recorded_at: 2023-04-20 19:52:23 GMT
+      string: ../fixtures/usa_00301.dat.gz
+  recorded_at: 2023-05-04 21:48:20 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

@@ -13,7 +13,9 @@ define_extract_usa(
   variables,
   data_format = "fixed_width",
   data_structure = "rectangular",
-  rectangular_on = NULL
+  rectangular_on = NULL,
+  case_select_who = "individuals",
+  data_quality_flags = NULL
 )
 
 define_extract_cps(
@@ -22,7 +24,9 @@ define_extract_cps(
   variables,
   data_format = "fixed_width",
   data_structure = "rectangular",
-  rectangular_on = NULL
+  rectangular_on = NULL,
+  case_select_who = "individuals",
+  data_quality_flags = NULL
 )
 
 define_extract_ipumsi(
@@ -31,7 +35,9 @@ define_extract_ipumsi(
   variables,
   data_format = "fixed_width",
   data_structure = "rectangular",
-  rectangular_on = NULL
+  rectangular_on = NULL,
+  case_select_who = "individuals",
+  data_quality_flags = NULL
 )
 }
 \arguments{
@@ -62,6 +68,25 @@ is supported.
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
+
+\item{case_select_who}{Indication of how to interpret any case selections
+included for variables in the extract.
+
+\code{"individuals"} includes records for all individuals who match the
+specified case selections.
+
+\code{"households"} includes records for all members of each household that
+contains an individual who matches the specified case selections.
+
+Defaults to \code{"individuals"}. Use \code{\link[=var_spec]{var_spec()}} to add case selections for
+specific variables.}
+
+\item{data_quality_flags}{Set to \code{TRUE} to include data quality
+flags for all applicable variables in the extract definition. This will
+override the \code{data_quality_flags} specification for individual variables
+in the definition.
+
+Use \code{\link[=var_spec]{var_spec()}} to add data quality flags for specific variables.}
 }
 \value{
 An object of class \code{\link[=ipums_extract-class]{micro_extract}} containing

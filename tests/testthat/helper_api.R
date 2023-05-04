@@ -12,7 +12,8 @@ test_usa_extract <- function() {
       ),
       "YEAR"
     ),
-    data_format = "fixed_width"
+    data_format = "fixed_width",
+    case_select_who = "households"
   )
 }
 
@@ -24,7 +25,7 @@ test_cps_extract <- function() {
       var_spec(
         "AGE",
         attached_characteristics = "head",
-        data_quality_flags = TRUE
+        data_quality_flags = FALSE
       ),
       var_spec(
         "SEX",
@@ -38,7 +39,9 @@ test_cps_extract <- function() {
       )
     ),
     data_format = "fixed_width",
-    data_structure = "hierarchical"
+    data_structure = "hierarchical",
+    case_select_who = "individuals",
+    data_quality_flags = TRUE
   )
 }
 

@@ -4,11 +4,11 @@ http_interactions:
     uri: https://api.ipums.org/extracts/?collection=usa&version=2
     body:
       encoding: ''
-      string: '{"description":"Test USA extract","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us2017b":{}},"variables":{"RACE":{"caseSelections":{"detailed":["801","802"]}},"YEAR":{}},"collection":"usa","version":2}'
+      string: '{"description":"Test USA extract","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us2017b":{}},"variables":{"RACE":{"caseSelections":{"detailed":["801","802"]},"preselected":false},"YEAR":{}},"caseSelectWho":"households","dataQualityFlags":false,"collection":"usa","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 20 Apr 2023 19:51:40 GMT
-      etag: W/"53207d74e07f90530a65a717c7a42f23"
+      date: Thu, 04 May 2023 21:47:18 GMT
+      etag: W/"a673a13846ab41a9cf84ce80d39d5b04"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,14 +30,14 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 21055f39-7118-498b-bedc-a3886025a7f8
-      x-runtime: '1.142746'
+      x-request-id: f365c594-b50e-4b93-8d8d-7041f90eb366
+      x-runtime: '1.440226'
       x-xss-protection: '0'
-      content-length: '589'
+      content-length: '588'
     body:
       encoding: ''
       file: no
-      string: '{"number":243,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
+      string: '{"number":301,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"households","description":"Test
         USA extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"RACE":{"caseSelections":{"detailed":["801","802"]}}},"collection":"usa"}}'
-  recorded_at: 2023-04-20 19:51:40 GMT
+  recorded_at: 2023-05-04 21:47:18 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
