@@ -444,7 +444,6 @@ download_extract <- function(extract,
   is_extract <- inherits(extract, "ipums_extract")
 
   if (is_extract) {
-    extract <- validate_ipums_extract(extract)
     is_ready <- extract_is_completed_and_has_links(extract)
 
     # If not downloadable, check latest status, since we haven't done so yet.

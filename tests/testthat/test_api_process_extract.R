@@ -543,7 +543,7 @@ test_that("We validate extract before submission", {
     submit_extract(
       new_ipums_extract(collection = "usa", description = "Test")
     ),
-    "A `usa_extract` must contain values for `samples`"
+    "Extract definition must contain values for `samples`"
   )
 })
 

@@ -81,10 +81,6 @@ get_extract_info <- function(extract,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
 
-  if (inherits(extract, "ipums_extract")) {
-    extract <- validate_ipums_extract(extract)
-  }
-
   if (is_empty(extract$number) || is.na(extract$number)) {
     rlang::abort(
       c(
@@ -109,7 +105,7 @@ get_extract_info <- function(extract,
     api_key = api_key
   )
 
-  extract_list_from_json(response, validate = TRUE)[[1]]
+  extract_list_from_json(response)[[1]]
 }
 
 #' Browse definitions of previously-submitted extract requests

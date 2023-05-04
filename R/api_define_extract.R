@@ -1046,20 +1046,28 @@ add_to_extract.nhgis_extract <- function(extract,
     time_series_tables <- list(time_series_tables)
   }
 
+  error_header <- "Invalid `nhgis_extract` object:"
+
   if (!all(purrr::map_lgl(datasets, ~ inherits(.x, "ds_spec")))) {
-    rlang::abort(paste0(
-      "Expected `datasets` to be an `ds_spec` object ",
-      "or a list of `ds_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `datasets` to be a `ds_spec` object ",
+        "or a list of `ds_spec` objects."
+      )
+    )
   } else {
     purrr::walk(datasets, validate_ipums_extract)
   }
 
   if (!all(purrr::map_lgl(time_series_tables, ~ inherits(.x, "tst_spec")))) {
-    rlang::abort(paste0(
-      "Expected `time_series_tables` to be an `tst_spec` object ",
-      "or a list of `tst_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `time_series_tables` to be an `tst_spec` object ",
+        "or a list of `tst_spec` objects."
+      )
+    )
   } else {
     purrr::walk(time_series_tables, validate_ipums_extract)
   }
@@ -1071,11 +1079,20 @@ add_to_extract.nhgis_extract <- function(extract,
   old_tst <- purrr::map_chr(extract$time_series_tables, ~ .x$name)
 
   if (anyDuplicated(new_ds) != 0) {
-    rlang::abort("Cannot add two `ds_spec` objects of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `datasets` of same name."
+    )
   }
 
   if (anyDuplicated(tst_spec) != 0) {
-    rlang::abort("Cannot add two `tst_spec` objects of same name.")
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Extract definition cannot contain multiple `time_series_tables` of ",
+        "same name."
+      )
+    )
   }
 
   if (!is_null(extract$datasets)) {
@@ -1297,20 +1314,28 @@ add_to_extract.micro_extract <- function(extract,
     }
   }
 
+  error_header <- paste0("Invalid `", class(extract)[1], "` object:")
+
   if (!all(purrr::map_lgl(variables, ~ inherits(.x, "var_spec")))) {
-    rlang::abort(paste0(
-      "Expected `variables` to be an `var_spec` object ",
-      "or a list of `var_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `variables` to be a `var_spec` object ",
+        "or a list of `var_spec` objects."
+      )
+    )
   } else {
     purrr::walk(variables, validate_ipums_extract)
   }
 
   if (!all(purrr::map_lgl(samples, ~ inherits(.x, "samp_spec")))) {
-    rlang::abort(paste0(
-      "Expected `samples` to be an `samp_spec` object ",
-      "or a list of `samp_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `samples` to be a `samp_spec` object ",
+        "or a list of `samp_spec` objects."
+      )
+    )
   } else {
     purrr::walk(samples, validate_ipums_extract)
   }
@@ -1322,11 +1347,17 @@ add_to_extract.micro_extract <- function(extract,
   old_samps <- purrr::map_chr(extract$samples, ~ .x$name)
 
   if (anyDuplicated(new_vars) != 0) {
-    rlang::abort("Cannot add two `var_spec` objects of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `variables` of same name."
+    )
   }
 
   if (anyDuplicated(new_samps) != 0) {
-    rlang::abort("Cannot add two `samp_spec` objects of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `samples` of same name."
+    )
   }
 
   if (!is_null(extract$variables)) {
@@ -1944,22 +1975,26 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
   includes_tst <- !is_empty(x$time_series_tables) && !is_na(x$time_series_tables)
   includes_shp <- !is_empty(x$shapefiles) && !is_na(x$shapefiles)
 
+  error_header <- "Invalid `nhgis_extract` object:"
+
   if (!any(includes_ds, includes_tst, includes_shp)) {
-    rlang::abort(
+    ipums_extract_error(
+      error_header,
       paste0(
-        "An `nhgis_extract` must contain at least one of `datasets`, ",
+        "Extract definition must contain at least one of `datasets`, ",
         "`time_series_tables`, or `shapefiles`."
       )
     )
   }
 
   if (!all(purrr::map_lgl(x$datasets, ~ inherits(.x, "ds_spec")))) {
-    rlang::abort(c(
+    ipums_extract_error(
+      error_header,
       paste0(
         "Expected `datasets` to be a `ds_spec` object ",
         "or a list of `ds_spec` objects."
       )
-    ))
+    )
   } else {
     # purrr 1.0.1 adds additional info for errors that occur inside calls
     # to map() functions. This is not useful in our case, so we remove.
@@ -1976,10 +2011,13 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
   }
 
   if (!all(purrr::map_lgl(x$time_series_tables, ~ inherits(.x, "tst_spec")))) {
-    rlang::abort(paste0(
-      "Expected `time_series_tables` to be a `tst_spec` object ",
-      "or a list of `tst_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `time_series_tables` to be a `tst_spec` object ",
+        "or a list of `tst_spec` objects."
+      )
+    )
   } else {
     withCallingHandlers(
       purrr::walk(
@@ -1993,11 +2031,20 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
   }
 
   if (anyDuplicated(purrr::map(x$datasets, ~ .x$name)) != 0) {
-    rlang::abort("Cannot add multiple `datasets` of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `datasets` of same name."
+    )
   }
 
   if (anyDuplicated(purrr::map(x$time_series_tables, ~ .x$name)) != 0) {
-    rlang::abort("Cannot add multiple `time_series_tables` of same name.")
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Extract definition cannot contain multiple `time_series_tables` of ",
+        "same name."
+      )
+    )
   }
 
   # Specify the validation requirements for each extract field
@@ -2053,12 +2100,7 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `nhgis_extract` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error(error_header, extract_issues)
   }
 
   invisible(x)
@@ -2068,9 +2110,13 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
 validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   NextMethod()
 
+  # Use collection-specific class for clarity
+  error_header <- paste0("Invalid `", class(x)[1], "` object:")
+
   if (length(x$data_structure) > 0 && x$data_structure == "rectangular") {
     if (length(x$rectangular_on) > 0 && x$rectangular_on != "P") {
-      rlang::abort(
+      ipums_extract_error(
+        error_header,
         paste0(
           "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
           "in the future, the API will also support `rectangular_on = \"H\"."
@@ -2080,22 +2126,27 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   }
 
   if (is_empty(x$samples) || is_na(x$samples)) {
-    rlang::abort(paste0(
-      "A `", class(x)[1], "` must contain values for `samples`."
-    ))
+    ipums_extract_error(
+      error_header,
+      "Extract definition must contain values for `samples`"
+    )
   }
 
   if (is_empty(x$variables) || is_na(x$variables)) {
-    rlang::abort(paste0(
-      "A `", class(x)[1], "` must contain values for `variables`."
-    ))
+    ipums_extract_error(
+      error_header,
+      "Extract definition must contain values for `variables`"
+    )
   }
 
   if (!all(purrr::map_lgl(x$samples, ~ inherits(.x, "samp_spec")))) {
-    rlang::abort(paste0(
-      "Expected `samples` to be an `samp_spec` object ",
-      "or a list of `samp_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `samples` to be a `samp_spec` object ",
+        "or a list of `samp_spec` objects."
+      )
+    )
   } else {
     withCallingHandlers(
       purrr::walk(
@@ -2109,10 +2160,13 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   }
 
   if (!all(purrr::map_lgl(x$variables, ~ inherits(.x, "var_spec")))) {
-    rlang::abort(paste0(
-      "Expected `variables` to be an `var_spec` object ",
-      "or a list of `var_spec` objects."
-    ))
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `variables` to be a `var_spec` object ",
+        "or a list of `var_spec` objects."
+      )
+    )
   } else {
     withCallingHandlers(
       purrr::walk(
@@ -2126,11 +2180,17 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   }
 
   if (anyDuplicated(purrr::map(x$variables, ~ .x$name)) != 0) {
-    rlang::abort("Cannot add multiple `variables` of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `variables` of same name."
+    )
   }
 
   if (anyDuplicated(purrr::map(x$samples, ~ .x$name)) != 0) {
-    rlang::abort("Cannot add multiple `samples` of same name.")
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `samples` of same name."
+    )
   }
 
   extract_field_spec <- list(
@@ -2184,12 +2244,7 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `usa_extract` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error(error_header, extract_issues)
   }
 
   invisible(x)
@@ -2244,12 +2299,7 @@ validate_ipums_extract.ipums_extract <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `ipums_extract` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error("Invalid `ipums_extract` object:", extract_issues)
   }
 
   # Throw error if no API for collection
@@ -2263,12 +2313,13 @@ validate_ipums_extract.samp_spec <- function(x, call = caller_env()) {
   unexpected_names <- names(x)[!names(x) %in% "name"]
 
   if (length(unexpected_names) > 0) {
-    rlang::abort(c(
+    ipums_extract_error(
       "Invalid `samp_spec` object:",
-      "x" = paste0(
-        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      paste0(
+        "Unrecognized fields: `",
+        paste0(unexpected_names, collapse = "`, `"), "`"
       )
-    ))
+    )
   }
 
   spec <- list(
@@ -2295,12 +2346,7 @@ validate_ipums_extract.samp_spec <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `samp_spec` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error("Invalid `samp_spec` object:", extract_issues)
   }
 
   invisible(x)
@@ -2318,12 +2364,13 @@ validate_ipums_extract.var_spec <- function(x, call = caller_env()) {
   )]
 
   if (length(unexpected_names) > 0) {
-    rlang::abort(c(
+    ipums_extract_error(
       "Invalid `var_spec` object:",
-      "x" = paste0(
-        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      paste0(
+        "Unrecognized fields: `",
+        paste0(unexpected_names, collapse = "`, `"), "`"
       )
-    ))
+    )
   }
 
   includes_cs <- !is_empty(x$case_selections) || !is_null(x$case_selections)
@@ -2377,12 +2424,7 @@ validate_ipums_extract.var_spec <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `var_spec` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error("Invalid `var_spec` object:", extract_issues)
   }
 
   invisible(x)
@@ -2399,12 +2441,13 @@ validate_ipums_extract.ds_spec <- function(x, call = caller_env()) {
   )]
 
   if (length(unexpected_names) > 0) {
-    rlang::abort(c(
+    ipums_extract_error(
       "Invalid `ds_spec` object:",
-      "x" = paste0(
-        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      paste0(
+        "Unrecognized fields: `",
+        paste0(unexpected_names, collapse = "`, `"), "`"
       )
-    ))
+    )
   }
 
   spec <- list(
@@ -2451,12 +2494,7 @@ validate_ipums_extract.ds_spec <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `ds_spec` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error("Invalid `ds_spec` object:", extract_issues)
   }
 
   invisible(x)
@@ -2467,12 +2505,13 @@ validate_ipums_extract.tst_spec <- function(x, call = caller_env()) {
   unexpected_names <- names(x)[!names(x) %in% c("name", "geog_levels", "years")]
 
   if (length(unexpected_names) > 0) {
-    rlang::abort(c(
+    ipums_extract_error(
       "Invalid `tst_spec` object:",
-      "x" = paste0(
-        "Unrecognized fields: `", paste0(unexpected_names, collapse = "`, `"), "`"
+      paste0(
+        "Unrecognized fields: `",
+        paste0(unexpected_names, collapse = "`, `"), "`"
       )
-    ))
+    )
   }
 
   spec <- list(
@@ -2509,12 +2548,7 @@ validate_ipums_extract.tst_spec <- function(x, call = caller_env()) {
   extract_issues <- unlist(purrr::compact(extract_issues))
 
   if (length(extract_issues) > 0) {
-    rlang::abort(
-      c(
-        "Invalid `tst_spec` object:",
-        purrr::set_names(extract_issues, "x")
-      )
-    )
+    ipums_extract_error("Invalid `tst_spec` object:", extract_issues)
   }
 
   invisible(x)
@@ -2738,6 +2772,16 @@ validate_type <- function(extract, field, type = NULL) {
   }
 
   invisible(NULL)
+}
+
+# Helper for easier error formatting for invalid ipums_extract objects
+ipums_extract_error <- function(header,
+                                errors,
+                                call = caller_env()) {
+  rlang::abort(
+    c(header, purrr::set_names(errors, "x")),
+    call = call
+  )
 }
 
 #' Convert JSON containing extract specifications to an extract object
