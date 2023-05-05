@@ -129,23 +129,6 @@
 #'   metadata. If provided, an associated `dataset` must also be specified.
 #' @param time_series_table Name of an individual time series table for which
 #'   to retrieve metadata.
-#' @param ... Optional set of arguments used to filter the requested
-#'   summary metadata.
-#'
-#'   Each argument should be named and consist of a
-#'   character vector. Each string in the vector is interpreted as
-#'   a regular expression that is matched to the values in the metadata column
-#'   with the same name as the argument name. Only metadata records
-#'   whose values match the provided expressions will be included in the output.
-#'   See examples.
-#'
-#'   Only used when `type` is provided.
-#' @param match_all If `TRUE`, only metadata records that match all of the
-#'   expressions provided in `...` will be included in the output. If `FALSE`,
-#'   metadata records that match any of the expressions will be included.
-#'   Defaults to `TRUE`.
-#' @param match_case If `TRUE`, use case-sensitive matching when interpreting
-#'   the expressions provided in `...`. Defaults to `FALSE`.
 #' @param delay Number of seconds to delay between
 #'   successive API requests, if multiple requests are needed to retrieve all
 #'   records.
@@ -168,37 +151,39 @@
 #'
 #' @examples
 #' \dontrun{
+#' library(dplyr)
+#'
 #' # Get summary metadata for all available sources of a given data type
-#' get_nhgis_metadata("datasets")
+#' get_metadata_nhgis("datasets")
 #'
-#' # Filter summary metadata to records that meet specific criteria.
-#' # This returns records whose description includes both "Sex" and "Age" and
-#' # whose years include 1990 and 2000:
-#' get_nhgis_metadata(
-#'   "time_series_tables",
-#'   description = c("Sex", "Age"),
-#'   years = c(1990, 2000)
+#' # Filter to identify data sources of interest by their metadata values
+#' all_tsts <- get_metadata_nhgis("time_series_tables")
+#'
+#' tsts <- all_tsts %>%
+#'   filter(
+#'     grepl("Children", description),
+#'     grepl("Families", description),
+#'     geographic_integration == "Standardized to 2010"
+#'   )
+#'
+#' tsts$name
+#'
+#' # Get detailed metadata for a single source with its associated argument:
+#' cs5_meta <- get_metadata_nhgis(time_series_table = "CS5")
+#' cs5_meta$geog_levels
+#'
+#' define_extract_nhgis(
+#'   time_series_tables = tst_spec("CS5", geog_levels = "state")
 #' )
 #'
-#' # Alternatively, return records whose description includes
-#' # either "Sex" or "Age"
-#' get_nhgis_metadata(
-#'   "time_series_tables",
-#'   description = c("Sex", "Age"),
-#'   match_all = FALSE
-#' )
-#'
-#' # Get metadata for single data source
-#' get_nhgis_metadata(dataset = "1990_STF1")
-#' get_nhgis_metadata(data_table = "NP1", dataset = "1990_STF1")
+#' # Detailed metadata is also provided for datasets and data tables
+#' get_metadata_nhgis(dataset = "1990_STF1")
+#' get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
 #' }
-get_nhgis_metadata <- function(type = NULL,
+get_metadata_nhgis <- function(type = NULL,
                                dataset = NULL,
                                data_table = NULL,
                                time_series_table = NULL,
-                               ...,
-                               match_all = TRUE,
-                               match_case = FALSE,
                                delay = 0,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
   summary_req <- !is.null(type)
@@ -265,13 +250,6 @@ get_nhgis_metadata <- function(type = NULL,
       delay = delay,
       api_key = api_key
     )
-
-    metadata <- filter_df_cols(
-      metadata,
-      ...,
-      match_all = match_all,
-      match_case = match_case
-    )
   } else {
     metadata <- get_detailed_metadata(
       collection = "nhgis",
@@ -285,19 +263,81 @@ get_nhgis_metadata <- function(type = NULL,
   metadata
 }
 
+#' List available samples for IPUMS microdata collections
+#'
+#' @description
+#' Retrieve sample IDs and descriptions for IPUMS microdata collections.
+#'
+#' Currently supported microdata collections are:
+#'   - IPUMS USA (`"usa"`)
+#'   - IPUMS CPS (`"cps"`)
+#'   - IPUMS International (`"ipumsi"`)
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @inheritParams get_metadata_nhgis
+#' @param collection Character string of the IPUMS collection for which to
+#'   retrieve sample IDs. Defaults to the current default collection,
+#'   if it exists. See [set_ipums_default_collection()].
+#'
+#'   For a list of codes used to refer to each collection, see
+#'   [ipums_data_collections()].
+#' @param delay Number of seconds to delay between
+#'   successive API requests, if multiple requests are needed to retrieve all
+#'   records.
+#'
+#'   A delay is highly unlikely to be necessary and is intended only as a
+#'   fallback in the event that you cannot retrieve all sample IDs without
+#'   exceeding the API rate limit.
+#'
+#' @return A [`tibble`][tibble::tbl_df-class] containing sample IDs and
+#'   descriptions for the indicated collection.
+#'
+#' @seealso
+#' [`define_extract_*()`][define_extract_micro] to create an IPUMS microdata
+#'   extract definition.
+#'
+#' @export
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' get_sample_info("usa")
+#' get_sample_info("cps")
+#' get_sample_info("ipumsi")
+#' }
+get_sample_info <- function(collection = NULL,
+                            delay = 0,
+                            api_key = Sys.getenv("IPUMS_API_KEY")) {
+  collection <- collection %||% get_default_collection()
+
+  metadata <- get_summary_metadata(
+    collection = collection,
+    type = "samples",
+    delay = delay,
+    api_key = api_key
+  )
+
+  metadata
+}
+
 # Internal functions -----------------------------------------------------------
 
-#' Get NHGIS summary metadata
+#' Get summary metadata
 #'
-#' Helper to retrieve summary metadata for all NHGIS datasets, data tables,
-#' time series tables, or shapefiles. Handles data table caching and updating.
+#' @description
+#' Helper to retrieve summary metadata for all records of a given metadata type.
+#' This is in contrast to "detailed" metadata, which provides information on a
+#' particular data source (e.g. for a single NHGIS dataset).
 #'
-#' @inheritParams get_nhgis_metadata
-#' @param get_all_records Logical indicating whether all records should be
-#'   retrieved by iterating through the paginated API response. This is only
-#'   needed to enable unit testing of page iteration without producing very
-#'   large cassette files. Users can trigger iterative behavior by leaving
-#'   `n_records = NULL` in `get_nhgis_metadata()`.
+#' For NHGIS, summary metadata is available for datasets, time series tables,
+#' and shapefiles.
+#'
+#' For microdata, summary metadata is currently only available for samples.
+#'
+#' @inheritParams get_sample_info
+#' @inheritParams get_metadata_nhgis
 #'
 #' @return Tibble of summary metadata for the requested `type`
 #'
@@ -331,11 +371,29 @@ get_summary_metadata <- function(collection,
     }
   )
 
-  # Convert all data.frames to tibbles recursively to catch columns
-  # that also contain data.frames
-  nested_df_to_tbl(metadata)
+  # Recursively convert all metadata data.frames to tibbles and all
+  # camelCase names to snake_case
+  convert_metadata(metadata)
 }
 
+#' Get detailed metadata for a particular data source
+#'
+#' @inheritParams get_sample_info
+#' @inheritParams get_metadata_nhgis
+#' @param ... Arbitrary number of named and/or unnamed arguments to be passed
+#'   to `metadata_request_path()`. This constructs the URL for the metadata
+#'   request. Named arguments will have their names placed before their
+#'   corresponding values in the output URL. Unnamed arguments will be added
+#'   to the URL in the order they are provided. All arguments and values
+#'   will be separated by slashes.
+#'
+#'   Arguments whose value is `NULL` will not be included. This syntax
+#'   allows you to input all *possible* endpoint parameters while safely
+#'   leaving them out of the resulting URL if not provided.
+#'
+#' @return List of metadata for the requested data source
+#'
+#' @noRd
 get_detailed_metadata <- function(collection,
                                   ...,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
@@ -357,131 +415,33 @@ get_detailed_metadata <- function(collection,
     simplifyVector = TRUE
   )
 
-  # Convert all data.frames to tibbles recursively to catch columns
-  # that also contain data.frames
-  nested_df_to_tbl(metadata)
+  # Recursively convert all metadata data.frames to tibbles and all
+  # camelCase names to snake_case
+  convert_metadata(metadata)
 }
 
-#' Identify list elements that match provided regular expressions
+#' Convert metadata provided by API to appropriate data structures and
+#' naming conventions used in ipumsr
 #'
-#' For each element in a list, identify whether that list element's values match
-#' a set of provided regular expressions.
+#' @description
+#' By default the metadata responses will contain tabular data
+#' structures as `data.frames` and with the API's camelCase naming conventions.
 #'
-#' @param l List to filter
-#' @param match_vals Vector of regular expressions to match to elements in list
-#'   `l`
-#' @param match_all If `TRUE`, each element of `l` must match *all* expressions
-#'   provided in `match_vals` to return `TRUE`. If `FALSE` each element of `l`
-#'   must match *at least one* of the expressions provided in `match_vals` to
-#'   return `TRUE`. Defaults to `TRUE`
-#' @param match_case Logical indicating whether to perform case-sensitive
-#'   (`TRUE`) or case-insensitive matching (`FALSE`). Defaults to `FALSE`.
-#'
-#' @return A logical vector of the same length as `l` indicating which list
-#'   elements match the provided regular expressions.
+#' This recursively converts all data.frames (which may be nested in other
+#' data.frame and list objects) to tibbles and converts camelCase field names
+#' to snake_case throughout.
 #'
 #' @noRd
-filter_list <- function(l, match_vals, match_all = FALSE, match_case = FALSE) {
-  if (!match_case) {
-    l <- purrr::map(l, tolower)
-    match_vals <- tolower(match_vals)
-  }
-
-  if (match_all) {
-    filt <- function(...) all(...)
-  } else {
-    filt <- function(...) any(...)
-  }
-
-  i <- purrr::map_lgl(
-    l,
-    function(x) {
-      filt(
-        purrr::map_lgl(
-          match_vals,
-          function(y) any(grepl(y, x))
-        )
-      )
-    }
-  )
-
-  i
-}
-
-#' Filter tibble with column-specific regular expressions
-#'
-#' Filter the records in a tibble/data.frame to those that match a set of
-#' regular expressions, which may differ across columns.
-#'
-#' @param .data Tibble/data.frame to filter
-#' @param ... Character vectors to use when filtering `.data`.
-#'   Argument names should correspond to column names found in `.data`. Values
-#'   represent regular expressions that will be matched to the values found
-#'   in the column of `.data` corresponding to the given argument name.
-#' @param match_all If `TRUE`, each row in `.data` must match *all* expressions
-#'   provided in `...` to be included in the output. If `FALSE` each row in
-#'   `.data` must match *at least one* of the expressions provided in `...` to
-#'   be included. Defaults to `TRUE`
-#' @param match_case Logical indicating whether to perform case-sensitive
-#'   (`TRUE`) or case-insensitive matching (`FALSE`). Defaults to `FALSE`.
-#'
-#' @return tibble/data.frame. Rows are a subset of the input `.data`, while
-#'   columns remain unmodified.
-#'
-#' @noRd
-filter_df_cols <- function(.data, ..., match_all = TRUE, match_case = FALSE) {
-  dots <- purrr::compact(rlang::list2(...))
-
-  missing_names <- setdiff(names(dots), colnames(.data))
-  dots <- dots[names(dots) %in% colnames(.data)]
-
-  if (length(missing_names) > 0) {
-    rlang::warn(
-      c(
-        "Ignoring unrecognized metadata variables:",
-        set_names(paste0("`", missing_names, "`"), "*")
-      )
-    )
-  }
-
-  if (length(dots) == 0) {
-    return(.data)
-  }
-
-  matches <- purrr::map(
-    names(dots),
-    ~ filter_list(
-      .data[[.x]],
-      match_vals = dots[[.x]],
-      match_all = match_all,
-      match_case = match_case
-    )
-  )
-
-  if (match_all) {
-    matches <- purrr::reduce(matches, `&`)
-  } else {
-    matches <- purrr::reduce(matches, `|`)
-  }
-
-  .data[matches, ]
-}
-
-#' Convert all data.frames in a nested list/data.frame into tibbles
-#'
-#' Single-dataset metadata breakdowns field returns a
-#' data.frame that includes a column of data.frames. We want to convert
-#' all levels of such a hierarchy to tibbles for consistent formatting.
-#'
-#' @noRd
-nested_df_to_tbl <- function(l) {
-  if (is.data.frame(l) || tibble::is_tibble(l)) {
-    l <- dplyr::mutate(
-      tibble::as_tibble(l),
+convert_metadata <- function(metadata) {
+  if (is.data.frame(metadata) || tibble::is_tibble(metadata)) {
+    # If the metadata is tabular, ensure all columns only contain
+    # tibbles, not data.frames
+    metadata <- dplyr::mutate(
+      tibble::as_tibble(metadata),
       dplyr::across(
         dplyr::everything(),
         ~ if (rlang::is_list(.x)) {
-          purrr::map(.x, nested_df_to_tbl)
+          purrr::map(.x, convert_metadata)
         } else {
           .x
         }
@@ -490,11 +450,15 @@ nested_df_to_tbl <- function(l) {
 
     # Convert from API's camelCase to snake_case for consistency with
     # ipums_extract objects
-    colnames(l) <- to_snake_case(colnames(l))
-  } else if (rlang::is_list(l)) {
-    l <- purrr::map(l, nested_df_to_tbl)
-    names(l) <- to_snake_case(names(l))
+    colnames(metadata) <- to_snake_case(colnames(metadata))
+  } else if (rlang::is_list(metadata)) {
+    # If metadata is in a list, ensure each list element is cleaned
+    # appropriately. Tabular structures within the list will be recursively
+    # processed.
+    metadata <- purrr::map(metadata, convert_metadata)
+    names(metadata) <- to_snake_case(names(metadata))
   }
 
-  l
+  # If not tabular or list, return the cleaned metadata
+  metadata
 }

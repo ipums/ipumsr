@@ -14,8 +14,10 @@ set_ipums_default_collection(
 \arguments{
 \item{collection}{Character string of the collection to set as your
 default collection. The collection must currently be supported
-by the IPUMS API. Use \code{\link[=ipums_data_collections]{ipums_data_collections()}} to determine if a
-collection has API support.}
+by the IPUMS API.
+
+For a list of codes used to refer to each collection, see
+\code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{save}{If \code{TRUE}, save the default collection for use in future
 sessions by adding it to the \code{.Renviron} file in your home directory.

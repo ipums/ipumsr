@@ -321,7 +321,7 @@ extract builder:
     CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
 
 IPUMS NHGIS users can find the codes used for datasets, data tables,
-time series tables, and more by using `get_nhgis_metadata()`.
+time series tables, and more by using `get_metadata_nhgis()`.
 
 NHGIS provides summary metadata for all available data sources of a
 given type (e.g. datasets, shapefiles) or detailed metadata for a
@@ -333,12 +333,12 @@ used to determine the name used by the API to reference a data source of
 interest.
 
 ```{r}
-get_nhgis_metadata(type = "datasets") %>%
+get_metadata_nhgis(type = "datasets") %>%
   head()
 ```
 
 To get details on a particular data source, pass its name to the
-associated argument of `get_nhgis_metadata()`. Use this to determine the
+associated argument of `get_metadata_nhgis()`. Use this to determine the
 codes and descriptions of various subfields for a given data source
 (e.g. data tables for a given dataset, geographic levels for a dataset
 or time series table, etc.).
@@ -348,7 +348,7 @@ included in the extract request above (P1 and P2) correspond to total
 population counts and urban/rural population counts, respectively:
 
 ```{r}
-ds_meta <- get_nhgis_metadata(dataset = "2010_SF1a")
+ds_meta <- get_metadata_nhgis(dataset = "2010_SF1a")
 
 ds_meta$data_tables %>%
   filter(name %in% c("P1", "P2"))

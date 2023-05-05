@@ -38,13 +38,7 @@ define_extract_ipumsi(
 \item{description}{Description of the extract.}
 
 \item{samples}{Character vector of sample names to include in the extract.
-Samples should be specified using the sample ID codes for the given
-project:
-\itemize{
-\item \href{https://usa.ipums.org/usa-action/samples/sample_ids}{IPUMS USA}
-\item \href{https://cps.ipums.org/cps-action/samples/sample_ids}{IPUMS CPS}
-\item \href{https://international.ipums.org/international-action/samples/sample_ids}{IPUMS International}
-}}
+Use \code{\link[=get_sample_info]{get_sample_info()}} to identify sample IDs for a given collection.}
 
 \item{variables}{Character vector of variable names or a list of detailed
 variable specifications for all variables in the extract request. Use

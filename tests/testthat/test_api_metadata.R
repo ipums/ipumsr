@@ -2,39 +2,19 @@ test_that("We can get summary metadata", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("nhgis-metadata-summary", {
-    shp_meta <- get_nhgis_metadata("shapefiles")
+    shp_meta <- get_metadata_nhgis("shapefiles")
+  })
+  vcr::use_cassette("micro-metadata-summary", {
+    cps_meta <- get_sample_info("cps")
   })
 
   expect_true(tibble::is_tibble(shp_meta))
   expect_true(!is_empty(shp_meta))
-})
+  expect_equal(shp_meta$name[[1]], "us_state_1790_tl2000")
 
-test_that("We can filter summary metadata", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("nhgis-metadata-summary-filtered", {
-    expect_warning(
-      shp_meta_filt <- get_nhgis_metadata(
-        "shapefiles",
-        year = "1790",
-        geographic_level = "State",
-        foo = "bar"
-      ),
-      "unrecognized metadata variables"
-    )
-
-    ds_meta_filt <- get_nhgis_metadata(
-      "datasets",
-      name = c("1790_cPop", "1800_cPop"),
-      match_all = FALSE
-    )
-  })
-
-  expect_true(all(grepl("1790", shp_meta_filt$year)))
-  expect_true(
-    all(shp_meta_filt$geographic_level == "State")
-  )
-  expect_equal(nrow(ds_meta_filt), 2)
+  expect_true(tibble::is_tibble(cps_meta))
+  expect_true(!is_empty(cps_meta))
+  expect_equal(cps_meta$name[[1]], "cps1962_03s")
 })
 
 test_that("We can iterate through pages to get all records", {
@@ -53,7 +33,7 @@ test_that("We can iterate through pages to get all records", {
     )
   })
 
-  metadata <- nested_df_to_tbl(
+  metadata <- convert_metadata(
     purrr::map_dfr(
       responses,
       function(res) {
@@ -81,7 +61,7 @@ test_that("We can get metadata for single dataset", {
   ds <- "2010_SF1a"
 
   vcr::use_cassette("nhgis-metadata-single-dataset", {
-    single_ds_meta <- get_nhgis_metadata(dataset = ds)
+    single_ds_meta <- get_metadata_nhgis(dataset = ds)
   })
 
   expect_true(is_list(single_ds_meta))
@@ -112,7 +92,7 @@ test_that("We can get metadata for single time series table", {
   tst <- "CM0"
 
   vcr::use_cassette("nhgis-metadata-single-tst", {
-    single_tst_meta <- get_nhgis_metadata(time_series_table = tst)
+    single_tst_meta <- get_metadata_nhgis(time_series_table = tst)
   })
 
   expect_true(is_list(single_tst_meta))
@@ -141,7 +121,7 @@ test_that("We can get metadata for single data table", {
   dt <- "P8"
 
   vcr::use_cassette("nhgis-metadata-single-source", {
-    single_dt_meta <- get_nhgis_metadata(dataset = ds, data_table = dt)
+    single_dt_meta <- get_metadata_nhgis(dataset = ds, data_table = dt)
   })
 
   expect_equal(length(single_dt_meta), 7)
@@ -159,25 +139,25 @@ test_that("We can get metadata for single data table", {
 test_that("We throw errors on bad metadata specs prior to making request", {
   # Only one source per metadata request
   expect_error(
-    get_nhgis_metadata(dataset = c("A", "B")),
+    get_metadata_nhgis(dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(time_series_table = c("A", "B")),
+    get_metadata_nhgis(time_series_table = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(data_table = "A", dataset = c("A", "B")),
+    get_metadata_nhgis(data_table = "A", dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
 
   # Table metadata needs dataset
   expect_error(
-    get_nhgis_metadata(data_table = c("A", "B")),
+    get_metadata_nhgis(data_table = c("A", "B")),
     "`data_table` must be specified with a corresponding `dataset`"
   )
   expect_error(
-    get_nhgis_metadata(data_table = "P8"),
+    get_metadata_nhgis(data_table = "P8"),
     "`data_table` must be specified with a corresponding `dataset`"
   )
 
@@ -186,6 +166,6 @@ test_that("We throw errors on bad metadata specs prior to making request", {
   # TODO: if we truly want to handle these errors ourselves we will
   # likely need to validate the resulting request URL before submitting.
   # expect_error(
-  #   get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1")
+  #   get_metadata_nhgis(data_table = "bad table", dataset = "1980_STF1")
   # )
 })

@@ -18,10 +18,10 @@ IPUMS API. Note that some data collections do not yet have API support.
 \details{
 Currently, ipumsr supports extract definitions for the following collections:
 \itemize{
-\item IPUMS USA
-\item IPUMS CPS
-\item IPUMS International
-\item IPUMS NHGIS
+\item IPUMS USA (\code{"usa"})
+\item IPUMS CPS (\code{"cps"})
+\item IPUMS International (\code{"ipumsi"})
+\item IPUMS NHGIS (\code{"nhgis"})
 }
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.

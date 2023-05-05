@@ -32,7 +32,10 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 
 \item{collection}{Character string of the IPUMS collection for which to
 retrieve extract history. Defaults to the current default
-collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.}
+collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.
+
+For a list of codes used to refer to each collection, see
+\code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 }
 \value{
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.

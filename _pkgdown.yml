@@ -83,7 +83,7 @@ reference:
       - combine_extracts
       - save_extract_as_json
       - define_extract_from_json
-      - get_nhgis_metadata
+      - get_metadata_nhgis
       - ipums_extract
       - ipums_data_collections
       - extract_tbl_to_list

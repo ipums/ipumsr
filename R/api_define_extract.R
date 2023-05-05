@@ -134,12 +134,7 @@ NULL
 #'
 #' @param description Description of the extract.
 #' @param samples Character vector of sample names to include in the extract.
-#'   Samples should be specified using the sample ID codes for the given
-#'   project:
-#'
-#'   - [IPUMS USA](https://usa.ipums.org/usa-action/samples/sample_ids)
-#'   - [IPUMS CPS](https://cps.ipums.org/cps-action/samples/sample_ids)
-#'   - [IPUMS International](https://international.ipums.org/international-action/samples/sample_ids)
+#'   Use [get_sample_info()] to identify sample IDs for a given collection.
 #' @param variables Character vector of variable names or a list of detailed
 #'   variable specifications for all variables in the extract request. Use
 #'   [var_spec()] to create a `var_spec` object containing a detailed variable
@@ -303,7 +298,7 @@ define_extract_ipumsi <- function(description,
 #' Define the parameters of an IPUMS NHGIS extract request to be submitted via
 #' the IPUMS API.
 #'
-#' Use [get_nhgis_metadata()] to browse and identify data sources for use
+#' Use [get_metadata_nhgis()] to browse and identify data sources for use
 #' in NHGIS extract definitions. For general information, see the NHGIS
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
@@ -343,7 +338,7 @@ define_extract_ipumsi <- function(description,
 #'
 #'   Required when any of the `datasets` included in the extract definition
 #'   include `geog_levels` that require extent selection. See
-#'   [get_nhgis_metadata()] to determine if a geographic level requires extent
+#'   [get_metadata_nhgis()] to determine if a geographic level requires extent
 #'   selection. At the time of writing, NHGIS supports extent selection only
 #'   for blocks and block groups.
 #' @param breakdown_and_data_type_layout The desired layout
@@ -356,7 +351,7 @@ define_extract_ipumsi <- function(description,
 #'
 #'   Required if any `datasets` included in the extract definition consist of
 #'   multiple data types (for instance, estimates and margins of error) or have
-#'   multiple breakdown values specified. See [get_nhgis_metadata()] to
+#'   multiple breakdown values specified. See [get_metadata_nhgis()] to
 #'   determine whether a requested dataset has multiple data types.
 #' @param tst_layout The desired layout of all `time_series_tables` included in
 #'   the extract definition.
@@ -387,7 +382,7 @@ define_extract_ipumsi <- function(description,
 #'   the extract definition.
 #'
 #' @seealso
-#' [get_nhgis_metadata()] to find data to include in an extract definition.
+#' [get_metadata_nhgis()] to find data to include in an extract definition.
 #'
 #' [submit_extract()], [download_extract()], and [get_extract_info()] to
 #'   process and manage an extract request.
@@ -607,7 +602,7 @@ samp_spec <- function(name) {
 #' Provide specifications for individual datasets and time series
 #' tables when defining an IPUMS NHGIS extract request.
 #'
-#' Use [get_nhgis_metadata()] to browse dataset and time series
+#' Use [get_metadata_nhgis()] to browse dataset and time series
 #' table specification parameters.
 #'
 #' @param name Name of the dataset or time series table.
@@ -621,7 +616,7 @@ samp_spec <- function(name) {
 #'   For time series tables, all years are selected by default.
 #'
 #'   For datasets, use `"*"` to select all available years. Use
-#'   [get_nhgis_metadata()] to determine if a dataset allows year selection.
+#'   [get_metadata_nhgis()] to determine if a dataset allows year selection.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to apply to the given dataset.

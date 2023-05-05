@@ -45,7 +45,7 @@ data within a particular state). Use \code{"*"} to select all available extents.
 
 Required when any of the \code{datasets} included in the extract definition
 include \code{geog_levels} that require extent selection. See
-\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a geographic level requires extent
+\code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to determine if a geographic level requires extent
 selection. At the time of writing, NHGIS supports extent selection only
 for blocks and block groups.}
 
@@ -63,7 +63,7 @@ own file
 
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
-multiple breakdown values specified. See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to
+multiple breakdown values specified. See \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in

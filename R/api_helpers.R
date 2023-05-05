@@ -12,10 +12,10 @@
 #'
 #' Currently, ipumsr supports extract definitions for the following collections:
 #'
-#' * IPUMS USA
-#' * IPUMS CPS
-#' * IPUMS International
-#' * IPUMS NHGIS
+#' * IPUMS USA (`"usa"`)
+#' * IPUMS CPS (`"cps"`)
+#' * IPUMS International (`"ipumsi"`)
+#' * IPUMS NHGIS (`"nhgis"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -113,8 +113,10 @@ set_ipums_api_key <- function(api_key,
 #'
 #' @param collection Character string of the collection to set as your
 #'   default collection. The collection must currently be supported
-#'   by the IPUMS API. Use [ipums_data_collections()] to determine if a
-#'   collection has API support.
+#'   by the IPUMS API.
+#'
+#'   For a list of codes used to refer to each collection, see
+#'   [ipums_data_collections()].
 #' @param save If `TRUE`, save the default collection for use in future
 #'   sessions by adding it to the `.Renviron` file in your home directory.
 #'   Defaults to `FALSE`, unless `overwrite = TRUE`.

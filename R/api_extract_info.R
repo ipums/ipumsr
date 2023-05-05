@@ -128,6 +128,9 @@ get_extract_info <- function(extract,
 #' @param collection Character string of the IPUMS collection for which to
 #'   retrieve extract history. Defaults to the current default
 #'   collection, if it exists. See [set_ipums_default_collection()].
+#'
+#'   For a list of codes used to refer to each collection, see
+#'   [ipums_data_collections()].
 #' @param how_many The number of extract requests for which to retrieve
 #'   information. Defaults to the 10 most recent extracts.
 #' @param as_table If `TRUE`, summarize extract history in a

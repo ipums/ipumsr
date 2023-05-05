@@ -5,7 +5,7 @@
 * Adds API support for IPUMS NHGIS extract requests! Use 
   `define_extract_nhgis()` to make an NHGIS extract definition.
   
-* Adds API support for IPUMS NHGIS metadata. Use `get_nhgis_metadata()` to
+* Adds API support for IPUMS NHGIS metadata. Use `get_metadata_nhgis()` to
   browse NHGIS data sources when creating an NHGIS extract request.
 
 * `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.

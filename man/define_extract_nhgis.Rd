@@ -38,7 +38,7 @@ data within a particular state). Use \code{"*"} to select all available extents.
 
 Required when any of the \code{datasets} included in the extract definition
 include \code{geog_levels} that require extent selection. See
-\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to determine if a geographic level requires extent
+\code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to determine if a geographic level requires extent
 selection. At the time of writing, NHGIS supports extent selection only
 for blocks and block groups.}
 
@@ -53,7 +53,7 @@ own file
 
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
-multiple breakdown values specified. See \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to
+multiple breakdown values specified. See \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
@@ -92,7 +92,7 @@ the extract definition.
 Define the parameters of an IPUMS NHGIS extract request to be submitted via
 the IPUMS API.
 
-Use \code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to browse and identify data sources for use
+Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to browse and identify data sources for use
 in NHGIS extract definitions. For general information, see the NHGIS
 \href{https://www.nhgis.org/data-availability}{data source overview} and the
 \href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
@@ -183,7 +183,7 @@ submit_extract(nhgis_extract)
 }
 }
 \seealso{
-\code{\link[=get_nhgis_metadata]{get_nhgis_metadata()}} to find data to include in an extract definition.
+\code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to find data to include in an extract definition.
 
 \code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
 process and manage an extract request.

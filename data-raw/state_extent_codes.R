@@ -7,7 +7,7 @@
 # Any dataset that has extent selection will do for state-level codes
 placeholder_ds <- "1990_STF1"
 
-state_extent_codes <- get_nhgis_metadata(
+state_extent_codes <- get_metadata_nhgis(
   dataset = placeholder_ds
 )$geographic_instances
 
