@@ -8,6 +8,7 @@ download_extract(
   extract,
   download_dir = getwd(),
   overwrite = FALSE,
+  progress = TRUE,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
 }
@@ -33,6 +34,9 @@ Defaults to current working directory.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any files that
 already exist in \code{download_dir}. Defaults to \code{FALSE}.}
+
+\item{progress}{If \code{TRUE}, output progress bar showing the status of the
+download request. Defaults to \code{TRUE}.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See

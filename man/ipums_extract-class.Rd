@@ -98,8 +98,6 @@ request is ready to download.
 \itemize{
 \item Modify values in an existing extract definition with \code{\link[=add_to_extract]{add_to_extract()}} and
 \code{\link[=remove_from_extract]{remove_from_extract()}}.
-\item Combine definitions from multiple extracts into a single extract with
-\code{\link[=combine_extracts]{combine_extracts()}}.
 }
 }
 

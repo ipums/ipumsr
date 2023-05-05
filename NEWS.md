@@ -11,9 +11,6 @@
 * `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.
   Set `as_table = TRUE` to get recent extract information in tabular format.
   
-* Adds `combine_extracts()` to allow for the merging of multiple extract
-  definitions.
-  
 * Allows users to set a default IPUMS collection using
   `set_ipums_default_collection()`. Users with a default collection do not 
   need to specify the IPUMS collection in functions that require it; instead,

@@ -45,7 +45,7 @@
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
 #'
 #' [set_ipums_default_collection()] to set a default collection.
@@ -81,10 +81,6 @@ get_extract_info <- function(extract,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
 
-  if (inherits(extract, "ipums_extract")) {
-    extract <- validate_ipums_extract(extract)
-  }
-
   if (is_empty(extract$number) || is.na(extract$number)) {
     rlang::abort(
       c(
@@ -109,7 +105,7 @@ get_extract_info <- function(extract,
     api_key = api_key
   )
 
-  extract_list_from_json(response, validate = TRUE)[[1]]
+  extract_list_from_json(response)[[1]]
 }
 
 #' Browse definitions of previously-submitted extract requests
@@ -153,7 +149,7 @@ get_extract_info <- function(extract,
 #' @seealso
 #' [get_extract_info()] to get the current status of a specific extract request.
 #'
-#' [add_to_extract()], [remove_from_extract()] and [combine_extracts()] to
+#' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
 #'
 #' [extract_tbl_to_list()] and [extract_list_to_tbl()] to manipulate information
@@ -232,6 +228,10 @@ get_extract_history <- function(collection = NULL,
 
   if (as_table) {
     extracts <- extract_list_to_tbl(extracts)
+  }
+
+  if (length(extracts) == 0) {
+    rlang::abort("No past extracts were found for this collection.")
   }
 
   extracts

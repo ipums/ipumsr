@@ -212,7 +212,7 @@ test_that("We coerce variables and samples to `ipums_spec` objects", {
       samples = "A",
       variables = c(var_spec("A"), var_spec("B"))
     ),
-    "Expected `variables` to be an `var_spec`"
+    "Expected `variables` to be a `var_spec`"
   )
 })
 
@@ -262,7 +262,7 @@ test_that("Can validate core microdata extract fields", {
   )
   expect_error(
     validate_ipums_extract(new_ipums_extract("usa", description = "")),
-    "A `usa_extract` must contain values for `samples`"
+    "Extract definition must contain values for `samples`"
   )
   expect_error(
     validate_ipums_extract(
@@ -382,7 +382,7 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
         data_format = "csv"
       )
     ),
-    "Expected `samples` to be an `samp_spec` object or a list of "
+    "Expected `samples` to be a `samp_spec` object or a list of "
   )
   expect_error(
     validate_ipums_extract(
@@ -395,7 +395,7 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
         data_format = "csv"
       )
     ),
-    "Expected `variables` to be an `var_spec` object or a list of "
+    "Expected `variables` to be a `var_spec` object or a list of "
   )
   expect_error(
     validate_ipums_extract(
@@ -516,7 +516,7 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
       samples = "A",
       variables = c("A", "A")
     ),
-    "Cannot add multiple `variables` of same name"
+    "cannot contain multiple `variables` of same name"
   )
   expect_error(
     define_extract_cps(
@@ -524,19 +524,19 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
       samples = c("A", "A"),
       variables = "A"
     ),
-    "Cannot add multiple `samples` of same name"
+    "cannot contain multiple `samples` of same name"
   )
   expect_error(
     define_extract_nhgis(
       datasets = list(ds_spec("A", "A", "A"), ds_spec("A", "B", "C"))
     ),
-    "Cannot add multiple `datasets` of same name"
+    "cannot contain multiple `datasets` of same name"
   )
   expect_error(
     define_extract_nhgis(
       time_series_tables = list(tst_spec("A", "A", "A"), tst_spec("A", "B"))
     ),
-    "Cannot add multiple `time_series_tables` of same name"
+    "cannot contain multiple `time_series_tables` of same name"
   )
 })
 
@@ -816,7 +816,7 @@ test_that("Improper extract revisions throw warnings or errors", {
       samples = names(usa_extract$samples),
       variables = names(usa_extract$variables)
     ),
-    "A `usa_extract` must contain values for `samples`"
+    "Extract definition must contain values for `samples`"
   )
   expect_error(
     remove_from_extract(
@@ -845,94 +845,16 @@ test_that("Improper extract revisions throw warnings or errors", {
         ds_spec("A", "B", "B")
       )
     ),
-    "Cannot add two `ds_spec` objects of same name"
+    "cannot contain multiple `datasets` of same name"
   )
   expect_error(
     add_to_extract(
       usa_extract,
       variables = c("A", "A")
     ),
-    "Cannot add two `var_spec` objects of same name"
+    "cannot contain multiple `variables` of same name"
   )
 })
-
-test_that("Can combine microdata extracts", {
-  x1 <- define_extract_usa(
-    description = "Combining",
-    samples = c("S1", "S2"),
-    variables = "V1",
-    data_format = "csv"
-  )
-
-  x2 <- define_extract_usa(
-    description = "",
-    samples = "S3",
-    variables = "V2",
-    data_format = "csv"
-  )
-
-  x_target <- define_extract_usa(
-    description = "Combining",
-    samples = c("S1", "S2", "S3"),
-    variables = c("V1", "V2"),
-    data_format = "csv"
-  )
-
-  x <- combine_extracts(x1, x2)
-
-  expect_identical(x, x_target)
-})
-
-
-test_that("Can combine NHGIS extracts", {
-  x1 <- define_extract_nhgis(
-    description = "Combining",
-    shapefiles = "S1"
-  )
-
-  x2 <- define_extract_nhgis(
-    datasets = list(
-      ds_spec("A", c("D1", "D2"), "G1"),
-      ds_spec("B", "D3", "G2")
-    ),
-    time_series_tables = list(
-      tst_spec("T1", "G1"),
-      tst_spec("T2", "G1")
-    ),
-    tst_layout = "time_by_file_layout"
-  )
-
-  x3 <- define_extract_nhgis(
-    datasets = ds_spec("C", c("D2", "D4"), c("G2", "G3"), years = "Y1"),
-    shapefiles = "S1",
-    data_format = "fixed_width"
-  )
-
-  x_target <- define_extract_nhgis(
-    description = "Combining",
-    datasets = list(
-      ds_spec("A", c("D1", "D2"), "G1"),
-      ds_spec("B", "D3", "G2"),
-      ds_spec("C", c("D2", "D4"), c("G2", "G3"), "Y1")
-    ),
-    time_series_tables = list(
-      tst_spec("T1", "G1"),
-      tst_spec("T2", "G1")
-    ),
-    tst_layout = "time_by_file_layout",
-    shapefiles = "S1",
-    data_format = "csv_no_header"
-  )
-
-  x <- combine_extracts(x1, x2, x3)
-
-  expect_identical(x, x_target)
-  expect_error(
-    combine_extracts(x1, define_extract_usa("A", "B", "C")),
-    "same collection"
-  )
-})
-
 
 # JSON Conversion ----------------
 

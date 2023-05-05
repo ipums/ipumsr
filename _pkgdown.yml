@@ -80,7 +80,6 @@ reference:
       - is_extract_ready
       - add_to_extract
       - remove_from_extract
-      - combine_extracts
       - save_extract_as_json
       - define_extract_from_json
       - get_metadata_nhgis

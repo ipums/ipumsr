@@ -374,6 +374,8 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   Defaults to current working directory.
 #' @param overwrite If `TRUE`, overwrite any files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
+#' @param progress If `TRUE`, output progress bar showing the status of the
+#'   download request. Defaults to `TRUE`.
 #'
 #' @return The path(s) to the files required to read the data
 #'   requested in the extract, invisibly.
@@ -436,12 +438,12 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
+                             progress = TRUE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
   is_extract <- inherits(extract, "ipums_extract")
 
   if (is_extract) {
-    extract <- validate_ipums_extract(extract)
     is_ready <- extract_is_completed_and_has_links(extract)
 
     # If not downloadable, check latest status, since we haven't done so yet.
@@ -494,7 +496,13 @@ download_extract <- function(extract,
     )
   }
 
-  ipums_extract_specific_download(extract, download_dir, overwrite, api_key)
+  ipums_extract_specific_download(
+    extract,
+    download_dir,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
+  )
 }
 
 # Non-exported functions ---------------------------------------------------
@@ -661,6 +669,7 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
 ipums_extract_specific_download <- function(extract,
                                             download_dir,
                                             overwrite,
+                                            progress,
                                             api_key) {
   UseMethod("ipums_extract_specific_download")
 }
@@ -669,8 +678,9 @@ ipums_extract_specific_download <- function(extract,
 ipums_extract_specific_download.micro_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
+                                                          progress,
                                                           api_key) {
-  ddi_url <- extract$download_links$ddiCodebook$url
+  ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
 
   ddi_file_path <- normalizePath(
@@ -685,8 +695,21 @@ ipums_extract_specific_download.micro_extract <- function(extract,
     mustWork = FALSE
   )
 
-  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
-  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
+  ipums_api_download_request(
+    ddi_url,
+    ddi_file_path,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
+  )
+
+  ipums_api_download_request(
+    data_url,
+    data_file_path,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
+  )
 
   message(
     paste0(
@@ -702,9 +725,10 @@ ipums_extract_specific_download.micro_extract <- function(extract,
 ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
+                                                          progress,
                                                           api_key) {
-  table_url <- extract$download_links$tableData$url
-  gis_url <- extract$download_links$gisData$url
+  table_url <- extract$download_links$table_data$url
+  gis_url <- extract$download_links$gis_data$url
 
   urls <- purrr::compact(
     list(
@@ -743,7 +767,13 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   file_paths <- purrr::map2_chr(
     urls,
     file_paths,
-    ~ ipums_api_download_request(.x, .y, overwrite, api_key)
+    ~ ipums_api_download_request(
+      .x,
+      .y,
+      overwrite = overwrite,
+      progress = progress,
+      api_key = api_key
+    )
   )
 
   if (!is.null(table_url) && !is.null(gis_url)) {
@@ -779,21 +809,22 @@ extract_is_completed_and_has_links <- function(extract) {
 
 #' @export
 extract_is_completed_and_has_links.micro_extract <- function(extract) {
-  status <- extract$status
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
+  has_codebook <- has_url(download_links, "ddi_codebook")
+  has_data <-  has_url(download_links, "data")
 
-  status == "completed" && has_url(download_links, "ddiCodebook") &&
-    has_url(download_links, "data")
+  is_complete && has_codebook && has_data
 }
 
 #' @export
 extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
-  status <- extract$status
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  status == "completed" && length(download_links) > 0
+  has_table_data <- has_url(download_links, "table_data")
+  has_gis_data <- has_url(download_links, "gis_data")
+
+  is_complete && (has_table_data || has_gis_data)
 }

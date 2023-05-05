@@ -31,6 +31,7 @@ ipums_data_collections <- function() {
     "IPUMS CPS", "microdata", "cps", TRUE,
     "IPUMS International", "microdata", "ipumsi", TRUE,
     "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
+    "IPUMS IHGIS", "aggregate data", "ihgis", FALSE,
     "IPUMS AHTUS", "microdata", "ahtus", FALSE,
     "IPUMS MTUS", "microdata", "mtus", FALSE,
     "IPUMS ATUS", "microdata", "atus", FALSE,
@@ -783,8 +784,18 @@ validate_api_request <- function(res, call = caller_env()) {
     # Standard error message
     error_message <- paste0("API request failed with status ", status, ".")
 
-    # 401 or 403 are authorization errors
+    # Authorization errors could be related to invalid registration or key
     if (status %in% c(401, 403)) {
+      # The API provides details for invalid registration cases, so check
+      # if any error details exist.
+      if (length(error_details) > 0) {
+        rlang::abort(
+          c("Invalid IPUMS registration.", error_details),
+          call = call
+        )
+      }
+
+      # Otherwise we should be dealing with a valid registration but invalid key
       rlang::abort(
         c(
           "The provided API key is either missing or invalid.",
@@ -798,7 +809,7 @@ validate_api_request <- function(res, call = caller_env()) {
       )
     }
 
-    # If a downloads request, inform that download failed
+    # If a downloads request, add hint to inform of possible issue
     if (is_downloads_request) {
       rlang::abort(
         c(
@@ -1093,6 +1104,7 @@ ipums_api_extracts_request <- function(verb,
 ipums_api_download_request <- function(url,
                                        file_path,
                                        overwrite,
+                                       progress = TRUE,
                                        api_key = Sys.getenv("IPUMS_API_KEY")) {
   if (file.exists(file_path) && !overwrite) {
     rlang::abort(
@@ -1103,13 +1115,19 @@ ipums_api_download_request <- function(url,
     )
   }
 
+  if (progress) {
+    progress <- httr::progress()
+  } else {
+    progress <- NULL
+  }
+
   ipums_api_request(
     "GET",
     url = url,
     body = FALSE,
     api_key = api_key,
     httr::write_disk(file_path, overwrite = TRUE),
-    httr::progress()
+    progress
   )
 
   file_path
@@ -1292,4 +1310,9 @@ to_snake_case <- function(x) {
 
 to_camel_case <- function(x) {
   gsub("\\_(\\w?)", "\\U\\1", x, perl = TRUE)
+}
+
+# Helper to check whether a given URL exists in an extract's download links
+has_url <- function(links, name) {
+  is.list(links[[name]]) && is.character(links[[name]][["url"]])
 }

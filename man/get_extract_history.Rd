@@ -76,7 +76,7 @@ get_last_extract_info("nhgis")
 \seealso{
 \code{\link[=get_extract_info]{get_extract_info()}} to get the current status of a specific extract request.
 
-\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
+\code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
 revise an extract definition.
 
 \code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information

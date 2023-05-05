@@ -176,7 +176,7 @@ process and manage an extract request.
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
 
-\code{\link[=add_to_extract.micro_extract]{add_to_extract()}},
-\code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}, and
-\code{\link[=combine_extracts]{combine_extracts()}} to revise an extract definition.
+\code{\link[=add_to_extract.micro_extract]{add_to_extract()}}, and
+\code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}
+to revise an extract definition.
 }
