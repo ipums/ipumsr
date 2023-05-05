@@ -360,10 +360,9 @@ test_that("Tibble of recent micro extracts has expected structure", {
   })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
-  })
-  vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_extract_history("cps", as_table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    )
   })
 
   recent_numbers <- recent_usa_extracts_tbl$number
@@ -381,10 +380,8 @@ test_that("Tibble of recent micro extracts has expected structure", {
   )
 
   expect_equal(nrow(recent_usa_extracts_tbl), 10)
-  expect_equal(nrow(recent_cps_extracts_tbl), 10)
 
   expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
-  expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
 
   expect_equal(single_usa_extract_tbl$number, ready_usa_extract$number)
   expect_equal(
@@ -426,7 +423,9 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", as_table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+    )
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -448,12 +447,12 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 
   recent_nhgis_extract_submitted_tst <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-      recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
+            recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
   ]
 
   recent_nhgis_extract_submitted_shp <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-      recent_nhgis_extracts_tbl$data_type == "shapefiles"),
+            recent_nhgis_extracts_tbl$data_type == "shapefiles"),
   ]
 
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
@@ -492,17 +491,19 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 test_that("Can get specific number of recent extracts in tibble format", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_extract_history(
-      "usa",
-      how_many = 2,
-      as_table = TRUE
+    lifecycle::expect_deprecated(
+      two_recent_usa_extracts <- get_recent_extracts_info_tbl(
+        "usa",
+        how_many = 2
+      )
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_extract_history(
-      "nhgis",
-      how_many = 2,
-      as_table = TRUE
+    lifecycle::expect_deprecated(
+      two_recent_nhgis_extracts <- get_recent_extracts_info_tbl(
+        "nhgis",
+        how_many = 2
+      )
     )
   })
 
@@ -526,18 +527,24 @@ test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_extract_history("usa", as_table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    )
   })
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_extract_history("usa", as_table = FALSE)
+    recent_usa_extracts_list <- get_extract_history("usa")
   })
 
-  converted_to_list <- extract_tbl_to_list(
-    recent_usa_extracts_tbl,
-    validate = FALSE
+  lifecycle::expect_deprecated(
+    converted_to_list <- extract_tbl_to_list(
+      recent_usa_extracts_tbl,
+      validate = FALSE
+    )
   )
 
-  converted_to_tbl <- extract_list_to_tbl(recent_usa_extracts_list)
+  lifecycle::expect_deprecated(
+    converted_to_tbl <- extract_list_to_tbl(recent_usa_extracts_list)
+  )
 
   expect_identical(recent_usa_extracts_list, converted_to_list)
   expect_identical(recent_usa_extracts_tbl, converted_to_tbl)
@@ -550,14 +557,21 @@ test_that("NHGIS tbl/list conversion works", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_extract_history("nhgis", as_table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+    )
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_extract_history("nhgis", as_table = FALSE)
+    recent_nhgis_extracts_list <- get_extract_history("nhgis")
   })
 
-  converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
-  converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  lifecycle::expect_deprecated(
+    converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
+  )
+
+  lifecycle::expect_deprecated(
+    converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  )
 
   expect_identical(recent_nhgis_extracts_list, converted_to_list)
   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
@@ -589,7 +603,7 @@ test_that("NHGIS tbl/list conversion works", {
 # Test included because conversion has behaved strangely when missing at
 # least one of datasets, time_series_tables, or shapefiles in past.
 test_that("NHGIS shapefile-only tbl/list conversion works", {
-  skip_if_no_api_access(have_api_access)
+  # skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract-shp", {
     submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
@@ -600,15 +614,20 @@ test_that("NHGIS shapefile-only tbl/list conversion works", {
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    nhgis_extract_tbl_shp <- get_extract_history(
-      "nhgis",
-      how_many = 1,
-      as_table = TRUE
+    lifecycle::expect_deprecated(
+      nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl(
+        "nhgis",
+        how_many = 1
+      )
     )
   })
 
+  lifecycle::expect_deprecated(
+    extract <- extract_tbl_to_list(nhgis_extract_tbl_shp)
+  )
+
   expect_identical(
-    extract_tbl_to_list(nhgis_extract_tbl_shp)[[1]],
+    extract[[1]],
     ready_nhgis_extract_shp
   )
 })

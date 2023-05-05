@@ -85,7 +85,6 @@ reference:
       - get_metadata_nhgis
       - ipums_extract
       - ipums_data_collections
-      - extract_tbl_to_list
   - title: "Explore IPUMS variable metadata"
     contents:
       - ipums_view

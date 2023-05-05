@@ -7,7 +7,6 @@
 get_extract_history(
   collection = NULL,
   how_many = 10,
-  as_table = FALSE,
   delay = 0,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
@@ -23,11 +22,6 @@ For a list of codes used to refer to each collection, see
 \item{how_many}{The number of extract requests for which to retrieve
 information. Defaults to the 10 most recent extracts.}
 
-\item{as_table}{If \code{TRUE}, summarize extract history in a
-\code{\link[tibble:tbl_df-class]{tibble}}. Otherwise, provide extract history as a
-list of \code{\link[=ipums_extract-class]{ipums_extract}} objects.
-Defaults to \code{FALSE}.}
-
 \item{delay}{Number of seconds to delay between
 successive API requests, if multiple requests are needed to retrieve all
 records.
@@ -41,9 +35,7 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
-Either a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects or
-a \code{\link[tibble:tbl_df-class]{tibble}} containing the extract definitions,
-depending on the value of \code{as_table}.
+A list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
 }
 \description{
 Retrieve definitions of an arbitrary number of previously submitted extract
@@ -57,16 +49,12 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 \dontrun{
-# Get information for most recent extract requests
+# Get information for most recent extract requests.
+# By default gets the most recent 10 extracts
 get_extract_history("usa")
 
-# Adjust the number to return and output format
-get_extract_history("cps", how_many = 3, as_table = TRUE)
-
-# Setting `how_many` to `Inf` will retrieve your entire history.
-# You may want to set `as_table = TRUE` to consolidate output depending on
-# the size of your extract history.
-get_extract_history("nhgis", how_many = Inf, as_table = TRUE)
+# Return only the most recent 3 extract definitions
+get_extract_history("cps", how_many = 3)
 
 # To get the most recent extract (for instance, if you have forgotten its
 # extract number), use `get_last_extract_info()`
@@ -78,7 +66,4 @@ get_last_extract_info("nhgis")
 
 \code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
 revise an extract definition.
-
-\code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information
-about recent extract requests.
 }

@@ -9,7 +9,6 @@
   browse NHGIS data sources when creating an NHGIS extract request.
 
 * `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.
-  Set `as_table = TRUE` to get recent extract information in tabular format.
   
 * Allows users to set a default IPUMS collection using
   `set_ipums_default_collection()`. Users with a default collection do not 
@@ -67,7 +66,11 @@
   remain unchanged.
   
 * `get_recent_extracts_info_list()` and `get_recent_extracts_info_tbl()` have
-  been deprecated in favor of `get_extract_history()`.
+  been deprecated in favor of `get_extract_history()`. Additionally,
+  tabular-formatted extract history has been deprecated, along with conversion
+  functions `extract_tbl_to_list()` and `extract_list_to_tbl()`. Use the 
+  list of `ipums_extract` objects provided by `get_extract_history()` to
+  browse past extract definitions.
   
 * `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
   `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular

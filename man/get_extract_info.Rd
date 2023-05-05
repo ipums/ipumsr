@@ -87,7 +87,4 @@ extract definition.
 revise an extract definition.
 
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
-
-\code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information
-about recent extract requests.
 }

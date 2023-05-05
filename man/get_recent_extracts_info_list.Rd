@@ -21,8 +21,10 @@ get_recent_extracts_info_tbl(
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 Functionality for accessing recent extract information has been moved to
-\code{\link[=get_extract_history]{get_extract_history()}}.
+\code{\link[=get_extract_history]{get_extract_history()}}. Please use that function instead.
 
-Please use that function instead.
+Additionally, support for tabular extract history has been deprecated.
+To identify past extracts that meet certain criteria, iterate through the
+list provided by \code{get_extract_history()}.
 }
 \keyword{internal}
