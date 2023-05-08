@@ -603,7 +603,7 @@ test_that("NHGIS tbl/list conversion works", {
 # Test included because conversion has behaved strangely when missing at
 # least one of datasets, time_series_tables, or shapefiles in past.
 test_that("NHGIS shapefile-only tbl/list conversion works", {
-  # skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract-shp", {
     submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())

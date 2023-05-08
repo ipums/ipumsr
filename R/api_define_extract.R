@@ -2893,7 +2893,7 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
       # extractDefinition won't exist if it is from a saved JSON file
       def <- x$extractDefinition %||% x
 
-      api_extract_warnings(x$number, def$warnings)
+      api_extract_warnings(x$number, x$warnings)
 
       samples <- purrr::map(
         names(def$samples),

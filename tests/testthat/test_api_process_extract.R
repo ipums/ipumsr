@@ -237,6 +237,8 @@ test_that("Can resubmit an extract", {
 })
 
 test_that("Revisions update status of submitted extract", {
+  skip_if_no_api_access(have_api_access)
+
   vcr::use_cassette("recent-usa-extracts-list", {
     usa_extracts <- get_extract_history("usa")
   })
@@ -576,7 +578,7 @@ test_that("Can add to a submitted extract", {
 # Save a submitted extract as JSON -------
 
 test_that("We can export to and import from JSON, submitted extract", {
-  # skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
     submitted_usa_extract <- submit_extract(test_usa_extract())

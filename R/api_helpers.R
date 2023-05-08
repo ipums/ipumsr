@@ -868,8 +868,7 @@ api_extract_warnings <- function(extract_number, warnings) {
   if (length(warnings) > 0) {
     rlang::warn(c(
       paste0(
-        "Extract number ", extract_number,
-        " contains unsupported features and has been modified:"
+        "Extract number ", extract_number, " contains unsupported features:"
       ),
       warnings
     ))

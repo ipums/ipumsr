@@ -412,6 +412,8 @@ test_that("We catch invalid collection specifications during requests", {
 })
 
 test_that("We warn users about unsupported features detected in an extract", {
+  skip_if_no_api_access(have_api_access)
+
   vcr::use_cassette("submitted-cps-extract", {
     cps_extract <- submit_extract(test_cps_extract())
   })
@@ -431,11 +433,14 @@ test_that("We warn users about unsupported features detected in an extract", {
     })
   })
 
-  # Set `validate = FALSE` as this is a version 1 response, which
+  # Ensure `validate = FALSE` as this is a version 1 response, which
   # cannot be converted to a valid ipums_extract object. However,
   # we should still be able to provide warnings.
+  # NB: we cannot currently test for multiple-extract endpoint because
+  # v2 `extract_list_from_json` is not compatible with v1 formatted
+  # response in this case.
   expect_warning(
-    extract_list_from_json(response, validate = FALSE)[[1]],
+    extract_list_from_json(response, validate = FALSE),
     paste0(
       "Extract number ", cps_extract$number,
       " contains unsupported features.+",
@@ -444,6 +449,12 @@ test_that("We warn users about unsupported features detected in an extract", {
       "Attaching characteristics is unsupported"
     )
   )
+
+  # TODO: we cannot currently test warnings for issues that have never been
+  # supported via API, e.g. longitudinal extracts should also produce
+  # warnings, but as they can only be created in the web app, we do
+  # not currently have a consistent way to reproduce these fixtures
+  # across developers.
 })
 
 # Misc ------------------------------------------
