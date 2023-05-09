@@ -95,9 +95,8 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \seealso{
 \code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
-
 \code{\link[=define_extract]{define_extract_*()}} to create a new extract request from
 scratch.
+
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 }

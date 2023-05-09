@@ -174,13 +174,8 @@ submit_extract(usa_extract)
 }
 }
 \seealso{
-\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
-process and manage an extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
-
-\code{\link[=add_to_extract.micro_extract]{add_to_extract()}}, and
-\code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}
-to revise an extract definition.
 }

@@ -61,5 +61,5 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 \code{\link[=get_extract_info]{get_extract_info()}} and \code{\link[=is_extract_ready]{is_extract_ready()}} to check the status of an
 extract request.
 
-\code{\link[=download_extract]{download_extract()}} to download an extract.
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 }

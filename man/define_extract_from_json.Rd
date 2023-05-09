@@ -80,11 +80,12 @@ identical(my_extract, copy_of_my_extract)
 file.remove(extract_json_path)
 }
 \seealso{
-\code{\link[=define_extract]{define_extract_*()}} to define an extract request to save.
+\code{\link[=define_extract]{define_extract_*()}} to define an extract request manually.
+
+\code{\link[=get_extract_info]{get_extract_info()}} to obtain a past extract to save.
+
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 
 \code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
 revise an extract definition.
-
-\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
-process and manage an extract request.
 }

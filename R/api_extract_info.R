@@ -36,16 +36,15 @@
 #' @seealso
 #' [get_extract_history()] to browse past extract definitions
 #'
-#' [submit_extract()] and [download_extract()] to
-#'   process and manage an extract request.
+#' [wait_for_extract()] to wait for an extract to finish processing.
+#'
+#' [download_extract()] to download an extract's data files.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
 #' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
-#'
-#' [set_ipums_default_collection()] to set a default collection.
 #'
 #' @export
 #'
@@ -158,6 +157,75 @@ get_extract_info <- function(extract,
 #' # To get the most recent extract (for instance, if you have forgotten its
 #' # extract number), use `get_last_extract_info()`
 #' get_last_extract_info("nhgis")
+#' }
+#'
+#' # To browse your extract history by particular criteria, you can
+#' # loop through the extract objects. We'll create a sample list of 2 extracts:
+#' extract1 <- define_extract_usa(
+#'   description = "2013 ACS",
+#'   samples = "us2013a",
+#'   variables = var_spec(
+#'     "SEX",
+#'     case_selections = "2",
+#'     data_quality_flags = TRUE
+#'   )
+#' )
+#'
+#' extract2 <- define_extract_usa(
+#'   description = "2014 ACS",
+#'   samples = "us2014a",
+#'   variables = list(
+#'     var_spec("RACE"),
+#'     var_spec(
+#'       "SEX",
+#'       case_selections = "1",
+#'       data_quality_flags = FALSE
+#'     )
+#'   )
+#' )
+#'
+#' extracts <- list(extract1, extract2)
+#'
+#' # `purrr::keep()`` is particularly useful for filtering:
+#' purrr::keep(extracts, ~ "RACE" %in% names(.x$variables))
+#'
+#' purrr::keep(extracts, ~ grepl("2014 ACS", .x$description))
+#'
+#' # You can also filter on variable-specific criteria
+#' purrr::keep(extracts, ~ isTRUE(.x$variables[["SEX"]]$data_quality_flags))
+#'
+#' # To filter based on all variables in an extract, you'll need to
+#' # create a nested loop. For instance, to find all extracts that have
+#' # any variables with data_quality_flags:
+#' purrr::keep(
+#'   extracts,
+#'   function(extract) {
+#'     any(purrr::map_lgl(
+#'       names(extract$variables),
+#'       function(var) isTRUE(extract$variables[[var]]$data_quality_flags)
+#'     ))
+#'   }
+#' )
+#'
+#' # To peruse your extract history without filtering, `purrr::map()` is more
+#' # useful
+#' purrr::map(extracts, ~ names(.x$variables))
+#'
+#' purrr::map(extracts, ~ names(.x$samples))
+#'
+#' purrr::map(x, ~ .x$variables[["RACE"]]$case_selections)
+#'
+#' # Once you have identified a past extract, you can easily download or
+#' # resubmit it
+#' \dontrun{
+#' extracts <- get_extract_history("nhgis")
+#'
+#' extract <- purrr::keep(
+#'   extracts,
+#'   ~ "CW3" %in% names(.x$time_series_tables)
+#' )
+#'
+#' download_extract(extract[[1]])
 #' }
 get_extract_history <- function(collection = NULL,
                                 how_many = 10,

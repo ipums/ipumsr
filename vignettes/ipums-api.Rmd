@@ -46,16 +46,16 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
                                                fixture_path = NULL,
                                                n_requests = 1) {
   fixture_path <- fixture_path %||% vcr::vcr_test_path("fixtures")
-
+  
   ready_extract_cassette_file <- file.path(
     fixture_path, cassette_file_name
   )
-
+  
   ready_lines <- readLines(ready_extract_cassette_file)
   request_lines <- which(grepl("^- request:", ready_lines))
-
+  
   start_line <- request_lines[length(request_lines) - n_requests + 1]
-
+  
   writeLines(
     c(
       ready_lines[[1]],
@@ -71,11 +71,11 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
 The IPUMS API supports two asset types:
 
 -   **IPUMS extract** endpoints can be used to submit extract requests
-    for processing and download completed extract files.
+for processing and download completed extract files.
 
 -   **IPUMS metadata** endpoints can be used to discover and explore
-    available IPUMS data as well as retrieve codes, names, and other
-    extract parameters necessary to form extract requests.
+available IPUMS data as well as retrieve codes, names, and other
+extract parameters necessary to form extract requests.
 
 ipumsr provides functions that support both of these assets.
 
@@ -84,11 +84,11 @@ that can help users to:
 
 -   Precisely reproduce the specifications of previous extract requests
 -   Easily revise and resubmit previous extract requests to update
-    analyses with new data
+analyses with new data
 -   Save extract request definitions that can be shared with others
-    without violating IPUMS conditions
+without violating IPUMS conditions
 -   Integrate the extract download process with functions to load data
-    into R
+into R
 -   Quickly identify and explore available IPUMS data sources
 
 The basic workflow for interacting with the IPUMS API is as follows:
@@ -114,6 +114,7 @@ following collections:
 
 -   IPUMS USA
 -   IPUMS CPS
+-   IPUMS International
 -   IPUMS NHGIS
 
 IPUMS **metadata** support is currently available via API for the
@@ -146,13 +147,13 @@ can find links to register for each of the API-supported IPUMS
 collections below:
 
 -   [IPUMS
-    USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
+USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
 -   [IPUMS
-    CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
+CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
 -   [IPUMS
-    International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
+International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
 -   [IPUMS
-    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
+NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
 
 Once you're registered, you'll be able to [create an API
 key](https://account.ipums.org/api_keys).
@@ -184,6 +185,7 @@ These functions take the form `define_extract_<collection>()`:
 
 -   `define_extract_usa()`
 -   `define_extract_cps()`
+-   `define_extract_ipumsi()`
 -   `define_extract_nhgis()`
 
 Alternatively, use `define_extract_from_json()` to load an extract
@@ -213,9 +215,11 @@ tables P1 and P2 from the 2010 SF1a census file at the state level:
 ```{r}
 nhgis_extract_definition <- define_extract_nhgis(
   description = "NHGIS extract for API vignette",
-  datasets = "2010_SF1a",
-  data_tables = c("P1", "P2"),
-  geog_levels = "state"
+  datasets = ds_spec(
+    "2010_SF1a",
+    data_tables = c("P1", "P2"),
+    geog_levels = "state"
+  )
 )
 
 nhgis_extract_definition
@@ -229,9 +233,10 @@ applied to all `datasets` in the extract definition:
 ```{r}
 define_extract_nhgis(
   description = "NHGIS extract with multiple datasets",
-  datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
-  data_tables = c("B01001", "B01002"),
-  geog_levels = "state"
+  datasets = list(
+    ds_spec("2016_2020_ACS5a", "B01001", "state"),
+    ds_spec("2017_2021_ACS5a", "B01002", "state")
+  )
 )
 ```
 
@@ -245,12 +250,10 @@ subfield values:
 # geog_levels are recycled to all datasets
 define_extract_nhgis(
   description = "NHGIS extract with multiple datasets",
-  datasets = c("2016_2020_ACS5a", "2017_2021_ACS5a"),
-  data_tables = list(
-    "2016_2020_ACS5a" = "B01001",
-    "2017_2021_ACS5a" = "B01002"
-  ),
-  geog_levels = "state"
+  datasets = list(
+    ds_spec("2016_2020_ACS5a", "B01001", "state"),
+    ds_spec("2017_2021_ACS5a", "B01002", "state")
+  )
 )
 ```
 
@@ -308,17 +311,17 @@ While the IPUMS metadata API is not yet available for microdata
 collections, users can find sample ID codes at the following links:
 
 -   [IPUMS
-    USA](https://usa.ipums.org/usa-action/samples/sample_ids){target="_blank"}
+USA](https://usa.ipums.org/usa-action/samples/sample_ids){target="_blank"}
 -   [IPUMS
-    CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
+CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
 
 For microdata variable names, refer to the relevant collection's online
 extract builder:
 
 -   [IPUMS
-    USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
+USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
 -   [IPUMS
-    CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
+CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
 
 IPUMS NHGIS users can find the codes used for datasets, data tables,
 time series tables, and more by using `get_metadata_nhgis()`.
@@ -334,7 +337,7 @@ interest.
 
 ```{r}
 get_metadata_nhgis(type = "datasets") %>%
-  head()
+head()
 ```
 
 To get details on a particular data source, pass its name to the
@@ -351,7 +354,7 @@ population counts and urban/rural population counts, respectively:
 ds_meta <- get_metadata_nhgis(dataset = "2010_SF1a")
 
 ds_meta$data_tables %>%
-  filter(name %in% c("P1", "P2"))
+filter(name %in% c("P1", "P2"))
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}

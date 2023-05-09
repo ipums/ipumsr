@@ -114,7 +114,7 @@ is_extract_ready("usa:1")
 }
 }
 \seealso{
-\code{\link[=download_extract]{download_extract()}} to download an extract.
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 
 \code{\link[=get_extract_info]{get_extract_info()}} to obtain the definition of a submitted extract request.
 }

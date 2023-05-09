@@ -1,13 +1,12 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -18,8 +17,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:28:24 GMT
-      etag: W/"9fcbe25607d733017f7e4c7aa4b7824d"
+      date: Tue, 09 May 2023 09:20:39 GMT
+      etag: W/"5614a90688b0e21bba44b934b9af6d77"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,8 +29,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: eb3025ec-c0d9-47ca-9c0b-e4c734a41e74
-      x-runtime: '0.013056'
+      x-request-id: e189b8c0-3373-480e-a844-732e8552182a
+      x-runtime: '0.014314'
       x-xss-protection: '0'
       content-length: '34675'
     body:
@@ -148,23 +147,23 @@ http_interactions:
         \u0026 Counties]","sequence":2801},{"name":"1939_1959_cVS","group":"1939-1959
         Vital Statistics","description":"Natality \u0026 Mortality Data [US, States
         \u0026 Counties]","sequence":2901},{"name":"1940_cAge","group":"1940 Census","description":"Detailed
-        Age Data [US, States \u0026 Counties]","sequence":3002},{"name":"1940_sOcc","group":"1940
-        Census","description":"Occupation Data [US \u0026 States]","sequence":3003},{"name":"1940_cPHAE","group":"1940
+        Age Data [US, States \u0026 Counties]","sequence":3001},{"name":"1940_sOcc","group":"1940
+        Census","description":"Occupation Data [US \u0026 States]","sequence":3002},{"name":"1940_cPHAE","group":"1940
         Census","description":"Population, Housing, Agriculture \u0026 Economic Data
-        [US, States \u0026 Counties]","sequence":3004},{"name":"1940_tPH_Major","group":"1940
+        [US, States \u0026 Counties]","sequence":3003},{"name":"1940_tPH_Major","group":"1940
         Census","description":"Population \u0026 Housing Data [Tracts \u0026 NY Health
-        Areas: Major Cities \u0026 Surrounds]","sequence":3005},{"name":"1940_tPH_NYC","group":"1940
-        Census","description":"Population \u0026 Housing Data [Tracts: New York NY]","sequence":3006},{"name":"1940_tPop_HI","group":"1940
-        Census","description":"Population Data [Tracts: Hawaii]","sequence":3007},{"name":"1950_cAge","group":"1950
-        Census","description":"Detailed Age Data [US, States \u0026 Counties]","sequence":3202},{"name":"1950_sOcc","group":"1950
-        Census","description":"Occupation Data [US \u0026 States]","sequence":3203},{"name":"1950_cPHA","group":"1950
+        Areas: Major Cities \u0026 Surrounds]","sequence":3004},{"name":"1940_tPH_NYC","group":"1940
+        Census","description":"Population \u0026 Housing Data [Tracts: New York NY]","sequence":3005},{"name":"1940_tPop_HI","group":"1940
+        Census","description":"Population Data [Tracts: Hawaii]","sequence":3006},{"name":"1950_cAge","group":"1950
+        Census","description":"Detailed Age Data [US, States \u0026 Counties]","sequence":3201},{"name":"1950_sOcc","group":"1950
+        Census","description":"Occupation Data [US \u0026 States]","sequence":3202},{"name":"1950_cPHA","group":"1950
         Census","description":"Population, Housing \u0026 Agriculture Data [US, States
-        \u0026 Counties]","sequence":3204},{"name":"1950_tPH_Major","group":"1950
+        \u0026 Counties]","sequence":3203},{"name":"1950_tPH_Major","group":"1950
         Census","description":"Population \u0026 Housing Data [Tracts: Major Cities
-        \u0026 Surrounds]","sequence":3205},{"name":"1950_tPop_Misc","group":"1950
+        \u0026 Surrounds]","sequence":3204},{"name":"1950_tPop_Misc","group":"1950
         Census","description":"Population Totals [Tracts: Selected Areas in GA, HI,
-        IA, NJ \u0026 SC]","sequence":3206},{"name":"1950_tPrP_LA","group":"1950 Census","description":"Preliminary
-        Population Data [Tracts: Los Angeles CA]","sequence":3207},{"name":"1952_cRelig","group":"1952
+        IA, NJ \u0026 SC]","sequence":3205},{"name":"1950_tPrP_LA","group":"1950 Census","description":"Preliminary
+        Population Data [Tracts: Los Angeles CA]","sequence":3206},{"name":"1952_cRelig","group":"1952
         Survey of Churches and Church Membership","description":"Religious Bodies
         Data [States \u0026 Counties]","sequence":3301},{"name":"1959_1972_cVS","group":"1959-1972
         Vital Statistics","description":"Natality \u0026 Mortality Data [US, States
@@ -408,18 +407,18 @@ http_interactions:
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
         of Work]","sequence":6005}],"pageNumber":1,"pageSize":2500,"totalCount":253,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-04-06 22:28:25 GMT
+  recorded_at: 2023-05-09 09:20:43 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a?version=2
+    uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -429,8 +428,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:28:25 GMT
-      etag: W/"32c60454242accf7b28deb33d31c810f"
+      date: Tue, 09 May 2023 09:20:42 GMT
+      etag: W/"0cb29bbcfb42a62230d555c65f030845"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -441,8 +440,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 4825e507-0fb1-455b-be93-1f9e6668d7cd
-      x-runtime: '0.006380'
+      x-request-id: 921495e3-847c-4494-b155-3d3f0098bc1b
+      x-runtime: '2.621506'
       x-xss-protection: '0'
       content-length: '72949'
     body:
@@ -943,7 +942,7 @@ http_interactions:
         Attendance Area for 2009-2010 Second Grade","hasGeogExtentSelection":false,"sequence":404},{"name":"sab_01","description":"School
         Attendance Area for 2009-2010 First Grade","hasGeogExtentSelection":false,"sequence":405},{"name":"sab_00","description":"School
         Attendance Area for 2009-2010 Kindergarten","hasGeogExtentSelection":false,"sequence":406}],"geographicInstances":[{"name":"010","description":"Alabama"},{"name":"020","description":"Alaska"},{"name":"040","description":"Arizona"},{"name":"050","description":"Arkansas"},{"name":"060","description":"California"},{"name":"080","description":"Colorado"},{"name":"090","description":"Connecticut"},{"name":"100","description":"Delaware"},{"name":"110","description":"District
-        Of Columbia"},{"name":"120","description":"Florida"},{"name":"130","description":"Georgia"},{"name":"150","description":"Hawaii"},{"name":"160","description":"Idaho"},{"name":"170","description":"Illinois"},{"name":"180","description":"Indiana"},{"name":"190","description":"Iowa"},{"name":"200","description":"Kansas"},{"name":"210","description":"Kentucky"},{"name":"220","description":"Louisiana"},{"name":"230","description":"Maine"},{"name":"240","description":"Maryland"},{"name":"250","description":"Massachusetts"},{"name":"260","description":"Michigan"},{"name":"270","description":"Minnesota"},{"name":"280","description":"Mississippi"},{"name":"290","description":"Missouri"},{"name":"300","description":"Montana"},{"name":"310","description":"Nebraska"},{"name":"320","description":"Nevada"},{"name":"330","description":"New
+        of Columbia"},{"name":"120","description":"Florida"},{"name":"130","description":"Georgia"},{"name":"150","description":"Hawaii"},{"name":"160","description":"Idaho"},{"name":"170","description":"Illinois"},{"name":"180","description":"Indiana"},{"name":"190","description":"Iowa"},{"name":"200","description":"Kansas"},{"name":"210","description":"Kentucky"},{"name":"220","description":"Louisiana"},{"name":"230","description":"Maine"},{"name":"240","description":"Maryland"},{"name":"250","description":"Massachusetts"},{"name":"260","description":"Michigan"},{"name":"270","description":"Minnesota"},{"name":"280","description":"Mississippi"},{"name":"290","description":"Missouri"},{"name":"300","description":"Montana"},{"name":"310","description":"Nebraska"},{"name":"320","description":"Nevada"},{"name":"330","description":"New
         Hampshire"},{"name":"340","description":"New Jersey"},{"name":"350","description":"New
         Mexico"},{"name":"360","description":"New York"},{"name":"370","description":"North
         Carolina"},{"name":"380","description":"North Dakota"},{"name":"390","description":"Ohio"},{"name":"400","description":"Oklahoma"},{"name":"410","description":"Oregon"},{"name":"420","description":"Pennsylvania"},{"name":"440","description":"Rhode
@@ -1055,5 +1054,5 @@ http_interactions:
         New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
         New England city and town area--urban"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"}]}]}'
-  recorded_at: 2023-04-06 22:28:25 GMT
+  recorded_at: 2023-05-09 09:20:43 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

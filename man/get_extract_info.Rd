@@ -78,14 +78,13 @@ get_last_extract_info("nhgis")
 \seealso{
 \code{\link[=get_extract_history]{get_extract_history()}} to browse past extract definitions
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
-process and manage an extract request.
+\code{\link[=wait_for_extract]{wait_for_extract()}} to wait for an extract to finish processing.
+
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
 
 \code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
 revise an extract definition.
-
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
 }

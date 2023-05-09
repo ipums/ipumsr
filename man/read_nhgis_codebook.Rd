@@ -4,12 +4,7 @@
 \alias{read_nhgis_codebook}
 \title{Read metadata from an NHGIS codebook (.txt) file}
 \usage{
-read_nhgis_codebook(
-  cb_file,
-  file_select = NULL,
-  raw = FALSE,
-  data_layer = deprecated()
-)
+read_nhgis_codebook(cb_file, file_select = NULL, raw = FALSE)
 }
 \arguments{
 \item{cb_file}{Path to a codebook (.txt) file, a .zip
@@ -24,9 +19,6 @@ file. Ignored if \code{cb_file} is the path to a single codebook file.}
 \item{raw}{If \code{TRUE}, return a character vector containing the lines
 of \code{cb_file} rather than an \code{ipums_ddi} object. Defaults to
 \code{FALSE}.}
-
-\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
-instead.}
 }
 \value{
 If \code{raw = FALSE}, an \code{ipums_ddi} object with information on the
@@ -37,12 +29,18 @@ If \code{raw = TRUE}, a character vector with one element for each
 line of the given \code{cb_file}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Read the variable metadata contained in the .txt codebook file included with
 NHGIS extracts into an \link{ipums_ddi} object.
 
 Because NHGIS variable metadata do not
 adhere to all the standards of microdata DDI files, some of the \code{ipums_ddi}
 fields will not be populated.
+
+This function is marked as experimental while we determine whether
+there may be a more robust way to standardize codebook and DDI reading across
+IPUMS collections.
 }
 \examples{
 # Example file

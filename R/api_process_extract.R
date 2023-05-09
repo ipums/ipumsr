@@ -25,7 +25,7 @@
 #' [get_extract_info()] and [is_extract_ready()] to check the status of an
 #'   extract request.
 #'
-#' [download_extract()] to download an extract.
+#' [download_extract()] to download an extract's data files.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
 #'   extract definition and newly-assigned extract number of the submitted
@@ -161,7 +161,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   whether the extract is ready to download.
 #'
 #' @seealso
-#' [download_extract()] to download an extract.
+#' [download_extract()] to download an extract's data files.
 #'
 #' [get_extract_info()] to obtain the definition of a submitted extract request.
 #'

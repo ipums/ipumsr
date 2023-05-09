@@ -176,15 +176,10 @@ NULL
 #'   the extract definition.
 #'
 #' @seealso
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
-#'
-#' [`add_to_extract()`][add_to_extract.micro_extract()], and
-#' [`remove_from_extract()`][remove_from_extract.micro_extract()]
-#' to revise an extract definition.
 #'
 #' @name define_extract-micro
 #'
@@ -411,15 +406,10 @@ define_extract_ipumsi <- function(description,
 #' @seealso
 #' [get_metadata_nhgis()] to find data to include in an extract definition.
 #'
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
-#'
-#' [`add_to_extract()`][add_to_extract.nhgis_extract()] and
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()]
-#' to revise an extract definition.
 #'
 #' @export
 #'
@@ -757,13 +747,14 @@ tst_spec <- function(name,
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract] to define an extract request to save.
+#' [`define_extract_*()`][define_extract] to define an extract request manually.
+#'
+#' [get_extract_info()] to obtain a past extract to save.
+#'
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
-#'
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
 #'
 #' @export
 #'
@@ -900,11 +891,10 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' @seealso
 #' [remove_from_extract()] to remove values from an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
 #' [`define_extract_*()`][define_extract] to create a new extract request from
 #' scratch.
+#'
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' @export
 #'
@@ -1481,11 +1471,10 @@ add_to_extract.micro_extract <- function(extract,
 #' @seealso
 #' [add_to_extract()] to add values to an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
 #' [`define_extract_*()`][define_extract] to create a new extract definition
 #' from scratch.
+#'
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' @export
 #'
