@@ -15,7 +15,7 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
 #' See *Downloading IPUMS files* below for more information about downloading
 #' these files.
@@ -23,6 +23,11 @@
 #' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
 #' in their handling of extracts that contain multiple record types.
 #' See *Data structures* below.
+#'
+#' Note that Stata, SAS, and SPSS file formats are not supported by
+#' ipumsr readers. Convert your extract to fixed-width or CSV format, or see
+#' [haven](https://haven.tidyverse.org/index.html) for help
+#' loading these files.
 #'
 #' @inheritSection read_ipums_micro Downloading IPUMS files
 #'

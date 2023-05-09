@@ -66,24 +66,23 @@ reference:
       - ipums_list_files
   - title: "Interact with the IPUMS API"
     contents:
-      - set_ipums_api_key
-      - set_ipums_default_collection
       - define_extract_usa
       - define_extract_cps
       - define_extract_ipumsi
       - define_extract_nhgis
+      - ipums_extract
       - submit_extract
+      - wait_for_extract
+      - download_extract
       - get_extract_info
       - get_extract_history
-      - download_extract
-      - wait_for_extract
-      - is_extract_ready
-      - add_to_extract
-      - remove_from_extract
       - save_extract_as_json
       - define_extract_from_json
+      - add_to_extract
+      - remove_from_extract
       - get_metadata_nhgis
-      - ipums_extract
+      - set_ipums_api_key
+      - set_ipums_default_collection
       - ipums_data_collections
   - title: "Explore IPUMS variable metadata"
     contents:

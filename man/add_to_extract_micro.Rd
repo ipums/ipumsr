@@ -24,8 +24,9 @@ collection}
 
 \item{description}{Description of the extract.}
 
-\item{samples}{Character vector of sample names to include in the extract.
-Use \code{\link[=get_sample_info]{get_sample_info()}} to identify sample IDs for a given collection.}
+\item{samples}{Vector of samples to include in the extract
+request. Use \code{\link[=get_sample_info]{get_sample_info()}} to identify
+sample IDs for a given collection.}
 
 \item{variables}{Character vector of variable names or a list of
 \code{var_spec} objects created by \code{\link[=var_spec]{var_spec()}}
@@ -38,11 +39,13 @@ will be added to those that already exist for that variable.}
 \code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
 
 \item{data_structure}{Data structure for the output the extract data.
-
-\code{"rectangular"} provides person records with all requested household
+\itemize{
+\item \code{"rectangular"} provides person records with all requested household
 information attached to respective household members.
+\item \code{"hierarchical"} provides household records followed by person records.
+}
 
-\code{"hierarchical"} provides household records followed by person records.}
+Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
 records on which to rectangularize. Currently only \code{"P"} (person records)
@@ -52,13 +55,13 @@ Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \cod
 otherwise.}
 
 \item{case_select_who}{Indication of how to interpret any case selections
-included for variables in the extract.
-
-\code{"individuals"} includes records for all individuals who match the
+included for variables in the extract definition.
+\itemize{
+\item \code{"individuals"} includes records for all individuals who match the
 specified case selections.
-
-\code{"households"} includes records for all members of each household that
+\item \code{"households"} includes records for all members of each household that
 contains an individual who matches the specified case selections.
+}
 
 Defaults to \code{"individuals"}. Use \code{\link[=var_spec]{var_spec()}} to add case selections for
 specific variables.}

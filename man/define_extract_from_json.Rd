@@ -34,6 +34,35 @@ IPUMS user.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
+\section{API Version Compatibility}{
+
+As of v0.6.0, ipumsr only supports IPUMS API version 2. If you have stored
+an extract definition made using version beta or version 1 of the IPUMS
+API, you will not be able to load it using \code{define_extract_from_json()}. The
+API version for the request should be stored in the saved JSON file. (If
+there is no \code{"version"} field in the JSON file, the request was likely made
+under version beta or version 1.)
+
+If the extract definition was originally made under your user account and
+you know its corresponding extract number, use \code{\link[=get_extract_info]{get_extract_info()}} to obtain
+a definition compliant with IPUMS API version 2. You can then save this
+definition to JSON with \code{save_extract_as_json()}.
+
+Otherwise, you will need to update the JSON file to be compliant with
+IPUMS API version 2. In general, this should only require renaming
+all JSON fields written in \code{snake_case} to \code{camelCase}. For instance,
+\code{"data_tables"} would become \code{"dataTables"}, \code{"data_format"} would become
+\code{"dataFormat"}, and so on. You will also need to update
+the \code{"version"} field to \code{2}. If you are unable to create a valid extract
+by modifying the file, you may have to recreate the definition manually
+using the appropriate \code{\link[=define_extract]{define_extract_*()}} function.
+
+See the IPUMS developer documentation for more details on
+\href{https://developer.ipums.org/docs/apiprogram/versioning/}{API versioning} and
+\href{https://developer.ipums.org/docs/apiprogram/changelog/}{breaking changes}
+introduced in version 2.
+}
+
 \examples{
 my_extract <- define_extract_usa(
   description = "2013-2014 ACS Data",

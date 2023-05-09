@@ -17,6 +17,9 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
 extract definition and newly-assigned extract number of the submitted
 extract.
+
+Note that some unspecified extract fields may be populated with default
+values and therefore change slightly upon submission.
 }
 \description{
 Submit an extract request via the IPUMS API and return an \link{ipums_extract}
@@ -26,9 +29,9 @@ request number.
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa(
-  description = "2013-2014 ACS Data",
-  samples = c("us2013a", "us2014a"),
+my_extract <- define_extract_cps(
+  description = "2018-2019 CPS Data",
+  samples = c("cps2018_05s", "cps2019_05s"),
   variables = c("SEX", "AGE", "YEAR")
 )
 
@@ -43,7 +46,7 @@ get_extract_info(submitted_extract)
 
 # You can always get the latest status, even if you forget to store the
 # submitted extract request object
-submitted_extract <- get_last_extract_info("usa")
+submitted_extract <- get_last_extract_info("cps")
 
 # You can also check if submitted extract is ready
 is_extract_ready(submitted_extract)
@@ -53,8 +56,10 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 }
 }
 \seealso{
-\code{\link[=download_extract]{download_extract()}} to download an extract.
+\code{\link[=wait_for_extract]{wait_for_extract()}} to wait for an extract to finish processing.
 
 \code{\link[=get_extract_info]{get_extract_info()}} and \code{\link[=is_extract_ready]{is_extract_ready()}} to check the status of an
 extract request.
+
+\code{\link[=download_extract]{download_extract()}} to download an extract.
 }

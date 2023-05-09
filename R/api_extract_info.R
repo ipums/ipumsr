@@ -8,7 +8,7 @@
 #' Retrieve the definition and latest status of an extract request
 #'
 #' @description
-#' Retrieve the latest extract status of an extract request.
+#' Retrieve the latest status of an extract request.
 #'
 #' `get_last_extract_info()` is a convenience function to retrieve the most
 #' recent extract for a given collection.
@@ -25,9 +25,6 @@
 #'     `c("collection", number)`
 #'   * An extract number to be associated with your default IPUMS
 #'     collection. See [set_ipums_default_collection()]
-#'
-#'   Extract numbers do not need to be zero-padded. That is, use `1`, not
-#'   `"0001"`.
 #'
 #'   For a list of codes used to refer to each collection, see
 #'   [ipums_data_collections()].
@@ -73,6 +70,10 @@
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("nhgis")
 #' get_extract_info(1)
+#'
+#' # To get the most recent extract (for instance, if you have forgotten its
+#' # extract number), use `get_last_extract_info()`
+#' get_last_extract_info("nhgis")
 #' }
 get_extract_info <- function(extract,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
@@ -105,7 +106,7 @@ get_extract_info <- function(extract,
   extract_list_from_json(response)[[1]]
 }
 
-#' Browse definitions of previously-submitted extract requests
+#' Browse definitions of previously submitted extract requests
 #'
 #' @description
 #' Retrieve definitions of an arbitrary number of previously submitted extract

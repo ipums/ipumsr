@@ -53,7 +53,7 @@ submitted to the IPUMS API for processing.
 \item \code{download_links}: links to the downloadable data, if the extract request
 was completed at the time it was last checked.
 \item \code{number}: the number of the extract request. With \code{collection}, this
-uniquely identifies an extract request.
+uniquely identifies an extract request for a given user.
 \item \code{status}: status of the extract request at the time it was last checked.
 One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"},
 \code{"canceled"}, \code{"failed"}, or \code{"completed"}.
@@ -67,9 +67,9 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \code{\link[=define_extract]{define_extract_*()}} function. These functions take the
 form \verb{define_extract_\{collection\}}.
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
-request
+request.
 \item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of
-previously-submitted extracts
+previously-submitted extract requests.
 }
 }
 

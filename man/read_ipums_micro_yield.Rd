@@ -28,12 +28,11 @@ read_ipums_micro_list_yield(
 \arguments{
 \item{ddi}{Either a path to a DDI .xml file downloaded from
 \href{https://www.ipums.org/}{IPUMS}, or an
-\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
-
-See \emph{Downloading IPUMS files} below.}
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}. See
+\emph{Downloading IPUMS files} below.}
 
 \item{vars}{Names of variables to include in the output. Accepts a
-vector of names or a \link[tidyselect:language]{selection helper}.
+vector of names or a \link[=selection_language]{selection helper}.
 If \code{NULL}, includes all variables in the file.
 
 For hierarchical data, the \code{RECTYPE} variable is always included even if
@@ -44,8 +43,8 @@ the provided \code{ddi} file. By default, looks for the data file in the same
 directory as the DDI file. If the data file has been moved, specify
 its location here.}
 
-\item{verbose}{Logical indicating whether to print progress information
-to the console.}
+\item{verbose}{Logical indicating whether to display IPUMS conditions and
+progress information.}
 
 \item{var_attrs}{Variable attributes from the DDI to add to the columns of
 the output data. Defaults to all available attributes.
@@ -60,7 +59,7 @@ an \link{ipums_ddi} object. Use \code{\link[=read_ipums_ddi]{read_ipums_ddi()}} 
 names to lowercase when reading a DDI file.
 
 If \code{lower_vars = TRUE} and \code{vars} is specified, \code{vars} should reference the
-converted column names.}
+lowercase column names.}
 }
 \value{
 A HipYield R6 object (see Details section)
@@ -68,7 +67,6 @@ A HipYield R6 object (see Details section)
 \description{
 Read a microdata dataset downloaded from the IPUMS extract system into an
 object that can read and operate on a group ("yield") of lines at a time.
-
 Use these functions to read a file that is too large to store in memory at
 a single time. They represent a more flexible implementation of
 \code{\link[=read_ipums_micro_chunked]{read_ipums_micro_chunked()}} using R6.
@@ -77,7 +75,7 @@ Two files are required to load IPUMS microdata extracts:
 \itemize{
 \item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
 (.xml) used to parse the extract's data file
-\item A data file (generally .dat.gz)
+\item A data file (either .dat.gz or .csv.gz)
 }
 
 See \emph{Downloading IPUMS files} below for more information about downloading
@@ -87,7 +85,7 @@ these files.
 in their handling of extracts that contain multiple record types.
 See \emph{Data structures} below.
 
-Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+Note that these functions only support fixed-width (.dat) data files.
 }
 \section{Methods summary:}{
 These functions return a HipYield R6 object with the following methods:

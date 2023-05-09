@@ -294,7 +294,7 @@ get_metadata_nhgis <- function(type = NULL,
 #'   descriptions for the indicated collection.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract_micro] to create an IPUMS microdata
+#' [`define_extract_*()`][define_extract-micro] to create an IPUMS microdata
 #'   extract definition.
 #'
 #' @export

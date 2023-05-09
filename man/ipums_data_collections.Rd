@@ -7,8 +7,9 @@
 ipums_data_collections()
 }
 \value{
-A \code{\link[tibble:tbl_df-class]{tibble}} with three columns containing the
-full collection name, the corresponding code used by the IPUMS API, and the
+A \code{\link[tibble:tbl_df-class]{tibble}} with four columns containing the
+full collection name, the type of data the collection provides,
+the collection code used by the IPUMS API, and the
 status of API support for the collection.
 }
 \description{
@@ -25,4 +26,7 @@ Currently, ipumsr supports extract definitions for the following collections:
 }
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+}
+\examples{
+ipums_data_collections()
 }

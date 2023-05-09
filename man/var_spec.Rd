@@ -35,7 +35,7 @@ flags for the given variable. By default, data quality flags are not
 included.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
-This is unlikely to be needed.}
+This is not needed for external use.}
 }
 \value{
 A \code{var_spec} or \code{samp_spec} object.
@@ -61,10 +61,14 @@ var2 <- var_spec(
 )
 
 # Use variable specifications in a microdata extract definition:
-define_extract_usa(
+extract <- define_extract_usa(
   description = "Example extract",
   samples = "us2017b",
   variables = list(var1, var2)
 )
+
+extract$variables$SCHOOL
+
+extract$variables$RACE
 }
 \keyword{internal}

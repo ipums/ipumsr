@@ -8,7 +8,6 @@
 #' @description
 #' Read a microdata dataset downloaded from the IPUMS extract system into an
 #' object that can read and operate on a group ("yield") of lines at a time.
-#'
 #' Use these functions to read a file that is too large to store in memory at
 #' a single time. They represent a more flexible implementation of
 #' [read_ipums_micro_chunked()] using R6.
@@ -16,7 +15,7 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
 #' See *Downloading IPUMS files* below for more information about downloading
 #' these files.
@@ -25,7 +24,7 @@
 #' in their handling of extracts that contain multiple record types.
 #' See *Data structures* below.
 #'
-#' Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+#' Note that these functions only support fixed-width (.dat) data files.
 #'
 #' # Methods summary:
 #' These functions return a HipYield R6 object with the following methods:

@@ -20,9 +20,6 @@ form \code{"collection:number"} or as a vector of the form
 collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-Extract numbers do not need to be zero-padded. That is, use \code{1}, not
-\code{"0001"}.
-
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
@@ -41,7 +38,7 @@ For a list of codes used to refer to each collection, see
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Retrieve the latest extract status of an extract request.
+Retrieve the latest status of an extract request.
 
 \code{get_last_extract_info()} is a convenience function to retrieve the most
 recent extract for a given collection.
@@ -72,6 +69,10 @@ get_extract_info(c("usa", "1"))
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("nhgis")
 get_extract_info(1)
+
+# To get the most recent extract (for instance, if you have forgotten its
+# extract number), use `get_last_extract_info()`
+get_last_extract_info("nhgis")
 }
 }
 \seealso{

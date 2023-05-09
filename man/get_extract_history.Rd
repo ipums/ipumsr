@@ -2,7 +2,7 @@
 % Please edit documentation in R/api_extract_info.R
 \name{get_extract_history}
 \alias{get_extract_history}
-\title{Browse definitions of previously-submitted extract requests}
+\title{Browse definitions of previously submitted extract requests}
 \usage{
 get_extract_history(
   collection = NULL,

@@ -89,9 +89,7 @@ NULL
 #'
 #' @param ddi_file Path to a DDI .xml file downloaded from
 #'   [IPUMS](https://www.ipums.org/) or a .zip archive or directory containing
-#'   the .xml file.
-#'
-#'   See *Downloading IPUMS files* below.
+#'   the .xml file. See *Downloading IPUMS files* below.
 #' @param file_select If `ddi_file` is a .zip archive or directory that contains
 #'   multiple .xml files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a

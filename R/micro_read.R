@@ -11,14 +11,19 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
-#' See *Downloading IPUMS files* below for more information about downloading
-#' these files.
+#' See *Downloading IPUMS files* below for more information about
+#' downloading these files.
 #'
 #' `read_ipums_micro()` and `read_ipums_micro_list()` differ in their handling
 #' of extracts that contain multiple record types. See *Data structures*
 #' below.
+#'
+#' Note that Stata, SAS, and SPSS file formats are not supported by
+#' ipumsr readers. Convert your extract to fixed-width or CSV format, or see
+#' [haven](https://haven.tidyverse.org/index.html) for help
+#' loading these files.
 #'
 #' @section Data structures:
 #'
@@ -71,11 +76,10 @@
 #'
 #' @param ddi Either a path to a DDI .xml file downloaded from
 #'   [IPUMS](https://www.ipums.org/), or an
-#'   [ipums_ddi] object parsed by [read_ipums_ddi()].
-#'
-#'   See *Downloading IPUMS files* below.
+#'   [ipums_ddi] object parsed by [read_ipums_ddi()]. See
+#'   *Downloading IPUMS files* below.
 #' @param vars Names of variables to include in the output. Accepts a
-#'   vector of names or a [selection helper][tidyselect::language].
+#'   vector of names or a [selection helper][ipumsr::selection_language].
 #'   If `NULL`, includes all variables in the file.
 #'
 #'   For hierarchical data, the `RECTYPE` variable is always included even if
@@ -87,8 +91,8 @@
 #'   the provided `ddi` file. By default, looks for the data file in the same
 #'   directory as the DDI file. If the data file has been moved, specify
 #'   its location here.
-#' @param verbose Logical indicating whether to print progress information
-#'   to the console.
+#' @param verbose Logical indicating whether to display IPUMS conditions and
+#'   progress information.
 #' @param var_attrs Variable attributes from the DDI to add to the columns of
 #'   the output data. Defaults to all available attributes.
 #'   See [set_ipums_var_attributes()] for more details.
@@ -101,7 +105,7 @@
 #'   names to lowercase when reading a DDI file.
 #'
 #'   If `lower_vars = TRUE` and `vars` is specified, `vars` should reference the
-#'   converted column names.
+#'   lowercase column names.
 #' @return `read_ipums_micro()` returns a single
 #'   [`tibble`][tibble::tbl_df-class] object.
 #'
