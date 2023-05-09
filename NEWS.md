@@ -1,14 +1,93 @@
 # ipumsr (development version)
 
-## IPUMS API updates
+## Breaking Changes + Deprecations
 
-* Adds API support for IPUMS NHGIS extract requests! Use 
-  `define_extract_nhgis()` to make an NHGIS extract definition.
+* ipumsr now supports IPUMS API version 2, and no longer supports
+  either the beta version or version 1 of the IPUMS API.
   
-* Adds API support for IPUMS NHGIS metadata. Use `get_metadata_nhgis()` to
-  browse NHGIS data sources when creating an NHGIS extract request.
+  This means that extract definitions saved in JSON format will no longer
+  be compatible with ipumsr via `define_extract_from_json()`. To load 
+  extract definitions created under previous API versions, you will
+  need to modify the JSON file to comply with the IPUMS API version 2 extract
+  schema. In general, this should only require renaming
+  all JSON fields written in `snake_case` to `camelCase`. For instance,
+  `"data_tables"` would become `"dataTables"`, `"data_format"` would become
+  `"dataFormat"`, and so on. You will also need to update
+  the `"version"` field to `2`.
+  
+  See the IPUMS developer documentation for more details on
+  [API versioning](https://developer.ipums.org/docs/apiprogram/versioning/) and
+  [breaking changes](https://developer.ipums.org/docs/apiprogram/changelog/)
+  introduced in version 2.
+  
+* `get_recent_extracts_info_*()` functions have been deprecated, and
+  tabular-formatted extract history will no longer be supported. Conversion 
+  functions `extract_tbl_to_list()` and `extract_list_to_tb()` have therefore
+  also been deprecated. Use  `get_extract_history()` to obtain previous extract
+  definitions in list format.
+  
+* Support for IPUMS Terra has been discontinued. This includes deprecations
+  to all `read_terra_*()` functions, the `types = "raster"` option in 
+  `ipums_list_files()`, and `read_ipums_codebook()`. 
+  
+  Previously, IPUMS Terra and IPUMS NHGIS codebooks were both loaded with 
+  `read_ipums_codebook()`. NHGIS codebook reading has been moved to 
+  `read_nhgis_codebook()`.
+  
+  For more on IPUMS Terra decommissioning, click 
+  [here](https://terra.ipums.org/decommissioning).
+  
+* Individual `ipums_list_*()` functions have been moved to `ipums_list_files()`.
 
-* `get_extract_history()` replaces `get_recent_extracts_info_*()` functions.
+* `data_layer` and `shape_layer` arguments have been deprecated in favor of
+  `file_select` throughout ipumsr. This provides clarity on the intended purpose
+  of this argument. Deprecated functions that use the original argument names 
+  remain unchanged.
+  
+* `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
+  `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular
+  data, respectively. Join data with an `ipums_shape_*_join()` function.
+  
+* `read_ipums_sf()` no longer defaults to `bind_multiple = TRUE`.
+
+* Support for objects from the sp package has been deprecated because of the 
+  upcoming retirement of rgdal. Use `read_ipums_sf()` to load spatial data
+  as an `sf` object. To convert to a `Spatial*` object, use `sf::as_Spatial()`.
+  For more, click [here](https://r-spatial.org/r/2022/04/12/evolution.html).
+  
+* The `verbose` argument has been deprecated in `read_ipums_sf()` for
+  consistency with the terminology used in the sf package. Please use `quiet`
+  instead.
+
+## New Features
+
+### IPUMS API
+
+* Adds API support for two IPUMS collections: IPUMS NHGIS and IPUMS 
+  International!
+  - Use `define_extract_nhgis()` to create an NHGIS extract definition.
+  - Use `define_extract_ipumsi()` to create an IPUMS International extract
+    definition.
+    
+* Adds support for IPUMS API version 2 features!
+  - Hierarchical extracts are now supported. Set 
+    `data_structure = "hiearchical"` to create a hierarchical extract 
+    definition.
+  - Detailed variable specifications are now supported, including
+    case selections, attached_characteristics, and data quality flags. Use
+    `var_spec()` to add these specifications to variables in your 
+    extract definition.
+  - Include data quality flags for all applicable variables in a microdata
+    extract definition with the `data_quality_flags` argument.
+  - Apply case selections to either `"individuals"`" or `"households"` with 
+    the `case_select_who` argument.
+  - Select specific years for NHGIS time series tables with `tst_spec()`.
+
+* Adds API support for IPUMS NHGIS metadata
+  - Use `get_metadata_nhgis()` to browse NHGIS data sources. Metadata
+  is available in summary form for all datasets, data tables, time series 
+  tables, and shapefiles as well as for individual datasets, data tables, and
+  time series tables.
   
 * Allows users to set a default IPUMS collection using
   `set_ipums_default_collection()`. Users with a default collection do not 
@@ -18,22 +97,12 @@
   
 * `wait_for_extract()` wait intervals no longer double after each status
   check. Instead, intervals increase by 10 seconds with each subsequent check.
-  
-* Extract definitions are now validated more frequently in extract-handling 
-  functions.
 
-* Warnings encourage users to resubmit extracts that have expired. Previously,
-  the distinction between expired and in-progress extract requests was not 
-  always made (e.g. in `is_extract_ready()`)
+### IPUMS readers
 
+* Adds handling for fixed-width NHGIS extracts in `read_nhgis()`.
 
-## IPUMS reader updates
-
-* Adds handling for fixed-width extracts in `read_nhgis()`.
-
-* `read_ipums_sf()` no longer defaults to `bind_multiple = TRUE`.
-
-* `read_nhgis_codebook()` replaces `read_ipums_codebook()` and allows reading
+* `read_nhgis_codebook()` allows reading
   of raw codebook lines (as opposed to extracting codebook information into 
   an `ipums_ddi` object) by setting `raw = TRUE`. Furthermore, `var_info`
   generated from NHGIS codebook files has been updated to include more
@@ -53,48 +122,6 @@
   slightly from the information found in the codebook.
   
 * `ipums_example()` includes updated example files.
-
-* It is now possible to consistently read unzipped extract files. Previously,
-  some functions required that extracts be in the zipped format provided
-  upon download.
-
-## Deprecations
-
-* `data_layer` and `shape_layer` arguments have been deprecated in favor of
-  `file_select` throughout ipumsr. This provides clarity on the intended purpose
-  of this argument. Deprecated functions that use the original argument names 
-  remain unchanged.
-  
-* `get_recent_extracts_info_list()` and `get_recent_extracts_info_tbl()` have
-  been deprecated in favor of `get_extract_history()`. Additionally,
-  tabular-formatted extract history has been deprecated, along with conversion
-  functions `extract_tbl_to_list()` and `extract_list_to_tbl()`. Use the 
-  list of `ipums_extract` objects provided by `get_extract_history()` to
-  browse past extract definitions.
-  
-* `read_nhgis_sf()` and `read_nhgis_sp()` have been deprecated. Use
-  `read_ipums_sf()` and `read_nhgis()` to load spatial and tabular
-  data, respectively. Join data with an `ipums_shape_*_join()` function.
-  
-* Support for objects from the sp package has been deprecated because of the 
-  upcoming retirement of rgdal. Use `read_ipums_sf()` to load spatial data
-  as an `sf` object. To convert to a `Spatial*` object, use `sf::as_Spatial()`.
-  For more, click [here](https://r-spatial.org/r/2022/04/12/evolution.html).
-  
-* Support for IPUMS Terra has been deprecated, as the IPUMS Terra project is
-  being decommissioned. This includes all `read_terra_*()` functions. 
-  For more, click [here](https://terra.ipums.org/decommissioning).
-  
-* `read_ipums_codebook()` has been deprecated in favor of 
-  `read_nhgis_codebook()`. Previously, `read_ipums_codebook()` handled
-  IPUMS Terra as well as IPUMS NHGIS extracts.
-  
-* `ipums_list_data()`, `ipums_list_shape()` and `ipums_list_raster()` have
-  been deprecated in favor of `ipums_list_files()`.
-  
-* The `verbose` argument has been deprecated in `read_ipums_sf()` for
-  consistency with the terminology used in the sf package. Please use `quiet`
-  instead.
   
 ## Miscellaneous
 
