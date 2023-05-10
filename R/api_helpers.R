@@ -1218,7 +1218,7 @@ check_api_support <- function(collection) {
     rlang::abort(
       c(
         paste0(
-          "Unrecognized collection \"", collection, "\""
+          "Unrecognized collection: \"", collection, "\""
         ),
         "i" = paste0(
           "The IPUMS API supports collections: \"",

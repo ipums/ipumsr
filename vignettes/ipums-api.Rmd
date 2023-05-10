@@ -68,7 +68,7 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
 
 ## Overview
 
-The IPUMS API supports two asset types:
+The IPUMS API supports two asset types, both of which are supported by ipumsr:
 
 -   **IPUMS extract** endpoints can be used to submit extract requests
 for processing and download completed extract files.
@@ -76,8 +76,6 @@ for processing and download completed extract files.
 -   **IPUMS metadata** endpoints can be used to discover and explore
 available IPUMS data as well as retrieve codes, names, and other
 extract parameters necessary to form extract requests.
-
-ipumsr provides functions that support both of these assets.
 
 Use of the IPUMS API enables the adoption of a programmatic workflow
 that can help users to:
@@ -181,7 +179,7 @@ stored it in the `IPUMS_API_KEY` environment variable.
 
 Each IPUMS collection has its own extract definition function that is
 used to specify the parameters of a new extract request from scratch.
-These functions take the form `define_extract_<collection>()`:
+These functions take the form `define_extract_*()`:
 
 -   `define_extract_usa()`
 -   `define_extract_cps()`
@@ -189,14 +187,14 @@ These functions take the form `define_extract_<collection>()`:
 -   `define_extract_nhgis()`
 
 Alternatively, use `define_extract_from_json()` to load an extract
-definition from an external JSON file (see [*Share an extract
-definition*](#share)).
+definition from an external JSON file (see 
+[*share an extract definition*](#share)).
 
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
 
-For instance, the following defines an extract request for the `AGE`,
-`SEX`, `RACE`, and `STATEFIP` variables from the 2018 and 2019 American
+For instance, the following defines a simple extract request for the `AGE`,
+`SEX`, `RACE`, `STATEFIP`, and `MARST` variables from the 2018 and 2019 American
 Community Survey (ACS):
 
 ```{r}
@@ -209,8 +207,23 @@ usa_extract_definition <- define_extract_usa(
 usa_extract_definition
 ```
 
-Similarly, the following would produce an NHGIS extract definition for
-tables P1 and P2 from the 2010 SF1a census file at the state level:
+You can include more detailed specifications for specific variables using
+the `var_spec()` helper:
+
+```{r}
+define_extract_usa(
+  description = "USA extract for API vignette",
+  samples = c("us2018a", "us2019a"),
+  variables = list(
+    var_spec("AGE", attached_characteristics = "mother"),
+    var_spec("SEX", case_selections = "1")
+  )
+)
+```
+
+Similarly, use `ds_spec()` and `tst_spec()` helpers to define an
+NHGIS extract request. For instance, to get tables P1 and P2
+from the 2010 SF1a census file at the state level, use the `datasets` argument:
 
 ```{r}
 nhgis_extract_definition <- define_extract_nhgis(
@@ -225,40 +238,18 @@ nhgis_extract_definition <- define_extract_nhgis(
 nhgis_extract_definition
 ```
 
-Note that in NHGIS extract definitions, certain fields, like
-`data_tables` and `geog_levels`, are associated with a particular
-dataset. For an extract with multiple datasets, these subfields will be
-applied to all `datasets` in the extract definition:
+Or to obtain a state-level time series table for persons by age:
 
 ```{r}
 define_extract_nhgis(
-  description = "NHGIS extract with multiple datasets",
-  datasets = list(
-    ds_spec("2016_2020_ACS5a", "B01001", "state"),
-    ds_spec("2017_2021_ACS5a", "B01002", "state")
-  )
+  description = "NHGIS extract for API vignette",
+  time_series_tables = tst_spec("CW3", geog_levels = "state"),
+  shapefiles = "us_state_2010_tl2010"
 )
 ```
 
-To specify unique values for a subfield for each dataset, use a named
-list instead of a vector in the subfield argument. This allows you to
-explicitly indicate which dataset should be associated with which
-subfield values:
-
-```{r}
-# In this case, data_tables are matched to individual datasets, while
-# geog_levels are recycled to all datasets
-define_extract_nhgis(
-  description = "NHGIS extract with multiple datasets",
-  datasets = list(
-    ds_spec("2016_2020_ACS5a", "B01001", "state"),
-    ds_spec("2017_2021_ACS5a", "B01002", "state")
-  )
-)
-```
-
-NHGIS time series tables also have similar behavior for `geog_levels` and 
-`years`. See `?define_extract_nhgis` for more information.
+See the documentation for a particular `define_extract_*()`
+function to learn more about other available options when defining an extract.
 
 ### Extract request objects
 
@@ -277,12 +268,12 @@ While `ipums_extract` objects for different collections have slightly
 different structures, they all support the same API workflow.
 
 The specifications for a given extract request object can be accessed
-using standard list-indexing syntax:
+using standard list-indexing syntax.
 
 ```{r}
-usa_extract_definition$samples
+names(usa_extract_definition$samples)
 
-nhgis_extract_definition[["data_tables"]]
+nhgis_extract_definition$datasets[["2010_SF1a"]]
 ```
 
 `ipums_extract` objects also contain information about the extract
@@ -308,12 +299,12 @@ To build a valid extract request, you need to know the names and codes
 used for the data sources and variables you want to include.
 
 While the IPUMS metadata API is not yet available for microdata
-collections, users can find sample ID codes at the following links:
+collections, users can find basic sample ID codes with `get_sample_info()`.
+For instance:
 
--   [IPUMS
-USA](https://usa.ipums.org/usa-action/samples/sample_ids){target="_blank"}
--   [IPUMS
-CPS](https://cps.ipums.org/cps-action/samples/sample_ids){target="_blank"}
+```{r}
+get_sample_info("ipumsi")
+```
 
 For microdata variable names, refer to the relevant collection's online
 extract builder:
@@ -322,6 +313,8 @@ extract builder:
 USA](https://usa.ipums.org/usa-action/variables/group){target="_blank"}
 -   [IPUMS
 CPS](https://cps.ipums.org/cps-action/variables/group){target="_blank"}
+-   [IPUMS
+International](https://international.ipums.org/international-action/variables/group){target="_blank"}
 
 IPUMS NHGIS users can find the codes used for datasets, data tables,
 time series tables, and more by using `get_metadata_nhgis()`.
@@ -337,7 +330,7 @@ interest.
 
 ```{r}
 get_metadata_nhgis(type = "datasets") %>%
-head()
+  head()
 ```
 
 To get details on a particular data source, pass its name to the
@@ -354,7 +347,7 @@ population counts and urban/rural population counts, respectively:
 ds_meta <- get_metadata_nhgis(dataset = "2010_SF1a")
 
 ds_meta$data_tables %>%
-filter(name %in% c("P1", "P2"))
+  filter(name %in% c("P1", "P2"))
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -630,9 +623,9 @@ to `add_to_extract()`.
 ```{r}
 old_extract <- get_extract_info("usa:33")
 
-old_extract$samples
+names(old_extract$samples)
 
-old_extract$variables
+names(old_extract$variables)
 ```
 
 ```{r}
@@ -640,21 +633,21 @@ new_extract <- add_to_extract(
   old_extract,
   samples = "us2020a",
   variables = "RELATE",
-  data_format = "sas9"
+  description = "New extract with 2020 data"
 )
 
-new_extract$samples
+names(new_extract$samples)
 
-new_extract$variables
+names(new_extract$variables)
 ```
 
 The new extract contains the contents of the original extract definition
 for USA 33 along with the new sample, variable, and format selections.
-For fields that take a single value, like `data_format`, the new value
+For fields that take a single value, like `description`, the new value
 will automatically replace the existing one:
 
 ```{r}
-new_extract$data_format
+new_extract$description
 ```
 
 Note that because the returned `ipums_extract` object represents a new
@@ -665,7 +658,7 @@ To submit this updated extract definition, just use `submit_extract()`
 again:
 
 ```{r, eval=FALSE}
-updated_extract <- submit_extract(new_extract)
+new_extract_submission <- submit_extract(new_extract)
 ```
 
 On the other hand, if there are values that you no longer want to
@@ -674,60 +667,24 @@ include in your extract request, use `remove_from_extract()`:
 ```{r}
 new_extract <- remove_from_extract(new_extract, samples = "us2020a")
 
-new_extract$samples
+names(new_extract$samples)
 ```
 
-For NHGIS extracts, removing a dataset or time series table will remove
-all its associated subfields:
+Removing a variable, dataset, or time series table will remove
+all its associated specifications:
 
 ```{r}
 nhgis_extract_definition <- define_extract_nhgis(
   description = "Extract request with multiple TSTs",
-  time_series_tables = c("A00", "AV0"),
-  geog_levels = c("county", "state")
+  time_series_tables = list(
+    tst_spec("A00", "county"),
+    tst_spec("AV0", "state")
+  )
 )
 
 nhgis_extract_definition
 
 remove_from_extract(nhgis_extract_definition, time_series_tables = "A00")
-```
-
-In contrast, removing a subfield value will remove it from all datasets
-or time series tables in the extract:
-
-```{r}
-remove_from_extract(nhgis_extract_definition, geog_levels = "state")
-```
-
-To selectively modify subfields from particular datasets or time series
-tables, pass a list to the argument instead of a vector. This allows you
-to indicate which parent field should have the subfield modified. This
-is analogous to the syntax that can be used when defining an NHGIS
-extract request.
-
-```{r}
-nhgis_extract_definition %>%
-  add_to_extract(geog_levels = list(AV0 = "nation")) %>%
-  remove_from_extract(geog_levels = list(A00 = "state"))
-```
-
-Note that it is possible to produce invalid extract definitions when
-revising an extract. If you want to *replace* values in a definition, it
-is usually best to use `add_to_extract()` before `remove_from_extract()`
-to limit the possibility of removing required extract fields.
-
-```{r, error=TRUE}
-# Throws error because all time series tables must have geog levels:
-nhgis_extract_definition %>%
-  remove_from_extract(geog_levels = c("county", "state")) %>%
-  add_to_extract(geog_levels = "nation")
-```
-
-```{r}
-# Add new values to extract definition first to avoid the error:
-nhgis_extract_definition %>%
-  add_to_extract(geog_levels = "nation") %>%
-  remove_from_extract(geog_levels = c("county", "state"))
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -746,8 +703,13 @@ can't remember the exact number, you can use
 a particular collection.
 
 By default, this returns your 10 most recent extract requests as a list
-of `ipums_extract` objects. You can adjust how many requests to retrieve
-with the `how_many` argument:
+of `ipums_extract` objects.
+
+```{r, warning=FALSE}
+usa_extracts <- get_extract_history("usa")
+```
+
+You can adjust how many requests to retrieve with the `how_many` argument:
 
 ```{r}
 nhgis_extracts <- get_extract_history("nhgis", how_many = 3)
@@ -760,19 +722,29 @@ them with the familiar API functions. For instance, to revise your
 second-most-recent extract for resubmission:
 
 ```{r, eval=FALSE}
-revised_extract <- add_to_extract(
+new_extract <- add_to_extract(
   nhgis_extracts[[2]],
   shapefiles = "us_nation_2010_tl2010"
 )
 ```
 
-You could even download all recent extracts that have completed, using
-`purrr::keep()` and `purrr::map()`:
+You can also filter your past extracts for those with particular characteristics
+using `purrr::keep()`:
 
-```{r, eval=FALSE}
-ddi_paths <- nhgis_extracts %>%
-  keep(is_extract_ready) %>%
-  map(download_extract)
+```{r}
+purrr::keep(usa_extracts, ~ "MARST" %in% names(.x$variables))
+
+purrr::keep(
+  nhgis_extracts, 
+  ~ "2010_SF1a" %in% names(.x$datasets) && 
+    "P2" %in% .x$datasets[["2010_SF1a"]]$data_tables 
+)
+```
+
+Or use the `purrr::map()` family to browse your past extract definitions:
+
+```{r}
+purrr::map_chr(usa_extracts, ~ .x$description)
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -786,7 +758,7 @@ Because each of the API functions in the standard workflow returns an
 expression:
 
 ```{r, eval=FALSE}
-data <- define_extract_usa(
+usa_data <- define_extract_usa(
   "USA extract for API vignette",
   c("us2018a", "us2019a"),
   c("AGE", "SEX", "RACE", "STATEFIP")

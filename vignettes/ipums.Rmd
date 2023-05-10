@@ -82,21 +82,37 @@ following collections:
 
 -   IPUMS CPS
 
+-   IPUMS International
+
 -   IPUMS NHGIS
 
 The workflow for requesting and downloading data via API is
-straightforward: first, define the parameters of your extract, then
-submit the extract. After waiting for it to complete, you can download
-the files directly to your local machine without ever having to leave R:
+straightforward. First, define the parameters of your extract. The available
+options will differ by IPUMS data collection. See the documentation for
+a collection's `define_extract_*()` function for more details.
 
-```{r, eval=FALSE}
-extract_request <- define_extract_nhgis(
-  description = "Using the IPUMS API",
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  geog_levels = "state"
+```{r}
+cps_extract_request <- define_extract_cps(
+  description = "2018-2019 CPS Data",
+  samples = c("cps2018_05s", "cps2019_05s"),
+  variables = c("SEX", "AGE", "YEAR")
 )
 
+nhgis_extract_request <- define_extract_nhgis(
+  description = "NHGIS Data via IPUMS API",
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "state"
+  )
+)
+```
+
+Next, submit your extract definition. After waiting for it to complete, you 
+can download the files directly to your local machine without ever having to 
+leave R:
+
+```{r, eval = FALSE}
 submitted_extract <- submit_extract(extract_request)
 downloadable_extract <- wait_for_extract(submitted_extract)
 data_files <- download_extract(downloadable_extract)
@@ -120,14 +136,14 @@ those provided in [readr](https://readr.tidyverse.org/index.html) in two
 ways:
 
 -   ipumsr anticipates standard IPUMS file structures, limiting the need
-    for users to manually decompress and organize their downloaded files
-    before reading.
+for users to manually decompress and organize their downloaded files
+before reading.
 
 -   ipumsr uses an extract's metadata files to automatically attach
-    contextual information to the data. This allows users to easily
-    identify variable names, variable descriptions, and labeled data
-    values (from [haven](https://haven.tidyverse.org/)), which are
-    common in IPUMS files.
+contextual information to the data. This allows users to easily
+identify variable names, variable descriptions, and labeled data
+values (from [haven](https://haven.tidyverse.org/)), which are
+common in IPUMS files.
 
 For microdata files, use the `read_ipums_micro_*()` family:
 

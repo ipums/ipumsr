@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1153?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts/1223?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:29:41 GMT
-      etag: W/"3192158c3ec188a0b02a7b58106940a0"
+      date: Wed, 10 May 2023 07:37:50 GMT
+      etag: W/"bc77f21bafbdece8de15c5de6a73625f"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,20 +30,20 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 8e4410e1-e2c5-4529-9af3-ed94e8b3ce9a
-      x-runtime: '0.545914'
+      x-request-id: b4c1e0db-b652-446e-b080-ff6b14bf4d76
+      x-runtime: '0.668588'
       x-xss-protection: '0'
       content-length: '591'
     body:
       encoding: ''
       file: no
-      string: '{"number":1153,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002399/nhgis1153_csv_PREVIEW.zip","bytes":2616,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002399/nhgis1153_csv.zip","bytes":7046,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"NHGIS
+      string: '{"number":1223,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2028927/nhgis1223_csv_PREVIEW.zip","bytes":2616,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2028927/nhgis1223_csv.zip","bytes":7046,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"NHGIS
         extract for API vignette","datasets":{"2010_SF1a":{"dataTables":["P1","P2"],"geogLevels":["state"],"breakdownValues":["bs32.ge00"]}},"version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-04-06 22:29:42 GMT
+  recorded_at: 2023-05-10 07:37:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2002399/nhgis1153_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2028927/nhgis1223_csv.zip
     body:
       encoding: ''
       string: ''
@@ -58,14 +58,14 @@ http_interactions:
       message: 'Success: (200) OK'
     headers:
       accept-ranges: bytes
-      cache-control: private
-      content-disposition: attachment; filename="nhgis1153_csv.zip"; filename*=UTF-8''nhgis1153_csv.zip
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis1223_csv.zip"; filename*=UTF-8''nhgis1223_csv.zip
       content-type: application/zip
-      date: Thu, 06 Apr 2023 22:29:42 GMT
-      etag: '"642f47cb-1b86"'
-      last-modified: Thu, 06 Apr 2023 22:29:31 GMT
-      server: nginx/1.14.2
-      set-cookie: _session_id=hujTCm2JzMtZxner%2B9yFC%2FAY6Ft2WkvkRU2RIJZ%2FFXD8Kyy4yLqdOl7AFnDI%2F4%2BCvlEvQggqqagM5rfHXF08kicslrUcryZ632aUjqtaT5Ur8uk%2FvAQlM5J3f6wl4gFZw8hiQtj6glRluzWzShhxDxbJrSsjixRuWKKZPpdiTmTrUcmvQhowMdHczVzw3y9Q5G4JZgKX9kJsswP0XsRPcWPlBzbPv2QFwajbv5TFgk8P3MKmiJ6g8e%2FdtUumTkQ%3D--y0ScS2nw8zOh2gO4--suYo25amwiPYumsP6Lk1FA%3D%3D;
+      date: Wed, 10 May 2023 07:37:50 GMT
+      etag: '"645b49c3-1b86"'
+      last-modified: Wed, 10 May 2023 07:37:39 GMT
+      server: nginx/1.18.0
+      set-cookie: _session_id=aYHhfLcFLXRWqO4fdHIe%2Bjx1RHGWhAeJEvI%2FZy1g3lSom8pa%2BhDv19hwz6LjRmhMs3ZZ4rKq%2BdQfLxPO1NyHwNBjQVCYC8nxfyEypZHThhmLb0r2MHFLndrPRax2dyXSzqn62kIkcKwU6SDH65YGLWWPE254W42GZVIGiqxrw26og7uLsamaT9XUXkIhRrAqAXtR2pStkL8TaDEVfl1NCdZTDlbUd351xP6gXaRCZhgkA7dnopms3%2BpC6t7V%2BP4%3D--pgY5IIiGNHgv8fYj--%2Feng56ridV5V04SaSA7A%2Bw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -74,6 +74,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: fixtures/nhgis1153_csv.zip
-  recorded_at: 2023-04-06 22:29:42 GMT
+      string: fixtures/nhgis1223_csv.zip
+  recorded_at: 2023-05-10 07:37:51 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

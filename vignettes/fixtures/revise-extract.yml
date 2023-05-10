@@ -7,8 +7,8 @@ http_interactions:
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,7 +18,7 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 06 Apr 2023 22:29:43 GMT
+      date: Wed, 10 May 2023 07:37:52 GMT
       etag: W/"30d6293df03cf7d481e9ee773fe1b32b"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
@@ -30,8 +30,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: a3f6fdaa-6482-4b13-a160-db00f3468e86
-      x-runtime: '0.304727'
+      x-request-id: 5ca34584-3346-4e19-8f56-30b7893cbeb4
+      x-runtime: '0.542103'
       x-xss-protection: '0'
       content-length: '534'
     body:
@@ -39,5 +39,5 @@ http_interactions:
       file: no
       string: '{"number":33,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
         extract","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true}},"collection":"usa"}}'
-  recorded_at: 2023-04-06 22:29:43 GMT
+  recorded_at: 2023-05-10 07:37:52 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0

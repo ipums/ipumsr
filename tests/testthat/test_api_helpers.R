@@ -394,7 +394,7 @@ test_that("We catch invalid collection specifications during requests", {
   # collections are available.
   expect_error(
     api_request_url(collection = "foo", path = extract_request_path()),
-    "No API version found for collection \"foo\""
+    "Unrecognized collection: \"foo\""
   )
 
   # But ensure that the error is still caught by the API if `api_request_url()`
@@ -467,7 +467,7 @@ test_that("We can get correct API version info for each collection", {
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(
     get_extract_history("fake-collection"),
-    "No API version found"
+    "Unrecognized collection"
   )
 })
 
@@ -482,11 +482,11 @@ test_that("standardize_extract_identifier handles unusual cases", {
   )
   expect_error(
     standardize_extract_identifier("fake-collection:1"),
-    "No API version found for collection \"fake-collection\""
+    "Unrecognized collection: \"fake-collection\""
   )
   expect_error(
     standardize_extract_identifier("fake-collection", collection_ok = TRUE),
-    "No API version found for collection \"fake-collection\""
+    "Unrecognized collection: \"fake-collection\""
   )
   expect_equal(
     standardize_extract_identifier("nhgis", collection_ok = TRUE),

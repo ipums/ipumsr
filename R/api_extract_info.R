@@ -213,7 +213,7 @@ get_extract_info <- function(extract,
 #'
 #' purrr::map(extracts, ~ names(.x$samples))
 #'
-#' purrr::map(x, ~ .x$variables[["RACE"]]$case_selections)
+#' purrr::map(extracts, ~ .x$variables[["RACE"]]$case_selections)
 #'
 #' # Once you have identified a past extract, you can easily download or
 #' # resubmit it

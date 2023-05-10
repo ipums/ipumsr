@@ -124,23 +124,36 @@ IPUMS API to make extract requests.
 ### Select cases {#select-cases}
 
 For microdata projects, another good option for reducing extract size is
-to use the "Select Cases" option before submitting. This allows you to
-produce an extract containing data for a particular subset of values in
-an included variable. For example, you could select cases on `AGE` such
-that your extract only includes those older than 65.
+to select only those cases that are relevant to your research question,
+producing an extract containing only data for a particular subset of values
+for a given variable.
 
-In general, the "Select Cases" option is available on the last page
-before submitting an extract request.
+Within ipumsr, you can use `var_spec()` to specify case selections for a
+variable in an extract. For instance, the following would produce an extract
+only including records for married women:
 
-Case selection is not yet available via the IPUMS API, but is slated to
-be supported in the future.
+```{r}
+define_extract_usa(
+  description = "2013 ACS Data for Married Women",
+  samples = "us2013a",
+  variables = list(
+    var_spec("MARST", case_selections = "1"),
+    var_spec("SEX", case_selections = "2")
+  )
+)
+```
+
+If you're using the online interface, the "Select Cases" option is usually 
+available  on the last page before submitting an extract request.
 
 ### Use a sampled subset of the data
 
 Yet another option (also only for microdata projects) is to take a
-random subsample of the data before producing your extract. Use the
-"Customize Sample Size" option to do so. This also appears on the final
-page before submitting an extract request.
+random subsample of the data before producing your extract.
+
+Sampled data is not available via the IPUMS API, but you can use the
+"Customize Sample Size" option in the online interface to do so. This also 
+appears on the final page before submitting an extract request.
 
 If you've already submitted the extract, you can click the "REVISE" link
 on the "Download or Revise Extracts" page to access these features and
@@ -377,41 +390,6 @@ chunked_model <- read_ipums_micro_chunked(
 
 summary(chunked_model)
 ```
-
-#### Chunked case selection
-
-Sometimes you may only be interested in a subset of the data, but can't
-read the entire dataset into memory to remove the unused cases.
-
-It may make the most sense to do this when creating your extract, which
-can be done through the IPUMS extract interface (see the [select
-cases](#select-cases) section above). R is also likely to be slower for
-this functionality than other options, like Unix commands `awk` and
-`sed`.
-
-However, ipumsr `chunked` functions can emulate this functionality by
-filtering the chunked data in the callback function:
-
-```{r}
-# Subset only those in "Poor" health
-chunked_subset <- read_ipums_micro_chunked(
-  cps_ddi_file,
-  data_file = cps_data_file,
-  callback = IpumsDataFrameCallback$new(
-    function(x, pos) {
-      filter(x, HEALTH == 5)
-    }
-  ),
-  chunk_size = 1000,
-  verbose = FALSE
-)
-
-chunked_subset
-```
-
-This option may be particularly useful if you want to subset based on
-complex logic that would be hard to code into the IPUMS extract system
-or Unix tools.
 
 ### Reading yielded data
 
