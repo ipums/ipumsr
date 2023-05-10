@@ -2,14 +2,16 @@
 
 ## Breaking Changes + Deprecations
 
-* ipumsr now supports IPUMS API version 2, and no longer supports
+* ipumsr now supports **IPUMS API version 2**, and no longer supports
   either the beta version or version 1 of the IPUMS API.
   
   This means that extract definitions saved in JSON format will no longer
-  be compatible with ipumsr via `define_extract_from_json()`. To load 
+  be compatible with ipumsr via `define_extract_from_json()`! To load 
   extract definitions created under previous API versions, you will
   need to modify the JSON file to comply with the IPUMS API version 2 extract
-  schema. In general, this should only require renaming
+  schema. 
+  
+  In general, this should only require renaming
   all JSON fields written in `snake_case` to `camelCase`. For instance,
   `"data_tables"` would become `"dataTables"`, `"data_format"` would become
   `"dataFormat"`, and so on. You will also need to update
@@ -22,7 +24,7 @@
   
 * `get_recent_extracts_info_*()` functions have been deprecated, and
   tabular-formatted extract history will no longer be supported. Conversion 
-  functions `extract_tbl_to_list()` and `extract_list_to_tb()` have therefore
+  functions `extract_tbl_to_list()` and `extract_list_to_tbl()` have therefore
   also been deprecated. Use  `get_extract_history()` to obtain previous extract
   definitions in list format.
   
@@ -63,8 +65,7 @@
 
 ### IPUMS API
 
-* Adds API support for two IPUMS collections: IPUMS NHGIS and IPUMS 
-  International!
+* Adds API support for IPUMS NHGIS and IPUMS International!
   - Use `define_extract_nhgis()` to create an NHGIS extract definition.
   - Use `define_extract_ipumsi()` to create an IPUMS International extract
     definition.
@@ -74,7 +75,7 @@
     `data_structure = "hiearchical"` to create a hierarchical extract 
     definition.
   - Detailed variable specifications are now supported, including
-    case selections, attached_characteristics, and data quality flags. Use
+    case selections, attached characteristics, and data quality flags. Use
     `var_spec()` to add these specifications to variables in your 
     extract definition.
   - Include data quality flags for all applicable variables in a microdata
