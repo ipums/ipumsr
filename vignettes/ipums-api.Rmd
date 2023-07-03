@@ -613,7 +613,7 @@ like to update a familiar extract definition with different or more
 current data. ipumsr includes functions for revising a previous extract
 definition, facilitating a "revise and resubmit" workflow.
 
-Let's say you decided you wanted to include the 2020 ACS sample as well
+Let's say you decided you wanted to add the 2020 ACS sample as well
 as the `RELATE` variable to the data from a previous IPUMS USA extract.
 You can retrieve that extract definition as described above and add new
 values with `add_to_extract()`. In general, any parameters that can be
