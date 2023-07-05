@@ -522,10 +522,7 @@ define_extract_nhgis <- function(description = "",
     description = description,
     datasets = set_nested_names(datasets),
     time_series_tables = set_nested_names(time_series_tables),
-    geographic_extents = geog_extent_lookup(
-      unlist(geographic_extents),
-      state_geog_lookup$abbs
-    ),
+    geographic_extents = unlist(geographic_extents),
     shapefiles = unlist(shapefiles),
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
     tst_layout = tst_layout,
@@ -1169,9 +1166,9 @@ add_to_extract.nhgis_extract <- function(extract,
     description = description %||% extract$description,
     datasets = set_nested_names(datasets),
     time_series_tables = set_nested_names(time_series_tables),
-    geographic_extents = geog_extent_lookup(
-      union(extract$geographic_extents, unlist(geographic_extents)),
-      state_geog_lookup$abbs
+    geographic_extents = union(
+      extract$geographic_extents,
+      unlist(geographic_extents)
     ),
     shapefiles = union(extract$shapefiles, unlist(shapefiles)),
     breakdown_and_data_type_layout = breakdown_and_data_type_layout,
@@ -1624,10 +1621,7 @@ remove_from_extract.nhgis_extract <- function(extract,
     breakdown_and_data_type_layout <- extract$breakdown_and_data_type_layout
     geographic_extents <- setdiff_null(
       extract$geographic_extents,
-      geog_extent_lookup(
-        unlist(geographic_extents),
-        state_geog_lookup$abbs
-      )
+      unlist(geographic_extents)
     )
   }
 
@@ -2854,10 +2848,7 @@ extract_list_from_json.nhgis_json <- function(extract_json, validate = FALSE) {
         description = def$description,
         datasets = set_nested_names(datasets),
         time_series_tables = set_nested_names(time_series_tables),
-        geographic_extents = geog_extent_lookup(
-          unlist(def$geographicExtents),
-          state_geog_lookup$abbs
-        ),
+        geographic_extents = unlist(def$geographicExtents),
         shapefiles = unlist(def$shapefiles),
         breakdown_and_data_type_layout = def$breakdownAndDataTypeLayout,
         tst_layout = def$timeSeriesTableLayout,

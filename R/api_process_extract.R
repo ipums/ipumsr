@@ -538,10 +538,7 @@ extract_to_request_json.nhgis_extract <- function(extract) {
       extract$breakdown_and_data_type_layout
     ),
     timeSeriesTableLayout = jsonlite::unbox(extract$tst_layout),
-    geographicExtents = geog_extent_lookup(
-      extract$geographic_extents,
-      state_geog_lookup$codes
-    ),
+    geographicExtents = extract$geographic_extents,
     collection = jsonlite::unbox(extract$collection),
     version = jsonlite::unbox(ipums_api_version())
   )

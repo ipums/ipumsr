@@ -733,13 +733,13 @@ test_that("Can remove from an NHGIS extract", {
     nhgis_extract,
     datasets = "2015_2019_ACS5a",
     time_series_tables = "CW3",
-    geographic_extents = "DC"
+    geographic_extents = "110"
   )
 
   expect_equal(revised$datasets, nhgis_extract$datasets[1])
   expect_null(revised$time_series_tables)
   expect_null(revised$tst_layout)
-  expect_equal(revised$geographic_extents, "PA")
+  expect_equal(revised$geographic_extents, "420")
 })
 
 test_that("Unused revisions do not alter unsubmitted extracts", {

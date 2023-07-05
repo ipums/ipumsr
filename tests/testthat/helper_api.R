@@ -66,7 +66,7 @@ test_nhgis_extract <- function() {
       ds_spec("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
     ),
     time_series_tables = tst_spec("CW3", "state", "1990"),
-    geographic_extents = c("110", "Pennsylvania"),
+    geographic_extents = c("110", "420"),
     tst_layout = "time_by_row_layout",
     shapefiles = "110_blck_grp_2019_tl2019",
     data_format = "csv_no_header"

@@ -1258,31 +1258,6 @@ api_version_from_json <- function(extract_json) {
 
 EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))
 
-#' Convert geog extent values from names to codes and vice versa
-#'
-#' Allows users to specify geographic extents (currently states) by providing
-#' full names, abbreviations, or NHGIS codes. These are converted to codes
-#' before submitting to the API and converted to abbreviations for use in R.
-#'
-#' @param values Geog extent values to match to their associated abbreviations
-#' @param lookup_key Named vector whose names match `values` and whose values
-#'   represent the associated name to convert those values to
-#'
-#' @return A vector of length `values` with the recoded values
-#'
-#' @noRd
-geog_extent_lookup <- function(values, lookup_key) {
-  values_lower <- tolower(values)
-
-  if (length(values_lower) == 0) {
-    return(NULL)
-  }
-
-  recoded <- toupper(dplyr::recode(values_lower, !!!lookup_key))
-
-  recoded
-}
-
 resubmission_hint <- function(is_extract) {
   if (!is_extract) {
     hint <- paste0(

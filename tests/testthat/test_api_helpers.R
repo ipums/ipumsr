@@ -48,7 +48,7 @@ test_that("Can print NHGIS extracts", {
       "\n  Tables: B01001, B01002",
       "\n  Geog Levels: blck_grp",
       "\n",
-      "\nGeographic extents: DC, PA",
+      "\nGeographic extents: 110, 420",
       "\n",
       "\nTime Series Table: CW3",
       "\n  Geog Levels: state",

@@ -176,7 +176,7 @@ test_that("Can submit an NHGIS extract of multiple types", {
   expect_identical(submitted_nhgis_extract$datasets, nhgis_extract$datasets)
   expect_identical(submitted_nhgis_extract$time_series_tables, nhgis_extract$time_series_tables)
   expect_equal(submitted_nhgis_extract$shapefiles, "110_blck_grp_2019_tl2019")
-  expect_equal(submitted_nhgis_extract$geographic_extents, c("DC", "PA"))
+  expect_equal(submitted_nhgis_extract$geographic_extents, c("110", "420"))
   expect_true(submitted_nhgis_extract$submitted)
   expect_equal(submitted_nhgis_extract$status, "queued")
   expect_identical(submitted_nhgis_extract$download_links, EMPTY_NAMED_LIST)
