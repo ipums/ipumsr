@@ -197,3 +197,16 @@ test_that("Don't duplicate rectype vars in ATUS hierarchical extracts (#43)", {
     )
   )
 })
+
+
+test_that("Empty vars selection is handled", {
+  expect_error(
+    cps <- read_ipums_micro(
+      ipums_example("cps_00006.xml"),
+      data_file = ipums_example("cps_00006.dat.gz"),
+      vars = starts_with("MISSING"),
+      verbose = FALSE
+    ),
+    regexp = "did not match any variables"
+  )
+})
