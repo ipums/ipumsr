@@ -109,6 +109,28 @@ test_that("Can read Hierarchical into list format", {
   expect_equal(cps$HOUSEHOLD$HWTSUPP[1], HWTSUPP_first5_values[1])
 })
 
+test_that("Can read Rectangular into list format", {
+  temp_file <- paste0(tempfile(), ".dat")
+
+  temp <- readr::read_lines(ipums_example("cps_00006.dat.gz"))
+  readr::write_lines(temp, temp_file)
+  on.exit(unlink(temp_file), add = TRUE, after = FALSE)
+
+  cps_list <- read_ipums_micro_list(
+    ipums_example("cps_00006.xml"),
+    data_file = temp_file,
+    verbose = FALSE
+  )
+
+  cps <- read_ipums_micro(
+    ipums_example("cps_00006.xml"),
+    data_file = temp_file,
+    verbose = FALSE
+  )
+
+  testthat::expect_identical(cps_list$P, cps)
+})
+
 test_that("Arguments n_max and vars work", {
   cps <- read_ipums_micro(
     ipums_example("cps_00010.xml"),
