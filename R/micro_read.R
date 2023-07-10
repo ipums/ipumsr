@@ -264,8 +264,23 @@ read_ipums_micro_list <- function(
     ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   }
 
+  # If the file type is rectangular, direct users to read_ipums_micro()
+  if (ddi$file_type == "rectangular") {
+    rlang::abort(
+      c(
+        "Data file must be hierarchical, not rectangular.",
+        i = "For rectangular data, use `read_ipums_micro()`."
+      )
+    )
+  }
+
   if (is.null(data_file)) {
     data_file <- file.path(ddi$file_path, ddi$file_name)
+  }
+
+  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz") &
+      ddi$file_type == "hierarchical") {
+    rlang::abort("Hierarchical data cannot be read as csv.")
   }
 
   data_file <- custom_check_file_exists(
@@ -287,45 +302,19 @@ read_ipums_micro_list <- function(
   rt_ddi <- get_rt_ddi(ddi)
   ddi <- ddi_filter_vars(ddi, vars, "list", verbose)
 
-  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") {
-      rlang::abort("Hierarchical data cannot be read as csv.")
-    }
+  rt_info <- ddi_to_rtinfo(rt_ddi)
+  col_spec <- ddi_to_colspec(ddi, "list", verbose)
 
-    col_types <- ddi_to_readr_colspec(ddi)
+  out <- hipread::hipread_list(
+    data_file,
+    col_spec,
+    rt_info,
+    progress = show_readr_progress(verbose),
+    n_max = n_max,
+    encoding = ddi$file_encoding
+  )
 
-    out <- readr::read_csv(
-      data_file,
-      col_types = col_types,
-      n_max = n_max,
-      locale = ipums_locale(ddi$file_encoding),
-      progress = show_readr_progress(verbose)
-    )
-
-    if (ddi_has_lowercase_var_names(ddi)) {
-      out <- dplyr::rename_all(out, tolower)
-    }
-
-    if (verbose) {
-      cat("Assuming data rectangularized to 'P' record type")
-    }
-
-    out <- list("P" = out)
-  } else {
-    rt_info <- ddi_to_rtinfo(rt_ddi)
-    col_spec <- ddi_to_colspec(ddi, "list", verbose)
-
-    out <- hipread::hipread_list(
-      data_file,
-      col_spec,
-      rt_info,
-      progress = show_readr_progress(verbose),
-      n_max = n_max,
-      encoding = ddi$file_encoding
-    )
-
-    names(out) <- rectype_label_names(names(out), rt_ddi)
-  }
+  names(out) <- rectype_label_names(names(out), rt_ddi)
 
   for (rt in names(out)) {
     out[[rt]] <- set_ipums_var_attributes(out[[rt]], ddi, var_attrs)
