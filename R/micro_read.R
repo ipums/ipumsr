@@ -264,32 +264,22 @@ read_ipums_micro_list <- function(
     ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   }
 
-  # If the file type is rectangular, it can be handled by read_ipums_micro()
+  # If the file type is rectangular, direct users to read_ipums_micro()
   if (ddi$file_type == "rectangular") {
-    out <- read_ipums_micro(
-      ddi,
-      vars = !!enquo(vars),
-      n_max = n_max,
-      data_file = data_file,
-      verbose = verbose,
-      var_attrs = var_attrs,
-      lower_vars = FALSE
+    rlang::abort(
+      c(
+        "Data file must be hierarchical, not rectangular.",
+        i = "For rectangular data, use `read_ipums_micro()`."
+      )
     )
-
-    if (verbose) {
-      cat("Assuming data rectangularized to 'P' record type")
-    }
-
-    return(list("P" = out))
   }
 
   if (is.null(data_file)) {
     data_file <- file.path(ddi$file_path, ddi$file_name)
   }
 
-  # We know the file is hierarchical because the function would have already
-  # returned if it was rectangular
-  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
+  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz") &
+      ddi$file_type == "hierarchical") {
     rlang::abort("Hierarchical data cannot be read as csv.")
   }
 
