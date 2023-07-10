@@ -65,7 +65,7 @@ variable metadata, as many data processing operations will remove these
 attributes from data frame-like objects.
 }
 \examples{
-ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
 # Info for all variables in a data source
 ipums_var_info(ddi)

@@ -50,7 +50,7 @@ variables:
 ```{r, message=FALSE}
 library(ipumsr)
 
-ddi <- read_ipums_ddi(ipums_example("cps_00015.xml"))
+ddi <- read_ipums_ddi(ipums_example("cps_00160.xml"))
 cps <- read_ipums_micro(ddi, verbose = FALSE)
 
 cps

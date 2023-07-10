@@ -98,7 +98,7 @@
 #' suppressMessages(library(dplyr))
 #'
 #' # Example codebook file
-#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#' cps_rect_ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Function to extract Minnesota cases from CPS example
 #' # (This can also be accomplished using "Select Cases" in the IPUMS
@@ -145,7 +145,7 @@
 #'
 #' # `x` will be a list when using `read_ipums_micro_list_chunked()`
 #' read_ipums_micro_list_chunked(
-#'   ipums_example("cps_00010.xml"),
+#'   ipums_example("cps_00159.xml"),
 #'   IpumsSideEffectCallback$new(function(x, pos) {
 #'     print(
 #'       paste0(
@@ -161,7 +161,7 @@
 #' # Using the biglm package, you can even run a regression without storing
 #' # the full dataset in memory
 #' lm_results <- read_ipums_micro_chunked(
-#'   ipums_example("cps_00015.xml"),
+#'   ipums_example("cps_00160.xml"),
 #'   IpumsBiglmCallback$new(
 #'     INCTOT ~ AGE + HEALTH, # Model formula
 #'     function(x, pos) {

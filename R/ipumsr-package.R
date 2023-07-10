@@ -98,7 +98,7 @@ readr::spec
 #' @name selection_language
 #'
 #' @examples
-#' cps_file <- ipums_example("cps_00006.xml")
+#' cps_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load 3 variables by name
 #' read_ipums_micro(
@@ -115,7 +115,7 @@ readr::spec
 #' )
 #'
 #' # Standard tidyselect selectors are also supported
-#' read_ipums_micro(cps_file, vars = starts_with("WT"), verbose = FALSE)
+#' read_ipums_micro(cps_file, vars = starts_with("ASEC"), verbose = FALSE)
 #'
 #' # Selection methods can be combined
 #' read_ipums_micro(

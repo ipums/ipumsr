@@ -1,6 +1,6 @@
 test_that("can set attributes altogether", {
   data <- read_ipums_micro(
-    read_ipums_ddi(ipums_example("cps_00006.xml")),
+    read_ipums_ddi(ipums_example("cps_00157.xml")),
     verbose = FALSE
   )
 
@@ -12,15 +12,15 @@ test_that("can set attributes altogether", {
       "YEARP is repeated on person records."
     )
   )
-  expect_true(is.labelled(data[[4]]))
+  expect_true(is.labelled(data[["STATEFIP"]]))
   expect_equal(
-    attr(data[[4]], "labels")[1],
+    attr(data[["STATEFIP"]], "labels")[1],
     c("Alabama" = 1)
   )
 })
 
 test_that("setting variable attributes one at a time (#34)", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
   data <- read_ipums_micro(ddi, var_attrs = NULL, verbose = FALSE)
 
   all_attributes <- set_ipums_var_attributes(data, ddi)

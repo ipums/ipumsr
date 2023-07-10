@@ -123,7 +123,7 @@
 #'
 #' @examples
 #' # Codebook for rectangular example file
-#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#' cps_rect_ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load data based on codebook file info
 #' cps <- read_ipums_micro(cps_rect_ddi_file)
@@ -137,7 +137,7 @@
 #' cps <- read_ipums_micro(ddi, verbose = FALSE)
 #'
 #' # Codebook for hierarchical example file
-#' cps_hier_ddi_file <- ipums_example("cps_00010.xml")
+#' cps_hier_ddi_file <- ipums_example("cps_00159.xml")
 #'
 #' # Read in "long" format to get a single data frame
 #' read_ipums_micro(cps_hier_ddi_file, verbose = FALSE)
