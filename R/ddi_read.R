@@ -116,7 +116,7 @@ NULL
 #'
 #' @examples
 #' # Example codebook file
-#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load data into an `ipums_ddi` obj
 #' ddi <- read_ipums_ddi(ddi_file)
@@ -353,7 +353,11 @@ get_var_info_from_ddi <- function(ddi_xml,
     TRUE ~ "character" # Default to character if it's unexpected
   )
 
-  code_instr <- xml_text_from_path_first(var_info_xml, "d1:codInstr")
+  code_instr <- fostr_replace(
+    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
+    "^Codes",
+    ""
+  )
 
   if (file_type == "hierarchical") {
     rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")

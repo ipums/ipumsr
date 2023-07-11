@@ -632,7 +632,7 @@ fill_in_lbl <- function(lblval, orig_labels) {
 #' @export
 #'
 #' @examples
-#' cps <- read_ipums_micro(ipums_example("cps_00006.xml"))
+#' cps <- read_ipums_micro(ipums_example("cps_00157.xml"))
 #'
 #' attributes(cps$YEAR)
 #' attributes(zap_ipums_attributes(cps$YEAR))

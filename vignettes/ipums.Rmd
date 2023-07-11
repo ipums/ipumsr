@@ -132,7 +132,7 @@ ways:
 For microdata files, use the `read_ipums_micro_*()` family:
 
 ```{r}
-cps_file <- ipums_example("cps_00006.xml")
+cps_file <- ipums_example("cps_00157.xml")
 cps_data <- read_ipums_micro(cps_file)
 
 head(cps_data)

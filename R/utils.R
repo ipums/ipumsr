@@ -177,7 +177,7 @@ find_files_in <- function(file,
 #' @export
 #'
 #' @examples
-#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load metadata into `ipums_ddi` object
 #' ddi <- read_ipums_ddi(ddi_file)

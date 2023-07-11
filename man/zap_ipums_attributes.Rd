@@ -19,7 +19,7 @@ Remove all label attributes (value labels, variable labels, and variable
 descriptions) from a data frame or vector.
 }
 \examples{
-cps <- read_ipums_micro(ipums_example("cps_00006.xml"))
+cps <- read_ipums_micro(ipums_example("cps_00157.xml"))
 
 attributes(cps$YEAR)
 attributes(zap_ipums_attributes(cps$YEAR))

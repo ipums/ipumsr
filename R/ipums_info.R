@@ -58,7 +58,7 @@
 #' information.
 #'
 #' @examples
-#' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#' ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 #'
 #' # Info for all variables in a data source
 #' ipums_var_info(ddi)
@@ -214,7 +214,7 @@ print.ipums_formatted_print <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#' ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 #'
 #' ipums_file_info(ddi)
 ipums_file_info <- function(object, type = NULL) {

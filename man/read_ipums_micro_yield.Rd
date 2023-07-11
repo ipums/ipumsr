@@ -175,7 +175,7 @@ returns the path to the codebook file.
 
 \examples{
 # Create an IpumsLongYield object
-long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))
+long_yield <- read_ipums_micro_yield(ipums_example("cps_00157.xml"))
 
 # Yield the first 10 rows of the data
 long_yield$yield(10)
@@ -200,7 +200,7 @@ while (!long_yield$is_done()) {
 total_mn
 
 # Can also read hierarchical data as list:
-list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
+list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00159.xml"))
 
 # Yield size is based on total rows for all list elements
 list_yield$yield(10)

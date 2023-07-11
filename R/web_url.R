@@ -36,7 +36,7 @@
 #' @export
 #'
 #' @examples
-#' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#' ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 #'
 #' # Get URL for information about a particular variable
 #' ipums_website(ddi, "MONTH", launch = FALSE)

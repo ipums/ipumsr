@@ -59,7 +59,7 @@ library(ipumsr)
 library(dplyr)
 
 # Example data
-cps_ddi_file <- ipums_example("cps_00006.xml")
+cps_ddi_file <- ipums_example("cps_00157.xml")
 
 cps_data <- read_ipums_micro(cps_ddi_file)
 
@@ -144,7 +144,7 @@ Hierarchical data can be loaded in list format or long format.
 `read_ipums_micro()` will read in long format:
 
 ```{r}
-cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"))
 
 read_ipums_micro(cps_hier_ddi)
 ```

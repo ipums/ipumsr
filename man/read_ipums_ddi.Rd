@@ -69,7 +69,7 @@ returns the path to the codebook file.
 
 \examples{
 # Example codebook file
-ddi_file <- ipums_example("cps_00006.xml")
+ddi_file <- ipums_example("cps_00157.xml")
 
 # Load data into an `ipums_ddi` obj
 ddi <- read_ipums_ddi(ddi_file)

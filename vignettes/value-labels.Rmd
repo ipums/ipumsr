@@ -50,7 +50,7 @@ variables:
 ```{r, message=FALSE}
 library(ipumsr)
 
-ddi <- read_ipums_ddi(ipums_example("cps_00015.xml"))
+ddi <- read_ipums_ddi(ipums_example("cps_00160.xml"))
 cps <- read_ipums_micro(ddi, verbose = FALSE)
 
 cps
@@ -255,18 +255,18 @@ user-defined function:
 
 -   The `.lbl` argument references the *labels*
 
-For instance, to convert all values equal to `99999999` to `NA`, we can
+For instance, to convert all values equal to `999999999` to `NA`, we can
 provide a function that uses the `.val` argument:
 
 ```{r}
 # Convert to NA using function that returns TRUE for all labelled values equal to 99999999
 inctot_na <- lbl_na_if(
   cps$INCTOT,
-  function(.val, .lbl) .val == 99999999
+  function(.val, .lbl) .val == 999999999
 )
 
 # All 99999999 values have been converted to NA
-any(inctot_na == 99999999, na.rm = TRUE)
+any(inctot_na == 999999999, na.rm = TRUE)
 
 # And the label has been removed:
 ipums_val_labels(inctot_na)
@@ -288,13 +288,13 @@ all(inctot_na2 == inctot_na, na.rm = TRUE)
 You can also specify the function using a one-sided formula:
 
 ```{r, eval=FALSE}
-lbl_na_if(cps$INCTOT, ~ .val == 99999999)
+lbl_na_if(cps$INCTOT, ~ .val == 999999999)
 ```
 
 or for R versions greater than 4.1, base R's anonymous function syntax:
 
 ```{r, eval=FALSE}
-lbl_na_if(cps$INCTOT, \(.val, .lbl) .val == 99999999)
+lbl_na_if(cps$INCTOT, \(.val, .lbl) .val == 999999999)
 ```
 
 Note that `.val` only refers to *labelled* values---unlabelled values

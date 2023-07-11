@@ -1,5 +1,7 @@
 test_that("can read DDI with labeled string variable", {
-  ddi <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
+  ddi <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml")
+  )
   sample_val_labels <- ddi$var_info[
     ddi$var_info$var_name == "SAMPLE",
     "val_labels",
@@ -9,14 +11,19 @@ test_that("can read DDI with labeled string variable", {
 })
 
 test_that("We ignore layer selection for direct .xml files", {
-  ddi1 <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
-  ddi2 <- read_ipums_ddi(ipums_example("mtus_00002.xml"), file_select = 4)
+  ddi1 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml")
+  )
+  ddi2 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml"),
+    file_select = 4
+  )
   expect_identical(ddi1, ddi2)
 })
 
 test_that("Can read ddi from zip archives and directories", {
-  xml1 <- xml2::read_xml(ipums_example("cps_00006.xml"))
-  xml2 <- xml2::read_xml(ipums_example("cps_00010.xml"))
+  xml1 <- xml2::read_xml(ipums_example("cps_00157.xml"))
+  xml2 <- xml2::read_xml(ipums_example("cps_00159.xml"))
 
   tmp <- tempfile()
 
@@ -39,11 +46,11 @@ test_that("Can read ddi from zip archives and directories", {
 
   expect_identical(
     read_ipums_ddi(tmp, file_select = 1)$var_info,
-    read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
+    read_ipums_ddi(ipums_example("cps_00157.xml"))$var_info
   )
   expect_identical(
     read_ipums_ddi(tmp, file_select = 2)$var_info,
-    read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
+    read_ipums_ddi(ipums_example("cps_00159.xml"))$var_info
   )
 
   zip(
@@ -62,13 +69,13 @@ test_that("Can read ddi from zip archives and directories", {
       file.path(tmp, "test.zip"),
       file_select = contains("xml1")
     )$var_info,
-    read_ipums_ddi(ipums_example("cps_00006.xml"))$var_info
+    read_ipums_ddi(ipums_example("cps_00157.xml"))$var_info
   )
   expect_identical(
     read_ipums_ddi(
       file.path(tmp, "test.zip"),
       file_select = contains("xml2")
     )$var_info,
-    read_ipums_ddi(ipums_example("cps_00010.xml"))$var_info
+    read_ipums_ddi(ipums_example("cps_00159.xml"))$var_info
   )
 })
