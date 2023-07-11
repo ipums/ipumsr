@@ -2933,7 +2933,7 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
 }
 
 #' @export
-extract_list_from_json.json <- function(extract_json) {
+extract_list_from_json.json <- function(extract_json, validate = FALSE) {
   extract_info <- jsonlite::fromJSON(extract_json)
 
   if (is_null(extract_info$collection)) {
