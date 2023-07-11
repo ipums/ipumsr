@@ -1,5 +1,7 @@
 test_that("can read DDI with labeled string variable", {
-  ddi <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
+  ddi <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml")
+  )
   sample_val_labels <- ddi$var_info[
     ddi$var_info$var_name == "SAMPLE",
     "val_labels",
@@ -9,8 +11,13 @@ test_that("can read DDI with labeled string variable", {
 })
 
 test_that("We ignore layer selection for direct .xml files", {
-  ddi1 <- read_ipums_ddi(ipums_example("mtus_00002.xml"))
-  ddi2 <- read_ipums_ddi(ipums_example("mtus_00002.xml"), file_select = 4)
+  ddi1 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml")
+  )
+  ddi2 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml"),
+    file_select = 4
+  )
   expect_identical(ddi1, ddi2)
 })
 

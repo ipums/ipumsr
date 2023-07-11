@@ -184,7 +184,7 @@ test_that("keyvar is loaded regardless of selection in hierarchical", {
 
 
 test_that("Don't duplicate rectype vars in ATUS hierarchical extracts (#43)", {
-  ddi_file <- ipums_example("atus_00025.xml")
+  ddi_file <- file.path(vcr::vcr_test_path("fixtures"), "atus_00025.xml")
   ddi <- read_ipums_ddi(ddi_file)
 
   data <- dplyr::tibble(
