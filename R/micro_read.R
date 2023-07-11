@@ -305,13 +305,26 @@ read_ipums_micro_list <- function(
   rt_info <- ddi_to_rtinfo(rt_ddi)
   col_spec <- ddi_to_colspec(ddi, "list", verbose)
 
-  out <- hipread::hipread_list(
-    data_file,
-    col_spec,
-    rt_info,
-    progress = show_readr_progress(verbose),
-    n_max = n_max,
-    encoding = ddi$file_encoding
+  tryCatch(
+    out <- hipread::hipread_list(
+      data_file,
+      col_spec,
+      rt_info,
+      progress = show_readr_progress(verbose),
+      n_max = n_max,
+      encoding = ddi$file_encoding
+    ),
+    error = function(cond) {
+      rlang::abort(
+        c(
+          cond$message,
+          i = paste0(
+            "Try `read_ipums_micro()` to load this file as a single data frame."
+          )
+        ),
+        call = expr(read_ipums_micro_list())
+      )
+    }
   )
 
   names(out) <- rectype_label_names(names(out), rt_ddi)
@@ -322,6 +335,7 @@ read_ipums_micro_list <- function(
 
   out
 }
+
 
 #' Warns the user that lower_vars has been ignored when they supply an ipums_ddi
 #' to a data reading function
