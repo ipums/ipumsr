@@ -938,6 +938,9 @@ api_request_url <- function(collection, path, queries = NULL) {
 #'
 #' @noRd
 extract_request_path <- function(number = NULL) {
+  if (!rlang::is_null(number)) {
+    number <- format(number, scientific = FALSE)
+  }
   paste0("extracts/", number)
 }
 
