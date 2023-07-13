@@ -33,7 +33,7 @@ read_ipums_micro_list_yield(
 See \emph{Downloading IPUMS files} below.}
 
 \item{vars}{Names of variables to include in the output. Accepts a
-vector of names or a \link[tidyselect:language]{selection helper}.
+vector of names or a \link[=selection_language]{tidyselect selection}.
 If \code{NULL}, includes all variables in the file.
 
 For hierarchical data, the \code{RECTYPE} variable is always included even if

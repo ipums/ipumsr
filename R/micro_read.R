@@ -75,7 +75,7 @@
 #'
 #'   See *Downloading IPUMS files* below.
 #' @param vars Names of variables to include in the output. Accepts a
-#'   vector of names or a [selection helper][tidyselect::language].
+#'   vector of names or a [tidyselect selection][selection_language].
 #'   If `NULL`, includes all variables in the file.
 #'
 #'   For hierarchical data, the `RECTYPE` variable is always included even if

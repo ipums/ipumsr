@@ -135,7 +135,7 @@ readr::spec
 #' read_nhgis(
 #'   ipums_example("nhgis0731_csv.zip"),
 #'   file_select = contains("nominal_state"),
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 NULL
 

@@ -37,7 +37,7 @@
 #' @examplesIf requireNamespace("sf")
 #' data <- read_nhgis(
 #'   ipums_example("nhgis0972_csv.zip"),
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))

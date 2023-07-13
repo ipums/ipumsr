@@ -42,15 +42,13 @@
 #'   contains multiple files that represent the same geographic units for
 #'   different extents (e.g. block-level data for multiple states).
 #' @param add_layer_var If `TRUE`, add a variable to the output data indicating
-#'   the file that each row originates from. Defaults to `TRUE` if
-#'   `bind_multiple = TRUE` and `FALSE` otherwise.
+#'   the file that each row originates from. Defaults to `FALSE` unless
+#'   `bind_multiple = TRUE` and multiple files exist in `shape_file`.
 #'
 #'   The column name will always be prefixed with `"layer"`, but will be
 #'   adjusted to avoid name conflicts if another column named `"layer"` already
 #'   exists in the data.
-#' @param ... Additional arguments passed to [`sf::read_sf()`][sf::read_sf].
-#' @param verbose `r lifecycle::badge("deprecated")` Please use `quiet`
-#'   (passed to `sf::read_sf`) instead.
+#' @param verbose If `TRUE` report additional progress information on load.
 #' @param shape_layer `r lifecycle::badge("deprecated")` Please use
 #'   `file_select` instead.
 #'
@@ -78,9 +76,8 @@
 #' # files. Select a single file with `file_select`:
 #' read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
 #'
-#' # Or row-bind files with `bind_multiple`
-#' # (Useful for files of the same geographic level that cover different
-#' # extents)
+#' # Or row-bind files with `bind_multiple`. This may be useful for files of
+#' # the same geographic level that cover different extents)
 #' read_ipums_sf(
 #'   shape_ex2,
 #'   file_select = matches("us_pmsa"),
@@ -100,8 +97,7 @@ read_ipums_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
-                          ...,
-                          verbose = deprecated(),
+                          verbose = FALSE,
                           shape_layer = deprecated()) {
   custom_check_file_exists(shape_file)
 
@@ -116,19 +112,19 @@ read_ipums_sf <- function(shape_file,
     file_select <- enquo(file_select)
   }
 
-  dots <- rlang::list2(...)
-
-  if (!missing(verbose)) {
-    lifecycle::deprecate_soft(
-      "0.6.0",
-      "read_ipums_sf(verbose = )",
-      "read_ipums_sf(quiet = )"
-    )
-
-    if (!"quiet" %in% names(dots)) {
-      dots$quiet <- !verbose
-    }
-  }
+  # dots <- rlang::list2(...)
+  #
+  # if (!missing(verbose)) {
+  #   lifecycle::deprecate_soft(
+  #     "0.6.0",
+  #     "read_ipums_sf(verbose = )",
+  #     "read_ipums_sf(quiet = )"
+  #   )
+  #
+  #   if (!"quiet" %in% names(dots)) {
+  #     dots$quiet <- !verbose
+  #   }
+  # }
 
   vars <- enquo(vars)
   load_sf_namespace()
@@ -150,25 +146,43 @@ read_ipums_sf <- function(shape_file,
   )
 
   encoding <- determine_encoding(read_shape_files, encoding)
-
-  if (!any(grepl("ENCODING", dots$options))) {
-    dots$options <- c(paste0("ENCODING=", encoding), dots$options)
-  } else {
-    rlang::warn(
-      paste0(
-        "Encoding specified in both `encoding` and `options` arguments. ",
-        "Using the value provided to `options`"
-      )
-    )
-  }
+  #
+  # if (!any(grepl("ENCODING", dots$options))) {
+  #   dots$options <- c(paste0("ENCODING=", encoding), dots$options)
+  # } else {
+  #   rlang::warn(
+  #     paste0(
+  #       "Encoding specified in both `encoding` and `options` arguments. ",
+  #       "Using the value provided to `options`"
+  #     )
+  #   )
+  # }
+  #
+  # out <- purrr::map2(
+  #   read_shape_files,
+  #   encoding,
+  #   function(.x, .y) {
+  #     args <- c(list(.x), dots)
+  #
+  #     this_sf <- rlang::exec(sf::read_sf, !!!args)
+  #
+  #     if (!rlang::quo_is_null(vars)) {
+  #       this_sf <- dplyr::select(this_sf, !!vars)
+  #     }
+  #
+  #     this_sf
+  #   }
+  # )
 
   out <- purrr::map2(
     read_shape_files,
     encoding,
     function(.x, .y) {
-      args <- c(list(.x), dots)
-
-      this_sf <- rlang::exec(sf::read_sf, !!!args)
+      this_sf <- sf::read_sf(
+        .x,
+        quiet = !verbose,
+        options = paste0("ENCODING=", .y)
+      )
 
       if (!rlang::quo_is_null(vars)) {
         this_sf <- dplyr::select(this_sf, !!vars)
@@ -456,7 +470,7 @@ shape_file_prep <- function(shape_file,
   # if someone tries to read a zip of a zip/dir where there are 2 shps in the
   # inner zip) something was not as expected.
   if (length(read_shape_files) == 0 ||
-    (length(read_shape_files) > 1 && !bind_multiple)) {
+      (length(read_shape_files) > 1 && !bind_multiple)) {
     rlang::abort(
       c(
         "Files in `shape_file` not formatted as expected. ",

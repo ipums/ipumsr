@@ -77,7 +77,7 @@ tabular data that emerge in some IPUMS files
 \dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- read_nhgis(
   ipums_example("nhgis0972_csv.zip"),
-  show_col_types = FALSE
+  verbose = FALSE
 )
 
 sf_data <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))

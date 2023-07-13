@@ -39,8 +39,8 @@ not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
 \code{SpatialPointsDataFrame}).}
 
 \item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. Defaults to \code{TRUE} if
-\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
+the file that each row originates from. Defaults to \code{FALSE} unless
+\code{bind_multiple = TRUE} and multiple files exist in \code{shape_file}.
 
 The column name will always be prefixed with \code{"layer"}, but will be
 adjusted to avoid name conflicts if another column named \code{"layer"} already

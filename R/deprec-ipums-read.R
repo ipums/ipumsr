@@ -596,7 +596,7 @@ read_nhgis_sf <- function(data_file,
     sf_data <- read_ipums_sf(
       shape_file,
       file_select = !!shape_layer,
-      quiet = !verbose,
+      verbose = verbose,
       encoding = shape_encoding,
       bind_multiple = TRUE
     ),
