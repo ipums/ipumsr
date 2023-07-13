@@ -76,12 +76,24 @@ Use \code{\link[=var_spec]{var_spec()}} to add data quality flags for specific v
 A modified \code{micro_extract} object
 }
 \description{
-Add new values or replace existing values in an IPUMS microdata extract
-definition.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-All fields are optional, and if omitted, will be unchanged. Supplying a value
+Add new values or replace existing values in an IPUMS microdata extract
+definition. All fields are optional, and if omitted, will be unchanged.
+Supplying a value
 for fields that take a single value, such as \code{description} and \code{data_format},
 will replace the existing value with the supplied value.
+
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract_micro]{define_extract_*()}} functions.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To remove existing values from an IPUMS microdata extract definition, use
 \code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}}.
@@ -103,22 +115,33 @@ extract <- define_extract_usa(
   variables = c("SEX", "AGE", "YEAR")
 )
 
+# Add a single sample
 add_to_extract(extract, samples = "us2014a")
 
+# Add samples and variables
 extract2 <- add_to_extract(
   extract,
   samples = "us2014a",
   variables = c("MARST", "BIRTHYR")
 )
 
-# Add new variable-specific specifications as you would when defining
-# an extract, even to modify variables that already exist in the definition
+# Modify specifications for variables in the extract by using `var_spec()`
+# with the existing variable name:
+add_to_extract(
+  extract,
+  samples = "us2014a",
+  variables = var_spec("SEX", case_selections = "2")
+)
+
+# You can make multiple modifications or additions by providing a list
+# of `var_spec()` objects:
 add_to_extract(
   extract,
   samples = "us2014a",
   variables = list(
     var_spec("RACE", attached_characteristics = "mother"),
-    var_spec("SEX", case_selections = "2")
+    var_spec("SEX", case_selections = "2"),
+    var_spec("RELATE")
   )
 )
 

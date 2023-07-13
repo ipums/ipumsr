@@ -1199,6 +1199,264 @@ ipums_api_version <- function() {
   }
 }
 
+# `spec` helpers -------------
+
+#' Cast a vector or list to a list of `ipums_spec` objects
+#'
+#' This function is used to power the use of character strings as variable
+#' names in extract definition functions. It is also used in extract revisions
+#' to ensure a standardized input when interpreting revision arguments.
+#'
+#' @param x Vector or list of objects to cast to a list of `ipums_spec` objects.
+#'   Vector elements are interpreted as names for the resulting `ipums_spec`
+#'   objects. Objects in `x` that are already `ipums_spec` objects are
+#'   unchanged.
+#' @param class Character indicating the subclass (e.g. `"var_spec"`) of the
+#'   output list elements. Elements that are not modified retain their original
+#'   class.
+#'
+#' @return list of `ipums_spec` objects
+#'
+#' @noRd
+spec_cast <- function(x, class) {
+  if (inherits(x, "ipums_spec")) {
+    x <- list(x)
+  } else {
+    # Named entries should be from combination of spec objects
+    # with character strings in a vector, which is not allowed.
+    to_cast <- purrr::map_lgl(x, ~ !inherits(.x, "ipums_spec"))
+
+    if (any(rlang::have_name(to_cast) & to_cast)) {
+      rlang::warn(c(
+        paste0("Unexpected names in input when converting to `", class, "`"),
+        paste0(
+          "You may have combined `",
+          class, "` objects with `c()` instead of `list()`"
+        )
+      ))
+    }
+
+    if (any(to_cast)) {
+      x[to_cast] <- purrr::map(
+        x[to_cast],
+        ~ new_ipums_spec(.x, class = class)
+      )
+    }
+  }
+
+  x
+}
+
+#' Compare extract specifications and remove values
+#'
+#' This powers the logic in `remove_from_extract()` by comparing extract
+#' definition specifications and specifications provided as arguments to
+#' that function.
+#'
+#' The entries in `extract_spec` are matched to those in `spec` by name, and
+#' values for detailed specifications are removed where they match.
+#'
+#' @param extract_spec List of `ipums_spec` objects containing the
+#'   specifications contained in an extract definition.
+#' @param spec List of `ipums_spec` objects containing the values to remove
+#'   from those in `extract_spec`
+#'
+#' @return A list of `ipums_spec` objects
+#'
+#' @noRd
+spec_remove <- function(extract_spec, spec) {
+  spec_names <- purrr::map_chr(spec, ~ .x$name)
+
+  extract_spec <- purrr::compact(
+    purrr::map(
+      extract_spec,
+      function(x) {
+        if (x$name %in% spec_names) {
+          i <- which(spec_names == x$name)
+          spec_setdiff(x, spec[[i]])
+        } else {
+          x
+        }
+      }
+    )
+  )
+
+  if (length(extract_spec) == 0) {
+    extract_spec <- NULL
+  }
+
+  extract_spec
+}
+
+#' Compare extract specifications and add values
+#'
+#' This powers the logic in `add_to_extract()` by comparing extract
+#' definition specifications and specifications provided as arguments to
+#' that function.
+#'
+#' The entries in `extract_spec` are matched to those in `spec` by name, and
+#' values for detailed specifications are added where they do not match.
+#'
+#' @param extract_spec List of `ipums_spec` objects containing the
+#'   specifications contained in an extract definition.
+#' @param spec List of `ipums_spec` objects containing the values to add
+#'   to those in `extract_spec`
+#'
+#' @return A list of `ipums_spec` objects
+#'
+#' @noRd
+spec_add <- function(extract_spec, spec) {
+  spec_names <- purrr::map_chr(spec, ~ .x$name)
+
+  if (!rlang::is_null(extract_spec)) {
+    extract_spec_names <- purrr::map_chr(extract_spec, ~ .x$name)
+    new_spec <- spec[which(!spec_names %in% extract_spec_names)]
+
+    extract_spec <- purrr::compact(
+      purrr::map(
+        extract_spec,
+        function(x) {
+          if (x$name %in% spec_names) {
+            i <- which(spec_names == x$name)
+            spec_union(x, spec[[i]])
+          } else {
+            x
+          }
+        }
+      )
+    )
+
+    extract_spec <- c(extract_spec, new_spec)
+  } else {
+    extract_spec <- spec
+  }
+
+  extract_spec
+}
+
+# Helper to drive the logic comparing two spec objects and removing
+# the detailed specification values present in both from the first spec object.
+spec_setdiff <- function(spec, spec_mod, validate = FALSE) {
+  UseMethod("spec_setdiff")
+}
+
+#' @export
+spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  if (length(args) == 0) {
+    return(NULL)
+  }
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  cs_type <- spec$case_selection_type
+
+  if (length(args) == 0) {
+    return(NULL)
+  }
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  # `case_selections` may have been modified, but we want to ensure that
+  # `case_selection_type` is retained if needed and removed if all case
+  # selections are removed.
+  if (!is_null(spec$case_selections)) {
+    spec$case_selection_type <- cs_type
+  } else {
+    spec$case_selection_type <- NULL
+  }
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+# Helper to drive the logic comparing two spec objects and unioning
+# the detailed specification values present in the second with the first.
+spec_union <- function(spec, spec_mod, validate = FALSE) {
+  UseMethod("spec_union")
+}
+
+#' @export
+spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  purrr::walk(
+    args,
+    function(x) {
+      if (x == "case_selection_type") {
+        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+      } else {
+        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+      }
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
 # Misc ------------------
 
 copy_ipums_extract <- function(extract) {

@@ -100,15 +100,24 @@ Required when an extract definition includes any \code{datasets} or
 A modified \code{nhgis_extract} object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Add new values to an IPUMS NHGIS extract definition.
 All fields are optional, and if omitted, will be unchanged.
 Supplying a value for fields that take a single value, such as
 \code{description} and \code{data_format}, will replace the existing value with
 the supplied value.
 
-In general, adding to an extract follows the same syntax conventions as used
-in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. Use \code{ds_spec()} and \code{tst_spec()} to create
-dataset and time series table specifications.
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To remove existing values from an IPUMS NHGIS extract definition, use
 \code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}}.
@@ -142,11 +151,21 @@ add_to_extract(
 )
 
 # If a dataset/time series table name already exists in the definition
-# its specification will be modified by adding the new specification to
-# the existing one
+# its specification will be modified by adding the new specifications to
+# the existing ones
 add_to_extract(
   extract,
   datasets = ds_spec("1990_STF1", "NP4", "nation")
+)
+
+# You can add new datasets and modify existing ones simultaneously by
+# providing a list of `ds_spec` objects
+add_to_extract(
+  extract,
+  datasets = list(
+    ds_spec("1990_STF1", "NP4", "nation"),
+    ds_spec("1990_STF2a", "NPA1", "county")
+  )
 )
 
 # Values that can only take a single value are replaced

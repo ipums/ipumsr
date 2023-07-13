@@ -6,9 +6,15 @@
 \title{Create dataset and time series table specifications for IPUMS NHGIS extract
 requests}
 \usage{
-ds_spec(name, data_tables, geog_levels, years = NULL, breakdown_values = NULL)
+ds_spec(
+  name,
+  data_tables = NULL,
+  geog_levels = NULL,
+  years = NULL,
+  breakdown_values = NULL
+)
 
-tst_spec(name, geog_levels, years = NULL)
+tst_spec(name, geog_levels = NULL, years = NULL)
 }
 \arguments{
 \item{name}{Name of the dataset or time series table.}
@@ -39,6 +45,17 @@ tables when defining an IPUMS NHGIS extract request.
 
 Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to browse dataset and time series
 table specification parameters.
+}
+\details{
+In general, \code{data_tables} and \code{geog_levels} are required for all
+dataset specifications, and \code{geog_levels} are required for all
+time series table specifications.
+
+However, it is possible to make a temporary specification for an incomplete
+dataset or time series table by omitting these values. This supports the
+syntax used when modifying an existing extract (see
+\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} or
+\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}}).
 }
 \examples{
 dataset <- ds_spec(

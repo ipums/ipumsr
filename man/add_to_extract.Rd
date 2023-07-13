@@ -21,6 +21,8 @@ An object of the same class as \code{extract} containing the modified
 extract definition
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Add or replace values in an existing \code{ipums_extract} object.
 This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
@@ -36,9 +38,16 @@ subclass (i.e. collection) of the extract being modified.
 \link[=add_to_extract.nhgis_extract]{here}
 }
 
-In general, for a given collection, the arguments to \code{add_to_extract()}
-are identical to those used when defining an extract for that collection. For
-more information about defining an extract, click \link[=define_extract]{here}.
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract]{define_extract_*()}} functions.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To remove existing values from an extract definition, use
 \code{\link[=remove_from_extract]{remove_from_extract()}}.
@@ -46,18 +55,11 @@ To remove existing values from an extract definition, use
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
+# Microdata extracts
 usa_extract <- define_extract_usa(
   description = "2013 ACS Data",
   samples = "us2013a",
   variables = c("SEX", "AGE", "YEAR")
-)
-
-nhgis_extract <- define_extract_nhgis(
-  datasets = ds_spec(
-    "1990_STF1",
-    data_tables = c("NP1", "NP2"),
-    geog_levels = "county"
-  )
 )
 
 # Add new samples and variables
@@ -71,6 +73,24 @@ add_to_extract(
 add_to_extract(
   usa_extract,
   variables = var_spec("SEX", case_selections = "1")
+)
+
+# Modify/add multiple variables
+add_to_extract(
+  usa_extract,
+  variables = list(
+    var_spec("SEX", case_selections = "1"),
+    var_spec("RELATE")
+  )
+)
+
+# NHGIS extracts
+nhgis_extract <- define_extract_nhgis(
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2"),
+    geog_levels = "county"
+  )
 )
 
 # Add a new dataset or time series table
@@ -87,6 +107,15 @@ add_to_extract(
 add_to_extract(
   nhgis_extract,
   datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "state")
+)
+
+# Modify/add multiple datasets or time series tables
+add_to_extract(
+  nhgis_extract,
+  time_series_tables = list(
+    tst_spec("CW3", geog_levels = "state"),
+    tst_spec("CW4", geog_levels = "state")
+  )
 )
 
 # Values that can only take a single value are replaced

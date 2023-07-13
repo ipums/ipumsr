@@ -603,9 +603,9 @@ format_for_json <- function(x) {
 
 #' @export
 format_for_json.ipums_spec <- function(x) {
-  # Assume first element is the name of the field
-  if (length(x) > 1) {
-    l <- purrr::compact(x[seq(2, length(x))])
+  # Name of field is in the `name` entry
+  if ("name" %in% names(x)) {
+    l <- purrr::compact(x[setdiff(names(x), "name")])
   } else {
     l <- EMPTY_NAMED_LIST
   }

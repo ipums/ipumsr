@@ -16,8 +16,8 @@
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
-\item{datasets}{Names of the datasets
-to remove from the extract definition. All \code{data_tables}, \code{geog_levels},
+\item{datasets}{Dataset specifications to remove from the extract definition.
+All \code{data_tables}, \code{geog_levels},
 \code{years}, and \code{breakdown_values} associated with the specified
 \code{datasets} will also be removed.}
 
@@ -37,8 +37,21 @@ from the extract definition.}
 A modified \code{nhgis_extract} object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Remove existing values from an IPUMS NHGIS extract definition. All
 fields are optional, and if omitted, will be unchanged.
+
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To add new values to an IPUMS NHGIS extract definition, use
 \code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}.
@@ -72,14 +85,30 @@ extract <- define_extract_nhgis(
   )
 )
 
+# Providing names of datasets or time series tables will remove them and
+# all of their associated specifications from the extract:
 remove_from_extract(
   extract,
   time_series_tables = c("CW3", "CW5")
 )
 
+# To remove detailed specifications from a dataset or time series table,
+# use `ds_spec()` or `tst_spec()`. The named dataset or time series table
+# will be retained in the extract, but modified by removing the indicated
+# specifications:
 remove_from_extract(
   extract,
-  datasets = "1990_STF1"
+  datasets = ds_spec("1990_STF1", data_tables = c("NP2", "NP3"))
+)
+
+# To make multiple modifications, use a list of `ds_spec()` or `tst_spec()`
+# objects:
+remove_from_extract(
+  extract,
+  time_series_tables = list(
+    tst_spec("CW3", geog_levels = "county"),
+    tst_spec("CW5", geog_levels = "state")
+  )
 )
 }
 \seealso{

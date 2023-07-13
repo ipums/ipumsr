@@ -23,8 +23,21 @@ will also be removed.}
 A modified \code{micro_extract} object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Remove existing values from an IPUMS microdata extract definition. All
 fields are optional, and if omitted, will be unchanged.
+
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract_micro]{define_extract_*()}} functions.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To add new values to an IPUMS microdata extract definition, see
 \code{\link[=add_to_extract.micro_extract]{add_to_extract()}}.
@@ -50,10 +63,30 @@ usa_extract <- define_extract_usa(
   )
 )
 
+# Providing names of samples or variables will remove them and
+# all of their associated specifications from the extract:
 remove_from_extract(
   usa_extract,
   samples = "us2014a",
   variables = c("AGE", "RACE")
+)
+
+# To remove detailed specifications from a variable, indicate the
+# specifications to remove within `var_spec()`. The
+# named variable will be retained in the extract, but modified by
+# removing the indicated specifications.
+remove_from_extract(
+  usa_extract,
+  variables = var_spec("SEX", case_selections = "1")
+)
+
+# To make multiple modifications, use a list of `var_spec()` objects.
+remove_from_extract(
+  usa_extract,
+  variables = list(
+    var_spec("SEX", case_selections = "1"),
+    var_spec("AGE")
+  )
 )
 }
 \seealso{

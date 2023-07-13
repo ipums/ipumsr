@@ -191,28 +191,67 @@ test_that("Microdata variables get correct default values", {
   expect_equal(var2$case_selection_type, "general")
 })
 
-test_that("We coerce variables and samples to `ipums_spec` objects", {
+test_that("We cast vectors to `ipums_spec` objects", {
   x <- define_extract_cps(
     description = "",
     samples = "A",
-    variables = list("B")
+    variables = list("B", "C")
   )
 
   expect_s3_class(x$samples[[1]], "samp_spec")
   expect_s3_class(x$variables[[1]], "var_spec")
   expect_equal(names(x$samples), "A")
-  expect_equal(names(x$variables), "B")
+  expect_equal(names(x$variables), c("B", "C"))
 
-  # Do not coerce if named to guard against unexpected behavior when variables
-  # are combined with c() instead of list(). (c() removes class so each
-  # variable field will be coerced individually)
-  expect_error(
-    define_extract_cps(
+  # It is not possible to distinguish a "vector" of spec objects from
+  # a generic named vector. We use names to determine whether the input
+  # to a spec argument is unexpected. But we do still coerce since the input
+  # values are in a vector, which we can handle.
+  expect_warning(
+    x <- define_extract_cps(
       description = "",
       samples = "A",
       variables = c(var_spec("A"), var_spec("B"))
     ),
-    "Expected `variables` to be a `var_spec`"
+    paste0(
+      "Unexpected names in input when converting to `var_spec`.+",
+      "You may have combined `var_spec` objects with `c\\(\\)`"
+    )
+  )
+
+  expect_equal(names(x$variables), c("A", "B"))
+})
+
+test_that("Vector to `ipums_spec` casting logic is as expected", {
+  expect_equal(
+    spec_cast(tst_spec("A", "B"), "tst_spec"),
+    list(tst_spec("A", "B"))
+  )
+  expect_equal(
+    spec_cast(list(tst_spec("A", "B")), "tst_spec"),
+    list(tst_spec("A", "B"))
+  )
+  expect_equal(
+    spec_cast(tst_spec("A", "B"), "ds_spec"),
+    list(tst_spec("A", "B"))
+  )
+  expect_equal(
+    spec_cast(c("A", "B"), "var_spec"),
+    list(var_spec("A"), var_spec("B"))
+  )
+  expect_equal(
+    spec_cast(list(var_spec("A"), "B"), "var_spec"),
+    list(var_spec("A"), var_spec("B"))
+  )
+  expect_equal(
+    spec_cast(list(samp_spec("A"), samp_spec("B"), "C"), "samp_spec"),
+    list(samp_spec("A"), samp_spec("B"), samp_spec("C"))
+  )
+  expect_warning(
+    spec_cast(c(var_spec("A"), "B"), "var_spec")
+  )
+  expect_warning(
+    spec_cast(c(a = "A", "B"), "var_spec")
   )
 })
 
@@ -254,7 +293,7 @@ test_that("Succesful validation returns identical object", {
 test_that("Can validate core microdata extract fields", {
   expect_error(
     validate_ipums_extract(define_extract_usa()),
-    "argument \"variables\" is missing"
+    "argument \"samples\" is missing"
   )
   expect_error(
     validate_ipums_extract(new_ipums_extract("usa")),
@@ -409,14 +448,21 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
     "Expected `datasets` to be a `ds_spec` object or a list of"
   )
   expect_error(
-    validate_ipums_extract(
-      new_ipums_extract(
-        "nhgis",
-        description = "",
-        time_series_tables = list("a", "b", "c")
-      )
+    define_extract_nhgis(
+      description = "",
+      time_series_tables = c("a", "b", "c")
     ),
     "Expected `time_series_tables` to be a `tst_spec` object or a list of"
+  )
+  expect_silent(
+    define_extract_cps(
+      description = "test",
+      samples = "sample",
+      variables = list(
+        "var1",
+        var_spec("var2", attached_characteristics = "head")
+      )
+    )
   )
 })
 
@@ -429,7 +475,10 @@ test_that("Can validate `*_spec` objects within extracts", {
       samples = samps,
       variables = var_spec("A", case_selection_type = "detailed")
     ),
-    "`case_selection_type` must be missing when `case_selection` is not provided."
+    paste0(
+      "`case_selection_type` must be missing when `case_selections` is not",
+      " provided."
+    )
   )
   expect_error(
     define_extract_cps(
@@ -462,9 +511,9 @@ test_that("Can validate `*_spec` objects within extracts", {
     define_extract_cps(
       description = "",
       variables = var_spec("A"),
-      samples = list(new_nested_field("A", foo = "bar", class = "samp_spec"))
+      samples = list(new_ipums_spec("A", foo = "bar", class = "samp_spec"))
     ),
-    "Invalid `samp_spec` object:.+Unrecognized fields: `foo`"
+    "Invalid `samp_spec` specification:.+Unrecognized fields: `foo`"
   )
   expect_error(
     define_extract_nhgis(
@@ -476,7 +525,7 @@ test_that("Can validate `*_spec` objects within extracts", {
       )
     ),
     paste0(
-      "Invalid `ds_spec` object:.+",
+      "Invalid `ds_spec` specification:.+",
       "`data_tables` must not contain missing values.+",
       "`geog_levels` must be of type `character`, not `list`.+",
       "`years` must be of type `character`, not `double`"
@@ -490,7 +539,7 @@ test_that("Can validate `*_spec` objects within extracts", {
       )
     ),
     paste0(
-      "Invalid `tst_spec` object:.+",
+      "Invalid `tst_spec` specification:.+",
       "`name` must not contain missing values.+",
       "`geog_levels` must not contain missing values"
     )
@@ -633,10 +682,14 @@ test_that("Can add subfields to existing `ipums_*` fields", {
 
   cps_revised <- add_to_extract(
     cps_extract,
-    variables = var_spec(
-      "RACE",
-      case_selections = "813",
-      case_selection_type = "detailed"
+    variables = list(
+      var_spec(
+        "RACE",
+        case_selections = "813",
+        case_selection_type = "detailed"
+      ),
+      # Ensure we add case_selection_type when adding new case selections:
+      var_spec("AGE", case_selections = "10")
     )
   )
 
@@ -690,9 +743,17 @@ test_that("Can add subfields to existing `ipums_*` fields", {
     cps_revised$variables$RACE$case_selection_type,
     "detailed"
   )
+  expect_equal(
+    cps_revised$variables$AGE$case_selections,
+    "10"
+  )
+  expect_equal(
+    cps_revised$variables$AGE$case_selection_type,
+    "general"
+  )
 })
 
-test_that("Can remove from a microdata extract", {
+test_that("Can remove full fields from a microdata extract", {
   usa_extract <- test_usa_extract()
 
   revised_extract <- add_to_extract(
@@ -704,7 +765,10 @@ test_that("Can remove from a microdata extract", {
   revised_extract <- remove_from_extract(
     revised_extract,
     samples = "us2017b",
-    variables = c("AGE", "SEX")
+    variables = list(
+      var_spec("AGE"),
+      "SEX"
+    )
   )
 
   expect_equal(
@@ -726,12 +790,12 @@ test_that("Can remove from a microdata extract", {
   )
 })
 
-test_that("Can remove from an NHGIS extract", {
+test_that("Can remove full fields from an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
 
   revised <- remove_from_extract(
     nhgis_extract,
-    datasets = "2015_2019_ACS5a",
+    datasets = ds_spec("2015_2019_ACS5a"),
     time_series_tables = "CW3",
     geographic_extents = "110"
   )
@@ -783,6 +847,62 @@ test_that("Unused revisions do not alter unsubmitted extracts", {
   )
 })
 
+test_that("Can remove subfields from existing spec fields", {
+  cps_extract <- test_cps_extract()
+  nhgis_extract <- test_nhgis_extract()
+
+  revised_nhgis <- remove_from_extract(
+    nhgis_extract,
+    datasets = ds_spec("2014_2018_ACS5a", data_tables = "B01001")
+  )
+
+  expect_equal(
+    revised_nhgis$datasets[["2014_2018_ACS5a"]]$data_tables,
+    "B01002"
+  )
+  expect_equal(
+    revised_nhgis$datasets[["2015_2019_ACS5a"]],
+    nhgis_extract$datasets[["2015_2019_ACS5a"]]
+  )
+
+  revised_cps <- remove_from_extract(
+    cps_extract,
+    variables = list(
+      var_spec("AGE", data_quality_flags = FALSE),
+      var_spec(
+        "SEX",
+        attached_characteristics = "mother",
+        case_selections = "2"
+      )
+    )
+  )
+
+  expect_null(
+    revised_cps$variables[["AGE"]]$data_quality_flags
+  )
+  expect_equal(
+    revised_cps$variables[["SEX"]]$attached_characteristics,
+    "father"
+  )
+  expect_null(revised_cps$variables[["SEX"]]$case_selections)
+  expect_null(revised_cps$variables[["SEX"]]$case_selection_type)
+})
+
+test_that("Can remove full fields and subfields simultaneously", {
+  cps_extract <- test_cps_extract()
+
+  revised_cps <- remove_from_extract(
+    cps_extract,
+    variables = list(
+      "SEX",
+      var_spec("RACE", case_selections = c("810", "811"))
+    )
+  )
+
+  expect_false("SEX" %in% names(revised_cps$variables))
+  expect_equal(revised_cps$variables[["RACE"]]$case_selections, "812")
+})
+
 test_that("Improper extract revisions throw warnings or errors", {
   usa_extract <- test_usa_extract()
   nhgis_extract <- test_nhgis_extract()
@@ -823,7 +943,11 @@ test_that("Improper extract revisions throw warnings or errors", {
       usa_extract,
       samples = usa_extract$samples
     ),
-    "Expected `samples` to be a character vector"
+    "Extract definition must contain values for `samples`"
+  )
+  expect_error(
+    add_to_extract(nhgis_extract, datasets = ds_spec("A", "B")),
+    "`geog_levels` must not contain missing values"
   )
   expect_error(
     add_to_extract(usa_extract, data_format = "bad_format"),
@@ -853,6 +977,13 @@ test_that("Improper extract revisions throw warnings or errors", {
       variables = c("A", "A")
     ),
     "cannot contain multiple `variables` of same name"
+  )
+  expect_warning(
+    add_to_extract(usa_extract, variables = c("A", var_spec("B"))),
+    paste0(
+      "Unexpected names in input when converting to `var_spec`.+",
+      "You may have combined `var_spec` objects with `c\\(\\)`"
+    )
   )
 })
 
