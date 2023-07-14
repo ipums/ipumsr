@@ -3,6 +3,7 @@ on:
     branches: [main, update-github-actions]
   pull_request:
     branches: [main, update-github-actions]
+  workflow_dispatch:
 
 name: test-coverage
 
