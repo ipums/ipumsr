@@ -20,7 +20,7 @@
 #' If you no longer have access to the .do file, consider resubmitting the
 #' extract that produced the data. You can also change the desired data
 #' format to produce a .csv file, which does not require additional metadata
-#' files to parse.
+#' files to be loaded.
 #'
 #' For more about resubmitting an existing extract via the IPUMS API, see
 #' `vignette("ipums-api", package = "ipumsr")`.

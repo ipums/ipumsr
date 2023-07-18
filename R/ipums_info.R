@@ -8,8 +8,8 @@
 #' @description
 #' Summarize the variable metadata for the variables found in an [ipums_ddi]
 #' object or data frame. Provides descriptions of variable
-#' content (`var_label` and `var_desc`) as well as labels for particular
-#' values in each variable (`val_labels`).
+#' content (`var_label` and `var_desc`) as well as labels of particular
+#' values for each variable (`val_labels`).
 #'
 #' `ipums_var_info()` produces a [`tibble`][tibble::tbl_df-class] summary
 #' of multiple variables at once.
@@ -69,6 +69,12 @@
 #' ipums_var_label(ddi, MONTH)
 #'
 #' ipums_val_labels(ddi, MONTH)
+#'
+#' # NHGIS also supports variable-level metadata, though many fields
+#' # are not relevant and remain blank:
+#' cb <- read_nhgis_codebook(ipums_example("nhgis0972_csv.zip"))
+#'
+#' ipums_var_info(cb)
 ipums_var_info <- function(object, vars = NULL) {
   UseMethod("ipums_var_info")
 }

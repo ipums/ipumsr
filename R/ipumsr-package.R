@@ -97,6 +97,8 @@ readr::spec
 #'
 #' @name selection_language
 #'
+#' @keywords internal
+#'
 #' @examples
 #' cps_file <- ipums_example("cps_00157.xml")
 #'
@@ -158,10 +160,6 @@ tidyselect::matches
 #' @importFrom tidyselect num_range
 #' @export
 tidyselect::num_range
-
-#' @importFrom tidyselect starts_with
-#' @export
-tidyselect::starts_with
 
 #' @importFrom tidyselect one_of
 #' @export

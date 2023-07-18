@@ -17,14 +17,15 @@
 #' To retrieve summary metadata for all available data sources of a particular
 #' type, use the `type` argument. To retrieve detailed metadata for a
 #' single data source, use the `dataset`, `data_table`, or `time_series_table`
-#' arguments. See the *metadata availability* section below for information on
+#' argument. See the *metadata availability* section below for information on
 #' the metadata provided for each data type.
 #'
 #' For general information, see the NHGIS
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
 #'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")` and
+#' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
 #'
 #' @section Metadata availability:
 #' The following sections summarize the metadata fields provided for each data
@@ -33,8 +34,8 @@
 #'
 #' ## Datasets:
 #'
-#' - **`name`:** The unique identifier for the dataset. This is the code that is
-#'   used to refer to the dataset when interacting with the IPUMS API.
+#' - **`name`:** The unique identifier for the dataset. This is the value that
+#'   is used to refer to the dataset when interacting with the IPUMS API.
 #' - **`group:`** The group of datasets to which the dataset belongs.
 #'   For instance, 5 separate datasets are part of the
 #'   `"2015 American Community Survey"` group.
@@ -65,7 +66,7 @@
 #' ## Data tables:
 #'
 #' - **`name`:** The unique identifier for the data table within its dataset.
-#'   This is the code that is used to refer to the data table when interacting
+#'   This is the value that is used to refer to the data table when interacting
 #'   with the IPUMS API.
 #' - **`description`:** A short description of the data table.
 #' - **`universe`:** The statistical population measured by this data table
@@ -82,7 +83,7 @@
 #' ## Time series tables:
 #'
 #' - **`name`:** The unique identifier for the time series table. This is the
-#'   code that is used to refer to the time series table when interacting with
+#'   value that is used to refer to the time series table when interacting with
 #'   the IPUMS API.
 #' - **`description`:** A short description of the time series table.
 #' - **`geographic_integration`:** The method by which the time series table
@@ -107,7 +108,7 @@
 #' ## Shapefiles:
 #'
 #' - **`name`:** The unique identifier for the shapefile. This is the
-#'   code that is used to refer to the shapefile when interacting with
+#'   value that is used to refer to the shapefile when interacting with
 #'   the IPUMS API.
 #' - **`year`:** The survey year in which the shapefile's represented areas
 #'   were used for tabulations, which may be different than the vintage of the
@@ -172,6 +173,7 @@
 #' cs5_meta <- get_metadata_nhgis(time_series_table = "CS5")
 #' cs5_meta$geog_levels
 #'
+#' # Use the available values when defining an NHGIS extract request
 #' define_extract_nhgis(
 #'   time_series_tables = tst_spec("CS5", geog_levels = "state")
 #' )
@@ -294,7 +296,7 @@ get_metadata_nhgis <- function(type = NULL,
 #'   descriptions for the indicated collection.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract_micro] to create an IPUMS microdata
+#' [`define_extract_*()`][define_extract-micro] to create an IPUMS microdata
 #'   extract definition.
 #'
 #' @export

@@ -54,8 +54,7 @@ A \code{SpatialPolygonsDataFrame} or \code{SpatialPointsDataFrame} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Read spatial data from an IPUMS extract into R using the
-\href{https://cran.r-project.org/web/packages/sp/index.html}{\code{sp}} package.
+Read spatial data from an IPUMS extract into R using the \code{sp} package.
 
 This function has been deprecated because of the upcoming retirement
 of the rgdal package. For more information, click
@@ -81,7 +80,7 @@ shape_file <- ipums_example("nhgis0972_shape_small.zip")
 
 # If sp package is available, can load as SpatialPolygonsDataFrame
 if (require(sp) && require(rgdal)) {
-  sp_data <- read_ipums_sp(shape_file)
+  sp_data <- read_ipums_sp(shape_file, verbose = FALSE)
 }
 }
 \keyword{internal}

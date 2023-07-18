@@ -7,6 +7,7 @@
 
 #' List IPUMS data collections
 #'
+#' @description
 #' List IPUMS data collections with their corresponding codes used by the
 #' IPUMS API. Note that some data collections do not yet have API support.
 #'
@@ -19,11 +20,15 @@
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @return A [`tibble`][tibble::tbl_df-class] with three columns containing the
-#'   full collection name, the corresponding code used by the IPUMS API, and the
+#' @return A [`tibble`][tibble::tbl_df-class] with four columns containing the
+#'   full collection name, the type of data the collection provides,
+#'   the collection code used by the IPUMS API, and the
 #'   status of API support for the collection.
 #'
 #' @export
+#'
+#' @examples
+#' ipums_data_collections()
 ipums_data_collections <- function() {
   tibble::tribble(
     ~collection_name, ~collection_type, ~code_for_api, ~api_support,
@@ -803,7 +808,7 @@ validate_api_request <- function(res, call = caller_env()) {
             "Please provide your API key to the `api_key` argument ",
             "or request a key at https://account.ipums.org/api_keys"
           ),
-          "i" = "Use `set_ipums_api_key() to save your key for future use."
+          "i" = "Use `set_ipums_api_key()` to save your key for future use."
         ),
         call = call
       )
@@ -1474,9 +1479,11 @@ check_api_support <- function(collection) {
   if (!collection %in% versions$code_for_api) {
     rlang::abort(
       c(
-        paste0("No API version found for collection \"", collection, "\""),
+        paste0(
+          "Unrecognized collection: \"", collection, "\""
+        ),
         "i" = paste0(
-          "The IPUMS API currently supports the following collections: \"",
+          "The IPUMS API supports collections: \"",
           paste0(versions$code_for_api, collapse = "\", \""), "\""
         )
       )

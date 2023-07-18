@@ -64,13 +64,17 @@
 #' @examplesIf requireNamespace("sf")
 #' # Example shapefile from NHGIS
 #' shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-#' data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
-#'
-#' shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
+#' data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 #'
 #' sf_data <- read_ipums_sf(shape_ex1)
 #'
 #' sf_data
+#'
+#' # To combine spatial data with tabular data without losing the attributes
+#' # included in the tabular data, use an ipums shape join:
+#' ipums_shape_full_join(data_ex1, sf_data, by = "GISJOIN")
+#'
+#' shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
 #'
 #' # Shapefiles are provided in .zip archives that may contain multiple
 #' # files. Select a single file with `file_select`:
@@ -82,14 +86,6 @@
 #'   shape_ex2,
 #'   file_select = matches("us_pmsa"),
 #'   bind_multiple = TRUE
-#' )
-#'
-#' # To combine spatial data with tabular data without losing the attributes
-#' # included in the tabular data, use an ipums shape join:
-#' ipums_shape_full_join(
-#'   data_ex1,
-#'   sf_data,
-#'   by = "GISJOIN"
 #' )
 read_ipums_sf <- function(shape_file,
                           file_select = NULL,

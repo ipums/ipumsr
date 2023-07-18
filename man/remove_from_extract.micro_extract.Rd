@@ -31,7 +31,7 @@ fields are optional, and if omitted, will be unchanged.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -96,7 +96,7 @@ to an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
-from scratch.
+\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+definition from scratch.
 }
 \keyword{internal}

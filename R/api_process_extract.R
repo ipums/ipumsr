@@ -20,21 +20,26 @@
 #'   [set_ipums_api_key()].
 #'
 #' @seealso
-#' [download_extract()] to download an extract.
+#' [wait_for_extract()] to wait for an extract to finish processing.
 #'
 #' [get_extract_info()] and [is_extract_ready()] to check the status of an
 #'   extract request.
+#'
+#' [download_extract()] to download an extract's data files.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
 #'   extract definition and newly-assigned extract number of the submitted
 #'   extract.
 #'
+#'   Note that some unspecified extract fields may be populated with default
+#'   values and therefore change slightly upon submission.
+#'
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
+#' my_extract <- define_extract_cps(
+#'   description = "2018-2019 CPS Data",
+#'   samples = c("cps2018_05s", "cps2019_05s"),
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
@@ -49,7 +54,7 @@
 #'
 #' # You can always get the latest status, even if you forget to store the
 #' # submitted extract request object
-#' submitted_extract <- get_last_extract_info("usa")
+#' submitted_extract <- get_last_extract_info("cps")
 #'
 #' # You can also check if submitted extract is ready
 #' is_extract_ready(submitted_extract)
@@ -98,10 +103,26 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Wait for an extract request to finish by periodically checking its status
 #' via the IPUMS API until it is complete.
 #'
-#' Completed extracts will have a value of `"completed"` in their `status`
-#' field.
+#' `is_extract_ready()` is a convenience function to check if an extract
+#' is ready to download without committing your R session to waiting for
+#' extract completion.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @details
+#' The `status` of a submitted extract will be one of `"queued"`, `"started"`,
+#' `"produced"`, `"canceled"`, `"failed"`, or `"completed"`.
+#'
+#' To be ready to download, an extract must have a `"completed"` status.
+#' However, some requests that are `"completed"` may still be unavailable for
+#' download, as extracts expire and are removed from IPUMS servers after a set
+#' period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
+#'
+#' Therefore, these functions also check the `download_links` field of the
+#' extract request to determine if data are available for download. If an
+#' extract has expired (that is, it has completed but its download links are
+#' no longer available), these functions will warn that the extract request
+#' must be resubmitted.
 #'
 #' @inheritParams define_extract_usa
 #' @inheritParams download_extract
@@ -115,9 +136,6 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'     `c("collection", number)`
 #'   * An extract number to be associated with your default IPUMS
 #'     collection. See [set_ipums_default_collection()]
-#'
-#'   Extract numbers do not need to be zero-padded. That is, use `1`, not
-#'   `"0001"`.
 #'
 #'   For a list of codes used to refer to each collection, see
 #'   [ipums_data_collections()].
@@ -135,21 +153,24 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   beginning of each wait interval and upon extract completion.
 #'   Defaults to `TRUE`.
 #'
-#' @return An [`ipums_extract`][ipums_extract-class] object containing the
-#'   extract definition and the URLs from which to download extract files.
+#' @return For `wait_for_extract()`, an
+#'   [`ipums_extract`][ipums_extract-class] object containing the extract
+#'   definition and the URLs from which to download extract files.
+#'
+#'   For `is_extract_ready()`, a logical value indicating
+#'   whether the extract is ready to download.
 #'
 #' @seealso
-#' [download_extract()] to download an extract.
+#' [download_extract()] to download an extract's data files.
 #'
-#' [get_extract_info()] and [is_extract_ready()] to check the status of an
-#'   extract request.
+#' [get_extract_info()] to obtain the definition of a submitted extract request.
 #'
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
+#' my_extract <- define_extract_ipumsi(
+#'   description = "Botswana data",
+#'   samples = c("bw2001a", "bw2011a"),
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
@@ -161,14 +182,19 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' downloadable_extract <- wait_for_extract(submitted_extract)
 #'
 #' # Or by specifying the collection and number for the extract request:
-#' downloadable_extract <- wait_for_extract("usa:1")
+#' downloadable_extract <- wait_for_extract("ipumsi:1")
 #'
 #' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
+#' set_ipums_default_collection("ipumsi")
+#'
 #' downloadable_extract <- wait_for_extract(1)
 #'
 #' # Use `download_extract()` to download the completed extract:
 #' files <- download_extract(downloadable_extract)
+#'
+#' # Use `is_extract_ready()` if you don't want to tie up your R session by
+#' # waiting for completion
+#' is_extract_ready("usa:1")
 #' }
 wait_for_extract <- function(extract,
                              initial_delay_seconds = 0,
@@ -254,63 +280,8 @@ wait_for_extract <- function(extract,
   invisible(extract)
 }
 
-#' Check if an extract is ready to download
-#'
-#' @description
-#' Get the latest status of an in-progress extract request and determine if
-#' it has finished processing and is ready for download.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' The "status" of a submitted extract is one of `"queued"`, `"started"`,
-#' `"produced"`, `"canceled"`, `"failed"`, or `"completed"`.
-#'
-#' To be ready to download, an extract must have a `"completed"` status.
-#' However, some requests that are `"completed"` may still be unavailable for
-#' download, as extracts expire and are removed from IPUMS servers after a set
-#' period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
-#'
-#' Therefore, this function also checks the `"download_links"` field of the
-#' extract request to determine if data are available for download. If an
-#' extract has expired (that is, it has completed but its download links are
-#' no longer available), this function will warn that the extract request
-#' must be resubmitted.
-#'
-#' @inheritParams wait_for_extract
-#'
-#' @return A logical vector of length one.
-#'
-#' @seealso
-#' [download_extract()] to download an extract.
-#'
-#' [get_extract_info()] to check the status of an extract request.
-#'
-#' [submit_extract()] to resubmit an expired extract request.
-#'
+#' @rdname wait_for_extract
 #' @export
-#'
-#' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
-#'   variables = c("SEX", "AGE", "YEAR")
-#' )
-#'
-#' \dontrun{
-#' submitted_extract <- submit_extract(my_extract)
-#'
-#' # Check the extract request associated with a given `ipums_extract` object
-#' is_extract_ready(submitted_extract)
-#'
-#' # Or by supplying the collection and extract number
-#' is_extract_ready("usa:1")
-#' is_extract_ready(c("usa", "1"))
-#'
-#' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
-#' is_extract_ready(1)
-#' }
 is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
 
@@ -372,7 +343,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
-#' @param overwrite If `TRUE`, overwrite any files that
+#' @param overwrite If `TRUE`, overwrite any conflicting files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
 #' @param progress If `TRUE`, output progress bar showing the status of the
 #'   download request. Defaults to `TRUE`.
@@ -401,20 +372,13 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
-#' nhgis_extract <- define_extract_nhgis(
-#'   description = "Example NHGIS extract",
-#'   datasets = ds_spec(
-#'     "1990_STF3",
-#'     data_tables = "NP57",
-#'     geog_levels = c("county", "tract")
-#'   )
-#' )
-#'
 #' \dontrun{
 #' submitted_extract <- submit_extract(usa_extract)
 #'
+#' downloadable_extract <- wait_for_extract(submitted_extract)
+#'
 #' # For microdata, the path to the DDI .xml codebook file is provided.
-#' usa_xml_file <- download_extract(submitted_extract)
+#' usa_xml_file <- download_extract(downloadable_extract)
 #'
 #' # Load with a `read_ipums_micro_*()` function
 #' usa_data <- read_ipums_micro(usa_xml_file)
@@ -424,16 +388,10 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # NHGIS extracts return a path to both the tabular and spatial data files,
 #' # as applicable.
-#' #
-#' # Load NHGIS tabular data
 #' nhgis_data <- read_nhgis(data = nhgis_files["data"])
 #'
 #' # Load NHGIS spatial data
 #' nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
-#'
-#' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
-#' download_extract(1)
 #' }
 download_extract <- function(extract,
                              download_dir = getwd(),
@@ -445,12 +403,10 @@ download_extract <- function(extract,
 
   if (is_extract) {
     is_ready <- extract_is_completed_and_has_links(extract)
+  }
 
-    # If not downloadable, check latest status, since we haven't done so yet.
-    if (!is_ready) {
-      extract <- get_extract_info(extract, api_key = api_key)
-    }
-  } else {
+  # If not downloadable, check latest status, since we haven't done so yet.
+  if (!is_extract || !is_ready) {
     extract <- get_extract_info(extract, api_key = api_key)
     is_ready <- extract_is_completed_and_has_links(extract)
   }

@@ -291,12 +291,6 @@ You can also specify the function using a one-sided formula:
 lbl_na_if(cps$INCTOT, ~ .val == 999999999)
 ```
 
-or for R versions greater than 4.1, base R's anonymous function syntax:
-
-```{r, eval=FALSE}
-lbl_na_if(cps$INCTOT, \(.val, .lbl) .val == 999999999)
-```
-
 Note that `.val` only refers to *labelled* values---unlabelled values
 are not affected:
 

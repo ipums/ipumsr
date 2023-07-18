@@ -99,3 +99,4 @@ read_nhgis(
   verbose = FALSE
 )
 }
+\keyword{internal}

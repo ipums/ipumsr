@@ -23,16 +23,13 @@ form \code{"collection:number"} or as a vector of the form
 collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-Extract numbers do not need to be zero-padded. That is, use \code{1}, not
-\code{"0001"}.
-
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
 \item{download_dir}{Path to the directory where the files should be written.
 Defaults to current working directory.}
 
-\item{overwrite}{If \code{TRUE}, overwrite any files that
+\item{overwrite}{If \code{TRUE}, overwrite any conflicting files that
 already exist in \code{download_dir}. Defaults to \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, output progress bar showing the status of the
@@ -71,20 +68,13 @@ usa_extract <- define_extract_usa(
   variables = c("SEX", "AGE", "YEAR")
 )
 
-nhgis_extract <- define_extract_nhgis(
-  description = "Example NHGIS extract",
-  datasets = ds_spec(
-    "1990_STF3",
-    data_tables = "NP57",
-    geog_levels = c("county", "tract")
-  )
-)
-
 \dontrun{
 submitted_extract <- submit_extract(usa_extract)
 
+downloadable_extract <- wait_for_extract(submitted_extract)
+
 # For microdata, the path to the DDI .xml codebook file is provided.
-usa_xml_file <- download_extract(submitted_extract)
+usa_xml_file <- download_extract(downloadable_extract)
 
 # Load with a `read_ipums_micro_*()` function
 usa_data <- read_ipums_micro(usa_xml_file)
@@ -94,16 +84,10 @@ nhgis_files <- download_extract("nhgis:1")
 
 # NHGIS extracts return a path to both the tabular and spatial data files,
 # as applicable.
-#
-# Load NHGIS tabular data
 nhgis_data <- read_nhgis(data = nhgis_files["data"])
 
 # Load NHGIS spatial data
 nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
-
-# If you have a default collection, you can use the extract number alone:
-set_ipums_default_collection("usa")
-download_extract(1)
 }
 }
 \seealso{

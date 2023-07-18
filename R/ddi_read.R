@@ -56,7 +56,8 @@
 #' @aliases ipums_ddi
 NULL
 
-#' Read metadata about an IPUMS extract from a DDI codebook (.xml) file
+#' Read metadata about an IPUMS microdata extract from a DDI codebook (.xml)
+#' file
 #'
 #' @description
 #' Reads the metadata about an IPUMS extract from a
@@ -89,9 +90,7 @@ NULL
 #'
 #' @param ddi_file Path to a DDI .xml file downloaded from
 #'   [IPUMS](https://www.ipums.org/) or a .zip archive or directory containing
-#'   the .xml file.
-#'
-#'   See *Downloading IPUMS files* below.
+#'   the .xml file. See *Downloading IPUMS files* below.
 #' @param file_select If `ddi_file` is a .zip archive or directory that contains
 #'   multiple .xml files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a
@@ -434,12 +433,18 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' Read metadata from an NHGIS codebook (.txt) file
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Read the variable metadata contained in the .txt codebook file included with
 #' NHGIS extracts into an [ipums_ddi] object.
 #'
 #' Because NHGIS variable metadata do not
 #' adhere to all the standards of microdata DDI files, some of the `ipums_ddi`
 #' fields will not be populated.
+#'
+#' This function is marked as experimental while we determine whether
+#' there may be a more robust way to standardize codebook and DDI reading across
+#' IPUMS collections.
 #'
 #' @param cb_file Path to a codebook (.txt) file, a .zip
 #'   archive from an NHGIS extract, or a directory containing the codebook file.
@@ -451,8 +456,6 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' @param raw If `TRUE`, return a character vector containing the lines
 #'   of `cb_file` rather than an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
-#'   instead.
 #'
 #' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
 #'   variables contained in the data for the extract associated with the given
@@ -460,8 +463,6 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'
 #'   If `raw = TRUE`, a character vector with one element for each
 #'   line of the given `cb_file`.
-#'
-#' @rdname ipums_codebook
 #'
 #' @export
 #'
@@ -500,18 +501,8 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' cat(codebook_raw[1:20], sep = "\n")
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
-                                raw = FALSE,
-                                data_layer = deprecated()) {
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis_codebook(data_layer = )",
-      "read_nhgis_codebook(file_select = )",
-    )
-    file_select <- enquo(data_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
+                                raw = FALSE) {
+  file_select <- enquo(file_select)
 
   custom_check_file_exists(cb_file)
 

@@ -8,7 +8,7 @@
 #' Retrieve the definition and latest status of an extract request
 #'
 #' @description
-#' Retrieve the latest extract status of an extract request.
+#' Retrieve the latest status of an extract request.
 #'
 #' `get_last_extract_info()` is a convenience function to retrieve the most
 #' recent extract for a given collection.
@@ -26,9 +26,6 @@
 #'   * An extract number to be associated with your default IPUMS
 #'     collection. See [set_ipums_default_collection()]
 #'
-#'   Extract numbers do not need to be zero-padded. That is, use `1`, not
-#'   `"0001"`.
-#'
 #'   For a list of codes used to refer to each collection, see
 #'   [ipums_data_collections()].
 #' @inheritParams submit_extract
@@ -39,16 +36,12 @@
 #' @seealso
 #' [get_extract_history()] to browse past extract definitions
 #'
-#' [submit_extract()] and [download_extract()] to
-#'   process and manage an extract request.
+#' [wait_for_extract()] to wait for an extract to finish processing.
+#'
+#' [download_extract()] to download an extract's data files.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
-#'
-#' [add_to_extract()] and [remove_from_extract()] to
-#'   revise an extract definition.
-#'
-#' [set_ipums_default_collection()] to set a default collection.
 #'
 #' @export
 #'
@@ -64,15 +57,21 @@
 #'
 #' # Get latest info for the request associated with a given `ipums_extract`
 #' # object:
-#' get_extract_info(submitted_extract)
+#' updated_extract <- get_extract_info(submitted_extract)
+#'
+#' updated_extract$status
 #'
 #' # Or specify the extract collection and number:
 #' get_extract_info("usa:1")
-#' get_extract_info(c("usa", "1"))
+#' get_extract_info(c("usa", 1))
 #'
 #' # If you have a default collection, you can use the extract number alone:
 #' set_ipums_default_collection("nhgis")
 #' get_extract_info(1)
+#'
+#' # To get the most recent extract (for instance, if you have forgotten its
+#' # extract number), use `get_last_extract_info()`
+#' get_last_extract_info("nhgis")
 #' }
 get_extract_info <- function(extract,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
@@ -105,7 +104,7 @@ get_extract_info <- function(extract,
   extract_list_from_json(response)[[1]]
 }
 
-#' Browse definitions of previously-submitted extract requests
+#' Browse definitions of previously submitted extract requests
 #'
 #' @description
 #' Retrieve definitions of an arbitrary number of previously submitted extract
@@ -140,9 +139,6 @@ get_extract_info <- function(extract,
 #' @seealso
 #' [get_extract_info()] to get the current status of a specific extract request.
 #'
-#' [add_to_extract()] and [remove_from_extract()] to
-#'   revise an extract definition.
-#'
 #' @export
 #'
 #' @examples
@@ -157,6 +153,75 @@ get_extract_info <- function(extract,
 #' # To get the most recent extract (for instance, if you have forgotten its
 #' # extract number), use `get_last_extract_info()`
 #' get_last_extract_info("nhgis")
+#' }
+#'
+#' # To browse your extract history by particular criteria, you can
+#' # loop through the extract objects. We'll create a sample list of 2 extracts:
+#' extract1 <- define_extract_usa(
+#'   description = "2013 ACS",
+#'   samples = "us2013a",
+#'   variables = var_spec(
+#'     "SEX",
+#'     case_selections = "2",
+#'     data_quality_flags = TRUE
+#'   )
+#' )
+#'
+#' extract2 <- define_extract_usa(
+#'   description = "2014 ACS",
+#'   samples = "us2014a",
+#'   variables = list(
+#'     var_spec("RACE"),
+#'     var_spec(
+#'       "SEX",
+#'       case_selections = "1",
+#'       data_quality_flags = FALSE
+#'     )
+#'   )
+#' )
+#'
+#' extracts <- list(extract1, extract2)
+#'
+#' # `purrr::keep()`` is particularly useful for filtering:
+#' purrr::keep(extracts, ~ "RACE" %in% names(.x$variables))
+#'
+#' purrr::keep(extracts, ~ grepl("2014 ACS", .x$description))
+#'
+#' # You can also filter on variable-specific criteria
+#' purrr::keep(extracts, ~ isTRUE(.x$variables[["SEX"]]$data_quality_flags))
+#'
+#' # To filter based on all variables in an extract, you'll need to
+#' # create a nested loop. For instance, to find all extracts that have
+#' # any variables with data_quality_flags:
+#' purrr::keep(
+#'   extracts,
+#'   function(extract) {
+#'     any(purrr::map_lgl(
+#'       names(extract$variables),
+#'       function(var) isTRUE(extract$variables[[var]]$data_quality_flags)
+#'     ))
+#'   }
+#' )
+#'
+#' # To peruse your extract history without filtering, `purrr::map()` is more
+#' # useful
+#' purrr::map(extracts, ~ names(.x$variables))
+#'
+#' purrr::map(extracts, ~ names(.x$samples))
+#'
+#' purrr::map(extracts, ~ .x$variables[["RACE"]]$case_selections)
+#'
+#' # Once you have identified a past extract, you can easily download or
+#' # resubmit it
+#' \dontrun{
+#' extracts <- get_extract_history("nhgis")
+#'
+#' extract <- purrr::keep(
+#'   extracts,
+#'   ~ "CW3" %in% names(.x$time_series_tables)
+#' )
+#'
+#' download_extract(extract[[1]])
 #' }
 get_extract_history <- function(collection = NULL,
                                 how_many = 10,

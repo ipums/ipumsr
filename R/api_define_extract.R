@@ -13,26 +13,26 @@
 #' submitted and unsubmitted extract requests are stored in `ipums_extract`
 #' objects.
 #'
-#' `ipums_extract` objects are futher divided into microdata
+#' `ipums_extract` objects are further divided into microdata
 #' and aggregate data classes, and will also include
 #' a collection-specific extract subclass to accommodate differences in
 #' extract options and content across collections.
 #'
 #' Currently supported collections are:
 #'
-#' * IPUMS microdata (`"micro_extract"`)
+#' - IPUMS microdata (`"micro_extract"`)
 #'     + IPUMS USA (`"usa_extract"`)
 #'     + IPUMS CPS (`"cps_extract"`)
 #'     + IPUMS International (`"ipumsi_extract"`)
-#' * IPUMS aggregate data (`"agg_extract"`)
+#' - IPUMS aggregate data (`"agg_extract"`)
 #'     + IPUMS NHGIS (`"nhgis_extract"`)
 #'
-#' Learn more about the IPUMS API in vignette("ipums-api").
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
 #' @section Properties:
 #' Objects of class `ipums_extract` have:
 #' * A `class` attribute of the form
-#'   `c("{collection}_extract", "{data_type}_extract", "ipums_extract")`.
+#'   `c("{collection}_extract", "{collection_type}_extract", "ipums_extract")`.
 #'   For instance, `c("cps_extract", "micro_extract", "ipums_extract")`.
 #' * A base type of `"list"`.
 #' * A `names` attribute that is a character vector the same length as the
@@ -47,7 +47,7 @@
 #' * `download_links`: links to the downloadable data, if the extract request
 #'   was completed at the time it was last checked.
 #' * `number`: the number of the extract request. With `collection`, this
-#'   uniquely identifies an extract request.
+#'   uniquely identifies an extract request for a given user.
 #' * `status`: status of the extract request at the time it was last checked.
 #'   One of `"unsubmitted"`, `"queued"`, `"started"`, `"produced"`,
 #'   `"canceled"`, `"failed"`, or `"completed"`.
@@ -57,9 +57,9 @@
 #'   [`define_extract_*()`][define_extract] function. These functions take the
 #'   form `define_extract_{collection}`.
 #' * Use [get_extract_info()] to get the latest status of a submitted extract
-#'   request
+#'   request.
 #' * Use [get_extract_history()] to obtain the extract definitions of
-#'   previously-submitted extracts
+#'   previously-submitted extract requests.
 #'
 #' @section Submitting an extract:
 #' * Use [submit_extract()] to submit an extract request for processing through
@@ -72,10 +72,6 @@
 #' @section Downloading an extract:
 #' * Download the data contained in a completed extract with
 #'   [download_extract()].
-#'
-#' @section Revising an extract definition:
-#' * Modify values in an existing extract definition with [add_to_extract()] and
-#'   [remove_from_extract()].
 #'
 #' @section Saving an extract:
 #' * Save an extract to a JSON-formatted file with [save_extract_as_json()].
@@ -125,27 +121,31 @@ NULL
 #' - **IPUMS CPS**: `define_extract_cps()`
 #' - **IPUMS International**: `define_extract_ipumsi()`
 #'
-#' Use the [var_spec()] helper to generate detailed variable-level
-#' specifications for an extract request.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")` and
+#' microdata extract definitions in `vignette("ipums-api-micro")`.
 #'
 #' @param description Description of the extract.
-#' @param samples Character vector of sample names to include in the extract.
-#'   Use [get_sample_info()] to identify sample IDs for a given collection.
-#' @param variables Character vector of variable names or a list of detailed
-#'   variable specifications for all variables in the extract request. Use
-#'   [var_spec()] to create a `var_spec` object containing a detailed variable
-#'   specification. See examples.
-#' @param data_format Format for the output extract data file. One of
-#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`. Defaults to
-#'   `"fixed_width"`.
-#' @param data_structure Data structure for the output the extract data.
+#' @param samples Vector of samples to include in the extract
+#'   request. Use [get_sample_info()] to identify
+#'   sample IDs for a given collection.
+#' @param variables Vector of variable names or a list of detailed
+#'   variable specifications to include in the extract
+#'   request. Use [var_spec()] to create a `var_spec` object containing a
+#'   detailed variable specification. See examples.
+#' @param data_format Format for the output extract data file. Either
+#'   `"fixed_width"` or `"csv"`.
 #'
-#'   `"rectangular"` provides person records with all requested household
+#'   Note that while `"stata"`, `"spss"`, or `"sas9"` are also accepted, these
+#'   file formats are not supported by ipumsr data-reading functions.
+#'
+#'   Defaults to `"fixed_width"`.
+#' @param data_structure Data structure for the output extract data.
+#'
+#'   - `"rectangular"` provides person records with all requested household
 #'   information attached to respective household members.
+#'   - `"hierarchical"` provides household records followed by person records.
 #'
-#'   `"hierarchical"` provides household records followed by person records.
+#'   Defaults to `"rectangular"`.
 #' @param rectangular_on If `data_structure` is `"rectangular"`,
 #'   records on which to rectangularize. Currently only `"P"` (person records)
 #'   is supported.
@@ -153,12 +153,11 @@ NULL
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
 #' @param case_select_who Indication of how to interpret any case selections
-#'   included for variables in the extract.
+#'   included for variables in the extract definition.
 #'
-#'   `"individuals"` includes records for all individuals who match the
+#'   - `"individuals"` includes records for all individuals who match the
 #'   specified case selections.
-#'
-#'   `"households"` includes records for all members of each household that
+#'   - `"households"` includes records for all members of each household that
 #'    contains an individual who matches the specified case selections.
 #'
 #'   Defaults to `"individuals"`. Use [var_spec()] to add case selections for
@@ -174,19 +173,12 @@ NULL
 #'   the extract definition.
 #'
 #' @seealso
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' [`add_to_extract()`][add_to_extract.micro_extract()], and
-#' [`remove_from_extract()`][remove_from_extract.micro_extract()]
-#' to revise an extract definition.
-#'
-#' @export
-#'
-#' @name define_extract_micro
+#' @name define_extract-micro
 #'
 #' @examples
 #' usa_extract <- define_extract_usa(
@@ -226,7 +218,7 @@ NULL
 #' # create variables prior to defining the extract:
 #' var_names <- c("AGE", "SEX")
 #'
-#' var_spec <- purrr::map(
+#' my_vars <- purrr::map(
 #'   var_names,
 #'   ~ var_spec(.x, attached_characteristics = "mother")
 #' )
@@ -234,7 +226,7 @@ NULL
 #' ipumsi_extract <- define_extract_ipumsi(
 #'   description = "Extract definition with predefined variables",
 #'   samples = c("br2010a", "cl2017a"),
-#'   variables = var_spec
+#'   variables = my_vars
 #' )
 #'
 #' # Extract specifications can be indexed by name
@@ -251,7 +243,7 @@ NULL
 NULL
 
 #' @export
-#' @rdname define_extract_micro
+#' @rdname define_extract-micro
 define_extract_usa <- function(description,
                                samples,
                                variables,
@@ -274,7 +266,7 @@ define_extract_usa <- function(description,
 }
 
 #' @export
-#' @rdname define_extract_micro
+#' @rdname define_extract-micro
 define_extract_cps <- function(description,
                                samples,
                                variables,
@@ -297,7 +289,7 @@ define_extract_cps <- function(description,
 }
 
 #' @export
-#' @rdname define_extract_micro
+#' @rdname define_extract-micro
 define_extract_ipumsi <- function(description,
                                   samples,
                                   variables,
@@ -330,7 +322,8 @@ define_extract_ipumsi <- function(description,
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
 #'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#' Learn more about the IPUMS API in `vignette("ipums-api")` and
+#' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
 #'
 #' @details
 #' An NHGIS extract definition must include at least one dataset, time series
@@ -344,8 +337,8 @@ define_extract_ipumsi <- function(description,
 #' series table must be associated with a selection of `geog_levels` and
 #' may optionally be associated with a selection of `years`.
 #'
-#' See examples for more details about specifying datasets and time series
-#' tables in an NHGIS extract definition.
+#' See examples or `vignette("ipums-api-nhgis")` for more details about
+#' specifying datasets and time series tables in an NHGIS extract definition.
 #'
 #' @param description Description of the extract.
 #' @param datasets List of dataset specifications for any
@@ -399,8 +392,8 @@ define_extract_ipumsi <- function(description,
 #'   - `"csv_header"` includes a second, more descriptive header row.
 #'   - `"fixed_width"` provides data in a fixed width format
 #'
-#'   Note that [read_nhgis()] removes the additional header row in
-#'   `"csv_header"` files by default.
+#'   Note that by default, [read_nhgis()] removes the additional header row in
+#'   `"csv_header"` files.
 #'
 #'   Required when an extract definition includes any `datasets` or
 #'   `time_series_tables`.
@@ -411,15 +404,10 @@ define_extract_ipumsi <- function(description,
 #' @seealso
 #' [get_metadata_nhgis()] to find data to include in an extract definition.
 #'
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
-#'
-#' [`add_to_extract()`][add_to_extract.nhgis_extract()] and
-#' [`remove_from_extract()`][remove_from_extract.nhgis_extract()]
-#' to revise an extract definition.
 #'
 #' @export
 #'
@@ -543,19 +531,35 @@ define_extract_nhgis <- function(description = "",
 #'
 #' Currently, no additional specifications are available for IPUMS samples.
 #'
+#' Learn more about microdata extract definitions in
+#' `vignette("ipums-api-micro")`.
+#'
 #' @param name Name of the sample or variable.
-#' @param case_selections Cases to select for the given variable.
+#' @param case_selections A character vector of values of the given variable
+#'   that should be used to select cases. Values should be specified exactly as
+#'   they appear in the "CODES" tab for the given variable in the web-based
+#'   extract builder, including zero-padding (e.g. see the "CODES" tab for IPUMS
+#'   CPS variable
+#'   [EDUC](https://cps.ipums.org/cps-action/variables/EDUC#codes_section)).
 #' @param case_selection_type One of `"general"` or `"detailed"` indicating
-#'   the type of case selection to use for the cases in `case_selections`.
+#'   whether the values in `case_selections` should be matched against the
+#'   general or detailed codes for the given variable. Only some variables have
+#'   detailed codes. See IPUMS USA variable
+#'   [RACE](https://usa.ipums.org/usa-action/variables/RACE#codes_section) for
+#'   an example of a variable with general and detailed codes.
+#'
 #'   Defaults to `"general"` if any `case_selections` are specified.
-#' @param attached_characteristics Characteristics to attach for the given
-#'   variable. Accepted values are `"mother"`, `"father"`, `"spouse"`, `"head"`,
-#'   or a combination.
+#' @param attached_characteristics Whose characteristics should be attached, if
+#'   any? Accepted values are `"mother"`, `"father"`, `"spouse"`, `"head"`,
+#'   or a combination. Specifying attached characteristics will add variables to
+#'   your extract that contain the values for the given variable for the
+#'   specified household members (e.g. variable "AGE_MOM" will be added if
+#'   `"mother"` is specified for the variable `"AGE"`).
 #' @param data_quality_flags Logical indicating whether to include data quality
 #'   flags for the given variable. By default, data quality flags are not
 #'   included.
 #' @param preselected Logical indicating whether the variable is preselected.
-#'   This is unlikely to be needed.
+#'   This is not needed for external use.
 #'
 #' @return A `var_spec` or `samp_spec` object.
 #'
@@ -578,11 +582,15 @@ define_extract_nhgis <- function(description = "",
 #' )
 #'
 #' # Use variable specifications in a microdata extract definition:
-#' define_extract_usa(
+#' extract <- define_extract_usa(
 #'   description = "Example extract",
 #'   samples = "us2017b",
 #'   variables = list(var1, var2)
 #' )
+#'
+#' extract$variables$SCHOOL
+#'
+#' extract$variables$RACE
 var_spec <- function(name,
                      case_selections = NULL,
                      case_selection_type = NULL,
@@ -617,8 +625,11 @@ samp_spec <- function(name) {
 #' Provide specifications for individual datasets and time series
 #' tables when defining an IPUMS NHGIS extract request.
 #'
-#' Use [get_metadata_nhgis()] to browse dataset and time series
-#' table specification parameters.
+#' Use [get_metadata_nhgis()] to identify available values for dataset and
+#' time series table specification parameters.
+#'
+#' Learn more about NHGIS extract definitions in
+#' `vignette("ipums-api-nhgis")`.
 #'
 #' @details
 #' In general, `data_tables` and `geog_levels` are required for all
@@ -639,9 +650,8 @@ samp_spec <- function(name) {
 #' @param years Years for which to obtain the data for the given dataset or time
 #'   series table.
 #'
-#'   For time series tables, all years are selected by default.
-#'
-#'   For datasets, use `"*"` to select all available years. Use
+#'   For time series tables, all years are selected by default. For datasets,
+#'   use `"*"` to select all available years. Use
 #'   [get_metadata_nhgis()] to determine if a dataset allows year selection.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
@@ -712,20 +722,51 @@ tst_spec <- function(name,
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
+#' @section API Version Compatibility:
+#' As of v0.6.0, ipumsr only supports IPUMS API version 2. If you have stored
+#' an extract definition made using version beta or version 1 of the IPUMS
+#' API, you will not be able to load it using `define_extract_from_json()`. The
+#' API version for the request should be stored in the saved JSON file. (If
+#' there is no `"api_version"` or `"version"` field in the JSON file, the
+#' request was likely made under version beta or version 1.)
+#'
+#' If the extract definition was originally made under your user account and
+#' you know its corresponding extract number, use [get_extract_info()] to obtain
+#' a definition compliant with IPUMS API version 2. You can then save this
+#' definition to JSON with `save_extract_as_json()`.
+#'
+#' Otherwise, you will need to update the JSON file to be compliant with
+#' IPUMS API version 2. In general, this should only require renaming
+#' all JSON fields written in `snake_case` to `camelCase`. For instance,
+#' `"data_tables"` would become `"dataTables"`, `"data_format"` would become
+#' `"dataFormat"`, and so on. You will also need to change the `"api_version"`
+#' field to `"version"` and set it equal to `2`. If you are unable to create
+#' a valid extract by modifying the file, you may have to recreate the
+#' definition manually using the appropriate
+#' [`define_extract_*()`][define_extract] function.
+#'
+#' See the IPUMS developer documentation for more details on
+#' [API versioning](https://developer.ipums.org/docs/apiprogram/versioning/) and
+#' [breaking changes](https://developer.ipums.org/docs/apiprogram/changelog/)
+#' introduced in version 2.
+#'
 #' @inheritParams add_to_extract
-#' @param extract_json Path to a file containing a JSON-formatted
-#'   extract definition.
+#' @param file File path to which to write the JSON-formatted extract
+#'   definition.
+#' @param overwrite If `TRUE`, overwrite `file` if it already exists.
+#'   Defaults to `FALSE`.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract] to define an extract request to save.
+#' [`define_extract_*()`][define_extract] to define an extract request manually.
+#'
+#' [get_extract_info()] to obtain a past extract to save.
+#'
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' [add_to_extract()] and [remove_from_extract()] to
 #'   revise an extract definition.
-#'
-#' [submit_extract()], [download_extract()], and [get_extract_info()] to
-#'   process and manage an extract request.
 #'
 #' @export
 #'
@@ -744,6 +785,25 @@ tst_spec <- function(name,
 #' identical(my_extract, copy_of_my_extract)
 #'
 #' file.remove(extract_json_path)
+save_extract_as_json <- function(extract, file, overwrite = FALSE) {
+  extract_as_json <- extract_to_request_json(extract)
+
+  if (file.exists(file) && !overwrite) {
+    rlang::abort(c(
+      paste0("File \"", file, "\" already exists."),
+      "i" = "To overwrite, set `overwrite = TRUE`."
+    ))
+  }
+
+  writeLines(jsonlite::prettify(extract_as_json), con = file)
+  invisible(file)
+}
+
+#' @param extract_json Path to a file containing a JSON-formatted
+#'   extract definition.
+#'
+#' @export
+#' @rdname save_extract_as_json
 define_extract_from_json <- function(extract_json) {
   collection <- jsonlite::fromJSON(extract_json)$collection
 
@@ -803,27 +863,6 @@ define_extract_from_json <- function(extract_json) {
   list_of_extracts[[1]]
 }
 
-#' @param file File path to which to write the JSON-formatted extract
-#'   definition.
-#' @param overwrite If `TRUE`, overwrite `file` if it already exists.
-#'   Defaults to `FALSE`.
-#'
-#' @rdname define_extract_from_json
-#' @export
-save_extract_as_json <- function(extract, file, overwrite = FALSE) {
-  extract_as_json <- extract_to_request_json(extract)
-
-  if (file.exists(file) && !overwrite) {
-    rlang::abort(c(
-      paste0("File \"", file, "\" already exists."),
-      "i" = "To overwrite, set `overwrite = TRUE`."
-    ))
-  }
-
-  writeLines(jsonlite::prettify(extract_as_json), con = file)
-  invisible(file)
-}
-
 #' Add values to an existing IPUMS extract definition
 #'
 #' @description
@@ -868,14 +907,15 @@ save_extract_as_json <- function(extract, file, overwrite = FALSE) {
 #' @return An object of the same class as `extract` containing the modified
 #'   extract definition
 #'
+#' @keywords internal
+#'
 #' @seealso
 #' [remove_from_extract()] to remove values from an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
 #' [`define_extract_*()`][define_extract] to create a new extract request from
 #' scratch.
+#'
+#' [submit_extract()] to submit an extract request for processing.
 #'
 #' @export
 #'
@@ -1160,7 +1200,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract_micro] functions.
+#' definitions with [`define_extract_*()`][define_extract-micro] functions.
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1181,7 +1221,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' To modify variable-specific parameters for variables that already exist
 #' in the extract, create a new variable specification with [var_spec()].
 #'
-#' @inheritParams define_extract_micro
+#' @inheritParams define_extract-micro
 #' @inheritParams add_to_extract
 #' @param variables Character vector of variable names or a list of
 #'   `var_spec` objects created by [var_spec()]
@@ -1189,8 +1229,11 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #'   If a variable already exists in the extract, its specifications
 #'   will be added to those that already exist for that variable.
-#' @param data_format Format for the output extract data file. One of
-#'   `"fixed_width"`, `"csv"`, `"stata"`, `"spss"`, or `"sas9"`.
+#' @param data_format Format for the output extract data file. Either
+#'   `"fixed_width"` or `"csv"`.
+#'
+#'   Note that while `"stata"`, `"spss"`, or `"sas9"` are also accepted, these
+#'   file formats are not supported by ipumsr data-reading functions.
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1204,8 +1247,8 @@ add_to_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [`define_extract_*()`][define_extract] to create a new extract definition
-#'   from scratch
+#' [`define_extract_*()`][define_extract-micro] to create a new extract
+#'   definition from scratch
 #'
 #' @export
 #'
@@ -1368,13 +1411,14 @@ add_to_extract.micro_extract <- function(extract,
 #' @seealso
 #' [add_to_extract()] to add values to an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
-#'
 #' [`define_extract_*()`][define_extract] to create a new extract definition
 #' from scratch.
 #'
+#' [submit_extract()] to submit an extract request for processing.
+#'
 #' @export
+#'
+#' @keywords internal
 #'
 #' @examples
 #' # Microdata extracts
@@ -1458,10 +1502,6 @@ remove_from_extract <- function(extract, ...) {
 #' a previously submitted extract request, this function will reset the
 #' definition to an unsubmitted state.
 #'
-#' To retain a dataset or time series table while modifying its particular
-#' specifications, first remove that dataset or time series table, then add a
-#' new specification using `add_to_extract()`.
-#'
 #' @inheritParams remove_from_extract
 #' @param datasets Dataset specifications to remove from the extract definition.
 #'   All `data_tables`, `geog_levels`,
@@ -1472,8 +1512,7 @@ remove_from_extract <- function(extract, ...) {
 #'   associated  with the specified `time_series_tables` will also be removed.
 #' @param geographic_extents Geographic extents to remove from the extract
 #'   definition.
-#' @param shapefiles [Shapefiles](https://www.nhgis.org/gis-files) to remove
-#'   from the extract definition.
+#' @param shapefiles Shapefiles to remove from the extract definition.
 #' @param ... Ignored
 #'
 #' @return A modified `nhgis_extract` object
@@ -1618,7 +1657,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract_micro] functions.
+#' definitions with [`define_extract_*()`][define_extract-micro] functions.
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1639,7 +1678,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' To retain a variable while modifying its particular specifications, first
 #' remove that variable, then add a new specification using `add_to_extract()`.
 #'
-#' @inheritParams define_extract_micro
+#' @inheritParams define_extract-micro
 #' @inheritParams remove_from_extract
 #' @param samples Character vector of sample names to remove from the extract
 #'   definition.
@@ -1659,8 +1698,8 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [`define_extract_*()`][define_extract] to create a new extract definition
-#'   from scratch.
+#' [`define_extract_*()`][define_extract-micro] to create a new extract
+#'   definition from scratch.
 #'
 #' @export
 #'

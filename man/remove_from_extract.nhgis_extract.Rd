@@ -28,8 +28,7 @@ associated  with the specified \code{time_series_tables} will also be removed.}
 \item{geographic_extents}{Geographic extents to remove from the extract
 definition.}
 
-\item{shapefiles}{\href{https://www.nhgis.org/gis-files}{Shapefiles} to remove
-from the extract definition.}
+\item{shapefiles}{Shapefiles to remove from the extract definition.}
 
 \item{...}{Ignored}
 }
@@ -67,10 +66,6 @@ removed.) Thus, it is not necessary to explicitly remove these values.
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
-
-To retain a dataset or time series table while modifying its particular
-specifications, first remove that dataset or time series table, then add a
-new specification using \code{add_to_extract()}.
 }
 \examples{
 extract <- define_extract_nhgis(

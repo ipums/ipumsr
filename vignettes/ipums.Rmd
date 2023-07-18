@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 library(ipumsr)
 ```
 
-## Obtaining IPUMS Data
+## Obtaining IPUMS data
 
 IPUMS data are free, but do require registration. New users can register
 with a particular [IPUMS project](https://www.ipums.org/overview) by
@@ -41,7 +41,7 @@ through the interactive extract system found on that project's website.
 For some projects, data can also be downloaded within R by interacting
 with the IPUMS API.
 
-### Downloading from the IPUMS Website
+### Downloading via the IPUMS website
 
 To create a new extract request, navigate to the extract interface for
 the IPUMS project of interest by clicking **Select Data** in the heading
@@ -82,37 +82,55 @@ following collections:
 
 -   IPUMS CPS
 
+-   IPUMS International
+
 -   IPUMS NHGIS
 
 The workflow for requesting and downloading data via API is
-straightforward: first, define the parameters of your extract, then
-submit the extract. After waiting for it to complete, you can download
-the files directly to your local machine without ever having to leave R:
+straightforward. First, define the parameters of your extract. The available 
+extract definition options will differ by IPUMS data collection. 
+See the [microdata API request](ipums-api-micro.html) and 
+[NHGIS API request](ipums-api-nhgis.html) vignettes for more details on
+defining an extract.
 
-```{r, eval=FALSE}
-extract_request <- define_extract_nhgis(
-  description = "Using the IPUMS API",
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  geog_levels = "state"
+```{r}
+cps_extract_request <- define_extract_cps(
+  description = "2018-2019 CPS Data",
+  samples = c("cps2018_05s", "cps2019_05s"),
+  variables = c("SEX", "AGE", "YEAR")
 )
 
+nhgis_extract_request <- define_extract_nhgis(
+  description = "NHGIS Data via IPUMS API",
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "state"
+  )
+)
+```
+
+Next, submit your extract definition. After waiting for it to complete, you 
+can download the files directly to your local machine without ever having to 
+leave R:
+
+```{r, eval = FALSE}
 submitted_extract <- submit_extract(extract_request)
 downloadable_extract <- wait_for_extract(submitted_extract)
 data_files <- download_extract(downloadable_extract)
 ```
 
-You can also access previous extract requests, even if they weren't made
-with the API:
+You can also get the specifications of your previous extract requests, even if 
+they weren't made with the API:
 
 ```{r, eval=FALSE}
 past_extracts <- get_extract_history("nhgis")
 ```
 
-See the associated [vignette](ipums-api.html) for more details about how
-to use ipumsr to interact with the IPUMS API.
+See the [introduction to the IPUMS API](ipums-api.html) for more details 
+about how to use ipumsr to interact with the IPUMS API.
 
-## Reading Data
+## Reading IPUMS data
 
 Once your extract is downloaded, you can load your data into R with the
 family of `read_*()` functions in ipumsr. These functions expand on
@@ -120,14 +138,14 @@ those provided in [readr](https://readr.tidyverse.org/index.html) in two
 ways:
 
 -   ipumsr anticipates standard IPUMS file structures, limiting the need
-    for users to manually decompress and organize their downloaded files
-    before reading.
+for users to manually extract and organize their downloaded files
+before reading.
 
 -   ipumsr uses an extract's metadata files to automatically attach
-    contextual information to the data. This allows users to easily
-    identify variable names, variable descriptions, and labeled data
-    values (from [haven](https://haven.tidyverse.org/)), which are
-    common in IPUMS files.
+contextual information to the data. This allows users to easily
+identify variable names, variable descriptions, and labeled data
+values (from [haven](https://haven.tidyverse.org/)), which are
+common in IPUMS files.
 
 For microdata files, use the `read_ipums_micro_*()` family:
 
@@ -166,13 +184,13 @@ packages like [readr](https://readr.tidyverse.org/) (for delimited
 files) or [haven](https://haven.tidyverse.org/) (for Stata, SPSS, or SAS
 files).
 
-See the [vignette](ipums-read.html) focused on reading IPUMS data for
+See the [vignette](ipums-read.html) on reading IPUMS data for
 more information.
 
-## Exploring Metadata
+### Exploring file metadata
 
-Load metadata information with `read_ipums_ddi()` (for microdata
-projects) and `read_nhgis_codebook()` (for NHGIS). These store file and
+Load a file's metadata with `read_ipums_ddi()` (for microdata
+projects) and `read_nhgis_codebook()` (for NHGIS). These provide file- and
 variable-level metadata for a given data source, which can be used to
 interpret the data contents.
 

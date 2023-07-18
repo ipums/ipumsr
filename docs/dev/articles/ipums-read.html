@@ -56,7 +56,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Introduction</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -68,7 +68,8 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
+<li class="dropdown-header">IPUMS Data</li>
+    <li>
       <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
@@ -77,8 +78,17 @@
     <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">Interact with the IPUMS API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     </li>
@@ -147,7 +157,7 @@ its data into R for analysis.</p>
 download a data extract, see the <a href="ipums.html">introduction</a>
 to IPUMS data.</p>
 <div class="section level2">
-<h2 id="ipums-extract-structure">IPUMS Extract Structure<a class="anchor" aria-label="anchor" href="#ipums-extract-structure"></a>
+<h2 id="ipums-extract-structure">IPUMS extract structure<a class="anchor" aria-label="anchor" href="#ipums-extract-structure"></a>
 </h2>
 <p>IPUMS extracts will be organized slightly differently for different
 <a href="https://www.ipums.org/overview" class="external-link">IPUMS projects</a>. In general,
@@ -170,7 +180,7 @@ them in your data processing pipeline. See the vignette about <a href="value-lab
 working with these labels.</p>
 </div>
 <div class="section level2">
-<h2 id="reading-microdata-extracts">Reading Microdata Extracts<a class="anchor" aria-label="anchor" href="#reading-microdata-extracts"></a>
+<h2 id="reading-microdata-extracts">Reading microdata extracts<a class="anchor" aria-label="anchor" href="#reading-microdata-extracts"></a>
 </h2>
 <p>Microdata extracts typically provide their metadata in a DDI (.xml)
 file separate from the compressed data (.dat.gz) files.</p>
@@ -181,20 +191,20 @@ to directly load its associated data file into R.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Example data</span></span>
-<span><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span></span>
+<span><span class="va">cps_ddi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00157.xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
-<span><span class="co">#&gt;    YEAR SERIAL HWTSUPP STATEFIP       MONTH     PERNUM WTSUPP INCTOT            </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>476.     <span style="text-decoration: underline;">4</span>883          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      2  <span style="text-decoration: underline;">1</span>471.     <span style="text-decoration: underline;">5</span>800          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span>      3  <span style="text-decoration: underline;">1</span>579. 99<span style="text-decoration: underline;">999</span>998<span style="color: #949494;"> [Missing…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span>      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375</span></span></code></pre></div>
+<span><span class="co">#&gt;    YEAR SERIAL MONTH     ASECWTH STATEFIP       PERNUM ASECWT INCTOT            </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>962     80 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span>      1  <span style="text-decoration: underline;">1</span>476.      <span style="text-decoration: underline;">4</span>883         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>962     80 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span>      2  <span style="text-decoration: underline;">1</span>471.      <span style="text-decoration: underline;">5</span>800         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>962     80 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span>      3  <span style="text-decoration: underline;">1</span>579. 999<span style="text-decoration: underline;">999</span>998<span style="color: #949494;"> [Missin…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>962     82 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span>      1  <span style="text-decoration: underline;">1</span>598.     <span style="text-decoration: underline;">14</span>015         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>962     83 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span>      1  <span style="text-decoration: underline;">1</span>707.     <span style="text-decoration: underline;">16</span>552         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>962     84 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span>      1  <span style="text-decoration: underline;">1</span>790.      <span style="text-decoration: underline;">6</span>375</span></span></code></pre></div>
 <p>Note that you provide the path to the DDI file, <em>not</em> the data
 file. This is because ipumsr needs to find both the DDI and data files
 to read in your data, and the DDI file includes the name of the data
@@ -205,16 +215,16 @@ metadata in each column. For a summary of the column contents, use
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 4</span></span></span>
-<span><span class="co">#&gt;   var_name var_label                    var_desc                      val_labels</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> YEAR     Survey year                  <span style="color: #949494;">"</span>YEAR reports the year in wh… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SERIAL   Household serial number      <span style="color: #949494;">"</span>SERIAL is an identifying nu… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> HWTSUPP  Household weight, Supplement <span style="color: #949494;">"</span>HWTSUPP is a household-leve… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> STATEFIP State (FIPS code)            <span style="color: #949494;">"</span>STATEFIP identifies the hou… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> MONTH    Month                        <span style="color: #949494;">"</span>MONTH indicates the calenda… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> PERNUM   Person number in sample unit <span style="color: #949494;">"</span>PERNUM numbers all persons … <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> WTSUPP   Supplement Weight            <span style="color: #949494;">"</span>WTSUPP is a person-level we… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INCTOT   Total personal income        <span style="color: #949494;">"</span>INCTOT indicates each respo… <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   var_name var_label                                         var_desc val_labels</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> YEAR     Survey year                                       <span style="color: #949494;">"</span>YEAR r… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SERIAL   Household serial number                           <span style="color: #949494;">"</span>SERIAL… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> MONTH    Month                                             <span style="color: #949494;">"</span>MONTH … <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASECWTH  Annual Social and Economic Supplement Household … <span style="color: #949494;">"</span>ASECWT… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> STATEFIP State (FIPS code)                                 <span style="color: #949494;">"</span>STATEF… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> PERNUM   Person number in sample unit                      <span style="color: #949494;">"</span>PERNUM… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> ASECWT   Annual Social and Economic Supplement Weight      <span style="color: #949494;">"</span>ASECWT… <span style="color: #949494;">&lt;tibble&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INCTOT   Total personal income                             <span style="color: #949494;">"</span>INCTOT… <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
 <p>This information is also attached to specific columns. You can obtain
 it with <code><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes()</a></code> or by using ipumsr helpers:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -257,13 +267,9 @@ often advantageous to independently load the DDI file into an
 <code class="sourceCode R"><span><span class="va">cps_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cps_ddi</span></span>
-<span><span class="co">#&gt; An IPUMS DDI for IPUMS-CPS with 8 variables</span></span>
-<span><span class="co">#&gt; Extract 'cps_00006.dat' created on 2017-08-02</span></span>
-<span><span class="co">#&gt; User notes:  User-provided description: Minimal test extract</span></span>
-<span><span class="co">#&gt;   Samples: 1962, 1963</span></span>
-<span><span class="co">#&gt;   Variables: STATEFIP, INCTOT (automatically Year, SERIAL, HWTSUPP, MONTH,</span></span>
-<span><span class="co">#&gt;   WTSUPP)</span></span>
-<span><span class="co">#&gt;   Select Cases: State - Minnesota, Iowa, Wisconsin, South Dakota, North Dakota</span></span></code></pre></div>
+<span><span class="co">#&gt; An IPUMS DDI for IPUMS CPS with 8 variables</span></span>
+<span><span class="co">#&gt; Extract 'cps_00157.dat' created on 2023-07-10</span></span>
+<span><span class="co">#&gt; User notes:  User-provided description: Reproducing cps00006</span></span></code></pre></div>
 <p>This is because many common data processing functions have the
 side-effect of removing these attributes:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -316,7 +322,7 @@ match those in the DDI:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="hierarchical-extracts">Hierarchical Extracts<a class="anchor" aria-label="anchor" href="#hierarchical-extracts"></a>
+<h3 id="hierarchical-extracts">Hierarchical extracts<a class="anchor" aria-label="anchor" href="#hierarchical-extracts"></a>
 </h3>
 <p>IPUMS microdata can come in either “rectangular” or “hierarchical”
 format.</p>
@@ -332,23 +338,23 @@ household.</p>
 <p>Hierarchical data can be loaded in list format or long format.
 <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> will read in long format:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cps_hier_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00010.xml"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cps_hier_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00159.xml"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_hier_ddi</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
+<span><span class="co">#&gt; Use of data from IPUMS CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11,053 × 9</span></span></span>
-<span><span class="co">#&gt;    RECTYPE     YEAR SERIAL HWTSUPP STATEFIP MONTH    PERNUM WTSUPP INCTOT       </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wis…</span>  3<span style="color: #949494;"> [Mar…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>476.  4.88<span style="color: #949494;">e</span>3      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            2  <span style="text-decoration: underline;">1</span>471.  5.8 <span style="color: #949494;">e</span>3      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            3  <span style="text-decoration: underline;">1</span>579.  1.00<span style="color: #949494;">e</span>8<span style="color: #949494;"> [Mis…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Min…</span>  3<span style="color: #949494;"> [Mar…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     82     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>598.  1.40<span style="color: #949494;">e</span>4      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Min…</span>  3<span style="color: #949494;"> [Mar…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     83     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>707.  1.66<span style="color: #949494;">e</span>4      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Min…</span>  3<span style="color: #949494;"> [Mar…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     84     <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>790.  6.38<span style="color: #949494;">e</span>3      </span></span>
+<span><span class="co">#&gt;    RECTYPE     YEAR SERIAL MONTH    ASECWTH STATEFIP PERNUM ASECWT INCTOT       </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     80  3<span style="color: #949494;"> [Mar…</span>   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wis…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>476.  4.88<span style="color: #949494;">e</span>3      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            2  <span style="text-decoration: underline;">1</span>471.  5.8 <span style="color: #949494;">e</span>3      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     80 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            3  <span style="text-decoration: underline;">1</span>579.  1.00<span style="color: #949494;">e</span>9<span style="color: #949494;"> [Mis…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     82  3<span style="color: #949494;"> [Mar…</span>   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Min…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     82 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>598.  1.40<span style="color: #949494;">e</span>4      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     83  3<span style="color: #949494;"> [Mar…</span>   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Min…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     83 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>707.  1.66<span style="color: #949494;">e</span>4      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> H<span style="color: #949494;"> [Househ…</span>  <span style="text-decoration: underline;">1</span>962     84  3<span style="color: #949494;"> [Mar…</span>   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Min…</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P<span style="color: #949494;"> [Person…</span>  <span style="text-decoration: underline;">1</span>962     84 <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>  <span style="color: #BB0000;">NA</span>            1  <span style="text-decoration: underline;">1</span>790.  6.38<span style="color: #949494;">e</span>3      </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 11,043 more rows</span></span></span></code></pre></div>
 <p>The long format consists of a single <code>data.frame</code> that
 includes rows with varying record types. In this example, some rows have
@@ -360,37 +366,37 @@ with <code>NA</code> in rows of that record type.</p>
 each element contains all the records for a given record type:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro_list</a></span><span class="op">(</span><span class="va">cps_hier_ddi</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Use of data from IPUMS-CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
+<span><span class="co">#&gt; Use of data from IPUMS CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
 <span><span class="co">#&gt; $HOUSEHOLD</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,385 × 6</span></span></span>
-<span><span class="co">#&gt;    RECTYPE               YEAR SERIAL HWTSUPP STATEFIP       MONTH    </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     80   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     82   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     83   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     84   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    107   <span style="text-decoration: underline;">4</span>355. 19<span style="color: #949494;"> [Iowa]</span>      3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    108   <span style="text-decoration: underline;">1</span>479. 19<span style="color: #949494;"> [Iowa]</span>      3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    122   <span style="text-decoration: underline;">3</span>603. 27<span style="color: #949494;"> [Minnesota]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    124   <span style="text-decoration: underline;">4</span>104. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    125   <span style="text-decoration: underline;">2</span>182. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    126   <span style="text-decoration: underline;">1</span>826. 55<span style="color: #949494;"> [Wisconsin]</span> 3<span style="color: #949494;"> [March]</span></span></span>
+<span><span class="co">#&gt;    RECTYPE               YEAR SERIAL MONTH     ASECWTH STATEFIP      </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     80 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>476. 55<span style="color: #949494;"> [Wisconsin]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     82 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>598. 27<span style="color: #949494;"> [Minnesota]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     83 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>707. 27<span style="color: #949494;"> [Minnesota]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962     84 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>790. 27<span style="color: #949494;"> [Minnesota]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    107 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">4</span>355. 19<span style="color: #949494;"> [Iowa]</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    108 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>479. 19<span style="color: #949494;"> [Iowa]</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    122 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">3</span>603. 27<span style="color: #949494;"> [Minnesota]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    124 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">4</span>104. 55<span style="color: #949494;"> [Wisconsin]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    125 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">2</span>182. 55<span style="color: #949494;"> [Wisconsin]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> H<span style="color: #949494;"> [Household Record]</span>  <span style="text-decoration: underline;">1</span>962    126 3<span style="color: #949494;"> [March]</span>   <span style="text-decoration: underline;">1</span>826. 55<span style="color: #949494;"> [Wisconsin]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,375 more rows</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $PERSON</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7,668 × 6</span></span></span>
-<span><span class="co">#&gt;    RECTYPE            YEAR SERIAL PERNUM WTSUPP INCTOT                          </span></span>
+<span><span class="co">#&gt;    RECTYPE            YEAR SERIAL PERNUM ASECWT INCTOT                          </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>                       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      1  <span style="text-decoration: underline;">1</span>476.     <span style="text-decoration: underline;">4</span>883                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      2  <span style="text-decoration: underline;">1</span>471.     <span style="text-decoration: underline;">5</span>800                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      3  <span style="text-decoration: underline;">1</span>579. 99<span style="text-decoration: underline;">999</span>998<span style="color: #949494;"> [Missing.]</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     82      1  <span style="text-decoration: underline;">1</span>598.    <span style="text-decoration: underline;">14</span>015                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     83      1  <span style="text-decoration: underline;">1</span>707.    <span style="text-decoration: underline;">16</span>552                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     84      1  <span style="text-decoration: underline;">1</span>790.     <span style="text-decoration: underline;">6</span>375                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      1  <span style="text-decoration: underline;">4</span>355. 99<span style="text-decoration: underline;">999</span>999<span style="color: #949494;"> [N.I.U. (Not in Univer…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      2  <span style="text-decoration: underline;">1</span>386.        0                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      3  <span style="text-decoration: underline;">1</span>629.      600                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      4  <span style="text-decoration: underline;">1</span>432. 99<span style="text-decoration: underline;">999</span>999<span style="color: #949494;"> [N.I.U. (Not in Univer…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      1  <span style="text-decoration: underline;">1</span>476.      <span style="text-decoration: underline;">4</span>883                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      2  <span style="text-decoration: underline;">1</span>471.      <span style="text-decoration: underline;">5</span>800                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     80      3  <span style="text-decoration: underline;">1</span>579. 999<span style="text-decoration: underline;">999</span>998<span style="color: #949494;"> [Missing. (1962-1964 …</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     82      1  <span style="text-decoration: underline;">1</span>598.     <span style="text-decoration: underline;">14</span>015                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     83      1  <span style="text-decoration: underline;">1</span>707.     <span style="text-decoration: underline;">16</span>552                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962     84      1  <span style="text-decoration: underline;">1</span>790.      <span style="text-decoration: underline;">6</span>375                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      1  <span style="text-decoration: underline;">4</span>355. 999<span style="text-decoration: underline;">999</span>999<span style="color: #949494;"> [N.I.U.]</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      2  <span style="text-decoration: underline;">1</span>386.         0                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      3  <span style="text-decoration: underline;">1</span>629.       600                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P<span style="color: #949494;"> [Person Record]</span>  <span style="text-decoration: underline;">1</span>962    107      4  <span style="text-decoration: underline;">1</span>432. 999<span style="text-decoration: underline;">999</span>999<span style="color: #949494;"> [N.I.U.]</span>              </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7,658 more rows</span></span></span></code></pre></div>
 <p><code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> and
 <code><a href="../reference/read_ipums_micro.html">read_ipums_micro_list()</a></code> also support partial loading by
@@ -399,7 +405,7 @@ documentation for more details about other options.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="reading-aggregate-data-extracts">Reading Aggregate Data Extracts<a class="anchor" aria-label="anchor" href="#reading-aggregate-data-extracts"></a>
+<h2 id="reading-ipums-nhgis-extracts">Reading IPUMS NHGIS extracts<a class="anchor" aria-label="anchor" href="#reading-ipums-nhgis-extracts"></a>
 </h2>
 <p>Unlike microdata projects, NHGIS extracts provide their data and
 metadata files bundled into a single .zip archive.
@@ -452,11 +458,11 @@ where available:</p>
 <p>Variable metadata for NHGIS data are slightly different than those
 provided by microdata products. First, they come from a .txt codebook
 file rather than an .xml DDI file. Codebooks can still be loaded into an
-<code>ipums_ddi</code> object, but many fields that do not apply to
-aggregate data will be empty. In general, NHGIS codebooks provide only
-variable labels and descriptions along with citation information.</p>
+<code>ipums_ddi</code> object, but fields that do not apply to aggregate
+data will be empty. In general, NHGIS codebooks provide only variable
+labels and descriptions, along with citation information.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Most useful metadata for NHGIS is for variable labels:</span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">nhgis_cb</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -479,7 +485,7 @@ variable labels and descriptions along with citation information.</p>
 contents themselves without converting to an <code>ipums_ddi</code>
 object, set <code>raw = TRUE</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">nhgis_cb</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
@@ -505,7 +511,7 @@ object, set <code>raw = TRUE</code>.</p>
 <div class="section level3">
 <h3 id="handling-multiple-files">Handling multiple files<a class="anchor" aria-label="anchor" href="#handling-multiple-files"></a>
 </h3>
-<p>In the above example, <code><a href="../reference/ipums_codebook.html">read_nhgis_codebook()</a></code> was able to
+<p>In the above example, <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> was able to
 identify and load the codebook file, even though the provided file path
 is the same that was provided to <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> earlier.
 However, for more complicated NHGIS extracts that include data from
@@ -548,7 +554,7 @@ the data:</p>
 <span><span class="co">#&gt; $var_desc</span></span>
 <span><span class="co">#&gt; [1] "Table A00: Total Population"</span></span></code></pre></div>
 <p>(If for some reason the codebook is not loaded correctly, you can
-load it separately with <code><a href="../reference/ipums_codebook.html">read_nhgis_codebook()</a></code>, which also
+load it separately with <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code>, which also
 accepts a <code>file_select</code> specification.)</p>
 <p><code>file_select</code> also accepts the full path or the index of
 the file to load:</p>
@@ -568,8 +574,8 @@ the file to load:</p>
 <p>NHGIS data are most easily handled when in .csv format.
 <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> uses <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code> to handle
 the generation of column type specifications. If the guessed
-specifications are incorrect, you can use <code>read_csv()</code>
-arguments to adjust. This is most likely to occur for columns that
+specifications are incorrect, you can use the <code>col_types</code>
+argument to adjust. This is most likely to occur for columns that
 contain geographic codes that are stored as numeric values:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert MSA codes to character format</span></span>
@@ -596,11 +602,6 @@ contain geographic codes that are stored as numeric values:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
-<p>Note that some readr options may conflict with ipumsr data loading
-conventions. For instance, codebook metadata are attached by matching on
-column name. Altering names on load will prevent the addition of
-metadata for these columns (though the metadata can still be viewed in
-the codebook itself).</p>
 </div>
 <div class="section level4">
 <h4 id="fixed-width-data">Fixed-width data<a class="anchor" aria-label="anchor" href="#fixed-width-data"></a>
@@ -648,14 +649,11 @@ is driven by the column parsing information contained in the .do file
 provided in the .zip archive. This contains information not only about
 column positions and data types, but also implicit decimals in the
 data.</p>
-<p>It is possible to load fixed-width data manually using arguments
-passed to <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">readr::read_fwf()</a></code> but this will not include
-handling of implicit decimals, and you may end up with confusing or
-incorrect values. In general, if you no longer have access to the .do
-file, it is best to resubmit and/or re-download the extract (you can
-also consider converting to .csv format in the process). If you have
-moved the .do file, provide its file path to the <code>do_file</code>
-argument to use its column parsing information.</p>
+<p>If you no longer have access to the .do file, it is best to resubmit
+and/or re-download the extract (you may also consider converting to .csv
+format in the process). If you have moved the .do file, provide its file
+path to the <code>do_file</code> argument to use its column parsing
+information.</p>
 <p>Note that unlike <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code>, fixed-width files
 for NHGIS are still handled by providing the path to the <em>data
 file</em>, not the <em>metadata file</em> (i.e. you cannot provide an
@@ -666,7 +664,7 @@ loading of NHGIS .csv files.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="reading-spatial-data">Reading Spatial Data<a class="anchor" aria-label="anchor" href="#reading-spatial-data"></a>
+<h2 id="reading-spatial-data">Reading spatial data<a class="anchor" aria-label="anchor" href="#reading-spatial-data"></a>
 </h2>
 <p>IPUMS distributes spatial data for several projects.</p>
 <ul>
@@ -734,9 +732,9 @@ the correct join columns and use the <code>by</code> argument to join on
 these columns.</p>
 <p>Once joined, data include both statistical and spatial information
 along with the variable metadata.</p>
-<div class="section level4">
-<h4 id="harmonized-vs--non-harmonized-data">Harmonized vs. non-harmonized data<a class="anchor" aria-label="anchor" href="#harmonized-vs--non-harmonized-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="harmonized-vs--non-harmonized-data">Harmonized vs. non-harmonized data<a class="anchor" aria-label="anchor" href="#harmonized-vs--non-harmonized-data"></a>
+</h3>
 <p>Longitudinal analysis of geographic data is complicated by the fact
 that geographic boundaries shift over time. IPUMS therefore provides
 multiple types of spatial data:</p>

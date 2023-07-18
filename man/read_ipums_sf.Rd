@@ -77,13 +77,17 @@ need to manually unzip the downloaded file before loading it into R.
 \dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
-
-shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
+data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 sf_data <- read_ipums_sf(shape_ex1)
 
 sf_data
+
+# To combine spatial data with tabular data without losing the attributes
+# included in the tabular data, use an ipums shape join:
+ipums_shape_full_join(data_ex1, sf_data, by = "GISJOIN")
+
+shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
 
 # Shapefiles are provided in .zip archives that may contain multiple
 # files. Select a single file with `file_select`:
@@ -95,14 +99,6 @@ read_ipums_sf(
   shape_ex2,
   file_select = matches("us_pmsa"),
   bind_multiple = TRUE
-)
-
-# To combine spatial data with tabular data without losing the attributes
-# included in the tabular data, use an ipums shape join:
-ipums_shape_full_join(
-  data_ex1,
-  sf_data,
-  by = "GISJOIN"
 )
 \dontshow{\}) # examplesIf}
 }

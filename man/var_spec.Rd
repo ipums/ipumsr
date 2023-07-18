@@ -20,22 +20,35 @@ samp_spec(name)
 \arguments{
 \item{name}{Name of the sample or variable.}
 
-\item{case_selections}{Cases to select for the given variable.}
+\item{case_selections}{A character vector of values of the given variable
+that should be used to select cases. Values should be specified exactly as
+they appear in the "CODES" tab for the given variable in the web-based
+extract builder, including zero-padding (e.g. see the "CODES" tab for IPUMS
+CPS variable
+\href{https://cps.ipums.org/cps-action/variables/EDUC#codes_section}{EDUC}).}
 
 \item{case_selection_type}{One of \code{"general"} or \code{"detailed"} indicating
-the type of case selection to use for the cases in \code{case_selections}.
+whether the values in \code{case_selections} should be matched against the
+general or detailed codes for the given variable. Only some variables have
+detailed codes. See IPUMS USA variable
+\href{https://usa.ipums.org/usa-action/variables/RACE#codes_section}{RACE} for
+an example of a variable with general and detailed codes.
+
 Defaults to \code{"general"} if any \code{case_selections} are specified.}
 
-\item{attached_characteristics}{Characteristics to attach for the given
-variable. Accepted values are \code{"mother"}, \code{"father"}, \code{"spouse"}, \code{"head"},
-or a combination.}
+\item{attached_characteristics}{Whose characteristics should be attached, if
+any? Accepted values are \code{"mother"}, \code{"father"}, \code{"spouse"}, \code{"head"},
+or a combination. Specifying attached characteristics will add variables to
+your extract that contain the values for the given variable for the
+specified household members (e.g. variable "AGE_MOM" will be added if
+\code{"mother"} is specified for the variable \code{"AGE"}).}
 
 \item{data_quality_flags}{Logical indicating whether to include data quality
 flags for the given variable. By default, data quality flags are not
 included.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
-This is unlikely to be needed.}
+This is not needed for external use.}
 }
 \value{
 A \code{var_spec} or \code{samp_spec} object.
@@ -45,6 +58,9 @@ Provide specifications for individual variables when defining an
 IPUMS microdata extract request.
 
 Currently, no additional specifications are available for IPUMS samples.
+
+Learn more about microdata extract definitions in
+\code{vignette("ipums-api-micro")}.
 }
 \examples{
 var1 <- var_spec(
@@ -61,10 +77,14 @@ var2 <- var_spec(
 )
 
 # Use variable specifications in a microdata extract definition:
-define_extract_usa(
+extract <- define_extract_usa(
   description = "Example extract",
   samples = "us2017b",
   variables = list(var1, var2)
 )
+
+extract$variables$SCHOOL
+
+extract$variables$RACE
 }
 \keyword{internal}

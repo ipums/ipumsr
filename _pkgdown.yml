@@ -16,20 +16,27 @@ navbar:
   left:
     - icon: "fa-home"
       href: index.html
-    - text: "Introduction"
+    - text: "Get Started"
       href: "articles/ipums.html"
     - text: "Reference"
       href: "reference/index.html"
     - text: "Articles"
       menu:
+      - text: "IPUMS Data"
       - text: "Read IPUMS data"
         href: "articles/ipums-read.html"
       - text: "Value labels"
         href: "articles/value-labels.html"
       - text: "Big IPUMS data"
         href: "articles/ipums-bigdata.html"
-      - text: "Interact with the IPUMS API"
+      - text: "------------------"
+      - text: "IPUMS API"
+      - text: "Introduction to the API"
         href: "articles/ipums-api.html"
+      - text: "Microdata API requests"
+        href: "articles/ipums-api-micro.html"
+      - text: "NHGIS API requests"
+        href: "articles/ipums-api-nhgis.html"
       - text: "------------------"
       - text: "Project-specific exercises"
         href: "https://ipums.org/exercises.shtml"
@@ -47,8 +54,10 @@ home:
   - text: Ask a question
     href: http://forum.ipums.org
 reference:
-  - title: "Read IPUMS microdata"
-    contents:
+  - title: "Read IPUMS data"
+    desc: "Load IPUMS data and metadata files into R"
+  - subtitle: "Microdata projects"
+  - contents:
       - read_ipums_micro
       - read_ipums_micro_list
       - read_ipums_ddi
@@ -56,45 +65,45 @@ reference:
       - read_ipums_micro_list_chunked
       - read_ipums_micro_yield
       - read_ipums_micro_list_yield
-      - read_ipums_sf
-      - ipums_list_files
-  - title: "Read IPUMS aggregate data"
+  - subtitle: "Aggregate data projects"
   - contents:
       - read_nhgis
       - read_nhgis_codebook
+  - subtitle: "General use"
+  - contents:
       - read_ipums_sf
       - ipums_list_files
   - title: "Interact with the IPUMS API"
-    contents:
-      - set_ipums_api_key
-      - set_ipums_default_collection
+    desc: "Request and download IPUMS data within R"
+  - contents:
       - define_extract_usa
       - define_extract_cps
       - define_extract_ipumsi
       - define_extract_nhgis
+      - get_sample_info
+      - get_metadata_nhgis
       - submit_extract
+      - wait_for_extract
+      - download_extract
       - get_extract_info
       - get_extract_history
-      - download_extract
-      - wait_for_extract
-      - is_extract_ready
-      - add_to_extract
-      - remove_from_extract
       - save_extract_as_json
       - define_extract_from_json
-      - get_metadata_nhgis
-      - ipums_extract
+      - set_ipums_api_key
+      - set_ipums_default_collection
       - ipums_data_collections
+      - ipums_extract
   - title: "Explore IPUMS variable metadata"
+    desc: "Get additional information about IPUMS data contents"
     contents:
-      - ipums_view
       - ipums_var_info
       - ipums_var_desc
       - ipums_var_label
       - ipums_val_labels
-      - ipums_website
-      - ipums_conditions
       - ipums_file_info
+      - ipums_conditions
+      - ipums_view
+      - ipums_website
   - title: "Work with value labels"
     desc: "Translate IPUMS value labels to standard R data structures"
     contents:
@@ -108,12 +117,10 @@ reference:
       - lbl_add_vals
       - lbl
   - title: "Other helpers"
-    desc: "Miscellaneous other helper functions for working with IPUMS data"
+    desc: "Miscellaneous functions for working with IPUMS data"
     contents:
       - ipums_bind_rows
+      - starts_with("ipums_shape")
+      - set_ipums_var_attributes
       - ipums_collect
       - ipums_example
-      - starts_with("ipums_shape")
-      - join_failures
-      - set_ipums_var_attributes
-      - selection_language

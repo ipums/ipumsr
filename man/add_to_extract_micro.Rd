@@ -24,8 +24,9 @@ collection}
 
 \item{description}{Description of the extract.}
 
-\item{samples}{Character vector of sample names to include in the extract.
-Use \code{\link[=get_sample_info]{get_sample_info()}} to identify sample IDs for a given collection.}
+\item{samples}{Vector of samples to include in the extract
+request. Use \code{\link[=get_sample_info]{get_sample_info()}} to identify
+sample IDs for a given collection.}
 
 \item{variables}{Character vector of variable names or a list of
 \code{var_spec} objects created by \code{\link[=var_spec]{var_spec()}}
@@ -34,15 +35,20 @@ containing specifications for all variables to include in the extract.
 If a variable already exists in the extract, its specifications
 will be added to those that already exist for that variable.}
 
-\item{data_format}{Format for the output extract data file. One of
-\code{"fixed_width"}, \code{"csv"}, \code{"stata"}, \code{"spss"}, or \code{"sas9"}.}
+\item{data_format}{Format for the output extract data file. Either
+\code{"fixed_width"} or \code{"csv"}.
 
-\item{data_structure}{Data structure for the output the extract data.
+Note that while \code{"stata"}, \code{"spss"}, or \code{"sas9"} are also accepted, these
+file formats are not supported by ipumsr data-reading functions.}
 
-\code{"rectangular"} provides person records with all requested household
+\item{data_structure}{Data structure for the output extract data.
+\itemize{
+\item \code{"rectangular"} provides person records with all requested household
 information attached to respective household members.
+\item \code{"hierarchical"} provides household records followed by person records.
+}
 
-\code{"hierarchical"} provides household records followed by person records.}
+Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
 records on which to rectangularize. Currently only \code{"P"} (person records)
@@ -52,13 +58,13 @@ Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \cod
 otherwise.}
 
 \item{case_select_who}{Indication of how to interpret any case selections
-included for variables in the extract.
-
-\code{"individuals"} includes records for all individuals who match the
+included for variables in the extract definition.
+\itemize{
+\item \code{"individuals"} includes records for all individuals who match the
 specified case selections.
-
-\code{"households"} includes records for all members of each household that
+\item \code{"households"} includes records for all members of each household that
 contains an individual who matches the specified case selections.
+}
 
 Defaults to \code{"individuals"}. Use \code{\link[=var_spec]{var_spec()}} to add case selections for
 specific variables.}
@@ -87,7 +93,7 @@ will replace the existing value with the supplied value.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -155,7 +161,7 @@ values from an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
-from scratch
+\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+definition from scratch
 }
 \keyword{internal}

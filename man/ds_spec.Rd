@@ -28,9 +28,8 @@ at which to obtain data for the given dataset or time series table.}
 \item{years}{Years for which to obtain the data for the given dataset or time
 series table.
 
-For time series tables, all years are selected by default.
-
-For datasets, use \code{"*"} to select all available years. Use
+For time series tables, all years are selected by default. For datasets,
+use \code{"*"} to select all available years. Use
 \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to determine if a dataset allows year selection.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
@@ -43,8 +42,11 @@ A \code{ds_spec} or \code{tst_spec} object.
 Provide specifications for individual datasets and time series
 tables when defining an IPUMS NHGIS extract request.
 
-Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to browse dataset and time series
-table specification parameters.
+Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to identify available values for dataset and
+time series table specification parameters.
+
+Learn more about NHGIS extract definitions in
+\code{vignette("ipums-api-nhgis")}.
 }
 \details{
 In general, \code{data_tables} and \code{geog_levels} are required for all

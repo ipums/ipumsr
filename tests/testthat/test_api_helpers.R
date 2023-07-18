@@ -365,28 +365,6 @@ test_that("We inform user about invalid extract number request", {
   })
 })
 
-test_that("We inform user about expired extract for invalid download request", {
-  skip_if_no_api_access(have_api_access)
-
-  # Currently, the API downloads a file containing the 404 error, so for now
-  # ensure that we only write this to a temp file.
-  # TODO: In the future we will want to ensure we don't download on an erroneous
-  # request.
-  file <- file.path(tempdir(), "foo.zip")
-
-  on.exit(unlink(file), add = TRUE, after = FALSE)
-
-  expect_error(
-    ipums_api_download_request(
-      url = "https://api.ipums.org/downloads/nhgis/api/v1/extracts/foo.zip",
-      file_path =  file,
-      overwrite = TRUE,
-      progress = FALSE
-    ),
-    "API request failed.+The extract may have expired"
-  )
-})
-
 test_that("We catch invalid collection specifications during requests", {
   skip_if_no_api_access(have_api_access)
 
@@ -394,7 +372,7 @@ test_that("We catch invalid collection specifications during requests", {
   # collections are available.
   expect_error(
     api_request_url(collection = "foo", path = extract_request_path()),
-    "No API version found for collection \"foo\""
+    "Unrecognized collection: \"foo\""
   )
 
   # But ensure that the error is still caught by the API if `api_request_url()`
@@ -467,7 +445,7 @@ test_that("We can get correct API version info for each collection", {
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(
     get_extract_history("fake-collection"),
-    "No API version found"
+    "Unrecognized collection"
   )
 })
 
@@ -482,11 +460,11 @@ test_that("standardize_extract_identifier handles unusual cases", {
   )
   expect_error(
     standardize_extract_identifier("fake-collection:1"),
-    "No API version found for collection \"fake-collection\""
+    "Unrecognized collection: \"fake-collection\""
   )
   expect_error(
     standardize_extract_identifier("fake-collection", collection_ok = TRUE),
-    "No API version found for collection \"fake-collection\""
+    "Unrecognized collection: \"fake-collection\""
   )
   expect_equal(
     standardize_extract_identifier("nhgis", collection_ok = TRUE),

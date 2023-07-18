@@ -2,7 +2,7 @@
 % Please edit documentation in R/api_extract_info.R
 \name{get_extract_history}
 \alias{get_extract_history}
-\title{Browse definitions of previously-submitted extract requests}
+\title{Browse definitions of previously submitted extract requests}
 \usage{
 get_extract_history(
   collection = NULL,
@@ -60,10 +60,76 @@ get_extract_history("cps", how_many = 3)
 # extract number), use `get_last_extract_info()`
 get_last_extract_info("nhgis")
 }
+
+# To browse your extract history by particular criteria, you can
+# loop through the extract objects. We'll create a sample list of 2 extracts:
+extract1 <- define_extract_usa(
+  description = "2013 ACS",
+  samples = "us2013a",
+  variables = var_spec(
+    "SEX",
+    case_selections = "2",
+    data_quality_flags = TRUE
+  )
+)
+
+extract2 <- define_extract_usa(
+  description = "2014 ACS",
+  samples = "us2014a",
+  variables = list(
+    var_spec("RACE"),
+    var_spec(
+      "SEX",
+      case_selections = "1",
+      data_quality_flags = FALSE
+    )
+  )
+)
+
+extracts <- list(extract1, extract2)
+
+# `purrr::keep()`` is particularly useful for filtering:
+purrr::keep(extracts, ~ "RACE" \%in\% names(.x$variables))
+
+purrr::keep(extracts, ~ grepl("2014 ACS", .x$description))
+
+# You can also filter on variable-specific criteria
+purrr::keep(extracts, ~ isTRUE(.x$variables[["SEX"]]$data_quality_flags))
+
+# To filter based on all variables in an extract, you'll need to
+# create a nested loop. For instance, to find all extracts that have
+# any variables with data_quality_flags:
+purrr::keep(
+  extracts,
+  function(extract) {
+    any(purrr::map_lgl(
+      names(extract$variables),
+      function(var) isTRUE(extract$variables[[var]]$data_quality_flags)
+    ))
+  }
+)
+
+# To peruse your extract history without filtering, `purrr::map()` is more
+# useful
+purrr::map(extracts, ~ names(.x$variables))
+
+purrr::map(extracts, ~ names(.x$samples))
+
+purrr::map(extracts, ~ .x$variables[["RACE"]]$case_selections)
+
+# Once you have identified a past extract, you can easily download or
+# resubmit it
+\dontrun{
+extracts <- get_extract_history("nhgis")
+
+extract <- purrr::keep(
+  extracts,
+  ~ "CW3" \%in\% names(.x$time_series_tables)
+)
+
+download_extract(extract[[1]])
+}
 }
 \seealso{
 \code{\link[=get_extract_info]{get_extract_info()}} to get the current status of a specific extract request.
-
-\code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
-revise an extract definition.
 }

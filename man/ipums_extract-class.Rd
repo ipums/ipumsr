@@ -10,7 +10,7 @@ extract definition and status of an IPUMS data extract request. Both
 submitted and unsubmitted extract requests are stored in \code{ipums_extract}
 objects.
 
-\code{ipums_extract} objects are futher divided into microdata
+\code{ipums_extract} objects are further divided into microdata
 and aggregate data classes, and will also include
 a collection-specific extract subclass to accommodate differences in
 extract options and content across collections.
@@ -29,14 +29,14 @@ Currently supported collections are:
 }
 }
 
-Learn more about the IPUMS API in vignette("ipums-api").
+Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \section{Properties}{
 
 Objects of class \code{ipums_extract} have:
 \itemize{
 \item A \code{class} attribute of the form
-\code{c("{collection}_extract", "{data_type}_extract", "ipums_extract")}.
+\code{c("{collection}_extract", "{collection_type}_extract", "ipums_extract")}.
 For instance, \code{c("cps_extract", "micro_extract", "ipums_extract")}.
 \item A base type of \code{"list"}.
 \item A \code{names} attribute that is a character vector the same length as the
@@ -53,7 +53,7 @@ submitted to the IPUMS API for processing.
 \item \code{download_links}: links to the downloadable data, if the extract request
 was completed at the time it was last checked.
 \item \code{number}: the number of the extract request. With \code{collection}, this
-uniquely identifies an extract request.
+uniquely identifies an extract request for a given user.
 \item \code{status}: status of the extract request at the time it was last checked.
 One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"},
 \code{"canceled"}, \code{"failed"}, or \code{"completed"}.
@@ -67,9 +67,9 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \code{\link[=define_extract]{define_extract_*()}} function. These functions take the
 form \verb{define_extract_\{collection\}}.
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
-request
+request.
 \item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of
-previously-submitted extracts
+previously-submitted extract requests.
 }
 }
 
@@ -90,14 +90,6 @@ request is ready to download.
 \itemize{
 \item Download the data contained in a completed extract with
 \code{\link[=download_extract]{download_extract()}}.
-}
-}
-
-\section{Revising an extract definition}{
-
-\itemize{
-\item Modify values in an existing extract definition with \code{\link[=add_to_extract]{add_to_extract()}} and
-\code{\link[=remove_from_extract]{remove_from_extract()}}.
 }
 }
 

@@ -313,8 +313,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Read spatial data from an IPUMS extract into R using the
-#' [`sp`](https://cran.r-project.org/web/packages/sp/index.html) package.
+#' Read spatial data from an IPUMS extract into R using the `sp` package.
 #'
 #' This function has been deprecated because of the upcoming retirement
 #' of the rgdal package. For more information, click
@@ -358,7 +357,7 @@ read_ipums_codebook <- function(cb_file, data_layer = NULL) {
 #'
 #' # If sp package is available, can load as SpatialPolygonsDataFrame
 #' if (require(sp) && require(rgdal)) {
-#'   sp_data <- read_ipums_sp(shape_file)
+#'   sp_data <- read_ipums_sp(shape_file, verbose = FALSE)
 #' }
 read_ipums_sp <- function(shape_file,
                           shape_layer = NULL,
@@ -520,7 +519,7 @@ careful_sp_rbind <- function(sp_list, add_layer_var = NULL) {
 #'
 #' Please read spatial and tabular data separately using [`read_ipums_sf()`] and
 #' [`read_nhgis()`]. To join spatial and tabular data, use an
-#' [ipums_shape_*_join][ipums_shape_left_join] function.
+#' [`ipums_shape_*_join`][ipums_shape_left_join] function.
 #'
 #' To convert an `sf` object to a `SpatialPolygonsDataFrame` or other `sp`
 #' object, use [`sf::as_Spatial()`].

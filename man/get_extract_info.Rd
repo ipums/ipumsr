@@ -20,9 +20,6 @@ form \code{"collection:number"} or as a vector of the form
 collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-Extract numbers do not need to be zero-padded. That is, use \code{1}, not
-\code{"0001"}.
-
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
@@ -41,7 +38,7 @@ For a list of codes used to refer to each collection, see
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Retrieve the latest extract status of an extract request.
+Retrieve the latest status of an extract request.
 
 \code{get_last_extract_info()} is a convenience function to retrieve the most
 recent extract for a given collection.
@@ -63,28 +60,30 @@ submitted_extract <- submit_extract(my_extract)
 
 # Get latest info for the request associated with a given `ipums_extract`
 # object:
-get_extract_info(submitted_extract)
+updated_extract <- get_extract_info(submitted_extract)
+
+updated_extract$status
 
 # Or specify the extract collection and number:
 get_extract_info("usa:1")
-get_extract_info(c("usa", "1"))
+get_extract_info(c("usa", 1))
 
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("nhgis")
 get_extract_info(1)
+
+# To get the most recent extract (for instance, if you have forgotten its
+# extract number), use `get_last_extract_info()`
+get_last_extract_info("nhgis")
 }
 }
 \seealso{
 \code{\link[=get_extract_history]{get_extract_history()}} to browse past extract definitions
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
-process and manage an extract request.
+\code{\link[=wait_for_extract]{wait_for_extract()}} to wait for an extract to finish processing.
+
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
-
-\code{\link[=add_to_extract]{add_to_extract()}} and \code{\link[=remove_from_extract]{remove_from_extract()}} to
-revise an extract definition.
-
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
 }

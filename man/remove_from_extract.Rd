@@ -97,9 +97,9 @@ remove_from_extract(
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
-
 \code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
 from scratch.
+
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 }
+\keyword{internal}

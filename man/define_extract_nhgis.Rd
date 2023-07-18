@@ -78,8 +78,8 @@ row
 \item \code{"fixed_width"} provides data in a fixed width format
 }
 
-Note that \code{\link[=read_nhgis]{read_nhgis()}} removes the additional header row in
-\code{"csv_header"} files by default.
+Note that by default, \code{\link[=read_nhgis]{read_nhgis()}} removes the additional header row in
+\code{"csv_header"} files.
 
 Required when an extract definition includes any \code{datasets} or
 \code{time_series_tables}.}
@@ -97,7 +97,8 @@ in NHGIS extract definitions. For general information, see the NHGIS
 \href{https://www.nhgis.org/data-availability}{data source overview} and the
 \href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
 
-Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+Learn more about the IPUMS API in \code{vignette("ipums-api")} and
+NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
 }
 \details{
 An NHGIS extract definition must include at least one dataset, time series
@@ -111,8 +112,8 @@ Create an NHGIS time series table specification with \code{\link[=tst_spec]{tst_
 series table must be associated with a selection of \code{geog_levels} and
 may optionally be associated with a selection of \code{years}.
 
-See examples for more details about specifying datasets and time series
-tables in an NHGIS extract definition.
+See examples or \code{vignette("ipums-api-nhgis")} for more details about
+specifying datasets and time series tables in an NHGIS extract definition.
 }
 \examples{
 # Extract definition for tables from an NHGIS dataset
@@ -185,13 +186,8 @@ submit_extract(nhgis_extract)
 \seealso{
 \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to find data to include in an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}}, \code{\link[=download_extract]{download_extract()}}, and \code{\link[=get_extract_info]{get_extract_info()}} to
-process and manage an extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
-
-\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} and
-\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}}
-to revise an extract definition.
 }

@@ -3,7 +3,7 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read data from an IPUMS extract by chunk
+#' Read data from an IPUMS microdata extract by chunk
 #'
 #' @description
 #' Read a microdata dataset downloaded from the IPUMS extract system in chunks.
@@ -15,7 +15,7 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
 #' See *Downloading IPUMS files* below for more information about downloading
 #' these files.
@@ -23,6 +23,11 @@
 #' `read_ipums_micro_chunked()` and `read_ipums_micro_list_chunked()` differ
 #' in their handling of extracts that contain multiple record types.
 #' See *Data structures* below.
+#'
+#' Note that Stata, SAS, and SPSS file formats are not supported by
+#' ipumsr readers. Convert your extract to fixed-width or CSV format, or see
+#' [haven](https://haven.tidyverse.org/index.html) for help
+#' loading these files.
 #'
 #' @inheritSection read_ipums_micro Downloading IPUMS files
 #'
@@ -101,8 +106,8 @@
 #' cps_rect_ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Function to extract Minnesota cases from CPS example
-#' # (This can also be accomplished using "Select Cases" in the IPUMS
-#' # extract system)
+#' # (This can also be accomplished by including case selections
+#' # in an extract definition)
 #' #
 #' # Function must take `x` and `pos` to refer to data and row position,
 #' # respectively.
@@ -116,7 +121,7 @@
 #' # Process data in chunks, filtering to MN cases in each chunk
 #' read_ipums_micro_chunked(
 #'   cps_rect_ddi_file,
-#'   filter_mn_callback,
+#'   callback = filter_mn_callback,
 #'   chunk_size = 1000,
 #'   verbose = FALSE
 #' )
@@ -124,13 +129,13 @@
 #' # Tabulate INCTOT average by state without storing full dataset in memory
 #' read_ipums_micro_chunked(
 #'   cps_rect_ddi_file,
-#'   IpumsDataFrameCallback$new(
+#'   callback = IpumsDataFrameCallback$new(
 #'     function(x, pos) {
 #'       x %>%
 #'         mutate(
 #'           INCTOT = lbl_na_if(
 #'             INCTOT,
-#'             ~ .lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'             ~ grepl("Missing|N.I.U.", .lbl)
 #'           )
 #'         ) %>%
 #'         filter(!is.na(INCTOT)) %>%
@@ -138,7 +143,8 @@
 #'         summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
 #'     }
 #'   ),
-#'   chunk_size = 1000
+#'   chunk_size = 1000,
+#'   verbose = FALSE
 #' ) %>%
 #'   group_by(STATEFIP) %>%
 #'   summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
@@ -146,7 +152,7 @@
 #' # `x` will be a list when using `read_ipums_micro_list_chunked()`
 #' read_ipums_micro_list_chunked(
 #'   ipums_example("cps_00159.xml"),
-#'   IpumsSideEffectCallback$new(function(x, pos) {
+#'   callback = IpumsSideEffectCallback$new(function(x, pos) {
 #'     print(
 #'       paste0(
 #'         nrow(x$PERSON), " persons and ",
@@ -169,7 +175,7 @@
 #'         mutate(
 #'           INCTOT = lbl_na_if(
 #'             INCTOT,
-#'             ~ .lbl %in% c("Missing.", "N.I.U. (Not in Universe).")
+#'             ~ grepl("Missing|N.I.U.", .lbl)
 #'           ),
 #'           HEALTH = as_factor(HEALTH)
 #'         )

@@ -61,7 +61,7 @@
   </a>
 </li>
 <li>
-  <a href="articles/ipums.html">Introduction</a>
+  <a href="articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -73,7 +73,8 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
+<li class="dropdown-header">IPUMS Data</li>
+    <li>
       <a href="articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
@@ -82,8 +83,17 @@
     <li>
       <a href="articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="articles/ipums-api.html">Interact with the IPUMS API</a>
+      <a href="articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     </li>
@@ -142,14 +152,20 @@
 <p>ipumsr provides an R interface for handling IPUMS data, allowing users to:</p>
 <ul>
 <li><p>Easily read files downloaded from the IPUMS extract system</p></li>
-<li><p>Clean and prepare data using the contextual information contained in the variable-level metadata that is included with many IPUMS files</p></li>
 <li><p>Submit requests for data and download files through the IPUMS API</p></li>
+<li><p>Clean and prepare data using the contextual information contained in the variable-level metadata that is included with many IPUMS files</p></li>
 </ul>
 <div class="section level2">
 <h2 id="what-is-ipums">What is IPUMS?<a class="anchor" aria-label="anchor" href="#what-is-ipums"></a>
 </h2>
-<p><a href="https://www.ipums.org/mission-purpose" class="external-link">IPUMS</a> is the world’s largest publicly available individual-level population database, providing census and survey data from around the world integrated across time and space. IPUMS integration and documentation makes it easy to study change, conduct comparative research, merge information across data types, and analyze individuals within family and community context. Data and services are available free of charge.</p>
-<p>IPUMS consists of multiple projects, or collections, that provide different data products. Microdata projects distribute data for individual survey units, like people or households. Aggregate data projects distribute aggregate statistics calculated from microdata for particular geographic units.</p>
+<p><a href="https://www.ipums.org/mission-purpose" class="external-link">IPUMS</a> is the world’s largest publicly available individual-level population database, providing census and survey data from around the world integrated across time and space. IPUMS integration and documentation make it easy to study change, conduct comparative research, merge information across data types, and analyze individuals within family and community context. Data and services are available free of charge.</p>
+<p>IPUMS consists of multiple projects, or collections, that provide different data products.</p>
+<ul>
+<li>
+<strong>Microdata</strong> projects distribute data for individual survey units, like people or households.</li>
+<li>
+<strong>Aggregate data</strong> projects distribute aggregate statistics calculated from microdata for particular geographic units.</li>
+</ul>
 <table class="table">
 <colgroup>
 <col width="21%">
@@ -178,6 +194,16 @@
 <td>Census microdata covering over 100 countries, contemporary and historical</td>
 </tr>
 <tr class="even">
+<td><a href="https://www.nhgis.org/" class="external-link">IPUMS NHGIS</a></td>
+<td>Aggregate Data</td>
+<td>Tabular U.S. Census data and GIS boundary files (1790-present)</td>
+</tr>
+<tr class="odd">
+<td><a href="https://ihgis.ipums.org/" class="external-link">IPUMS IHGIS</a></td>
+<td>Aggregate Data</td>
+<td>Tabular and GIS data from population, housing, and agricultural censuses around the world</td>
+</tr>
+<tr class="even">
 <td><a href="https://timeuse.ipums.org/" class="external-link">IPUMS Time Use</a></td>
 <td>Microdata</td>
 <td>Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)</td>
@@ -197,16 +223,6 @@
 <td>Microdata</td>
 <td>Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013</td>
 </tr>
-<tr class="even">
-<td><a href="https://www.nhgis.org/" class="external-link">IPUMS NHGIS</a></td>
-<td>Aggregate Data</td>
-<td>Tabular U.S. Census data and GIS boundary files (1790-present)</td>
-</tr>
-<tr class="odd">
-<td><a href="https://ihgis.ipums.org/" class="external-link">IPUMS IHGIS</a></td>
-<td>Aggregate Data</td>
-<td>Tabular and GIS data from population, housing, and agricultural censuses around the world</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -221,20 +237,34 @@
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ipums/ipumsr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>The package vignettes are a great place to learn more about ipumsr and IPUMS data:</p>
 <ul>
-<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums.html" class="external-link">General introduction</a></p></li>
-<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-read.html" class="external-link">Reading IPUMS data files</a></p></li>
-<li><p><a href="https://tech.popdata.org/ipumsr/articles/value-labels.html" class="external-link">Using IPUMS variable metadata</a></p></li>
-<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-api.html" class="external-link">Interacting with the IPUMS API</a></p></li>
-<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-bigdata.html" class="external-link">Handling large data files</a></p></li>
+<li><a href="https://tech.popdata.org/ipumsr/articles/ipums.html" class="external-link">General introduction</a></li>
+</ul>
+<div class="section level3">
+<h3 id="working-with-ipums-data">Working with IPUMS Data<a class="anchor" aria-label="anchor" href="#working-with-ipums-data"></a>
+</h3>
+<ul>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-read.html" class="external-link">Read IPUMS data files</a></p></li>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/value-labels.html" class="external-link">IPUMS variable metadata</a></p></li>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-bigdata.html" class="external-link">Options for large data files</a></p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="interacting-with-the-ipums-api">Interacting with the IPUMS API<a class="anchor" aria-label="anchor" href="#interacting-with-the-ipums-api"></a>
+</h3>
+<ul>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-api.html" class="external-link">Introduction to the IPUMS API</a></p></li>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html" class="external-link">Microdata API requests</a></p></li>
+<li><p><a href="https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html" class="external-link">NHGIS API requests</a></p></li>
 </ul>
 <p>The <a href="https://www.ipums.org/support/exercises" class="external-link">IPUMS support website</a> also houses many project-specific exercises.</p>
 </div>
+</div>
 <div class="section level2">
-<h2 id="related-work">Related Work<a class="anchor" aria-label="anchor" href="#related-work"></a>
+<h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
 </h2>
 <ul>
 <li><p>The <a href="http://r-survey.r-forge.r-project.org/survey/" class="external-link">survey</a> and <a href="https://github.com/gergness/srvyr/" class="external-link">srvyr</a> packages can help you incorporate IPUMS survey weights into your analysis for various survey designs.</p></li>
@@ -243,7 +273,7 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="getting-help--contributing">Getting Help + Contributing<a class="anchor" aria-label="anchor" href="#getting-help--contributing"></a>
+<h2 id="getting-help--contributing">Getting help + contributing<a class="anchor" aria-label="anchor" href="#getting-help--contributing"></a>
 </h2>
 <p>We greatly appreciate feedback and development contributions. Please submit any bug reports, pull requests, or other suggestions on <a href="https://github.com/ipums/ipumsr/issues" class="external-link">GitHub</a>. Before contributing, please be sure to read the <a href="https://github.com/ipums/ipumsr/blob/master/CONTRIBUTING.md" class="external-link">Contributing Guidelines</a> and the <a href="https://github.com/ipums/ipumsr/blob/master/CONDUCT.md" class="external-link">Code of Conduct</a>.</p>
 <p>If you have general questions or concerns about IPUMS data, check out our <a href="https://forum.ipums.org" class="external-link">user forum</a> or send an email to <a href="mailto:ipums@umn.edu" class="email">ipums@umn.edu</a>.</p>
