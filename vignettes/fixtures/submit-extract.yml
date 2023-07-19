@@ -1,0 +1,84 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2
+    body:
+      encoding: ''
+      string: '{"description":"USA extract for API vignette","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us2018a":{},"us2019a":{}},"variables":{"AGE":{},"SEX":{},"RACE":{},"STATEFIP":{},"MARST":{}},"caseSelectWho":"individuals","collection":"usa","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 19 Jul 2023 22:10:57 GMT
+      etag: W/"48bb46ae3f6b7c1ad6a98663396c03eb"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 998020e2-ff01-4a64-bb8e-40f4d79550d5
+      x-runtime: '0.841659'
+      x-xss-protection: '0'
+      content-length: '675'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":348,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"USA
+        extract for API vignette","samples":{"us2018a":{},"us2019a":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"CLUSTER":{"preselected":true},"STATEFIP":{},"STRATA":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"SEX":{},"AGE":{},"MARST":{},"RACE":{}},"collection":"usa"}}'
+  recorded_at: 2023-07-19 22:10:58 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2&pageNumber=1&pageSize=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 19 Jul 2023 22:10:58 GMT
+      etag: W/"11a34ae253f1ed7ab1d329cf702ecc69"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 14c8032d-185a-4092-8e16-10627dfd03e9
+      x-runtime: '0.793346'
+      x-xss-protection: '0'
+      content-length: '870'
+    body:
+      encoding: ''
+      file: no
+      string: '{"data":[{"number":348,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"USA
+        extract for API vignette","samples":{"us2018a":{},"us2019a":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"CLUSTER":{"preselected":true},"STATEFIP":{},"STRATA":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"SEX":{},"AGE":{},"MARST":{},"RACE":{}},"collection":"usa"}}],"totalCount":348,"pageNumber":1,"pageSize":1,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/extracts/?collection=usa\u0026pageNumber=2\u0026pageSize=1\u0026version=2"}}'
+  recorded_at: 2023-07-19 22:10:58 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

@@ -579,7 +579,7 @@ flag codes.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="additional-options">Additional options<a class="anchor" aria-label="anchor" href="#additional-options"></a>
+<h2 id="data-structure-and-file-format">Data structure and file format<a class="anchor" aria-label="anchor" href="#data-structure-and-file-format"></a>
 </h2>
 <p>By default, microdata extract definitions will request data in a
 rectangular structure and fixed-width file format.</p>
@@ -591,6 +591,8 @@ household members.</p>
 records for households and persons, set
 <code>data_structure = "hierarchical"</code> in your extract
 definition.</p>
+<p>See the <a href="ipums-read.html">IPUMS data reading vignette</a> for
+more information about loading hierarchical data into R.</p>
 <p>To request a file format other than fixed-width, adjust the
 <code>data_format</code> argument. Note that while you can request data
 in a variety of formats (Stata, SPSS, etc.), ipumsr’s

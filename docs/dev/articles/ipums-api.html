@@ -182,7 +182,7 @@ request</li>
 <a href="#submit">Submit</a> the extract request to the IPUMS
 API</li>
 <li>
-<a href="#check">Check</a> extract request status</li>
+<a href="#wait">Wait</a> for an extract to complete</li>
 <li>
 <a href="#download">Download</a> a completed extract</li>
 </ol>
@@ -352,7 +352,7 @@ submit it to the IPUMS API for processing.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="submit">Submit an extract<a class="anchor" aria-label="anchor" href="#submit"></a>
+<h2 id="submit">Submit an extract request<a class="anchor" aria-label="anchor" href="#submit"></a>
 </h2>
 <p>To submit an extract definition, use
 <code><a href="../reference/submit_extract.html">submit_extract()</a></code>.</p>
@@ -362,11 +362,11 @@ Storing the returned object can be useful for checking the extract
 request’s status later.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_ext_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">usa_ext_def</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Successfully submitted IPUMS USA extract number 328</span></span></code></pre></div>
+<span><span class="co">#&gt; Successfully submitted IPUMS USA extract number 348</span></span></code></pre></div>
 <p>The extract number will be stored in the returned object:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">number</span></span>
-<span><span class="co">#&gt; [1] 328</span></span>
+<span><span class="co">#&gt; [1] 348</span></span>
 <span></span>
 <span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "queued"</span></span></code></pre></div>
@@ -374,48 +374,204 @@ request’s status later.</p>
 updated by the API upon submission. For instance, for microdata
 extracts, additional preselected variables may be added to the extract
 even if they weren’t specified explicitly in the extract definition.</p>
-</div>
-<div class="section level2">
-<h2 id="check">Check the status of an extract<a class="anchor" aria-label="anchor" href="#check"></a>
-</h2>
-<p>It may take some time for the IPUMS servers to process your extract
-request. To determine if your extract is ready to download, you can
-check its latest status with <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>, which will
-return an <code>ipums_extract</code> object reflecting the requested
-extract definition with the most current <code>status</code>. The
-<code>status</code> of a submitted extract will be one of
-<code>"queued"</code>, <code>"started"</code>, <code>"produced"</code>,
-<code>"canceled"</code>, <code>"failed"</code>, or
-<code>"completed"</code>.</p>
-<p>If the extract is complete and ready for download, the
-<code>download_links</code> field will be populated with any extract
-files that are available for download. Otherwise, the links will be
-empty.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usa_ext_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">status</span></span>
-<span><span class="co">#&gt; [1] "queued"</span></span>
-<span></span>
-<span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">download_links</span></span>
-<span><span class="co">#&gt; named list()</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "YEAR"     "SAMPLE"   "SERIAL"   "CBSERIAL" "HHWT"     "CLUSTER" </span></span>
+<span><span class="co">#&gt;  [7] "STATEFIP" "STRATA"   "GQ"       "PERNUM"   "PERWT"    "SEX"     </span></span>
+<span><span class="co">#&gt; [13] "AGE"      "MARST"    "RACE"</span></span></code></pre></div>
 <p>If you forget to store the updated extract object returned by
 <code><a href="../reference/submit_extract.html">submit_extract()</a></code>, you can use the
 <code><a href="../reference/get_extract_info.html">get_last_extract_info()</a></code> helper to request the information
 for your most recent extract request for a given collection:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usa_ext_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span></code></pre></div>
-<p>You can also request the information for any single extract request
-by passing the collection and extract number to
-<code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>. These can be provided either as a
-single string of the form <code>"collection:number"</code> or as a
-length-2 vector: <code>c(collection, number)</code>. Several other API
-functions also support this syntax as well.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usa_ext_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:10"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">usa_ext_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Or, alternatively:</span></span>
-<span><span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"usa"</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">number</span></span>
+<span><span class="co">#&gt; [1] 348</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="wait">Wait for an extract request to complete<a class="anchor" aria-label="anchor" href="#wait"></a>
+</h2>
+<p>It may take some time for the IPUMS servers to process your extract
+request. You can ensure that an extract has finished processing before
+you attempt to download its files by using
+<code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>. This polls the API regularly until
+processing has completed (by default, each interval increases by 10
+seconds). It then returns an <code>ipums_extract</code> object
+containing the completed extract definition.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">usa_ext_complete</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking extract status...</span></span>
+<span><span class="co">#&gt; Waiting 10 seconds...</span></span>
+<span><span class="co">#&gt; Checking extract status...</span></span>
+<span><span class="co">#&gt; Waiting 20 seconds...</span></span>
+<span><span class="co">#&gt; Checking extract status...</span></span>
+<span><span class="co">#&gt; IPUMS USA extract 348 is ready to download.</span></span>
+<span></span>
+<span><span class="va">usa_ext_complete</span><span class="op">$</span><span class="va">status</span></span>
+<span><span class="co">#&gt; [1] "completed"</span></span>
+<span></span>
+<span><span class="co"># `download_links` should be populated if the extract is ready for download</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_ext_complete</span><span class="op">$</span><span class="va">download_links</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "r_command_file"     "basic_codebook"     "data"              </span></span>
+<span><span class="co">#&gt; [4] "stata_command_file" "sas_command_file"   "spss_command_file" </span></span>
+<span><span class="co">#&gt; [7] "ddi_codebook"</span></span></code></pre></div>
+<p>Note that <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code> will tie up your R session
+until your extract is ready to download. While this is fine in a
+strictly programmatic workflow, it may be frustrating when working
+interactively, especially for large extracts or when the IPUMS servers
+are busy.</p>
+<p>In these cases, you can manually check whether an extract is ready
+for download with <code><a href="../reference/wait_for_extract.html">is_extract_ready()</a></code>. As long as this
+returns <code>TRUE</code>, you should be able to download your extract’s
+files.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/wait_for_extract.html">is_extract_ready</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>Note that extracts are removed from the IPUMS servers after a set
+period of time (72 hours for microdata collections, 2 weeks for IPUMS
+NHGIS). Therefore, an extract that has a <code>"completed"</code> status
+may still be unavailable for download. <code><a href="../reference/wait_for_extract.html">is_extract_ready()</a></code>
+will alert you if the extract has expired and needs to be
+resubmitted.</p>
+<p>For a more detailed status check, provide the extract’s collection
+and number to <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>. This returns an
+<code>ipums_extract</code> object reflecting the requested extract
+definition with the most current <code>status</code>. The
+<code>status</code> of a submitted extract will be one of
+<code>"queued"</code>, <code>"started"</code>, <code>"produced"</code>,
+<code>"canceled"</code>, <code>"failed"</code>, or
+<code>"completed"</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">usa_ext_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">status</span></span>
+<span><span class="co">#&gt; [1] "completed"</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="download">Download an extract<a class="anchor" aria-label="anchor" href="#download"></a>
+</h2>
+<p>Once your extract has finished processing, use
+<code><a href="../reference/download_extract.html">download_extract()</a></code> to download the extract’s data files to
+your local machine. This will return the path to the downloaded file(s)
+required to load the data into R.</p>
+<p>For microdata collections, this will be the path to the DDI codebook
+(.xml) file, which can be used to read the associated data (contained in
+a .dat.gz file).</p>
+<p>For NHGIS, this will be a path to the .zip archive containing the
+requested data files and/or shapefiles.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># By default, downloads to your current working directory</span></span>
+<span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span></code></pre></div>
+<p>The files produced by <code><a href="../reference/download_extract.html">download_extract()</a></code> can be passed
+directly into the reader functions provided by ipumsr. For instance, for
+microdata projects:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
+<span><span class="va">micro_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></code></pre></div>
+<p>If instead you’re working with an NHGIS extract, use
+<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> or <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code>.</p>
+<p>See the <a href="ipums-read.html">associated vignette</a> for more
+information about loading IPUMS data into R.</p>
+</div>
+<div class="section level2">
+<h2 id="recent">Get info on past extracts<a class="anchor" aria-label="anchor" href="#recent"></a>
+</h2>
+<p>To retrieve the definition corresponding to a particular extract,
+provide its collection and number to <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>.
+These can be provided either as a single string of the form
+<code>"collection:number"</code> or as a length-2 vector:
+<code>c(collection, number)</code>. Several other API functions support
+this syntax as well.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">usa_ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:47"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Alternatively:</span></span>
+<span><span class="va">usa_ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"usa"</span>, <span class="fl">47</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">usa_ext</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 47</span></span>
+<span><span class="co">#&gt; Description: Test extract</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(8 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, GQ, PERNUM, PERWT</span></span></code></pre></div>
+<p>If you know you made a specific extract definition in the past, but
+you can’t remember the exact number, you can use
+<code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to peruse your recent extract
+requests for a particular collection.</p>
+<p>By default, this returns your 10 most recent extract requests as a
+list of <code>ipums_extract</code> objects. You can adjust how many
+requests to retrieve with the <code>how_many</code> argument:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">usa_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_history.html">get_extract_history</a></span><span class="op">(</span><span class="st">"usa"</span>, how_many <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">usa_extracts</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 347</span></span>
+<span><span class="co">#&gt; Description: Data from long ago</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 346</span></span>
+<span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(9 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, GQ, PERNU...</span></span></code></pre></div>
+<p>Because this is a list of <code>ipums_extract</code> objects, you can
+operate on them with the API functions that have been introduced
+already.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/wait_for_extract.html">is_extract_ready</a></span><span class="op">(</span><span class="va">usa_extracts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>You can also iterate through your extract history to find extracts
+with particular characteristics. For instance, we can use
+<code><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">purrr::keep()</a></code> to find all extracts that contain a certain
+variable or are ready for download:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
+<span></span>
+<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 347</span></span>
+<span><span class="co">#&gt; Description: Data from long ago</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 346</span></span>
+<span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(9 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, GQ, PERNU...</span></span></code></pre></div>
+<p>Or we can use the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> family to browse certain
+values:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="op">~</span> <span class="va">.x</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "USA extract for API vignette" "Data from long ago"          </span></span>
+<span><span class="co">#&gt; [3] "Data from 2017 PRCS"</span></span></code></pre></div>
 <p>If you regularly use only a single IPUMS collection, you can save
 yourself some typing by setting that collection as your default.
 <code><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection()</a></code> will save a specified
@@ -423,9 +579,9 @@ collection to the value of the <code>IPUMS_DEFAULT_COLLECTION</code>
 environment variable. If you have a default collection set, API
 functions will use that collection in all requests, assuming no other
 collection is specified.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span> <span class="co"># Set `save = TRUE` to store across sessions</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check the default collection:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_DEFAULT_COLLECTION"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "usa"</span></span>
@@ -440,57 +596,6 @@ collection is specified.</p>
 <span><span class="va">cps_ext_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"cps:10"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="download">Download an extract<a class="anchor" aria-label="anchor" href="#download"></a>
-</h2>
-<p>To be available for download, an extract must have a
-<code>"completed"</code> status. However, some requests that are
-<code>"completed"</code> may still be unavailable for download, as
-extracts expire and are removed from IPUMS servers after a set period of
-time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).</p>
-<p>You can check whether an extract is ready for download with
-<code><a href="../reference/wait_for_extract.html">is_extract_ready()</a></code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/wait_for_extract.html">is_extract_ready</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>If your extract is ready to download, you can use
-<code><a href="../reference/download_extract.html">download_extract()</a></code> to download the extract’s data files to
-your local machine.</p>
-<p>This will return the path to the downloaded file(s) required to load
-the data into R.</p>
-<p>For microdata collections, this is the path to the DDI codebook
-(.xml) file, which can be used to read the associated data (contained in
-a .dat.gz file). For NHGIS, this will be a path to the .zip archive
-containing the requested data files and/or shapefiles.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># By default, downloads to your current working directory</span></span>
-<span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span></code></pre></div>
-<p>If your extract request has not finished processing, you’ll receive
-an error when attempting to download. To wait until the extract is ready
-before attempting to download, use <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>. If
-the extract request is not yet ready, R will poll the API regularly
-(each interval will increase by 10 seconds) until processing has
-completed.</p>
-<p>Note that <code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code> will tie up your R session
-until the extract is ready to download. This may be undesirable behavior
-for large extracts that take a long time to produce or when the IPUMS
-servers are busy. If you like, you can set a maximum wait time and
-adjust other API polling parameters in
-<code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">downloadable_extract</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wait_for_extract.html">wait_for_extract</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
-<span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">downloadable_extract</span><span class="op">)</span></span></code></pre></div>
-<p>The files produced by <code><a href="../reference/download_extract.html">download_extract()</a></code> can be passed
-directly into the reader functions provided by ipumsr. For instance, for
-microdata projects:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
-<span><span class="va">micro_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></code></pre></div>
-<p>If instead you’re working with an NHGIS extract, use
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> or <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code>.</p>
-<p>See the <a href="ipums-read.html">associated vignette</a> for more
-information about loading IPUMS data into R.</p>
-</div>
-<div class="section level2">
 <h2 id="share">Share an extract definition<a class="anchor" aria-label="anchor" href="#share"></a>
 </h2>
 <p>One exciting feature enabled by the IPUMS API is the ability to share
@@ -503,7 +608,7 @@ don’t prohibit sharing data extract definitions.</p>
 <code><a href="../reference/save_extract_as_json.html">define_extract_from_json()</a></code>, which read and write
 <code>ipums_extract</code> objects to and from a standardized
 JSON-formatted file.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_ext_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_extract_info</a></span><span class="op">(</span><span class="st">"usa:10"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/save_extract_as_json.html">save_extract_as_json</a></span><span class="op">(</span><span class="va">usa_ext_10</span>, file <span class="op">=</span> <span class="st">"usa_extract_10.json"</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, you can send <code>usa_extract_10.json</code> to
@@ -511,7 +616,7 @@ another user to allow them to create a duplicate
 <code>ipums_extract</code> object, which they can load and submit to the
 API themselves (as long as they have <a href="#set-key">API
 access</a>).</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clone_of_usa_ext_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/save_extract_as_json.html">define_extract_from_json</a></span><span class="op">(</span><span class="st">"usa_extract_10.json"</span><span class="op">)</span></span>
 <span><span class="va">usa_ext_10_resubmitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">clone_of_usa_ext_10</span><span class="op">)</span></span></code></pre></div>
 <p>Note that the code in the previous chunk assumes that the file is
@@ -520,7 +625,7 @@ replace <code>"usa_extract_10.json"</code> with the full path to the
 file.</p>
 </div>
 <div class="section level2">
-<h2 id="revise-a-previous-extract">Revise a previous extract<a class="anchor" aria-label="anchor" href="#revise-a-previous-extract"></a>
+<h2 id="revise-a-previous-extract-request">Revise a previous extract request<a class="anchor" aria-label="anchor" href="#revise-a-previous-extract-request"></a>
 </h2>
 <p>Occasionally, you may want to modify an existing extract definition
 (e.g. to update an analysis with new data). The easiest way to do so is
@@ -545,91 +650,12 @@ rather than based only on an old extract number. These two functions may
 be retired in the future.</p>
 </div>
 <div class="section level2">
-<h2 id="recent">Get info on past extracts<a class="anchor" aria-label="anchor" href="#recent"></a>
-</h2>
-<p>If you know you made a specific extract definition in the past, but
-you can’t remember the exact number, you can use
-<code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to peruse your recent extract
-requests for a particular collection.</p>
-<p>By default, this returns your 10 most recent extract requests as a
-list of <code>ipums_extract</code> objects. You can adjust how many
-requests to retrieve with the <code>how_many</code> argument:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usa_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_history.html">get_extract_history</a></span><span class="op">(</span><span class="st">"usa"</span>, how_many <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">usa_extracts</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 328</span></span>
-<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 327</span></span>
-<span><span class="co">#&gt; Description: Data from long ago</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 326</span></span>
-<span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(9 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, GQ, PERNU...</span></span></code></pre></div>
-<p>Because this is a list of <code>ipums_extract</code> objects, you can
-operate on them with the familiar API functions.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usa_extracts</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">status</span></span>
-<span><span class="co">#&gt; [1] "completed"</span></span></code></pre></div>
-<p>You can also iterate through your extract history to find extracts
-with particular characteristics. For instance, we can use
-<code><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">purrr::keep()</a></code> to find all extracts that contain a certain
-variable or are ready for download:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 328</span></span>
-<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
-<span></span>
-<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 328</span></span>
-<span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 327</span></span>
-<span><span class="co">#&gt; Description: Data from long ago</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 326</span></span>
-<span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(9 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, GQ, PERNU...</span></span></code></pre></div>
-<p>Or we can use the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> family to browse:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="op">~</span> <span class="va">.x</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "USA extract for API vignette" "Data from long ago"          </span></span>
-<span><span class="co">#&gt; [3] "Data from 2017 PRCS"</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="putting-it-all-together">Putting it all together<a class="anchor" aria-label="anchor" href="#putting-it-all-together"></a>
 </h2>
 <p>These functions are compatible with one another such that they can be
 combined into a single pipeline that requests, downloads, and reads your
 extract data into an R data frame:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract-micro.html">define_extract_usa</a></span><span class="op">(</span></span>
 <span>  <span class="st">"USA extract for API vignette"</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us2018a"</span>, <span class="st">"us2019a"</span><span class="op">)</span>,</span>
@@ -644,7 +670,7 @@ single file will need to be selected before reading, as
 <code><a href="../reference/download_extract.html">download_extract()</a></code> will return the path to each file. For
 instance, for a hypothetical <code>nhgis_extract</code> that contains
 both tabular and spatial data:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">nhgis_extract</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># Select only the tabular data file to read</span></span>
 <span>  <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
