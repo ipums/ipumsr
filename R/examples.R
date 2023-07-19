@@ -22,7 +22,7 @@
 #' ipums_example()
 #'
 #' # Get path to a specific example file
-#' file <- ipums_example("cps_00006.xml")
+#' file <- ipums_example("cps_00157.xml")
 #'
 #' read_ipums_micro(file)
 ipums_example <- function(path = NULL) {

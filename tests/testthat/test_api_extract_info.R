@@ -22,7 +22,7 @@ on.exit(
 
 # Check extract status -----------------
 
-test_that("Can check USA extract status", {
+test_that("Can check microdata extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
@@ -62,49 +62,6 @@ test_that("Can check USA extract status", {
   })
   vcr::use_cassette("get-usa-extract-info", {
     is_ready_id2 <- is_extract_ready(paste0("usa:", extract_number))
-  })
-
-  expect_true(is_ready && is_ready_id1 && is_ready_id2)
-})
-
-test_that("Can check CPS extract status", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(test_cps_extract())
-  })
-
-  extract_number <- submitted_cps_extract$number
-
-  vcr::use_cassette("ready-cps-extract", {
-    wait_for_extract(submitted_cps_extract)
-  })
-
-  vcr::use_cassette("get-cps-extract-info", {
-    extract <- get_extract_info(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id1 <- get_extract_info(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    extract_id2 <- get_extract_info(paste0("cps:", extract_number))
-  })
-
-  expect_s3_class(extract, "cps_extract")
-  expect_s3_class(extract, "ipums_extract")
-  expect_true(extract$status == "completed")
-
-  expect_identical(extract, extract_id1)
-  expect_identical(extract, extract_id2)
-
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready <- is_extract_ready(submitted_cps_extract)
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id1 <- is_extract_ready(c("cps", extract_number))
-  })
-  vcr::use_cassette("get-cps-extract-info", {
-    is_ready_id2 <- is_extract_ready(paste0("cps:", extract_number))
   })
 
   expect_true(is_ready && is_ready_id1 && is_ready_id2)
@@ -157,9 +114,7 @@ test_that("Cannot check status for an extract with no number", {
   expect_error(
     get_extract_info(
       define_extract_nhgis(
-        datasets = "a",
-        data_tables = "B",
-        geog_levels = "C"
+        datasets = ds_spec("a", "B", "C")
       )
     ),
     "Cannot get info for an `ipums_extract` object with missing extract number"
@@ -269,7 +224,7 @@ test_that("Can get extract info for default collection", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
+    recent_nhgis_extracts_list <- get_extract_history("nhgis")
   })
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
@@ -287,7 +242,7 @@ test_that("Can get extract info for default collection", {
     })
 
     vcr::use_cassette("recent-nhgis-extracts-list", {
-      recent_nhgis_extracts_list_default <- get_recent_extracts_info()
+      recent_nhgis_extracts_list_default <- get_extract_history()
     })
 
     expect_identical(
@@ -298,85 +253,161 @@ test_that("Can get extract info for default collection", {
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = NA), {
     expect_error(
-      get_recent_extracts_info(),
+      get_extract_history(),
       "No default collection set"
     )
   })
 })
 
-test_that("Can parse API errors on bad requests", {
+# Extract history ------------------------
+
+test_that("Can get extract history for all records", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis")
+  # We reproduce the internal workings of `get_extract_history()`
+  # so we can update the page size parameter, which is otherwise not exposed.
+  # This enables us to ensure that multiple pages are requested.
+  vcr::use_cassette("extract-history-all-records", {
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "cps",
+        path = extract_request_path(),
+        queries = list(pageNumber = 1, pageSize = 30)
+      ),
+      max_pages = Inf
+    )
   })
 
-  bad_extract <- new_ipums_extract(
-    "nhgis",
-    datasets = "foo",
-    data_tables = "bar",
-    geog_levels = "baz"
+  extracts <- purrr::flatten(
+    purrr::map(
+      responses,
+      function(res) {
+        extract_list_from_json(
+          new_ipums_json(
+            httr::content(res, "text"),
+            collection = "cps"
+          )
+        )
+      }
+    )
   )
 
-  vcr::use_cassette("nhgis-extract-errors", {
-    expect_error(
-      get_last_extract_info("nhgis", api_key = "foobar"),
-      "API Key is either missing or invalid"
-    )
-    expect_error(
-      get_extract_info(c("nhgis", recent_nhgis_extracts_list[[1]]$number + 1)),
-      paste0(
-        "number ", recent_nhgis_extracts_list[[1]]$number + 1,
-        " does not exist"
-      )
-    )
-    expect_error(
-      ipums_api_json_request(
-        "POST",
-        collection = "nhgis",
-        path = NULL,
-        body = extract_to_request_json(bad_extract),
-        api_key = Sys.getenv("IPUMS_API_KEY")
-      ),
-      "Datasets invalid"
-    )
-  })
+  expect_equal(length(extracts), 94)
+  expect_equal(extracts[[94]][["number"]], 1)
 })
 
-# Recent extract tbl ------------------------
-
-test_that("Tibble of recent USA extracts has expected structure", {
+test_that("Can get extract history for more records than page size", {
   skip_if_no_api_access(have_api_access)
 
-  vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
+  # We reproduce the internal workings of `get_extract_history()`
+  # so we can update the page size parameter, which is otherwise not exposed.
+  # This enables us to ensure that multiple pages are requested.
+  how_many <- 91
+  page_limit <- 30
+
+  vcr::use_cassette("extract-history-multi-page-records", {
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "cps",
+        path = extract_request_path(),
+        queries = list(pageNumber = 1, pageSize = page_limit)
+      ),
+      max_pages = ceiling(how_many / page_limit)
+    )
   })
+
+  extracts <- purrr::flatten(
+    purrr::map(
+      responses,
+      function(res) {
+        extract_list_from_json(
+          new_ipums_json(
+            httr::content(res, "text"),
+            collection = "cps"
+          )
+        )
+      }
+    )
+  )
+
+  if (length(extracts) > how_many) {
+    extracts <- extracts[seq_len(how_many)]
+  }
+
+  expect_equal(length(extracts), how_many)
+
+  # The appropriate last record number can be discerned on the most recent
+  # record and the number of records retrieved
+  expect_equal(
+    extracts[[how_many]]$number,
+    extracts[[1]]$number - how_many + 1
+  )
+})
+
+test_that("Tibble of recent micro extracts has expected structure", {
+  skip_if_no_api_access(have_api_access)
+
+  usa_extract <- test_usa_extract()
+
+  vcr::use_cassette("submitted-usa-extract", {
+    submitted_usa_extract <- submit_extract(usa_extract)
+  })
+
+  submitted_number <- submitted_usa_extract$number
+
+  vcr::use_cassette("ready-usa-extract", {
+    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+  })
+
+  vcr::use_cassette("recent-usa-extracts-tbl", {
+    lifecycle::expect_deprecated(
+      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    )
+  })
+
+  recent_numbers <- recent_usa_extracts_tbl$number
+
+  single_usa_extract_tbl <- recent_usa_extracts_tbl[
+    recent_numbers == submitted_number,
+  ]
 
   expected_columns <- c(
     "collection", "description", "data_structure",
     "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
+    "case_selections", "case_selection_type", "attached_characteristics",
+    "var_data_quality_flags", "preselected", "data_quality_flags",
+    "case_select_who", "submitted", "download_links", "number", "status"
   )
 
   expect_equal(nrow(recent_usa_extracts_tbl), 10)
+
   expect_setequal(names(recent_usa_extracts_tbl), expected_columns)
-})
 
-test_that("Tibble of recent CPS extracts has expected structure", {
-  skip_if_no_api_access(have_api_access)
-
-  vcr::use_cassette("recent-cps-extracts-tbl", {
-    recent_cps_extracts_tbl <- get_recent_extracts_info("cps", table = TRUE)
-  })
-
-  expected_columns <- c(
-    "collection", "description", "data_structure",
-    "rectangular_on", "data_format", "samples", "variables",
-    "submitted", "download_links", "number", "status"
+  expect_equal(single_usa_extract_tbl$number, ready_usa_extract$number)
+  expect_equal(
+    single_usa_extract_tbl$variables[[1]],
+    names(ready_usa_extract$variables)
   )
-
-  expect_equal(nrow(recent_cps_extracts_tbl), 10)
-  expect_setequal(names(recent_cps_extracts_tbl), expected_columns)
+  expect_equal(
+    single_usa_extract_tbl$samples[[1]],
+    names(ready_usa_extract$samples)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selections[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selections)
+  )
+  expect_equal(
+    single_usa_extract_tbl$case_selection_type[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$case_selection_type)
+  )
+  expect_equal(
+    single_usa_extract_tbl$attached_characteristics[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$attached_characteristics)
+  )
+  expect_equal(
+    single_usa_extract_tbl$var_data_quality_flags[[1]],
+    purrr::map(ready_usa_extract$variables, ~ .x$data_quality_flags)
+  )
 })
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {
@@ -392,7 +423,9 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+    )
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -407,52 +440,50 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
     "submitted", "download_links", "status"
   )
 
-  recent_nhgis_extract_submitted <- recent_nhgis_extracts_tbl[
+  recent_nhgis_extract_submitted_ds <- recent_nhgis_extracts_tbl[
     which(recent_numbers == submitted_number &
-      recent_nhgis_extracts_tbl$data_type == "datasets"),
+            recent_nhgis_extracts_tbl$data_type == "datasets"),
   ]
 
-  row_level_nhgis_tbl <- collapse_nhgis_extract_tbl(recent_nhgis_extracts_tbl)
+  recent_nhgis_extract_submitted_tst <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+            recent_nhgis_extracts_tbl$data_type == "time_series_tables"),
+  ]
 
-  row_level_nhgis_tbl_submitted <- row_level_nhgis_tbl[
-    which(row_level_nhgis_tbl$number == submitted_number),
+  recent_nhgis_extract_submitted_shp <- recent_nhgis_extracts_tbl[
+    which(recent_numbers == submitted_number &
+            recent_nhgis_extracts_tbl$data_type == "shapefiles"),
   ]
 
   expect_setequal(names(recent_nhgis_extracts_tbl), expected_columns)
   expect_equal(length(unique(recent_numbers)), 10)
-  expect_equal(nrow(row_level_nhgis_tbl), 10)
 
   expect_equal(
-    recent_nhgis_extract_submitted$name,
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$name,
+    names(ready_nhgis_extract$datasets)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$datasets[[1]],
-    ready_nhgis_extract$datasets
+    recent_nhgis_extract_submitted_ds$data_tables,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$data_tables))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$data_tables[[1]],
-    ready_nhgis_extract$data_tables
+    recent_nhgis_extract_submitted_ds$geog_levels,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$geog_levels))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$geog_levels[[1]],
-    ready_nhgis_extract$geog_levels
-  )
-  # When NULL, values are not recycled in the tbl format:
-  expect_equal(
-    row_level_nhgis_tbl_submitted$years[[1]],
-    ready_nhgis_extract$years
+    recent_nhgis_extract_submitted_ds$years,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$years))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$breakdown_values[[1]],
-    ready_nhgis_extract$breakdown_values
+    recent_nhgis_extract_submitted_ds$breakdown_values,
+    unname(purrr::map(ready_nhgis_extract$datasets, ~ .x$breakdown_values))
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$time_series_tables[[1]],
-    ready_nhgis_extract$time_series_tables
+    recent_nhgis_extract_submitted_tst$name,
+    names(ready_nhgis_extract$time_series_tables)
   )
   expect_equal(
-    row_level_nhgis_tbl_submitted$shapefiles[[1]],
+    recent_nhgis_extract_submitted_shp$name,
     ready_nhgis_extract$shapefiles
   )
 })
@@ -460,34 +491,34 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 test_that("Can get specific number of recent extracts in tibble format", {
   skip_if_no_api_access(have_api_access)
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    two_recent_usa_extracts <- get_recent_extracts_info(
-      "usa",
-      how_many = 2,
-      table = TRUE
-    )
-  })
-  vcr::use_cassette("recent-cps-extracts-tbl-five", {
-    five_recent_cps_extracts <- get_recent_extracts_info(
-      "cps",
-      how_many = 5,
-      table = TRUE
+    lifecycle::expect_deprecated(
+      two_recent_usa_extracts <- get_recent_extracts_info_tbl(
+        "usa",
+        how_many = 2
+      )
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    two_recent_nhgis_extracts <- get_recent_extracts_info(
-      "nhgis",
-      how_many = 2,
-      table = TRUE
+    lifecycle::expect_deprecated(
+      two_recent_nhgis_extracts <- get_recent_extracts_info_tbl(
+        "nhgis",
+        how_many = 2
+      )
     )
   })
 
   expect_equal(nrow(two_recent_usa_extracts), 2)
-  expect_equal(nrow(five_recent_cps_extracts), 5)
 
   # NHGIS does not adhere to 1-row per extract, but only 2 should be
   # represented
   expect_equal(length(unique(two_recent_nhgis_extracts$number)), 2)
-  expect_equal(nrow(collapse_nhgis_extract_tbl(two_recent_nhgis_extracts)), 2)
+})
+
+test_that("Error on invalid number of records", {
+  expect_error(
+    get_extract_history("usa", how_many = 0),
+    "Must request a positive number of records."
+  )
 })
 
 # Tibble <--> List conversion -------------------
@@ -496,18 +527,24 @@ test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    recent_usa_extracts_tbl <- get_recent_extracts_info("usa", table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
+    )
   })
   vcr::use_cassette("recent-usa-extracts-list", {
-    recent_usa_extracts_list <- get_recent_extracts_info("usa", table = FALSE)
+    recent_usa_extracts_list <- get_extract_history("usa")
   })
 
-  converted_to_list <- extract_tbl_to_list(
-    recent_usa_extracts_tbl,
-    validate = FALSE
+  lifecycle::expect_deprecated(
+    converted_to_list <- extract_tbl_to_list(
+      recent_usa_extracts_tbl,
+      validate = FALSE
+    )
   )
 
-  converted_to_tbl <- extract_list_to_tbl(recent_usa_extracts_list)
+  lifecycle::expect_deprecated(
+    converted_to_tbl <- extract_list_to_tbl(recent_usa_extracts_list)
+  )
 
   expect_identical(recent_usa_extracts_list, converted_to_list)
   expect_identical(recent_usa_extracts_tbl, converted_to_tbl)
@@ -520,14 +557,21 @@ test_that("NHGIS tbl/list conversion works", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    recent_nhgis_extracts_tbl <- get_recent_extracts_info("nhgis", table = TRUE)
+    lifecycle::expect_deprecated(
+      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
+    )
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
-    recent_nhgis_extracts_list <- get_recent_extracts_info("nhgis", table = FALSE)
+    recent_nhgis_extracts_list <- get_extract_history("nhgis")
   })
 
-  converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
-  converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  lifecycle::expect_deprecated(
+    converted_to_list <- extract_tbl_to_list(recent_nhgis_extracts_tbl)
+  )
+
+  lifecycle::expect_deprecated(
+    converted_to_tbl <- extract_list_to_tbl(recent_nhgis_extracts_list)
+  )
 
   expect_identical(recent_nhgis_extracts_list, converted_to_list)
   expect_identical(recent_nhgis_extracts_tbl, converted_to_tbl)
@@ -545,9 +589,9 @@ test_that("NHGIS tbl/list conversion works", {
   # `test_nhgis_extract()` does not include case where multiple DS with
   # different subfields. Including here for a test of this scenario:
   x <- define_extract_nhgis(
-    datasets = c("D1", "D2"),
-    data_tables = list("A", "B"),
-    geog_levels = "C"
+    datasets = list(
+      ds_spec("D1", "A", "C"), ds_spec("D2", "B", "C")
+    )
   )
 
   expect_identical(
@@ -570,15 +614,20 @@ test_that("NHGIS shapefile-only tbl/list conversion works", {
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    nhgis_extract_tbl_shp <- get_recent_extracts_info(
-      "nhgis",
-      how_many = 1,
-      table = TRUE
+    lifecycle::expect_deprecated(
+      nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl(
+        "nhgis",
+        how_many = 1
+      )
     )
   })
 
+  lifecycle::expect_deprecated(
+    extract <- extract_tbl_to_list(nhgis_extract_tbl_shp)
+  )
+
   expect_identical(
-    extract_tbl_to_list(nhgis_extract_tbl_shp)[[1]],
+    extract[[1]],
     ready_nhgis_extract_shp
   )
 })

@@ -1,0 +1,424 @@
+---
+title: "NHGIS API Requests"
+author: "Institute for Social Research and Data Innovation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NHGIS API Requests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, echo=FALSE, results="hide"}
+library(vcr)
+
+vcr_dir <- "fixtures"
+
+have_api_access <- TRUE
+
+if (!nzchar(Sys.getenv("IPUMS_API_KEY"))) {
+  if (dir.exists(vcr_dir) && length(dir(vcr_dir)) > 0) {
+    # Fake API token to fool ipumsr API functions
+    Sys.setenv("IPUMS_API_KEY" = "foobar")
+  } else {
+    # If there are no mock files nor API token, can't run API tests
+    have_api_access <- FALSE
+  }
+}
+
+vcr_configure(
+  filter_sensitive_data = list(
+    "<<<IPUMS_API_KEY>>>" = Sys.getenv("IPUMS_API_KEY")
+  ),
+  write_disk_path = vcr_dir,
+  dir = vcr_dir
+)
+
+check_cassette_names()
+
+# We do not expose detailed pagination options to users, but we do not want
+# to save a full record of summary metadata in a .yml fixture for this
+# vignette. This helper allows us to request just a few records, which
+# we pretend is the full set of records for the purposes of the vignette.
+get_truncated_metadata <- function(collection,
+                                   type,
+                                   page_size = 10,
+                                   max_pages = 1,
+                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
+  url <- ipumsr:::api_request_url(
+    collection = collection,
+    path = ipumsr:::metadata_request_path(collection, type),
+    queries = list(pageNumber = 1, pageSize = page_size)
+  )
+  
+  responses <- ipumsr:::ipums_api_paged_request(
+    url = url,
+    max_pages = max_pages,
+    delay = 0,
+    api_key = api_key
+  )
+  
+  metadata <- purrr::map_dfr(
+    responses,
+    function(res) {
+      content <- jsonlite::fromJSON(
+        httr::content(res, "text"),
+        simplifyVector = TRUE
+      )
+      
+      content$data
+    }
+  )
+  
+  # Recursively convert all metadata data.frames to tibbles and all
+  # camelCase names to snake_case
+  ipumsr:::convert_metadata(metadata)
+}
+```
+
+This vignette details the options available for requesting IPUMS NHGIS data 
+via the IPUMS API.
+
+If you haven't yet learned the basics of the IPUMS API workflow, you may want
+to start with the [IPUMS API introduction](ipums-api.html). The code below
+assumes you have registered and set up your API key as described there.
+
+In addition to NHGIS, the IPUMS API also supports several microdata projects.
+For details about obtaining IPUMS microdata using ipumsr, see
+the [microdata-specific vignette](ipums-api-micro.html).
+
+Before getting started, we'll load ipumsr and some helpful packages for this 
+demo:
+
+```{r, message=FALSE}
+library(ipumsr)
+library(dplyr)
+library(purrr)
+```
+
+## Basic IPUMS NHGIS concepts
+
+IPUMS NHGIS supports 3 main types of data products: datasets, time series 
+tables, and shapefiles.
+
+* A _dataset_ contains a collection of _data tables_ that each correspond to a
+particular tabulated summary statistic. A dataset is distinguished by the years, 
+geographic levels, and topics that it covers. For instance, 2021 1-year data 
+from the American Community Survey (ACS) is encapsulated in a single dataset. In
+other cases, a single census product will be split into multiple datasets.
+
+* A _time series table_ is a longitudinal data source that links comparable 
+statistics from multiple U.S. censuses in a single bundle. A table is 
+comprised of one or more related time series, each of which describes a single
+summary statistic measured at multiple times for a given geographic level.
+
+* A _shapefile_ (or _GIS file_) contains geographic data for a given 
+geographic level and year. Typically, these files are composed of polygon
+geometries containing the boundaries of census reporting areas.
+
+## IPUMS NHGIS metadata
+
+Of course, to make a request for any of these data sources, we have to know 
+the codes that the API uses to refer to them. Fortunately, we can browse the 
+metadata for all available IPUMS NHGIS data sources with `get_metadata_nhgis()`. 
+
+Users can view summary metadata for all available data sources of a given
+data type, or detailed metadata for a specific data source by name.
+
+### Summary metadata
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("nhgis-metadata-summary")
+```
+
+To see a summary of all available sources for a given data product type, 
+use the `type` argument. This returns a data frame containing the available
+datasets, data tables, time series tables, or shapefiles.
+
+```{r}
+ds <- get_metadata_nhgis(type = "datasets")
+
+head(ds)
+```
+
+We can use basic functions from [dplyr](https://dplyr.tidyverse.org/) to 
+filter the metadata to those records of
+interest. For instance, if we wanted to find all the data sources related to
+agriculture from the 1900 Census, we could filter on `group` and `description`:
+
+```{r}
+ds %>% 
+  filter(
+    group == "1900 Census", 
+    grepl("Agriculture", description)
+  )
+```
+
+The values listed in the `name` column correspond to the code that you would 
+use to request that dataset when creating an extract definition to be submitted 
+to the IPUMS API.
+
+Similarly, for time series tables:
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+# Secretly get truncated number of tst records because otherwise the .yml
+# fixture becomes very large.
+
+# Make sure that any code that uses this metadata is consistent with the output
+# that would be obtained were the entire metadata set loaded!
+tst <- get_truncated_metadata("nhgis", "time_series_tables")
+```
+
+```{r, eval=FALSE}
+tst <- get_metadata_nhgis("time_series_tables")
+```
+
+While some of the metadata fields are consistent across different data types,
+some, like `geographic_integration`, are specific to time series tables:
+
+```{r}
+head(tst)
+```
+
+Note that for time series tables, some metadata fields are stored in list
+columns, where each entry is itself a data frame:
+
+```{r}
+tst$years[[1]]
+
+tst$geog_levels[[1]]
+```
+
+To filter on these columns, we can use `map_lgl()` from 
+[purrr](https://purrr.tidyverse.org/). For instance, to find all time series 
+tables that include data from a particular year:
+
+```{r}
+# Iterate over each `years` entry, identifying whether that entry
+# contains "1840" in its `name` column.
+tst %>%
+  filter(map_lgl(years, ~ "1840" %in% .x$name))
+```
+
+For more details on working with nested data frames, see the documentation for
+[dplyr](https://dplyr.tidyverse.org/) and [purrr](https://purrr.tidyverse.org/).
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("nhgis-metadata-summary")
+```
+
+### Detailed metadata
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("nhgis-metadata-detailed")
+```
+
+Once we have identified a data source of interest, we can find out more about
+its detailed options by providing its name to the corresponding argument of
+`get_metadata_nhgis()`:
+
+```{r}
+cAg_meta <- get_metadata_nhgis(dataset = "1900_cAg")
+```
+
+This provides a comprehensive list of the possible specifications for the input
+data source. For instance, for the 1900_cAg dataset, we have 66 tables to
+choose from, and 3 possible geographic levels:
+
+```{r}
+cAg_meta$data_tables
+
+cAg_meta$geog_levels
+```
+
+You can also get detailed metadata for an individual data table. Since data
+tables belong to specific datasets, both need to be specified to identify a
+data table:
+
+```{r}
+get_metadata_nhgis(dataset = "1900_cAg", data_table = "NT2")
+```
+
+Note that the `name` element is the one that contains the codes used for 
+interacting with the IPUMS API. The `nhgis_code` element refers to the 
+prefix attached to individual variables in the output data, and the API will 
+throw an error if you use it in an extract definition.
+For more details on interpreting each of the provided metadata elements, see 
+the documentation for `get_metadata_nhgis()`.
+
+Now that we have identified some of our options, we can go ahead and define
+an extract request to submit to the IPUMS API.
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("nhgis-metadata-detailed")
+```
+
+## Defining an IPUMS NHGIS extract request
+
+To create an extract definition containing the specifications for a specific
+set of IPUMS NHGIS data, use `define_extract_nhgis()`.
+
+When you define an extract request, you can specify the data to be
+included in the extract and indicate the desired format and layout.
+
+### Basic extract definitions
+
+Let's say we're interested in getting state-level data on the number of 
+farms and their average size from the 1900_cAg dataset that we identified above. 
+As we can see in the metadata, these data are contained in tables NT2 and NT3:
+
+```{r}
+cAg_meta$data_tables
+```
+
+To request these data, we need to make an explicit
+_dataset specification_. All datasets must be associated with a selection of
+data tables and geographic levels. We can use the `ds_spec()` helper function
+to specify our selections for these parameters. `ds_spec()` bundles all the selections for a given dataset together into 
+a single object (in this case, a `ds_spec` object):
+
+```{r}
+dataset <- ds_spec(
+  "1900_cAg", 
+  data_tables = c("NT1", "NT2"), 
+  geog_levels = "state"
+)
+
+str(dataset)
+```
+
+This dataset specification can then be provided to the extract defintion:
+
+```{r}
+nhgis_ext <- define_extract_nhgis(
+  description = "Example farm data in 1900",
+  datasets = dataset
+)
+
+nhgis_ext
+```
+
+(Dataset specifications can also include selections for `years` and 
+`breakdown_values`, but these are not available for all datasets.)
+
+Similarly, to make a request for time series tables, use the `tst_spec()`
+helper. This makes a `tst_spec` object containing a time series table 
+specification.
+
+Time series tables do not contain individual data tables, but do require a 
+geographic level selection, and allow an optional selection of years:
+
+```{r}
+define_extract_nhgis(
+  description = "Example time series table request",
+  time_series_tables = tst_spec(
+    "CW3", 
+    geog_levels = c("county", "tract"),
+    years = c("1990", "2000")
+  )
+)
+```
+
+An attempt to define an extract that does not have all the required 
+specifications for a given dataset or time series table will throw an error:
+
+```{r, error=TRUE}
+define_extract_nhgis(
+  description = "Invalid extract",
+  datasets = ds_spec("1900_STF1", data_tables = "NP1")
+)
+```
+
+Note that it is still possible to make invalid extract requests 
+(for instance, by requesting a dataset or table that doesn't exist). 
+This kind of issue will be caught upon submission to the API, not upon the
+creation of the extract definition.
+
+Shapefiles don't have any additional specification options, and therefore 
+can be requested simply by providing their names:
+
+```{r}
+define_extract_nhgis(
+  description = "Example shapefiles request",
+  shapefiles = c("us_county_2021_tl2021", "us_county_2020_tl2020")
+)
+```
+
+### More complicated extract definitions
+
+It's possible to request data for multiple datasets (or time series tables)
+in a single extract definition. To do so, pass a `list` of `ds_spec`
+or `tst_spec` objects in `define_extract_nhgis()`:
+
+```{r}
+define_extract_nhgis(
+  description = "Slightly more complicated extract request",
+  datasets = list(
+    ds_spec("2018_ACS1", "B01001", "state"),
+    ds_spec("2019_ACS1", "B01001", "state")
+  ),
+  shapefiles = c("us_state_2018_tl2018", "us_state_2019_tl2019")
+)
+```
+
+For extracts with multiple datasets or time series tables, it may be easier 
+to generate the specifications independently before creating your extract 
+request object. You can quickly create multiple `ds_spec` objects by 
+iterating across the specifications you want to include. Here, we use purrr
+to do so, but you could also use a `for` loop:
+
+```{r}
+ds_names <- c("2019_ACS1", "2018_ACS1")
+tables <- c("B01001", "B01002")
+geogs <- c("county", "state")
+
+# For each dataset to include, create a specification with the
+# data tabels and geog levels indicated above
+datasets <- purrr::map(
+  ds_names,
+  ~ ds_spec(
+    name = .x, 
+    data_tables = tables, 
+    geog_levels = geogs
+  )
+)
+
+nhgis_ext <- define_extract_nhgis(
+  description = "Slightly more complicated extract request",
+  datasets = datasets
+)
+
+nhgis_ext
+```
+
+This workflow also makes it easy to quickly update the specifications in the
+future. For instance, to add the 2017 ACS 1-year data to the extract definition 
+above, you'd only need to add `"2017_ACS1"` to the `ds_names` variable. 
+The iteration would automatically add the selected tables and geog levels for 
+the new dataset. (This workflow works particularly well for ACS datasets, which 
+often have the same data table names across datasets.)
+
+### Additional options
+
+IPUMS NHGIS extract definitions also support additional options to modify the 
+format of the extract's resulting data files. See the documentation for 
+`define_extract_nhgis()` for more details on these options.
+
+## Next steps
+
+Once you have defined an extract request, you can submit the extract for
+processing:
+
+```{r, eval=FALSE}
+nhgis_ext_submitted <- submit_extract(nhgis_ext)
+```
+
+The workflow for submitting and monitoring an extract request and downloading
+its files when complete is described in the 
+[IPUMS API introduction](ipums-api.html).

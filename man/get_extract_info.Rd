@@ -2,18 +2,10 @@
 % Please edit documentation in R/api_extract_info.R
 \name{get_extract_info}
 \alias{get_extract_info}
-\alias{get_recent_extracts_info}
 \alias{get_last_extract_info}
-\title{Get information about submitted extract requests}
+\title{Retrieve the definition and latest status of an extract request}
 \usage{
 get_extract_info(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
-
-get_recent_extracts_info(
-  collection = NULL,
-  how_many = 10,
-  table = FALSE,
-  api_key = Sys.getenv("IPUMS_API_KEY")
-)
 
 get_last_extract_info(collection = NULL, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
@@ -28,9 +20,6 @@ form \code{"collection:number"} or as a vector of the form
 collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
 
-Extract numbers do not need to be zero-padded. That is, use \code{1}, not
-\code{"0001"}.
-
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 
@@ -39,38 +28,23 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 
 \item{collection}{Character string of the IPUMS collection for which to
-retrieve recent extract requests.
+retrieve extract history. Defaults to the current default
+collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.
 
-If \code{NULL}, uses the current default
-collection, if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.}
-
-\item{how_many}{The number of recent extract requests for which to retrieve
-information.}
-
-\item{table}{Logical value indicating whether to return recent extract
-information as a \code{\link[tibble:tbl_df-class]{tibble}} (\code{TRUE}) or a list of
-\code{\link[=ipums_extract-class]{ipums_extract}} objects (\code{FALSE}). Defaults to
-\code{FALSE}.}
+For a list of codes used to refer to each collection, see
+\code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
 }
 \value{
-For \code{get_extract_info()} and \code{get_last_extract_info()}, an
-\code{\link[=ipums_extract-class]{ipums_extract}} object.
-
-For \code{get_recent_extracts_info()}, a list of
-\code{\link[=ipums_extract-class]{ipums_extract}} objects (if \code{table = FALSE}) or
-a \code{\link[tibble:tbl_df-class]{tibble}} (if \code{table = TRUE}).
+An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Retrieve the definitions of your previously submitted extract requests.
+Retrieve the latest status of an extract request.
 
-Use \code{get_extract_info()} to retrieve the definition and current status of a
-specific extract request.
+\code{get_last_extract_info()} is a convenience function to retrieve the most
+recent extract for a given collection.
 
-Use \code{get_recent_extracts_info()} to retrieve the information for the most
-recent extract requests for a particular collection.
-
-\code{get_last_extract_info()} is a convenience function to retrieve the
-most recent extract request for a given collection.
+To browse definitions of your previously submitted extract requests, see
+\code{\link[=get_extract_history]{get_extract_history()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -86,37 +60,30 @@ submitted_extract <- submit_extract(my_extract)
 
 # Get latest info for the request associated with a given `ipums_extract`
 # object:
-get_extract_info(submitted_extract)
+updated_extract <- get_extract_info(submitted_extract)
+
+updated_extract$status
 
 # Or specify the extract collection and number:
 get_extract_info("usa:1")
-get_extract_info(c("usa", "1"))
-
-# Get information for multiple recent requests by specifying a collection
-# with no number:
-get_recent_extracts_info("usa")
+get_extract_info(c("usa", 1))
 
 # If you have a default collection, you can use the extract number alone:
 set_ipums_default_collection("nhgis")
 get_extract_info(1)
 
-# Or omit the number to get information about recent extracts
-get_recent_extracts_info(how_many = 3, table = TRUE)
-get_last_extract_info()
+# To get the most recent extract (for instance, if you have forgotten its
+# extract number), use `get_last_extract_info()`
+get_last_extract_info("nhgis")
 }
 }
 \seealso{
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to
-process and manage an extract request.
+\code{\link[=get_extract_history]{get_extract_history()}} to browse past extract definitions
+
+\code{\link[=wait_for_extract]{wait_for_extract()}} to wait for an extract to finish processing.
+
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
-
-\code{\link[=add_to_extract]{add_to_extract()}}, \code{\link[=remove_from_extract]{remove_from_extract()}} and \code{\link[=combine_extracts]{combine_extracts()}} to
-revise an extract definition.
-
-\code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
-
-\code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}} and \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}} to manipulate information
-about recent extract requests.
 }

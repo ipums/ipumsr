@@ -1,7 +1,7 @@
 test_that("Reading variables in lowercase is okay - DDI", {
-  ddi_regular <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+  ddi_regular <- read_ipums_ddi(ipums_example("cps_00157.xml"))
   ddi_lower <- read_ipums_ddi(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     lower_vars = TRUE
   )
 
@@ -27,11 +27,11 @@ test_that("Reading variables in lowercase is okay - DDI", {
 
 test_that("Reading variables in lowercase is okay - rect micro data", {
   rect_regular <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     verbose = FALSE
   )
   rect_lower <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     lower_vars = TRUE,
     verbose = FALSE
   )
@@ -41,7 +41,7 @@ test_that("Reading variables in lowercase is okay - rect micro data", {
   expect_equal(rect_regular, rect_lower)
 
   # Also should work when you set lower_vars when reading the DDI
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"), lower_vars = TRUE)
   data <- read_ipums_micro(ddi, verbose = FALSE)
 
   expect_equal(names(data), tolower(names(data)))
@@ -49,11 +49,11 @@ test_that("Reading variables in lowercase is okay - rect micro data", {
 
 test_that("Reading variables in lowercase is okay - hier micro data", {
   hier_regular <- read_ipums_micro_list(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     verbose = FALSE
   )
   hier_lower <- read_ipums_micro_list(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     lower_vars = TRUE,
     verbose = FALSE
   )
@@ -64,14 +64,14 @@ test_that("Reading variables in lowercase is okay - hier micro data", {
   expect_equal(hier_regular, hier_lower)
 
   # Also should work when you set lower_vars when reading the DDI
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"), lower_vars = TRUE)
   data <- read_ipums_micro_list(ddi, verbose = FALSE)
 
   expect_equal(names(data$PERSON), tolower(names(data$PERSON)))
 })
 
 test_that("lower_vars = TRUE warning on rectangular .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
   expect_warning(
     data <- read_ipums_micro(ddi, verbose = FALSE, lower_vars = TRUE),
@@ -82,7 +82,7 @@ test_that("lower_vars = TRUE warning on rectangular .dat.gz", {
 
 
 test_that("lower_vars = TRUE warning on hierarchical .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"))
 
   expect_warning(
     data <- read_ipums_micro_list(ddi, verbose = FALSE, lower_vars = TRUE),
@@ -93,18 +93,18 @@ test_that("lower_vars = TRUE warning on hierarchical .dat.gz", {
 
 
 test_that("lower_vars arg works on .csv.gz file", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00158.xml"), lower_vars = TRUE)
   data <- read_ipums_micro(
     ddi,
-    data_file = ipums_example("cps_00006.csv.gz"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE
   )
 
   expect_equal(names(data), tolower(names(data)))
 
   data <- read_ipums_micro(
-    ddi = ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    ddi = ipums_example("cps_00158.xml"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE,
     lower_vars = TRUE
   )
@@ -113,7 +113,7 @@ test_that("lower_vars arg works on .csv.gz file", {
 })
 
 test_that("lower_vars arg works on chunked rectangular .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
   expect_warning(
     data <- read_ipums_micro_chunked(
@@ -126,7 +126,7 @@ test_that("lower_vars arg works on chunked rectangular .dat.gz", {
   )
   expect_equal(names(data), toupper(names(data)))
 
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"), lower_vars = TRUE)
   data <- read_ipums_micro_chunked(
     ddi,
     IpumsDataFrameCallback$new(function(x, ...) x[x$statefip == 19, ]),
@@ -136,7 +136,7 @@ test_that("lower_vars arg works on chunked rectangular .dat.gz", {
   expect_equal(names(data), tolower(names(data)))
 
   data <- read_ipums_micro_chunked(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     IpumsDataFrameCallback$new(function(x, ...) x[x$statefip == 19, ]),
     verbose = FALSE,
     lower_vars = TRUE
@@ -147,7 +147,7 @@ test_that("lower_vars arg works on chunked rectangular .dat.gz", {
 
 
 test_that("lower_vars arg works on chunked hierarchical .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"))
 
   expect_warning(
     data <- read_ipums_micro_list_chunked(
@@ -172,7 +172,7 @@ test_that("lower_vars arg works on chunked hierarchical .dat.gz", {
   )
 
 
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"), lower_vars = TRUE)
   data <- read_ipums_micro_list_chunked(
     ddi,
     IpumsListCallback$new(function(x, ...) x),
@@ -193,7 +193,7 @@ test_that("lower_vars arg works on chunked hierarchical .dat.gz", {
   )
 
   data <- read_ipums_micro_list_chunked(
-    ddi = ipums_example("cps_00010.xml"),
+    ddi = ipums_example("cps_00159.xml"),
     IpumsListCallback$new(function(x, ...) x),
     verbose = FALSE,
     lower_vars = TRUE
@@ -214,20 +214,20 @@ test_that("lower_vars arg works on chunked hierarchical .dat.gz", {
 })
 
 test_that("lower_vars arg works on chunked .csv.gz file", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00158.xml"), lower_vars = TRUE)
   data <- read_ipums_micro_chunked(
     ddi,
     IpumsDataFrameCallback$new(function(x, ...) x[x$STATEFIP == 19, ]),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE
   )
 
   expect_equal(names(data), tolower(names(data)))
 
   data <- read_ipums_micro_chunked(
-    ddi = ipums_example("cps_00006.xml"),
+    ddi = ipums_example("cps_00158.xml"),
     IpumsDataFrameCallback$new(function(x, ...) x[x$STATEFIP == 19, ]),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE,
     lower_vars = TRUE
   )
@@ -236,7 +236,7 @@ test_that("lower_vars arg works on chunked .csv.gz file", {
 })
 
 test_that("lower_vars arg works with _yield on rectangular .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
   expect_warning(
     cps_yield_source <- read_ipums_micro_yield(
@@ -255,7 +255,7 @@ test_that("lower_vars arg works with _yield on rectangular .dat.gz", {
   expect_equal(names(data), toupper(names(data)))
 
 
-  ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"), lower_vars = TRUE)
   cps_yield_source <- read_ipums_micro_yield(
     ddi,
     verbose = FALSE
@@ -270,7 +270,7 @@ test_that("lower_vars arg works with _yield on rectangular .dat.gz", {
 
 
   cps_yield_source <- read_ipums_micro_yield(
-    ddi = ipums_example("cps_00006.xml"),
+    ddi = ipums_example("cps_00157.xml"),
     verbose = FALSE,
     lower_vars = TRUE
   )
@@ -285,7 +285,7 @@ test_that("lower_vars arg works with _yield on rectangular .dat.gz", {
 
 
 test_that("lower_vars arg works with _yield on hierarchical .dat.gz", {
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"))
 
   expect_warning(
     cps_yield_source <- read_ipums_micro_list_yield(
@@ -311,7 +311,7 @@ test_that("lower_vars arg works with _yield on hierarchical .dat.gz", {
   expect_equal(names(data$PERSON), toupper(names(data$PERSON)))
 
 
-  ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"), lower_vars = TRUE)
+  ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"), lower_vars = TRUE)
   cps_yield_source <- read_ipums_micro_list_yield(
     ddi,
     verbose = FALSE
@@ -332,7 +332,7 @@ test_that("lower_vars arg works with _yield on hierarchical .dat.gz", {
   expect_equal(names(data$PERSON), tolower(names(data$PERSON)))
 
   cps_yield_source <- read_ipums_micro_list_yield(
-    ddi = ipums_example("cps_00010.xml"),
+    ddi = ipums_example("cps_00159.xml"),
     verbose = FALSE,
     lower_vars = TRUE
   )

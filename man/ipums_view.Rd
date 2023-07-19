@@ -25,7 +25,7 @@ The filepath to the html (silently if \code{launch = TRUE})
 Requires that htmltools, shiny and DT are installed.
 }
 \examples{
-ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 \dontrun{
 ipums_view(ddi)
 ipums_view(ddi, "codebook.html", launch = FALSE)

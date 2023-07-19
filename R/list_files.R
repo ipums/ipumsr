@@ -17,7 +17,7 @@
 #'
 #'   While less useful, this can also be provided as a string specifying an
 #'   exact file name or an integer to match files by index position.
-#' @param types One or more of `"data"`, `"shape"`, or `"raster"` indicating
+#' @param types One or more of `"data"` or `"shape"` indicating
 #'   the type of files to include in the output. `"data"` refers to
 #'   tabular data sources, while `"shape"` refers to spatial data sources.
 #'

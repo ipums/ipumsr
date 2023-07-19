@@ -11,8 +11,7 @@ read_ipums_sf(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
-  ...,
-  verbose = deprecated(),
+  verbose = FALSE,
   shape_layer = deprecated()
 )
 }
@@ -42,17 +41,14 @@ contains multiple files that represent the same geographic units for
 different extents (e.g. block-level data for multiple states).}
 
 \item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. Defaults to \code{TRUE} if
-\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
+the file that each row originates from. Defaults to \code{FALSE} unless
+\code{bind_multiple = TRUE} and multiple files exist in \code{shape_file}.
 
 The column name will always be prefixed with \code{"layer"}, but will be
 adjusted to avoid name conflicts if another column named \code{"layer"} already
 exists in the data.}
 
-\item{...}{Additional arguments passed to \code{\link[sf:st_read]{sf::read_sf()}}.}
-
-\item{verbose}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{quiet}
-(passed to \code{sf::read_sf}) instead.}
+\item{verbose}{If \code{TRUE} report additional progress information on load.}
 
 \item{shape_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
 \code{file_select} instead.}
@@ -81,33 +77,28 @@ need to manually unzip the downloaded file before loading it into R.
 \dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"))
-
-shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
+data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 sf_data <- read_ipums_sf(shape_ex1)
 
 sf_data
 
+# To combine spatial data with tabular data without losing the attributes
+# included in the tabular data, use an ipums shape join:
+ipums_shape_full_join(data_ex1, sf_data, by = "GISJOIN")
+
+shape_ex2 <- ipums_example("nhgis0712_shape_small.zip")
+
 # Shapefiles are provided in .zip archives that may contain multiple
 # files. Select a single file with `file_select`:
 read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
 
-# Or row-bind files with `bind_multiple`
-# (Useful for files of the same geographic level that cover different
-# extents)
+# Or row-bind files with `bind_multiple`. This may be useful for files of
+# the same geographic level that cover different extents)
 read_ipums_sf(
   shape_ex2,
   file_select = matches("us_pmsa"),
   bind_multiple = TRUE
-)
-
-# To combine spatial data with tabular data without losing the attributes
-# included in the tabular data, use an ipums shape join:
-ipums_shape_full_join(
-  data_ex1,
-  sf_data,
-  by = "GISJOIN"
 )
 \dontshow{\}) # examplesIf}
 }

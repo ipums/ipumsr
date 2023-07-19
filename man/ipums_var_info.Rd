@@ -35,8 +35,8 @@ information.
 \description{
 Summarize the variable metadata for the variables found in an \link{ipums_ddi}
 object or data frame. Provides descriptions of variable
-content (\code{var_label} and \code{var_desc}) as well as labels for particular
-values in each variable (\code{val_labels}).
+content (\code{var_label} and \code{var_desc}) as well as labels of particular
+values for each variable (\code{val_labels}).
 
 \code{ipums_var_info()} produces a \code{\link[tibble:tbl_df-class]{tibble}} summary
 of multiple variables at once.
@@ -65,7 +65,7 @@ variable metadata, as many data processing operations will remove these
 attributes from data frame-like objects.
 }
 \examples{
-ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
 # Info for all variables in a data source
 ipums_var_info(ddi)
@@ -76,6 +76,12 @@ ipums_var_desc(ddi, MONTH)
 ipums_var_label(ddi, MONTH)
 
 ipums_val_labels(ddi, MONTH)
+
+# NHGIS also supports variable-level metadata, though many fields
+# are not relevant and remain blank:
+cb <- read_nhgis_codebook(ipums_example("nhgis0972_csv.zip"))
+
+ipums_var_info(cb)
 }
 \seealso{
 \code{\link[=read_ipums_ddi]{read_ipums_ddi()}} or \code{\link[=read_nhgis_codebook]{read_nhgis_codebook()}} to read IPUMS metadata files.

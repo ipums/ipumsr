@@ -1,0 +1,85 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2
+    body:
+      encoding: ''
+      string: '{"description":"Data from 2017 PRCS","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us2017b":{}},"variables":{"RACE":{},"YEAR":{}},"caseSelectWho":"individuals","collection":"usa","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Mon, 17 Jul 2023 19:35:29 GMT
+      etag: W/"c9094ea8ad0096894f4d80975b8392cb"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 9fdd1edb-dace-4de7-ba92-e467d4fa3d19
+      x-runtime: '0.855612'
+      x-xss-protection: '0'
+      content-length: '549'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":326,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Data
+        from 2017 PRCS","samples":{"us2017b":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"RACE":{}},"collection":"usa"}}'
+  recorded_at: 2023-07-17 19:35:31 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=usa&version=2
+    body:
+      encoding: ''
+      string: '{"description":"Data from long ago","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","samples":{"us1880a":{}},"variables":{"SEX":{},"AGE":{},"LABFORCE":{}},"caseSelectWho":"individuals","collection":"usa","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Mon, 17 Jul 2023 19:35:31 GMT
+      etag: W/"d91c9184e92e6cedb8c6060545b5335d"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 91e9e137-e6f1-4b8b-bd56-d6db9852bcd2
+      x-runtime: '0.952393'
+      x-xss-protection: '0'
+      content-length: '599'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":327,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Data
+        from long ago","samples":{"us1880a":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"HHWT":{"preselected":true},"CLUSTER":{"preselected":true},"STRATA":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"SEX":{},"AGE":{},"LABFORCE":{}},"collection":"usa"}}'
+  recorded_at: 2023-07-17 19:35:31 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

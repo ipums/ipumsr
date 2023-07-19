@@ -1,0 +1,41 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=2&pageSize=3000
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 18:26:44 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 2894597a-9a90-4d89-ace5-a665471dd40f
+      x-runtime: '0.065414'
+      x-xss-protection: '0'
+      content-length: '98'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"Out of Range","status":{"code":404,"name":"Not Found"},"detail":"Invalid
+        pageSize: 3000"}'
+  recorded_at: 2023-04-26 18:26:44 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

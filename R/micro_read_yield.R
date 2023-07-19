@@ -3,12 +3,11 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read data from an IPUMS extract in yields
+#' Read data from an IPUMS microdata extract in yields
 #'
 #' @description
 #' Read a microdata dataset downloaded from the IPUMS extract system into an
 #' object that can read and operate on a group ("yield") of lines at a time.
-#'
 #' Use these functions to read a file that is too large to store in memory at
 #' a single time. They represent a more flexible implementation of
 #' [read_ipums_micro_chunked()] using R6.
@@ -16,7 +15,7 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
 #' See *Downloading IPUMS files* below for more information about downloading
 #' these files.
@@ -25,7 +24,7 @@
 #' in their handling of extracts that contain multiple record types.
 #' See *Data structures* below.
 #'
-#' Note that these functions can only read .dat(.gz) files, not .csv(.gz) files.
+#' Note that these functions only support fixed-width (.dat) data files.
 #'
 #' # Methods summary:
 #' These functions return a HipYield R6 object with the following methods:
@@ -98,7 +97,7 @@
 #'
 #' @examples
 #' # Create an IpumsLongYield object
-#' long_yield <- read_ipums_micro_yield(ipums_example("cps_00006.xml"))
+#' long_yield <- read_ipums_micro_yield(ipums_example("cps_00157.xml"))
 #'
 #' # Yield the first 10 rows of the data
 #' long_yield$yield(10)
@@ -123,7 +122,7 @@
 #' total_mn
 #'
 #' # Can also read hierarchical data as list:
-#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00010.xml"))
+#' list_yield <- read_ipums_micro_list_yield(ipums_example("cps_00159.xml"))
 #'
 #' # Yield size is based on total rows for all list elements
 #' list_yield$yield(10)

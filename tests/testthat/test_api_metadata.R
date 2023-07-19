@@ -1,115 +1,68 @@
-# Setup ------------------------------------------------------------------------
-
-if (have_api_access) {
-  # Summary metadata
-  vcr::use_cassette("nhgis-metadata-summary", {
-    ds_meta <- get_nhgis_metadata("datasets")
-    shp_meta <- get_nhgis_metadata("shapefiles")
-  })
-
-  # Filtered metadata
-  vcr::use_cassette("nhgis-metadata-filtered", {
-    tst_meta_filt <- suppressWarnings(
-      get_nhgis_metadata(
-        "time_series_tables",
-        description = c("Sex", "Age"),
-        years = c("1990", "2000"),
-        geographic_integration = "Standard",
-        foo = "bar"
-      )
-    )
-    ds_meta_filt <- get_nhgis_metadata(
-      "datasets",
-      name = c("1790_cPop", "1800_cPop"),
-      match_all = FALSE
-    )
-  })
-
-  # Single-source metadata
-  ds <- "2010_SF1a"
-  dt <- "P8"
-  tst <- "CM0"
-
-  vcr::use_cassette("nhgis-metadata-single-source", {
-    single_ds_meta <- get_nhgis_metadata(dataset = ds)
-    single_dt_meta <- get_nhgis_metadata(dataset = ds, data_table = dt)
-    single_tst_meta <- get_nhgis_metadata(time_series_table = tst)
-  })
-
-  test_that("API throws expected errors on bad metadata requests", {
-    # API Errors
-    vcr::use_cassette("nhgis-metadata-errors", {
-      expect_error(
-        get_nhgis_metadata(dataset = "bad-dataset"),
-        "Couldn\'t find Dataset"
-      )
-      expect_error(
-        get_nhgis_metadata(data_table = "bad-table", dataset = "1980_STF1"),
-        "Couldn\'t find DataTable"
-      )
-      expect_error(
-        get_nhgis_metadata(time_series_table = "bad-tst"),
-        "Couldn\'t find TimeSeriesTable"
-      )
-      expect_warning(
-        get_nhgis_metadata("time_series_tables", foo = "bar"),
-        "unrecognized metadata variables.+foo"
-      )
-    })
-  })
-
-  test_that("API throws expected authorization errors", {
-    skip_if_not_installed("withr")
-
-    vcr::use_cassette("nhgis-metadata-missing-api-key", {
-      expect_error(
-        withr::with_envvar(
-          new = c("IPUMS_API_KEY" = NA),
-          get_nhgis_metadata("datasets")
-        ),
-        "Authorization field missing"
-      )
-      expect_error(
-        withr::with_envvar(
-          new = c("IPUMS_API_KEY" = "foobar"),
-          get_nhgis_metadata("datasets")
-        ),
-        "Access to this API has been disallowed"
-      )
-    })
-  })
-}
-
-# Tests ------------------------------------------------------------------------
-
 test_that("We can get summary metadata", {
   skip_if_no_api_access(have_api_access)
 
-  expect_true(tibble::is_tibble(ds_meta))
-  expect_true(!is_empty(ds_meta))
-
-  expect_true(tibble::is_tibble(tst_meta_filt))
-  expect_true(!is_empty(tst_meta_filt))
+  vcr::use_cassette("nhgis-metadata-summary", {
+    shp_meta <- get_metadata_nhgis("shapefiles")
+  })
+  vcr::use_cassette("micro-metadata-summary", {
+    cps_meta <- get_sample_info("cps")
+  })
 
   expect_true(tibble::is_tibble(shp_meta))
   expect_true(!is_empty(shp_meta))
+  expect_equal(shp_meta$name[[1]], "us_state_1790_tl2000")
+
+  expect_true(tibble::is_tibble(cps_meta))
+  expect_true(!is_empty(cps_meta))
+  expect_equal(cps_meta$name[[1]], "cps1962_03s")
 })
 
-test_that("We can filter summary metadata", {
+test_that("We can iterate through pages to get all records", {
   skip_if_no_api_access(have_api_access)
 
-  expect_true(all(grepl("[Ss]ex", tst_meta_filt$description)))
-  expect_true(all(grepl("[Aa]ge", tst_meta_filt$description)))
-  expect_true(
-    all(purrr::map_lgl(tst_meta_filt$years, ~ all(c("1990", "2000") %in% .x)))
+  page_size <- 100
+
+  vcr::use_cassette("nhgis-metadata-summary-paged", {
+    responses <- ipums_api_paged_request(
+      url = api_request_url(
+        collection = "nhgis",
+        path = metadata_request_path("nhgis", "datasets"),
+        queries = list(pageNumber = 1, pageSize = page_size)
+      ),
+      max_pages = Inf
+    )
+  })
+
+  metadata <- convert_metadata(
+    purrr::map_dfr(
+      responses,
+      function(res) {
+        content <- jsonlite::fromJSON(
+          httr::content(res, "text"),
+          simplifyVector = TRUE
+        )
+
+        content$data
+      }
+    )
   )
-  expect_true(all(grepl("[Ss]tandard", tst_meta_filt$geographic_integration)))
 
-  expect_equal(nrow(ds_meta_filt), 2)
+  expect_true(tibble::is_tibble(metadata))
+  expect_true(!is_empty(metadata))
+
+  # Should have more records than the page_size if pagination worked
+  # as expected
+  expect_true(nrow(metadata) > page_size)
 })
 
-test_that("We can get metadata for specific data sources", {
+test_that("We can get metadata for single dataset", {
   skip_if_no_api_access(have_api_access)
+
+  ds <- "2010_SF1a"
+
+  vcr::use_cassette("nhgis-metadata-single-dataset", {
+    single_ds_meta <- get_metadata_nhgis(dataset = ds)
+  })
 
   expect_true(is_list(single_ds_meta))
   expect_equal(length(single_ds_meta), 10)
@@ -131,6 +84,16 @@ test_that("We can get metadata for specific data sources", {
       tibble::is_tibble(single_ds_meta$breakdowns$breakdown_values[[1]])
     )
   )
+})
+
+test_that("We can get metadata for single time series table", {
+  skip_if_no_api_access(have_api_access)
+
+  tst <- "CM0"
+
+  vcr::use_cassette("nhgis-metadata-single-tst", {
+    single_tst_meta <- get_metadata_nhgis(time_series_table = tst)
+  })
 
   expect_true(is_list(single_tst_meta))
   expect_equal(length(single_tst_meta), 7)
@@ -149,6 +112,17 @@ test_that("We can get metadata for specific data sources", {
       tibble::is_tibble(single_tst_meta$geog_levels)
     )
   )
+})
+
+test_that("We can get metadata for single data table", {
+  skip_if_no_api_access(have_api_access)
+
+  ds <- "2010_SF1a"
+  dt <- "P8"
+
+  vcr::use_cassette("nhgis-metadata-single-source", {
+    single_dt_meta <- get_metadata_nhgis(dataset = ds, data_table = dt)
+  })
 
   expect_equal(length(single_dt_meta), 7)
   expect_equal(
@@ -162,35 +136,36 @@ test_that("We can get metadata for specific data sources", {
   expect_true(tibble::is_tibble(single_dt_meta$variables))
 })
 
-test_that("We throw errors on bad metadata requests", {
-  skip_if_no_api_access(have_api_access)
-
+test_that("We throw errors on bad metadata specs prior to making request", {
   # Only one source per metadata request
   expect_error(
-    get_nhgis_metadata(dataset = c("A", "B")),
+    get_metadata_nhgis(dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(time_series_table = c("A", "B")),
+    get_metadata_nhgis(time_series_table = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_nhgis_metadata(data_table = "A", dataset = c("A", "B")),
+    get_metadata_nhgis(data_table = "A", dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
 
   # Table metadata needs dataset
   expect_error(
-    get_nhgis_metadata(data_table = c("A", "B")),
+    get_metadata_nhgis(data_table = c("A", "B")),
     "`data_table` must be specified with a corresponding `dataset`"
   )
   expect_error(
-    get_nhgis_metadata(data_table = "P8"),
+    get_metadata_nhgis(data_table = "P8"),
     "`data_table` must be specified with a corresponding `dataset`"
   )
 
-  expect_error(
-    get_nhgis_metadata(data_table = "bad table", dataset = "1980_STF1"),
-    "Unable to submit metadata request"
-  )
+  # This produces a low-level curl error and therefore is not submitted
+  # but on other OS it is submitted and would therefore need to be mocked.
+  # TODO: if we truly want to handle these errors ourselves we will
+  # likely need to validate the resulting request URL before submitting.
+  # expect_error(
+  #   get_metadata_nhgis(data_table = "bad table", dataset = "1980_STF1")
+  # )
 })

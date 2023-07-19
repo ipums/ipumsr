@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/92?collection=usa&version=beta
+    uri: https://api.ipums.org/extracts/328?collection=usa&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,28 +18,26 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 20 Jan 2023 20:02:50 GMT
-      etag: W/"3e0cbbf31d3f2252ee274b15aad5794b"
+      date: Mon, 17 Jul 2023 19:36:41 GMT
+      etag: W/"009accd2d80cd0fb2c75126ff888985e"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0 + Phusion Passenger(R) 6.0.15
-      status: 200 OK
+      server: nginx/1.18.0
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
-      x-powered-by: Phusion Passenger(R) 6.0.15
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ec016be3-2dcf-4b73-a19e-72b538395cc4
-      x-runtime: '0.352491'
-      x-xss-protection: 1; mode=block
-      content-length: '1893'
+      x-request-id: 227c33c2-9503-4a61-8b89-fb1ee69298d2
+      x-runtime: '0.466431'
+      x-xss-protection: '0'
+      content-length: '2002'
     body:
-      encoding: UTF-8
+      encoding: ''
       file: no
-      string: '{"data_structure":{"rectangular":{"on":"P"}},"data_format":"fixed_width","description":"USA
-        extract for API vignette","samples":{"us2018a":{},"us2019a":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"CLUSTER":{"preselected":true},"STATEFIP":{},"STRATA":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"SEX":{},"AGE":{},"RACE":{}},"download_links":{"basic_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.cbk","bytes":24947,"sha256":"2d65ae45c366e63ecf359acb3750ffe5644710add038863bb08d9a61abb886ce"},"R_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.R","bytes":406,"sha256":"379ea2cedfb63dbf8a1a8e28b2f288b1c2eba490868f2faa3e174212f76381c6"},"sas_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.sas","bytes":18242,"sha256":"11c32dcd66a3226317c9606ab2087bfaebf3fea81abe1aec696ff2392b4e7eb5"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.dat.gz","bytes":81939126,"sha256":"fb1f70f969f65f7a72e1d25757f8c7d8a45540ea216b479e512b817323d405fb"},"ddi_codebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.xml","bytes":90942,"sha256":"58985f5669dcca46c2ffda8a25dcfa1cfca61dcb993416e864fbad4dc680315b"},"spss_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.sps","bytes":18857,"sha256":"443d9f26cc34c522b69d8ea5979cf41e80362610ed1bfcfd28581b2ff8dd835b"},"stata_command_file":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/1945635/usa_00092.do","bytes":34433,"sha256":"449ba53b491449f33770926a0c28a62e6663e4a0b92e31d36530ba29ef89b3a4"}},"number":92,"status":"completed"}'
-  recorded_at: 2023-01-20 20:02:50 GMT
-  recorded_with: vcr/1.0.2, webmockr/0.8.0
+      string: '{"number":328,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"rCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.R","bytes":406,"sha256":"7fc529e22ec8c21a31dd6241671c73fa91ccabaa96a44af1ebfd542195d65e32"},"basicCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.cbk","bytes":25356,"sha256":"92ee5376d84f04d2bac25949753aeb698ec01eb648c573061a9e6ed7a79f8197"},"data":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.dat.gz","bytes":83827507,"sha256":"9ac6f484e0f9cc62aec1d3a87c92ac74cc0a518747d6814ea2b6292ade3f8bcf"},"stataCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.do","bytes":34951,"sha256":"20f153a1de0b31394a164f38df7107388a06152bee969fba9ff5a4587d3693c4"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.sas","bytes":18543,"sha256":"c40671875f99b2dcb0ee396739a12e2e4d97383567f3b6d0c47aa4f0d39e0531"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.sps","bytes":19145,"sha256":"7982029c31328f578c9f871f8e284a70a3be4186c53d870ad1e06a04f2895993"},"ddiCodebook":{"url":"https://api.ipums.org/downloads/usa/api/v1/extracts/2061574/usa_00328.xml","bytes":92152,"sha256":"5d0fd63eba56803df7527123b2438d4464207d0bd0917cc49561f77c16733c0d"}},"extractDefinition":{"version":2,"dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"USA
+        extract for API vignette","samples":{"us2018a":{},"us2019a":{}},"variables":{"YEAR":{"preselected":true},"SAMPLE":{"preselected":true},"SERIAL":{"preselected":true},"CBSERIAL":{"preselected":true},"HHWT":{"preselected":true},"CLUSTER":{"preselected":true},"STATEFIP":{},"STRATA":{"preselected":true},"GQ":{"preselected":true},"PERNUM":{"preselected":true},"PERWT":{"preselected":true},"SEX":{},"AGE":{},"MARST":{},"RACE":{}},"collection":"usa"}}'
+  recorded_at: 2023-07-17 19:36:41 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

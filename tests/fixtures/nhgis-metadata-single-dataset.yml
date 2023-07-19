@@ -1,0 +1,648 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/2010_SF1a?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 22:05:46 GMT
+      etag: W/"32c60454242accf7b28deb33d31c810f"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: f9a07fea-7b4f-4cac-b3ec-f87834806812
+      x-runtime: '0.009052'
+      x-xss-protection: '0'
+      content-length: '72949'
+    body:
+      encoding: ''
+      file: no
+      string: '{"name":"2010_SF1a","nhgisId":"ds172","group":"2010 Census","description":"SF
+        1a - P \u0026 H Tables [Blocks \u0026 Larger Areas]","sequence":4802,"hasMultipleDataTypes":false,"dataTables":[{"name":"P1","nhgisCode":"H7V","description":"Total
+        Population","sequence":1},{"name":"P2","nhgisCode":"H7W","description":"Urban
+        and Rural","sequence":2},{"name":"P3","nhgisCode":"H7X","description":"Race","sequence":3},{"name":"P4","nhgisCode":"H7Y","description":"Hispanic
+        or Latino Origin","sequence":4},{"name":"P5","nhgisCode":"H7Z","description":"Hispanic
+        or Latino Origin by Race","sequence":5},{"name":"P6","nhgisCode":"H70","description":"Race
+        (Total Races Tallied)","sequence":6},{"name":"P7","nhgisCode":"H71","description":"Hispanic
+        or Latino Origin by Race (Total Races Tallied)","sequence":7},{"name":"P8","nhgisCode":"H72","description":"Race","sequence":8},{"name":"P9","nhgisCode":"H73","description":"Hispanic
+        or Latino, and Not Hispanic or Latino by Race","sequence":9},{"name":"P10","nhgisCode":"H74","description":"Race
+        for the Population 18 Years and Over","sequence":10},{"name":"P11","nhgisCode":"H75","description":"Hispanic
+        or Latino, and Not Hispanic or Latino by Race for the Population 18 Years
+        and Over","sequence":11},{"name":"P12","nhgisCode":"H76","description":"Sex
+        by Age","sequence":12},{"name":"P13","nhgisCode":"H77","description":"Median
+        Age by Sex","sequence":13},{"name":"P14","nhgisCode":"H78","description":"Sex
+        by Age for the Population Under 20 Years","sequence":14},{"name":"P15","nhgisCode":"H79","description":"Hispanic
+        or Latino Origin of Householder by Race of Householder","sequence":15},{"name":"P16","nhgisCode":"H8A","description":"Population
+        in Households by Age","sequence":16},{"name":"P17","nhgisCode":"H8B","description":"Average
+        Household Size by Age","sequence":17},{"name":"P18","nhgisCode":"H8C","description":"Household
+        Type","sequence":18},{"name":"P19","nhgisCode":"H8D","description":"Household
+        Size by Household Type by Presence of Own Children","sequence":19},{"name":"P20","nhgisCode":"H8E","description":"Households
+        by Presence of People Under 18 Years by Household Type by Age of People Under
+        18 Years","sequence":20},{"name":"P21","nhgisCode":"H8F","description":"Households
+        by Age of Householder by Household Type by Presence of Related Children","sequence":21},{"name":"P22","nhgisCode":"H8G","description":"Household
+        Type by Age of Householder","sequence":22},{"name":"P23","nhgisCode":"H8H","description":"Households
+        by Presence of People 60 Years and Over by Household Type","sequence":23},{"name":"P24","nhgisCode":"H8I","description":"Households
+        by Presence of People 60 Years and Over, Household Size, and Household Type","sequence":24},{"name":"P25","nhgisCode":"H8J","description":"Households
+        by Presence of People 65 Years and Over, Household Size, and Household Type","sequence":25},{"name":"P26","nhgisCode":"H8K","description":"Households
+        by Presence of People 75 Years and Over, Household Size, and Household Type","sequence":26},{"name":"P27","nhgisCode":"H8L","description":"Households
+        by Presence of Nonrelatives","sequence":27},{"name":"P28","nhgisCode":"H8M","description":"Household
+        Type by Household Size","sequence":28},{"name":"P29","nhgisCode":"H8N","description":"Household
+        Type by Relationship","sequence":29},{"name":"P30","nhgisCode":"H8O","description":"Household
+        Type for the Population in Households","sequence":30},{"name":"P31","nhgisCode":"H8P","description":"Household
+        Type by Relationship for the Population Under 18 Years","sequence":31},{"name":"P32","nhgisCode":"H8Q","description":"Household
+        Type by Relationship by Age for the Population Under 18 Years","sequence":32},{"name":"P33","nhgisCode":"H8R","description":"Household
+        Type for the Population Under 18 Years in Households (Excluding Householders,
+        Spouses, and Unmarried Partners)","sequence":33},{"name":"P34","nhgisCode":"H8S","description":"Household
+        Type by Relationship for the Population 65 Years and Over","sequence":34},{"name":"P35","nhgisCode":"H8T","description":"Families","sequence":35},{"name":"P36","nhgisCode":"H8U","description":"Population
+        in Families by Age","sequence":36},{"name":"P37","nhgisCode":"H8V","description":"Average
+        Family Size by Age","sequence":37},{"name":"P38","nhgisCode":"H8W","description":"Family
+        Type by Presence and Age of Own Children","sequence":38},{"name":"P39","nhgisCode":"H8X","description":"Family
+        Type by Presence and Age of Related Children","sequence":39},{"name":"P40","nhgisCode":"H8Y","description":"Family
+        Type and Age for Own Children Under 18 Years","sequence":40},{"name":"P41","nhgisCode":"H8Z","description":"Age
+        of Grandchildren Under 18 Years Living with a Grandparent Householder","sequence":41},{"name":"P42","nhgisCode":"H80","description":"Group
+        Quarters Population by Group Quarters Type","sequence":42},{"name":"P43","nhgisCode":"H81","description":"Group
+        Quarters Population by Sex by Age by Group Quarters Type","sequence":43},{"name":"P44","nhgisCode":"H82","description":"Population
+        Substituted","sequence":44},{"name":"P45","nhgisCode":"H83","description":"Allocation
+        of Population Items","sequence":45},{"name":"P46","nhgisCode":"H84","description":"Allocation
+        of Race","sequence":46},{"name":"P47","nhgisCode":"H85","description":"Allocation
+        of Hispanic or Latino Origin","sequence":47},{"name":"P48","nhgisCode":"H86","description":"Allocation
+        of Sex","sequence":48},{"name":"P49","nhgisCode":"H87","description":"Allocation
+        of Age","sequence":49},{"name":"P50","nhgisCode":"H88","description":"Allocation
+        of Relationship","sequence":50},{"name":"P51","nhgisCode":"H89","description":"Allocation
+        of Population Items for the Population in Group Quarters","sequence":51},{"name":"P12A","nhgisCode":"H9A","description":"Sex
+        by Age (White Alone)","sequence":52},{"name":"P12B","nhgisCode":"H9B","description":"Sex
+        by Age (Black or African American Alone)","sequence":53},{"name":"P12C","nhgisCode":"H9C","description":"Sex
+        by Age (American Indian and Alaska Native Alone)","sequence":54},{"name":"P12D","nhgisCode":"H9D","description":"Sex
+        by Age (Asian Alone)","sequence":55},{"name":"P12E","nhgisCode":"H9E","description":"Sex
+        by Age (Native Hawaiian and Other Pacific Islander Alone)","sequence":56},{"name":"P12F","nhgisCode":"H9F","description":"Sex
+        by Age (Some Other Race Alone)","sequence":57},{"name":"P12G","nhgisCode":"H9G","description":"Sex
+        by Age (Two or More Races)","sequence":58},{"name":"P12H","nhgisCode":"H9H","description":"Sex
+        by Age (Hispanic or Latino)","sequence":59},{"name":"P12I","nhgisCode":"H9I","description":"Sex
+        by Age (White Alone, Not Hispanic or Latino)","sequence":60},{"name":"P13A","nhgisCode":"H9J","description":"Median
+        Age by Sex (White Alone)","sequence":61},{"name":"P13B","nhgisCode":"H9K","description":"Median
+        Age by Sex (Black or African American Alone)","sequence":62},{"name":"P13C","nhgisCode":"H9L","description":"Median
+        Age by Sex (American Indian and Alaska Native Alone)","sequence":63},{"name":"P13D","nhgisCode":"H9M","description":"Median
+        Age by Sex (Asian Alone)","sequence":64},{"name":"P13E","nhgisCode":"H9N","description":"Median
+        Age by Sex (Native Hawaiian and Other Pacific Islander Alone)","sequence":65},{"name":"P13F","nhgisCode":"H9O","description":"Median
+        Age by Sex (Some Other Race Alone)","sequence":66},{"name":"P13G","nhgisCode":"H9P","description":"Median
+        Age by Sex (Two or More Races)","sequence":67},{"name":"P13H","nhgisCode":"H9Q","description":"Median
+        Age by Sex (Hispanic or Latino)","sequence":68},{"name":"P13I","nhgisCode":"H9R","description":"Median
+        Age by Sex (White Alone, Not Hispanic or Latino)","sequence":69},{"name":"P16A","nhgisCode":"H9S","description":"Population
+        in Households by Age (White Alone Householder)","sequence":70},{"name":"P16B","nhgisCode":"H9T","description":"Population
+        in Households by Age (Black or African American Alone Householder)","sequence":71},{"name":"P16C","nhgisCode":"H9U","description":"Population
+        in Households by Age (American Indian and Alaska Native Alone Householder)","sequence":72},{"name":"P16D","nhgisCode":"H9V","description":"Population
+        in Households by Age (Asian Alone Householder)","sequence":73},{"name":"P16E","nhgisCode":"H9W","description":"Population
+        in Households by Age (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":74},{"name":"P16F","nhgisCode":"H9X","description":"Population
+        in Households by Age (Some Other Race Alone Householder)","sequence":75},{"name":"P16G","nhgisCode":"H9Y","description":"Population
+        in Households by Age (Two or More Races Householder)","sequence":76},{"name":"P16H","nhgisCode":"H9Z","description":"Population
+        in Households by Age (Hispanic or Latino Householder)","sequence":77},{"name":"P16I","nhgisCode":"H90","description":"Population
+        in Households by Age (White Alone, Not Hispanic or Latino Householder)","sequence":78},{"name":"P17A","nhgisCode":"H91","description":"Average
+        Household Size by Age (White Alone Householder)","sequence":79},{"name":"P17B","nhgisCode":"H92","description":"Average
+        Household Size by Age (Black or African American Alone Householder)","sequence":80},{"name":"P17C","nhgisCode":"H93","description":"Average
+        Household Size by Age (American Indian and Alaska Native Alone Householder)","sequence":81},{"name":"P17D","nhgisCode":"H94","description":"Average
+        Household Size by Age (Asian Alone Householder)","sequence":82},{"name":"P17E","nhgisCode":"H95","description":"Average
+        Household Size by Age (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":83},{"name":"P17F","nhgisCode":"H96","description":"Average
+        Household Size by Age (Some Other Race Alone Householder)","sequence":84},{"name":"P17G","nhgisCode":"H97","description":"Average
+        Household Size by Age (Two or More Races Householder)","sequence":85},{"name":"P17H","nhgisCode":"H98","description":"Average
+        Household Size by Age (Hispanic or Latino Householder)","sequence":86},{"name":"P17I","nhgisCode":"H99","description":"Average
+        Household Size by Age (White Alone, Not Hispanic or Latino Householder)","sequence":87},{"name":"P18A","nhgisCode":"IAA","description":"Household
+        Type (White Alone Householder)","sequence":88},{"name":"P18B","nhgisCode":"IAB","description":"Household
+        Type (Black or African American Alone Householder)","sequence":89},{"name":"P18C","nhgisCode":"IAC","description":"Household
+        Type (American Indian and Alaska Native Alone Householder)","sequence":90},{"name":"P18D","nhgisCode":"IAD","description":"Household
+        Type (Asian Alone Householder)","sequence":91},{"name":"P18E","nhgisCode":"IAE","description":"Household
+        Type (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":92},{"name":"P18F","nhgisCode":"IAF","description":"Household
+        Type (Some Other Race Alone Householder)","sequence":93},{"name":"P18G","nhgisCode":"IAG","description":"Household
+        Type (Two or More Races Householder)","sequence":94},{"name":"P18H","nhgisCode":"IAH","description":"Household
+        Type (Hispanic or Latino Householder)","sequence":95},{"name":"P18I","nhgisCode":"IAI","description":"Household
+        Type (White Alone, Not Hispanic or Latino Householder)","sequence":96},{"name":"P28A","nhgisCode":"IAJ","description":"Household
+        Type by Household Size (White Alone Householder)","sequence":97},{"name":"P28B","nhgisCode":"IAK","description":"Household
+        Type by Household Size (Black or African American Alone Householder)","sequence":98},{"name":"P28C","nhgisCode":"IAL","description":"Household
+        Type by Household Size (American Indian and Alaska Native Alone Householder)","sequence":99},{"name":"P28D","nhgisCode":"IAM","description":"Household
+        Type by Household Size (Asian Alone Householder)","sequence":100},{"name":"P28E","nhgisCode":"IAN","description":"Household
+        Type by Household Size (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":101},{"name":"P28F","nhgisCode":"IAO","description":"Household
+        Type by Household Size (Some Other Race Alone Householder)","sequence":102},{"name":"P28G","nhgisCode":"IAP","description":"Household
+        Type by Household Size (Two or More Races Householder)","sequence":103},{"name":"P28H","nhgisCode":"IAQ","description":"Household
+        Type by Household Size (Hispanic or Latino Householder)","sequence":104},{"name":"P28I","nhgisCode":"IAR","description":"Household
+        Type by Household Size (White Alone, Not Hispanic or Latino Householder)","sequence":105},{"name":"P29A","nhgisCode":"IAS","description":"Household
+        Type by Relationship (White Alone)","sequence":106},{"name":"P29B","nhgisCode":"IAT","description":"Household
+        Type by Relationship (Black or African American Alone)","sequence":107},{"name":"P29C","nhgisCode":"IAU","description":"Household
+        Type by Relationship (American Indian and Alaska Native Alone)","sequence":108},{"name":"P29D","nhgisCode":"IAV","description":"Household
+        Type by Relationship (Asian Alone)","sequence":109},{"name":"P29E","nhgisCode":"IAW","description":"Household
+        Type by Relationship (Native Hawaiian and Other Pacific Islander Alone)","sequence":110},{"name":"P29F","nhgisCode":"IAX","description":"Household
+        Type by Relationship (Some Other Race Alone)","sequence":111},{"name":"P29G","nhgisCode":"IAY","description":"Household
+        Type by Relationship (Two or More Races)","sequence":112},{"name":"P29H","nhgisCode":"IAZ","description":"Household
+        Type by Relationship (Hispanic or Latino)","sequence":113},{"name":"P29I","nhgisCode":"IA0","description":"Household
+        Type by Relationship (White Alone, Not Hispanic or Latino)","sequence":114},{"name":"P31A","nhgisCode":"IA1","description":"Household
+        Type by Relationship for the Population Under 18 Years (White Alone)","sequence":115},{"name":"P31B","nhgisCode":"IA2","description":"Household
+        Type by Relationship for the Population Under 18 Years (Black or African American
+        Alone)","sequence":116},{"name":"P31C","nhgisCode":"IA3","description":"Household
+        Type by Relationship for the Population Under 18 Years (American Indian and
+        Alaska Native Alone)","sequence":117},{"name":"P31D","nhgisCode":"IA4","description":"Household
+        Type by Relationship for the Population Under 18 Years (Asian Alone)","sequence":118},{"name":"P31E","nhgisCode":"IA5","description":"Household
+        Type by Relationship for the Population Under 18 Years (Native Hawaiian and
+        Other Pacific Islander Alone)","sequence":119},{"name":"P31F","nhgisCode":"IA6","description":"Household
+        Type by Relationship for the Population Under 18 Years (Some Other Race Alone)","sequence":120},{"name":"P31G","nhgisCode":"IA7","description":"Household
+        Type by Relationship for the Population Under 18 Years (Two or More Races)","sequence":121},{"name":"P31H","nhgisCode":"IA8","description":"Household
+        Type by Relationship for the Population Under 18 Years (Hispanic or Latino)","sequence":122},{"name":"P31I","nhgisCode":"IA9","description":"Household
+        Type by Relationship for the Population Under 18 Years (White Alone, Not Hispanic
+        or Latino)","sequence":123},{"name":"P34A","nhgisCode":"IBA","description":"Household
+        Type by Relationship for the Population 65 Years and Over (White Alone)","sequence":124},{"name":"P34B","nhgisCode":"IBB","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Black or African
+        American Alone)","sequence":125},{"name":"P34C","nhgisCode":"IBC","description":"Household
+        Type by Relationship for the Population 65 Years and Over (American Indian
+        and Alaska Native Alone)","sequence":126},{"name":"P34D","nhgisCode":"IBD","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Asian Alone)","sequence":127},{"name":"P34E","nhgisCode":"IBE","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Native Hawaiian
+        and Other Pacific Islander Alone)","sequence":128},{"name":"P34F","nhgisCode":"IBF","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Some Other Race
+        Alone)","sequence":129},{"name":"P34G","nhgisCode":"IBG","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Two or More Races)","sequence":130},{"name":"P34H","nhgisCode":"IBH","description":"Household
+        Type by Relationship for the Population 65 Years and Over (Hispanic or Latino)","sequence":131},{"name":"P34I","nhgisCode":"IBI","description":"Household
+        Type by Relationship for the Population 65 Years and Over (White Alone, Not
+        Hispanic or Latino)","sequence":132},{"name":"P35A","nhgisCode":"IBJ","description":"Families
+        (White Alone Householder)","sequence":133},{"name":"P35B","nhgisCode":"IBK","description":"Families
+        (Black or African American Alone Householder)","sequence":134},{"name":"P35C","nhgisCode":"IBL","description":"Families
+        (American Indian and Alaska Native Alone Householder)","sequence":135},{"name":"P35D","nhgisCode":"IBM","description":"Families
+        (Asian Alone Householder)","sequence":136},{"name":"P35E","nhgisCode":"IBN","description":"Families
+        (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":137},{"name":"P35F","nhgisCode":"IBO","description":"Families
+        (Some Other Race Alone Householder)","sequence":138},{"name":"P35G","nhgisCode":"IBP","description":"Families
+        (Two or More Races Householder)","sequence":139},{"name":"P35H","nhgisCode":"IBQ","description":"Families
+        (Hispanic or Latino Householder)","sequence":140},{"name":"P35I","nhgisCode":"IBR","description":"Families
+        (White Alone, Not Hispanic or Latino Householder)","sequence":141},{"name":"P36A","nhgisCode":"IBS","description":"Population
+        in Families by Age (White Alone Householder)","sequence":142},{"name":"P36B","nhgisCode":"IBT","description":"Population
+        in Families by Age (Black or African American Alone Householder)","sequence":143},{"name":"P36C","nhgisCode":"IBU","description":"Population
+        in Families by Age (American Indian and Alaska Native Alone Householder)","sequence":144},{"name":"P36D","nhgisCode":"IBV","description":"Population
+        in Families by Age (Asian Alone Householder)","sequence":145},{"name":"P36E","nhgisCode":"IBW","description":"Population
+        in Families by Age (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":146},{"name":"P36F","nhgisCode":"IBX","description":"Population
+        in Families by Age (Some Other Race Alone Householder)","sequence":147},{"name":"P36G","nhgisCode":"IBY","description":"Population
+        in Families by Age (Two or More Races Householder)","sequence":148},{"name":"P36H","nhgisCode":"IBZ","description":"Population
+        in Families by Age (Hispanic or Latino Householder)","sequence":149},{"name":"P36I","nhgisCode":"IB0","description":"Population
+        in Families by Age (White Alone, Not Hispanic or Latino Householder)","sequence":150},{"name":"P37A","nhgisCode":"IB1","description":"Average
+        Family Size by Age (White Alone Householder)","sequence":151},{"name":"P37B","nhgisCode":"IB2","description":"Average
+        Family Size by Age (Black or African American Alone Householder)","sequence":152},{"name":"P37C","nhgisCode":"IB3","description":"Average
+        Family Size by Age (American Indian and Alaska Native Alone Householder)","sequence":153},{"name":"P37D","nhgisCode":"IB4","description":"Average
+        Family Size by Age (Asian Alone Householder)","sequence":154},{"name":"P37E","nhgisCode":"IB5","description":"Average
+        Family Size by Age (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":155},{"name":"P37F","nhgisCode":"IB6","description":"Average
+        Family Size by Age (Some Other Race Alone Householder)","sequence":156},{"name":"P37G","nhgisCode":"IB7","description":"Average
+        Family Size by Age (Two or More Races Householder)","sequence":157},{"name":"P37H","nhgisCode":"IB8","description":"Average
+        Family Size by Age (Hispanic or Latino Householder)","sequence":158},{"name":"P37I","nhgisCode":"IB9","description":"Average
+        Family Size by Age (White Alone, Not Hispanic or Latino Householder)","sequence":159},{"name":"P38A","nhgisCode":"ICA","description":"Family
+        Type by Presence and Age of Own Children (White Alone Householder)","sequence":160},{"name":"P38B","nhgisCode":"ICB","description":"Family
+        Type by Presence and Age of Own Children (Black or African American Alone
+        Householder)","sequence":161},{"name":"P38C","nhgisCode":"ICC","description":"Family
+        Type by Presence and Age of Own Children (American Indian and Alaska Native
+        Alone Householder)","sequence":162},{"name":"P38D","nhgisCode":"ICD","description":"Family
+        Type by Presence and Age of Own Children (Asian Alone Householder)","sequence":163},{"name":"P38E","nhgisCode":"ICE","description":"Family
+        Type by Presence and Age of Own Children (Native Hawaiian and Other Pacific
+        Islander Alone Householder)","sequence":164},{"name":"P38F","nhgisCode":"ICF","description":"Family
+        Type by Presence and Age of Own Children (Some Other Race Alone Householder)","sequence":165},{"name":"P38G","nhgisCode":"ICG","description":"Family
+        Type by Presence and Age of Own Children (Two or More Races Householder)","sequence":166},{"name":"P38H","nhgisCode":"ICH","description":"Family
+        Type by Presence and Age of Own Children (Hispanic or Latino Householder)","sequence":167},{"name":"P38I","nhgisCode":"ICI","description":"Family
+        Type by Presence and Age of Own Children (White Alone, Not Hispanic or Latino
+        Householder)","sequence":168},{"name":"P39A","nhgisCode":"ICJ","description":"Family
+        Type by Presence and Age of Related Children (White Alone Householder)","sequence":169},{"name":"P39B","nhgisCode":"ICK","description":"Family
+        Type by Presence and Age of Related Children (Black or African American Alone
+        Householder)","sequence":170},{"name":"P39C","nhgisCode":"ICL","description":"Family
+        Type by Presence and Age of Related Children (American Indian and Alaska Native
+        Alone Householder)","sequence":171},{"name":"P39D","nhgisCode":"ICM","description":"Family
+        Type by Presence and Age of Related Children (Asian Alone Householder)","sequence":172},{"name":"P39E","nhgisCode":"ICN","description":"Family
+        Type by Presence and Age of Related Children (Native Hawaiian and Other Pacific
+        Islander Alone Householder)","sequence":173},{"name":"P39F","nhgisCode":"ICO","description":"Family
+        Type by Presence and Age of Related Children (Some Other Race Alone Householder)","sequence":174},{"name":"P39G","nhgisCode":"ICP","description":"Family
+        Type by Presence and Age of Related Children (Two or More Races Householder)","sequence":175},{"name":"P39H","nhgisCode":"ICQ","description":"Family
+        Type by Presence and Age of Related Children (Hispanic or Latino Householder)","sequence":176},{"name":"P39I","nhgisCode":"ICR","description":"Family
+        Type by Presence and Age of Related Children (White Alone, Not Hispanic or
+        Latino Householder)","sequence":177},{"name":"H1","nhgisCode":"IFC","description":"Housing
+        Units","sequence":178},{"name":"H2","nhgisCode":"IFD","description":"Urban
+        and Rural","sequence":179},{"name":"H3","nhgisCode":"IFE","description":"Occupancy
+        Status","sequence":180},{"name":"H4","nhgisCode":"IFF","description":"Tenure","sequence":181},{"name":"H5","nhgisCode":"IFG","description":"Vacancy
+        Status","sequence":182},{"name":"H6","nhgisCode":"IFH","description":"Race
+        of Householder","sequence":183},{"name":"H7","nhgisCode":"IFI","description":"Hispanic
+        or Latino Origin of Householder by Race of Householder","sequence":184},{"name":"H8","nhgisCode":"IFJ","description":"Total
+        Races Tallied for Householders","sequence":185},{"name":"H9","nhgisCode":"IFK","description":"Hispanic
+        or Latino Origin of Householders by Total Races Tallied","sequence":186},{"name":"H10","nhgisCode":"IFL","description":"Total
+        Population in Occupied Housing Units","sequence":187},{"name":"H11","nhgisCode":"IFM","description":"Total
+        Population in Occupied Housing Units by Tenure","sequence":188},{"name":"H12","nhgisCode":"IFN","description":"Average
+        Household Size of Occupied Housing Units by Tenure","sequence":189},{"name":"H13","nhgisCode":"IFO","description":"Household
+        Size","sequence":190},{"name":"H14","nhgisCode":"IFP","description":"Tenure
+        by Race of Householder","sequence":191},{"name":"H15","nhgisCode":"IFQ","description":"Tenure
+        by Hispanic or Latino Origin of Householder","sequence":192},{"name":"H16","nhgisCode":"IFR","description":"Tenure
+        by Household Size","sequence":193},{"name":"H17","nhgisCode":"IFS","description":"Tenure
+        by Age of Householder","sequence":194},{"name":"H18","nhgisCode":"IFT","description":"Tenure
+        by Household Type by Age of Householder","sequence":195},{"name":"H19","nhgisCode":"IFU","description":"Tenure
+        by Presence of People Under 18 Years (Excluding Householders, Spouses, and
+        Unmarried Partners)","sequence":196},{"name":"H20","nhgisCode":"IFV","description":"Occupied
+        Housing Units Substituted","sequence":197},{"name":"H21","nhgisCode":"IFW","description":"Allocation
+        of Vacancy Status","sequence":198},{"name":"H22","nhgisCode":"IFX","description":"Allocation
+        of Tenure","sequence":199},{"name":"H11A","nhgisCode":"IFY","description":"Total
+        Population in Occupied Housing Units by Tenure (White Alone Householder)","sequence":200},{"name":"H11B","nhgisCode":"IFZ","description":"Total
+        Population in Occupied Housing Units by Tenure (Black or African American
+        Alone Householder)","sequence":201},{"name":"H11C","nhgisCode":"IF0","description":"Total
+        Population in Occupied Housing Units by Tenure (American Indian and Alaska
+        Native Alone Householder)","sequence":202},{"name":"H11D","nhgisCode":"IF1","description":"Total
+        Population in Occupied Housing Units by Tenure (Asian Alone Householder)","sequence":203},{"name":"H11E","nhgisCode":"IF2","description":"Total
+        Population in Occupied Housing Units by Tenure (Native Hawaiian and Other
+        Pacific Islander Alone Householder)","sequence":204},{"name":"H11F","nhgisCode":"IF3","description":"Total
+        Population in Occupied Housing Units by Tenure (Some Other Race Alone Householder)","sequence":205},{"name":"H11G","nhgisCode":"IF4","description":"Total
+        Population in Occupied Housing Units by Tenure (Two or More Races Householder)","sequence":206},{"name":"H11H","nhgisCode":"IF5","description":"Total
+        Population in Occupied Housing Units by Tenure (Hispanic or Latino Householder)","sequence":207},{"name":"H11I","nhgisCode":"IF6","description":"Total
+        Population in Occupied Housing Units by Tenure (White Alone, Not Hispanic
+        or Latino Householder)","sequence":208},{"name":"H12A","nhgisCode":"IF7","description":"Average
+        Household Size of Occupied Housing Units by Tenure (White Alone Householder)","sequence":209},{"name":"H12B","nhgisCode":"IF8","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Black or African American
+        Alone Householder)","sequence":210},{"name":"H12C","nhgisCode":"IF9","description":"Average
+        Household Size of Occupied Housing Units by Tenure (American Indian and Alaska
+        Native Alone Householder)","sequence":211},{"name":"H12D","nhgisCode":"IGA","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Asian Alone Householder)","sequence":212},{"name":"H12E","nhgisCode":"IGB","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Native Hawaiian and Other
+        Pacific Islander Alone Householder)","sequence":213},{"name":"H12F","nhgisCode":"IGC","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Some Other Race Alone
+        Householder)","sequence":214},{"name":"H12G","nhgisCode":"IGD","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Two or More Races Householder)","sequence":215},{"name":"H12H","nhgisCode":"IGE","description":"Average
+        Household Size of Occupied Housing Units by Tenure (Hispanic or Latino Householder)","sequence":216},{"name":"H12I","nhgisCode":"IGF","description":"Average
+        Household Size of Occupied Housing Units by Tenure (White Alone, Not Hispanic
+        or Latino Householder)","sequence":217},{"name":"H16A","nhgisCode":"IGG","description":"Tenure
+        by Household Size (White Alone Householder)","sequence":218},{"name":"H16B","nhgisCode":"IGH","description":"Tenure
+        by Household Size (Black or African American Alone Householder)","sequence":219},{"name":"H16C","nhgisCode":"IGI","description":"Tenure
+        by Household Size (American Indian and Alaska Native Alone Householder)","sequence":220},{"name":"H16D","nhgisCode":"IGJ","description":"Tenure
+        by Household Size (Asian Alone Householder)","sequence":221},{"name":"H16E","nhgisCode":"IGK","description":"Tenure
+        by Household Size (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":222},{"name":"H16F","nhgisCode":"IGL","description":"Tenure
+        by Household Size (Some Other Race Alone Householder)","sequence":223},{"name":"H16G","nhgisCode":"IGM","description":"Tenure
+        by Household Size (Two or More Races Householder)","sequence":224},{"name":"H16H","nhgisCode":"IGN","description":"Tenure
+        by Household Size (Hispanic or Latino Householder)","sequence":225},{"name":"H16I","nhgisCode":"IGO","description":"Tenure
+        by Household Size (White Alone, Not Hispanic or Latino Householder)","sequence":226},{"name":"H17A","nhgisCode":"IGP","description":"Tenure
+        by Age of Householder (White Alone Householder)","sequence":227},{"name":"H17B","nhgisCode":"IGQ","description":"Tenure
+        by Age of Householder (Black or African American Alone Householder)","sequence":228},{"name":"H17C","nhgisCode":"IGR","description":"Tenure
+        by Age of Householder (American Indian and Alaska Native Alone Householder)","sequence":229},{"name":"H17D","nhgisCode":"IGS","description":"Tenure
+        by Age of Householder (Asian Alone Householder)","sequence":230},{"name":"H17E","nhgisCode":"IGT","description":"Tenure
+        by Age of Householder (Native Hawaiian and Other Pacific Islander Alone Householder)","sequence":231},{"name":"H17F","nhgisCode":"IGU","description":"Tenure
+        by Age of Householder (Some Other Race Alone Householder)","sequence":232},{"name":"H17G","nhgisCode":"IGV","description":"Tenure
+        by Age of Householder (Two or More Races Householder)","sequence":233},{"name":"H17H","nhgisCode":"IGW","description":"Tenure
+        by Age of Householder (Hispanic or Latino Householder)","sequence":234},{"name":"H17I","nhgisCode":"IGX","description":"Tenure
+        by Age of Householder (White Alone Householder, Not Hispanic or Latino)","sequence":235}],"geogLevels":[{"name":"nation","description":"Nation","hasGeogExtentSelection":false,"sequence":1},{"name":"region","description":"Region","hasGeogExtentSelection":false,"sequence":2},{"name":"division","description":"Division","hasGeogExtentSelection":false,"sequence":3},{"name":"state","description":"State","hasGeogExtentSelection":false,"sequence":4},{"name":"state_260","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State","hasGeogExtentSelection":false,"sequence":5},{"name":"state_290","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder--State","hasGeogExtentSelection":false,"sequence":6},{"name":"state_262","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State","hasGeogExtentSelection":false,"sequence":7},{"name":"state_264","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State","hasGeogExtentSelection":false,"sequence":8},{"name":"state_311","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":false,"sequence":9},{"name":"state_315","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State","hasGeogExtentSelection":false,"sequence":10},{"name":"state_331","description":"Combined
+        Statistical Area--State","hasGeogExtentSelection":false,"sequence":11},{"name":"state_333","description":"Combined
+        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":false,"sequence":12},{"name":"state_351","description":"New
+        England City and Town Area--State","hasGeogExtentSelection":false,"sequence":17},{"name":"state_356","description":"New
+        England City and Town Area--New England City and Town Area Division--State","hasGeogExtentSelection":false,"sequence":18},{"name":"state_336","description":"Combined
+        New England City and Town Area--State","hasGeogExtentSelection":false,"sequence":19},{"name":"state_338","description":"Combined
+        New England City and Town Area--New England City and Town Area--State","hasGeogExtentSelection":false,"sequence":20},{"name":"state_410","description":"Urban
+        Area--State","hasGeogExtentSelection":false,"sequence":22},{"name":"state_870","description":"5-Digit
+        ZIP Code Tabulation Area--State","hasGeogExtentSelection":false,"sequence":23},{"name":"county","description":"State--County","hasGeogExtentSelection":false,"sequence":25},{"name":"county_155","description":"State--Place--County","hasGeogExtentSelection":false,"sequence":27},{"name":"county_510_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County","hasGeogExtentSelection":false,"sequence":31},{"name":"county_612","description":"State--State
+        Legislative District (Upper Chamber)--County","hasGeogExtentSelection":false,"sequence":37},{"name":"county_622","description":"State--State
+        Legislative District (Lower Chamber)--County","hasGeogExtentSelection":false,"sequence":38},{"name":"county_282","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County","hasGeogExtentSelection":false,"sequence":39},{"name":"county_285","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County","hasGeogExtentSelection":false,"sequence":40},{"name":"county_288","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County","hasGeogExtentSelection":false,"sequence":41},{"name":"county_322","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--County","hasGeogExtentSelection":false,"sequence":42},{"name":"county_324","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--County","hasGeogExtentSelection":false,"sequence":43},{"name":"county_362","description":"State--New
+        England City and Town Area--County","hasGeogExtentSelection":false,"sequence":46},{"name":"county_365","description":"State--New
+        England City and Town Area--New England City and Town Area Division--County","hasGeogExtentSelection":false,"sequence":47},{"name":"county_431","description":"State--Urban
+        Area--County","hasGeogExtentSelection":false,"sequence":48},{"name":"county_881","description":"State--5-Digit
+        ZIP Code Tabulation Area--County","hasGeogExtentSelection":false,"sequence":50},{"name":"county_270","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County","hasGeogExtentSelection":false,"sequence":52},{"name":"county_272","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County","hasGeogExtentSelection":false,"sequence":53},{"name":"county_274","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County","hasGeogExtentSelection":false,"sequence":54},{"name":"county_313","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State--County","hasGeogExtentSelection":false,"sequence":55},{"name":"county_316","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State--County","hasGeogExtentSelection":false,"sequence":56},{"name":"county_353","description":"New
+        England City and Town Area--State--County","hasGeogExtentSelection":false,"sequence":59},{"name":"county_357","description":"New
+        England City and Town Area--New England City and Town Area Division--State--County","hasGeogExtentSelection":false,"sequence":60},{"name":"county_430","description":"Urban
+        Area--State--County","hasGeogExtentSelection":false,"sequence":62},{"name":"county_880","description":"5-Digit
+        ZIP Code Tabulation Area--State--County","hasGeogExtentSelection":false,"sequence":63},{"name":"tract","description":"State--County--Census
+        Tract","hasGeogExtentSelection":false,"sequence":65},{"name":"tract_080","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract","hasGeogExtentSelection":false,"sequence":66},{"name":"tract_158","description":"State--Place--County--Census
+        Tract","hasGeogExtentSelection":false,"sequence":72},{"name":"tract_511_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County--Census Tract","hasGeogExtentSelection":false,"sequence":73},{"name":"tract_631","description":"State--State
+        Legislative District (Upper Chamber)--County--Census Tract","hasGeogExtentSelection":false,"sequence":77},{"name":"tract_636","description":"State--State
+        Legislative District (Lower Chamber)--County--Census Tract","hasGeogExtentSelection":false,"sequence":78},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","hasGeogExtentSelection":true,"sequence":83},{"name":"blck_grp_091","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract--Block Group [2000 \u0026 2010
+        partition, pre-Urban/Rural]","hasGeogExtentSelection":true,"sequence":84},{"name":"blck_grp_090","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract--Urban/Rural--Block Group [2000
+        \u0026 2010 partition]","hasGeogExtentSelection":true,"sequence":89},{"name":"block","description":"State--County--Census
+        Tract--Block","hasGeogExtentSelection":true,"sequence":93},{"name":"cty_sub","description":"State--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":100},{"name":"cty_sub_521_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":106},{"name":"cty_sub_613","description":"State--State
+        Legislative District (Upper Chamber)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":112},{"name":"cty_sub_623","description":"State--State
+        Legislative District (Lower Chamber)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":113},{"name":"cty_sub_261","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision","hasGeogExtentSelection":false,"sequence":114},{"name":"cty_sub_265","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":115},{"name":"cty_sub_267","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":116},{"name":"cty_sub_363","description":"State--New
+        England City and Town Area--County--County Subdivision","hasGeogExtentSelection":false,"sequence":118},{"name":"cty_sub_366","description":"State--New
+        England City and Town Area--New England City and Town Area Division--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":119},{"name":"cty_sub_441","description":"State--Urban
+        Area--County--County Subdivision","hasGeogExtentSelection":false,"sequence":120},{"name":"cty_sub_271","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":121},{"name":"cty_sub_275","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":122},{"name":"cty_sub_277","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":123},{"name":"cty_sub_354","description":"New
+        England City and Town Area--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":126},{"name":"cty_sub_358","description":"New
+        England City and Town Area--New England City and Town Area Division--State--County--County
+        Subdivision","hasGeogExtentSelection":false,"sequence":127},{"name":"cty_sub_440","description":"Urban
+        Area--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":128},{"name":"submcd","description":"State--County--County
+        Subdivision--Subminor Civil Division","hasGeogExtentSelection":false,"sequence":129},{"name":"place","description":"State--Place","hasGeogExtentSelection":false,"sequence":145},{"name":"place_159","description":"State--County--Place","hasGeogExtentSelection":false,"sequence":149},{"name":"place_070","description":"State--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":152},{"name":"place_172","description":"State--Consolidated
+        City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":155},{"name":"place_531_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Place/Remainder","hasGeogExtentSelection":false,"sequence":156},{"name":"place_542_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Consolidated City--Place within
+        Consolidated City","hasGeogExtentSelection":false,"sequence":162},{"name":"place_614","description":"State--State
+        Legislative District (Upper Chamber)--Place/Remainder","hasGeogExtentSelection":false,"sequence":166},{"name":"place_644","description":"State--State
+        Legislative District (Upper Chamber)--Consolidated City--Place within Consolidated
+        City","hasGeogExtentSelection":false,"sequence":167},{"name":"place_624","description":"State--State
+        Legislative District (Lower Chamber)--Place/Remainder","hasGeogExtentSelection":false,"sequence":168},{"name":"place_645","description":"State--State
+        Legislative District (Lower Chamber)--Consolidated City--Place within Consolidated
+        City","hasGeogExtentSelection":false,"sequence":169},{"name":"place_263","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":170},{"name":"place_266","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":171},{"name":"place_268","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":172},{"name":"place_321","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Principal City","hasGeogExtentSelection":false,"sequence":173},{"name":"place_361","description":"State--New
+        England City and Town Area--Principal City","hasGeogExtentSelection":false,"sequence":179},{"name":"place_451","description":"State--Urban
+        Area--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":181},{"name":"place_465","description":"State--Urban
+        Area--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":182},{"name":"place_269","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--Place/Remainder","hasGeogExtentSelection":false,"sequence":183},{"name":"place_273","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":184},{"name":"place_276","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":185},{"name":"place_278","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":186},{"name":"place_312","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State--Principal City","hasGeogExtentSelection":false,"sequence":187},{"name":"place_352","description":"New
+        England City and Town Area--State--Principal City","hasGeogExtentSelection":false,"sequence":190},{"name":"place_450","description":"Urban
+        Area--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":193},{"name":"place_464","description":"Urban
+        Area--State--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":194},{"name":"c_city","description":"State--Consolidated
+        City","hasGeogExtentSelection":false,"sequence":196},{"name":"c_city_541_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Consolidated City","hasGeogExtentSelection":false,"sequence":198},{"name":"c_city_615","description":"State--State
+        Legislative District (Upper Chamber)--Consolidated City","hasGeogExtentSelection":false,"sequence":203},{"name":"c_city_625","description":"State--State
+        Legislative District (Lower Chamber)--Consolidated City","hasGeogExtentSelection":false,"sequence":204},{"name":"c_city_463","description":"State--Urban
+        Area--Consolidated City","hasGeogExtentSelection":false,"sequence":205},{"name":"c_city_462","description":"Urban
+        Area--State--Consolidated City","hasGeogExtentSelection":false,"sequence":206},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","hasGeogExtentSelection":false,"sequence":210},{"name":"stleg_up","description":"State--State
+        Legislative District (Upper Chamber)","hasGeogExtentSelection":false,"sequence":223},{"name":"stleg_lo","description":"State--State
+        Legislative District (Lower Chamber)","hasGeogExtentSelection":false,"sequence":226},{"name":"sd_elm","description":"State--School
+        District (Elementary)/Remainder","hasGeogExtentSelection":false,"sequence":229},{"name":"sd_sec","description":"State--School
+        District (Secondary)/Remainder","hasGeogExtentSelection":false,"sequence":234},{"name":"sd_uni","description":"State--School
+        District (Unified)/Remainder","hasGeogExtentSelection":false,"sequence":239},{"name":"anrc","description":"Alaska
+        Native Regional Corporation","hasGeogExtentSelection":false,"sequence":245},{"name":"anrc_560_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":248},{"name":"anrc_634","description":"State--State
+        Legislative District (Upper Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":253},{"name":"anrc_639","description":"State--State
+        Legislative District (Lower Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":254},{"name":"aianhh","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":255},{"name":"aianhh_280","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":256},{"name":"aianhh_144","description":"State--County--Census
+        Tract--American Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":257},{"name":"aianhh_154","description":"State--County--Census
+        Tract--Block Group--American Indian Area/Alaska Native Area/Hawaiian Home
+        Land","hasGeogExtentSelection":true,"sequence":258},{"name":"aianhh_550_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
+        Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":264},{"name":"aianhh_616","description":"State--State
+        Legislative District (Upper Chamber)--American Indian Area/Alaska Native Area/Hawaiian
+        Home Land","hasGeogExtentSelection":false,"sequence":269},{"name":"aianhh_626","description":"State--State
+        Legislative District (Lower Chamber)--American Indian Area/Alaska Native Area/Hawaiian
+        Home Land","hasGeogExtentSelection":false,"sequence":270},{"name":"res_only","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":271},{"name":"res_only_283","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":272},{"name":"res_only_551_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
+        Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":273},{"name":"res_only_646","description":"State--State
+        Legislative District (Upper Chamber)--American Indian Area/Alaska Native Area
+        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":278},{"name":"res_only_647","description":"State--State
+        Legislative District (Lower Chamber)--American Indian Area/Alaska Native Area
+        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":279},{"name":"trust","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":280},{"name":"trust_286","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":281},{"name":"trust_552_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area (Off-Reservation
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":282},{"name":"trust_648","description":"State--State
+        Legislative District (Upper Chamber)--American Indian Area (Off-Reservation
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":287},{"name":"trust_649","description":"State--State
+        Legislative District (Lower Chamber)--American Indian Area (Off-Reservation
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":288},{"name":"trbl_sub","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":289},{"name":"trbl_sub_253","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
+        Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":290},{"name":"trbl_sub_255","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":291},{"name":"trbl_sub_553_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
+        Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":293},{"name":"trbl_sub_554_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
+        Area (Reservation or Statistical Entity Only)--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":297},{"name":"trbl_sub_555_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--American Indian Area (Off-Reservation
+        Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":301},{"name":"trbl_sub_281","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":307},{"name":"trbl_sub_284","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
+        Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":308},{"name":"trbl_sub_287","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":309},{"name":"trbl_ct","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Census Tract","hasGeogExtentSelection":false,"sequence":310},{"name":"trbl_ct_291","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
+        Census Tract","hasGeogExtentSelection":false,"sequence":311},{"name":"trbl_ct_292","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Census
+        Tract","hasGeogExtentSelection":false,"sequence":312},{"name":"trbl_ct_257","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder--Tribal
+        Census Tract","hasGeogExtentSelection":false,"sequence":313},{"name":"trbl_bg","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Census Tract--Tribal
+        Block Group","hasGeogExtentSelection":false,"sequence":314},{"name":"trbl_bg_293","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
+        Census Tract--Tribal Block Group","hasGeogExtentSelection":false,"sequence":315},{"name":"trbl_bg_294","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Census
+        Tract--Tribal Block Group","hasGeogExtentSelection":false,"sequence":316},{"name":"trbl_bg_259","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder--Tribal
+        Census Tract--Tribal Block Group","hasGeogExtentSelection":false,"sequence":317},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":319},{"name":"cbsa_332","description":"Combined
+        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":320},{"name":"cbsa_320","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":321},{"name":"cbsa_34101","description":"State--Combined
+        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":322},{"name":"metdiv","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division","hasGeogExtentSelection":false,"sequence":323},{"name":"metdiv_323","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division","hasGeogExtentSelection":false,"sequence":324},{"name":"csa","description":"Combined
+        Statistical Area","hasGeogExtentSelection":false,"sequence":325},{"name":"csa_340","description":"State--Combined
+        Statistical Area","hasGeogExtentSelection":false,"sequence":326},{"name":"necta","description":"New
+        England City and Town Area","hasGeogExtentSelection":false,"sequence":344},{"name":"necta_337","description":"Combined
+        New England City and Town Area--New England City and Town Area","hasGeogExtentSelection":false,"sequence":345},{"name":"necta_360","description":"State--New
+        England City and Town Area","hasGeogExtentSelection":false,"sequence":346},{"name":"necta_346","description":"State--Combined
+        New England City and Town Area--New England City and Town Area","hasGeogExtentSelection":false,"sequence":347},{"name":"nectadiv","description":"New
+        England City and Town Area--New England City and Town Area Division","hasGeogExtentSelection":false,"sequence":348},{"name":"nectadiv_364","description":"State--New
+        England City and Town Area--New England City and Town Area Division","hasGeogExtentSelection":false,"sequence":349},{"name":"c_necta","description":"Combined
+        New England City and Town Area","hasGeogExtentSelection":false,"sequence":350},{"name":"c_necta_345","description":"State--Combined
+        New England City and Town Area","hasGeogExtentSelection":false,"sequence":351},{"name":"urb_area","description":"Urban
+        Area","hasGeogExtentSelection":false,"sequence":353},{"name":"urb_area_420","description":"State--Urban
+        Area","hasGeogExtentSelection":false,"sequence":354},{"name":"urbrural_085","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract--Urban/Rural","hasGeogExtentSelection":false,"sequence":359},{"name":"zcta","description":"5-Digit
+        ZIP Code Tabulation Area","hasGeogExtentSelection":false,"sequence":363},{"name":"zcta_871","description":"State--5-Digit
+        ZIP Code Tabulation Area","hasGeogExtentSelection":false,"sequence":364},{"name":"sab201112_12","description":"School
+        Attendance Area for 2011-2012 Twelfth Grade","hasGeogExtentSelection":false,"sequence":368},{"name":"sab201112_11","description":"School
+        Attendance Area for 2011-2012 Eleventh Grade","hasGeogExtentSelection":false,"sequence":369},{"name":"sab201112_10","description":"School
+        Attendance Area for 2011-2012 Tenth Grade","hasGeogExtentSelection":false,"sequence":370},{"name":"sab201112_09","description":"School
+        Attendance Area for 2011-2012 Ninth Grade","hasGeogExtentSelection":false,"sequence":371},{"name":"sab201112_08","description":"School
+        Attendance Area for 2011-2012 Eighth Grade","hasGeogExtentSelection":false,"sequence":372},{"name":"sab201112_07","description":"School
+        Attendance Area for 2011-2012 Seventh Grade","hasGeogExtentSelection":false,"sequence":373},{"name":"sab201112_06","description":"School
+        Attendance Area for 2011-2012 Sixth Grade","hasGeogExtentSelection":false,"sequence":374},{"name":"sab201112_05","description":"School
+        Attendance Area for 2011-2012 Fifth Grade","hasGeogExtentSelection":false,"sequence":375},{"name":"sab201112_04","description":"School
+        Attendance Area for 2011-2012 Fourth Grade","hasGeogExtentSelection":false,"sequence":376},{"name":"sab201112_03","description":"School
+        Attendance Area for 2011-2012 Third Grade","hasGeogExtentSelection":false,"sequence":377},{"name":"sab201112_02","description":"School
+        Attendance Area for 2011-2012 Second Grade","hasGeogExtentSelection":false,"sequence":378},{"name":"sab201112_01","description":"School
+        Attendance Area for 2011-2012 First Grade","hasGeogExtentSelection":false,"sequence":379},{"name":"sab201112_00","description":"School
+        Attendance Area for 2011-2012 Kindergarten","hasGeogExtentSelection":false,"sequence":380},{"name":"sab201011_12","description":"School
+        Attendance Area for 2010-2011 Twelfth Grade","hasGeogExtentSelection":false,"sequence":381},{"name":"sab201011_11","description":"School
+        Attendance Area for 2010-2011 Eleventh Grade","hasGeogExtentSelection":false,"sequence":382},{"name":"sab201011_10","description":"School
+        Attendance Area for 2010-2011 Tenth Grade","hasGeogExtentSelection":false,"sequence":383},{"name":"sab201011_09","description":"School
+        Attendance Area for 2010-2011 Ninth Grade","hasGeogExtentSelection":false,"sequence":384},{"name":"sab201011_08","description":"School
+        Attendance Area for 2010-2011 Eighth Grade","hasGeogExtentSelection":false,"sequence":385},{"name":"sab201011_07","description":"School
+        Attendance Area for 2010-2011 Seventh Grade","hasGeogExtentSelection":false,"sequence":386},{"name":"sab201011_06","description":"School
+        Attendance Area for 2010-2011 Sixth Grade","hasGeogExtentSelection":false,"sequence":387},{"name":"sab201011_05","description":"School
+        Attendance Area for 2010-2011 Fifth Grade","hasGeogExtentSelection":false,"sequence":388},{"name":"sab201011_04","description":"School
+        Attendance Area for 2010-2011 Fourth Grade","hasGeogExtentSelection":false,"sequence":389},{"name":"sab201011_03","description":"School
+        Attendance Area for 2010-2011 Third Grade","hasGeogExtentSelection":false,"sequence":390},{"name":"sab201011_02","description":"School
+        Attendance Area for 2010-2011 Second Grade","hasGeogExtentSelection":false,"sequence":391},{"name":"sab201011_01","description":"School
+        Attendance Area for 2010-2011 First Grade","hasGeogExtentSelection":false,"sequence":392},{"name":"sab201011_00","description":"School
+        Attendance Area for 2010-2011 Kindergarten","hasGeogExtentSelection":false,"sequence":393},{"name":"sab_12","description":"School
+        Attendance Area for 2009-2010 Twelfth Grade","hasGeogExtentSelection":false,"sequence":394},{"name":"sab_11","description":"School
+        Attendance Area for 2009-2010 Eleventh Grade","hasGeogExtentSelection":false,"sequence":395},{"name":"sab_10","description":"School
+        Attendance Area for 2009-2010 Tenth Grade","hasGeogExtentSelection":false,"sequence":396},{"name":"sab_09","description":"School
+        Attendance Area for 2009-2010 Ninth Grade","hasGeogExtentSelection":false,"sequence":397},{"name":"sab_08","description":"School
+        Attendance Area for 2009-2010 Eighth Grade","hasGeogExtentSelection":false,"sequence":398},{"name":"sab_07","description":"School
+        Attendance Area for 2009-2010 Seventh Grade","hasGeogExtentSelection":false,"sequence":399},{"name":"sab_06","description":"School
+        Attendance Area for 2009-2010 Sixth Grade","hasGeogExtentSelection":false,"sequence":400},{"name":"sab_05","description":"School
+        Attendance Area for 2009-2010 Fifth Grade","hasGeogExtentSelection":false,"sequence":401},{"name":"sab_04","description":"School
+        Attendance Area for 2009-2010 Fourth Grade","hasGeogExtentSelection":false,"sequence":402},{"name":"sab_03","description":"School
+        Attendance Area for 2009-2010 Third Grade","hasGeogExtentSelection":false,"sequence":403},{"name":"sab_02","description":"School
+        Attendance Area for 2009-2010 Second Grade","hasGeogExtentSelection":false,"sequence":404},{"name":"sab_01","description":"School
+        Attendance Area for 2009-2010 First Grade","hasGeogExtentSelection":false,"sequence":405},{"name":"sab_00","description":"School
+        Attendance Area for 2009-2010 Kindergarten","hasGeogExtentSelection":false,"sequence":406}],"geographicInstances":[{"name":"010","description":"Alabama"},{"name":"020","description":"Alaska"},{"name":"040","description":"Arizona"},{"name":"050","description":"Arkansas"},{"name":"060","description":"California"},{"name":"080","description":"Colorado"},{"name":"090","description":"Connecticut"},{"name":"100","description":"Delaware"},{"name":"110","description":"District
+        Of Columbia"},{"name":"120","description":"Florida"},{"name":"130","description":"Georgia"},{"name":"150","description":"Hawaii"},{"name":"160","description":"Idaho"},{"name":"170","description":"Illinois"},{"name":"180","description":"Indiana"},{"name":"190","description":"Iowa"},{"name":"200","description":"Kansas"},{"name":"210","description":"Kentucky"},{"name":"220","description":"Louisiana"},{"name":"230","description":"Maine"},{"name":"240","description":"Maryland"},{"name":"250","description":"Massachusetts"},{"name":"260","description":"Michigan"},{"name":"270","description":"Minnesota"},{"name":"280","description":"Mississippi"},{"name":"290","description":"Missouri"},{"name":"300","description":"Montana"},{"name":"310","description":"Nebraska"},{"name":"320","description":"Nevada"},{"name":"330","description":"New
+        Hampshire"},{"name":"340","description":"New Jersey"},{"name":"350","description":"New
+        Mexico"},{"name":"360","description":"New York"},{"name":"370","description":"North
+        Carolina"},{"name":"380","description":"North Dakota"},{"name":"390","description":"Ohio"},{"name":"400","description":"Oklahoma"},{"name":"410","description":"Oregon"},{"name":"420","description":"Pennsylvania"},{"name":"440","description":"Rhode
+        Island"},{"name":"450","description":"South Carolina"},{"name":"460","description":"South
+        Dakota"},{"name":"470","description":"Tennessee"},{"name":"480","description":"Texas"},{"name":"490","description":"Utah"},{"name":"500","description":"Vermont"},{"name":"510","description":"Virginia"},{"name":"530","description":"Washington"},{"name":"540","description":"West
+        Virginia"},{"name":"550","description":"Wisconsin"},{"name":"560","description":"Wyoming"},{"name":"720","description":"Puerto
+        Rico"}],"breakdowns":[{"name":"bs32","type":"Spatial","description":"Geographic
+        Subarea (2010 Census and American Community Survey)","breakdownValues":[{"name":"bs32.ge00","description":"Total
+        area"},{"name":"bs32.ge01","description":"Urban"},{"name":"bs32.ge04","description":"Urban--in
+        urbanized area"},{"name":"bs32.ge05","description":"Urban--in urbanized area
+        of 5,000,000 or more population"},{"name":"bs32.ge06","description":"Urban--in
+        urbanized area of 2,500,000 to 4,999,999 population"},{"name":"bs32.ge07","description":"Urban--in
+        urbanized area of 1,000,000 to 2,499,999 population"},{"name":"bs32.ge08","description":"Urban--in
+        urbanized area of 500,000 to 999,999 population"},{"name":"bs32.ge09","description":"Urban--in
+        urbanized area of 250,000 to 499,999 population"},{"name":"bs32.ge10","description":"Urban--in
+        urbanized area of 100,000 to 249,999 population"},{"name":"bs32.ge11","description":"Urban--in
+        urbanized area of 50,000 to 99,999 population"},{"name":"bs32.ge28","description":"Urban--in
+        urban cluster"},{"name":"bs32.ge29","description":"Urban--in urban cluster
+        of 25,000 to 49,999 population"},{"name":"bs32.ge30","description":"Urban--in
+        urban cluster of 10,000 to 24,999 population"},{"name":"bs32.ge31","description":"Urban--in
+        urban cluster of 5,000 to 9,999 population"},{"name":"bs32.ge32","description":"Urban--in
+        urban cluster of 2,500 to 4,999 population"},{"name":"bs32.ge43","description":"Rural"},{"name":"bs32.ge44","description":"Rural--place"},{"name":"bs32.ge45","description":"Rural--place
+        of 2,500 or more population"},{"name":"bs32.ge46","description":"Rural--place
+        of 1,000 to 2,499 population"},{"name":"bs32.ge47","description":"Rural--place
+        of less than 1,000 population"},{"name":"bs32.ge48","description":"Rural--not
+        in place"},{"name":"bs32.ge89","description":"American Indian Reservation
+        and Trust Land--Federal"},{"name":"bs32.ge90","description":"American Indian
+        Reservation and Trust Land--State"},{"name":"bs32.ge91","description":"Oklahoma
+        Tribal Statistical Area"},{"name":"bs32.ge92","description":"Tribal Designated
+        Statistical Area"},{"name":"bs32.ge93","description":"Alaska Native Village
+        Statistical Area"},{"name":"bs32.ge94","description":"State Designated Tribal
+        Statistical Area"},{"name":"bs32.ge95","description":"Hawaiian Home Land"},{"name":"bs32.geA0","description":"In
+        metropolitan or micropolitan statistical area"},{"name":"bs32.geA1","description":"In
+        metropolitan or micropolitan statistical area--in principal city"},{"name":"bs32.geA2","description":"In
+        metropolitan or micropolitan statistical area--not in principal city"},{"name":"bs32.geA3","description":"In
+        metropolitan or micropolitan statistical area--urban"},{"name":"bs32.geA4","description":"In
+        metropolitan or micropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geA5","description":"In
+        metropolitan or micropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geA6","description":"In
+        metropolitan or micropolitan statistical area--rural"},{"name":"bs32.geC0","description":"In
+        metropolitan statistical area"},{"name":"bs32.geC1","description":"In metropolitan
+        statistical area--in principal city"},{"name":"bs32.geC2","description":"In
+        metropolitan statistical area--not in principal city"},{"name":"bs32.geC3","description":"In
+        metropolitan statistical area--urban"},{"name":"bs32.geC4","description":"In
+        metropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geC5","description":"In
+        metropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geC6","description":"In
+        metropolitan statistical area--rural"},{"name":"bs32.geC7","description":"In
+        metropolitan statistical area of 5,000,000 or more population"},{"name":"bs32.geC8","description":"In
+        metropolitan statistical area of 2,500,000 to 4,999,999 population"},{"name":"bs32.geC9","description":"In
+        metropolitan statistical area of 1,000,000 to 2,499,999 population"},{"name":"bs32.geCA","description":"In
+        metropolitan statistical area of 500,000 to 999,999 population"},{"name":"bs32.geCB","description":"In
+        metropolitan statistical area of 250,000 to 499,999 population"},{"name":"bs32.geCC","description":"In
+        metropolitan statistical area of 100,000 to 249,999 population"},{"name":"bs32.geCD","description":"In
+        metropolitan statistical area of less than 100,000 population"},{"name":"bs32.geCE","description":"In
+        metropolitan statistical area of 5,000,000 or more population--in principal
+        city"},{"name":"bs32.geCF","description":"In metropolitan statistical area
+        of 5,000,000 or more population--not in principal city"},{"name":"bs32.geCG","description":"In
+        metropolitan statistical area of 2,500,000 to 4,999,999 population--in principal
+        city"},{"name":"bs32.geCH","description":"In metropolitan statistical area
+        of 2,500,000 to 4,999,999 population--not in principal city"},{"name":"bs32.geCJ","description":"In
+        metropolitan statistical area of 1,000,000 to 2,499,999 population--in principal
+        city"},{"name":"bs32.geCK","description":"In metropolitan statistical area
+        of 1,000,000 to 2,499,999 population--not in principal city"},{"name":"bs32.geCL","description":"In
+        metropolitan statistical area of 500,000 to 999,999 population--in principal
+        city"},{"name":"bs32.geCM","description":"In metropolitan statistical area
+        of 500,000 to 999,999 population--not in principal city"},{"name":"bs32.geCN","description":"In
+        metropolitan statistical area of 250,000 to 499,999 population--in principal
+        city"},{"name":"bs32.geCP","description":"In metropolitan statistical area
+        of 250,000 to 499,999 population--not in principal city"},{"name":"bs32.geCQ","description":"In
+        metropolitan statistical area of 100,000 to 249,999 population--in principal
+        city"},{"name":"bs32.geCR","description":"In metropolitan statistical area
+        of 100,000 to 249,999 population--not in principal city"},{"name":"bs32.geCS","description":"In
+        metropolitan statistical area of less than 100,000 population--in principal
+        city"},{"name":"bs32.geCT","description":"In metropolitan statistical area
+        of less than 100,000 population--not in principal city"},{"name":"bs32.geE0","description":"In
+        micropolitan statistical area"},{"name":"bs32.geE1","description":"In micropolitan
+        statistical area--in principal city"},{"name":"bs32.geE2","description":"In
+        micropolitan statistical area--not in principal city"},{"name":"bs32.geE3","description":"In
+        micropolitan statistical area--urban"},{"name":"bs32.geE4","description":"In
+        micropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geE5","description":"In
+        micropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geE6","description":"In
+        micropolitan statistical area--rural"},{"name":"bs32.geE7","description":"In
+        micropolitan statistical area of 100,000 or more population"},{"name":"bs32.geE8","description":"In
+        micropolitan statistical area of 50,000 to 99,999 population"},{"name":"bs32.geE9","description":"In
+        micropolitan statistical area of 25,000 to 49,999 population"},{"name":"bs32.geEA","description":"In
+        micropolitan statistical area of less than 25,000 population"},{"name":"bs32.geEB","description":"In
+        micropolitan statistical area of 100,000 or more population--in principal
+        city"},{"name":"bs32.geEC","description":"In micropolitan statistical area
+        of 100,000 or more population--not in principal city"},{"name":"bs32.geED","description":"In
+        micropolitan statistical area of 50,000 to 99,999 population--in principal
+        city"},{"name":"bs32.geEE","description":"In micropolitan statistical area
+        of 50,000 to 99,999 population--not in principal city"},{"name":"bs32.geEF","description":"In
+        micropolitan statistical area of 25,000 to 49,999 population--in principal
+        city"},{"name":"bs32.geEG","description":"In micropolitan statistical area
+        of 25,000 to 49,999 population--not in principal city"},{"name":"bs32.geEH","description":"In
+        micropolitan statistical area of less than 25,000 population--in principal
+        city"},{"name":"bs32.geEJ","description":"In micropolitan statistical area
+        of less than 25,000 population--not in principal city"},{"name":"bs32.geG0","description":"Not
+        in metropolitan or micropolitan statistical area"},{"name":"bs32.geG1","description":"Not
+        in metropolitan or micropolitan statistical area--urban"},{"name":"bs32.geG2","description":"Not
+        in metropolitan or micropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geG3","description":"Not
+        in metropolitan or micropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geG4","description":"Not
+        in metropolitan or micropolitan statistical area--rural"},{"name":"bs32.geH0","description":"Not
+        in metropolitan statistical area"},{"name":"bs32.geH1","description":"Not
+        in metropolitan statistical area--urban"},{"name":"bs32.geH2","description":"Not
+        in metropolitan statistical area--urban--in urbanized area"},{"name":"bs32.geH3","description":"Not
+        in metropolitan statistical area--urban--in urban cluster"},{"name":"bs32.geH4","description":"Not
+        in metropolitan statistical area--rural"},{"name":"bs32.geM1","description":"In
+        New England city and town area--in principal city"},{"name":"bs32.geM2","description":"In
+        New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
+        New England city and town area--urban"},{"name":"bs32.geM6","description":"In
+        New England city and town area--rural"}]}]}'
+  recorded_at: 2023-04-26 22:05:46 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

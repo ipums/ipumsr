@@ -37,7 +37,7 @@ object, use sf::as_Spatial()."><meta property="og:image" content="http://tech.po
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Introduction</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -48,7 +48,8 @@ object, use sf::as_Spatial()."><meta property="og:image" content="http://tech.po
      
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
+  <ul class="dropdown-menu" role="menu"><li class="dropdown-header">IPUMS Data</li>
+    <li>
       <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
@@ -57,8 +58,16 @@ object, use sf::as_Spatial()."><meta property="og:image" content="http://tech.po
     <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">Interact with the IPUMS API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     <li>
@@ -112,7 +121,7 @@ Splitting this functionality allows for more control over the data reading
 and joining process.</p>
 <p>Please read spatial and tabular data separately using <code><a href="read_ipums_sf.html">read_ipums_sf()</a></code> and
 <code><a href="read_nhgis.html">read_nhgis()</a></code>. To join spatial and tabular data, use an
-<a href="ipums_shape_join.html">ipums_shape_*_join</a> function.</p>
+<code><a href="ipums_shape_join.html">ipums_shape_*_join</a></code> function.</p>
 <p>To convert an <code>sf</code> object to a <code>SpatialPolygonsDataFrame</code> or other <code>sp</code>
 object, use <code><a href="https://r-spatial.github.io/sf/reference/coerce-methods.html" class="external-link">sf::as_Spatial()</a></code>.</p>
     </div>

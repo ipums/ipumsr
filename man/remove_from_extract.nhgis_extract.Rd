@@ -7,11 +7,7 @@
 \method{remove_from_extract}{nhgis_extract}(
   extract,
   datasets = NULL,
-  data_tables = NULL,
   time_series_tables = NULL,
-  geog_levels = NULL,
-  years = NULL,
-  breakdown_values = NULL,
   geographic_extents = NULL,
   shapefiles = NULL,
   ...
@@ -20,43 +16,19 @@
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
-\item{datasets}{\href{https://www.nhgis.org/overview-nhgis-datasets}{Datasets}
-to remove from the extract definition. All \code{data_tables}, \code{geog_levels},
+\item{datasets}{Dataset specifications to remove from the extract definition.
+All \code{data_tables}, \code{geog_levels},
 \code{years}, and \code{breakdown_values} associated with the specified
 \code{datasets} will also be removed.}
 
-\item{data_tables}{Summary tables to remove from the \code{datasets} in the
-extract definition.
-
-See Details section for syntax options when an extract definition has
-multiple \code{datasets}.}
-
-\item{time_series_tables}{\href{https://www.nhgis.org/time-series-tables}{Time series tables}
-to remove from the extract definition. All \code{geog_levels}
+\item{time_series_tables}{Names of the time series tables
+to remove from the extract definition. All \code{geog_levels} and \code{years}
 associated  with the specified \code{time_series_tables} will also be removed.}
-
-\item{geog_levels}{Geographic levels to remove from the \code{datasets} and/or
-\code{time_series_tables} in the extract definition.
-
-See Details section for syntax options when an extract definition has
-multiple \code{datasets} or \code{time_series_tables}.}
-
-\item{years}{Years to remove from the \code{datasets} in the extract definition.
-
-See Details section for syntax options when an extract definition has
-multiple \code{datasets}.}
-
-\item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
-to remove from the \code{datasets} in the extract definition.
-
-See Details section for syntax options when an extract definition has
-multiple \code{datasets}..}
 
 \item{geographic_extents}{Geographic extents to remove from the extract
 definition.}
 
-\item{shapefiles}{\href{https://www.nhgis.org/gis-files}{Shapefiles} to remove
-from the extract definition.}
+\item{shapefiles}{Shapefiles to remove from the extract definition.}
 
 \item{...}{Ignored}
 }
@@ -64,79 +36,32 @@ from the extract definition.}
 A modified \code{nhgis_extract} object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Remove existing values from an IPUMS NHGIS extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
-In general, removing from an extract follows the same syntax conventions as
-used in \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}. See Details section
-for more information on how values passed to dataset and time series table
-subfields are interpreted.
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To add new values to an IPUMS NHGIS extract definition, use
-\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}. When replacing values,
-it is best to first add new values using
-\code{add_to_extract()} before removing values with
-\code{remove_from_extract()}. This limits the possibility of producing a
-temporarily invalid extract specification.
+\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \details{
-For extract definitions that include any \code{datasets},
-corresponding \code{data_tables} and \code{geog_levels} must be specified. For
-extract definitions that include any \code{time_series_tables}, corresponding
-\code{geog_levels} must be specified.
-
-NHGIS extract definitions may contain multiple \code{datasets} or
-\code{time_series_tables.} Each dataset or time series table is associated with
-several subfields that apply only to that particular dataset or time series
-table.
-
-The following arguments are removed from the extract definition's \code{datasets}:
-\itemize{
-\item \code{data_tables}
-\item \code{years}
-\item \code{breakdown_values}
-}
-
-The following arguments are removed from the extract definition's \code{datasets}
-\emph{and} \code{time_series_tables}:
-\itemize{
-\item \code{geog_levels}
-}
-
-To remove the values of these arguments from \emph{all} of the \code{datasets} and/or
-\code{time_series_tables} in the extract definition, pass the values as a vector.
-
-To remove the values of these arguments to \emph{specific} \code{datasets} and/or
-\code{time_series_tables} in the extract definition, pass the values as a named
-list. In this case, names should correspond to the \code{datasets} and/or
-\code{time_series_tables} and their associated values will only be removed from
-the indicated dataset or time series table.
-
-Note that subfields are modified \emph{after} the removal of any \code{datasets}
-and \code{time_series_tables} specified in \code{datasets} or
-\code{time_series_tables} arguments.
-
-While while it is possible to match
-elements to \code{datasets} and/or
-\code{time_series_tables} by index by providing an unnamed list, we recommend
-using names to explicitly specify the values that should be removed from each
-of the request's \code{datasets} and \code{time_series_tables}.
-
 Any extract fields that are rendered irrelevant after modifying the extract
 will be automatically removed. (For instance, if all \code{time_series_tables}
 are removed from an extract, \code{tst_layout} will also be
 removed.) Thus, it is not necessary to explicitly remove these values.
-
-Note that it is possible to produce invalid extracts using
-\code{remove_from_extract()} (for instance, an extract that includes a
-time series table without associated geographic levels). This can occur if
-you intend to replace the existing values for a required extract field.
-If the goal is not to remove values but to replace them,
-it is best to first use \code{add_to_extract()},
-then \code{remove_from_extract()}, as this will avoid the possibility
-of temporarily producing an invalid extract.
 
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
@@ -144,42 +69,46 @@ definition to an unsubmitted state.
 }
 \examples{
 extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  geog_levels = "county"
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "county"
+  ),
+  time_series_tables = list(
+    tst_spec("CW3", c("state", "county")),
+    tst_spec("CW5", c("state", "county"))
+  )
 )
 
-# Remove a table from existing datasets:
-remove_from_extract(extract, data_tables = "NP3")
-
-extract2 <- define_extract_nhgis(
-  time_series_tables = c("CW3", "CW5"),
-  geog_levels = c("state", "county")
-)
-
-# Remove an entire time series table
+# Providing names of datasets or time series tables will remove them and
+# all of their associated specifications from the extract:
 remove_from_extract(
-  extract2,
-  time_series_tables = "CW3"
+  extract,
+  time_series_tables = c("CW3", "CW5")
 )
 
-# Use a named list to remove values from specific datasets or time
-# series tables:
+# To remove detailed specifications from a dataset or time series table,
+# use `ds_spec()` or `tst_spec()`. The named dataset or time series table
+# will be retained in the extract, but modified by removing the indicated
+# specifications:
 remove_from_extract(
-  extract2,
-  geog_levels = list(CW5 = "state", CW3 = "county")
+  extract,
+  datasets = ds_spec("1990_STF1", data_tables = c("NP2", "NP3"))
 )
 
-# Replace values by using `add_to_extract()` first to avoid invalid
-# extract definitions
-revised <- add_to_extract(extract2, geog_levels = list(CW3 = "tract"))
-remove_from_extract(revised, geog_levels = list(CW3 = c("county", "state")))
+# To make multiple modifications, use a list of `ds_spec()` or `tst_spec()`
+# objects:
+remove_from_extract(
+  extract,
+  time_series_tables = list(
+    tst_spec("CW3", geog_levels = "county"),
+    tst_spec("CW5", geog_levels = "state")
+  )
+)
 }
 \seealso{
 \code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} to add values
 to an extract definition.
-
-\code{\link[=combine_extracts]{combine_extracts()}} to combine multiple extract definitions.
 
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.

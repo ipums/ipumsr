@@ -29,7 +29,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Introduction</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -40,7 +40,8 @@
      
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
+  <ul class="dropdown-menu" role="menu"><li class="dropdown-header">IPUMS Data</li>
+    <li>
       <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
@@ -49,8 +50,16 @@
     <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">Interact with the IPUMS API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     <li>
@@ -99,37 +108,74 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
 <div class="section level3">
-<h3 id="ipums-api-updates-development-version">IPUMS API updates<a class="anchor" aria-label="anchor" href="#ipums-api-updates-development-version"></a></h3>
-<ul><li><p>Adds API support for IPUMS NHGIS extract requests! Use <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code> to make an NHGIS extract definition.</p></li>
-<li><p>Adds API support for IPUMS NHGIS metadata. Use <code><a href="../reference/get_nhgis_metadata.html">get_nhgis_metadata()</a></code> to browse NHGIS data sources when creating an NHGIS extract request.</p></li>
-<li><p><code><a href="../reference/get_extract_info.html">get_recent_extracts_info()</a></code> replaces <code>get_recent_extracts_info_*()</code> functions. Set <code>table = TRUE</code> to get recent extract information in tabular format.</p></li>
-<li><p>Adds <code><a href="../reference/combine_extracts.html">combine_extracts()</a></code> to allow for the merging of multiple extract definitions.</p></li>
+<h3 id="breaking-changes--deprecations-development-version">Breaking Changes + Deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes--deprecations-development-version"></a></h3>
+<div class="section level4">
+<h4 id="ipums-api-development-version">IPUMS API<a class="anchor" aria-label="anchor" href="#ipums-api-development-version"></a></h4>
+<ul><li>
+<p>ipumsr now supports <strong>IPUMS API version 2</strong>, and no longer supports either the beta version or version 1 of the IPUMS API.</p>
+<p>This means that extract definitions saved in JSON format will no longer be compatible with ipumsr via <code><a href="../reference/save_extract_as_json.html">define_extract_from_json()</a></code>. To load extract definitions created under previous API versions, there are two options:</p>
+<ul><li><p>Rewrite the extract definition represented in the JSON file using the <code>define_extract_*()</code> function for the relevant IPUMS collection, then update the saved file with <code>save_extract_to_json()</code>.</p></li>
+<li><p>Update the JSON file by converting all <code>snake_case</code> fields to <code>camelCase</code>. For instance, <code>"data_format"</code> would become <code>"dataFormat"</code>. The <code>"api_version"</code> field will also need to be changed to <code>"version"</code> and set equal to <code>2</code>.</p></li>
+</ul><p>See the IPUMS developer documentation for more details on <a href="https://developer.ipums.org/docs/apiprogram/versioning/" class="external-link">API versioning</a> and <a href="https://developer.ipums.org/docs/apiprogram/changelog/" class="external-link">breaking changes</a> introduced in version 2.</p>
+</li>
+<li><p>The <code>ipums_extract</code> object structure has been updated. For IPUMS microdata projects, <code>variables</code> and <code>samples</code> are no longer stored as character vectors, but as lists. This accommodates new API version 2 features (see below). Use <code>names(x$variables)</code> instead of <code>x$variables</code> to access variable (and sample) names as a character vector.</p></li>
+<li>
+<p><code>get_recent_extracts_info_*()</code> functions have been deprecated. Additionally, tabular-formatted extract history is no longer supported, and conversion functions <code><a href="../reference/extract_tbl_to_list.html">extract_tbl_to_list()</a></code> and <code><a href="../reference/extract_tbl_to_list.html">extract_list_to_tbl()</a></code> have therefore been deprecated as well.</p>
+<p>Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to browse previous extract definitions in list format.</p>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="ipums-readers-development-version">IPUMS Readers<a class="anchor" aria-label="anchor" href="#ipums-readers-development-version"></a></h4>
+<ul><li><p><code><a href="../reference/read_nhgis_sf.html">read_nhgis_sf()</a></code> and <code><a href="../reference/read_nhgis_sf.html">read_nhgis_sp()</a></code> have been deprecated. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> to load spatial and tabular data, respectively. Join data with an <code>ipums_shape_*_join()</code> function.</p></li>
+<li><p><code>data_layer</code> and <code>shape_layer</code> arguments have been deprecated in favor of <code>file_select</code> throughout ipumsr. This provides clarity on the intended purpose of this argument. Deprecated functions that use the original argument names remain unchanged.</p></li>
+<li>
+<p>Support for objects from the sp package has been deprecated because of the upcoming retirement of rgdal. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> to load spatial data as an <code>sf</code> object. To convert to a <code>Spatial*</code> object, use <code><a href="https://r-spatial.github.io/sf/reference/coerce-methods.html" class="external-link">sf::as_Spatial()</a></code>.</p>
+<p>For more, see r-spatial’s <a href="https://r-spatial.org/r/2022/04/12/evolution.html" class="external-link">post</a> covering the evolution of several spatial packages.</p>
+</li>
+<li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> no longer defaults to <code>bind_multiple = TRUE</code>.</p></li>
+<li><p>Individual <code>ipums_list_*()</code> functions have been moved to <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>.</p></li>
+<li><p>Example files in <code><a href="../reference/ipums_example.html">ipums_example()</a></code> have been updated and include new file names.</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="ipums-terra-development-version">IPUMS Terra<a class="anchor" aria-label="anchor" href="#ipums-terra-development-version"></a></h4>
+<ul><li>
+<p>Support for IPUMS Terra has been discontinued. This includes deprecations to all <code>read_terra_*()</code> functions, the <code>types = "raster"</code> option in <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>, and <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>.</p>
+<p>NHGIS codebook reading was previously supported by <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>. This functionality has been moved to <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code>.</p>
+<p>For more on IPUMS Terra decommissioning, click <a href="https://terra.ipums.org/decommissioning" class="external-link">here</a>.</p>
+</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<div class="section level4">
+<h4 id="ipums-api-development-version-1">IPUMS API<a class="anchor" aria-label="anchor" href="#ipums-api-development-version-1"></a></h4>
+<ul><li>
+<p>Adds API support for IPUMS NHGIS and IPUMS International!</p>
+<ul><li>Use <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code> to create an NHGIS extract definition.</li>
+<li>Use <code><a href="../reference/define_extract-micro.html">define_extract_ipumsi()</a></code> to create an IPUMS International extract definition.</li>
+</ul></li>
+<li>
+<p>Adds support for IPUMS API version 2 features! This includes:</p>
+<ul><li>Detailed variable specifications for IPUMS microdata extract definitions, including case selections, attached characteristics, and data quality flags. Use <code><a href="../reference/var_spec.html">var_spec()</a></code> to add these specifications to variables in your extract definition.</li>
+<li>Additional definition-wide parameters for IPUMS microdata extracts, including <code>data_quality_flags</code> and <code>case_select_who</code>.</li>
+<li>Hierarchical extracts for IPUMS microdata extracts. Set <code>data_structure = "hiearchical"</code> to create a hierarchical extract definition.</li>
+<li>Year selection for time series tables in IPUMS NHGIS extract definitions. Use <code><a href="../reference/ds_spec.html">tst_spec()</a></code> to add year selections for time series tables.</li>
+</ul></li>
+<li>
+<p>Adds API support for IPUMS NHGIS metadata</p>
+<ul><li>Use <code><a href="../reference/get_metadata_nhgis.html">get_metadata_nhgis()</a></code> to browse NHGIS data sources. Metadata is available in summary form for all datasets, data tables, time series tables, and shapefiles as well as for individual datasets, data tables, and time series tables.</li>
+</ul></li>
 <li><p>Allows users to set a default IPUMS collection using <code><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection()</a></code>. Users with a default collection do not need to specify the IPUMS collection in functions that require it; instead, the default collection is used. This is a convenience for users who rely primarily on a single IPUMS collection.</p></li>
 <li><p><code><a href="../reference/wait_for_extract.html">wait_for_extract()</a></code> wait intervals no longer double after each status check. Instead, intervals increase by 10 seconds with each subsequent check.</p></li>
-<li><p>Extract definitions are now validated more frequently in extract-handling functions.</p></li>
-<li><p>Warnings encourage users to resubmit extracts that have expired. Previously, the distinction between expired and in-progress extract requests was not always made (e.g. in <code><a href="../reference/is_extract_ready.html">is_extract_ready()</a></code>)</p></li>
 </ul></div>
-<div class="section level3">
-<h3 id="ipums-reader-updates-development-version">IPUMS reader updates<a class="anchor" aria-label="anchor" href="#ipums-reader-updates-development-version"></a></h3>
-<ul><li><p>Adds handling for fixed-width extracts in <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>.</p></li>
-<li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> no longer defaults to <code>bind_multiple = TRUE</code>.</p></li>
-<li><p><code><a href="../reference/ipums_codebook.html">read_nhgis_codebook()</a></code> replaces <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code> and allows reading of raw codebook lines (as opposed to extracting codebook information into an <code>ipums_ddi</code> object) by setting <code>raw = TRUE</code>. Furthermore, <code>var_info</code> generated from NHGIS codebook files has been updated to include more contextual information about the data variables.</p></li>
-<li><p><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> now supports the passing of arguments to underlying readr functions <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code> and <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">readr::read_fwf()</a></code>. <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> defaults will typically be appropriate, but users now can adjust data-reading parameters as needed. Note that some of these options may impact ipumsr reading functionality (e.g. attaching variable metadata to data files).</p></li>
+<div class="section level4">
+<h4 id="ipums-readers-development-version-1">IPUMS readers<a class="anchor" aria-label="anchor" href="#ipums-readers-development-version-1"></a></h4>
+<ul><li><p>Adds handling for fixed-width NHGIS extracts in <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>.</p></li>
+<li><p><code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> allows reading of raw codebook lines (as opposed to extracting codebook information into an <code>ipums_ddi</code> object) by setting <code>raw = TRUE</code>. Furthermore, <code>var_info</code> generated from NHGIS codebook files has been updated to include more contextual information about the data variables.</p></li>
+<li><p><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> now supports additional arguments to refine the data loading process. Users can now specify <code>col_types</code> manually and read a subset of a data file using <code>vars</code> and <code>n_max</code>.</p></li>
 <li><p><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> now allows users to retain the extra header row included in some NHGIS files. Set <code>remove_extra_header = FALSE</code> to do so. In general, the information contained in the extra header is attached to the data from the NHGIS codebook file, but in some cases the extra header may differ slightly from the information found in the codebook.</p></li>
-<li><p><code><a href="../reference/ipums_example.html">ipums_example()</a></code> includes updated example files.</p></li>
-<li><p>It is now possible to consistently read unzipped extract files. Previously, some functions required that extracts be in the zipped format provided upon download.</p></li>
 </ul></div>
-<div class="section level3">
-<h3 id="deprecations-development-version">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-development-version"></a></h3>
-<ul><li><p><code>data_layer</code> and <code>shape_layer</code> arguments have been deprecated in favor of <code>file_select</code> throughout ipumsr. This provides clarity on the intended purpose of this argument. Deprecated functions that use the original argument names remain unchanged.</p></li>
-<li><p><code><a href="../reference/get_recent_extracts_info_list.html">get_recent_extracts_info_list()</a></code> and <code><a href="../reference/get_recent_extracts_info_list.html">get_recent_extracts_info_tbl()</a></code> have been deprecated in favor of <code><a href="../reference/get_extract_info.html">get_recent_extracts_info()</a></code>.</p></li>
-<li><p><code><a href="../reference/read_nhgis_sf.html">read_nhgis_sf()</a></code> and <code><a href="../reference/read_nhgis_sf.html">read_nhgis_sp()</a></code> have been deprecated. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> to load spatial and tabular data, respectively. Join data with an <code>ipums_shape_*_join()</code> function.</p></li>
-<li><p>Support for objects from the sp package has been deprecated because of the upcoming retirement of rgdal. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> to load spatial data as an <code>sf</code> object. To convert to a <code>Spatial*</code> object, use <code><a href="https://r-spatial.github.io/sf/reference/coerce-methods.html" class="external-link">sf::as_Spatial()</a></code>. For more, click <a href="https://r-spatial.org/r/2022/04/12/evolution.html" class="external-link">here</a>.</p></li>
-<li><p>Support for IPUMS Terra has been deprecated, as the IPUMS Terra project is being decommissioned. This includes all <code>read_terra_*()</code> functions. For more, click <a href="https://terra.ipums.org/decommissioning" class="external-link">here</a>.</p></li>
-<li><p><code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code> has been deprecated in favor of <code><a href="../reference/ipums_codebook.html">read_nhgis_codebook()</a></code>. Previously, <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code> handled IPUMS Terra as well as IPUMS NHGIS extracts.</p></li>
-<li><p><code><a href="../reference/ipums_list_data.html">ipums_list_data()</a></code>, <code><a href="../reference/ipums_list_data.html">ipums_list_shape()</a></code> and <code><a href="../reference/ipums_list_data.html">ipums_list_raster()</a></code> have been deprecated in favor of <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>.</p></li>
-<li><p>The <code>verbose</code> argument has been deprecated in <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> for consistency with the terminology used in the sf package. Please use <code>quiet</code> instead.</p></li>
-</ul></div>
+</div>
 <div class="section level3">
 <h3 id="miscellaneous-development-version">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-development-version"></a></h3>
 <ul><li><p>Various bug fixes</p></li>

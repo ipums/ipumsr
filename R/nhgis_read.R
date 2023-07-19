@@ -13,14 +13,17 @@
 #'
 #' @details
 #' The .do file that is included when downloading an NHGIS fixed-width
-#' extract contains important metadata about the data file's column
-#' positions and implicit decimals. `read_nhgis()` uses this information to
-#' parse and recode the fixed-width data appropriately. Therefore,
-#' while possible, it is not recommended to read fixed-width files without a
-#' corresponding .do file.
+#' extract contains the necessary metadata (e.g. column positions and implicit
+#' decimals) to correctly parse the data file. `read_nhgis()` uses this
+#' information to parse and recode the fixed-width data appropriately.
 #'
 #' If you no longer have access to the .do file, consider resubmitting the
-#' extract that produced the data.
+#' extract that produced the data. You can also change the desired data
+#' format to produce a .csv file, which does not require additional metadata
+#' files to be loaded.
+#'
+#' For more about resubmitting an existing extract via the IPUMS API, see
+#' `vignette("ipums-api", package = "ipumsr")`.
 #'
 #' @param data_file Path to a data file, a .zip archive from an NHGIS
 #'   extract, or a directory containing the data file.
@@ -29,78 +32,66 @@
 #'   Accepts a character vector specifying the
 #'   file name, a [tidyselect selection][selection_language], or an index
 #'   position. This must uniquely identify a file.
-#' @param var_attrs Variable attributes to add from the codebook (.txt) file
-#'   included in the extract. Defaults to
-#'   all available attributes.
+#' @param vars Names of variables to include in the output. Accepts a
+#'   vector of names or a [tidyselect selection][selection_language].
+#'   If `NULL`, includes all variables in the file.
+#' @param col_types One of `NULL`, a [`cols()`][readr::cols]
+#'   specification or a string. If `NULL`, all column types will be inferred
+#'   from the values in the first `guess_max` rows of each column.
+#'   Alternatively, you can use a compact string representation to specify
+#'   column types:
 #'
-#'   If the codebook is not found, data will be loaded with no variable
-#'   attributes.
+#'   - c = character
+#'   - i = integer
+#'   - n = number
+#'   - d = double
+#'   - l = logical
+#'   - f = factor
+#'   - D = date
+#'   - T = date time
+#'   - t = time
+#'   - ? = guess
+#'   - _ or - = skip
+#'
+#'   See [`read_delim()`][readr::read_delim] for more details.
+#' @param n_max Maximum number of lines to read.
+#' @param guess_max For .csv files, maximum number of lines to use for guessing
+#'   column types. Will never use more than the number of lines read.
+#' @param do_file For fixed-width files, path to the .do file associated with
+#'   the provided `data_file`. The .do file contains the parsing instructions
+#'   for the data file.
+#'
+#'   By default, looks in the same directory as `data_file` for a .do
+#'   file with the same name. See Details section below.
+#' @param var_attrs Variable attributes to add from the codebook (.txt) file
+#'   included in the extract. Defaults to all available attributes.
 #'
 #'   See [`set_ipums_var_attributes()`] for more details.
 #' @param remove_extra_header If `TRUE`, remove the additional descriptive
-#'   header row that is included in some NHGIS .csv files. Otherwise, the
-#'   additional header will appear in the first row of the output data frame.
+#'   header row included in some NHGIS .csv files.
 #'
-#'   The header contains similar information to that
+#'   This header row is not
+#'   usually needed as it contains similar information to that
 #'   included in the `"label"` attribute of each data column (if `var_attrs`
-#'   includes `"var_label"`), and is therefore not usually needed.
-#' @param do_file For fixed-width files, path to the .do file associated with
-#'   the provided `data_file`. The .do file contains the specifications that
-#'   indicate how to parse the data file.
-#'
-#'   By default, looks in the same directory as `data_file` for a .do
-#'   file with the same name. If `FALSE` or if the .do file cannot be found,
-#'   the .dat file will be parsed by the values provided to `col_positions`
-#'   in [`read_fwf()`][readr::read_fwf]. See Details section.
-#' @param file_type One of `"csv"` (for csv files) or `"dat"` (for fixed-width
-#'   files) indicating the type of file to search for in the path provided to
-#'   `data_file`. If `NULL`, determines the file type automatically based on
-#'   the files found in `data_file`. Only needed if `data_file` contains both
-#'   .csv and .dat files.
-#' @param na Character vector of strings to interpret as missing values.
-#'   If `NULL`, defaults to `c("", "NA")` for csv files and `c(".", "", "NA")`
-#'   for fixed-width files. See [`read_csv()`][readr::read_csv].
-#' @param col_names If reading a .csv file, either `TRUE`, `FALSE` or a
-#'   character vector of column names.
-#'
-#'   If `TRUE`, use the default column names included in NHGIS .csv files. If
-#'   `FALSE` or a character vector, replace the default column names with the
-#'   provided names or default placeholders. Note that any columns that have
-#'   altered names will not be attached to the requested `var_attrs`.
-#'
-#'   Note that unlike [`readr::read_csv()`][readr::read_csv], the first row
-#'   of the input (which contains NHGIS default headers) will always be removed
-#'   from the data.
-#' @param locale Controls defaults that vary from place to place. If `NULL`,
-#'   uses a locale designed to provide appropriate defaults for NHGIS files;
-#'   altering the locale may cause problems with data parsing.
-#'
-#'   If needed, you can use [`readr::locale()`][readr::locale] to
-#'   specify a different locale to control things like default time zone,
-#'   decimal mark, big mark, and day/month names. If you do so, specify
-#'   `encoding = "latin1"` to ensure files are encoded properly.
+#'   includes `"var_label"`).
 #' @param verbose Logical controlling whether to display output when loading
 #'   data. If `TRUE`, displays IPUMS conditions, a progress bar, and
-#'   guessed column types, unless `progress` or `show_col_types` is specified.
-#' @param progress Logical indicating whether to display a progress bar when
-#'   loading data. By default, uses the value of `verbose`, unless
-#'   the `readr.show_progress` option is set to `FALSE`.
-#' @param show_col_types Logical indicating whether to display guessed column
-#'   types. By default, uses the value of `verbose`, unless
-#'   the `readr.show_col_types` option is set to `FALSE`.
-#' @param ... Additional arguments passed to [`read_csv()`][readr::read_csv] or
-#'   [`read_fwf()`][readr::read_fwf].
+#'   column types. Otherwise, all are suppressed.
+#'
+#'   Will be overridden by `readr.show_progress` and `readr.show_col_types`
+#'   options, if they are set.
 #' @param data_layer `r lifecycle::badge("deprecated")` Please
 #'   use `file_select` instead.
 #'
 #' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
 #'   `data_file`
 #'
-#' @seealso [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#' @seealso
+#' [read_ipums_sf()] to read spatial data from an IPUMS extract.
 #'
-#'   [read_nhgis_codebook()] to read metadata about an IPUMS NHGIS extract.
+#' [read_nhgis_codebook()] to read metadata about an IPUMS NHGIS extract.
 #'
-#'   [ipums_list_files()] to list files in an IPUMS extract.
+#' [ipums_list_files()] to list files in an IPUMS extract.
 #'
 #' @export
 #'
@@ -113,50 +104,41 @@
 #' read_nhgis(csv_file)
 #'
 #' # For extracts that contain multiple files, use `file_select` to specify
-#' # a single file to load.
-#'
-#' # This accepts a tidyselect expression
+#' # a single file to load. This accepts a tidyselect expression:
 #' read_nhgis(fw_file, file_select = matches("ds239"), verbose = FALSE)
 #'
-#' # Or an index position
+#' # Or an index position:
 #' read_nhgis(fw_file, file_select = 2, verbose = FALSE)
 #'
-#' # NHGIS fixed-width files use the information contained in the extract's
-#' # .do file to parse the data correctly. If it does not exist, the parsing
-#' # will be incorrect. If you have moved the .do file, be sure to provide
-#' # its new file path to the `do_file` argument.
-#' bad_parse <- read_nhgis(
-#'   fw_file,
-#'   file_select = 2,
-#'   do_file = FALSE,
+#' # For CSV files, column types are inferred from the data. You can
+#' # manually specify column types with `col_types`. This may be useful for
+#' # geographic codes, which should typically be interpreted as character values
+#' read_nhgis(csv_file, col_types = list(MSA_CMSAA = "c"), verbose = FALSE)
+#'
+#' # Fixed-width files are parsed with the correct column positions
+#' # and column types automatically:
+#' read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
+#'
+#' # You can also read in a subset of the data file:
+#' read_nhgis(
+#'   csv_file,
+#'   n_max = 15,
+#'   vars = c(GISJOIN, YEAR, D6Z002),
 #'   verbose = FALSE
 #' )
-#'
-#' bad_parse$X1[1:10]
-#'
-#' # `readr::read_csv()` arguments are accepted, though most defaults should
-#' # be appropriate.
-#' read_nhgis(csv_file, col_types = readr::cols(.default = "c"))
 read_nhgis <- function(data_file,
                        file_select = NULL,
+                       vars = NULL,
+                       col_types = NULL,
+                       n_max = Inf,
+                       guess_max = min(n_max, 1000),
+                       do_file = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        remove_extra_header = TRUE,
-                       do_file = NULL,
-                       file_type = NULL,
-                       na = NULL,
-                       col_names = TRUE,
-                       locale = NULL,
                        verbose = TRUE,
-                       progress = NULL,
-                       show_col_types = NULL,
-                       ...,
                        data_layer = deprecated()) {
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
-  }
-
-  if (!is_null(file_type) && !file_type %in% c("csv", "dat")) {
-    rlang::abort("`file_type` must be one of \"csv\", or \"dat\"")
   }
 
   if (!missing(data_layer)) {
@@ -174,61 +156,48 @@ read_nhgis <- function(data_file,
 
   data_files <- find_files_in(
     data_file,
-    name_ext = file_type %||% "csv|dat",
+    name_ext = "csv|dat",
     multiple_ok = TRUE,
     none_ok = TRUE
   )
 
-  has_csv <- any(grepl(".csv$", data_files))
-  has_dat <- any(grepl(".dat$", data_files))
+  has_csv <- any(grepl("[.]csv$", data_files))
+  has_dat <- any(grepl("[.]dat$", data_files))
 
   if (!has_csv && !has_dat) {
-    if (is_null(file_type)) {
-      msg <- ".csv or .dat"
-    } else {
-      msg <- paste0(".", file_type)
-    }
-
-    rlang::abort(
-      paste0("No ", msg, " files found in the provided `data_file`.")
-    )
+    rlang::abort("No .csv or .dat files found in the provided `data_file`.")
   } else if (has_csv && has_dat) {
-    rlang::abort(
-      c(
-        "Both .csv and .dat files found in the provided `data_file`.",
-        "i" = paste0(
-          "Use the `file_type` argument to specify which file type to load."
-        )
+    rlang::abort(c(
+      "Both .csv and .dat files found in the provided `data_file`.",
+      "x" = paste0(
+        "Only one type of data file can be present in the provided `data_file`."
       )
-    )
+    ))
   }
 
   if (has_csv) {
     data <- read_nhgis_csv(
       data_file,
       file_select = !!file_select,
+      col_types = col_types,
+      col_select = !!enquo(vars),
+      n_max = n_max,
       var_attrs = var_attrs,
       remove_extra_header = remove_extra_header,
-      verbose = verbose,
-      na = na %||% c("", "NA"),
-      locale = locale,
-      col_names = col_names,
-      progress = progress %||% show_readr_progress(verbose),
-      show_col_types = show_col_types %||% show_readr_coltypes(verbose),
-      ...
+      na = c("", "NA"),
+      verbose = verbose
     )
   } else {
     data <- read_nhgis_fwf(
       data_file,
       file_select = !!file_select,
+      col_types = col_types,
+      col_select = !!enquo(vars),
       var_attrs = var_attrs,
       do_file = do_file,
+      n_max = n_max,
       verbose = verbose,
-      na = na %||% c(".", "", "NA"),
-      locale = locale,
-      progress = progress %||% show_readr_progress(verbose),
-      show_col_types = show_col_types %||% show_readr_coltypes(verbose),
-      ...
+      na = c(".", "", "NA")
     )
   }
 
@@ -240,22 +209,10 @@ read_nhgis <- function(data_file,
 read_nhgis_fwf <- function(data_file,
                            file_select = NULL,
                            do_file = NULL,
+                           col_types = NULL,
                            var_attrs = c("val_labels", "var_label", "var_desc"),
                            verbose = TRUE,
-                           locale = NULL,
                            ...) {
-  dots <- rlang::list2(...)
-
-  if (!is_null(dots$col_positions) && !is_false(do_file)) {
-    rlang::warn(
-      paste0(
-        "Only one of `col_positions` or `do_file` can be provided. ",
-        "Setting `do_file = FALSE`"
-      )
-    )
-    do_file <- FALSE
-  }
-
   col_spec <- NULL
 
   file_select <- enquo(file_select)
@@ -267,35 +224,6 @@ read_nhgis_fwf <- function(data_file,
     multiple_ok = FALSE,
     none_ok = FALSE
   )
-
-  cb_files <- find_files_in(
-    data_file,
-    name_ext = "txt",
-    multiple_ok = TRUE,
-    none_ok = TRUE
-  )
-
-  if (length(cb_files) > 0) {
-    cb_file <- fostr_subset(
-      cb_files,
-      fostr_replace(basename(file), ipums_file_ext(file), "")
-    )
-  }
-
-  cb_ddi_info <- try(
-    read_nhgis_codebook(data_file, file_select = tidyselect::all_of(cb_file)),
-    silent = TRUE
-  )
-
-  cb_error <- inherits(cb_ddi_info, "try-error")
-
-  if (cb_error) {
-    cb_ddi_info <- NHGIS_EMPTY_DDI
-  }
-
-  if (verbose) {
-    message(short_conditions_text(cb_ddi_info))
-  }
 
   if (file_is_zip(data_file)) {
     # Cannot use fwf_empty() col_positions on an unz() connection
@@ -315,67 +243,66 @@ read_nhgis_fwf <- function(data_file,
     file <- file.path(data_file, file)
   }
 
-  do_file <- do_file %||% fostr_replace(file, "\\.dat$", ".do")
+  default_do_file <- is_null(do_file)
 
-  if (is_false(do_file)) {
-    warn_default_fwf_parsing()
-  } else if (!file.exists(do_file)) {
-    if (!is_null(do_file)) {
-      rlang::warn(
-        c(
-          "Could not find the provided `do_file`.",
-          "i" = paste0(
-            "Make sure the provided `do_file` exists ",
-            "or use `col_positions` to specify column positions manually ",
-            "(see `?readr::read_fwf`)"
-          )
-        )
-      )
-      warn_default_fwf_parsing()
+  # Assume that a provided `do_file` is a relative path if `data_file` is
+  # zipped. Otherwise, full path must be provided.
+  if (file_is_zip(data_file)) {
+    do_file <- do_file %||% fostr_replace(basename(file), "\\.dat$", ".do")
+    do_file <- fostr_replace(file, basename(file), do_file)
+  } else {
+    do_file <- do_file %||% fostr_replace(file, "\\.dat$", ".do")
+  }
+
+  if (!file.exists(do_file)) {
+    if (!default_do_file) {
+      rlang::abort("Could not find the provided `do_file`.")
     } else {
-      rlang::warn(
-        c(
-          "Could not find a .do file associated with the provided file.",
-          "i" = paste0(
-            "Use the `do_file` argument to provide an associated .do file ",
-            "or use `col_positions` to specify column positions manually ",
-            "(see `?readr::read_fwf`)"
-          )
-        )
-      )
-      warn_default_fwf_parsing()
+      rlang::abort(c(
+        "Could not find a .do file associated with the provided data file.",
+        "i" = "Use the `do_file` argument to provide the path to the .do file."
+      ))
     }
-  } else if (file.exists(do_file)) {
+  } else {
     col_spec <- tryCatch(
       parse_nhgis_do_file(do_file),
       error = function(cnd) {
-        rlang::warn(
+        rlang::abort(
           c(
-            "Problem parsing .do file.",
+            "Unexpected error parsing .do file",
+            "x" = paste0(
+              "This may occur if files have been reorganized from the original",
+              " .zip format provided by NHGIS."
+            ),
             "i" = paste0(
-              "Using default `col_positions` to parse file. ",
-              "(see `?readr::read_fwf`)"
+              "Check that `file_select` matches the intended file ",
+              "or consider re-downloading this extract in .csv format."
             )
-          )
+          ),
+          call = expr(read_nhgis_fwf())
         )
-        warn_default_fwf_parsing()
-        NULL
       }
     )
   }
 
-  # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
-  # because an extract with county names has n with tildes and so is can
-  # be verified as ISO-8859-1)
-  cb_ddi_info$file_encoding <- "ISO-8859-1"
+  cb_ddi_info <- load_codebook(
+    data_file,
+    filename = file,
+    verbose = !is_null(var_attrs)
+  )
 
-  # Update dots with parsing info from .do file before passing to read_fwf()
-  dots$col_positions <- dots$col_positions %||% col_spec$col_positions
-  dots$col_types <- dots$col_types %||% col_spec$col_types
-  dots$locale <- locale %||% ipums_locale(cb_ddi_info$file_encoding)
+  if (verbose) {
+    message(short_conditions_text(cb_ddi_info))
+  }
 
-  data <- rlang::inject(
-    readr::read_fwf(file, !!!dots)
+  data <- readr::read_fwf(
+    file,
+    col_positions = col_spec$col_positions,
+    col_types = col_types %||% col_spec$col_types,
+    locale = ipums_locale(cb_ddi_info$file_encoding),
+    progress = show_readr_progress(verbose),
+    show_col_types = show_readr_coltypes(verbose),
+    ...
   )
 
   if (!is_null(col_spec$col_recode)) {
@@ -403,9 +330,6 @@ read_nhgis_csv <- function(data_file,
                            var_attrs = c("val_labels", "var_label", "var_desc"),
                            remove_extra_header = TRUE,
                            verbose = TRUE,
-                           locale = NULL,
-                           skip = 0,
-                           col_names = TRUE,
                            ...) {
   file_select <- enquo(file_select)
 
@@ -417,34 +341,11 @@ read_nhgis_csv <- function(data_file,
     none_ok = FALSE
   )
 
-  cb_files <- find_files_in(
+  cb_ddi_info <- load_codebook(
     data_file,
-    name_ext = "txt",
-    multiple_ok = TRUE,
-    none_ok = TRUE
+    filename = file,
+    verbose = !is_null(var_attrs)
   )
-
-  if (length(cb_files) > 0) {
-    cb_file <- fostr_subset(
-      cb_files,
-      fostr_replace(
-        basename(file),
-        ipums_file_ext(file),
-        ""
-      )
-    )
-  }
-
-  cb_ddi_info <- try(
-    read_nhgis_codebook(data_file, file_select = tidyselect::all_of(cb_file)),
-    silent = TRUE
-  )
-
-  cb_error <- inherits(cb_ddi_info, "try-error")
-
-  if (cb_error) {
-    cb_ddi_info <- NHGIS_EMPTY_DDI
-  }
 
   if (verbose) {
     message(short_conditions_text(cb_ddi_info))
@@ -458,46 +359,123 @@ read_nhgis_csv <- function(data_file,
 
   header_info <- check_header_row(data_file, file_select = !!file_select)
 
+  # Skip to avoid loading extra header
+  # We will reattach correct column names when we load the data.
   if (header_info$has_extra_header && remove_extra_header) {
-    skip <- 2 + skip
+    skip <- 2
   } else {
-    skip <- 1 + skip
+    skip <- 1
   }
 
-  if (is_null(col_names) || isTRUE(col_names)) {
-    col_names <- header_info$col_names
+  data <- readr::read_csv(
+    file,
+    skip = skip,
+    col_names = header_info$col_names, # Reattach skipped colnames
+    locale = ipums_locale(cb_ddi_info$file_encoding),
+    progress = show_readr_progress(verbose),
+    show_col_types = show_readr_coltypes(verbose),
+    ...
+  )
+
+  data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
+
+  data
+}
+
+#' Load a codebook associated with a provided NHGIS data file
+#'
+#' Helper to load a codebook associated with a provided data file.
+#' This is designed to handle a codebook that is bundled with a data file when
+#' loading that data file. To load a codebook .txt file directly, see
+#' `read_nhgis_codebook()`.
+#'
+#' This function is able to identify the correct codebook for a given data
+#' file regardless of whether the data file is zipped or is the direct path
+#' to a file. Codebooks are matched to data files by name, where the codebook
+#' has the same file name with `_codebook` appended.
+#'
+#' An empty codebook is provided if no matching codebook can be found.
+#'
+#' @param data_file Path to a data file, a .zip archive from an NHGIS
+#'   extract, or a directory containing the data file.
+#' @param filename Name of the .csv or .dat file to be loaded within the
+#'   `data_file` zip archive. This allows codebooks to be identified when
+#'   `data_file` contains multiple files.
+#'
+#'   We do not use `file_select` directly because it would not capture
+#'   the case in which a string is provided containing the full .csv or .dat
+#'   file name.
+#' @param verbose Logical indicating whether to warn if codebook cannot be
+#'   loaded.
+#'
+#' @return An `ipums_ddi` object
+#'
+#' @noRd
+load_codebook <- function(data_file, filename, verbose = FALSE) {
+  cb_files <- find_files_in(
+    data_file,
+    name_ext = "txt",
+    multiple_ok = TRUE,
+    none_ok = TRUE
+  )
+
+  if (length(cb_files) > 0) {
+    # If any .txt files, find the one with the same base name as
+    # the file being loaded
+    cb_file <- fostr_subset(
+      cb_files,
+      fostr_replace(basename(filename), ipums_file_ext(filename), "")
+    )
+  }
+
+  cb_ddi_info <- try(
+    read_nhgis_codebook(data_file, file_select = tidyselect::all_of(cb_file)),
+    silent = TRUE
+  )
+
+  cb_error <- inherits(cb_ddi_info, "try-error")
+
+  if (cb_error) {
+    # If error, a direct file path may have been provided.
+    # Attempt to load codebook for file with same base name in same directory
+    filename <- fostr_replace(
+      data_file,
+      paste0(ipums_file_ext(data_file), "$"),
+      "_codebook.txt"
+    )
+
+    cb_ddi_info <- try(
+      read_nhgis_codebook(filename),
+      silent = TRUE
+    )
+
+    cb_error <- inherits(cb_ddi_info, "try-error")
+  }
+
+  # If still no codebook info, return empty DDI
+  if (cb_error) {
+    cb_ddi_info <- NHGIS_EMPTY_DDI
+
+    if (verbose) {
+      rlang::warn(
+        c(
+          "Unable to read codebook associated with this file.",
+          "i" = "To load a codebook manually, use `read_nhgis_codebook()`.",
+          "i" = paste0(
+            "To attach codebook information to loaded data, ",
+            "use `set_ipums_var_attributes()`."
+          )
+        )
+      )
+    }
   }
 
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
   cb_ddi_info$file_encoding <- "ISO-8859-1"
-  locale <- locale %||% ipums_locale(cb_ddi_info$file_encoding)
 
-  data <- readr::read_csv(
-    file,
-    skip = skip,
-    col_names = col_names,
-    locale = locale,
-    ...
-  )
-
-  if (cb_error && !is_null(var_attrs)) {
-    rlang::warn(
-      c(
-        "Unable to read codebook associated with this file.",
-        "i" = "To load a codebook manually, use `read_nhgis_codebook()`.",
-        "i" = paste0(
-          "To attach codebook information to loaded data, ",
-          "use `set_ipums_var_attributes()`."
-        )
-      )
-    )
-  }
-
-  data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
-
-  data
+  cb_ddi_info
 }
 
 check_header_row <- function(data_file, file_select = NULL) {

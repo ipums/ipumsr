@@ -20,21 +20,26 @@
 #'   [set_ipums_api_key()].
 #'
 #' @seealso
-#' [download_extract()] to download an extract.
+#' [wait_for_extract()] to wait for an extract to finish processing.
 #'
 #' [get_extract_info()] and [is_extract_ready()] to check the status of an
 #'   extract request.
+#'
+#' [download_extract()] to download an extract's data files.
 #'
 #' @return An [`ipums_extract`][ipums_extract-class] object containing the
 #'   extract definition and newly-assigned extract number of the submitted
 #'   extract.
 #'
+#'   Note that some unspecified extract fields may be populated with default
+#'   values and therefore change slightly upon submission.
+#'
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
+#' my_extract <- define_extract_cps(
+#'   description = "2018-2019 CPS Data",
+#'   samples = c("cps2018_05s", "cps2019_05s"),
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
@@ -49,7 +54,7 @@
 #'
 #' # You can always get the latest status, even if you forget to store the
 #' # submitted extract request object
-#' submitted_extract <- get_last_extract_info("usa")
+#' submitted_extract <- get_last_extract_info("cps")
 #'
 #' # You can also check if submitted extract is ready
 #' is_extract_ready(submitted_extract)
@@ -64,23 +69,28 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 
   extract <- validate_ipums_extract(extract)
 
-  response <- ipums_api_json_request(
+  url <- api_request_url(
+    collection = extract$collection,
+    path = extract_request_path()
+  )
+
+  response <- ipums_api_extracts_request(
     "POST",
     collection = extract$collection,
-    path = NULL,
+    url = url,
     body = extract_to_request_json(extract),
     api_key = api_key
   )
 
   # extract_list_from_json() always returns a list of extracts, but in
   # this case there is always only one, so pluck it out
-  extract <- extract_list_from_json(response, validate = TRUE)[[1]]
+  extract <- extract_list_from_json(response)[[1]]
 
   message(
-    sprintf(
-      "Successfully submitted %s extract number %d",
+    paste0(
+      "Successfully submitted ",
       format_collection_for_printing(extract$collection),
-      extract$number
+      " extract number ", extract$number
     )
   )
 
@@ -93,10 +103,26 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Wait for an extract request to finish by periodically checking its status
 #' via the IPUMS API until it is complete.
 #'
-#' Completed extracts will have a value of `"completed"` in their `status`
-#' field.
+#' `is_extract_ready()` is a convenience function to check if an extract
+#' is ready to download without committing your R session to waiting for
+#' extract completion.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @details
+#' The `status` of a submitted extract will be one of `"queued"`, `"started"`,
+#' `"produced"`, `"canceled"`, `"failed"`, or `"completed"`.
+#'
+#' To be ready to download, an extract must have a `"completed"` status.
+#' However, some requests that are `"completed"` may still be unavailable for
+#' download, as extracts expire and are removed from IPUMS servers after a set
+#' period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
+#'
+#' Therefore, these functions also check the `download_links` field of the
+#' extract request to determine if data are available for download. If an
+#' extract has expired (that is, it has completed but its download links are
+#' no longer available), these functions will warn that the extract request
+#' must be resubmitted.
 #'
 #' @inheritParams define_extract_usa
 #' @inheritParams download_extract
@@ -110,9 +136,6 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'     `c("collection", number)`
 #'   * An extract number to be associated with your default IPUMS
 #'     collection. See [set_ipums_default_collection()]
-#'
-#'   Extract numbers do not need to be zero-padded. That is, use `1`, not
-#'   `"0001"`.
 #'
 #'   For a list of codes used to refer to each collection, see
 #'   [ipums_data_collections()].
@@ -130,21 +153,24 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   beginning of each wait interval and upon extract completion.
 #'   Defaults to `TRUE`.
 #'
-#' @return An [`ipums_extract`][ipums_extract-class] object containing the
-#'   extract definition and the URLs from which to download extract files.
+#' @return For `wait_for_extract()`, an
+#'   [`ipums_extract`][ipums_extract-class] object containing the extract
+#'   definition and the URLs from which to download extract files.
+#'
+#'   For `is_extract_ready()`, a logical value indicating
+#'   whether the extract is ready to download.
 #'
 #' @seealso
-#' [download_extract()] to download an extract.
+#' [download_extract()] to download an extract's data files.
 #'
-#' [get_extract_info()] and [is_extract_ready()] to check the status of an
-#'   extract request.
+#' [get_extract_info()] to obtain the definition of a submitted extract request.
 #'
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
+#' my_extract <- define_extract_ipumsi(
+#'   description = "Botswana data",
+#'   samples = c("bw2001a", "bw2011a"),
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
@@ -156,14 +182,19 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' downloadable_extract <- wait_for_extract(submitted_extract)
 #'
 #' # Or by specifying the collection and number for the extract request:
-#' downloadable_extract <- wait_for_extract("usa:1")
+#' downloadable_extract <- wait_for_extract("ipumsi:1")
 #'
 #' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
+#' set_ipums_default_collection("ipumsi")
+#'
 #' downloadable_extract <- wait_for_extract(1)
 #'
 #' # Use `download_extract()` to download the completed extract:
 #' files <- download_extract(downloadable_extract)
+#'
+#' # Use `is_extract_ready()` if you don't want to tie up your R session by
+#' # waiting for completion
+#' is_extract_ready("usa:1")
 #' }
 wait_for_extract <- function(extract,
                              initial_delay_seconds = 0,
@@ -174,7 +205,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-              timeout_seconds > 0)
+    timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -249,63 +280,8 @@ wait_for_extract <- function(extract,
   invisible(extract)
 }
 
-#' Check if an extract is ready to download
-#'
-#' @description
-#' Get the latest status of an in-progress extract request and determine if
-#' it has finished processing and is ready for download.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @details
-#' The "status" of a submitted extract is one of `"queued"`, `"started"`,
-#' `"produced"`, `"canceled"`, `"failed"`, or `"completed"`.
-#'
-#' To be ready to download, an extract must have a `"completed"` status.
-#' However, some requests that are `"completed"` may still be unavailable for
-#' download, as extracts expire and are removed from IPUMS servers after a set
-#' period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
-#'
-#' Therefore, this function also checks the `"download_links"` field of the
-#' extract request to determine if data are available for download. If an
-#' extract has expired (that is, it has completed but its download links are
-#' no longer available), this function will warn that the extract request
-#' must be resubmitted.
-#'
-#' @inheritParams wait_for_extract
-#'
-#' @return A logical vector of length one.
-#'
-#' @seealso
-#' [download_extract()] to download an extract.
-#'
-#' [get_extract_info()] to check the status of an extract request.
-#'
-#' [submit_extract()] to resubmit an expired extract request.
-#'
+#' @rdname wait_for_extract
 #' @export
-#'
-#' @examples
-#' my_extract <- define_extract_usa(
-#'   description = "2013-2014 ACS Data",
-#'   samples = c("us2013a", "us2014a"),
-#'   variables = c("SEX", "AGE", "YEAR")
-#' )
-#'
-#' \dontrun{
-#' submitted_extract <- submit_extract(my_extract)
-#'
-#' # Check the extract request associated with a given `ipums_extract` object
-#' is_extract_ready(submitted_extract)
-#'
-#' # Or by supplying the collection and extract number
-#' is_extract_ready("usa:1")
-#' is_extract_ready(c("usa", "1"))
-#'
-#' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
-#' is_extract_ready(1)
-#' }
 is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
 
@@ -367,8 +343,10 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
-#' @param overwrite Logical value indicating whether to overwrite any files that
+#' @param overwrite If `TRUE`, overwrite any conflicting files that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
+#' @param progress If `TRUE`, output progress bar showing the status of the
+#'   download request. Defaults to `TRUE`.
 #'
 #' @return The path(s) to the files required to read the data
 #'   requested in the extract, invisibly.
@@ -394,18 +372,13 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   variables = c("SEX", "AGE", "YEAR")
 #' )
 #'
-#' nhgis_extract <- define_extract_nhgis(
-#'   description = "Example NHGIS extract",
-#'   datasets = "1990_STF3",
-#'   data_tables = "NP57",
-#'   geog_levels = c("county", "tract")
-#' )
-#'
 #' \dontrun{
 #' submitted_extract <- submit_extract(usa_extract)
 #'
+#' downloadable_extract <- wait_for_extract(submitted_extract)
+#'
 #' # For microdata, the path to the DDI .xml codebook file is provided.
-#' usa_xml_file <- download_extract(submitted_extract)
+#' usa_xml_file <- download_extract(downloadable_extract)
 #'
 #' # Load with a `read_ipums_micro_*()` function
 #' usa_data <- read_ipums_micro(usa_xml_file)
@@ -415,26 +388,20 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # NHGIS extracts return a path to both the tabular and spatial data files,
 #' # as applicable.
-#' #
-#' # Load NHGIS tabular data
 #' nhgis_data <- read_nhgis(data = nhgis_files["data"])
 #'
 #' # Load NHGIS spatial data
 #' nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
-#'
-#' # If you have a default collection, you can use the extract number alone:
-#' set_ipums_default_collection("usa")
-#' download_extract(1)
 #' }
 download_extract <- function(extract,
                              download_dir = getwd(),
                              overwrite = FALSE,
+                             progress = TRUE,
                              api_key = Sys.getenv("IPUMS_API_KEY")) {
   extract <- standardize_extract_identifier(extract)
   is_extract <- inherits(extract, "ipums_extract")
 
   if (is_extract) {
-    extract <- validate_ipums_extract(extract)
     is_ready <- extract_is_completed_and_has_links(extract)
   }
 
@@ -485,7 +452,13 @@ download_extract <- function(extract,
     )
   }
 
-  ipums_extract_specific_download(extract, download_dir, overwrite, api_key)
+  ipums_extract_specific_download(
+    extract,
+    download_dir,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
+  )
 }
 
 # Non-exported functions ---------------------------------------------------
@@ -493,54 +466,37 @@ download_extract <- function(extract,
 #' Convert an `ipums_extract` object to a JSON string for API submission
 #'
 #' @param extract An `ipums_extract` object
-#' @param include_endpoint_info Logical indicating whether to include
-#'   collection and API version information in the JSON object
-#'
+
 #' @return A JSON string containing the formatted extract definition
 #'
 #' @noRd
-extract_to_request_json <- function(extract, include_endpoint_info) {
+extract_to_request_json <- function(extract) {
   UseMethod("extract_to_request_json")
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
-  extract$years <- purrr::map(
-    extract$years,
-    ~ if (!is.null(.x)) as.character(.x)
-  )
-
+extract_to_request_json.nhgis_extract <- function(extract) {
   if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
 
   request_list <- list(
-    datasets = format_nhgis_field_for_json(
-      datasets = extract$datasets,
-      data_tables = extract$data_tables[extract$datasets],
-      geog_levels = extract$geog_levels[extract$datasets],
-      years = extract$years[extract$datasets],
-      breakdown_values = extract$breakdown_values[extract$datasets]
+    datasets = purrr::flatten(
+      purrr::map(extract$datasets, format_for_json)
     ),
-    time_series_tables = format_nhgis_field_for_json(
-      time_series_tables = extract$time_series_tables,
-      geog_levels = extract$geog_levels[extract$time_series_tables]
+    timeSeriesTables = purrr::flatten(
+      purrr::map(extract$time_series_tables, format_for_json)
     ),
     shapefiles = extract$shapefiles,
-    data_format = jsonlite::unbox(extract$data_format),
+    dataFormat = jsonlite::unbox(extract$data_format),
     description = jsonlite::unbox(extract$description),
-    breakdown_and_data_type_layout = jsonlite::unbox(
+    breakdownAndDataTypeLayout = jsonlite::unbox(
       extract$breakdown_and_data_type_layout
     ),
-    time_series_table_layout = jsonlite::unbox(
-      extract$tst_layout
-    ),
-    geographic_extents = geog_extent_lookup(
-      extract$geographic_extents,
-      state_geog_lookup$codes
-    )
+    timeSeriesTableLayout = jsonlite::unbox(extract$tst_layout),
+    geographicExtents = extract$geographic_extents,
+    collection = jsonlite::unbox(extract$collection),
+    version = jsonlite::unbox(ipums_api_version())
   )
 
   request_list <- purrr::keep(
@@ -548,21 +504,11 @@ extract_to_request_json.nhgis_extract <- function(
     ~ !(any(is.na(.x)) || is_empty(.x))
   )
 
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = jsonlite::unbox(extract$collection),
-      api_version = jsonlite::unbox(ipums_api_version(extract$collection))
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
-
   jsonlite::toJSON(request_list)
 }
 
 #' @export
-extract_to_request_json.usa_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
+extract_to_request_json.micro_extract <- function(extract) {
   if (is.null(extract$description) || is.na(extract$description)) {
     extract$description <- ""
   }
@@ -573,63 +519,29 @@ extract_to_request_json.usa_extract <- function(
 
   request_list <- list(
     description = extract$description,
-    data_structure = format_data_structure_for_json(
+    dataStructure = format_data_structure_for_json(
       extract$data_structure,
       extract$rectangular_on
     ),
-    data_format = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables)
+    dataFormat = extract$data_format,
+    samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
+    variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
+    caseSelectWho = extract$case_select_who,
+    dataQualityFlags = extract$data_quality_flags,
+    collection = extract$collection,
+    version = ipums_api_version()
   )
 
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = extract$collection,
-      api_version = ipums_api_version(extract$collection)
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
+  request_list <- purrr::keep(
+    request_list,
+    ~ !(any(is.na(.x)) || is_empty(.x))
+  )
 
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
 #' @export
-extract_to_request_json.cps_extract <- function(extract,
-                                                include_endpoint_info = FALSE) {
-  if (is.null(extract$description) || is.na(extract$description)) {
-    extract$description <- ""
-  }
-
-  if (is.null(extract$data_format) || is.na(extract$data_format)) {
-    extract$data_format <- ""
-  }
-
-  request_list <- list(
-    description = extract$description,
-    data_structure = format_data_structure_for_json(
-      extract$data_structure,
-      extract$rectangular_on
-    ),
-    data_format = extract$data_format,
-    samples = format_samples_for_json(extract$samples),
-    variables = format_variables_for_json(extract$variables)
-  )
-
-  if (include_endpoint_info) {
-    endpoint_info <- list(
-      collection = extract$collection,
-      api_version = ipums_api_version(extract$collection)
-    )
-    request_list <- append(request_list, endpoint_info)
-  }
-
-  jsonlite::toJSON(request_list, auto_unbox = TRUE)
-}
-
-#' @export
-extract_to_request_json.ipums_extract <- function(
-    extract,
-    include_endpoint_info = FALSE) {
+extract_to_request_json.ipums_extract <- function(extract) {
   if (is_na(extract$description)) {
     extract$description <- ""
   }
@@ -641,21 +553,49 @@ extract_to_request_json.ipums_extract <- function(
   jsonlite::toJSON(request_list, auto_unbox = TRUE)
 }
 
-
-format_samples_for_json <- function(samples) {
-  if (length(samples) == 1 && is.na(samples)) {
-    return(EMPTY_NAMED_LIST)
-  }
-  sample_spec <- purrr::map(seq_along(samples), ~EMPTY_NAMED_LIST)
-  purrr::set_names(sample_spec, samples)
+format_for_json <- function(x) {
+  UseMethod("format_for_json")
 }
 
-format_variables_for_json <- function(variables) {
-  if (length(variables) == 1 && is.na(variables)) {
-    return(EMPTY_NAMED_LIST)
+#' @export
+format_for_json.ipums_spec <- function(x) {
+  # Name of field is in the `name` entry
+  if ("name" %in% names(x)) {
+    l <- purrr::compact(x[setdiff(names(x), "name")])
+  } else {
+    l <- EMPTY_NAMED_LIST
   }
-  var_spec <- purrr::map(seq_along(variables), ~EMPTY_NAMED_LIST)
-  purrr::set_names(var_spec, variables)
+
+  names(l) <- to_camel_case(names(l))
+  purrr::set_names(list(l), x$name)
+}
+
+#' @export
+format_for_json.var_spec <- function(x) {
+  if (is_null(x$case_selections)) {
+    case_selections <- NULL
+  } else {
+    case_selections <- purrr::set_names(
+      list(as.list(x$case_selections)),
+      x$case_selection_type
+    )
+  }
+
+  l <- purrr::compact(
+    list(
+      dataQualityFlags = x$data_quality_flags,
+      caseSelections = case_selections,
+      attachedCharacteristics = as.list(x$attached_characteristics),
+      preselected = x$preselected
+    )
+  )
+
+  purrr::set_names(list(l), x$name)
+}
+
+#' @export
+format_for_json.default <- function(x) {
+  x
 }
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
@@ -670,75 +610,6 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
   }
 }
 
-format_nhgis_field_for_json <- function(...) {
-  dots <- rlang::list2(...)
-
-  if (all(is.na(dots[[1]])) || is_empty(dots[[1]])) {
-    return(NULL)
-  }
-
-  supfields <- purrr::map(purrr::compact(dots[[1]]), c)
-  n_supfields <- length(supfields)
-
-  subfields <- dots[seq(2, length(dots))]
-
-  subfields_grp <- purrr::map(
-    1:n_supfields,
-    ~ purrr::map(subfields, .x)
-  )
-
-  subfields_formatted <- purrr::set_names(
-    purrr::map(subfields_grp, purrr::compact),
-    supfields
-  )
-
-  subfields_formatted
-}
-
-#' Writes the given url to file_path. Returns the file path of the
-#' downloaded data. Raises an error if the request is not successful.
-#'
-#' @noRd
-ipums_api_download_request <- function(url,
-                                       file_path,
-                                       overwrite,
-                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
-  if (file.exists(file_path) && !overwrite) {
-    rlang::abort(
-      c(
-        paste0("File `", file_path, "` already exists."),
-        "To overwrite, set `overwrite = TRUE`"
-      )
-    )
-  }
-
-  response <- httr::GET(
-    url,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
-    ),
-    add_user_auth_header(api_key),
-    httr::write_disk(file_path, overwrite = TRUE),
-    httr::progress()
-  )
-
-  if (httr::http_status(response)$category != "Success") {
-    rlang::abort(
-      c(
-        "Failed to download extract files.",
-        "i" = paste0(
-          "The extract may have expired. ",
-          "Check its latest status with `get_extract_info()`"
-        )
-      )
-    )
-  }
-
-  return(file_path)
-}
 
 #' Collection-specific extract download
 #'
@@ -751,15 +622,17 @@ ipums_api_download_request <- function(url,
 ipums_extract_specific_download <- function(extract,
                                             download_dir,
                                             overwrite,
+                                            progress,
                                             api_key) {
   UseMethod("ipums_extract_specific_download")
 }
 
 #' @export
-ipums_extract_specific_download.usa_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
+ipums_extract_specific_download.micro_extract <- function(extract,
+                                                          download_dir,
+                                                          overwrite,
+                                                          progress,
+                                                          api_key) {
   ddi_url <- extract$download_links$ddi_codebook$url
   data_url <- extract$download_links$data$url
 
@@ -775,41 +648,21 @@ ipums_extract_specific_download.usa_extract <- function(extract,
     mustWork = FALSE
   )
 
-  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
-  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
-
-  message(
-    paste0(
-      "DDI codebook file saved to ", ddi_file_path, "\nData file saved ",
-      "to ", data_file_path
-    )
+  ipums_api_download_request(
+    ddi_url,
+    ddi_file_path,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
   )
 
-  invisible(ddi_file_path)
-}
-
-#' @export
-ipums_extract_specific_download.cps_extract <- function(extract,
-                                                        download_dir,
-                                                        overwrite,
-                                                        api_key) {
-  ddi_url <- extract$download_links$ddi_codebook$url
-  data_url <- extract$download_links$data$url
-
-  ddi_file_path <- normalizePath(
-    file.path(download_dir, basename(ddi_url)),
-    winslash = "/",
-    mustWork = FALSE
+  ipums_api_download_request(
+    data_url,
+    data_file_path,
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
   )
-
-  data_file_path <- normalizePath(
-    file.path(download_dir, basename(data_url)),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  ipums_api_download_request(ddi_url, ddi_file_path, overwrite, api_key)
-  ipums_api_download_request(data_url, data_file_path, overwrite, api_key)
 
   message(
     paste0(
@@ -825,9 +678,10 @@ ipums_extract_specific_download.cps_extract <- function(extract,
 ipums_extract_specific_download.nhgis_extract <- function(extract,
                                                           download_dir,
                                                           overwrite,
+                                                          progress,
                                                           api_key) {
-  table_url <- extract$download_links$table_data
-  gis_url <- extract$download_links$gis_data
+  table_url <- extract$download_links$table_data$url
+  gis_url <- extract$download_links$gis_data$url
 
   urls <- purrr::compact(
     list(
@@ -866,7 +720,13 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   file_paths <- purrr::map2_chr(
     urls,
     file_paths,
-    ~ ipums_api_download_request(.x, .y, overwrite, api_key)
+    ~ ipums_api_download_request(
+      .x,
+      .y,
+      overwrite = overwrite,
+      progress = progress,
+      api_key = api_key
+    )
   )
 
   if (!is.null(table_url) && !is.null(gis_url)) {
@@ -889,127 +749,6 @@ ipums_extract_specific_download.nhgis_extract <- function(extract,
   invisible(file_paths)
 }
 
-#' Helper function to form, submit, and receive responses of requests expecting
-#'   a JSON response.
-#'
-#' @param verb `"GET"` or `"POST"`
-#' @param collection The IPUMS data collection for the extract.
-#' @param path Extensions to add to the base url.
-#' @param body The body of the request (e.g. the extract definition), if
-#'   relevant. Defaults to `FALSE`, which creates a body-less request.
-#' @param queries A named list of key value pairs to be added to the standard
-#'   query in the call to [httr::modify_url].
-#'
-#' @return If the request returns a JSON response, this function returns a
-#'   length-one character vector containing the response from the API
-#'   formatted as JSON. Otherwise, the function throws an error.
-#'
-#' @noRd
-ipums_api_json_request <- function(verb,
-                                   collection,
-                                   path,
-                                   body = FALSE,
-                                   queries = NULL,
-                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
-  queries_is_null_or_named_list <- is.null(queries) ||
-    is.list(queries) && !is.null(names(queries)) && !any(names(queries) == "")
-
-  if (!queries_is_null_or_named_list) {
-    rlang::abort("`queries` argument must be `NULL` or a named list")
-  }
-
-  api_url <- httr::modify_url(
-    api_base_url(),
-    path = path,
-    query = c(
-      list(collection = collection, version = ipums_api_version(collection)),
-      queries
-    )
-  )
-
-  res <- httr::VERB(
-    verb = verb,
-    url = api_url,
-    body = body,
-    httr::user_agent(
-      paste0(
-        "https://github.com/ipums/ipumsr ",
-        as.character(utils::packageVersion("ipumsr"))
-      )
-    ),
-    httr::content_type_json(),
-    add_user_auth_header(api_key)
-  )
-
-  if (httr::http_status(res)$category != "Success") {
-    status <- httr::status_code(res)
-
-    if (status == 400) {
-      tryCatch(
-        error_details <- parse_400_error(res),
-        error = function(cond) {
-          rlang::abort(
-            paste0(
-              "Received error from server (status code 400), but could not ",
-              "parse response for more details."
-            )
-          )
-        }
-      )
-      rlang::abort(error_details)
-    } else if (status == 404) {
-      if (fostr_detect(path, "^extracts/\\d+$")) {
-        extract_number <- as.numeric(fostr_split(path, "/")[[1]][[2]])
-        most_recent_extract_number <- get_last_extract_info(collection)$number
-
-        if (extract_number > most_recent_extract_number) {
-          coll <- format_collection_for_printing(collection)
-          rlang::abort(
-            c(
-              paste0(
-                coll, " extract number ",
-                extract_number, " does not exist."
-              ),
-              paste0(
-                "Most recent extract number: ",
-                most_recent_extract_number
-              )
-            )
-          )
-        }
-      }
-      rlang::abort("URL not found")
-    } else if (status %in% c(401, 403)) {
-      rlang::abort(c(
-        "The provided API Key is either missing or invalid.",
-        "i" = paste0(
-          "Please provide your API key to the `api_key` argument ",
-          "or request a key at https://account.ipums.org/api_keys"
-        ),
-        "i" = "Use `set_ipums_api_key() to save your key for future use."
-      ))
-    } else { # other non-success codes, e.g. 300s + 500s
-      rlang::abort(c(
-        paste0(
-          "Extract API request failed with status ",
-          httr::status_code(res)
-        ),
-        paste0("URL: ", api_url),
-        paste0("Content: ", httr::content(res, "text"))
-      ))
-    }
-  }
-
-  if (httr::http_type(res) != "application/json") {
-    rlang::abort("Extract API did not return json")
-  }
-
-  new_ipums_json(
-    httr::content(res, "text"),
-    collection = collection
-  )
-}
-
 #' Check if an extract is ready for download
 #'
 #' @param extract An `ipums_extract` object
@@ -1022,35 +761,23 @@ extract_is_completed_and_has_links <- function(extract) {
 }
 
 #' @export
-extract_is_completed_and_has_links.usa_extract <- function(extract) {
-  status <- extract$status
+extract_is_completed_and_has_links.micro_extract <- function(extract) {
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
+  has_codebook <- has_url(download_links, "ddi_codebook")
+  has_data <-  has_url(download_links, "data")
 
-  status == "completed" && has_url(download_links, "ddi_codebook") &&
-    has_url(download_links, "data")
-}
-
-#' @export
-extract_is_completed_and_has_links.cps_extract <- function(extract) {
-  status <- extract$status
-  download_links <- extract$download_links
-
-  has_url <- function(links, name) {
-    return(is.list(links[[name]]) && is.character(links[[name]][["url"]]))
-  }
-
-  status == "completed" && has_url(download_links, "ddi_codebook") &&
-    has_url(download_links, "data")
+  is_complete && has_codebook && has_data
 }
 
 #' @export
 extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
-  status <- extract$status
   download_links <- extract$download_links
+  is_complete <- extract$status == "completed"
 
-  status == "completed" && length(download_links) > 0
+  has_table_data <- has_url(download_links, "table_data")
+  has_gis_data <- has_url(download_links, "gis_data")
+
+  is_complete && (has_table_data || has_gis_data)
 }

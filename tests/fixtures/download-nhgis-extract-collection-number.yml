@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1091?collection=nhgis&version=v1
+    uri: https://api.ipums.org/extracts/1170?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 20:05:11 GMT
-      etag: W/"01676b97fbbf38fafacfa582aae3385f"
+      date: Mon, 10 Apr 2023 15:01:10 GMT
+      etag: W/"2428d982199ae32674d7fa9ec27c9ef3"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,20 +30,20 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: a26dfdcc-c6b4-4d0b-a92f-ffc032c6fde1
-      x-runtime: '0.569515'
+      x-request-id: 138389f0-48b4-4bf1-8e60-b6b51c6a8548
+      x-runtime: '0.622803'
       x-xss-protection: '0'
-      content-length: '895'
+      content-length: '1082'
     body:
       encoding: ''
       file: no
-      string: '{"data_format":"csv_no_header","description":"Extract for R client
-        testing","datasets":{"2014_2018_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["nation"],"breakdown_values":["bs32.ge00"]},"2015_2019_ACS5a":{"data_tables":["B01001","B01002"],"geog_levels":["blck_grp"],"breakdown_values":["bs32.ge00"]}},"time_series_tables":{"CW3":{"geog_levels":["state"]}},"time_series_table_layout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographic_extents":["110","420"],"breakdown_and_data_type_layout":"single_file","number":1091,"status":"completed","download_links":{"codebook_preview":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv_PREVIEW.zip","table_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv.zip","gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_shape.zip"}}'
-  recorded_at: 2023-03-23 20:05:12 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: '{"number":1170,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv_PREVIEW.zip","bytes":8537,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv.zip","bytes":1436460,"sha256":null},"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_shape.zip","bytes":510593,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
+        for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["110","420"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}'
+  recorded_at: 2023-04-10 15:01:11 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_csv.zip
     body:
       encoding: ''
       string: ''
@@ -59,27 +59,27 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1091_csv.zip"; filename*=UTF-8''nhgis1091_csv.zip
+      content-disposition: attachment; filename="nhgis1170_csv.zip"; filename*=UTF-8''nhgis1170_csv.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:11 GMT
-      etag: '"641caf19-16293f"'
-      last-modified: Thu, 23 Mar 2023 19:57:13 GMT
+      date: Mon, 10 Apr 2023 15:01:11 GMT
+      etag: '"6434233a-15eb2c"'
+      last-modified: Mon, 10 Apr 2023 14:54:50 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=LcQy7uzXQeeHShlSy2kseW5OthxSjV%2FKhUkE3XGwmhFcef%2Fb6x8QfnRR0DOzTdnBYe6RFSa2pokQtb1EqXAW%2BIcivkHjy3nCG8%2FX8ku81q0UpI%2BsdeHXQ%2FuvY3mf2M4B%2B1PjBvsaa4Il7BAhhkfSUUDDmtnU3JC4B4LZpLbL6%2Fr7POqlwLgXUng8qqsMlPr7NCAaiIWhmeKN3xp0Z94t%2BsLdboe7hKEVTp4u5noqbv%2Bi1miz2hKPvYKRWkgtaaU%3D--QHeRGdLlKZyNMktY--UgVnWpZWiiCQqQlBJCLypg%3D%3D;
+      set-cookie: _session_id=5hV2Vq%2FRxjr8kPpnDxdaty%2BRnYcRAfSjSb%2F9K1Pdzgzgh03hbs8yv9Sgg0nEo23s1kiciNOigpusN%2BVaTPfXQ4VkAXDHtFcR%2FTfk18uA3oE4JLYwEYkCn0vIm3tj2u9ivSFeb9tVAIr3odEa33JWqJg7NNZw9qO0JVqT88BmxkktW5JfTQgW9Jo52a8voaGaHn8zzRXDJK2lgQ%2BApEq5D6uCFGl6A85nzmcNaH4uAxOOFTDTixyPID4vBEvVgqk%3D--gfhFasAszGu3sO8q--oEJkt2gXtsUl%2FVh1gorbnw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '1452351'
+      content-length: '1436460'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_csv.zip
-  recorded_at: 2023-03-23 20:05:12 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1170_csv.zip
+  recorded_at: 2023-04-10 15:01:11 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004706/nhgis1170_shape.zip
     body:
       encoding: ''
       string: ''
@@ -95,13 +95,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: private
-      content-disposition: attachment; filename="nhgis1091_shape.zip"; filename*=UTF-8''nhgis1091_shape.zip
+      content-disposition: attachment; filename="nhgis1170_shape.zip"; filename*=UTF-8''nhgis1170_shape.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:11 GMT
-      etag: '"641caecb-7ca81"'
-      last-modified: Thu, 23 Mar 2023 19:55:55 GMT
+      date: Mon, 10 Apr 2023 15:01:11 GMT
+      etag: '"643422f6-7ca81"'
+      last-modified: Mon, 10 Apr 2023 14:53:42 GMT
       server: nginx/1.14.2
-      set-cookie: _session_id=RFyynLNPhgm490nzhRAdKNBY8esAZYHykG6%2BHAhigV55vVIlmbLO4gaq2uqbW9Q0J5SCwTecZKImv8I%2FRoRgdg4fjgkgb954UkHWZ6Li5Wm2lyQwxqCc5vS7EDeyB0%2BsA71F3bIGBHGWsrXW6WsHLxdfrL56biRCGZJlJG8uBi8GKymP1%2BZoLng1QrelBQNP0ZHkSflK1wZBDh3ZPxWmIACfI93v3CULsQmSkrkc0Umots5Z8AMZH8LAHSkG%2Byg%3D--Xw%2FfKEuiCSlAB9JM--s0YG32p%2B7gL9Z5emcFEHgA%3D%3D;
+      set-cookie: _session_id=JyW8K8hyM7WpzcYx83CzPodvcKh%2FgIZRHK7LMExr29F9UtgU2lw33kjwdbIM3KpZEEmqL0n7BtECutFBIWXGTNsxOg71IEJO%2BHYB3esXP77TjePJkSO%2Bx9wGtJNHCm%2BXXLLwg48CK1NZroumxD4fN%2F5UqWdYednrUOQF7h5MlOpp6Rh79u662P%2BqklZc7CsBiyeMHDUQjLPOCdSbRiTnRgcHCBUiW0thV7VUC0ofF1EV%2BtUDyOb7LjTCgDPtJPM%3D--MlAjc7qpMUF4LK2w--HAM0veH4y%2BKjm8Yncp4fKw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -110,6 +110,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_shape.zip
-  recorded_at: 2023-03-23 20:05:12 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1170_shape.zip
+  recorded_at: 2023-04-10 15:01:11 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

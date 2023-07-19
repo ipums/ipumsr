@@ -1,0 +1,48 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/116?collection=cps&version=v1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 04 May 2023 21:50:37 GMT
+      etag: W/"5a00d4330e2fafbb41421c6c18fa3e61"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 363ec7fc-118e-40a4-8f9d-c770b5dddb90
+      x-runtime: '0.661008'
+      x-xss-protection: '0'
+      content-length: '2337'
+    body:
+      encoding: ''
+      file: no
+      string: '{"version":1,"data_structure":{"hierarchical":{}},"data_format":"fixed_width","data_quality_flags":true,"description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"ASECFLAG":{"preselected":true},"ASECWTH":{"preselected":true},"PERNUM":{"preselected":true},"CPSIDP":{"preselected":true},"ASECWT":{"preselected":true},"AGE":{},"SEX":{},"RACE":{},"QAGE":{},"QSEX":{},"QRACE":{}},"number":116,"status":"completed","download_links":{"R_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.R","bytes":406,"sha256":"ec99cb7753e41e0712b320115eef3837c590be38b10b269ea1e1b8b5df522ed5"},"basic_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.cbk","bytes":11742,"sha256":"3b83e39b7d925b20dfc439e40becceedce1ba15bde7c84c2ca521e11bfc6c279"},"data":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.dat.gz","bytes":1401240,"sha256":"ec2c5e738e612df007c1f2280e0da8b46d2fc3a692bc9e13b8a176144e019144"},"stata_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.do","bytes":16252,"sha256":"12a37c3bd7b40d85ed14711cfde7c456fd43b58d7acafb3b1281fdc0dd6c7d29"},"sas_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.sas","bytes":7920,"sha256":"b6c603419878e9c30285c121d50b8fafe40e05968c11a6ccdb9e1d8b0765b4a0"},"spss_command_file":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.sps","bytes":7836,"sha256":"0d9daf227ab297ffa8f4fbe14bd55122f5de4fc465bb893737e20cfe8e462c2d"},"ddi_codebook":{"url":"https://api.ipums.org/downloads/cps/api/v1/extracts/2025307/cps_00116.xml","bytes":53995,"sha256":"5c66cd9e3417be4d709b7a7a6210f1cabdb465a8dd750d10a3b2e69ed58dc3a0"}},"warnings":["Automatic
+        inclusion of data quality flags is unsupported in IPUMS API version 1. Please
+        use at least version 2 for access to this feature.","Variable case selection
+        is unsupported in IPUMS API version 1. Please use at least version 2 to access
+        this feature.","Attaching characteristics is unsupported in IPUMS API version
+        1. Please use at least version 2 to access this feature."]}'
+  recorded_at: 2023-05-04 21:50:38 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

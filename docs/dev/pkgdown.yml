@@ -1,13 +1,15 @@
-pandoc: 2.19.2
+pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  ipums-api-micro: ipums-api-micro.html
+  ipums-api-nhgis: ipums-api-nhgis.html
   ipums-api: ipums-api.html
   ipums-bigdata: ipums-bigdata.html
   ipums-read: ipums-read.html
   ipums: ipums.html
   value-labels: value-labels.html
-last_built: 2023-04-07T21:03Z
+last_built: 2023-07-18T19:07Z
 urls:
   reference: http://tech.popdata.org/ipumsr/reference
   article: http://tech.popdata.org/ipumsr/articles

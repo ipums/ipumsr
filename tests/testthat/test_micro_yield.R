@@ -1,7 +1,7 @@
 test_that("basic yield reading - long .dat.gz rect matches chunked", {
   cps_yield_source <- read_ipums_micro_yield(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    ipums_example("cps_00157.xml"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -11,10 +11,10 @@ test_that("basic yield reading - long .dat.gz rect matches chunked", {
   }
 
   cps_chunked <- read_ipums_micro_chunked(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     IpumsListCallback$new(function(x, ...) x),
     1000,
-    data_file = ipums_example("cps_00006.dat.gz"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -23,8 +23,8 @@ test_that("basic yield reading - long .dat.gz rect matches chunked", {
 
 test_that("basic yield reading - long .dat.gz hier matches chunked", {
   cps_yield_source <- read_ipums_micro_yield(
-    ipums_example("cps_00010.xml"),
-    data_file = ipums_example("cps_00010.dat.gz"),
+    ipums_example("cps_00159.xml"),
+    data_file = ipums_example("cps_00159.dat.gz"),
     verbose = FALSE
   )
 
@@ -34,10 +34,10 @@ test_that("basic yield reading - long .dat.gz hier matches chunked", {
   }
 
   cps_chunked <- read_ipums_micro_chunked(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     IpumsListCallback$new(function(x, ...) x),
     1000,
-    data_file = ipums_example("cps_00010.dat.gz"),
+    data_file = ipums_example("cps_00159.dat.gz"),
     verbose = FALSE
   )
 
@@ -46,8 +46,8 @@ test_that("basic yield reading - long .dat.gz hier matches chunked", {
 
 test_that("basic yield reading - list .dat.gz hier matches chunked", {
   cps_yield_source <- read_ipums_micro_list_yield(
-    ipums_example("cps_00010.xml"),
-    data_file = ipums_example("cps_00010.dat.gz"),
+    ipums_example("cps_00159.xml"),
+    data_file = ipums_example("cps_00159.dat.gz"),
     verbose = FALSE
   )
 
@@ -57,10 +57,10 @@ test_that("basic yield reading - list .dat.gz hier matches chunked", {
   }
 
   cps_chunked <- read_ipums_micro_list_chunked(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     IpumsListCallback$new(function(x, ...) x),
     1000,
-    data_file = ipums_example("cps_00010.dat.gz"),
+    data_file = ipums_example("cps_00159.dat.gz"),
     verbose = FALSE
   )
 
@@ -69,8 +69,8 @@ test_that("basic yield reading - list .dat.gz hier matches chunked", {
 
 test_that("basic yield reading - list .dat.gz rect matches chunked", {
   cps_yield_source <- read_ipums_micro_list_yield(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    ipums_example("cps_00157.xml"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -80,10 +80,10 @@ test_that("basic yield reading - list .dat.gz rect matches chunked", {
   }
 
   cps_chunked <- read_ipums_micro_list_chunked(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     IpumsListCallback$new(function(x, ...) x),
     1000,
-    data_file = ipums_example("cps_00006.dat.gz"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -93,8 +93,8 @@ test_that("basic yield reading - list .dat.gz rect matches chunked", {
 test_that("read_ipums_micro_yield can't read from .csv file", {
   expect_error(
     cps_yield_source <- read_ipums_micro_yield(
-      ddi = ipums_example("cps_00006.xml"),
-      data_file = ipums_example("cps_00006.csv.gz"),
+      ddi = ipums_example("cps_00158.xml"),
+      data_file = ipums_example("cps_00158.csv.gz"),
       verbose = FALSE
     ),
     regexp = "does not support"

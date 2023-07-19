@@ -1,0 +1,51 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/CM0?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 22:05:46 GMT
+      etag: W/"41fb5dadabb4325e3e473a11d1b01f9b"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: d4839388-0851-49b6-b554-56358ec0b685
+      x-runtime: '0.008525'
+      x-xss-protection: '0'
+      content-length: '1213'
+    body:
+      encoding: ''
+      file: no
+      string: '{"name":"CM0","description":"Persons by Sex [2]","geographicIntegration":"Standardized
+        to 2010","sequence":10.03,"timeSeries":[{"name":"AA","description":"Persons:
+        Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
+        Tract","sequence":65},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","sequence":83},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","sequence":210},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
+        Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
+        Area","sequence":363}]}'
+  recorded_at: 2023-04-26 22:05:46 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

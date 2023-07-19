@@ -12,6 +12,12 @@ ddi_filter_vars <- function(ddi, vars, out_type, verbose) {
   names(varnames) <- varnames
   selected_vars <- varnames[tidyselect::eval_select(vars, varnames)]
 
+  if (length(selected_vars) == 0) {
+    rlang::abort(
+      "`vars` did not match any variables found in the provided file."
+    )
+  }
+
   if (ddi$file_type == "hierarchical" & out_type == "list") {
     key_vars <- purrr::flatten_chr(ddi$rectypes_keyvars$keyvars)
     missing_kv <- dplyr::setdiff(key_vars, selected_vars)

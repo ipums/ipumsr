@@ -11,14 +11,19 @@
 #' Two files are required to load IPUMS microdata extracts:
 #' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
 #'   (.xml) used to parse the extract's data file
-#' - A data file (generally .dat.gz)
+#' - A data file (either .dat.gz or .csv.gz)
 #'
-#' See *Downloading IPUMS files* below for more information about downloading
-#' these files.
+#' See *Downloading IPUMS files* below for more information about
+#' downloading these files.
 #'
 #' `read_ipums_micro()` and `read_ipums_micro_list()` differ in their handling
 #' of extracts that contain multiple record types. See *Data structures*
 #' below.
+#'
+#' Note that Stata, SAS, and SPSS file formats are not supported by
+#' ipumsr readers. Convert your extract to fixed-width or CSV format, or see
+#' [haven](https://haven.tidyverse.org/index.html) for help
+#' loading these files.
 #'
 #' @section Data structures:
 #'
@@ -71,11 +76,10 @@
 #'
 #' @param ddi Either a path to a DDI .xml file downloaded from
 #'   [IPUMS](https://www.ipums.org/), or an
-#'   [ipums_ddi] object parsed by [read_ipums_ddi()].
-#'
-#'   See *Downloading IPUMS files* below.
+#'   [ipums_ddi] object parsed by [read_ipums_ddi()]. See
+#'   *Downloading IPUMS files* below.
 #' @param vars Names of variables to include in the output. Accepts a
-#'   vector of names or a [selection helper][tidyselect::language].
+#'   vector of names or a [tidyselect selection][selection_language].
 #'   If `NULL`, includes all variables in the file.
 #'
 #'   For hierarchical data, the `RECTYPE` variable is always included even if
@@ -87,8 +91,8 @@
 #'   the provided `ddi` file. By default, looks for the data file in the same
 #'   directory as the DDI file. If the data file has been moved, specify
 #'   its location here.
-#' @param verbose Logical indicating whether to print progress information
-#'   to the console.
+#' @param verbose Logical indicating whether to display IPUMS conditions and
+#'   progress information.
 #' @param var_attrs Variable attributes from the DDI to add to the columns of
 #'   the output data. Defaults to all available attributes.
 #'   See [set_ipums_var_attributes()] for more details.
@@ -101,7 +105,7 @@
 #'   names to lowercase when reading a DDI file.
 #'
 #'   If `lower_vars = TRUE` and `vars` is specified, `vars` should reference the
-#'   converted column names.
+#'   lowercase column names.
 #' @return `read_ipums_micro()` returns a single
 #'   [`tibble`][tibble::tbl_df-class] object.
 #'
@@ -123,7 +127,7 @@
 #'
 #' @examples
 #' # Codebook for rectangular example file
-#' cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+#' cps_rect_ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load data based on codebook file info
 #' cps <- read_ipums_micro(cps_rect_ddi_file)
@@ -137,7 +141,7 @@
 #' cps <- read_ipums_micro(ddi, verbose = FALSE)
 #'
 #' # Codebook for hierarchical example file
-#' cps_hier_ddi_file <- ipums_example("cps_00010.xml")
+#' cps_hier_ddi_file <- ipums_example("cps_00159.xml")
 #'
 #' # Read in "long" format to get a single data frame
 #' read_ipums_micro(cps_hier_ddi_file, verbose = FALSE)
@@ -264,8 +268,23 @@ read_ipums_micro_list <- function(
     ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   }
 
+  # If the file type is rectangular, direct users to read_ipums_micro()
+  if (ddi$file_type == "rectangular") {
+    rlang::abort(
+      c(
+        "Data file must be hierarchical, not rectangular.",
+        i = "For rectangular data, use `read_ipums_micro()`."
+      )
+    )
+  }
+
   if (is.null(data_file)) {
     data_file <- file.path(ddi$file_path, ddi$file_name)
+  }
+
+  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz") &
+      ddi$file_type == "hierarchical") {
+    rlang::abort("Hierarchical data cannot be read as csv.")
   }
 
   data_file <- custom_check_file_exists(
@@ -287,34 +306,10 @@ read_ipums_micro_list <- function(
   rt_ddi <- get_rt_ddi(ddi)
   ddi <- ddi_filter_vars(ddi, vars, "list", verbose)
 
-  if (ipums_file_ext(data_file) %in% c(".csv", ".csv.gz")) {
-    if (ddi$file_type == "hierarchical") {
-      rlang::abort("Hierarchical data cannot be read as csv.")
-    }
+  rt_info <- ddi_to_rtinfo(rt_ddi)
+  col_spec <- ddi_to_colspec(ddi, "list", verbose)
 
-    col_types <- ddi_to_readr_colspec(ddi)
-
-    out <- readr::read_csv(
-      data_file,
-      col_types = col_types,
-      n_max = n_max,
-      locale = ipums_locale(ddi$file_encoding),
-      progress = show_readr_progress(verbose)
-    )
-
-    if (ddi_has_lowercase_var_names(ddi)) {
-      out <- dplyr::rename_all(out, tolower)
-    }
-
-    if (verbose) {
-      cat("Assuming data rectangularized to 'P' record type")
-    }
-
-    out <- list("P" = out)
-  } else {
-    rt_info <- ddi_to_rtinfo(rt_ddi)
-    col_spec <- ddi_to_colspec(ddi, "list", verbose)
-
+  tryCatch(
     out <- hipread::hipread_list(
       data_file,
       col_spec,
@@ -322,10 +317,21 @@ read_ipums_micro_list <- function(
       progress = show_readr_progress(verbose),
       n_max = n_max,
       encoding = ddi$file_encoding
-    )
+    ),
+    error = function(cond) {
+      rlang::abort(
+        c(
+          cond$message,
+          i = paste0(
+            "Try `read_ipums_micro()` to load this file as a single data frame."
+          )
+        ),
+        call = expr(read_ipums_micro_list())
+      )
+    }
+  )
 
-    names(out) <- rectype_label_names(names(out), rt_ddi)
-  }
+  names(out) <- rectype_label_names(names(out), rt_ddi)
 
   for (rt in names(out)) {
     out[[rt]] <- set_ipums_var_attributes(out[[rt]], ddi, var_attrs)
@@ -333,6 +339,7 @@ read_ipums_micro_list <- function(
 
   out
 }
+
 
 #' Warns the user that lower_vars has been ignored when they supply an ipums_ddi
 #' to a data reading function

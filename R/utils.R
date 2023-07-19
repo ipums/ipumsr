@@ -177,7 +177,7 @@ find_files_in <- function(file,
 #' @export
 #'
 #' @examples
-#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load metadata into `ipums_ddi` object
 #' ddi <- read_ipums_ddi(ddi_file)
@@ -354,15 +354,6 @@ load_sf_namespace <- function() {
     rlang::abort(c(
       "The `sf` package is required to read IPUMS boundary files.",
       "i" = "Install it with `install.packages(\"sf\")`"
-    ))
-  }
-}
-
-load_rgdal_namespace <- function() {
-  if (!requireNamespace("rgdal", quietly = TRUE)) {
-    rlang::abort(c(
-      "The `rgdal` package is required to read IPUMS boundary files.",
-      "i" = "Install it with `install.packages(\"rgdal\")`"
     ))
   }
 }
@@ -712,6 +703,14 @@ setdiff_null <- function(x, y) {
   }
 
   v
+}
+
+empty_to_null <- function(x) {
+  if (is_empty(x)) {
+    NULL
+  } else {
+    x
+  }
 }
 
 release_questions <- function() {

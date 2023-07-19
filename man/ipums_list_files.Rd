@@ -25,7 +25,7 @@ will be included.
 While less useful, this can also be provided as a string specifying an
 exact file name or an integer to match files by index position.}
 
-\item{types}{One or more of \code{"data"}, \code{"shape"}, or \code{"raster"} indicating
+\item{types}{One or more of \code{"data"} or \code{"shape"} indicating
 the type of files to include in the output. \code{"data"} refers to
 tabular data sources, while \code{"shape"} refers to spatial data sources.
 

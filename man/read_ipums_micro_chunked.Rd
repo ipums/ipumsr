@@ -3,7 +3,7 @@
 \name{read_ipums_micro_chunked}
 \alias{read_ipums_micro_chunked}
 \alias{read_ipums_micro_list_chunked}
-\title{Read data from an IPUMS extract by chunk}
+\title{Read data from an IPUMS microdata extract by chunk}
 \usage{
 read_ipums_micro_chunked(
   ddi,
@@ -30,9 +30,8 @@ read_ipums_micro_list_chunked(
 \arguments{
 \item{ddi}{Either a path to a DDI .xml file downloaded from
 \href{https://www.ipums.org/}{IPUMS}, or an
-\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
-
-See \emph{Downloading IPUMS files} below.}
+\link{ipums_ddi} object parsed by \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}. See
+\emph{Downloading IPUMS files} below.}
 
 \item{callback}{An \link{ipums_callback} object, or a function
 that will be converted to an \code{IpumsSideEffectCallback} object. Callback
@@ -44,7 +43,7 @@ read per chunk. Higher values use more RAM, but
 typically result in faster processing. Defaults to 10,000.}
 
 \item{vars}{Names of variables to include in the output. Accepts a
-vector of names or a \link[tidyselect:language]{selection helper}.
+vector of names or a \link[=selection_language]{tidyselect selection}.
 If \code{NULL}, includes all variables in the file.
 
 For hierarchical data, the \code{RECTYPE} variable is always included even if
@@ -55,8 +54,8 @@ the provided \code{ddi} file. By default, looks for the data file in the same
 directory as the DDI file. If the data file has been moved, specify
 its location here.}
 
-\item{verbose}{Logical indicating whether to print progress information
-to the console.}
+\item{verbose}{Logical indicating whether to display IPUMS conditions and
+progress information.}
 
 \item{var_attrs}{Variable attributes from the DDI to add to the columns of
 the output data. Defaults to all available attributes.
@@ -89,7 +88,7 @@ Two files are required to load IPUMS microdata extracts:
 \itemize{
 \item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
 (.xml) used to parse the extract's data file
-\item A data file (generally .dat.gz)
+\item A data file (either .dat.gz or .csv.gz)
 }
 
 See \emph{Downloading IPUMS files} below for more information about downloading
@@ -98,6 +97,11 @@ these files.
 \code{read_ipums_micro_chunked()} and \code{read_ipums_micro_list_chunked()} differ
 in their handling of extracts that contain multiple record types.
 See \emph{Data structures} below.
+
+Note that Stata, SAS, and SPSS file formats are not supported by
+ipumsr readers. Convert your extract to fixed-width or CSV format, or see
+\href{https://haven.tidyverse.org/index.html}{haven} for help
+loading these files.
 }
 \section{Data structures}{
 
@@ -166,11 +170,11 @@ returns the path to the codebook file.
 suppressMessages(library(dplyr))
 
 # Example codebook file
-cps_rect_ddi_file <- ipums_example("cps_00006.xml")
+cps_rect_ddi_file <- ipums_example("cps_00157.xml")
 
 # Function to extract Minnesota cases from CPS example
-# (This can also be accomplished using "Select Cases" in the IPUMS
-# extract system)
+# (This can also be accomplished by including case selections
+# in an extract definition)
 #
 # Function must take `x` and `pos` to refer to data and row position,
 # respectively.
@@ -184,7 +188,7 @@ filter_mn_callback <- IpumsDataFrameCallback$new(filter_mn)
 # Process data in chunks, filtering to MN cases in each chunk
 read_ipums_micro_chunked(
   cps_rect_ddi_file,
-  filter_mn_callback,
+  callback = filter_mn_callback,
   chunk_size = 1000,
   verbose = FALSE
 )
@@ -192,13 +196,13 @@ read_ipums_micro_chunked(
 # Tabulate INCTOT average by state without storing full dataset in memory
 read_ipums_micro_chunked(
   cps_rect_ddi_file,
-  IpumsDataFrameCallback$new(
+  callback = IpumsDataFrameCallback$new(
     function(x, pos) {
       x \%>\%
         mutate(
           INCTOT = lbl_na_if(
             INCTOT,
-            ~ .lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+            ~ grepl("Missing|N.I.U.", .lbl)
           )
         ) \%>\%
         filter(!is.na(INCTOT)) \%>\%
@@ -206,15 +210,16 @@ read_ipums_micro_chunked(
         summarize(INCTOT_SUM = sum(INCTOT), n = n(), .groups = "drop")
     }
   ),
-  chunk_size = 1000
+  chunk_size = 1000,
+  verbose = FALSE
 ) \%>\%
   group_by(STATEFIP) \%>\%
   summarize(avg_inc = sum(INCTOT_SUM) / sum(n))
 
 # `x` will be a list when using `read_ipums_micro_list_chunked()`
 read_ipums_micro_list_chunked(
-  ipums_example("cps_00010.xml"),
-  IpumsSideEffectCallback$new(function(x, pos) {
+  ipums_example("cps_00159.xml"),
+  callback = IpumsSideEffectCallback$new(function(x, pos) {
     print(
       paste0(
         nrow(x$PERSON), " persons and ",
@@ -229,7 +234,7 @@ read_ipums_micro_list_chunked(
 # Using the biglm package, you can even run a regression without storing
 # the full dataset in memory
 lm_results <- read_ipums_micro_chunked(
-  ipums_example("cps_00015.xml"),
+  ipums_example("cps_00160.xml"),
   IpumsBiglmCallback$new(
     INCTOT ~ AGE + HEALTH, # Model formula
     function(x, pos) {
@@ -237,7 +242,7 @@ lm_results <- read_ipums_micro_chunked(
         mutate(
           INCTOT = lbl_na_if(
             INCTOT,
-            ~ .lbl \%in\% c("Missing.", "N.I.U. (Not in Universe).")
+            ~ grepl("Missing|N.I.U.", .lbl)
           ),
           HEALTH = as_factor(HEALTH)
         )

@@ -1,0 +1,156 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/foo?collection=nhgis&version=2&pageNumber=1&pageSize=2500
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      content-type: text/html; charset=UTF-8
+      date: Wed, 26 Apr 2023 18:26:44 GMT
+      server: nginx/1.18.0
+      vary: Origin
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 68973b03-85a8-4419-8a6d-99755b1618db
+      x-runtime: '0.003238'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2023-04-26 18:26:44 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/foo?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 18:26:44 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: ab45a8b3-dd3d-4101-85c1-57dd730437c0
+      x-runtime: '0.013282'
+      x-xss-protection: '0'
+      content-length: '100'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find Dataset."}'
+  recorded_at: 2023-04-26 18:26:44 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/1980_STF1/data_tables/foo?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 18:26:44 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 6765ac0b-ceb7-4a01-8c54-09bd342a426b
+      x-runtime: '0.011915'
+      x-xss-protection: '0'
+      content-length: '102'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find DataTable."}'
+  recorded_at: 2023-04-26 18:26:44 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/foo?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 18:26:44 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 799f4d30-ed17-4c30-aa94-bff9f2bca85a
+      x-runtime: '0.013651'
+      x-xss-protection: '0'
+      content-length: '108'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
+        find TimeSeriesTable."}'
+  recorded_at: 2023-04-26 18:26:44 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
