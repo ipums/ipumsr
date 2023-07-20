@@ -803,7 +803,7 @@ test_that("Can remove full fields from an NHGIS extract", {
   expect_equal(revised$datasets, nhgis_extract$datasets[1])
   expect_null(revised$time_series_tables)
   expect_null(revised$tst_layout)
-  expect_equal(revised$geographic_extents, "420")
+  expect_equal(revised$geographic_extents, "100")
 })
 
 test_that("Unused revisions do not alter unsubmitted extracts", {

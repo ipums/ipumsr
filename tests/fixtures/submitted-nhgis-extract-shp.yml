@@ -7,8 +7,8 @@ http_interactions:
       string: '{"shapefiles":["110_blck_grp_2019_tl2019"],"description":"","collection":"nhgis","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 10 Apr 2023 15:00:32 GMT
-      etag: W/"437547b6b3c015eba8e12b21e895cfb3"
+      date: Thu, 20 Jul 2023 21:27:40 GMT
+      etag: W/"26b7c4e561f8acdf96fb34300c6a1686"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,13 +30,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 6e266fe7-c9e1-4570-bb61-37336f14f4a6
-      x-runtime: '0.194849'
+      x-request-id: fbb8aa17-766a-4916-978a-41e49894697e
+      x-runtime: '0.293624'
       x-xss-protection: '0'
       content-length: '193'
     body:
       encoding: ''
       file: no
-      string: '{"number":1171,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-04-10 15:00:32 GMT
+      string: '{"number":1271,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
+  recorded_at: 2023-07-20 21:27:40 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
