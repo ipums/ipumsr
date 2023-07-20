@@ -4,7 +4,7 @@
 \name{ipumsr-package}
 \alias{ipumsr}
 \alias{ipumsr-package}
-\title{ipumsr: An R interface for downloading, reading, and handling IPUMS data}
+\title{ipumsr: An R Interface for Downloading, Reading, and Handling IPUMS Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
