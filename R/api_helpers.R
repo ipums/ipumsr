@@ -771,7 +771,7 @@ parse_response_error <- function(res) {
 # Helper to handle errors and warnings for API requests.
 # Called in ipums_api_request()
 validate_api_request <- function(res, call = caller_env()) {
-  is_downloads_request <- fostr_detect(res$url, "downloads/")
+  is_downloads_request <- fostr_detect(res$url, "downloads")
   is_extract_request <- !is_downloads_request &&
     fostr_detect(res$url, "extracts/")
 
