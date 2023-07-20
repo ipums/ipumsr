@@ -565,12 +565,22 @@ datasets, which often have the same data table names across
 datasets.)</p>
 </div>
 <div class="section level3">
-<h3 id="additional-options">Additional options<a class="anchor" aria-label="anchor" href="#additional-options"></a>
+<h3 id="data-layout-and-file-format">Data layout and file format<a class="anchor" aria-label="anchor" href="#data-layout-and-file-format"></a>
 </h3>
 <p>IPUMS NHGIS extract definitions also support additional options to
-modify the format of the extract’s resulting data files. See the
-documentation for <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code> for more details
-on these options.</p>
+modify the layout and format of the extract’s resulting data files.</p>
+<p>For extracts that contain time series tables, the
+<code>tst_layout</code> argument indicates how the longitudinal data
+should be organized.</p>
+<p>For extracts that contain datasets with multiple breakdowns or data
+types, use the <code>breakdown_and_data_type_layout</code> argument to
+specify a layout . This is most common for data sources that contain
+both estimates and margins of error, like the ACS.</p>
+<p>File formats can be specified with the <code>data_format</code>
+argument. IPUMS NHGIS currently distributes files in csv and fixed-width
+format.</p>
+<p>See the documentation for <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code> for
+more details on these options.</p>
 </div>
 </div>
 <div class="section level2">

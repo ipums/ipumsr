@@ -417,7 +417,7 @@ Each data quality flag corresponds to one or more variables, and the codes for
 each flag vary based on the sample. See the documentation for the IPUMS
 collection of interest for more information about data quality flag codes.
 
-## Additional options
+## Data structure and file format
 
 By default, microdata extract definitions will request data in a rectangular
 structure and fixed-width file format. 
@@ -429,6 +429,9 @@ values from the associated household record onto all household members.
 To instead create a hierarchical extract, which includes separate records for 
 households and persons, set `data_structure = "hierarchical"` in your extract 
 definition.
+
+See the [IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
+for more information about loading hierarchical data into R.
 
 To request a file format other than fixed-width, adjust the `data_format` 
 argument. Note that

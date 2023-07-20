@@ -404,11 +404,24 @@ The iteration would automatically add the selected tables and geog levels for
 the new dataset. (This workflow works particularly well for ACS datasets, which 
 often have the same data table names across datasets.)
 
-### Additional options
+### Data layout and file format
 
 IPUMS NHGIS extract definitions also support additional options to modify the 
-format of the extract's resulting data files. See the documentation for 
-`define_extract_nhgis()` for more details on these options.
+layout and format of the extract's resulting data files. 
+
+For extracts that contain time series tables, the `tst_layout` argument
+indicates how the longitudinal data should be organized.
+
+For extracts that contain datasets with multiple breakdowns
+or data types, use the `breakdown_and_data_type_layout` argument to
+specify a layout . This is most common for data sources that contain both 
+estimates and margins of error, like the ACS.
+
+File formats can be specified with the `data_format` argument. IPUMS NHGIS
+currently distributes files in csv and fixed-width format.
+
+See the documentation for `define_extract_nhgis()` for more details on 
+these options. 
 
 ## Next steps
 
