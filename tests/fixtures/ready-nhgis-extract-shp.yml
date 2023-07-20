@@ -1,14 +1,14 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1171?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts/1271?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
   response:
     status:
       status_code: 200
@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 10 Apr 2023 15:01:04 GMT
-      etag: W/"7a4b91486c9d367cc64c2c081767fa7c"
+      date: Thu, 20 Jul 2023 21:27:52 GMT
+      etag: W/"54a8c3147dd39f4bd350f87aabeca130"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,13 +30,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 3598278b-ed1b-4309-97c3-ae3415287599
-      x-runtime: '0.559348'
+      x-request-id: 096c8ee1-5181-4299-9f40-276157d02585
+      x-runtime: '0.675476'
       x-xss-protection: '0'
       content-length: '326'
     body:
       encoding: ''
       file: no
-      string: '{"number":1171,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2004718/nhgis1171_shape.zip","bytes":510593,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-04-10 15:01:04 GMT
+      string: '{"number":1271,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063473/nhgis1271_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
+  recorded_at: 2023-07-20 21:27:52 GMT
   recorded_with: vcr/1.2.0, webmockr/0.9.0
