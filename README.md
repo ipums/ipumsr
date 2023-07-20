@@ -71,33 +71,17 @@ remotes::install_github("ipums/ipumsr")
 
 ## Getting started
 
-The package vignettes are a great place to learn more about ipumsr and
-IPUMS data:
+If you’re new to IPUMS data, see the [general
+introduction](https://tech.popdata.org/ipumsr/articles/ipums.html).
 
-- [General
-  introduction](https://tech.popdata.org/ipumsr/articles/ipums.html)
+To learn about obtaining IPUMS data via the IPUMS API, see the [IPUMS
+API
+introduction](https://tech.popdata.org/ipumsr/articles/ipums-api.html)
 
-### Working with IPUMS Data
-
-- [Read IPUMS data
-  files](https://tech.popdata.org/ipumsr/articles/ipums-read.html)
-
-- [IPUMS variable
-  metadata](https://tech.popdata.org/ipumsr/articles/value-labels.html)
-
-- [Options for large data
-  files](https://tech.popdata.org/ipumsr/articles/ipums-bigdata.html)
-
-### Interacting with the IPUMS API
-
-- [Introduction to the IPUMS
-  API](https://tech.popdata.org/ipumsr/articles/ipums-api.html)
-
-- [Microdata API
-  requests](https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html)
-
-- [NHGIS API
-  requests](https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html)
+Additional demonstrations are also available on the [package
+website](https://tech.popdata.org/ipumsr/articles/). You can access them
+through the **articles** tab or by using the `vignette()` function in R
+(e.g. `vignette("ipums-read", package = "ipumsr")`).
 
 The [IPUMS support website](https://www.ipums.org/support/exercises)
 also houses many project-specific exercises.
