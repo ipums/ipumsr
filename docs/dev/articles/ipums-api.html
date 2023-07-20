@@ -404,8 +404,6 @@ containing the completed extract definition.</p>
 <span><span class="co">#&gt; Checking extract status...</span></span>
 <span><span class="co">#&gt; Waiting 10 seconds...</span></span>
 <span><span class="co">#&gt; Checking extract status...</span></span>
-<span><span class="co">#&gt; Waiting 20 seconds...</span></span>
-<span><span class="co">#&gt; Checking extract status...</span></span>
 <span><span class="co">#&gt; IPUMS USA extract 348 is ready to download.</span></span>
 <span></span>
 <span><span class="va">usa_ext_complete</span><span class="op">$</span><span class="va">status</span></span>
@@ -428,18 +426,12 @@ files.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/wait_for_extract.html">is_extract_ready</a></span><span class="op">(</span><span class="va">usa_ext_submitted</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>Note that extracts are removed from the IPUMS servers after a set
-period of time (72 hours for microdata collections, 2 weeks for IPUMS
-NHGIS). Therefore, an extract that has a <code>"completed"</code> status
-may still be unavailable for download. <code><a href="../reference/wait_for_extract.html">is_extract_ready()</a></code>
-will alert you if the extract has expired and needs to be
-resubmitted.</p>
 <p>For a more detailed status check, provide the extract’s collection
 and number to <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code>. This returns an
 <code>ipums_extract</code> object reflecting the requested extract
-definition with the most current <code>status</code>. The
-<code>status</code> of a submitted extract will be one of
-<code>"queued"</code>, <code>"started"</code>, <code>"produced"</code>,
+definition with the most current status. The <code>status</code> of a
+submitted extract will be one of <code>"queued"</code>,
+<code>"started"</code>, <code>"produced"</code>,
 <code>"canceled"</code>, <code>"failed"</code>, or
 <code>"completed"</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -447,6 +439,15 @@ definition with the most current <code>status</code>. The
 <span></span>
 <span><span class="va">usa_ext_submitted</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "completed"</span></span></code></pre></div>
+<p>Note that extracts are removed from the IPUMS servers after a set
+period of time (72 hours for microdata collections, 2 weeks for IPUMS
+NHGIS). Therefore, an extract that has a <code>"completed"</code> status
+may still be unavailable for download.</p>
+<p><code><a href="../reference/wait_for_extract.html">is_extract_ready()</a></code> will alert you if the extract has
+expired and needs to be resubmitted. Simply use
+<code><a href="../reference/submit_extract.html">submit_extract()</a></code> to resubmit an extract request. Note that
+this will produce a <em>new</em> extract (with a new extract number),
+even if the extract definition is identical.</p>
 </div>
 <div class="section level2">
 <h2 id="download">Download an extract<a class="anchor" aria-label="anchor" href="#download"></a>
@@ -635,12 +636,13 @@ highly recommend that you save this code somewhere where it can be
 accessed and updated in the future.</p>
 <p>However, there are cases where the original extract definition code
 does not exist (e.g. if the extract was created using the online IPUMS
-extract system). In this case, the best approach is to create a new
-extract definition (using a <code>define_extract_*()</code> function)
-that reproduces the specifications of that extract along with the
-desired modifications. While this may be a bit tedious for complex
-extract definitions, it is a one-time investment that will make any
-future updates to the extract definition much easier.</p>
+extract system). In this case, the best approach is to view the extract
+definition with <code><a href="../reference/get_extract_info.html">get_extract_info()</a></code> and create a new extract
+definition (using a <code>define_extract_*()</code> function) that
+reproduces that definition along with the desired modifications. While
+this may be a bit tedious for complex extract definitions, it is a
+one-time investment that will make any future updates to the extract
+definition much easier.</p>
 <p>Previously, we encouraged users to use the helpers
 <code><a href="../reference/add_to_extract.html">add_to_extract()</a></code> and <code><a href="../reference/remove_from_extract.html">remove_from_extract()</a></code>
 when modifying extracts. We now encourage you to re-write extract
@@ -652,9 +654,9 @@ be retired in the future.</p>
 <div class="section level2">
 <h2 id="putting-it-all-together">Putting it all together<a class="anchor" aria-label="anchor" href="#putting-it-all-together"></a>
 </h2>
-<p>These functions are compatible with one another such that they can be
-combined into a single pipeline that requests, downloads, and reads your
-extract data into an R data frame:</p>
+<p>The core API functions in ipumsr are compatible with one another such
+that they can be combined into a single pipeline that requests,
+downloads, and reads your extract data into an R data frame:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract-micro.html">define_extract_usa</a></span><span class="op">(</span></span>
 <span>  <span class="st">"USA extract for API vignette"</span>,</span>

@@ -344,7 +344,7 @@ eject_cassette("wait-for-extract")
 modify_ready_extract_cassette_file(
   "wait-for-extract.yml",
   fixture_path = "fixtures",
-  n_requests = 3
+  n_requests = 2
 )
 ```
 
@@ -386,16 +386,10 @@ is_extract_ready(usa_ext_submitted)
 eject_cassette("extract-ready")
 ```
 
-Note that extracts are removed from the IPUMS servers after a set period of time
-(72 hours for microdata collections, 2 weeks for IPUMS NHGIS). Therefore,
-an extract that has a `"completed"` status may still be unavailable for
-download. `is_extract_ready()` will alert you if the extract has expired
-and needs to be resubmitted.
-
 For a more detailed status check, provide the extract's collection and 
 number to `get_extract_info()`. This returns an `ipums_extract` object 
 reflecting the requested extract definition with
-the most current `status`. The `status` of a submitted extract will be
+the most current status. The `status` of a submitted extract will be
 one of `"queued"`, `"started"`, `"produced"`, `"canceled"`, `"failed"`,
 or `"completed"`.
 
@@ -412,6 +406,16 @@ usa_ext_submitted$status
 ```{r, echo=FALSE, results="hide", message=FALSE}
 eject_cassette("check-extract-info")
 ```
+
+Note that extracts are removed from the IPUMS servers after a set period of time
+(72 hours for microdata collections, 2 weeks for IPUMS NHGIS). Therefore,
+an extract that has a `"completed"` status may still be unavailable for
+download. 
+
+`is_extract_ready()` will alert you if the extract has expired
+and needs to be resubmitted. Simply use `submit_extract()` to resubmit an
+extract request. Note that this will produce a _new_ extract (with a new 
+extract number), even if the extract definition is identical.
 
 ## Download an extract {#download}
 
@@ -578,9 +582,10 @@ somewhere where it can be accessed and updated in the future.
 
 However, there are cases where the original extract definition code does not
 exist (e.g. if the extract was created using the online IPUMS extract system).
-In this case, the best approach is to create a new extract definition
-(using a `define_extract_*()` function) that reproduces the specifications of 
-that extract along with the desired modifications. While this
+In this case, the best approach is to view the extract definition with
+`get_extract_info()` and create a new extract definition
+(using a `define_extract_*()` function) that reproduces that definition
+along with the desired modifications. While this
 may be a bit tedious for complex extract definitions, it is a one-time
 investment that will make any future updates to the extract
 definition much easier.
@@ -594,7 +599,7 @@ number. These two functions may be retired in the future.
 
 ## Putting it all together
 
-These functions are compatible with one another
+The core API functions in ipumsr are compatible with one another
 such that they can be combined into a single pipeline that requests, downloads,
 and reads your extract data into an R data frame:
 

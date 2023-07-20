@@ -430,8 +430,8 @@ To instead create a hierarchical extract, which includes separate records for
 households and persons, set `data_structure = "hierarchical"` in your extract 
 definition.
 
-See the [IPUMS data reading vignette](ipums-read.html) for more information 
-about loading hierarchical data into R.
+See the [IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
+for more information about loading hierarchical data into R.
 
 To request a file format other than fixed-width, adjust the `data_format` 
 argument. Note that
