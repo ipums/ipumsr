@@ -203,12 +203,20 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
           purrr::map(list(.data$time_series_tables), purrr::compact),
           error = function(cnd) list(NULL)
         ),
+        "shapefiles" = tryCatch(
+          purrr::map(list(.data$shapefiles), ~ purrr::compact(.x[!is.na(.x)])),
+          error = function(cnd) list(NULL)
+        ),
         "datasets" = purrr::map(
           .data$datasets,
           empty_to_null
         ),
         "time_series_tables" = purrr::map(
           .data$time_series_tables,
+          empty_to_null
+        ),
+        "shapefiles" = purrr::map(
+          .data$shapefiles,
           empty_to_null
         )
       ) %>%
