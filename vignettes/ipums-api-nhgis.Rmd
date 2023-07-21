@@ -293,7 +293,7 @@ dataset <- ds_spec(
 str(dataset)
 ```
 
-This dataset specification can then be provided to the extract defintion:
+This dataset specification can then be provided to the extract definition:
 
 ```{r}
 nhgis_ext <- define_extract_nhgis(
