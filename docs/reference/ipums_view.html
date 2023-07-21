@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Intro</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -40,33 +40,30 @@
      
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ipums.html">Introduction</a>
+  <ul class="dropdown-menu" role="menu"><li class="dropdown-header">IPUMS Data</li>
+    <li>
+      <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
       <a href="../articles/value-labels.html">Value labels</a>
     </li>
     <li>
-      <a href="../articles/ipums-geography.html">Geographic data in ipumsr</a>
-    </li>
-    <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">IPUMS data extract API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     <li>
-      <a href="../articles/ipums-cps.html">CPS exercise</a>
-    </li>
-    <li>
-      <a href="../articles/ipums-nhgis.html">NHGIS exercise</a>
-    </li>
-    <li>
-      <a href="../articles/ipums-terra.html">IPUMS Terra exercise</a>
-    </li>
-    <li>
-      <a href="https://ipums.org/exercises.shtml" class="external-link">More project exercises</a>
+      <a href="https://ipums.org/exercises.shtml" class="external-link">Project-specific exercises</a>
     </li>
   </ul></li>
 <li>
@@ -105,7 +102,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>View a static webpage with variable information from a IPUMS extract</h1>
-    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/viewer.r" class="external-link"><code>R/viewer.r</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/R/viewer.R" class="external-link"><code>R/viewer.R</code></a></small>
     <div class="hidden name"><code>ipums_view.Rd</code></div>
     </div>
 
@@ -114,19 +111,20 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ipums_view</span><span class="op">(</span><span class="va">x</span>, out_file <span class="op">=</span> <span class="cn">NULL</span>, launch <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ipums_view</span><span class="op">(</span><span class="va">x</span>, out_file <span class="op">=</span> <span class="cn">NULL</span>, launch <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>A DDI or other object with ipums attributes (such as data loaded from an extract).
-Note that the file level information (like extract notes) are only available from
-the DDI.</p></dd>
+<dd><p>An <a href="ipums_ddi-class.html">ipums_ddi</a> object or a data frame with IPUMS attributes
+attached.</p>
+<p>Note that the file-level information (e.g. extract notes) are only
+available when providing an <code>ipums_ddi</code> object.</p></dd>
 
 
 <dt>out_file</dt>
-<dd><p>Optionally specify a location to save HTML file. NULL the default
+<dd><p>Optional location to save produced HTML file. If <code>NULL</code>,
 makes a temporary file.</p></dd>
 
 
@@ -138,16 +136,16 @@ makes a temporary file.</p></dd>
     <h2>Value</h2>
     
 
-<p>The filepath to the html (silently if launch is <code>TRUE</code>)</p>
+<p>The filepath to the html (silently if <code>launch = TRUE</code>)</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00006.xml"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">ipums_view</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">ipums_view</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"codebook.html"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00157.xml"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_view</span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ipums_view</span><span class="op">(</span><span class="va">ddi</span>, <span class="st">"codebook.html"</span>, launch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

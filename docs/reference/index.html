@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Intro</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -40,33 +40,30 @@
      
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ipums.html">Introduction</a>
+  <ul class="dropdown-menu" role="menu"><li class="dropdown-header">IPUMS Data</li>
+    <li>
+      <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
       <a href="../articles/value-labels.html">Value labels</a>
     </li>
     <li>
-      <a href="../articles/ipums-geography.html">Geographic data in ipumsr</a>
-    </li>
-    <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">IPUMS data extract API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     <li>
-      <a href="../articles/ipums-cps.html">CPS exercise</a>
-    </li>
-    <li>
-      <a href="../articles/ipums-nhgis.html">NHGIS exercise</a>
-    </li>
-    <li>
-      <a href="../articles/ipums-terra.html">IPUMS Terra exercise</a>
-    </li>
-    <li>
-      <a href="https://ipums.org/exercises.shtml" class="external-link">More project exercises</a>
+      <a href="https://ipums.org/exercises.shtml" class="external-link">Project-specific exercises</a>
     </li>
   </ul></li>
 <li>
@@ -109,76 +106,133 @@
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
           <h2 id="read-ipums-data">Read IPUMS data <a href="#read-ipums-data" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Load IPUMS data and metadata files into R</p>
+        </th>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="microdata-projects">Microdata projects <a href="#microdata-projects" class="anchor" aria-hidden="true"></a></h3>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="read_ipums_micro.html">read_ipums_micro()</a></code> <code><a href="read_ipums_micro.html">read_ipums_micro_list()</a></code> </p>
         </td>
-        <td><p>Read data from an IPUMS extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_nhgis.html">read_nhgis()</a></code> <code><a href="read_nhgis.html">read_nhgis_sf()</a></code> <code><a href="read_nhgis.html">read_nhgis_sp()</a></code> </p>
-        </td>
-        <td><p>Read data from an NHGIS extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_terra_area.html">read_terra_area()</a></code> <code><a href="read_terra_area.html">read_terra_area_sf()</a></code> <code><a href="read_terra_area.html">read_terra_area_sp()</a></code> </p>
-        </td>
-        <td><p>Read data from an IPUMS Terra area extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_terra_micro.html">read_terra_micro()</a></code> </p>
-        </td>
-        <td><p>Read data from an IPUMS Terra microdata extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_terra_raster.html">read_terra_raster()</a></code> <code><a href="read_terra_raster.html">read_terra_raster_list()</a></code> </p>
-        </td>
-        <td><p>Read data from an IPUMS Terra raster extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_ipums_sf.html">read_ipums_sf()</a></code> <code><a href="read_ipums_sf.html">read_ipums_sp()</a></code> </p>
-        </td>
-        <td><p>Read boundary files from an IPUMS extract</p></td>
+        <td><p>Read data from an IPUMS microdata extract</p></td>
       </tr><tr><td>
           <p><code><a href="read_ipums_ddi.html">read_ipums_ddi()</a></code> </p>
         </td>
-        <td><p>Read metadata about an IPUMS extract from a DDI (.xml) file</p></td>
-      </tr><tr><td>
-          <p><code><a href="read_ipums_codebook.html">read_ipums_codebook()</a></code> </p>
-        </td>
-        <td><p>Read metadata from a text codebook in a NHGIS or Terra area-level extract</p></td>
+        <td><p>Read metadata about an IPUMS microdata extract from a DDI codebook (.xml)
+file</p></td>
       </tr><tr><td>
           <p><code><a href="read_ipums_micro_chunked.html">read_ipums_micro_chunked()</a></code> <code><a href="read_ipums_micro_chunked.html">read_ipums_micro_list_chunked()</a></code> </p>
         </td>
-        <td><p>Read data from an IPUMS extract (in chunks)</p></td>
+        <td><p>Read data from an IPUMS microdata extract by chunk</p></td>
       </tr><tr><td>
           <p><code><a href="read_ipums_micro_yield.html">read_ipums_micro_yield()</a></code> <code><a href="read_ipums_micro_yield.html">read_ipums_micro_list_yield()</a></code> </p>
         </td>
-        <td><p>Read data from an IPUMS extract (in yields)</p></td>
+        <td><p>Read data from an IPUMS microdata extract in yields</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="explore-ipums-metadata">Explore IPUMS metadata <a href="#explore-ipums-metadata" class="anchor" aria-hidden="true"></a></h2>
+          <h3 id="aggregate-data-projects">Aggregate data projects <a href="#aggregate-data-projects" class="anchor" aria-hidden="true"></a></h3>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="read_nhgis.html">read_nhgis()</a></code> </p>
+        </td>
+        <td><p>Read tabular data from an NHGIS extract</p></td>
+      </tr><tr><td>
+          <p><code><a href="read_nhgis_codebook.html">read_nhgis_codebook()</a></code> </p>
+        </td>
+        <td><p>Read metadata from an NHGIS codebook (.txt) file</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="general-use">General use <a href="#general-use" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="read_ipums_sf.html">read_ipums_sf()</a></code> </p>
+        </td>
+        <td><p>Read spatial data from an IPUMS extract</p></td>
+      </tr><tr><td>
+          <p><code><a href="ipums_list_files.html">ipums_list_files()</a></code> </p>
+        </td>
+        <td><p>List files contained within an IPUMS extract</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="interact-with-the-ipums-api">Interact with the IPUMS API <a href="#interact-with-the-ipums-api" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Request and download IPUMS data within R</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="define_extract-micro.html">define_extract_usa()</a></code> <code><a href="define_extract-micro.html">define_extract_cps()</a></code> <code><a href="define_extract-micro.html">define_extract_ipumsi()</a></code> </p>
+        </td>
+        <td><p>Define an extract request for an IPUMS microdata collection</p></td>
+      </tr><tr><td>
+          <p><code><a href="define_extract_nhgis.html">define_extract_nhgis()</a></code> </p>
+        </td>
+        <td><p>Define an IPUMS NHGIS extract request</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_sample_info.html">get_sample_info()</a></code> </p>
+        </td>
+        <td><p>List available samples for IPUMS microdata collections</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_metadata_nhgis.html">get_metadata_nhgis()</a></code> </p>
+        </td>
+        <td><p>List available data sources from IPUMS NHGIS</p></td>
+      </tr><tr><td>
+          <p><code><a href="submit_extract.html">submit_extract()</a></code> </p>
+        </td>
+        <td><p>Submit an extract request via the IPUMS API</p></td>
+      </tr><tr><td>
+          <p><code><a href="wait_for_extract.html">wait_for_extract()</a></code> <code><a href="wait_for_extract.html">is_extract_ready()</a></code> </p>
+        </td>
+        <td><p>Wait for an extract request to finish processing</p></td>
+      </tr><tr><td>
+          <p><code><a href="download_extract.html">download_extract()</a></code> </p>
+        </td>
+        <td><p>Download a completed IPUMS data extract</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_extract_info.html">get_extract_info()</a></code> <code><a href="get_extract_info.html">get_last_extract_info()</a></code> </p>
+        </td>
+        <td><p>Retrieve the definition and latest status of an extract request</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_extract_history.html">get_extract_history()</a></code> </p>
+        </td>
+        <td><p>Browse definitions of previously submitted extract requests</p></td>
+      </tr><tr><td>
+          <p><code><a href="save_extract_as_json.html">save_extract_as_json()</a></code> <code><a href="save_extract_as_json.html">define_extract_from_json()</a></code> </p>
+        </td>
+        <td><p>Store an extract definition in JSON format</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_ipums_api_key.html">set_ipums_api_key()</a></code> </p>
+        </td>
+        <td><p>Set your IPUMS API key</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_ipums_default_collection.html">set_ipums_default_collection()</a></code> </p>
+        </td>
+        <td><p>Set your default IPUMS collection</p></td>
+      </tr><tr><td>
+          <p><code><a href="ipums_data_collections.html">ipums_data_collections()</a></code> </p>
+        </td>
+        <td><p>List IPUMS data collections</p></td>
+      </tr><tr><td>
+          <p><code><a href="ipums_extract-class.html">ipums_extract-class</a></code> <code><a href="ipums_extract-class.html">ipums_extract</a></code> </p>
+        </td>
+        <td><p><code>ipums_extract</code> class</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="explore-ipums-variable-metadata">Explore IPUMS variable metadata <a href="#explore-ipums-variable-metadata" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Get additional information about IPUMS data contents</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="ipums_var_info.html">ipums_var_info()</a></code> <code><a href="ipums_var_info.html">ipums_var_label()</a></code> <code><a href="ipums_var_info.html">ipums_var_desc()</a></code> <code><a href="ipums_var_info.html">ipums_val_labels()</a></code> </p>
+        </td>
+        <td><p>Get contextual information about variables in an IPUMS data source</p></td>
+      </tr><tr><td>
+          <p><code><a href="ipums_file_info.html">ipums_file_info()</a></code> <code><a href="ipums_file_info.html">ipums_conditions()</a></code> </p>
+        </td>
+        <td><p>Get file information for an IPUMS extract</p></td>
+      </tr><tr><td>
           <p><code><a href="ipums_view.html">ipums_view()</a></code> </p>
         </td>
         <td><p>View a static webpage with variable information from a IPUMS extract</p></td>
       </tr><tr><td>
-          <p><code><a href="ipums_var_info.html">ipums_var_info()</a></code> <code><a href="ipums_var_info.html">ipums_var_desc()</a></code> <code><a href="ipums_var_info.html">ipums_var_label()</a></code> <code><a href="ipums_var_info.html">ipums_val_labels()</a></code> </p>
-        </td>
-        <td><p>Get IPUMS variable information</p></td>
-      </tr><tr><td>
           <p><code><a href="ipums_website.html">ipums_website()</a></code> </p>
         </td>
-        <td><p>Launch a browser window to the ipums website</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_conditions.html">ipums_conditions()</a></code> </p>
-        </td>
-        <td><p>Get IPUMS citation and conditions</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_file_info.html">ipums_file_info()</a></code> </p>
-        </td>
-        <td><p>Get IPUMS file information</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_list_files.html">ipums_list_files()</a></code> <code><a href="ipums_list_files.html">ipums_list_data()</a></code> <code><a href="ipums_list_files.html">ipums_list_shape()</a></code> <code><a href="ipums_list_files.html">ipums_list_raster()</a></code> </p>
-        </td>
-        <td><p>List files available for analysis in an IPUMS extract</p></td>
+        <td><p>Launch a browser window to an IPUMS metadata page</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="work-with-value-labels">Work with value labels <a href="#work-with-value-labels" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Translate IPUMS value labels to standard R data structures</p>
@@ -186,23 +240,19 @@
       </tr></tbody><tbody><tr><td>
           <p><code><a href="lbl_na_if.html">lbl_na_if()</a></code> </p>
         </td>
-        <td><p>Set labelled values to missing</p></td>
+        <td><p>Convert labelled data values to NA</p></td>
       </tr><tr><td>
-          <p><code><a href="lbl_relabel.html">lbl_relabel()</a></code> </p>
+          <p><code><a href="lbl_relabel.html">lbl_relabel()</a></code> <code><a href="lbl_relabel.html">lbl_collapse()</a></code> </p>
         </td>
-        <td><p>Relabel labelled values</p></td>
+        <td><p>Modify value labels for a labelled vector</p></td>
       </tr><tr><td>
           <p><code><a href="lbl_define.html">lbl_define()</a></code> </p>
         </td>
         <td><p>Define labels for an unlabelled vector</p></td>
       </tr><tr><td>
-          <p><code><a href="lbl_collapse.html">lbl_collapse()</a></code> </p>
-        </td>
-        <td><p>Collapse labelled values to labels that already exist</p></td>
-      </tr><tr><td>
           <p><code><a href="zap_ipums_attributes.html">zap_ipums_attributes()</a></code> </p>
         </td>
-        <td><p>Remove all IPUMS attributes from a variable (or all variables in a data.frame)</p></td>
+        <td><p>Remove label attributes from a data frame or labelled vector</p></td>
       </tr><tr><td>
           <p><code><a href="lbl_clean.html">lbl_clean()</a></code> </p>
         </td>
@@ -216,90 +266,21 @@
         </td>
         <td><p>Make a label placeholder object</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="interact-with-the-ipums-api">Interact with the IPUMS API <a href="#interact-with-the-ipums-api" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="set_ipums_api_key.html">set_ipums_api_key()</a></code> </p>
-        </td>
-        <td><p>Set your IPUMS API key</p></td>
-      </tr><tr><td>
-          <p><code><a href="define_extract_usa.html">define_extract_usa()</a></code> </p>
-        </td>
-        <td><p>Define an IPUMS USA extract request</p></td>
-      </tr><tr><td>
-          <p><code><a href="define_extract_cps.html">define_extract_cps()</a></code> </p>
-        </td>
-        <td><p>Define an IPUMS CPS extract request</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_extract-class.html">ipums_extract-class</a></code> </p>
-        </td>
-        <td><p><code>ipums_extract</code> class</p></td>
-      </tr><tr><td>
-          <p><code><a href="submit_extract.html">submit_extract()</a></code> </p>
-        </td>
-        <td><p>Submit an extract request via the IPUMS API</p></td>
-      </tr><tr><td>
-          <p><code><a href="wait_for_extract.html">wait_for_extract()</a></code> </p>
-        </td>
-        <td><p>Wait for extract to finish</p></td>
-      </tr><tr><td>
-          <p><code><a href="is_extract_ready.html">is_extract_ready()</a></code> </p>
-        </td>
-        <td><p>Is the extract ready to download?</p></td>
-      </tr><tr><td>
-          <p><code><a href="download_extract.html">download_extract()</a></code> </p>
-        </td>
-        <td><p>Download an IPUMS data extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_extract_info.html">get_extract_info()</a></code> </p>
-        </td>
-        <td><p>Get information about a submitted extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_last_extract_info.html">get_last_extract_info()</a></code> </p>
-        </td>
-        <td><p>Get information on last extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_recent_extracts_info.html">get_recent_extracts_info_list()</a></code> <code><a href="get_recent_extracts_info.html">get_recent_extracts_info_tbl()</a></code> </p>
-        </td>
-        <td><p>Get information on recent extracts</p></td>
-      </tr><tr><td>
-          <p><code><a href="add_to_extract.html">add_to_extract()</a></code> </p>
-        </td>
-        <td><p>Add values to an IPUMS USA or CPS extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="remove_from_extract.html">remove_from_extract()</a></code> </p>
-        </td>
-        <td><p>Remove values from an IPUMS USA or CPS extract</p></td>
-      </tr><tr><td>
-          <p><code><a href="save_extract_as_json.html">save_extract_as_json()</a></code> </p>
-        </td>
-        <td><p>Save an <code>ipums_extract</code> to disk as JSON</p></td>
-      </tr><tr><td>
-          <p><code><a href="define_extract_from_json.html">define_extract_from_json()</a></code> </p>
-        </td>
-        <td><p>Create an <code>ipums_extract</code> object from a JSON-formatted
-definition</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_data_collections.html">ipums_data_collections()</a></code> </p>
-        </td>
-        <td><p>List IPUMS data collections</p></td>
-      </tr><tr><td>
-          <p><code><a href="extract_tbl_to_list.html">extract_tbl_to_list()</a></code> </p>
-        </td>
-        <td><p>Convert a tibble of extract definitions to a list</p></td>
-      </tr><tr><td>
-          <p><code><a href="extract_list_to_tbl.html">extract_list_to_tbl()</a></code> </p>
-        </td>
-        <td><p>Convert a list of extract definitions to a tibble</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="other-helpers">Other helpers <a href="#other-helpers" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Miscellaneous other helper functions for working with IPUMS data</p>
+          <p class="section-desc"></p><p>Miscellaneous functions for working with IPUMS data</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="ipums_bind_rows.html">ipums_bind_rows()</a></code> </p>
         </td>
-        <td><p>Bind rows together, but preserve labelled class attributes</p></td>
+        <td><p>Bind multiple data frames by row, preserving labelled attributes</p></td>
+      </tr><tr><td>
+          <p><code><a href="ipums_shape_join.html">ipums_shape_left_join()</a></code> <code><a href="ipums_shape_join.html">ipums_shape_right_join()</a></code> <code><a href="ipums_shape_join.html">ipums_shape_inner_join()</a></code> <code><a href="ipums_shape_join.html">ipums_shape_full_join()</a></code> </p>
+        </td>
+        <td><p>Join tabular data to geographic boundaries</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_ipums_var_attributes.html">set_ipums_var_attributes()</a></code> </p>
+        </td>
+        <td><p>Add IPUMS variable attributes to a data frame</p></td>
       </tr><tr><td>
           <p><code><a href="ipums_collect.html">ipums_collect()</a></code> </p>
         </td>
@@ -307,23 +288,7 @@ definition</p></td>
       </tr><tr><td>
           <p><code><a href="ipums_example.html">ipums_example()</a></code> </p>
         </td>
-        <td><p>Get path to ipums example datasets</p></td>
-      </tr><tr><td>
-          <p><code><a href="ipums_shape_left_join.html">ipums_shape_left_join()</a></code> <code><a href="ipums_shape_left_join.html">ipums_shape_right_join()</a></code> <code><a href="ipums_shape_left_join.html">ipums_shape_inner_join()</a></code> <code><a href="ipums_shape_left_join.html">ipums_shape_full_join()</a></code> </p>
-        </td>
-        <td><p>Join data to geographic boundaries</p></td>
-      </tr><tr><td>
-          <p><code><a href="join_failures.html">join_failures()</a></code> </p>
-        </td>
-        <td><p>Report on observations dropped by a join</p></td>
-      </tr><tr><td>
-          <p><code><a href="set_ipums_var_attributes.html">set_ipums_var_attributes()</a></code> </p>
-        </td>
-        <td><p>Add IPUMS variable attributes to a data.frame</p></td>
-      </tr><tr><td>
-          <p><code><a href="dplyr_select_style.html">dplyr_select_style</a></code> </p>
-        </td>
-        <td><p>Select-style helpers from dplyr</p></td>
+        <td><p>Get path to IPUMS example datasets</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

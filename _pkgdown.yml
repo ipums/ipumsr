@@ -9,7 +9,7 @@ footer:
     left: Developed by [IPUMS](https://www.ipums.org) at the University of Minnesota
     right: built_with
 development:
-  mode: auto
+  mode: release
 navbar:
   title: "ipumsr"
   type: inverse
