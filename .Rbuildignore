@@ -10,7 +10,6 @@
 ^CONDUCT.md$
 ^CONTRIBUTING.md$
 ^data-raw$
-^ipumsexamples$
 ^appveyor\.yml$
 ^\.travis\.yml$
 ^codecov\.yml$
