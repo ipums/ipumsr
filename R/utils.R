@@ -712,11 +712,3 @@ empty_to_null <- function(x) {
     x
   }
 }
-
-release_questions <- function() {
-  paste0(
-    "Have you scrubbed the package for remaining references to ipumsexamples?",
-    "\n(If ipumsexamples has been removed previously, this question is no ",
-    "longer relevant"
-  )
-}
