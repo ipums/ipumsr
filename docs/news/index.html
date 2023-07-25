@@ -106,6 +106,9 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.0" id="ipumsr-060">ipumsr 0.6.0<small>2023-07-21</small><a class="anchor" aria-label="anchor" href="#ipumsr-060"></a></h2>
 <div class="section level3">
 <h3 id="breaking-changes--deprecations-0-6-0">Breaking Changes + Deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes--deprecations-0-6-0"></a></h3>
@@ -134,13 +137,13 @@
 </li>
 <li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> no longer defaults to <code>bind_multiple = TRUE</code>.</p></li>
 <li><p>Individual <code>ipums_list_*()</code> functions have been moved to <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>.</p></li>
+<li><p><code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code> has been deprecated. Use <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> to read NHGIS codebook files. IPUMS Terra codebook files are no longer supported (see below)</p></li>
 <li><p>Example files in <code><a href="../reference/ipums_example.html">ipums_example()</a></code> have been updated and include new file names.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="ipums-terra-0-6-0">IPUMS Terra<a class="anchor" aria-label="anchor" href="#ipums-terra-0-6-0"></a></h4>
 <ul><li>
 <p>Support for IPUMS Terra has been discontinued. This includes deprecations to all <code>read_terra_*()</code> functions, the <code>types = "raster"</code> option in <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>, and <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>.</p>
-<p>NHGIS codebook reading was previously supported by <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>. This functionality has been moved to <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code>.</p>
 <p>For more on IPUMS Terra decommissioning, click <a href="https://terra.ipums.org/decommissioning" class="external-link">here</a>.</p>
 </li>
 </ul></div>
