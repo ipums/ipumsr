@@ -13,8 +13,9 @@ An easy way to work with census, survey, and geographic data provided by IPUMS i
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://www.ipums.org}
+  \item \url{https://tech.popdata.org/ipumsr/}
   \item \url{https://github.com/ipums/ipumsr}
+  \item \url{https://www.ipums.org}
   \item Report bugs at \url{https://github.com/ipums/ipumsr/issues}
 }
 

@@ -17,7 +17,7 @@ Description: An easy way to work with census, survey, and geographic data
     drawn from over 750 censuses and surveys is available free of charge
     from the IPUMS website <https://www.ipums.org>.
 License: Mozilla Public License 2.0
-URL: https://www.ipums.org, https://github.com/ipums/ipumsr
+URL: https://tech.popdata.org/ipumsr/, https://github.com/ipums/ipumsr, https://www.ipums.org
 BugReports: https://github.com/ipums/ipumsr/issues
 Depends: 
     R (>= 3.6)
