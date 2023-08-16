@@ -233,26 +233,28 @@ read_ipums_micro_list_chunked(
 
 # Using the biglm package, you can even run a regression without storing
 # the full dataset in memory
-lm_results <- read_ipums_micro_chunked(
-  ipums_example("cps_00160.xml"),
-  IpumsBiglmCallback$new(
-    INCTOT ~ AGE + HEALTH, # Model formula
-    function(x, pos) {
-      x \%>\%
-        mutate(
-          INCTOT = lbl_na_if(
-            INCTOT,
-            ~ grepl("Missing|N.I.U.", .lbl)
-          ),
-          HEALTH = as_factor(HEALTH)
-        )
-    }
-  ),
-  chunk_size = 1000,
-  verbose = FALSE
-)
+if (requireNamespace("biglm")) {
+  lm_results <- read_ipums_micro_chunked(
+   ipums_example("cps_00160.xml"),
+   IpumsBiglmCallback$new(
+     INCTOT ~ AGE + HEALTH, # Model formula
+     function(x, pos) {
+       x \%>\%
+         mutate(
+           INCTOT = lbl_na_if(
+             INCTOT,
+             ~ grepl("Missing|N.I.U.", .lbl)
+           ),
+           HEALTH = as_factor(HEALTH)
+         )
+     }
+   ),
+   chunk_size = 1000,
+   verbose = FALSE
+ )
 
-summary(lm_results)
+ summary(lm_results)
+}
 }
 \seealso{
 \code{\link[=read_ipums_micro_yield]{read_ipums_micro_yield()}} for more flexible handling of large
