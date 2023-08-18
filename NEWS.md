@@ -1,3 +1,7 @@
+# ipumsr 0.6.1
+
+* Fixes for CRAN checks.
+
 # ipumsr 0.6.0
 
 ## Breaking Changes + Deprecations
