@@ -31,8 +31,8 @@ Read a single raster datasets downloaded from the IPUMS Terra extract system usi
 \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 
 Support for IPUMS Terra has been discontinued. These functions will be
-removed in a future release. For general handling of raster data in R, see the
-\link[terra:terra-package]{terra} package.
+removed in a future release. For general handling of raster data in R, see
+the \href{https://github.com/rspatial/terra}{terra} package.
 
 \emph{Note: Reading IPUMS Terra raster extracts requires installation of the
 raster package, which is no longer installed automatically when you install
