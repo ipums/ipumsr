@@ -416,53 +416,40 @@ test_that("Can read NHGIS codebook", {
 })
 
 test_that("Can read certain unzipped structures", {
-  sps_tmpfile <- file.path(tempdir(), "test.sps")
-  csv_tmpfile1 <- file.path(tempdir(), "test1.csv")
-  csv_tmpfile2 <- file.path(tempdir(), "test2.csv")
-  dat_tmpfile <- file.path(tempdir(), "test.dat")
+  file_dir <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
 
-  on.exit(unlink(sps_tmpfile), add = TRUE, after = FALSE)
-  on.exit(unlink(csv_tmpfile1), add = TRUE, after = FALSE)
-  on.exit(unlink(csv_tmpfile2), add = TRUE, after = FALSE)
-  on.exit(unlink(dat_tmpfile), add = TRUE, after = FALSE)
+  sps_tmpfile <- file.path(file_dir, "test.sps")
+  csv_tmpfile1 <- file.path(file_dir, "test1.csv")
+  csv_tmpfile2 <- file.path(file_dir, "test2.csv")
 
-  # Non-csv or dat file should not interfere with reading:
-  readr::write_lines("A", sps_tmpfile)
-
+  # Reading a directory produces expected file count errors
   expect_error(
-    read_nhgis(tempdir()),
+    read_nhgis("."),
     "No .csv or .dat files found"
   )
-
-  # Single file should read normally, but should warn
-  # that no codebook is available.
-  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile1)
-
-  expect_warning(
-    x1 <- read_nhgis(tempdir()),
-    "Unable to read codebook"
-  )
-
-  expect_message(
-    x2 <- read_nhgis(file.path(tempdir(), "test1.csv"), var_attrs = NULL),
-    "Use of data from NHGIS"
-  )
-
-  # NB: First row is removed because read_nhgis thinks this fake extract has an
-  # extra header row. Not a concern here.
-  expect_equal(x1$a, "b")
-  expect_equal(x1, x2)
-
-  # Multiple files should throw same errors even if unzipped:
-  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile2)
-
   expect_error(
-    read_nhgis(tempdir()),
+    read_nhgis(file_dir),
     "Multiple files found"
   )
 
+  # We did not write a codebook, so `read_nhgis` should be unable
+  # to find the codebook in this case
+  expect_warning(
+    x1 <- read_nhgis(file_dir, file_select = 1),
+    "Unable to read codebook"
+  )
+
+  # Direct file path should work, of course
+  expect_message(
+    x2 <- read_nhgis(file.path(file_dir, "test1.csv"), var_attrs = NULL),
+    "Use of data from NHGIS"
+  )
+  expect_equal(x1$a, "b")
+  expect_equal(x1, x2)
+
+  # Using `file_select` should be identical to reading direct file path
   expect_equal(
-    read_nhgis(tempdir(), file_select = 1, var_attrs = NULL),
+    read_nhgis(file_dir, file_select = 1, var_attrs = NULL),
     x1
   )
 
