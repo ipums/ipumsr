@@ -1,18 +1,29 @@
 ## Purpose of release
 
-This patch addresses errors in automated CRAN package checks for the
-r-devel-linux-x86_64-debian-clang platform.
+This patch addresses errors in automated CRAN package checks for the following
+platforms:
 
-The official CRAN check results indicated a segmentation fault during package
-unit testing. We were not able to reproduce the precise error, but identified 
-ancillary issues that may be related. We have updated our tests to address
-these errors and confirmed that R CMD check passes on R-hub's debian-clang-devel
-platform (Debian clang version 14.0.6).
+- r-devel-linux-x86_64-debian-gcc
+- r-devel-linux-x86_64-fedora-clang
+- r-devel-windows-x86_64
+- r-release-windows-x86_64
 
-CRAN check results also indicate unknown test failures for 
-r-devel-windows-x86_64 and r-release-windows-x86_64 platforms. We are not able
-to reproduce these issues locally. Checks on similar platforms via R-hub are 
-also successful.
+The official CRAN check results indicated unidentified failures during
+unit testing on these platforms. We recently submitted a patch (v0.6.1) in
+an attempt to address these failures, which was unsuccessful.
+
+Since that submission, we have made more progress identifying the source of the
+errors and have updated our unit test code accordingly. This version passes 
+R CMD check on the following platforms:
+
+- debian-clang-devel (checked via R-hub)
+- debian-gcc-devel (checked via R-hub)
+- ubuntu-gcc-release (checked via R-hub)
+- fedora-clang-devel (checked via R-hub)
+- windows-x86_64-devel (checked via R-hub and win-builder)
+- windows-x86_64-release (checked via win-builder)
+
+Thanks for your patience given multiple releases in a short time frame.
 
 ## R CMD check results
 
