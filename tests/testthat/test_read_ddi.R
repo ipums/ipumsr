@@ -14,9 +14,12 @@ test_that("We ignore layer selection for direct .xml files", {
   ddi1 <- read_ipums_ddi(
     file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml")
   )
-  ddi2 <- read_ipums_ddi(
-    file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml"),
-    file_select = 4
+  lifecycle::expect_deprecated(
+    ddi2 <- read_ipums_ddi(
+      file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml"),
+      file_select = 4
+    ),
+    "The `file_select` argument"
   )
   expect_identical(ddi1, ddi2)
 })
@@ -24,8 +27,13 @@ test_that("We ignore layer selection for direct .xml files", {
 test_that("Can read ddi from zip archives", {
   zipped_ddi <- file.path(vcr::vcr_test_path("fixtures"), "zipped_ddi.zip")
 
+  lifecycle::expect_deprecated(
+    try(read_ipums_ddi(zipped_ddi), silent = TRUE),
+    "Reading DDI files through a zip archive"
+  )
+
   expect_error(
-    read_ipums_ddi(zipped_ddi),
+    suppressWarnings(read_ipums_ddi(zipped_ddi)),
     "Multiple files found"
   )
 

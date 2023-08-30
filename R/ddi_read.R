@@ -89,17 +89,12 @@ NULL
 #'   returns the path to the codebook file.
 #'
 #' @param ddi_file Path to a DDI .xml file downloaded from
-#'   [IPUMS](https://www.ipums.org/) or a .zip archive containing the .xml file.
-#'   See *Downloading IPUMS files* below.
-#' @param file_select If `ddi_file` is a .zip archive or directory that contains
-#'   multiple .xml files, an expression identifying the file to read.
-#'   Accepts a character string specifying the file name, a
-#'   [tidyselect selection][selection_language], or an index position.
-#'   Ignored if `ddi_file` is the path to a single .xml file.
+#'   [IPUMS](https://www.ipums.org/). See *Downloading IPUMS files* below.
 #' @param lower_vars Logical indicating whether to convert variable names to
 #'   lowercase. Defaults to `FALSE` for consistency with IPUMS conventions.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
-#'   instead.
+#' @param data_layer,file_select `r lifecycle::badge("deprecated")` Reading
+#'   DDI files contained in a .zip archive has been deprecated. Please provide
+#'   the full path to the .xml file to be loaded in `ddi_file`.
 #'
 #' @return An [ipums_ddi] object with metadata information.
 #'
@@ -140,23 +135,37 @@ NULL
 #'
 #' ipums_var_label(cps$STATEFIP)
 read_ipums_ddi <- function(ddi_file,
-                           file_select = NULL,
                            lower_vars = FALSE,
+                           file_select = deprecated(),
                            data_layer = deprecated()) {
   if (!missing(data_layer)) {
     lifecycle::deprecate_warn(
       "0.6.0",
-      "read_ipums_ddi(data_layer = )",
-      "read_ipums_ddi(file_select = )",
+      "read_ipums_ddi(data_layer = )"
     )
     file_select <- enquo(data_layer)
+  } else if (!missing(file_select)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      "read_ipums_ddi(file_select = )"
+    )
+    file_select <- enquo(file_select)
   } else {
+    file_select <- NULL
     file_select <- enquo(file_select)
   }
 
-  custom_check_file_exists(ddi_file)
+  if (file_is_zip(ddi_file)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      I("Reading DDI files through a zip archive "),
+      details = "Please provide the full path to the DDI file to be loaded."
+    )
+  } else {
+    dir_read_deprecated(ddi_file)
+  }
 
-  dir_read_deprecated(ddi_file)
+  custom_check_file_exists(ddi_file)
 
   ddi_file_load <- find_files_in(
     ddi_file,
