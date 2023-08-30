@@ -25,9 +25,9 @@
 #' For more about resubmitting an existing extract via the IPUMS API, see
 #' `vignette("ipums-api", package = "ipumsr")`.
 #'
-#' @param data_file Path to a data file, a .zip archive from an NHGIS
-#'   extract, or a directory containing the data file.
-#' @param file_select If `data_file` is a .zip archive or directory that
+#' @param data_file Path to a .zip archive containing an NHGIS extract or
+#'   a single file from an NHGIS extract.
+#' @param file_select If `data_file` is a .zip archive that
 #'   contains multiple files, an expression identifying the file to load.
 #'   Accepts a character vector specifying the
 #'   file name, a [tidyselect selection][selection_language], or an index
@@ -61,8 +61,8 @@
 #'   the provided `data_file`. The .do file contains the parsing instructions
 #'   for the data file.
 #'
-#'   By default, looks in the same directory as `data_file` for a .do
-#'   file with the same name. See Details section below.
+#'   By default, looks in the same path as `data_file` for
+#'   a .do file with the same name. See Details section below.
 #' @param var_attrs Variable attributes to add from the codebook (.txt) file
 #'   included in the extract. Defaults to all available attributes.
 #'
@@ -140,6 +140,8 @@ read_nhgis <- function(data_file,
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
   }
+
+  dir_read_deprecated(data_file)
 
   if (!missing(data_layer)) {
     lifecycle::deprecate_warn(
@@ -396,8 +398,8 @@ read_nhgis_csv <- function(data_file,
 #'
 #' An empty codebook is provided if no matching codebook can be found.
 #'
-#' @param data_file Path to a data file, a .zip archive from an NHGIS
-#'   extract, or a directory containing the data file.
+#' @param data_file Path to a data file or a .zip archive containing an NHGIS
+#'   extract.
 #' @param filename Name of the .csv or .dat file to be loaded within the
 #'   `data_file` zip archive. This allows codebooks to be identified when
 #'   `data_file` contains multiple files.

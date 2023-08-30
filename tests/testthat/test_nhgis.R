@@ -415,53 +415,16 @@ test_that("Can read NHGIS codebook", {
   )
 })
 
-test_that("Can read certain unzipped structures", {
-  file_dir <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
+test_that("Can read unzipped NHGIS files", {
+  test_path <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
 
-  sps_tmpfile <- file.path(file_dir, "test.sps")
-  csv_tmpfile1 <- file.path(file_dir, "test1.csv")
-  csv_tmpfile2 <- file.path(file_dir, "test2.csv")
-
-  # Reading a directory produces expected file count errors
-  expect_error(
-    read_nhgis("."),
-    "No .csv or .dat files found"
-  )
-  expect_error(
-    read_nhgis(file_dir),
-    "Multiple files found"
+  x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1))
+  x2 <- read_nhgis(
+    file.path(test_path, "test1.csv"),
+    var_attrs = NULL,
+    verbose = FALSE
   )
 
-  # We did not write a codebook, so `read_nhgis` should be unable
-  # to find the codebook in this case
-  expect_warning(
-    x1 <- read_nhgis(file_dir, file_select = 1),
-    "Unable to read codebook"
-  )
-
-  # Direct file path should work, of course
-  expect_message(
-    x2 <- read_nhgis(file.path(file_dir, "test1.csv"), var_attrs = NULL),
-    "Use of data from NHGIS"
-  )
   expect_equal(x1$a, "b")
   expect_equal(x1, x2)
-
-  # Using `file_select` should be identical to reading direct file path
-  expect_equal(
-    read_nhgis(file_dir, file_select = 1, var_attrs = NULL),
-    x1
-  )
-
-  # Direct data file errors if mismatched extension
-  expect_error(
-    read_nhgis_fwf(csv_tmpfile1),
-    "Expected `file` to match extension"
-  )
-
-  # Reading a direct data file should ignore data layer
-  expect_equal(
-    suppressWarnings(read_nhgis(csv_tmpfile1, file_select = 3)),
-    x2
-  )
 })

@@ -22,9 +22,9 @@
 #' shapefiles, this function will throw an error. If this is the case, you may
 #' need to manually unzip the downloaded file before loading it into R.
 #'
-#' @param shape_file Path to a single .shp file, or a .zip archive or
-#'   directory containing at least one .shp file. See Details section.
-#' @param file_select If `shape_file` is a .zip archive or directory that
+#' @param shape_file Path to a single .shp file or a .zip archive
+#'   containing at least one .shp file. See Details section.
+#' @param file_select If `shape_file` is a .zip archive that
 #'   contains multiple files, an expression identifying the files to load.
 #'   Accepts a character string specifying the
 #'   file name, a [tidyselect selection][selection_language], or index
@@ -107,6 +107,8 @@ read_ipums_sf <- function(shape_file,
   } else {
     file_select <- enquo(file_select)
   }
+
+  dir_read_deprecated(shape_file)
 
   # dots <- rlang::list2(...)
   #

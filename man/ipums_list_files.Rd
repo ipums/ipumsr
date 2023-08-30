@@ -2,7 +2,7 @@
 % Please edit documentation in R/list_files.R
 \name{ipums_list_files}
 \alias{ipums_list_files}
-\title{List files contained within an IPUMS extract}
+\title{List files contained within a zipped IPUMS extract}
 \usage{
 ipums_list_files(
   file,
@@ -14,8 +14,8 @@ ipums_list_files(
 )
 }
 \arguments{
-\item{file}{Path to a .zip archive or directory containing the IPUMS extract
-to be examined.}
+\item{file}{Path to a .zip archive containing the IPUMS extract to be
+examined.}
 
 \item{file_select}{If the path in \code{file} contains multiple files, a
 \link[=selection_language]{tidyselect selection} identifying the files to be
@@ -40,8 +40,7 @@ A \code{\link[tibble:tbl_df-class]{tibble}} containing the types and names of
 the available files.
 }
 \description{
-Identify the files that can be read from an IPUMS extract, whether its
-files are stored in a .zip archive or a directory.
+Identify the files that can be read from an IPUMS extract.
 }
 \examples{
 nhgis_file <- ipums_example("nhgis0712_csv.zip")

@@ -14,8 +14,8 @@ read_ipums_ddi(
 }
 \arguments{
 \item{ddi_file}{Path to a DDI .xml file downloaded from
-\href{https://www.ipums.org/}{IPUMS} or a .zip archive or directory containing
-the .xml file. See \emph{Downloading IPUMS files} below.}
+\href{https://www.ipums.org/}{IPUMS} or a .zip archive containing the .xml file.
+See \emph{Downloading IPUMS files} below.}
 
 \item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
 multiple .xml files, an expression identifying the file to read.

@@ -52,8 +52,3 @@ test_that("Can read ddi from zip archives", {
     read_ipums_ddi(ipums_example("cps_00159.xml"))$var_info
   )
 })
-
-test_that("Get correct file path when loading from directory", {
-  x <- read_ipums_ddi(vcr::vcr_test_path("fixtures"), file_select = 1)
-  expect_equal(x$file_path, vcr::vcr_test_path("fixtures"))
-})

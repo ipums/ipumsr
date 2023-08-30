@@ -89,8 +89,8 @@ NULL
 #'   returns the path to the codebook file.
 #'
 #' @param ddi_file Path to a DDI .xml file downloaded from
-#'   [IPUMS](https://www.ipums.org/) or a .zip archive or directory containing
-#'   the .xml file. See *Downloading IPUMS files* below.
+#'   [IPUMS](https://www.ipums.org/) or a .zip archive containing the .xml file.
+#'   See *Downloading IPUMS files* below.
 #' @param file_select If `ddi_file` is a .zip archive or directory that contains
 #'   multiple .xml files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a
@@ -155,6 +155,8 @@ read_ipums_ddi <- function(ddi_file,
   }
 
   custom_check_file_exists(ddi_file)
+
+  dir_read_deprecated(ddi_file)
 
   ddi_file_load <- find_files_in(
     ddi_file,
@@ -508,6 +510,8 @@ get_var_info_from_ddi <- function(ddi_xml,
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE) {
+  dir_read_deprecated(cb_file)
+
   file_select <- enquo(file_select)
 
   custom_check_file_exists(cb_file)

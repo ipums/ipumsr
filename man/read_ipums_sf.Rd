@@ -16,10 +16,10 @@ read_ipums_sf(
 )
 }
 \arguments{
-\item{shape_file}{Path to a single .shp file, or a .zip archive or
-directory containing at least one .shp file. See Details section.}
+\item{shape_file}{Path to a single .shp file or a .zip archive
+containing at least one .shp file. See Details section.}
 
-\item{file_select}{If \code{shape_file} is a .zip archive or directory that
+\item{file_select}{If \code{shape_file} is a .zip archive that
 contains multiple files, an expression identifying the files to load.
 Accepts a character string specifying the
 file name, a \link[=selection_language]{tidyselect selection}, or index

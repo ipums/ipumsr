@@ -712,3 +712,16 @@ empty_to_null <- function(x) {
     x
   }
 }
+
+dir_read_deprecated <- function(file) {
+  if (is.character(file) && file_is_dir(file)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      I("Reading files through a directory "),
+      details = "Please provide the full path to file to be loaded.",
+      id = "dir_read",
+      env = caller_env(),
+      user_env = caller_env(2)
+    )
+  }
+}
