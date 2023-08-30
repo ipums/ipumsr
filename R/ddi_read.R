@@ -287,9 +287,15 @@ read_ipums_ddi <- function(ddi_file,
     }
   }
 
+  if (file_is_dir(ddi_file)) {
+    file_path <- ddi_file
+  } else {
+    file_path <- dirname(ddi_file)
+  }
+
   new_ipums_ddi(
     file_name = file_name,
-    file_path = dirname(ddi_file),
+    file_path = file_path,
     file_type = file_type,
     ipums_project = ipums_project,
     extract_date = extract_date,

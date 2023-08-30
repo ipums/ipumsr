@@ -126,6 +126,13 @@ test_that("Can't read Rectangular into list format", {
   )
 })
 
+test_that("Can read microdata from an `ipums_ddi` object", {
+  x1 <- read_ipums_micro(ipums_example("cps_00157.xml"))
+  x2 <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00157.xml")))
+
+  expect_identical(x1, x2)
+})
+
 test_that("Arguments n_max and vars work", {
   cps <- read_ipums_micro(
     ipums_example("cps_00159.xml"),
