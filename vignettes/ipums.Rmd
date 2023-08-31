@@ -1,9 +1,9 @@
 ---
-title: "IPUMS Data in R"
+title: "IPUMS Data and R"
 author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{IPUMS Data in R}
+  %\VignetteIndexEntry{IPUMS Data and R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,67 +16,77 @@ knitr::opts_chunk$set(
 library(ipumsr)
 ```
 
+This text provides an overview of how to find, request, download, and
+read IPUMS data into R. For a general introduction to IPUMS and ipumsr,
+see the [ipumsr home page](https://tech.popdata.org/ipumsr/index.html).
+
 ## Obtaining IPUMS data
 
 IPUMS data are free, but do require registration. New users can register
 with a particular [IPUMS project](https://www.ipums.org/overview) by
 clicking the **Register** link at the top right of the project website.
 
-IPUMS data are obtained by creating and submitting an *extract request*.
-This specifies the data to be included in the resulting *extract* (or
-*data extract*). A submitted extract request will be processed by the
-IPUMS servers. When complete, the extract containing the requested data
-can be downloaded.
+Users obtain IPUMS data by creating and submitting an *extract request*.
+This specifies which data to include in the resulting *extract* (or
+*data extract*). IPUMS servers process each submitted extract request,
+and when complete, users can download the extract containing the
+requested data.
 
 Extracts typically contain both data and metadata files. Data files
-typically come as .dat (for fixed-width files) or .csv (for
-comma-delimited files). Metadata files contain information about the
-data file and its contents, including variable descriptions and parsing
-instructions for fixed-width data files. Microdata projects provide
-metadata in DDI (.xml) files. Aggregate data projects provide metadata
-in either .txt or .csv formats.
+typically come as fixed-width (.dat) files or comma-delimited (.csv)
+files. Metadata files contain information about the data file and its
+contents, including variable descriptions and parsing instructions for
+fixed-width data files. IPUMS microdata projects provide metadata in DDI
+(.xml) files. Aggregate data projects provide metadata in either .txt or
+.csv formats.
 
-Registered users can download IPUMS data from a particular project
-through the interactive extract system found on that project's website.
-For some projects, data can also be downloaded within R by interacting
-with the IPUMS API.
+Users can submit extract requests and download extracts via either the
+IPUMS website or the IPUMS API, or via ipumsr functions that interface
+with the IPUMS API. The API currently supports access to the extract
+system only for [certain IPUMS
+projects](https://developer.ipums.org/docs/v2/apiprogram/apis/), which
+also determines the functionality that ipumsr can support.
 
-### Downloading via the IPUMS website
+### Obtaining data via an IPUMS website
 
-To create a new extract request, navigate to the extract interface for
-the IPUMS project of interest by clicking **Select Data** in the heading
-of the project website. The project extract interface allows you to
-specify the data you'd like to download. The data selection parameters
-will differ across projects; see each project's documentation for more
-details on the available options. If you've never created an extract for
-the project you're interested in, start by watching the project-specific
-video on creating extracts hosted on the [IPUMS Tutorials
+To create a new extract request via IPUMS websites, navigate to the
+extract interface for the IPUMS project of interest by clicking **Select
+Data** in the heading of the project website. The project extract
+interface allows you to explore what's available, find documentation
+about data concepts and sources, and then specify the data you'd like to
+download. The data selection parameters will differ across projects; see
+each project's documentation for more details on the available options.
+If you've never created an extract for the project you're interested in,
+a good way to learn the basics is to watch a project-specific video on
+creating extracts hosted on the [IPUMS Tutorials
 page](https://www.ipums.org/support/tutorials).
 
-#### For microdata projects
+#### Downloading from microdata projects
 
 Once your extract is ready, click the green **Download** button to
 download the data file. Then, right-click the **DDI** link in the
-codebook column, and select **Save Link As...** (see below).
+Codebook column, and select **Save Link As...** (see below).
 
 Note that some browsers may display different text, but there should be
 an option to download the DDI file as .xml. For instance, on Safari,
-select **Download Linked File As...**. The most important thing is that
-you download the file in .xml format, *not* .html format.
+select **Download Linked File As...**. For ipumsr to read the metadata,
+it is necessary to **save the file in .xml format, *not* .html format**.
 
 ![](microdata_annotated_screenshot.png){width="1000"}
 
-#### For aggregate data projects
+#### Downloading from aggregate data projects
 
-Simply download an extract's data by clicking the green **Tables**
-button (for tabular data) and/or **GIS Files** button (for spatial
-boundary data) in the **Download Data** column.
+Aggregate data projects include data and metadata together in a single
+.zip archive file. To download them, simply click on the green
+**Tables** button (for tabular data) and/or **GIS Files** button (for
+spatial boundary or location data) in the **Download Data** column.
 
-### Downloading via the IPUMS API
+### Obtaining data via the IPUMS API
 
-Extract requests can also be created and submitted from within R by
-interacting with the IPUMS API. The IPUMS API currently supports the
-following collections:
+Users can also create and submit extract requests within R by using
+ipumsr functions that interface with the IPUMS API. The IPUMS API
+currently supports access to the extract system for the following
+collections:
 
 -   IPUMS USA
 
@@ -86,12 +96,21 @@ following collections:
 
 -   IPUMS NHGIS
 
-The workflow for requesting and downloading data via API is
-straightforward. First, define the parameters of your extract. The available 
-extract definition options will differ by IPUMS data collection. 
-See the [microdata API request](ipums-api-micro.html) and 
-[NHGIS API request](ipums-api-nhgis.html) vignettes for more details on
-defining an extract.
+The IPUMS API and ipumsr also support access to IPUMS NHGIS metadata, so
+users can query NHGIS metadata in R to explore what data are available
+and specify NHGIS data requests. At this time, creating requests for
+microdata generally requires using the corresponding project websites to
+find samples and variables of interest and obtain their identifiers for
+use in R extract definitions.
+
+Once you have identified the data you would like to request, the
+workflow for requesting and downloading data via API is straightforward.
+First, define the parameters of your extract. The available extract
+definition options will differ by IPUMS data collection. See the
+[microdata API request](ipums-api-micro.html) and [NHGIS API
+request](ipums-api-nhgis.html) vignettes for more details on defining an
+extract. (The NHGIS vignette also discusses how to access NHGIS
+metadata.)
 
 ```{r}
 cps_extract_request <- define_extract_cps(
@@ -110,9 +129,9 @@ nhgis_extract_request <- define_extract_nhgis(
 )
 ```
 
-Next, submit your extract definition. After waiting for it to complete, you 
-can download the files directly to your local machine without ever having to 
-leave R:
+Next, submit your extract definition. After waiting for it to complete,
+you can download the files directly to your local machine without ever
+having to leave R:
 
 ```{r, eval = FALSE}
 submitted_extract <- submit_extract(extract_request)
@@ -120,32 +139,32 @@ downloadable_extract <- wait_for_extract(submitted_extract)
 data_files <- download_extract(downloadable_extract)
 ```
 
-You can also get the specifications of your previous extract requests, even if 
-they weren't made with the API:
+You can also get the specifications of your previous extract requests,
+even if they weren't made with the API:
 
 ```{r, eval=FALSE}
 past_extracts <- get_extract_history("nhgis")
 ```
 
-See the [introduction to the IPUMS API](ipums-api.html) for more details 
-about how to use ipumsr to interact with the IPUMS API.
+See the [introduction to the IPUMS API for R users](ipums-api.html) for
+more details about how to use ipumsr to interact with the IPUMS API.
 
 ## Reading IPUMS data
 
-Once your extract is downloaded, you can load your data into R with the
-family of `read_*()` functions in ipumsr. These functions expand on
+Once you have downloaded an extract, you can load the data into R with
+the family of `read_*()` functions in ipumsr. These functions expand on
 those provided in [readr](https://readr.tidyverse.org/index.html) in two
 ways:
 
 -   ipumsr anticipates standard IPUMS file structures, limiting the need
-for users to manually extract and organize their downloaded files
-before reading.
+    for users to manually extract and organize their downloaded files
+    before reading.
 
 -   ipumsr uses an extract's metadata files to automatically attach
-contextual information to the data. This allows users to easily
-identify variable names, variable descriptions, and labeled data
-values (from [haven](https://haven.tidyverse.org/)), which are
-common in IPUMS files.
+    contextual information to the data. This allows users to easily
+    identify variable names, variable descriptions, and labeled data
+    values (from [haven](https://haven.tidyverse.org/)), which are
+    common in IPUMS files.
 
 For microdata files, use the `read_ipums_micro_*()` family:
 
@@ -165,9 +184,9 @@ nhgis_data <- read_nhgis(nhgis_file)
 head(nhgis_data)
 ```
 
-ipumsr also supports the reading of IPUMS spatial boundary files into
-the `sf` format provided by the [sf](https://r-spatial.github.io/sf/)
-package:
+ipumsr also supports the reading of IPUMS shapefiles (spatial boundary
+and location files) into the `sf` format provided by the
+[sf](https://r-spatial.github.io/sf/) package:
 
 ```{r, eval = requireNamespace("sf")}
 shp_file <- ipums_example("nhgis0972_shape_small.zip")
@@ -184,13 +203,13 @@ packages like [readr](https://readr.tidyverse.org/) (for delimited
 files) or [haven](https://haven.tidyverse.org/) (for Stata, SPSS, or SAS
 files).
 
-See the [vignette](ipums-read.html) on reading IPUMS data for
-more information.
+See the vignette on [reading IPUMS data](ipums-read.html) for more
+information.
 
 ### Exploring file metadata
 
-Load a file's metadata with `read_ipums_ddi()` (for microdata
-projects) and `read_nhgis_codebook()` (for NHGIS). These provide file- and
+Load a file's metadata with `read_ipums_ddi()` (for microdata projects)
+and `read_nhgis_codebook()` (for NHGIS). These provide file- and
 variable-level metadata for a given data source, which can be used to
 interpret the data contents.
 
