@@ -463,8 +463,8 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' there may be a more robust way to standardize codebook and DDI reading across
 #' IPUMS collections.
 #'
-#' @param cb_file Path to a codebook (.txt) file, a .zip
-#'   archive from an NHGIS extract, or a directory containing the codebook file.
+#' @param cb_file Path to a .zip archive containing an NHGIS extract or to an
+#'   NHGIS codebook (.txt) file.
 #' @param file_select If `cb_file` is a .zip archive or directory that contains
 #'   multiple codebook files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a

@@ -7,8 +7,8 @@
 read_nhgis_codebook(cb_file, file_select = NULL, raw = FALSE)
 }
 \arguments{
-\item{cb_file}{Path to a codebook (.txt) file, a .zip
-archive from an NHGIS extract, or a directory containing the codebook file.}
+\item{cb_file}{Path to a .zip archive containing an NHGIS extract or to an
+NHGIS codebook (.txt) file.}
 
 \item{file_select}{If \code{cb_file} is a .zip archive or directory that contains
 multiple codebook files, an expression identifying the file to read.
