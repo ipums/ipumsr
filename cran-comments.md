@@ -3,27 +3,33 @@
 This patch addresses errors in automated CRAN package checks for the following
 platforms:
 
-- r-devel-linux-x86_64-debian-gcc
 - r-devel-linux-x86_64-fedora-clang
-- r-devel-windows-x86_64
-- r-release-windows-x86_64
+- r-devel-linux-x86_64-fedora-gcc
 
-The official CRAN check results indicated unidentified failures during
-unit testing on these platforms. We recently submitted a patch (v0.6.1) in
-an attempt to address these failures, which was unsuccessful.
+We recently submitted two patches (v0.6.1 and v0.6.2) in
+an attempt to address similar check errors on other platforms. These patches
+were successful in resolving the errors occurring on these platforms, but did
+not resolve the issues on fedora. 
 
-Since that submission, we have made more progress identifying the source of the
-errors and have updated our unit test code accordingly. This version passes 
-R CMD check on the following platforms:
+While we have localized the source of the test failure that is resulting 
+in check errors on the fedora platforms, we are unable
+to reproduce this failure locally or on any other similar platforms.
+
+The test failure involved non-critical features that were slated for 
+possible deprecation. Therefore, we have proceeded with the deprecation 
+process and updated our tests accordingly in an effort to resolve the issue.
+
+We can confirm that the version being submitted passes R CMD check locally on
+Windows and MacOS, as well as on the following remote platforms:
 
 - debian-clang-devel (checked via R-hub)
-- debian-gcc-devel (checked via R-hub)
 - ubuntu-gcc-release (checked via R-hub)
 - fedora-clang-devel (checked via R-hub)
+- fedora-gcc-devel (checked via R-hub)
 - windows-x86_64-devel (checked via R-hub and win-builder)
 - windows-x86_64-release (checked via win-builder)
 
-Thanks for your patience given multiple releases in a short time frame.
+Thanks again for your patience as we attempt to resolve these issues.
 
 ## R CMD check results
 
