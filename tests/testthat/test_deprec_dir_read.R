@@ -39,7 +39,7 @@ test_that("Reading through directory is deprecated", {
     "Reading files through a directory"
   )
   lifecycle::expect_deprecated(
-    try(read_nhgis_sf(test_path), silent = TRUE),
+    try(read_ipums_sf(test_path), silent = TRUE),
     "Reading files through a directory"
   )
 })
