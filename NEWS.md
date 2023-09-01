@@ -1,4 +1,29 @@
-# ipumsr (development version)
+# ipumsr 0.6.3
+
+* The ability to read an IPUMS DDI file contained within a zip archive using
+`read_ipums_ddi()` has been deprecated. Users must now load DDI files by 
+providing the direct path to the uncompressed .xml file.
+
+  This resolves an inconsistency between the behavior
+  of `read_ipums_micro_*()` functions when provided a DDI file path as compared to
+  an `ipums_ddi` object created with `read_ipums_ddi()`.
+
+* The ability to read IPUMS files by providing the path to their containing 
+directory has been deprecated. This affects:
+
+  - `read_nhgis()`
+  - `read_ipums_sf()`
+  - `read_nhgis_codebook()`
+  - `read_ipums_ddi()`
+  - `ipums_list_files()`
+  
+  These functions now require either a zip archive (with the exception of 
+  `read_ipums_ddi()`—see above) or a direct file path as input.
+  
+  This has the consequence that `read_ipums_sf()` with `bind_multiple = TRUE`
+  requires a zip archive as input if multiple files are to be read and combined.
+  
+* Documentation updates for clarity
 
 # ipumsr 0.6.2
 
