@@ -1,9 +1,9 @@
 ---
-title: "Introduction to the IPUMS API"
+title: "Introduction to the IPUMS API for R Users"
 author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to the IPUMS API}
+  %\VignetteIndexEntry{Introduction to the IPUMS API for R Users}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -66,24 +66,25 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
 }
 ```
 
-The IPUMS API provides two asset types, both of which are supported by ipumsr:
+The IPUMS API provides two asset types, both of which are supported by
+ipumsr:
 
 -   **IPUMS extract** endpoints can be used to submit extract requests
-for processing and download completed extract files.
+    for processing and download completed extract files.
 
 -   **IPUMS metadata** endpoints can be used to discover and explore
-available IPUMS data as well as retrieve codes, names, and other
-extract parameters necessary to form extract requests.
+    available IPUMS data as well as retrieve codes, names, and other
+    extract parameters necessary to form extract requests.
 
 Use of the IPUMS API enables the adoption of a programmatic workflow
 that can help users to:
 
 -   Precisely recreate the specifications of previous extract requests,
-making analysis scripts reproducible and self-contained
+    making analysis scripts reproducible and self-contained
 -   Save extract request definitions that can be shared with others
-without violating IPUMS conditions
+    without violating IPUMS conditions
 -   Integrate the extract download process with functions to load data
-into R
+    into R
 -   Quickly identify and explore available IPUMS data sources
 
 The basic workflow for interacting with the IPUMS API is as follows:
@@ -112,9 +113,9 @@ following collections:
 -   IPUMS International
 -   IPUMS NHGIS
 
-Note that this support only includes data available via a
-collection's extract engine. Many collections provide additional data via
-direct download, but these products are not supported by the IPUMS API.
+Note that this support only includes data available via a collection's
+extract engine. Many collections provide additional data via direct
+download, but these products are not supported by the IPUMS API.
 
 IPUMS **metadata** support is currently available via API for the
 following collections:
@@ -146,13 +147,13 @@ can find links to register for each of the API-supported IPUMS
 collections below:
 
 -   [IPUMS
-USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
+    USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
 -   [IPUMS
-CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
+    CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
 -   [IPUMS
-International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
+    International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
 -   [IPUMS
-NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
+    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
 
 Once you're registered, you'll be able to [create an API
 key](https://account.ipums.org/api_keys).
@@ -190,9 +191,9 @@ These functions take the form `define_extract_*()`:
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
 
-For instance, the following defines a simple IPUMS USA extract request for 
-the `AGE`, `SEX`, `RACE`, `STATEFIP`, and `MARST` variables from the 2018 
-and 2019 American Community Survey (ACS):
+For instance, the following defines a simple IPUMS USA extract request
+for the `AGE`, `SEX`, `RACE`, `STATEFIP`, and `MARST` variables from the
+2018 and 2019 American Community Survey (ACS):
 
 ```{r}
 usa_ext_def <- define_extract_usa(
@@ -205,26 +206,27 @@ usa_ext_def
 ```
 
 The exact extract definition options vary across collections, but all
-collections can be used with the same general workflow. For more details 
-on the available extract definition options, see the associated 
-[microdata](ipums-api-micro.html) and [NHGIS](ipums-api-nhgis.html) vignettes. 
+collections can be used with the same general workflow. For more details
+on the available extract definition options, see the associated
+[microdata](ipums-api-micro.html) and [NHGIS](ipums-api-nhgis.html)
+vignettes.
 
-For the purposes of demonstrating the overall workflow, we will continue to
-work with the sample IPUMS USA extract definition created above.
+For the purposes of demonstrating the overall workflow, we will continue
+to work with the sample IPUMS USA extract definition created above.
 
 ### Extract request objects
 
-`define_extract_*()` functions always produce an `ipums_extract` object, which 
-can be handled by other API functions (see `?ipums_extract`). Furthermore, 
-these objects will have a subclass for the particular collection with which 
-they are associated.
+`define_extract_*()` functions always produce an `ipums_extract` object,
+which can be handled by other API functions (see `?ipums_extract`).
+Furthermore, these objects will have a subclass for the particular
+collection with which they are associated.
 
 ```{r}
 class(usa_ext_def)
 ```
 
-Many of the specifications for a given extract request object can be accessed
-by indexing the object:
+Many of the specifications for a given extract request object can be
+accessed by indexing the object:
 
 ```{r}
 names(usa_ext_def$samples)
@@ -235,9 +237,9 @@ usa_ext_def$data_format
 ```
 
 `ipums_extract` objects also contain information about the extract
-request's processing status and its assigned extract number, which serves as an
-identifier for the extract request. Since this extract request is still 
-unsubmitted, it has no request number:
+request's processing status and its assigned extract number, which
+serves as an identifier for the extract request. Since this extract
+request is still unsubmitted, it has no request number:
 
 ```{r}
 usa_ext_def$status
@@ -245,8 +247,8 @@ usa_ext_def$status
 usa_ext_def$number
 ```
 
-To obtain the data requested in the extract definition, we must first submit it
-to the IPUMS API for processing.
+To obtain the data requested in the extract definition, we must first
+submit it to the IPUMS API for processing.
 
 ## Submit an extract request {#submit}
 
@@ -300,18 +302,18 @@ usa_ext_submitted$number
 usa_ext_submitted$status
 ```
 
-Note that some fields of a submitted extract may be automatically updated by
-the API upon submission. For instance, for microdata extracts, additional
-preselected variables may be added to the extract even if they weren't
-specified explicitly in the extract definition.
+Note that some fields of a submitted extract may be automatically
+updated by the API upon submission. For instance, for microdata
+extracts, additional preselected variables may be added to the extract
+even if they weren't specified explicitly in the extract definition.
 
 ```{r}
 names(usa_ext_submitted$variables)
 ```
 
-If you forget to store the updated extract object returned by 
-`submit_extract()`, you can use the `get_last_extract_info()` helper to 
-request the information for your most recent extract request for a given 
+If you forget to store the updated extract object returned by
+`submit_extract()`, you can use the `get_last_extract_info()` helper to
+request the information for your most recent extract request for a given
 collection:
 
 ```{r}
@@ -327,11 +329,11 @@ eject_cassette("submit-extract")
 ## Wait for an extract request to complete {#wait}
 
 It may take some time for the IPUMS servers to process your extract
-request. You can ensure that an extract has finished processing before you 
-attempt to download its files by using `wait_for_extract()`. This polls the 
-API regularly until processing has completed (by default, each interval 
-increases by 10 seconds). It then returns an `ipums_extract` object containing
-the completed extract definition.
+request. You can ensure that an extract has finished processing before
+you attempt to download its files by using `wait_for_extract()`. This
+polls the API regularly until processing has completed (by default, each
+interval increases by 10 seconds). It then returns an `ipums_extract`
+object containing the completed extract definition.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("wait-for-extract")
@@ -366,13 +368,13 @@ eject_cassette("wait-for-extract")
 ```
 
 Note that `wait_for_extract()` will tie up your R session until your
-extract is ready to download. While this is fine in a strictly 
+extract is ready to download. While this is fine in a strictly
 programmatic workflow, it may be frustrating when working interactively,
 especially for large extracts or when the IPUMS servers are busy.
 
-In these cases, you can manually check whether an extract is ready for download
-with `is_extract_ready()`. As long as this returns `TRUE`, you should be able 
-to download your extract's files.
+In these cases, you can manually check whether an extract is ready for
+download with `is_extract_ready()`. As long as this returns `TRUE`, you
+should be able to download your extract's files.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("extract-ready")
@@ -386,12 +388,11 @@ is_extract_ready(usa_ext_submitted)
 eject_cassette("extract-ready")
 ```
 
-For a more detailed status check, provide the extract's collection and 
-number to `get_extract_info()`. This returns an `ipums_extract` object 
-reflecting the requested extract definition with
-the most current status. The `status` of a submitted extract will be
-one of `"queued"`, `"started"`, `"produced"`, `"canceled"`, `"failed"`,
-or `"completed"`.
+For a more detailed status check, provide the extract's collection and
+number to `get_extract_info()`. This returns an `ipums_extract` object
+reflecting the requested extract definition with the most current
+status. The `status` of a submitted extract will be one of `"queued"`,
+`"started"`, `"produced"`, `"canceled"`, `"failed"`, or `"completed"`.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("check-extract-info")
@@ -407,55 +408,57 @@ usa_ext_submitted$status
 eject_cassette("check-extract-info")
 ```
 
-Note that extracts are removed from the IPUMS servers after a set period of time
-(72 hours for microdata collections, 2 weeks for IPUMS NHGIS). Therefore,
-an extract that has a `"completed"` status may still be unavailable for
-download. 
+Note that extracts are removed from the IPUMS servers after a set period
+of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
+Therefore, an extract that has a `"completed"` status may still be
+unavailable for download.
 
-`is_extract_ready()` will alert you if the extract has expired
-and needs to be resubmitted. Simply use `submit_extract()` to resubmit an
-extract request. Note that this will produce a _new_ extract (with a new 
-extract number), even if the extract definition is identical.
+`is_extract_ready()` will alert you if the extract has expired and needs
+to be resubmitted. Simply use `submit_extract()` to resubmit an extract
+request. Note that this will produce a *new* extract (with a new extract
+number), even if the extract definition is identical.
 
 ## Download an extract {#download}
 
-Once your extract has finished processing, use `download_extract()`
-to download the extract's data files to your local machine. This will return 
-the path to the downloaded file(s) required to load the data into R.
+Once your extract has finished processing, use `download_extract()` to
+download the extract's data files to your local machine. This will
+return the path to the downloaded file(s) required to load the data into
+R.
 
-For microdata collections, this will be the path to the DDI
-codebook (.xml) file, which can be used to read the associated data
-(contained in a .dat.gz file). 
+For microdata collections, this will be the path to the DDI codebook
+(.xml) file, which can be used to read the associated data (contained in
+a .dat.gz file).
 
-For NHGIS, this will be a path to the .zip 
-archive containing the requested data files and/or shapefiles.
+For NHGIS, this will be a path to the .zip archive containing the
+requested data files and/or shapefiles.
 
 ```{r, eval=FALSE}
 # By default, downloads to your current working directory
 filepath <- download_extract(usa_ext_submitted)
 ```
 
-The files produced by `download_extract()` can be passed directly into the
-reader functions provided by ipumsr. For instance, for microdata projects:
+The files produced by `download_extract()` can be passed directly into
+the reader functions provided by ipumsr. For instance, for microdata
+projects:
 
 ```{r, eval=FALSE}
 ddi <- read_ipums_ddi(filepath)
 micro_data <- read_ipums_micro(ddi)
 ```
 
-If instead you're working with an NHGIS extract, use `read_nhgis()` or 
+If instead you're working with an NHGIS extract, use `read_nhgis()` or
 `read_ipums_sf()`.
 
-See the [associated vignette](ipums-read.html) for more information about 
-loading IPUMS data into R.
+See the [associated vignette](ipums-read.html) for more information
+about loading IPUMS data into R.
 
 ## Get info on past extracts {#recent}
 
-To retrieve the definition corresponding to a particular extract, provide
-its collection and number to `get_extract_info()`. These can be provided 
-either as a single string of the form `"collection:number"` or as a 
-length-2 vector: `c(collection, number)`. Several other API functions 
-support this syntax as well.
+To retrieve the definition corresponding to a particular extract,
+provide its collection and number to `get_extract_info()`. These can be
+provided either as a single string of the form `"collection:number"` or
+as a length-2 vector: `c(collection, number)`. Several other API
+functions support this syntax as well.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("check-extract-history")
@@ -471,13 +474,12 @@ usa_ext
 ```
 
 If you know you made a specific extract definition in the past, but you
-can't remember the exact number, you can use
-`get_extract_history()` to peruse your recent extract requests for
-a particular collection.
+can't remember the exact number, you can use `get_extract_history()` to
+peruse your recent extract requests for a particular collection.
 
 By default, this returns your 10 most recent extract requests as a list
-of `ipums_extract` objects. You can adjust how many requests to 
-retrieve with the `how_many` argument:
+of `ipums_extract` objects. You can adjust how many requests to retrieve
+with the `how_many` argument:
 
 ```{r}
 usa_extracts <- get_extract_history("usa", how_many = 3)
@@ -493,8 +495,9 @@ is_extract_ready(usa_extracts[[2]])
 ```
 
 You can also iterate through your extract history to find extracts with
-particular characteristics. For instance, we can use `purrr::keep()` to 
-find all extracts that contain a certain variable or are ready for download:
+particular characteristics. For instance, we can use `purrr::keep()` to
+find all extracts that contain a certain variable or are ready for
+download:
 
 ```{r}
 purrr::keep(usa_extracts, ~ "MARST" %in% names(.x$variables))
@@ -560,8 +563,8 @@ save_extract_as_json(usa_ext_10, file = "usa_extract_10.json")
 
 At this point, you can send `usa_extract_10.json` to another user to
 allow them to create a duplicate `ipums_extract` object, which they can
-load and submit to the API themselves (as long as they have 
-[API access](#set-key)).
+load and submit to the API themselves (as long as they have [API
+access](#set-key)).
 
 ```{r, eval=FALSE}
 clone_of_usa_ext_10 <- define_extract_from_json("usa_extract_10.json")
@@ -574,34 +577,34 @@ in the current working directory. If it's saved somewhere else, replace
 
 ## Revise a previous extract request
 
-Occasionally, you may want to modify an existing extract definition (e.g.
-to update an analysis with new data). The easiest way to do so is to add the
-new specifications to the `define_extract_*()` code that produced the original 
-extract definition. This is why we highly recommend that you save this code
-somewhere where it can be accessed and updated in the future.
+Occasionally, you may want to modify an existing extract definition
+(e.g. to update an analysis with new data). The easiest way to do so is
+to add the new specifications to the `define_extract_*()` code that
+produced the original extract definition. This is why we highly
+recommend that you save this code somewhere where it can be accessed and
+updated in the future.
 
-However, there are cases where the original extract definition code does not
-exist (e.g. if the extract was created using the online IPUMS extract system).
-In this case, the best approach is to view the extract definition with
-`get_extract_info()` and create a new extract definition
+However, there are cases where the original extract definition code does
+not exist (e.g. if the extract was created using the online IPUMS
+extract system). In this case, the best approach is to view the extract
+definition with `get_extract_info()` and create a new extract definition
 (using a `define_extract_*()` function) that reproduces that definition
-along with the desired modifications. While this
-may be a bit tedious for complex extract definitions, it is a one-time
-investment that will make any future updates to the extract
-definition much easier.
+along with the desired modifications. While this may be a bit tedious
+for complex extract definitions, it is a one-time investment that will
+make any future updates to the extract definition much easier.
 
-Previously, we encouraged users to use the helpers 
-`add_to_extract()` and `remove_from_extract()` when modifying extracts.
-We now encourage you to re-write extract definitions because they improve
+Previously, we encouraged users to use the helpers `add_to_extract()`
+and `remove_from_extract()` when modifying extracts. We now encourage
+you to re-write extract definitions because they improve
 reproducibility: extract definition code will always be more clear and
-stable if it is written explicitly, rather than based only on an old extract
-number. These two functions may be retired in the future.
+stable if it is written explicitly, rather than based only on an old
+extract number. These two functions may be retired in the future.
 
 ## Putting it all together
 
-The core API functions in ipumsr are compatible with one another
-such that they can be combined into a single pipeline that requests, downloads,
-and reads your extract data into an R data frame:
+The core API functions in ipumsr are compatible with one another such
+that they can be combined into a single pipeline that requests,
+downloads, and reads your extract data into an R data frame:
 
 ```{r, eval=FALSE}
 usa_data <- define_extract_usa(
@@ -615,10 +618,11 @@ usa_data <- define_extract_usa(
   read_ipums_micro()
 ```
 
-Note that for NHGIS extracts that contain both data and shapefiles, a single
-file will need to be selected before reading, as `download_extract()` will
-return the path to each file. For instance, for a 
-hypothetical `nhgis_extract` that contains both tabular and spatial data:
+Note that for NHGIS extracts that contain both data and shapefiles, a
+single file will need to be selected before reading, as
+`download_extract()` will return the path to each file. For instance,
+for a hypothetical `nhgis_extract` that contains both tabular and
+spatial data:
 
 ```{r, eval=FALSE}
 nhgis_data <- download_extract(nhgis_extract) %>%
@@ -626,8 +630,8 @@ nhgis_data <- download_extract(nhgis_extract) %>%
   read_nhgis()
 ```
 
-Not only does this API workflow allow you to obtain IPUMS data without ever
-leaving your R environment, but it also allows you to retain a
+Not only does this API workflow allow you to obtain IPUMS data without
+ever leaving your R environment, but it also allows you to retain a
 reproducible record of your process. This makes it much easier to
 document your workflow, collaborate with other researchers, and update
 your analysis in the future.

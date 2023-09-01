@@ -126,6 +126,13 @@ test_that("Can't read Rectangular into list format", {
   )
 })
 
+test_that("Can read microdata from an `ipums_ddi` object", {
+  x1 <- read_ipums_micro(ipums_example("cps_00157.xml"))
+  x2 <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00157.xml")))
+
+  expect_identical(x1, x2)
+})
+
 test_that("Arguments n_max and vars work", {
   cps <- read_ipums_micro(
     ipums_example("cps_00159.xml"),
@@ -161,7 +168,7 @@ test_that("Setting argument var_attrs to NULL works", {
   expect_true(all(no_var_attrs))
 })
 
-test_that("Informative error when no ddi file", {
+test_that("Informative errors when improper ddi file", {
   expect_error(
     read_ipums_micro("FAKE_FILE.xml"),
     "Could not find file .+/FAKE_FILE.xml`"
@@ -169,6 +176,26 @@ test_that("Informative error when no ddi file", {
   expect_error(
     read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"),
     "Could not find file `C:/FAKE_FOLDER/FAKE_FILE.xml`"
+  )
+
+  # Try to read through a directory/zip:
+  vcr_dir <- vcr::vcr_test_path("fixtures")
+
+  expect_error(
+    read_ipums_micro(vcr_dir),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_list(vcr_dir),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_yield(file.path(vcr_dir, "zipped_ddi.zip")),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_chunked(file.path(vcr_dir, "zipped_ddi.zip")),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
   )
 })
 

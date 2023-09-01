@@ -15,45 +15,16 @@ coverage](https://codecov.io/gh/ipums/ipumsr/branch/main/graph/badge.svg)](https
 
 <!-- badges: end -->
 
-ipumsr provides an R interface for handling IPUMS data, allowing users
-to:
+ipumsr provides an R interface for handling
+[IPUMS](https://www.ipums.org) data, allowing users to:
 
 - Easily read files downloaded from the IPUMS extract system
 
-- Submit requests for data and download files through the IPUMS API
+- Request data, download files, and get metadata from certain IPUMS
+  collections
 
-- Clean and prepare data using the contextual information contained in
-  the variable-level metadata that is included with many IPUMS files
-
-## What is IPUMS?
-
-[IPUMS](https://www.ipums.org/mission-purpose) is the world’s largest
-publicly available individual-level population database, providing
-census and survey data from around the world integrated across time and
-space. IPUMS integration and documentation make it easy to study change,
-conduct comparative research, merge information across data types, and
-analyze individuals within family and community context. Data and
-services are available free of charge.
-
-IPUMS consists of multiple projects, or collections, that provide
-different data products.
-
-- **Microdata** projects distribute data for individual survey units,
-  like people or households.
-- **Aggregate data** projects distribute aggregate statistics calculated
-  from microdata for particular geographic units.
-
-| Project                                                               | Data Type      | Description                                                                                                                                                                                                                                             |
-|-----------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [IPUMS USA](https://usa.ipums.org/usa/)                               | Microdata      | U.S. Census and American Community Survey microdata (1850-present)                                                                                                                                                                                      |
-| [IPUMS CPS](https://cps.ipums.org/cps/)                               | Microdata      | Current Population Survey microdata including basic monthly surveys and supplements (1962-present)                                                                                                                                                      |
-| [IPUMS International](https://international.ipums.org/international/) | Microdata      | Census microdata covering over 100 countries, contemporary and historical                                                                                                                                                                               |
-| [IPUMS NHGIS](https://www.nhgis.org/)                                 | Aggregate Data | Tabular U.S. Census data and GIS boundary files (1790-present)                                                                                                                                                                                          |
-| [IPUMS IHGIS](https://ihgis.ipums.org/)                               | Aggregate Data | Tabular and GIS data from population, housing, and agricultural censuses around the world                                                                                                                                                               |
-| [IPUMS Time Use](https://timeuse.ipums.org/)                          | Microdata      | Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)                                                                                                                                                             |
-| [IPUMS Health Surveys](https://healthsurveys.ipums.org/)              | Microdata      | Microdata from the U.S. [National Health Interview Survey (NHIS)](https://nhis.ipums.org/nhis/) (1963-present) and [Medical Expenditure Panel Survey (MEPS)](https://meps.ipums.org/meps/) (1996-present)                                               |
-| [IPUMS Global Health](https://globalhealth.ipums.org/)                | Microdata      | Health survey microdata for low- and middle-income countries, including harmonized data collections for [Demographic and Health Surveys (DHS)](https://www.idhsdata.org/) and [Performance Monitoring for Action (PMA)](https://pma.ipums.org/) surveys |
-| [IPUMS Higher Ed](https://highered.ipums.org/highered/)               | Microdata      | Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013                                                                                                                                                                 |
+- Interpret and process data using the contextual information that is
+  included with many IPUMS files
 
 ## Installation
 
@@ -69,22 +40,76 @@ To install the development version of the package, use
 remotes::install_github("ipums/ipumsr")
 ```
 
+## What is IPUMS?
+
+[IPUMS](https://www.ipums.org/mission-purpose) is the world’s largest
+publicly available population database, providing census and survey data
+from around the world integrated across time and space. IPUMS
+integration and documentation make it easy to study change, conduct
+comparative research, merge information across data types, and analyze
+individuals within family and community context. Data and services are
+available free of charge.
+
+IPUMS consists of multiple projects, or collections, that provide
+different data products.
+
+- **Microdata** projects distribute data for individual survey units,
+  like people or households.
+- **Aggregate data** projects distribute summary tables of aggregate
+  statistics for particular geographic units along with corresponding
+  GIS mapping files.
+
+ipumsr supports different levels of functionality for each IPUMS
+project:
+
+| Project / Collection                                                  | Data Type      | Description                                                                                                                                                                                                                                             | Read Data Extracts | Request & Download Data | Get Metadata |
+|:----------------------------------------------------------------------|:---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:------------------------|:-------------|
+| [IPUMS USA](https://usa.ipums.org/usa/)                               | Microdata      | U.S. Census and American Community Survey microdata (1850-present)                                                                                                                                                                                      | X                  | X                       |              |
+| [IPUMS CPS](https://cps.ipums.org/cps/)                               | Microdata      | Current Population Survey microdata including basic monthly surveys and supplements (1962-present)                                                                                                                                                      | X                  | X                       |              |
+| [IPUMS International](https://international.ipums.org/international/) | Microdata      | Census microdata covering over 100 countries, contemporary and historical                                                                                                                                                                               | X                  | X                       |              |
+| [IPUMS NHGIS](https://www.nhgis.org/)                                 | Aggregate Data | Tabular U.S. Census data and GIS mapping files (1790-present)                                                                                                                                                                                           | X                  | X                       | X            |
+| [IPUMS IHGIS](https://ihgis.ipums.org/)                               | Aggregate Data | Tabular and GIS data from population, housing, and agricultural censuses around the world                                                                                                                                                               |                    |                         |              |
+| [IPUMS Time Use](https://timeuse.ipums.org/)                          | Microdata      | Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)                                                                                                                                                             | X                  |                         |              |
+| [IPUMS Health Surveys](https://healthsurveys.ipums.org/)              | Microdata      | Microdata from the U.S. [National Health Interview Survey (NHIS)](https://nhis.ipums.org/nhis/) (1963-present) and [Medical Expenditure Panel Survey (MEPS)](https://meps.ipums.org/meps/) (1996-present)                                               | X                  |                         |              |
+| [IPUMS Global Health](https://globalhealth.ipums.org/)                | Microdata      | Health survey microdata for low- and middle-income countries, including harmonized data collections for [Demographic and Health Surveys (DHS)](https://www.idhsdata.org/) and [Performance Monitoring for Action (PMA)](https://pma.ipums.org/) surveys | X                  |                         |              |
+| [IPUMS Higher Ed](https://highered.ipums.org/highered/)               | Microdata      | Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013                                                                                                                                                                 | X                  |                         |              |
+
+ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data
+requests, download data extracts, and get metadata, so the scope of
+ipumsr functionality generally corresponds to the [available API
+functionality](https://developer.ipums.org/docs/v2/apiprogram/apis/). As
+the IPUMS team extends the API to support more functionality for more
+projects, we aim to extend ipumsr capabilities accordingly.
+
 ## Getting started
 
-If you’re new to IPUMS data, see the [general
-introduction](https://tech.popdata.org/ipumsr/articles/ipums.html).
+If you’re new to IPUMS data, learn more about what’s available through
+the [IPUMS Projects Overview](https://www.ipums.org/overview).
 
-To learn about obtaining IPUMS data via the IPUMS API, see the [IPUMS
-API
-introduction](https://tech.popdata.org/ipumsr/articles/ipums-api.html)
+For an overview of how to find, request, download, and read IPUMS data
+into R, see [IPUMS Data and
+R](https://tech.popdata.org/ipumsr/articles/ipums.html).
 
-Additional demonstrations are also available on the [package
-website](https://tech.popdata.org/ipumsr/articles/). You can access them
-through the **articles** tab or by using the `vignette()` function in R
-(e.g. `vignette("ipums-read", package = "ipumsr")`).
+To learn how ipumsr interfaces with the IPUMS extract system via the
+IPUMS API, see the [Introduction to the IPUMS API for R
+Users](https://tech.popdata.org/ipumsr/articles/ipums-api.html).
 
-The [IPUMS support website](https://www.ipums.org/support/exercises)
-also houses many project-specific exercises.
+Additional demonstration vignettes are also available as
+[Articles](https://tech.popdata.org/ipumsr/articles/) on the package
+website or by using the `vignette()` function in R (e.g.
+`vignette("ipums-read", package = "ipumsr")`). These include vignettes
+for accessing
+[microdata](https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html)
+and [NHGIS data and
+metadata](https://tech.popdata.org/ipumsr/articles/ipums-api-nhgis.html)
+via the API.
+
+The [IPUMS support website](https://www.ipums.org/support) also houses
+many project-specific R-based [training
+exercises](https://www.ipums.org/support/exercises). (As of September
+2023, these exercises have not yet been updated to incorporate the major
+API data and metadata access capabilities added to ipumsr in version
+0.6.0.)
 
 ## Related work
 
