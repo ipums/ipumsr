@@ -19,7 +19,7 @@ To read spatial data from an NHGIS extract, use read_ipums_sf()."><meta property
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -133,12 +133,12 @@ system.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data_file</dt>
-<dd><p>Path to a data file, a .zip archive from an NHGIS
-extract, or a directory containing the data file.</p></dd>
+<dd><p>Path to a .zip archive containing an NHGIS extract or
+a single file from an NHGIS extract.</p></dd>
 
 
 <dt>file_select</dt>
-<dd><p>If <code>data_file</code> is a .zip archive or directory that
+<dd><p>If <code>data_file</code> is a .zip archive that
 contains multiple files, an expression identifying the file to load.
 Accepts a character vector specifying the
 file name, a <a href="selection_language.html">tidyselect selection</a>, or an index
@@ -183,8 +183,8 @@ column types. Will never use more than the number of lines read.</p></dd>
 <dd><p>For fixed-width files, path to the .do file associated with
 the provided <code>data_file</code>. The .do file contains the parsing instructions
 for the data file.</p>
-<p>By default, looks in the same directory as <code>data_file</code> for a .do
-file with the same name. See Details section below.</p></dd>
+<p>By default, looks in the same path as <code>data_file</code> for
+a .do file with the same name. See Details section below.</p></dd>
 
 
 <dt>var_attrs</dt>

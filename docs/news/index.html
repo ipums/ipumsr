@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -105,6 +105,32 @@
       <small>Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6.3" id="ipumsr-063">ipumsr 0.6.3<small>2023-09-01</small><a class="anchor" aria-label="anchor" href="#ipumsr-063"></a></h2>
+<ul><li>
+<p>The ability to read an IPUMS DDI file contained within a zip archive using <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> has been deprecated. Users must now load DDI files by providing the direct path to the uncompressed .xml file.</p>
+<p>This resolves an inconsistency between the behavior of <code>read_ipums_micro_*()</code> functions when provided a DDI file path as compared to an <code>ipums_ddi</code> object created with <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code>.</p>
+</li>
+<li>
+<p>The ability to read IPUMS files by providing the path to their containing directory has been deprecated. This affects:</p>
+<ul><li><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code></li>
+<li><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code></li>
+<li><code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code></li>
+<li><code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code></li>
+<li><code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code></li>
+</ul><p>These functions now require either a zip archive (with the exception of <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code>—see above) or a direct file path as input.</p>
+<p>This has the consequence that <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> with <code>bind_multiple = TRUE</code> requires a zip archive as input if multiple files are to be read and combined.</p>
+</li>
+<li><p>Documentation updates for clarity</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6.2" id="ipumsr-062">ipumsr 0.6.2<small>2023-08-22</small><a class="anchor" aria-label="anchor" href="#ipumsr-062"></a></h2>
+<ul><li>Fixes for CRAN checks.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6.1" id="ipumsr-061">ipumsr 0.6.1<small>2023-08-18</small><a class="anchor" aria-label="anchor" href="#ipumsr-061"></a></h2>
+<ul><li>Fixes for CRAN checks.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.0" id="ipumsr-060">ipumsr 0.6.0<small>2023-07-21</small><a class="anchor" aria-label="anchor" href="#ipumsr-060"></a></h2>
 <div class="section level3">

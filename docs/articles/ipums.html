@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPUMS Data in R • ipumsr</title>
+<title>IPUMS Data and R • ipumsr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="IPUMS Data in R">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="IPUMS Data and R">
 <meta property="og:description" content="ipumsr">
 <meta property="og:image" content="http://tech.popdata.org/ipumsr/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>IPUMS Data in R</h1>
+      <h1 data-toc-skip>IPUMS Data and R</h1>
                         <h4 data-toc-skip class="author">Institute for
 Social Research and Data Innovation</h4>
             
@@ -150,6 +150,10 @@ Social Research and Data Innovation</h4>
 
     
     
+<p>This text provides an overview of how to find, request, download, and
+read IPUMS data into R. For a general introduction to IPUMS and ipumsr,
+see the <a href="https://tech.popdata.org/ipumsr/index.html" class="external-link">ipumsr home
+page</a>.</p>
 <div class="section level2">
 <h2 id="obtaining-ipums-data">Obtaining IPUMS data<a class="anchor" aria-label="anchor" href="#obtaining-ipums-data"></a>
 </h2>
@@ -157,76 +161,87 @@ Social Research and Data Innovation</h4>
 register with a particular <a href="https://www.ipums.org/overview" class="external-link">IPUMS project</a> by clicking the
 <strong>Register</strong> link at the top right of the project
 website.</p>
-<p>IPUMS data are obtained by creating and submitting an <em>extract
-request</em>. This specifies the data to be included in the resulting
-<em>extract</em> (or <em>data extract</em>). A submitted extract request
-will be processed by the IPUMS servers. When complete, the extract
-containing the requested data can be downloaded.</p>
+<p>Users obtain IPUMS data by creating and submitting an <em>extract
+request</em>. This specifies which data to include in the resulting
+<em>extract</em> (or <em>data extract</em>). IPUMS servers process each
+submitted extract request, and when complete, users can download the
+extract containing the requested data.</p>
 <p>Extracts typically contain both data and metadata files. Data files
-typically come as .dat (for fixed-width files) or .csv (for
-comma-delimited files). Metadata files contain information about the
-data file and its contents, including variable descriptions and parsing
-instructions for fixed-width data files. Microdata projects provide
-metadata in DDI (.xml) files. Aggregate data projects provide metadata
-in either .txt or .csv formats.</p>
-<p>Registered users can download IPUMS data from a particular project
-through the interactive extract system found on that project’s website.
-For some projects, data can also be downloaded within R by interacting
-with the IPUMS API.</p>
+typically come as fixed-width (.dat) files or comma-delimited (.csv)
+files. Metadata files contain information about the data file and its
+contents, including variable descriptions and parsing instructions for
+fixed-width data files. IPUMS microdata projects provide metadata in DDI
+(.xml) files. Aggregate data projects provide metadata in either .txt or
+.csv formats.</p>
+<p>Users can submit extract requests and download extracts via either
+the IPUMS website or the IPUMS API, or via ipumsr functions that
+interface with the IPUMS API. The API currently supports access to the
+extract system only for <a href="https://developer.ipums.org/docs/v2/apiprogram/apis/" class="external-link">certain
+IPUMS projects</a>, which also determines the functionality that ipumsr
+can support.</p>
 <div class="section level3">
-<h3 id="downloading-via-the-ipums-website">Downloading via the IPUMS website<a class="anchor" aria-label="anchor" href="#downloading-via-the-ipums-website"></a>
+<h3 id="obtaining-data-via-an-ipums-website">Obtaining data via an IPUMS website<a class="anchor" aria-label="anchor" href="#obtaining-data-via-an-ipums-website"></a>
 </h3>
-<p>To create a new extract request, navigate to the extract interface
-for the IPUMS project of interest by clicking <strong>Select
-Data</strong> in the heading of the project website. The project extract
-interface allows you to specify the data you’d like to download. The
-data selection parameters will differ across projects; see each
-project’s documentation for more details on the available options. If
-you’ve never created an extract for the project you’re interested in,
-start by watching the project-specific video on creating extracts hosted
-on the <a href="https://www.ipums.org/support/tutorials" class="external-link">IPUMS Tutorials
+<p>To create a new extract request via IPUMS websites, navigate to the
+extract interface for the IPUMS project of interest by clicking
+<strong>Select Data</strong> in the heading of the project website. The
+project extract interface allows you to explore what’s available, find
+documentation about data concepts and sources, and then specify the data
+you’d like to download. The data selection parameters will differ across
+projects; see each project’s documentation for more details on the
+available options. If you’ve never created an extract for the project
+you’re interested in, a good way to learn the basics is to watch a
+project-specific video on creating extracts hosted on the <a href="https://www.ipums.org/support/tutorials" class="external-link">IPUMS Tutorials
 page</a>.</p>
 <div class="section level4">
-<h4 id="for-microdata-projects">For microdata projects<a class="anchor" aria-label="anchor" href="#for-microdata-projects"></a>
+<h4 id="downloading-from-microdata-projects">Downloading from microdata projects<a class="anchor" aria-label="anchor" href="#downloading-from-microdata-projects"></a>
 </h4>
 <p>Once your extract is ready, click the green <strong>Download</strong>
 button to download the data file. Then, right-click the
-<strong>DDI</strong> link in the codebook column, and select
+<strong>DDI</strong> link in the Codebook column, and select
 <strong>Save Link As…</strong> (see below).</p>
 <p>Note that some browsers may display different text, but there should
 be an option to download the DDI file as .xml. For instance, on Safari,
-select <strong>Download Linked File As…</strong>. The most important
-thing is that you download the file in .xml format, <em>not</em> .html
-format.</p>
+select <strong>Download Linked File As…</strong>. For ipumsr to read the
+metadata, it is necessary to <strong>save the file in .xml format,
+<em>not</em> .html format</strong>.</p>
 <p><img src="microdata_annotated_screenshot.png" width="1000"></p>
 </div>
 <div class="section level4">
-<h4 id="for-aggregate-data-projects">For aggregate data projects<a class="anchor" aria-label="anchor" href="#for-aggregate-data-projects"></a>
+<h4 id="downloading-from-aggregate-data-projects">Downloading from aggregate data projects<a class="anchor" aria-label="anchor" href="#downloading-from-aggregate-data-projects"></a>
 </h4>
-<p>Simply download an extract’s data by clicking the green
+<p>Aggregate data projects include data and metadata together in a
+single .zip archive file. To download them, simply click on the green
 <strong>Tables</strong> button (for tabular data) and/or <strong>GIS
-Files</strong> button (for spatial boundary data) in the
+Files</strong> button (for spatial boundary or location data) in the
 <strong>Download Data</strong> column.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="downloading-via-the-ipums-api">Downloading via the IPUMS API<a class="anchor" aria-label="anchor" href="#downloading-via-the-ipums-api"></a>
+<h3 id="obtaining-data-via-the-ipums-api">Obtaining data via the IPUMS API<a class="anchor" aria-label="anchor" href="#obtaining-data-via-the-ipums-api"></a>
 </h3>
-<p>Extract requests can also be created and submitted from within R by
-interacting with the IPUMS API. The IPUMS API currently supports the
-following collections:</p>
+<p>Users can also create and submit extract requests within R by using
+ipumsr functions that interface with the IPUMS API. The IPUMS API
+currently supports access to the extract system for the following
+collections:</p>
 <ul>
 <li><p>IPUMS USA</p></li>
 <li><p>IPUMS CPS</p></li>
 <li><p>IPUMS International</p></li>
 <li><p>IPUMS NHGIS</p></li>
 </ul>
-<p>The workflow for requesting and downloading data via API is
-straightforward. First, define the parameters of your extract. The
-available extract definition options will differ by IPUMS data
-collection. See the <a href="ipums-api-micro.html">microdata API
-request</a> and <a href="ipums-api-nhgis.html">NHGIS API request</a>
-vignettes for more details on defining an extract.</p>
+<p>The IPUMS API and ipumsr also support access to IPUMS NHGIS metadata,
+so users can query NHGIS metadata in R to explore what data are
+available and specify NHGIS data requests. At this time, creating
+requests for microdata generally requires using the corresponding
+project websites to find samples and variables of interest and obtain
+their identifiers for use in R extract definitions.</p>
+<p>Once you have identified the data you would like to request, the
+workflow for requesting and downloading data via API is straightforward.
+First, define the parameters of your extract. The available extract
+definition options will differ by IPUMS data collection. See the <a href="ipums-api-micro.html">microdata API request</a> and <a href="ipums-api-nhgis.html">NHGIS API request</a> vignettes for more
+details on defining an extract. (The NHGIS vignette also discusses how
+to access NHGIS metadata.)</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cps_extract_request</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract-micro.html">define_extract_cps</a></span><span class="op">(</span></span>
 <span>  description <span class="op">=</span> <span class="st">"2018-2019 CPS Data"</span>,</span>
@@ -253,17 +268,17 @@ without ever having to leave R:</p>
 requests, even if they weren’t made with the API:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">past_extracts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_history.html">get_extract_history</a></span><span class="op">(</span><span class="st">"nhgis"</span><span class="op">)</span></span></code></pre></div>
-<p>See the <a href="ipums-api.html">introduction to the IPUMS API</a>
-for more details about how to use ipumsr to interact with the IPUMS
-API.</p>
+<p>See the <a href="ipums-api.html">introduction to the IPUMS API for R
+users</a> for more details about how to use ipumsr to interact with the
+IPUMS API.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="reading-ipums-data">Reading IPUMS data<a class="anchor" aria-label="anchor" href="#reading-ipums-data"></a>
 </h2>
-<p>Once your extract is downloaded, you can load your data into R with
-the family of <code>read_*()</code> functions in ipumsr. These functions
-expand on those provided in <a href="https://readr.tidyverse.org/index.html" class="external-link">readr</a> in two ways:</p>
+<p>Once you have downloaded an extract, you can load the data into R
+with the family of <code>read_*()</code> functions in ipumsr. These
+functions expand on those provided in <a href="https://readr.tidyverse.org/index.html" class="external-link">readr</a> in two ways:</p>
 <ul>
 <li><p>ipumsr anticipates standard IPUMS file structures, limiting the
 need for users to manually extract and organize their downloaded files
@@ -319,8 +334,9 @@ family:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
-<p>ipumsr also supports the reading of IPUMS spatial boundary files into
-the <code>sf</code> format provided by the <a href="https://r-spatial.github.io/sf/" class="external-link">sf</a> package:</p>
+<p>ipumsr also supports the reading of IPUMS shapefiles (spatial
+boundary and location files) into the <code>sf</code> format provided by
+the <a href="https://r-spatial.github.io/sf/" class="external-link">sf</a> package:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">shp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span></span>
 <span><span class="va">nhgis_shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="va">shp_file</span><span class="op">)</span></span>
@@ -348,7 +364,7 @@ ipumsr. Otherwise, these files can likely be handled by existing data
 reading packages like <a href="https://readr.tidyverse.org/" class="external-link">readr</a>
 (for delimited files) or <a href="https://haven.tidyverse.org/" class="external-link">haven</a> (for Stata, SPSS, or SAS
 files).</p>
-<p>See the <a href="ipums-read.html">vignette</a> on reading IPUMS data
+<p>See the vignette on <a href="ipums-read.html">reading IPUMS data</a>
 for more information.</p>
 <div class="section level3">
 <h3 id="exploring-file-metadata">Exploring file metadata<a class="anchor" aria-label="anchor" href="#exploring-file-metadata"></a>

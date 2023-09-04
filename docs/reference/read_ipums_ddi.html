@@ -26,7 +26,7 @@ IPUMS DDI codebook files."><meta property="og:image" content="http://tech.popdat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -130,8 +130,8 @@ IPUMS DDI codebook files.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_ddi</span><span class="op">(</span></span>
 <span>  <span class="va">ddi_file</span>,</span>
-<span>  file_select <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  file_select <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  data_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -140,16 +140,7 @@ IPUMS DDI codebook files.</p>
     <h2>Arguments</h2>
     <dl><dt>ddi_file</dt>
 <dd><p>Path to a DDI .xml file downloaded from
-<a href="https://www.ipums.org/" class="external-link">IPUMS</a> or a .zip archive or directory containing
-the .xml file. See <em>Downloading IPUMS files</em> below.</p></dd>
-
-
-<dt>file_select</dt>
-<dd><p>If <code>ddi_file</code> is a .zip archive or directory that contains
-multiple .xml files, an expression identifying the file to read.
-Accepts a character string specifying the file name, a
-<a href="selection_language.html">tidyselect selection</a>, or an index position.
-Ignored if <code>ddi_file</code> is the path to a single .xml file.</p></dd>
+<a href="https://www.ipums.org/" class="external-link">IPUMS</a>. See <em>Downloading IPUMS files</em> below.</p></dd>
 
 
 <dt>lower_vars</dt>
@@ -157,9 +148,10 @@ Ignored if <code>ddi_file</code> is the path to a single .xml file.</p></dd>
 lowercase. Defaults to <code>FALSE</code> for consistency with IPUMS conventions.</p></dd>
 
 
-<dt>data_layer</dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Please use <code>file_select</code>
-instead.</p></dd>
+<dt>data_layer, file_select</dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reading
+DDI files contained in a .zip archive has been deprecated. Please provide
+the full path to the .xml file to be loaded in <code>ddi_file</code>.</p></dd>
 
 </dl></div>
     <div id="value">
