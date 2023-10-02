@@ -1,6 +1,6 @@
 data <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
-test_that("Basic join works (sf)", {
+test_that("Basic join works", {
   skip_if_not_installed("sf")
   shape <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 
@@ -11,24 +11,7 @@ test_that("Basic join works (sf)", {
   expect_equal(attr(joined, "sf_column"), "geometry")
 })
 
-test_that("Basic join works (sp)", {
-  skip_if_not_installed("sp")
-  skip_if_not_installed("rgdal")
-
-  lifecycle::expect_deprecated(
-    shape <- read_ipums_sp(
-      ipums_example("nhgis0972_shape_small.zip"),
-      verbose = FALSE
-    )
-  )
-
-  joined <- ipums_shape_inner_join(data, shape, by = "GISJOIN")
-
-  expect_null(join_failures(joined))
-  expect_equal(nrow(data), nrow(joined))
-})
-
-test_that("suffix argument works (sf)", {
+test_that("suffix argument works", {
   skip_if_not_installed("sf")
   shape <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 
@@ -46,7 +29,7 @@ test_that("suffix argument works (sf)", {
 })
 
 
-test_that("complicated by works (sf)", {
+test_that("complicated `by` works", {
   skip_if_not_installed("sf")
   shape <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 
@@ -71,7 +54,7 @@ test_that("complicated by works (sf)", {
   expect_true(identical(joined, joined_regular))
 })
 
-test_that("error for missing a by variable (sf)", {
+test_that("error for missing a by variable", {
   skip_if_not_installed("sf")
   shape <- read_ipums_sf(ipums_example("nhgis0972_shape_small.zip"))
 
