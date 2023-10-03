@@ -121,10 +121,10 @@
 #'   metadata API and extracts.
 #'
 #' @inheritParams submit_extract
-#' @param type One of `"datasets"`, `"time_series_tables"`, or `"shapefiles"`
-#'   indicating the type of summary metadata to retrieve. Leave `NULL` if
-#'   requesting metadata for a single `dataset`, `data_table`, or
-#'   `time_series_table`.
+#' @param type One of `"datasets"`, `"data_tables"`, `"time_series_tables"`,
+#'   or `"shapefiles"` indicating the type of summary metadata to retrieve.
+#'   Leave `NULL` if requesting metadata for a single `dataset`, `data_table`,
+#'   or `time_series_table`.
 #' @param dataset Name of an individual dataset for which to retrieve metadata.
 #' @param data_table Name of an individual data table for which to retrieve
 #'   metadata. If provided, an associated `dataset` must also be specified.
@@ -181,6 +181,22 @@
 #' # Detailed metadata is also provided for datasets and data tables
 #' get_metadata_nhgis(dataset = "1990_STF1")
 #' get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
+#'
+#' # Iterate over data sources to retrieve detailed metadata for several
+#' # records. For instance, to get variable metadata for a set of data tables:
+#' tables <- c("NP1", "NP2", "NP10")
+#'
+#' var_meta <- purrr::map(
+#'   tables,
+#'   function(dt) {
+#'     dt_meta <- get_metadata_nhgis(dataset = "1990_STF1", data_table = dt)
+#'
+#'     # This ensures you avoid hitting rate limit for large numbers of tables
+#'     Sys.sleep(1)
+#'
+#'     dt_meta$variables
+#'   }
+#' )
 #' }
 get_metadata_nhgis <- function(type = NULL,
                                dataset = NULL,

@@ -14,10 +14,10 @@ get_metadata_nhgis(
 )
 }
 \arguments{
-\item{type}{One of \code{"datasets"}, \code{"time_series_tables"}, or \code{"shapefiles"}
-indicating the type of summary metadata to retrieve. Leave \code{NULL} if
-requesting metadata for a single \code{dataset}, \code{data_table}, or
-\code{time_series_table}.}
+\item{type}{One of \code{"datasets"}, \code{"data_tables"}, \code{"time_series_tables"},
+or \code{"shapefiles"} indicating the type of summary metadata to retrieve.
+Leave \code{NULL} if requesting metadata for a single \code{dataset}, \code{data_table},
+or \code{time_series_table}.}
 
 \item{dataset}{Name of an individual dataset for which to retrieve metadata.}
 
@@ -200,6 +200,22 @@ define_extract_nhgis(
 # Detailed metadata is also provided for datasets and data tables
 get_metadata_nhgis(dataset = "1990_STF1")
 get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
+
+# Iterate over data sources to retrieve detailed metadata for several
+# records. For instance, to get variable metadata for a set of data tables:
+tables <- c("NP1", "NP2", "NP10")
+
+var_meta <- purrr::map(
+  tables,
+  function(dt) {
+    dt_meta <- get_metadata_nhgis(dataset = "1990_STF1", data_table = dt)
+
+    # This ensures you avoid hitting rate limit for large numbers of tables
+    Sys.sleep(1)
+
+    dt_meta$variables
+  }
+)
 }
 }
 \seealso{
