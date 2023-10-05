@@ -163,7 +163,8 @@ display_ipums_var_row <- function(var_name,
     ),
     silent = TRUE
   )
-  if (inherits(class(url)[1], "try-error")) {
+
+  if (inherits(url, "try-error")) {
     link <- NULL
   } else {
     link <- htmltools::a(href = url, "More details")
