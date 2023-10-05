@@ -77,7 +77,7 @@ ipums_website.ipums_ddi <- function(x,
   url <- get_ipums_url(var, project, verbose, homepage_if_missing)
 
   if (launch) {
-    shell.exec(url)
+    system2("open", url)
     invisible(url)
   } else {
     url
@@ -107,7 +107,7 @@ ipums_website.default <- function(x,
   url <- get_ipums_url(var, project, verbose, homepage_if_missing)
 
   if (launch) {
-    shell.exec(url)
+    system2("open", url)
     invisible(url)
   } else {
     url
