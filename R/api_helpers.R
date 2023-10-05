@@ -30,21 +30,14 @@
 #' @examples
 #' ipums_data_collections()
 ipums_data_collections <- function() {
-  tibble::tribble(
-    ~collection_name, ~collection_type, ~code_for_api, ~api_support,
-    "IPUMS USA", "microdata", "usa", TRUE,
-    "IPUMS CPS", "microdata", "cps", TRUE,
-    "IPUMS International", "microdata", "ipumsi", TRUE,
-    "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
-    "IPUMS IHGIS", "aggregate data", "ihgis", FALSE,
-    "IPUMS AHTUS", "microdata", "ahtus", FALSE,
-    "IPUMS MTUS", "microdata", "mtus", FALSE,
-    "IPUMS ATUS", "microdata", "atus", FALSE,
-    "IPUMS DHS", "microdata", "dhs", FALSE,
-    "IPUMS Higher Ed", "microdata", "highered", FALSE,
-    "IPUMS MEPS", "microdata", "meps", FALSE,
-    "IPUMS NHIS", "microdata", "nhis", FALSE,
-    "IPUMS PMA", "microdata", "pma", FALSE
+  purrr::map_dfr(
+    proj_config(),
+    ~ tibble::tibble(
+      collection_name = .x$proj_name,
+      collection_type = .x$collection_type,
+      code_for_api = .x$code_for_api,
+      api_support = .x$api_support
+    )
   )
 }
 

@@ -70,11 +70,22 @@ ipums_website.ipums_ddi <- function(x,
                                     homepage_if_missing = TRUE) {
   if (is.null(project)) project <- x$ipums_project
 
-  # Some convuluted code to check for "detailed variables", because their
-  # urls aren't right
-  var <- fix_for_detailed_var(x, var, var_label)
+  var <- fix_for_detailed_var(x, var = var, var_label = var_label)
 
-  url <- get_ipums_url(var, project, verbose, homepage_if_missing)
+  if (!rlang::is_null(var) && !var %in% x$var_info$var_name && verbose) {
+    rlang::warn(
+      paste0(
+        "`var` \"", var, "\" was not found in the provided `ipums_ddi` object"
+      )
+    )
+  }
+
+  url <- get_ipums_url(
+    x$ipums_project,
+    var = var,
+    verbose = verbose,
+    homepage_if_missing = homepage_if_missing
+  )
 
   if (launch) {
     system2("open", url)
@@ -100,11 +111,14 @@ ipums_website.default <- function(x,
     x <- NULL
   }
 
-  # Some convuluted code to check for "detailed variables", because their
-  # urls aren't right
-  var <- fix_for_detailed_var(x, var, var_label)
+  var <- fix_for_detailed_var(x, var = var, var_label = var_label)
 
-  url <- get_ipums_url(var, project, verbose, homepage_if_missing)
+  url <- get_ipums_url(
+    project,
+    var = var,
+    verbose = verbose,
+    homepage_if_missing = homepage_if_missing
+  )
 
   if (launch) {
     system2("open", url)
@@ -114,50 +128,32 @@ ipums_website.default <- function(x,
   }
 }
 
-get_ipums_url <- function(var,
-                          project,
+get_ipums_url <- function(project,
+                          var = NULL,
                           verbose = TRUE,
                           homepage_if_missing = FALSE) {
-  if (is.null(project)) {
-    rlang::abort(c(
-      paste0(
-        "No project found. Use `project` to specify a project. ",
-        "Available projects:"
-      ),
-      paste0("\"", all_proj_names(), "\"")
-    ))
+  config <- get_proj_config(
+    project,
+    default_if_missing = homepage_if_missing,
+    verbose = verbose
+  )
+
+  if (verbose && !config$has_var_url && !rlang::is_null(var)) {
+    rlang::warn(
+      paste0("Cannot give a variable-specific URL for project \"", project, "\"")
+    )
   }
 
-  config <- get_proj_config(project)
-
-  # TODO: This does not actually error on missing projects, because
-  # get_proj_config() returns a default config for invalid projects.
-  # Better check would just be that the project name is in all_proj_names()
-  # Do when updating ipums_website()
-  if (is.null(config)) {
-    rlang::abort(c(
-      "Unexpected project. Available projects:",
-      paste0("\"", all_proj_names(), "\"")
-    ))
-  }
-
-  if (verbose && !config$var_url) {
-    message("Cannot give a variable-specific URL for this project.")
-  }
-
-  if (!homepage_if_missing && !config$var_url) {
-    return(NULL)
-  }
-
-  config$url_function(var)
+  config$var_url(var)
 }
 
-
-# Some convuluted code to check for "detailed variables", because their urls
-# aren't right
-fix_for_detailed_var <- function(object, var, var_label) {
+# Detailed variables use the same URL as the non-detailed versions of those
+# variables. We need to remove the ending "D" from these variable names.
+# We identify detailed variables by checking for the text "detailed version"
+# in their variable label.
+fix_for_detailed_var <- function(object, var, var_label = NULL) {
   if (is.null(var_label) & !is.null(object)) {
-    var_label <- ipums_var_label(object, one_of(var))
+    var_label <- ipums_var_label(object, any_of(var))
   }
 
   if (is.null(var_label)) {

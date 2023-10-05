@@ -438,7 +438,16 @@ test_that("We warn users about unsupported features detected in an extract", {
 # Misc ------------------------------------------
 
 test_that("We can get correct API version info for each collection", {
-  has_support <- dplyr::filter(ipums_data_collections(), .data$api_support)
+  collections <- ipums_data_collections()
+
+  expect_setequal(
+    collections$collection_name,
+    c("IPUMS USA", "IPUMS CPS", "IPUMS International", "IPUMS NHGIS",
+      "IPUMS IHGIS", "IPUMS ATUS", "IPUMS AHTUS", "IPUMS MTUS", "IPUMS DHS",
+      "IPUMS PMA", "IPUMS MICS", "IPUMS NHIS", "IPUMS MEPS", "IPUMS Higher Ed")
+  )
+
+  has_support <- dplyr::filter(collections, .data$api_support)
 
   expect_equal(has_support$code_for_api, c("usa", "cps", "ipumsi", "nhgis"))
   expect_equal(ipums_api_version(), 2)
