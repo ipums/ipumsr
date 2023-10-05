@@ -159,11 +159,10 @@ display_ipums_var_row <- function(var_name,
 
   url <- try(
     ipums_website(
+      x = project,
       var = var_name,
-      project = project,
       launch = FALSE,
-      verbose = FALSE,
-      var_label = var_label
+      verbose = FALSE
     ),
     silent = TRUE
   )

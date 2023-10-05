@@ -6,54 +6,61 @@
 \usage{
 ipums_website(
   x,
-  var,
-  project = NULL,
+  var = NULL,
   launch = TRUE,
   verbose = TRUE,
-  var_label = NULL,
-  homepage_if_missing = TRUE
+  homepage_if_missing = FALSE,
+  project = deprecated(),
+  var_label = deprecated()
 )
 }
 \arguments{
-\item{x}{An \code{\link{ipums_ddi}} object. If left empty, \code{project} must be specified.}
+\item{x}{An \code{\link{ipums_ddi}} object or the name of an IPUMS project.
+See \code{\link[=ipums_data_collections]{ipums_data_collections()}} for supported projects.}
 
-\item{var}{Name of the variable to load}
+\item{var}{Name of the variable to load. If \code{NULL}, provides the URL to the
+project's main data selection site.}
 
-\item{project}{Name of an IPUMS project. Must be one of:
-\code{"IPUMS-USA"}, \code{"IPUMS-CPS"}, \code{"IPUMS-International"}, \code{"IPUMS-DHS"},
-\code{"ATUS-X"}, \code{"AHTUS-X"}, \code{"MTUS-X"}, \code{"NHIS"}, \code{"Higher Ed"}, \code{"NHGIS"}}
+\item{launch}{If \code{TRUE}, launch a browser window to the metadata webpage.
+Otherwise, return the URL for the webpage.}
 
-\item{launch}{If \code{TRUE}, launch the website.}
+\item{verbose}{If \code{TRUE}, produce warnings when invalid URL specifications
+are detected.}
 
-\item{verbose}{If \code{TRUE}, produces message if no variable-specific websites
-are found.}
+\item{homepage_if_missing}{If \code{TRUE}, return the IPUMS homepage if the
+IPUMS project in \code{x} is not recognized.}
 
-\item{var_label}{Variable label for the provided \code{var}.
+\item{project}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{x} instead.}
 
-This may be useful if the URL produced by \code{var} alone is incorrect.
-
-Only used if specifying \code{project}, not \code{x}.}
-
-\item{homepage_if_missing}{If \code{TRUE}, return the project homepage if the
-project does not provide variable-specific web pages.}
+\item{var_label}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Variable label for the
+provided \code{var}. This is typically obtained from the input \code{ipums_ddi}
+object and is unlikely to be needed.}
 }
 \value{
 The URL to the IPUMS webpage for the indicated project and variable
-(silently if launch is \code{TRUE})
+(invisibly if \code{launch = TRUE})
 }
 \description{
-Using an \link{ipums_ddi} object or IPUMS project
-along with a variable name, guesses the most appropriate URL for
-the variable's page on the IPUMS website.
+Launch the documentation webpage for a given
+IPUMS project and variable. The project can be provided in the form
+of an \code{\link{ipums_ddi}} object or can be manually specified.
 
-Currently, this is only available for Windows operating systems.
+This provides access to more extensive variable metadata than may be
+contained within an \code{ipums_ddi} object itself.
+
+Note that some IPUMS projects (e.g. IPUMS NHGIS) do not have
+variable-specific pages. In these cases, \code{ipums_website()} will launch the
+project's main data selection page.
 }
 \details{
-Note that some IPUMS projects (e.g. NHGIS) do not have variable-specific
-pages.
+If \code{launch = TRUE}, you will need a valid registration for the specified
+project to successfully launch the webpage.
 
-The generated URL may not work for variables that are constructed during the
-extract creation process.
+Not all IPUMS variables are found at webpages that exactly match the variable
+names that are included in completed extract files (and \code{ipums_ddi} objects).
+Therefore, there may be some projects and variables for which
+\code{ipums_website()} will launch the page for a different variable or an
+invalid page.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
@@ -63,6 +70,9 @@ ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 ipums_website(ddi, "MONTH")
 }
 
-# Can specify an IPUMS project instead of using an `ipums_ddi` object
-ipums_website(var = "RECTYPE", project = "IPUMS-CPS", launch = FALSE)
+# Can also specify an IPUMS project instead of an `ipums_ddi` object
+ipums_website("IPUMS CPS", var = "RECTYPE", launch = FALSE)
+
+# Shorthand project names from `ipums_data_collections()` are also accepted:
+ipums_website("ipumsi", var = "YEAR", launch = FALSE)
 }
