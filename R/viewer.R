@@ -229,7 +229,7 @@ expandable_div <- function(title, subtitle, content) {
 }
 
 split_double_linebreaks_to_ptags <- function(x) {
-  if (is.null(x)) {
+  if (is.null(x) || x == "") {
     return("")
   }
   out <- fostr_split(x, "\n\n")[[1]]
@@ -237,7 +237,7 @@ split_double_linebreaks_to_ptags <- function(x) {
 }
 
 convert_single_linebreak_to_brtags <- function(x) {
-  if (is.null(x)) {
+  if (is.null(x) || x == "") {
     return(NULL)
   }
 
