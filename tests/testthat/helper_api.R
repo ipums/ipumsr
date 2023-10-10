@@ -1,30 +1,72 @@
 # Sample extracts for use in api unit testing
 test_usa_extract <- function() {
   define_extract_usa(
-    samples = "us2017b",
-    variables = "YEAR",
-    description = "Test extract",
-    data_format = "fixed_width"
+    description = "Test USA extract",
+    samples = samp_spec("us2017b"),
+    variables = list(
+      var_spec(
+        "RACE",
+        case_selections = c("801", "802"),
+        case_selection_type = "detailed",
+        preselected = FALSE
+      ),
+      "YEAR"
+    ),
+    data_format = "fixed_width",
+    case_select_who = "households"
   )
 }
 
 test_cps_extract <- function() {
   define_extract_cps(
-    samples = c("cps1976_01s", "cps1976_02b"),
-    variables = c("YEAR", "MISH", "CPSIDP", "AGE", "SEX", "RACE", "UH_SEX_B1"),
     description = "Compare age-sex-race breakdowns 1976",
-    data_format = "fixed_width"
+    samples = c("cps2018_03s", "cps2019_03s"),
+    variables = list(
+      var_spec(
+        "AGE",
+        attached_characteristics = "head",
+        data_quality_flags = FALSE
+      ),
+      var_spec(
+        "SEX",
+        case_selections = "2",
+        attached_characteristics = c("mother", "father")
+      ),
+      var_spec(
+        "RACE",
+        case_selections = c("810", "811", "812"),
+        case_selection_type = "general"
+      )
+    ),
+    data_format = "fixed_width",
+    data_structure = "hierarchical",
+    case_select_who = "individuals",
+    data_quality_flags = TRUE
+  )
+}
+
+test_ipumsi_extract <- function() {
+  define_extract_ipumsi(
+    description = "Test IPUMSI extract",
+    samples = c("mx2015a", "cl2017a"),
+    variables = list(
+      var_spec("AGE", case_selections = "010"),
+      var_spec("SEX", attached_characteristics = "father"),
+      "EDATTAIN"
+    ),
+    data_format = "csv"
   )
 }
 
 test_nhgis_extract <- function() {
   define_extract_nhgis(
     description = "Extract for R client testing",
-    dataset = c("2014_2018_ACS5a", "2015_2019_ACS5a"),
-    data_tables = c("B01001", "B01002"),
-    time_series_table = "CW3",
-    geog_levels = list("nation", "blck_grp", "state"),
-    geographic_extents = c("110", "Pennsylvania"),
+    datasets = list(
+      ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
+      ds_spec("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
+    ),
+    time_series_tables = tst_spec("CW3", "state", "1990"),
+    geographic_extents = c("110", "100"),
     tst_layout = "time_by_row_layout",
     shapefiles = "110_blck_grp_2019_tl2019",
     data_format = "csv_no_header"

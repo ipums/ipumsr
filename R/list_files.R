@@ -3,13 +3,12 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' List files contained within an IPUMS extract
+#' List files contained within a zipped IPUMS extract
 #'
-#' Identify the files that can be read from an IPUMS extract, whether its
-#' files are stored in a .zip archive or a directory.
+#' Identify the files that can be read from an IPUMS extract.
 #'
-#' @param file Path to a .zip archive or directory containing the IPUMS extract
-#'   to be examined.
+#' @param file Path to a .zip archive containing the IPUMS extract to be
+#'   examined.
 #' @param file_select If the path in `file` contains multiple files, a
 #'   [tidyselect selection][selection_language] identifying the files to be
 #'   included in the output. Only files that match the provided expression
@@ -17,7 +16,7 @@
 #'
 #'   While less useful, this can also be provided as a string specifying an
 #'   exact file name or an integer to match files by index position.
-#' @param types One or more of `"data"`, `"shape"`, or `"raster"` indicating
+#' @param types One or more of `"data"` or `"shape"` indicating
 #'   the type of files to include in the output. `"data"` refers to
 #'   tabular data sources, while `"shape"` refers to spatial data sources.
 #'
@@ -53,6 +52,15 @@ ipums_list_files <- function(file,
   has_dl <- !missing(data_layer)
   has_sl <- !missing(shape_layer)
   has_rl <- !missing(raster_layer)
+
+  if (file_is_dir(file)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      I("Reading files through a directory "),
+      details = "Use `dir()` to list files in a directory.",
+      id = "dir_read"
+    )
+  }
 
   if (any(c(has_dl, has_sl, has_rl))) {
     lifecycle::deprecate_warn(

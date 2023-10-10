@@ -2,33 +2,26 @@
 % Please edit documentation in R/ddi_read.R
 \name{read_ipums_ddi}
 \alias{read_ipums_ddi}
-\title{Read metadata about an IPUMS extract from a DDI codebook (.xml) file}
+\title{Read metadata about an IPUMS microdata extract from a DDI codebook (.xml)
+file}
 \usage{
 read_ipums_ddi(
   ddi_file,
-  file_select = NULL,
   lower_vars = FALSE,
+  file_select = deprecated(),
   data_layer = deprecated()
 )
 }
 \arguments{
 \item{ddi_file}{Path to a DDI .xml file downloaded from
-\href{https://www.ipums.org/}{IPUMS} or a .zip archive or directory containing
-the .xml file.
-
-See \emph{Downloading IPUMS files} below.}
-
-\item{file_select}{If \code{ddi_file} is a .zip archive or directory that contains
-multiple .xml files, an expression identifying the file to read.
-Accepts a character string specifying the file name, a
-\link[=selection_language]{tidyselect selection}, or an index position.
-Ignored if \code{ddi_file} is the path to a single .xml file.}
+\href{https://www.ipums.org/}{IPUMS}. See \emph{Downloading IPUMS files} below.}
 
 \item{lower_vars}{Logical indicating whether to convert variable names to
 lowercase. Defaults to \code{FALSE} for consistency with IPUMS conventions.}
 
-\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{file_select}
-instead.}
+\item{data_layer, file_select}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reading
+DDI files contained in a .zip archive has been deprecated. Please provide
+the full path to the .xml file to be loaded in \code{ddi_file}.}
 }
 \value{
 An \link{ipums_ddi} object with metadata information.
@@ -69,7 +62,7 @@ returns the path to the codebook file.
 
 \examples{
 # Example codebook file
-ddi_file <- ipums_example("cps_00006.xml")
+ddi_file <- ipums_example("cps_00157.xml")
 
 # Load data into an `ipums_ddi` obj
 ddi <- read_ipums_ddi(ddi_file)

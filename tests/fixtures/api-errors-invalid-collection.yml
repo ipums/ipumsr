@@ -1,0 +1,43 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/?collection=foo&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 26 Apr 2023 18:26:46 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 5f78a0c7-9a25-42c3-a7ce-51db63bb7738
+      x-runtime: '0.002743'
+      x-xss-protection: '0'
+      content-length: '268'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"Bad Request","status":{"code":400,"name":"Collection Query
+        Parameter Invalid"},"detail":"The ''collection'' query parameter is invalid.
+        Currently, the only valid values are nhgis, ahtus, atus, cps, dhs, highered,
+        ipumsi, meps, mics, mtus, napp, nhis, pma, usa"}'
+  recorded_at: 2023-04-26 18:26:46 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

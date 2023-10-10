@@ -12,8 +12,8 @@
 #' \code{read_terra_raster}, or read multiple into a list using \code{read_terra_raster_list}.
 #'
 #' Support for IPUMS Terra has been discontinued. These functions will be
-#' removed in a future release. For general handling of raster data in R, see the
-#' [terra][terra::terra] package.
+#' removed in a future release. For general handling of raster data in R, see
+#' the [terra](https://github.com/rspatial/terra) package.
 #'
 #' \emph{Note: Reading IPUMS Terra raster extracts requires installation of the
 #' raster package, which is no longer installed automatically when you install
@@ -148,8 +148,8 @@ read_terra_raster_internal <- function(data_file,
 #' Reads a area-level dataset downloaded from the IPUMS Terra extract system.
 #'
 #' Support for IPUMS Terra has been discontinued. These functions will be
-#' removed in a future release. For general handling of raster data in R, see the
-#' [terra][terra::terra] package.
+#' removed in a future release. For general handling of raster data in R, see
+#' the [terra](https://github.com/rspatial/terra) package.
 #'
 #' @return
 #'   \code{read_terra_area} returns a \code{tbl_df} with the tabular data,
@@ -397,8 +397,8 @@ read_terra_area_sp <- function(
 #' Reads a microdata dataset downloaded from the IPUMS Terra extract system.
 #'
 #' Support for IPUMS Terra has been discontinued. This function will be
-#' removed in a future release. For general handling of raster data in R, see the
-#' [terra][terra::terra] package.
+#' removed in a future release. For general handling of raster data in R, see
+#' the [terra](https://github.com/rspatial/terra) package.
 #'
 #' @return
 #'   \code{read_terra_micro} returns a \code{tbl_df} with the tabular data. Use

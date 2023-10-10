@@ -1,13 +1,12 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/?collection=nhgis&version=v1&limit=1
+    uri: https://api.ipums.org/extracts/?collection=nhgis&version=2&pageNumber=1&pageSize=1
     body:
       encoding: ''
       string: ''
     headers:
       Accept: application/json, text/xml, application/xml, */*
-      Content-Type: application/json
       Authorization: <<<IPUMS_API_KEY>>>
   response:
     status:
@@ -18,8 +17,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 23 Mar 2023 20:05:03 GMT
-      etag: W/"04a417962876198382f8ad44db3b89a5"
+      date: Thu, 20 Jul 2023 21:27:53 GMT
+      etag: W/"a0384748edd7ba3999a587dcded945f6"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.18.0
       vary: Origin
@@ -30,13 +29,13 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e12826ee-3a7f-4fee-8cb8-90231741b85d
-      x-runtime: '0.569846'
+      x-request-id: db7be60b-9cbd-4a06-8d76-fe407d846215
+      x-runtime: '0.658817'
       x-xss-protection: '0'
-      content-length: '211'
+      content-length: '524'
     body:
       encoding: ''
       file: no
-      string: '[{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"number":1092,"status":"completed","download_links":{"gis_data":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992271/nhgis1092_shape.zip"}}]'
-  recorded_at: 2023-03-23 20:05:03 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: '{"data":[{"number":1271,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063473/nhgis1271_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}],"totalCount":1271,"pageNumber":1,"pageSize":1,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/extracts/?collection=nhgis\u0026pageNumber=2\u0026pageSize=1\u0026version=2"}}'
+  recorded_at: 2023-07-20 21:27:53 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

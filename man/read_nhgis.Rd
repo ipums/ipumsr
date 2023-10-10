@@ -7,101 +7,83 @@
 read_nhgis(
   data_file,
   file_select = NULL,
+  vars = NULL,
+  col_types = NULL,
+  n_max = Inf,
+  guess_max = min(n_max, 1000),
+  do_file = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   remove_extra_header = TRUE,
-  do_file = NULL,
-  file_type = NULL,
-  na = NULL,
-  col_names = TRUE,
-  locale = NULL,
   verbose = TRUE,
-  progress = NULL,
-  show_col_types = NULL,
-  ...,
   data_layer = deprecated()
 )
 }
 \arguments{
-\item{data_file}{Path to a data file, a .zip archive from an NHGIS
-extract, or a directory containing the data file.}
+\item{data_file}{Path to a .zip archive containing an NHGIS extract or
+a single file from an NHGIS extract.}
 
-\item{file_select}{If \code{data_file} is a .zip archive or directory that
+\item{file_select}{If \code{data_file} is a .zip archive that
 contains multiple files, an expression identifying the file to load.
 Accepts a character vector specifying the
 file name, a \link[=selection_language]{tidyselect selection}, or an index
 position. This must uniquely identify a file.}
 
-\item{var_attrs}{Variable attributes to add from the codebook (.txt) file
-included in the extract. Defaults to
-all available attributes.
+\item{vars}{Names of variables to include in the output. Accepts a
+vector of names or a \link[=selection_language]{tidyselect selection}.
+If \code{NULL}, includes all variables in the file.}
 
-If the codebook is not found, data will be loaded with no variable
-attributes.
+\item{col_types}{One of \code{NULL}, a \code{\link[readr:cols]{cols()}}
+specification or a string. If \code{NULL}, all column types will be inferred
+from the values in the first \code{guess_max} rows of each column.
+Alternatively, you can use a compact string representation to specify
+column types:
+\itemize{
+\item c = character
+\item i = integer
+\item n = number
+\item d = double
+\item l = logical
+\item f = factor
+\item D = date
+\item T = date time
+\item t = time
+\item ? = guess
+\item _ or - = skip
+}
+
+See \code{\link[readr:read_delim]{read_delim()}} for more details.}
+
+\item{n_max}{Maximum number of lines to read.}
+
+\item{guess_max}{For .csv files, maximum number of lines to use for guessing
+column types. Will never use more than the number of lines read.}
+
+\item{do_file}{For fixed-width files, path to the .do file associated with
+the provided \code{data_file}. The .do file contains the parsing instructions
+for the data file.
+
+By default, looks in the same path as \code{data_file} for
+a .do file with the same name. See Details section below.}
+
+\item{var_attrs}{Variable attributes to add from the codebook (.txt) file
+included in the extract. Defaults to all available attributes.
 
 See \code{\link[=set_ipums_var_attributes]{set_ipums_var_attributes()}} for more details.}
 
 \item{remove_extra_header}{If \code{TRUE}, remove the additional descriptive
-header row that is included in some NHGIS .csv files. Otherwise, the
-additional header will appear in the first row of the output data frame.
+header row included in some NHGIS .csv files.
 
-The header contains similar information to that
+This header row is not
+usually needed as it contains similar information to that
 included in the \code{"label"} attribute of each data column (if \code{var_attrs}
-includes \code{"var_label"}), and is therefore not usually needed.}
-
-\item{do_file}{For fixed-width files, path to the .do file associated with
-the provided \code{data_file}. The .do file contains the specifications that
-indicate how to parse the data file.
-
-By default, looks in the same directory as \code{data_file} for a .do
-file with the same name. If \code{FALSE} or if the .do file cannot be found,
-the .dat file will be parsed by the values provided to \code{col_positions}
-in \code{\link[readr:read_fwf]{read_fwf()}}. See Details section.}
-
-\item{file_type}{One of \code{"csv"} (for csv files) or \code{"dat"} (for fixed-width
-files) indicating the type of file to search for in the path provided to
-\code{data_file}. If \code{NULL}, determines the file type automatically based on
-the files found in \code{data_file}. Only needed if \code{data_file} contains both
-.csv and .dat files.}
-
-\item{na}{Character vector of strings to interpret as missing values.
-If \code{NULL}, defaults to \code{c("", "NA")} for csv files and \code{c(".", "", "NA")}
-for fixed-width files. See \code{\link[readr:read_delim]{read_csv()}}.}
-
-\item{col_names}{If reading a .csv file, either \code{TRUE}, \code{FALSE} or a
-character vector of column names.
-
-If \code{TRUE}, use the default column names included in NHGIS .csv files. If
-\code{FALSE} or a character vector, replace the default column names with the
-provided names or default placeholders. Note that any columns that have
-altered names will not be attached to the requested \code{var_attrs}.
-
-Note that unlike \code{\link[readr:read_delim]{readr::read_csv()}}, the first row
-of the input (which contains NHGIS default headers) will always be removed
-from the data.}
-
-\item{locale}{Controls defaults that vary from place to place. If \code{NULL},
-uses a locale designed to provide appropriate defaults for NHGIS files;
-altering the locale may cause problems with data parsing.
-
-If needed, you can use \code{\link[readr:locale]{readr::locale()}} to
-specify a different locale to control things like default time zone,
-decimal mark, big mark, and day/month names. If you do so, specify
-\code{encoding = "latin1"} to ensure files are encoded properly.}
+includes \code{"var_label"}).}
 
 \item{verbose}{Logical controlling whether to display output when loading
 data. If \code{TRUE}, displays IPUMS conditions, a progress bar, and
-guessed column types, unless \code{progress} or \code{show_col_types} is specified.}
+column types. Otherwise, all are suppressed.
 
-\item{progress}{Logical indicating whether to display a progress bar when
-loading data. By default, uses the value of \code{verbose}, unless
-the \code{readr.show_progress} option is set to \code{FALSE}.}
-
-\item{show_col_types}{Logical indicating whether to display guessed column
-types. By default, uses the value of \code{verbose}, unless
-the \code{readr.show_col_types} option is set to \code{FALSE}.}
-
-\item{...}{Additional arguments passed to \code{\link[readr:read_delim]{read_csv()}} or
-\code{\link[readr:read_fwf]{read_fwf()}}.}
+Will be overridden by \code{readr.show_progress} and \code{readr.show_col_types}
+options, if they are set.}
 
 \item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please
 use \code{file_select} instead.}
@@ -118,14 +100,17 @@ To read spatial data from an NHGIS extract, use \code{\link[=read_ipums_sf]{read
 }
 \details{
 The .do file that is included when downloading an NHGIS fixed-width
-extract contains important metadata about the data file's column
-positions and implicit decimals. \code{read_nhgis()} uses this information to
-parse and recode the fixed-width data appropriately. Therefore,
-while possible, it is not recommended to read fixed-width files without a
-corresponding .do file.
+extract contains the necessary metadata (e.g. column positions and implicit
+decimals) to correctly parse the data file. \code{read_nhgis()} uses this
+information to parse and recode the fixed-width data appropriately.
 
 If you no longer have access to the .do file, consider resubmitting the
-extract that produced the data.
+extract that produced the data. You can also change the desired data
+format to produce a .csv file, which does not require additional metadata
+files to be loaded.
+
+For more about resubmitting an existing extract via the IPUMS API, see
+\code{vignette("ipums-api", package = "ipumsr")}.
 }
 \examples{
 # Example files
@@ -136,30 +121,28 @@ fw_file <- ipums_example("nhgis0730_fixed.zip")
 read_nhgis(csv_file)
 
 # For extracts that contain multiple files, use `file_select` to specify
-# a single file to load.
-
-# This accepts a tidyselect expression
+# a single file to load. This accepts a tidyselect expression:
 read_nhgis(fw_file, file_select = matches("ds239"), verbose = FALSE)
 
-# Or an index position
+# Or an index position:
 read_nhgis(fw_file, file_select = 2, verbose = FALSE)
 
-# NHGIS fixed-width files use the information contained in the extract's
-# .do file to parse the data correctly. If it does not exist, the parsing
-# will be incorrect. If you have moved the .do file, be sure to provide
-# its new file path to the `do_file` argument.
-bad_parse <- read_nhgis(
-  fw_file,
-  file_select = 2,
-  do_file = FALSE,
+# For CSV files, column types are inferred from the data. You can
+# manually specify column types with `col_types`. This may be useful for
+# geographic codes, which should typically be interpreted as character values
+read_nhgis(csv_file, col_types = list(MSA_CMSAA = "c"), verbose = FALSE)
+
+# Fixed-width files are parsed with the correct column positions
+# and column types automatically:
+read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
+
+# You can also read in a subset of the data file:
+read_nhgis(
+  csv_file,
+  n_max = 15,
+  vars = c(GISJOIN, YEAR, D6Z002),
   verbose = FALSE
 )
-
-bad_parse$X1[1:10]
-
-# `readr::read_csv()` arguments are accepted, though most defaults should
-# be appropriate.
-read_nhgis(csv_file, col_types = readr::cols(.default = "c"))
 }
 \seealso{
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.

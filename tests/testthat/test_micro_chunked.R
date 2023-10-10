@@ -4,16 +4,16 @@
 
 test_that("basic chunk reading - long .dat.gz", {
   cps_full <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    ipums_example("cps_00157.xml"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
   cps_full <- cps_full[cps_full$STATEFIP == 19, ]
 
   cps_chunked <- read_ipums_micro_chunked(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     IpumsDataFrameCallback$new(function(x, ...) x[x$STATEFIP == 19, ]),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -23,16 +23,16 @@ test_that("basic chunk reading - long .dat.gz", {
 test_that("basic chunk reading - long .csv.gz", {
   skip_on_cran() # Don't want to lock readr into hipread's callback API
   cps_full <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    ipums_example("cps_00158.xml"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE
   )
   cps_full <- cps_full[cps_full$STATEFIP == 19, ]
 
   cps_chunked <- read_ipums_micro_chunked(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00158.xml"),
     IpumsDataFrameCallback$new(function(x, ...) x[x$STATEFIP == 19, ]),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE
   )
 
@@ -41,12 +41,12 @@ test_that("basic chunk reading - long .csv.gz", {
 
 test_that("basic chunk reading - list", {
   cps_full <- read_ipums_micro_list(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     verbose = FALSE
   )
 
   cps_chunked <- read_ipums_micro_list_chunked(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     IpumsListCallback$new(function(x, ...) x),
     verbose = FALSE
   )
@@ -66,7 +66,7 @@ test_that("basic chunk reading - list", {
 test_that("biglm is equivalent to lm", {
   skip_if_not_installed("biglm")
   biglm_results <- read_ipums_micro_chunked(
-    ipums_example("cps_00015.xml"),
+    ipums_example("cps_00160.xml"),
     IpumsBiglmCallback$new(
       INCTOT ~ AGE + HEALTH,
       function(x, ...) {
@@ -79,7 +79,7 @@ test_that("biglm is equivalent to lm", {
   )
 
   data <- read_ipums_micro(
-    ipums_example("cps_00015.xml"),
+    ipums_example("cps_00160.xml"),
     verbose = FALSE,
     var_attrs = NULL
   )

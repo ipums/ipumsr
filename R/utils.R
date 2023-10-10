@@ -177,7 +177,7 @@ find_files_in <- function(file,
 #' @export
 #'
 #' @examples
-#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load metadata into `ipums_ddi` object
 #' ddi <- read_ipums_ddi(ddi_file)
@@ -354,15 +354,6 @@ load_sf_namespace <- function() {
     rlang::abort(c(
       "The `sf` package is required to read IPUMS boundary files.",
       "i" = "Install it with `install.packages(\"sf\")`"
-    ))
-  }
-}
-
-load_rgdal_namespace <- function() {
-  if (!requireNamespace("rgdal", quietly = TRUE)) {
-    rlang::abort(c(
-      "The `rgdal` package is required to read IPUMS boundary files.",
-      "i" = "Install it with `install.packages(\"rgdal\")`"
     ))
   }
 }
@@ -714,10 +705,23 @@ setdiff_null <- function(x, y) {
   v
 }
 
-release_questions <- function() {
-  paste0(
-    "Have you scrubbed the package for remaining references to ipumsexamples?",
-    "\n(If ipumsexamples has been removed previously, this question is no ",
-    "longer relevant"
-  )
+empty_to_null <- function(x) {
+  if (is_empty(x)) {
+    NULL
+  } else {
+    x
+  }
+}
+
+dir_read_deprecated <- function(file) {
+  if (is.character(file) && file_is_dir(file)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      I("Reading files through a directory "),
+      details = "Please provide the full path to file to be loaded.",
+      id = "dir_read",
+      env = caller_env(),
+      user_env = caller_env(2)
+    )
+  }
 }

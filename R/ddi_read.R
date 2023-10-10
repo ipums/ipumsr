@@ -56,7 +56,8 @@
 #' @aliases ipums_ddi
 NULL
 
-#' Read metadata about an IPUMS extract from a DDI codebook (.xml) file
+#' Read metadata about an IPUMS microdata extract from a DDI codebook (.xml)
+#' file
 #'
 #' @description
 #' Reads the metadata about an IPUMS extract from a
@@ -88,19 +89,12 @@ NULL
 #'   returns the path to the codebook file.
 #'
 #' @param ddi_file Path to a DDI .xml file downloaded from
-#'   [IPUMS](https://www.ipums.org/) or a .zip archive or directory containing
-#'   the .xml file.
-#'
-#'   See *Downloading IPUMS files* below.
-#' @param file_select If `ddi_file` is a .zip archive or directory that contains
-#'   multiple .xml files, an expression identifying the file to read.
-#'   Accepts a character string specifying the file name, a
-#'   [tidyselect selection][selection_language], or an index position.
-#'   Ignored if `ddi_file` is the path to a single .xml file.
+#'   [IPUMS](https://www.ipums.org/). See *Downloading IPUMS files* below.
 #' @param lower_vars Logical indicating whether to convert variable names to
 #'   lowercase. Defaults to `FALSE` for consistency with IPUMS conventions.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
-#'   instead.
+#' @param data_layer,file_select `r lifecycle::badge("deprecated")` Reading
+#'   DDI files contained in a .zip archive has been deprecated. Please provide
+#'   the full path to the .xml file to be loaded in `ddi_file`.
 #'
 #' @return An [ipums_ddi] object with metadata information.
 #'
@@ -116,7 +110,7 @@ NULL
 #'
 #' @examples
 #' # Example codebook file
-#' ddi_file <- ipums_example("cps_00006.xml")
+#' ddi_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load data into an `ipums_ddi` obj
 #' ddi <- read_ipums_ddi(ddi_file)
@@ -141,18 +135,34 @@ NULL
 #'
 #' ipums_var_label(cps$STATEFIP)
 read_ipums_ddi <- function(ddi_file,
-                           file_select = NULL,
                            lower_vars = FALSE,
+                           file_select = deprecated(),
                            data_layer = deprecated()) {
   if (!missing(data_layer)) {
     lifecycle::deprecate_warn(
       "0.6.0",
-      "read_ipums_ddi(data_layer = )",
-      "read_ipums_ddi(file_select = )",
+      "read_ipums_ddi(data_layer = )"
     )
     file_select <- enquo(data_layer)
-  } else {
+  } else if (!missing(file_select)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      "read_ipums_ddi(file_select = )"
+    )
     file_select <- enquo(file_select)
+  } else {
+    file_select <- NULL
+    file_select <- enquo(file_select)
+  }
+
+  if (file_is_zip(ddi_file)) {
+    lifecycle::deprecate_warn(
+      "0.6.3",
+      I("Reading DDI files through a zip archive "),
+      details = "Please provide the full path to the DDI file to be loaded."
+    )
+  } else {
+    dir_read_deprecated(ddi_file)
   }
 
   custom_check_file_exists(ddi_file)
@@ -288,9 +298,15 @@ read_ipums_ddi <- function(ddi_file,
     }
   }
 
+  if (file_is_dir(ddi_file)) {
+    file_path <- ddi_file
+  } else {
+    file_path <- dirname(ddi_file)
+  }
+
   new_ipums_ddi(
     file_name = file_name,
-    file_path = dirname(ddi_file),
+    file_path = file_path,
     file_type = file_type,
     ipums_project = ipums_project,
     extract_date = extract_date,
@@ -353,7 +369,11 @@ get_var_info_from_ddi <- function(ddi_xml,
     TRUE ~ "character" # Default to character if it's unexpected
   )
 
-  code_instr <- xml_text_from_path_first(var_info_xml, "d1:codInstr")
+  code_instr <- fostr_replace(
+    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
+    "^Codes",
+    ""
+  )
 
   if (file_type == "hierarchical") {
     rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
@@ -430,6 +450,8 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' Read metadata from an NHGIS codebook (.txt) file
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Read the variable metadata contained in the .txt codebook file included with
 #' NHGIS extracts into an [ipums_ddi] object.
 #'
@@ -437,8 +459,12 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' adhere to all the standards of microdata DDI files, some of the `ipums_ddi`
 #' fields will not be populated.
 #'
-#' @param cb_file Path to a codebook (.txt) file, a .zip
-#'   archive from an NHGIS extract, or a directory containing the codebook file.
+#' This function is marked as experimental while we determine whether
+#' there may be a more robust way to standardize codebook and DDI reading across
+#' IPUMS collections.
+#'
+#' @param cb_file Path to a .zip archive containing an NHGIS extract or to an
+#'   NHGIS codebook (.txt) file.
 #' @param file_select If `cb_file` is a .zip archive or directory that contains
 #'   multiple codebook files, an expression identifying the file to read.
 #'   Accepts a character string specifying the file name, a
@@ -447,8 +473,6 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' @param raw If `TRUE`, return a character vector containing the lines
 #'   of `cb_file` rather than an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please use `file_select`
-#'   instead.
 #'
 #' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
 #'   variables contained in the data for the extract associated with the given
@@ -456,8 +480,6 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'
 #'   If `raw = TRUE`, a character vector with one element for each
 #'   line of the given `cb_file`.
-#'
-#' @rdname ipums_codebook
 #'
 #' @export
 #'
@@ -496,18 +518,10 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' cat(codebook_raw[1:20], sep = "\n")
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
-                                raw = FALSE,
-                                data_layer = deprecated()) {
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis_codebook(data_layer = )",
-      "read_nhgis_codebook(file_select = )",
-    )
-    file_select <- enquo(data_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
+                                raw = FALSE) {
+  dir_read_deprecated(cb_file)
+
+  file_select <- enquo(file_select)
 
   custom_check_file_exists(cb_file)
 

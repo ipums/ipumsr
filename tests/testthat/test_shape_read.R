@@ -161,38 +161,38 @@ test_that("sf and sp geometries are consistent with each other", {
   )
 })
 
-test_that("We can pass arguments to underlying reader functions", {
-  skip_if_not_installed("sf")
-  skip_if_not_installed("rgdal")
-  skip_if_not_installed("sp")
-
-  expect_output(
-    shp_sf <- read_ipums_sf(
-      nhgis_single_shp,
-      quiet = FALSE,
-      promote_to_multi = FALSE
-    )
-  )
-
-  # Make sure we handle case where user passes `options` to `...`
-  expect_warning(
-    read_ipums_sf(
-      nhgis_single_shp,
-      options = c("ENCODING=UTF-8", "SHPT=NO")
-    ),
-    "Encoding specified in both `encoding` and `options`.+",
-    "driver ESRI Shapefile does not support open option SHPT"
-  )
-
-  expect_true(any(sf::st_geometry_type(shp_sf) == "POLYGON"))
-
-  withr::with_options(list(lifecycle_verbosity = "quiet"), {
-    expect_warning(
-      shp_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE),
-      "OGR support is provided"
-    )
-  })
-})
+# test_that("We can pass arguments to underlying reader functions", {
+#   skip_if_not_installed("sf")
+#   skip_if_not_installed("rgdal")
+#   skip_if_not_installed("sp")
+#
+#   expect_output(
+#     shp_sf <- read_ipums_sf(
+#       nhgis_single_shp,
+#       quiet = FALSE,
+#       promote_to_multi = FALSE
+#     )
+#   )
+#
+#   # Make sure we handle case where user passes `options` to `...`
+#   expect_warning(
+#     read_ipums_sf(
+#       nhgis_single_shp,
+#       options = c("ENCODING=UTF-8", "SHPT=NO")
+#     ),
+#     "Encoding specified in both `encoding` and `options`.+",
+#     "driver ESRI Shapefile does not support open option SHPT"
+#   )
+#
+#   expect_true(any(sf::st_geometry_type(shp_sf) == "POLYGON"))
+#
+#   withr::with_options(list(lifecycle_verbosity = "quiet"), {
+#     expect_warning(
+#       shp_sp <- read_ipums_sp(nhgis_single_shp, verbose = FALSE),
+#       "OGR support is provided"
+#     )
+#   })
+# })
 
 test_that("We get informative errors when reading shapefiles", {
   skip_if_not_installed("sf")

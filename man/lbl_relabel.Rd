@@ -69,6 +69,7 @@ x <- haven::labelled(
 
 # Convert cases with value 11 to value 10 and associate with 10's label
 lbl_relabel(x, 10 ~ .val == 11)
+lbl_relabel(x, lbl("Yes") ~ .val == 11)
 
 # To relabel using new value/label pairs, use `lbl()` to define a new pair
 lbl_relabel(
@@ -76,10 +77,6 @@ lbl_relabel(
   lbl(10, "Yes/Yes-ish") ~ .val \%in\% c(10, 11),
   lbl(90, "???") ~ .val == 99 | .lbl == "Maybe"
 )
-
-# Use single argument in `lbl()` to update the label while leaving values
-# unchanged
-lbl_relabel(x, lbl("Yes") ~ .val == 11)
 
 # Collapse labels to create new label groups
 lbl_collapse(x, ~ (.val \%/\% 10) * 10)

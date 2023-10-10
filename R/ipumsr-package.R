@@ -97,8 +97,10 @@ readr::spec
 #'
 #' @name selection_language
 #'
+#' @keywords internal
+#'
 #' @examples
-#' cps_file <- ipums_example("cps_00006.xml")
+#' cps_file <- ipums_example("cps_00157.xml")
 #'
 #' # Load 3 variables by name
 #' read_ipums_micro(
@@ -115,7 +117,7 @@ readr::spec
 #' )
 #'
 #' # Standard tidyselect selectors are also supported
-#' read_ipums_micro(cps_file, vars = starts_with("WT"), verbose = FALSE)
+#' read_ipums_micro(cps_file, vars = starts_with("ASEC"), verbose = FALSE)
 #'
 #' # Selection methods can be combined
 #' read_ipums_micro(
@@ -135,7 +137,7 @@ readr::spec
 #' read_nhgis(
 #'   ipums_example("nhgis0731_csv.zip"),
 #'   file_select = contains("nominal_state"),
-#'   show_col_types = FALSE
+#'   verbose = FALSE
 #' )
 NULL
 
@@ -158,10 +160,6 @@ tidyselect::matches
 #' @importFrom tidyselect num_range
 #' @export
 tidyselect::num_range
-
-#' @importFrom tidyselect starts_with
-#' @export
-tidyselect::starts_with
 
 #' @importFrom tidyselect one_of
 #' @export

@@ -52,7 +52,7 @@ names in \code{data} do not match those found in \code{var_info}, attributes
 will not be added.
 }
 \examples{
-ddi_file <- ipums_example("cps_00006.xml")
+ddi_file <- ipums_example("cps_00157.xml")
 
 # Load metadata into `ipums_ddi` object
 ddi <- read_ipums_ddi(ddi_file)

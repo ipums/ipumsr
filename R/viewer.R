@@ -17,7 +17,7 @@
 #' @param launch Logical indicating whether to launch the website.
 #' @return The filepath to the html (silently if `launch = TRUE`)
 #' @examples
-#' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
+#' ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 #' \dontrun{
 #' ipums_view(ddi)
 #' ipums_view(ddi, "codebook.html", launch = FALSE)

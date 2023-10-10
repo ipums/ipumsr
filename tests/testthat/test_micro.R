@@ -16,12 +16,12 @@ STATEFIP_val_labels <- c(Alabama = 1, Alaska = 2)
 YEAR_first5_values <- rep(1962, 5)
 
 # imp_dec
-HWTSUPP_first5_values <- c(1475.59, 1475.59, 1475.59, 1597.61, 1706.65)
+ASECWTH_first5_values <- c(1475.59, 1475.59, 1475.59, 1597.61, 1706.65)
 
 test_that("Can read Rectangular .dat.gz", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    ipums_example("cps_00157.xml"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE
   )
 
@@ -31,18 +31,18 @@ test_that("Can read Rectangular .dat.gz", {
   expect_equal(attr(cps[["YEAR"]], "var_desc"), YEAR_var_desc)
   expect_equal(attr(cps[["STATEFIP"]], "labels")[1:2], STATEFIP_val_labels)
   expect_equal(cps$YEAR[1:5], YEAR_first5_values)
-  expect_equal(cps$HWTSUPP[1:5], HWTSUPP_first5_values)
+  expect_equal(cps$ASECWTH[1:5], ASECWTH_first5_values)
 })
 
 test_that("Can read Rectangular .dat", {
   temp_file <- paste0(tempfile(), ".dat")
 
-  temp <- readr::read_lines(ipums_example("cps_00006.dat.gz"))
+  temp <- readr::read_lines(ipums_example("cps_00157.dat.gz"))
   readr::write_lines(temp, temp_file)
   on.exit(unlink(temp_file), add = TRUE, after = FALSE)
 
   cps <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
+    ipums_example("cps_00157.xml"),
     data_file = temp_file,
     verbose = FALSE
   )
@@ -53,13 +53,13 @@ test_that("Can read Rectangular .dat", {
   expect_equal(attr(cps[["YEAR"]], "var_desc"), YEAR_var_desc)
   expect_equal(attr(cps[["STATEFIP"]], "labels")[1:2], STATEFIP_val_labels)
   expect_equal(cps$YEAR[1:5], YEAR_first5_values)
-  expect_equal(cps$HWTSUPP[1:5], HWTSUPP_first5_values)
+  expect_equal(cps$ASECWTH[1:5], ASECWTH_first5_values)
 })
 
 test_that("Can read Rectangular .csv.gz", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.csv.gz"),
+    ipums_example("cps_00158.xml"),
+    data_file = ipums_example("cps_00158.csv.gz"),
     verbose = FALSE
   )
 
@@ -69,12 +69,12 @@ test_that("Can read Rectangular .csv.gz", {
   expect_equal(attr(cps[["YEAR"]], "var_desc"), YEAR_var_desc)
   expect_equal(attr(cps[["STATEFIP"]], "labels")[1:2], STATEFIP_val_labels)
   expect_equal(cps$YEAR[1:5], YEAR_first5_values)
-  expect_equal(cps$HWTSUPP[1:5], HWTSUPP_first5_values)
+  expect_equal(cps$ASECWTH[1:5], ASECWTH_first5_values)
 })
 
 test_that("Can read Hierarchical into long format", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     verbose = FALSE
   )
 
@@ -84,12 +84,12 @@ test_that("Can read Hierarchical into long format", {
   expect_equal(attr(cps[["YEAR"]], "var_desc"), YEAR_var_desc)
   expect_equal(attr(cps[["STATEFIP"]], "labels")[1:2], STATEFIP_val_labels)
   expect_equal(cps$YEAR[1], YEAR_first5_values[1])
-  expect_equal(cps$HWTSUPP[1], HWTSUPP_first5_values[1])
+  expect_equal(cps$ASECWTH[1], ASECWTH_first5_values[1])
 })
 
 test_that("Can read Hierarchical into list format", {
   cps <- read_ipums_micro_list(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     verbose = FALSE
   )
 
@@ -106,12 +106,36 @@ test_that("Can read Hierarchical into list format", {
     STATEFIP_val_labels
   )
   expect_equal(cps$HOUSEHOLD$YEAR[1], YEAR_first5_values[1])
-  expect_equal(cps$HOUSEHOLD$HWTSUPP[1], HWTSUPP_first5_values[1])
+  expect_equal(cps$HOUSEHOLD$ASECWTH[1], ASECWTH_first5_values[1])
+})
+
+test_that("Can't read Rectangular into list format", {
+  temp_file <- paste0(tempfile(), ".dat")
+
+  temp <- readr::read_lines(ipums_example("cps_00157.dat.gz"))
+  readr::write_lines(temp, temp_file)
+  on.exit(unlink(temp_file), add = TRUE, after = FALSE)
+
+  expect_error(
+    cps_list <- read_ipums_micro_list(
+      ipums_example("cps_00157.xml"),
+      data_file = temp_file,
+      verbose = FALSE
+    ),
+    regexp = "must be hierarchical"
+  )
+})
+
+test_that("Can read microdata from an `ipums_ddi` object", {
+  x1 <- read_ipums_micro(ipums_example("cps_00157.xml"))
+  x2 <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00157.xml")))
+
+  expect_identical(x1, x2)
 })
 
 test_that("Arguments n_max and vars work", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     n_max = 100,
     vars = c(RECTYPE, STATEFIP),
     verbose = FALSE
@@ -122,8 +146,8 @@ test_that("Arguments n_max and vars work", {
 
 test_that("Arguments n_max and vars work for csv files (#26)", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    ipums_example("cps_00006.csv.gz"),
+    ipums_example("cps_00158.xml"),
+    ipums_example("cps_00158.csv.gz"),
     n_max = 100,
     vars = c(YEAR, SERIAL),
     verbose = FALSE
@@ -134,8 +158,8 @@ test_that("Arguments n_max and vars work for csv files (#26)", {
 
 test_that("Setting argument var_attrs to NULL works", {
   cps <- read_ipums_micro(
-    ipums_example("cps_00006.xml"),
-    data_file = ipums_example("cps_00006.dat.gz"),
+    ipums_example("cps_00157.xml"),
+    data_file = ipums_example("cps_00157.dat.gz"),
     verbose = FALSE,
     var_attrs = NULL
   )
@@ -144,7 +168,7 @@ test_that("Setting argument var_attrs to NULL works", {
   expect_true(all(no_var_attrs))
 })
 
-test_that("Informative error when no ddi file", {
+test_that("Informative errors when improper ddi file", {
   expect_error(
     read_ipums_micro("FAKE_FILE.xml"),
     "Could not find file .+/FAKE_FILE.xml`"
@@ -153,11 +177,31 @@ test_that("Informative error when no ddi file", {
     read_ipums_micro("C:/FAKE_FOLDER/FAKE_FILE.xml"),
     "Could not find file `C:/FAKE_FOLDER/FAKE_FILE.xml`"
   )
+
+  # Try to read through a directory/zip:
+  vcr_dir <- vcr::vcr_test_path("fixtures")
+
+  expect_error(
+    read_ipums_micro(vcr_dir),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_list(vcr_dir),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_yield(file.path(vcr_dir, "zipped_ddi.zip")),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro_chunked(file.path(vcr_dir, "zipped_ddi.zip")),
+    "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
 })
 
 test_that("keyvar is loaded regardless of selection in hierarchical", {
   cps <- read_ipums_micro_list(
-    ipums_example("cps_00010.xml"),
+    ipums_example("cps_00159.xml"),
     verbose = FALSE,
     vars = c(STATEFIP, INCTOT)
   )
@@ -167,7 +211,7 @@ test_that("keyvar is loaded regardless of selection in hierarchical", {
 
 
 test_that("Don't duplicate rectype vars in ATUS hierarchical extracts (#43)", {
-  ddi_file <- ipums_example("atus_00025.xml")
+  ddi_file <- file.path(vcr::vcr_test_path("fixtures"), "atus_00025.xml")
   ddi <- read_ipums_ddi(ddi_file)
 
   data <- dplyr::tibble(
@@ -195,5 +239,18 @@ test_that("Don't duplicate rectype vars in ATUS hierarchical extracts (#43)", {
       val = as.numeric(1:4),
       lbl = c("Northeast", "Midwest", "South", "West")
     )
+  )
+})
+
+
+test_that("Empty vars selection is handled", {
+  expect_error(
+    cps <- read_ipums_micro(
+      ipums_example("cps_00157.xml"),
+      data_file = ipums_example("cps_00157.dat.gz"),
+      vars = starts_with("MISSING"),
+      verbose = FALSE
+    ),
+    regexp = "did not match any variables"
   )
 })

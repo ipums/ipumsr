@@ -45,82 +45,30 @@ test_that("select_var_rows respects tidyselect syntax", {
 })
 
 test_that("find_files_in respects tidyselect syntax", {
-  # mpcstats doesn't have zip installed correctly...
-  # So check and skip this test if zip doesn't run
-  temp_dir_zip_test <- tempfile()
-  dir.create(temp_dir_zip_test)
-  file.create(file.path(temp_dir_zip_test, "test1.txt"))
-  test_zip <- zip(temp_dir_zip_test, temp_dir_zip_test, flags = "-q")
-
-  zipfile <- paste0(temp_dir_zip_test, ".zip")
-
-  on.exit(
-    unlink(temp_dir_zip_test, recursive = TRUE),
-    add = TRUE,
-    after = FALSE
-  )
-
-  on.exit(
-    unlink(zipfile),
-    add = TRUE,
-    after = FALSE
-  )
-
-  if (test_zip != 0) skip("zip doesn't work")
-
-  # Again it's kind of weird that it takes quosures, but
-  # since it's internal I think it's okay.
-
-  # Make an example zip extract
-  temp_dir <- tempfile()
-  dir.create(temp_dir)
-
-  on.exit(
-    unlink(temp_dir, recursive = TRUE),
-    add = TRUE,
-    after = FALSE
-  )
-
-  file.create(file.path(temp_dir, "test1.txt"))
-  file.create(file.path(temp_dir, "test2.txt"))
-  file.create(file.path(temp_dir, "test.csv"))
-  file.create(file.path(temp_dir, "abc.txt"))
-
   file_names <- c("abc.txt", "test.csv", "test1.txt", "test2.txt")
-  zip_file <- file.path(temp_dir, "test.zip")
-
-  # Mess with wd because zip includes unwanted folders otherwise
-  old_wd <- getwd()
-  setwd(temp_dir)
-
-  zip(
-    zip_file,
-    files = file_names,
-    flags = "-q"
-  )
-  setwd(old_wd)
+  zipped_misc <- file.path(vcr::vcr_test_path("fixtures"), "zipped_misc.zip")
 
   # Gets all files
   expect_equal(
-    ipumsr:::find_files_in(zip_file, multiple_ok = TRUE),
+    find_files_in(zipped_misc, multiple_ok = TRUE),
     file_names
   )
 
   # Errors if multiple is not okay
   expect_error(
-    ipumsr:::find_files_in(zip_file, multiple_ok = FALSE)
+    ipumsr:::find_files_in(zipped_misc, multiple_ok = FALSE)
   )
 
   # Can filter on extension
   expect_equal(
-    ipumsr:::find_files_in(zip_file, name_ext = "csv", multiple_ok = TRUE),
+    ipumsr:::find_files_in(zipped_misc, name_ext = "csv", multiple_ok = TRUE),
     "test.csv"
   )
 
   # Bare file names
   expect_equal(
     ipumsr:::find_files_in(
-      zip_file,
+      zipped_misc,
       file_select = rlang::quo(c(test1.txt, test2.txt)),
       multiple_ok = TRUE
     ),
@@ -130,7 +78,7 @@ test_that("find_files_in respects tidyselect syntax", {
   # String
   expect_equal(
     ipumsr:::find_files_in(
-      zip_file,
+      zipped_misc,
       file_select = rlang::quo(c("test1.txt", "test2.txt")),
       multiple_ok = TRUE
     ),
@@ -141,7 +89,7 @@ test_that("find_files_in respects tidyselect syntax", {
   my_vars <- c("test1.txt", "test2.txt")
   expect_equal(
     ipumsr:::find_files_in(
-      zip_file,
+      zipped_misc,
       file_select = rlang::quo(tidyselect::all_of(my_vars)),
       multiple_ok = TRUE
     ),
@@ -152,7 +100,7 @@ test_that("find_files_in respects tidyselect syntax", {
   # dplyr::select helpers
   expect_equal(
     ipumsr:::find_files_in(
-      zip_file,
+      zipped_misc,
       file_select = rlang::quo(starts_with("test")),
       multiple_ok = TRUE
     ),

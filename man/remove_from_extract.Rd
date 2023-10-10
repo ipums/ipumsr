@@ -10,70 +10,96 @@ remove_from_extract(extract, ...)
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
 
 \item{...}{Additional arguments specifying the extract fields and values to
-remove from the extract definition.
-
-All arguments available in a collection's \link{define_extract} function can be
-passed to \code{add_to_extract()}.}
+remove from the extract definition.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
 extract definition
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Remove values for specific fields in an existing \code{ipums_extract}
 object. This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To remove from an \strong{IPUMS USA} extract definition, click
-\link[=remove_from_extract.usa_extract]{here}
-\item To remove from an \strong{IPUMS CPS} extract definition, click
-\link[=remove_from_extract.cps_extract]{here}
+\item To remove from an \strong{IPUMS Microdata} extract definition, click
+\link[=remove_from_extract.micro_extract]{here}. This includes:
+\itemize{
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS International
+}
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
 }
 
-In general, for a given collection, the arguments to
-\code{remove_from_extract()} are identical to those used when defining an
-extract for that collection. For more about defining an extract, click
-\link[=define_extract]{here}.
+This function is marked as experimental because it is typically not the best
+option for maintaining reproducible extract definitions and may be retired
+in the future. For reproducibility, users should strive to build extract
+definitions with \code{\link[=define_extract]{define_extract_*()}} functions.
+
+If you have a complicated extract definition to revise, but do not have
+the original extract definition code that created it, we suggest that you
+save the revised extract as a JSON file with \code{\link[=save_extract_as_json]{save_extract_as_json()}}. This
+will create a stable version of the extract definition that
+can be used in the future as needed.
 
 To add new values to an extract, see \code{\link[=add_to_extract]{add_to_extract()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
+# Microdata extracts
 usa_extract <- define_extract_usa(
   description = "USA example",
   samples = c("us2013a", "us2014a"),
-  variables = c("AGE", "SEX", "YEAR")
+  variables = list(
+    var_spec("AGE"),
+    var_spec("SEX", case_selections = "2"),
+    var_spec("YEAR")
+  )
 )
 
+# Remove variables from an extract definition
 remove_from_extract(
   usa_extract,
   samples = "us2014a",
   variables = c("AGE", "SEX")
 )
 
-nhgis_extract <- define_extract_nhgis(
-  datasets = "1990_STF1",
-  data_tables = c("NP1", "NP2", "NP3"),
-  time_series_tables = "A00",
-  geog_levels = "county"
+# Remove detailed specifications for an existing variable
+remove_from_extract(
+  usa_extract,
+  variables = var_spec("SEX", case_selections = "2")
 )
 
-# Remove a table from existing datasets:
-remove_from_extract(nhgis_extract, data_tables = "NP3")
+# NHGIS extracts
+nhgis_extract <- define_extract_nhgis(
+  datasets = ds_spec(
+    "1990_STF1",
+    data_tables = c("NP1", "NP2", "NP3"),
+    geog_levels = "county"
+  ),
+  time_series_tables = tst_spec("A00", geog_levels = "county")
+)
 
-# Remove an entire dataset/time series table
-remove_from_extract(nhgis_extract, time_series_tables = "A00")
+# Remove an existing dataset or time series table
+remove_from_extract(nhgis_extract, datasets = "1990_STF1")
+
+# Remove detailed specifications from an existing dataset or
+# time series table
+remove_from_extract(
+  nhgis_extract,
+  datasets = ds_spec("1990_STF1", data_tables = "NP1")
+)
 }
 \seealso{
-\code{\link[=add_to_extract]{add_to_extract()}} or \code{\link[=combine_extracts]{combine_extracts()}} to add values to an extract
-definition.
+\code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
+\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
+from scratch.
 
-\code{\link[=define_extract_usa]{define_extract_usa()}}, \code{\link[=define_extract_cps]{define_extract_cps()}}, or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
-to create a new extract definition.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 }
+\keyword{internal}

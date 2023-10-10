@@ -2,6 +2,7 @@
 % Please edit documentation in R/api_process_extract.R
 \name{wait_for_extract}
 \alias{wait_for_extract}
+\alias{is_extract_ready}
 \title{Wait for an extract request to finish processing}
 \usage{
 wait_for_extract(
@@ -12,6 +13,8 @@ wait_for_extract(
   verbose = TRUE,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
+
+is_extract_ready(extract, api_key = Sys.getenv("IPUMS_API_KEY"))
 }
 \arguments{
 \item{extract}{One of:
@@ -23,9 +26,6 @@ form \code{"collection:number"} or as a vector of the form
 \item An extract number to be associated with your default IPUMS
 collection. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}
 }
-
-Extract numbers do not need to be zero-padded. That is, use \code{1}, not
-\code{"0001"}.
 
 For a list of codes used to refer to each collection, see
 \code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
@@ -52,22 +52,42 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 \code{\link[=set_ipums_api_key]{set_ipums_api_key()}}.}
 }
 \value{
-An \code{\link[=ipums_extract-class]{ipums_extract}} object containing the
-extract definition and the URLs from which to download extract files.
+For \code{wait_for_extract()}, an
+\code{\link[=ipums_extract-class]{ipums_extract}} object containing the extract
+definition and the URLs from which to download extract files.
+
+For \code{is_extract_ready()}, a logical value indicating
+whether the extract is ready to download.
 }
 \description{
 Wait for an extract request to finish by periodically checking its status
 via the IPUMS API until it is complete.
 
-Completed extracts will have a value of \code{"completed"} in their \code{status}
-field.
+\code{is_extract_ready()} is a convenience function to check if an extract
+is ready to download without committing your R session to waiting for
+extract completion.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
+\details{
+The \code{status} of a submitted extract will be one of \code{"queued"}, \code{"started"},
+\code{"produced"}, \code{"canceled"}, \code{"failed"}, or \code{"completed"}.
+
+To be ready to download, an extract must have a \code{"completed"} status.
+However, some requests that are \code{"completed"} may still be unavailable for
+download, as extracts expire and are removed from IPUMS servers after a set
+period of time (72 hours for microdata collections, 2 weeks for IPUMS NHGIS).
+
+Therefore, these functions also check the \code{download_links} field of the
+extract request to determine if data are available for download. If an
+extract has expired (that is, it has completed but its download links are
+no longer available), these functions will warn that the extract request
+must be resubmitted.
+}
 \examples{
-my_extract <- define_extract_usa(
-  description = "2013-2014 ACS Data",
-  samples = c("us2013a", "us2014a"),
+my_extract <- define_extract_ipumsi(
+  description = "Botswana data",
+  samples = c("bw2001a", "bw2011a"),
   variables = c("SEX", "AGE", "YEAR")
 )
 
@@ -79,19 +99,23 @@ submitted_extract <- submit_extract(my_extract)
 downloadable_extract <- wait_for_extract(submitted_extract)
 
 # Or by specifying the collection and number for the extract request:
-downloadable_extract <- wait_for_extract("usa:1")
+downloadable_extract <- wait_for_extract("ipumsi:1")
 
 # If you have a default collection, you can use the extract number alone:
-set_ipums_default_collection("usa")
+set_ipums_default_collection("ipumsi")
+
 downloadable_extract <- wait_for_extract(1)
 
 # Use `download_extract()` to download the completed extract:
 files <- download_extract(downloadable_extract)
+
+# Use `is_extract_ready()` if you don't want to tie up your R session by
+# waiting for completion
+is_extract_ready("usa:1")
 }
 }
 \seealso{
-\code{\link[=download_extract]{download_extract()}} to download an extract.
+\code{\link[=download_extract]{download_extract()}} to download an extract's data files.
 
-\code{\link[=get_extract_info]{get_extract_info()}} and \code{\link[=is_extract_ready]{is_extract_ready()}} to check the status of an
-extract request.
+\code{\link[=get_extract_info]{get_extract_info()}} to obtain the definition of a submitted extract request.
 }

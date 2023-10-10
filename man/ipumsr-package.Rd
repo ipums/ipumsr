@@ -4,7 +4,7 @@
 \name{ipumsr-package}
 \alias{ipumsr}
 \alias{ipumsr-package}
-\title{ipumsr: An R interface for downloading, reading, and handling IPUMS data}
+\title{ipumsr: An R Interface for Downloading, Reading, and Handling IPUMS Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
@@ -13,8 +13,9 @@ An easy way to work with census, survey, and geographic data provided by IPUMS i
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://www.ipums.org}
+  \item \url{https://tech.popdata.org/ipumsr/}
   \item \url{https://github.com/ipums/ipumsr}
+  \item \url{https://www.ipums.org}
   \item Report bugs at \url{https://github.com/ipums/ipumsr/issues}
 }
 

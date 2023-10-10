@@ -31,7 +31,7 @@ To read spatial data from an NHGIS extract, use read_ipums_sf()."><meta property
   </a>
 </li>
 <li>
-  <a href="../articles/ipums.html">Introduction</a>
+  <a href="../articles/ipums.html">Get Started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -42,7 +42,8 @@ To read spatial data from an NHGIS extract, use read_ipums_sf()."><meta property
      
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
+  <ul class="dropdown-menu" role="menu"><li class="dropdown-header">IPUMS Data</li>
+    <li>
       <a href="../articles/ipums-read.html">Read IPUMS data</a>
     </li>
     <li>
@@ -51,8 +52,16 @@ To read spatial data from an NHGIS extract, use read_ipums_sf()."><meta property
     <li>
       <a href="../articles/ipums-bigdata.html">Big IPUMS data</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">IPUMS API</li>
     <li>
-      <a href="../articles/ipums-api.html">Interact with the IPUMS API</a>
+      <a href="../articles/ipums-api.html">Introduction to the API</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-micro.html">Microdata API requests</a>
+    </li>
+    <li>
+      <a href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
     </li>
     <li class="divider">
     <li>
@@ -109,17 +118,14 @@ system.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_nhgis</span><span class="op">(</span></span>
 <span>  <span class="va">data_file</span>,</span>
 <span>  file_select <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col_types <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  guess_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_max</span>, <span class="fl">1000</span><span class="op">)</span>,</span>
+<span>  do_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  var_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"val_labels"</span>, <span class="st">"var_label"</span>, <span class="st">"var_desc"</span><span class="op">)</span>,</span>
 <span>  remove_extra_header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  do_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  file_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  na <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  col_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  locale <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  show_col_types <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span>,</span>
 <span>  data_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -139,91 +145,69 @@ file name, a <a href="selection_language.html">tidyselect selection</a>, or an i
 position. This must uniquely identify a file.</p></dd>
 
 
+<dt>vars</dt>
+<dd><p>Names of variables to include in the output. Accepts a
+vector of names or a <a href="selection_language.html">tidyselect selection</a>.
+If <code>NULL</code>, includes all variables in the file.</p></dd>
+
+
+<dt>col_types</dt>
+<dd><p>One of <code>NULL</code>, a <code><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols()</a></code>
+specification or a string. If <code>NULL</code>, all column types will be inferred
+from the values in the first <code>guess_max</code> rows of each column.
+Alternatively, you can use a compact string representation to specify
+column types:</p><ul><li><p>c = character</p></li>
+<li><p>i = integer</p></li>
+<li><p>n = number</p></li>
+<li><p>d = double</p></li>
+<li><p>l = logical</p></li>
+<li><p>f = factor</p></li>
+<li><p>D = date</p></li>
+<li><p>T = date time</p></li>
+<li><p>t = time</p></li>
+<li><p>? = guess</p></li>
+<li><p>_ or - = skip</p></li>
+</ul><p>See <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim()</a></code> for more details.</p></dd>
+
+
+<dt>n_max</dt>
+<dd><p>Maximum number of lines to read.</p></dd>
+
+
+<dt>guess_max</dt>
+<dd><p>For .csv files, maximum number of lines to use for guessing
+column types. Will never use more than the number of lines read.</p></dd>
+
+
+<dt>do_file</dt>
+<dd><p>For fixed-width files, path to the .do file associated with
+the provided <code>data_file</code>. The .do file contains the parsing instructions
+for the data file.</p>
+<p>By default, looks in the same directory as <code>data_file</code> for a .do
+file with the same name. See Details section below.</p></dd>
+
+
 <dt>var_attrs</dt>
 <dd><p>Variable attributes to add from the codebook (.txt) file
-included in the extract. Defaults to
-all available attributes.</p>
-<p>If the codebook is not found, data will be loaded with no variable
-attributes.</p>
+included in the extract. Defaults to all available attributes.</p>
 <p>See <code><a href="set_ipums_var_attributes.html">set_ipums_var_attributes()</a></code> for more details.</p></dd>
 
 
 <dt>remove_extra_header</dt>
 <dd><p>If <code>TRUE</code>, remove the additional descriptive
-header row that is included in some NHGIS .csv files. Otherwise, the
-additional header will appear in the first row of the output data frame.</p>
-<p>The header contains similar information to that
+header row included in some NHGIS .csv files.</p>
+<p>This header row is not
+usually needed as it contains similar information to that
 included in the <code>"label"</code> attribute of each data column (if <code>var_attrs</code>
-includes <code>"var_label"</code>), and is therefore not usually needed.</p></dd>
-
-
-<dt>do_file</dt>
-<dd><p>For fixed-width files, path to the .do file associated with
-the provided <code>data_file</code>. The .do file contains the specifications that
-indicate how to parse the data file.</p>
-<p>By default, looks in the same directory as <code>data_file</code> for a .do
-file with the same name. If <code>FALSE</code> or if the .do file cannot be found,
-the .dat file will be parsed by the values provided to <code>col_positions</code>
-in <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">read_fwf()</a></code>. See Details section.</p></dd>
-
-
-<dt>file_type</dt>
-<dd><p>One of <code>"csv"</code> (for csv files) or <code>"dat"</code> (for fixed-width
-files) indicating the type of file to search for in the path provided to
-<code>data_file</code>. If <code>NULL</code>, determines the file type automatically based on
-the files found in <code>data_file</code>. Only needed if <code>data_file</code> contains both
-.csv and .dat files.</p></dd>
-
-
-<dt>na</dt>
-<dd><p>Character vector of strings to interpret as missing values.
-If <code>NULL</code>, defaults to <code>c("", "NA")</code> for csv files and <code>c(".", "", "NA")</code>
-for fixed-width files. See <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv()</a></code>.</p></dd>
-
-
-<dt>col_names</dt>
-<dd><p>If reading a .csv file, either <code>TRUE</code>, <code>FALSE</code> or a
-character vector of column names.</p>
-<p>If <code>TRUE</code>, use the default column names included in NHGIS .csv files. If
-<code>FALSE</code> or a character vector, replace the default column names with the
-provided names or default placeholders. Note that any columns that have
-altered names will not be attached to the requested <code>var_attrs</code>.</p>
-<p>Note that unlike <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code>, the first row
-of the input (which contains NHGIS default headers) will always be removed
-from the data.</p></dd>
-
-
-<dt>locale</dt>
-<dd><p>Controls defaults that vary from place to place. If <code>NULL</code>,
-uses a locale designed to provide appropriate defaults for NHGIS files;
-altering the locale may cause problems with data parsing.</p>
-<p>If needed, you can use <code><a href="https://readr.tidyverse.org/reference/locale.html" class="external-link">readr::locale()</a></code> to
-specify a different locale to control things like default time zone,
-decimal mark, big mark, and day/month names. If you do so, specify
-<code>encoding = "latin1"</code> to ensure files are encoded properly.</p></dd>
+includes <code>"var_label"</code>).</p></dd>
 
 
 <dt>verbose</dt>
 <dd><p>Logical controlling whether to display output when loading
 data. If <code>TRUE</code>, displays IPUMS conditions, a progress bar, and
-guessed column types, unless <code>progress</code> or <code>show_col_types</code> is specified.</p></dd>
-
-
-<dt>progress</dt>
-<dd><p>Logical indicating whether to display a progress bar when
-loading data. By default, uses the value of <code>verbose</code>, unless
-the <code>readr.show_progress</code> option is set to <code>FALSE</code>.</p></dd>
-
-
-<dt>show_col_types</dt>
-<dd><p>Logical indicating whether to display guessed column
-types. By default, uses the value of <code>verbose</code>, unless
-the <code>readr.show_col_types</code> option is set to <code>FALSE</code>.</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Additional arguments passed to <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv()</a></code> or
-<code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">read_fwf()</a></code>.</p></dd>
+column types. Otherwise, all are suppressed.</p>
+<p>Will be overridden by <code>readr.show_progress</code> and <code>readr.show_col_types</code>
+options, if they are set.</p></dd>
 
 
 <dt>data_layer</dt>
@@ -243,18 +227,20 @@ use <code>file_select</code> instead.</p></dd>
     <div id="details">
     <h2>Details</h2>
     <p>The .do file that is included when downloading an NHGIS fixed-width
-extract contains important metadata about the data file's column
-positions and implicit decimals. <code>read_nhgis()</code> uses this information to
-parse and recode the fixed-width data appropriately. Therefore,
-while possible, it is not recommended to read fixed-width files without a
-corresponding .do file.</p>
+extract contains the necessary metadata (e.g. column positions and implicit
+decimals) to correctly parse the data file. <code>read_nhgis()</code> uses this
+information to parse and recode the fixed-width data appropriately.</p>
 <p>If you no longer have access to the .do file, consider resubmitting the
-extract that produced the data.</p>
+extract that produced the data. You can also change the desired data
+format to produce a .csv file, which does not require additional metadata
+files to be loaded.</p>
+<p>For more about resubmitting an existing extract via the IPUMS API, see
+<code><a href="../articles/ipums-api.html">vignette("ipums-api", package = "ipumsr")</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="read_ipums_sf.html">read_ipums_sf()</a></code> to read spatial data from an IPUMS extract.</p>
-<p><code><a href="ipums_codebook.html">read_nhgis_codebook()</a></code> to read metadata about an IPUMS NHGIS extract.</p>
+<p><code><a href="read_nhgis_codebook.html">read_nhgis_codebook()</a></code> to read metadata about an IPUMS NHGIS extract.</p>
 <p><code><a href="ipums_list_files.html">ipums_list_files()</a></code> to list files in an IPUMS extract.</p></div>
     </div>
 
@@ -296,9 +282,7 @@ extract that produced the data.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For extracts that contain multiple files, use `file_select` to specify</span></span></span>
-<span class="r-in"><span><span class="co"># a single file to load.</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># This accepts a tidyselect expression</span></span></span>
+<span class="r-in"><span><span class="co"># a single file to load. This accepts a tidyselect expression:</span></span></span>
 <span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span><span class="va">fw_file</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"ds239"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 114</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   YEAR  STUSAB NATION NATIONA AIHHTLI MEMI  PCI   GEOID NAME_E AJWBE001 AJWBE002</span>
@@ -312,7 +296,7 @@ extract that produced the data.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AJWBE022 &lt;dbl&gt;, AJWBE023 &lt;dbl&gt;, AJWBE024 &lt;dbl&gt;, AJWBE025 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AJWBE026 &lt;dbl&gt;, AJWBE027 &lt;dbl&gt;, AJWBE028 &lt;dbl&gt;, AJWBE029 &lt;dbl&gt;, …</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Or an index position</span></span></span>
+<span class="r-in"><span><span class="co"># Or an index position:</span></span></span>
 <span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span><span class="va">fw_file</span>, file_select <span class="op">=</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 84 × 28</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN STATE         STATEFP STATENH A00AA1790 A00AA1800 A00AA1810 A00AA1820</span>
@@ -335,54 +319,78 @@ extract that produced the data.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1980 &lt;dbl&gt;, A00AA1990 &lt;dbl&gt;, A00AA2000 &lt;dbl&gt;, A00AA2010 &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA2020 &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># NHGIS fixed-width files use the information contained in the extract's</span></span></span>
-<span class="r-in"><span><span class="co"># .do file to parse the data correctly. If it does not exist, the parsing</span></span></span>
-<span class="r-in"><span><span class="co"># will be incorrect. If you have moved the .do file, be sure to provide</span></span></span>
-<span class="r-in"><span><span class="co"># its new file path to the `do_file` argument.</span></span></span>
-<span class="r-in"><span><span class="va">bad_parse</span> <span class="op">&lt;-</span> <span class="fu">read_nhgis</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">fw_file</span>,</span></span>
-<span class="r-in"><span>  file_select <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>  do_file <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Data loaded from NHGIS fixed-width files may not be consistent with the information included in the data codebook when parsing column positions manually.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Please consult the .txt and .do files associated with this extract to ensure data is recoded correctly.</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">bad_parse</span><span class="op">$</span><span class="va">X1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "G010Alabama"            "G020Alaska"             "G025Alaska Territory"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "G040Arizona"            "G045Arizona Territory"  "G050Arkansas"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "G055Arkansas Territory" "G060California"         "G080Colorado"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "G085Colorado Territory"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># `readr::read_csv()` arguments are accepted, though most defaults should</span></span></span>
-<span class="r-in"><span><span class="co"># be appropriate.</span></span></span>
-<span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span><span class="va">csv_file</span>, col_types <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols</a></span><span class="op">(</span>.default <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">71</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">25</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Delimiter:</span> ","</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">chr</span> (25): GISJOIN, YEAR, STUSAB, CMSA, DIVISIONA, MSA_CMSAA, PMSA, PMSAA, RE...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span>
+<span class="r-in"><span><span class="co"># For CSV files, column types are inferred from the data. You can</span></span></span>
+<span class="r-in"><span><span class="co"># manually specify column types with `col_types`. This may be useful for</span></span></span>
+<span class="r-in"><span><span class="co"># geographic codes, which should typically be interpreted as character values</span></span></span>
+<span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span><span class="va">csv_file</span>, col_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>MSA_CMSAA <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 71 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN YEAR  STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G0080   1990  OH     28    <span style="color: #BB0000;">NA</span>        1692      Akron, O… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G0360   1990  CA     49    <span style="color: #BB0000;">NA</span>        4472      Anaheim-… 0360  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G0440   1990  MI     35    <span style="color: #BB0000;">NA</span>        2162      Ann Arbo… 0440  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G0620   1990  IL     14    <span style="color: #BB0000;">NA</span>        1602      Aurora--… 0620  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G0845   1990  PA     78    <span style="color: #BB0000;">NA</span>        6282      Beaver C… 0845  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G0875   1990  NJ     70    <span style="color: #BB0000;">NA</span>        5602      Bergen--… 0875  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G1120   1990  MA     07    <span style="color: #BB0000;">NA</span>        1122      Boston, … 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G1125   1990  CO     34    <span style="color: #BB0000;">NA</span>        2082      Boulder-… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G1145   1990  TX     42    <span style="color: #BB0000;">NA</span>        3362      Brazoria… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G1160   1990  CT     70    <span style="color: #BB0000;">NA</span>        5602      Bridgepo… 1160  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>        1692      Akron, O… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G0360    <span style="text-decoration: underline;">1</span>990 CA     49    <span style="color: #BB0000;">NA</span>        4472      Anaheim-… 0360  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G0440    <span style="text-decoration: underline;">1</span>990 MI     35    <span style="color: #BB0000;">NA</span>        2162      Ann Arbo… 0440  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G0620    <span style="text-decoration: underline;">1</span>990 IL     14    <span style="color: #BB0000;">NA</span>        1602      Aurora--… 0620  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G0845    <span style="text-decoration: underline;">1</span>990 PA     78    <span style="color: #BB0000;">NA</span>        6282      Beaver C… 0845  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G0875    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>        5602      Bergen--… 0875  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G1120    <span style="text-decoration: underline;">1</span>990 MA     07    <span style="color: #BB0000;">NA</span>        1122      Boston, … 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G1125    <span style="text-decoration: underline;">1</span>990 CO     34    <span style="color: #BB0000;">NA</span>        2082      Boulder-… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G1145    <span style="text-decoration: underline;">1</span>990 TX     42    <span style="color: #BB0000;">NA</span>        3362      Brazoria… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G1160    <span style="text-decoration: underline;">1</span>990 CT     70    <span style="color: #BB0000;">NA</span>        5602      Bridgepo… 1160  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 61 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: AREALAND &lt;chr&gt;, AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;chr&gt;, INTPTLNG &lt;chr&gt;, PSADC &lt;chr&gt;, D6Z001 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z002 &lt;chr&gt;, D6Z003 &lt;chr&gt;, D6Z004 &lt;chr&gt;, D6Z005 &lt;chr&gt;, D6Z006 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z007 &lt;chr&gt;, D6Z008 &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Fixed-width files are parsed with the correct column positions</span></span></span>
+<span class="r-in"><span><span class="co"># and column types automatically:</span></span></span>
+<span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span><span class="va">fw_file</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"ts"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 84 × 28</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN STATE         STATEFP STATENH A00AA1790 A00AA1800 A00AA1810 A00AA1820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G010    Alabama       01      010            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>    <span style="text-decoration: underline;">127</span>901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G020    Alaska        02      020            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G025    Alaska Terri… <span style="color: #BB0000;">NA</span>      025            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G040    Arizona       04      040            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G045    Arizona Terr… <span style="color: #BB0000;">NA</span>      045            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G050    Arkansas      05      050            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G055    Arkansas Ter… <span style="color: #BB0000;">NA</span>      055            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>     <span style="text-decoration: underline;">14</span>273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G060    California    06      060            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G080    Colorado      08      080            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G085    Colorado Ter… <span style="color: #BB0000;">NA</span>      085            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 74 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more variables: A00AA1830 &lt;dbl&gt;, A00AA1840 &lt;dbl&gt;, A00AA1850 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1860 &lt;dbl&gt;, A00AA1870 &lt;dbl&gt;, A00AA1880 &lt;dbl&gt;, A00AA1890 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1900 &lt;dbl&gt;, A00AA1910 &lt;dbl&gt;, A00AA1920 &lt;dbl&gt;, A00AA1930 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1940 &lt;dbl&gt;, A00AA1950 &lt;dbl&gt;, A00AA1960 &lt;dbl&gt;, A00AA1970 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA1980 &lt;dbl&gt;, A00AA1990 &lt;dbl&gt;, A00AA2000 &lt;dbl&gt;, A00AA2010 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   A00AA2020 &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can also read in a subset of the data file:</span></span></span>
+<span class="r-in"><span><span class="fu">read_nhgis</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">csv_file</span>,</span></span>
+<span class="r-in"><span>  n_max <span class="op">=</span> <span class="fl">15</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">GISJOIN</span>, <span class="va">YEAR</span>, <span class="va">D6Z002</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 15 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GISJOIN  YEAR D6Z002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> G0080    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">11</span>593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> G0360    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">95</span>737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> G0440    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">8</span>988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> G0620    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">8</span>982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> G0845    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">1</span>814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> G0875    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">20</span>476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> G1120    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">58</span>143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> G1125    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">9</span>467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> G1145    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">6</span>774</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> G1160    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">9</span>710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> G1170    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">3</span>209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> G1200    <span style="text-decoration: underline;">1</span>990   <span style="text-decoration: underline;">3</span>551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> G1280    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">12</span>072</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> G1600    <span style="text-decoration: underline;">1</span>990 <span style="text-decoration: underline;">111</span>582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> G1640    <span style="text-decoration: underline;">1</span>990  <span style="text-decoration: underline;">37</span>225</span>
 </code></pre></div>
     </div>
   </div>

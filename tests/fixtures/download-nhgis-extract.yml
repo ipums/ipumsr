@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_csv.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063471/nhgis1270_csv.zip
     body:
       encoding: ''
       string: ''
@@ -16,28 +16,28 @@ http_interactions:
       message: 'Success: (200) OK'
     headers:
       accept-ranges: bytes
-      cache-control: private
-      content-disposition: attachment; filename="nhgis1091_csv.zip"; filename*=UTF-8''nhgis1091_csv.zip
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis1270_csv.zip"; filename*=UTF-8''nhgis1270_csv.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:09 GMT
-      etag: '"641caf19-16293f"'
-      last-modified: Thu, 23 Mar 2023 19:57:13 GMT
-      server: nginx/1.14.2
-      set-cookie: _session_id=mmbfABEl%2Bcp5susDXPX6FTmqw8bhNgyyd4dNwK3KNgliIeMpjFkZVGzkWUwQtW1EpMVMC2bzNIiPARTLua5gfmcrzRbOcXQXRWTHp1K3zh0PuZ6NPCkP7f50s5yqkaIeGthRM5aWWfxsWud%2BnFYdKS5yqtYRLTv2NM1qqeXvkfvAd0bQpgtcOgFf%2FrS4o1uFwMR76CQKgusYIlL6KUO%2BJXPW%2Bj2GhFHF1BhHgVVsJkVEd9VcegBTmzI3QvoD6dw%3D--Y4oU0SW%2FurRgIKMa--g0oxg2sltgPddUKgBDEnFQ%3D%3D;
+      date: Thu, 20 Jul 2023 21:27:58 GMT
+      etag: '"64b9a57a-28bbd"'
+      last-modified: Thu, 20 Jul 2023 21:22:02 GMT
+      server: nginx/1.18.0
+      set-cookie: _session_id=55r6m59c2NEDzxKSxNtRcO02%2B3u1lghhyxvqo6%2BTiaTumXjOkuYMfvj6VmSGz4yKCYRQX7Eg%2BKuMa7YIkP1WsmBxaPhbwTw%2BxmZdE8ohsFYNbzr%2BEGIcg1Geg%2FbXPYvkwrw%2Bv0Nr3kxcDC6tz4SX4BH6nKmzffvKdFkK0tQGmc7Sf4thcNr57iI7dbgwW9XT9lezcsq0ONkkoAaQ08jFktb%2ByElz4epS%2FpICiAYRzGbSgI23t44k7%2BD%2F7fgM744%3D--E%2FzgyhO9Omh1x8M5--lr1iap4N%2FIbpbNFTpYT1Zw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '1452351'
+      content-length: '166845'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_csv.zip
-  recorded_at: 2023-03-23 20:05:10 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1270_csv.zip
+  recorded_at: 2023-07-20 21:27:58 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/1992256/nhgis1091_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063471/nhgis1270_shape.zip
     body:
       encoding: ''
       string: ''
@@ -52,22 +52,22 @@ http_interactions:
       message: 'Success: (200) OK'
     headers:
       accept-ranges: bytes
-      cache-control: private
-      content-disposition: attachment; filename="nhgis1091_shape.zip"; filename*=UTF-8''nhgis1091_shape.zip
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis1270_shape.zip"; filename*=UTF-8''nhgis1270_shape.zip
       content-type: application/zip
-      date: Thu, 23 Mar 2023 20:05:10 GMT
-      etag: '"641caecb-7ca81"'
-      last-modified: Thu, 23 Mar 2023 19:55:55 GMT
-      server: nginx/1.14.2
-      set-cookie: _session_id=T4N3gBkeW94LcnZox79N8mPuogWZxvvJipzmniuvRhi4b3yc7kAGjdXipf7kpiuVio1ltt9mhlTupU4FLLKqtvx4cVblQS5XQEWgSqXQEXPSLcJsRwA9bnVRji1cdEF0TokXBomX0u9wM1N5fWWBmCclO%2BRjKjiBJogH2MYnC0fByQsdCxsSgWMpGycgk9GWYbub6LgZoWr5lYNqQgig7AbcWVAs%2Faf68Q1Q6eQQq%2BKGbKw0ZGQTph%2FJY1KNz0s%3D--MboE8tv56oQrdSfA--1KRXoGM0LZdzOvLKLoLRhA%3D%3D;
+      date: Thu, 20 Jul 2023 21:27:58 GMT
+      etag: '"64b9a534-7ca95"'
+      last-modified: Thu, 20 Jul 2023 21:20:52 GMT
+      server: nginx/1.18.0
+      set-cookie: _session_id=Rxn2M3KPIn7rLpOvpLWi%2FpCPwAigjWOydkW%2FCaQJ1RMO%2FaYiCND6jtYKqP%2BoRkWJZiVLlaxbnsAVMCGnSslfnM6tw0D3Fjt8GygZ%2BZe7bi6RE%2FyAGT3VO4zeo4SoHPO%2B7SAbWaLoBplH0q1vnGmtA4mo9uZC0eBoFnqNs%2FXMxgmUgzrK7kFAtQWkXVVWMZv%2FJa8HZMHnqUyIZ6sLWJILhe2XMErk18y728BjD6Bt%2FHhm63t1qUhlGKPszSMrcG4%3D--oq0fF7v5EUeMEjyO--w8uJ8pTfDoA79gVGQ5mmgg%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '510593'
+      content-length: '510613'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1091_shape.zip
-  recorded_at: 2023-03-23 20:05:10 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.8.0
+      string: ../fixtures/nhgis1270_shape.zip
+  recorded_at: 2023-07-20 21:27:58 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

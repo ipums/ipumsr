@@ -7,37 +7,44 @@
 
 #' List IPUMS data collections
 #'
+#' @description
 #' List IPUMS data collections with their corresponding codes used by the
 #' IPUMS API. Note that some data collections do not yet have API support.
 #'
 #' Currently, ipumsr supports extract definitions for the following collections:
 #'
-#' * IPUMS USA
-#' * IPUMS CPS
-#' * IPUMS NHGIS
+#' * IPUMS USA (`"usa"`)
+#' * IPUMS CPS (`"cps"`)
+#' * IPUMS International (`"ipumsi"`)
+#' * IPUMS NHGIS (`"nhgis"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
-#' @return A [`tibble`][tibble::tbl_df-class] with three columns containing the
-#'   full collection name, the corresponding code used by the IPUMS API, and the
+#' @return A [`tibble`][tibble::tbl_df-class] with four columns containing the
+#'   full collection name, the type of data the collection provides,
+#'   the collection code used by the IPUMS API, and the
 #'   status of API support for the collection.
 #'
 #' @export
+#'
+#' @examples
+#' ipums_data_collections()
 ipums_data_collections <- function() {
   tibble::tribble(
-    ~collection_name, ~code_for_api, ~api_support,
-    "IPUMS USA", "usa", "beta",
-    "IPUMS CPS", "cps", "beta",
-    "IPUMS International", "ipumsi", "none",
-    "IPUMS NHGIS", "nhgis", "v1",
-    "IPUMS AHTUS", "ahtus", "none",
-    "IPUMS MTUS", "mtus", "none",
-    "IPUMS ATUS", "atus", "none",
-    "IPUMS DHS", "dhs", "none",
-    "IPUMS Higher Ed", "highered", "none",
-    "IPUMS MEPS", "meps", "none",
-    "IPUMS NHIS", "nhis", "none",
-    "IPUMS PMA", "pma", "none"
+    ~collection_name, ~collection_type, ~code_for_api, ~api_support,
+    "IPUMS USA", "microdata", "usa", TRUE,
+    "IPUMS CPS", "microdata", "cps", TRUE,
+    "IPUMS International", "microdata", "ipumsi", TRUE,
+    "IPUMS NHGIS", "aggregate data", "nhgis", TRUE,
+    "IPUMS IHGIS", "aggregate data", "ihgis", FALSE,
+    "IPUMS AHTUS", "microdata", "ahtus", FALSE,
+    "IPUMS MTUS", "microdata", "mtus", FALSE,
+    "IPUMS ATUS", "microdata", "atus", FALSE,
+    "IPUMS DHS", "microdata", "dhs", FALSE,
+    "IPUMS Higher Ed", "microdata", "highered", FALSE,
+    "IPUMS MEPS", "microdata", "meps", FALSE,
+    "IPUMS NHIS", "microdata", "nhis", FALSE,
+    "IPUMS PMA", "microdata", "pma", FALSE
   )
 }
 
@@ -112,8 +119,10 @@ set_ipums_api_key <- function(api_key,
 #'
 #' @param collection Character string of the collection to set as your
 #'   default collection. The collection must currently be supported
-#'   by the IPUMS API. Use [ipums_data_collections()] to determine if a
-#'   collection has API support.
+#'   by the IPUMS API.
+#'
+#'   For a list of codes used to refer to each collection, see
+#'   [ipums_data_collections()].
 #' @param save If `TRUE`, save the default collection for use in future
 #'   sessions by adding it to the `.Renviron` file in your home directory.
 #'   Defaults to `FALSE`, unless `overwrite = TRUE`.
@@ -137,7 +146,7 @@ set_ipums_api_key <- function(api_key,
 #' \dontrun{
 #' # Extract info will now be retrieved for the default collection:
 #' get_last_extract_info()
-#' get_recent_extracts_info()
+#' get_extract_history()
 #'
 #' is_extract_ready(1)
 #' get_extract_info(1)
@@ -163,7 +172,7 @@ set_ipums_default_collection <- function(collection = NULL,
     collection <- tolower(collection)
 
     # Error if collection is not currently available for API
-    ipums_api_version(collection)
+    check_api_support(collection)
 
     collection <- set_ipums_envvar(
       IPUMS_DEFAULT_COLLECTION = collection,
@@ -176,6 +185,8 @@ set_ipums_default_collection <- function(collection = NULL,
 }
 
 # Non-exported functions ---------------------------------------------------
+
+# Extract IDs ----------------
 
 #' Standardize accepted formats for identifying a particular extract request
 #'
@@ -234,7 +245,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
             )
           )
         } else {
-          ipums_api_version(extract)
+          check_api_support(extract)
           return(list(collection = extract, number = NA))
         }
       }
@@ -267,7 +278,7 @@ standardize_extract_identifier <- function(extract, collection_ok = FALSE) {
     )
   }
 
-  ipums_api_version(collection)
+  check_api_support(collection)
 
   if (number != round(number)) {
     rlang::abort(
@@ -289,7 +300,7 @@ get_default_collection <- function() {
 
   versions <- dplyr::filter(
     ipums_data_collections(),
-    .data$api_support != "none"
+    .data$api_support
   )
 
   if (!collection %in% versions$code_for_api) {
@@ -327,6 +338,7 @@ get_default_collection <- function() {
   collection
 }
 
+# Environment variables -----------------
 
 #' Helper for setting IPUMS environmental variables
 #'
@@ -476,6 +488,8 @@ unset_ipums_envvar <- function(var_name) {
   invisible("")
 }
 
+# Print methods --------------
+
 #' @export
 print.ipums_extract <- function(x, ...) {
   to_cat <- paste0(
@@ -491,31 +505,47 @@ print.ipums_extract <- function(x, ...) {
 }
 
 #' @export
-print.usa_extract <- function(x, ...) {
-  to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
-    "\n"
+print.micro_extract <- function(x, ...) {
+  styler <- extract_field_styler("bold")
+
+  samps_to_cat <- purrr::compact(
+    purrr::map(
+      x$samples,
+      function(x) {
+        if (inherits(x, "samp_spec")) {
+          x$name
+        }
+      }
+    )
   )
 
-  cat(to_cat)
+  vars_to_cat <- purrr::compact(
+    purrr::map(
+      x$variables,
+      function(x) {
+        if (inherits(x, "var_spec")) {
+          x$name
+        }
+      }
+    )
+  )
 
-  invisible(x)
-}
-
-#' @export
-print.cps_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
     " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n", print_truncated_vector(x$samples, "Samples: "),
-    "\n", print_truncated_vector(x$variables, "Variables: "),
+    "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
+    "\n\n",
+    print_truncated_vector(
+      samps_to_cat,
+      styler("Samples: ")
+    ),
+    "\n",
+    print_truncated_vector(
+      vars_to_cat,
+      styler("Variables: ")
+    ),
     "\n"
   )
 
@@ -527,44 +557,54 @@ print.cps_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
+  ds_to_cat <- purrr::compact(purrr::map(
+    x$datasets,
+    function(d) {
+      if (inherits(d, "ds_spec")) {
+        format_field_for_printing(
+          parent_field = list("Dataset: " = d$name),
+          subfields = list(
+            "Tables: " = d$data_tables,
+            "Geog Levels: " = d$geog_levels,
+            "Years: " = d$years,
+            "Breakdowns: " = d$breakdown_values
+          ),
+          parent_style = style_ds,
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
-  ds_to_cat <- purrr::map(
-    seq_along(x$datasets),
-    ~ format_field_for_printing(
-      parent_field = list("Dataset: " = x$datasets[[.x]]),
-      subfields = list(
-        "Tables: " = x$data_tables[x$datasets][[.x]],
-        "Geog Levels: " = x$geog_levels[x$datasets][[.x]],
-        "Years: " = x$years[x$datasets][[.x]],
-        "Breakdowns: " = x$breakdown_values[x$datasets][[.x]]
-      ),
-      parent_style = style_ds,
-      subfield_style = extract_field_styler("bold")
+  if (length(ds_to_cat) > 0) {
+    ds_to_cat <- c(
+      ds_to_cat,
+      format_field_for_printing(
+        parent_field = list("Geographic extents: " = x$geographic_extents),
+        parent_style = style_ds
+      )
     )
-  )
+  }
 
-  ds_to_cat <- c(
-    ds_to_cat,
-    format_field_for_printing(
-      parent_field = list("Geographic extents: " = x$geographic_extents),
-      parent_style = style_ds
-    )
-  )
-
-  tst_to_cat <- purrr::map(
-    seq_along(x$time_series_tables),
-    ~ format_field_for_printing(
-      parent_field = list("Time Series Table: " = x$time_series_tables[[.x]]),
-      subfields = list(
-        "Geog Levels: " = x$geog_levels[x$time_series_tables][[.x]]
-      ),
-      parent_style = extract_field_styler(
-        nhgis_print_color("time_series_table"),
-        "bold"
-      ),
-      subfield_style = extract_field_styler("bold")
-    )
-  )
+  tst_to_cat <- purrr::compact(purrr::map(
+    x$time_series_tables,
+    function(t) {
+      if (inherits(t, "tst_spec")) {
+        format_field_for_printing(
+          parent_field = list("Time Series Table: " = t$name),
+          subfields = list(
+            "Geog Levels: " = t$geog_levels,
+            "Years: " = t$years
+          ),
+          parent_style = extract_field_styler(
+            nhgis_print_color("time_series_table"),
+            "bold"
+          ),
+          subfield_style = extract_field_styler("bold")
+        )
+      }
+    }
+  ))
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
@@ -577,8 +617,8 @@ print.nhgis_extract <- function(x, ...) {
   to_cat <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n", print_truncated_vector(x$description, "Description: ", FALSE),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE),
     paste0(ds_to_cat, collapse = ""),
     paste0(tst_to_cat, collapse = ""),
     shp_to_cat,
@@ -626,7 +666,7 @@ format_field_for_printing <- function(parent_field = NULL,
                                       subfields = NULL,
                                       parent_style = NULL,
                                       subfield_style = NULL,
-                                      padding = 2) {
+                                      padding_top = 2) {
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -640,12 +680,8 @@ format_field_for_printing <- function(parent_field = NULL,
   style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    paste0(rep("\n", padding), collapse = ""),
-    print_truncated_vector(
-      parent_val,
-      style_field(parent_name),
-      FALSE
-    )
+    paste0(rep("\n", padding_top), collapse = ""),
+    print_truncated_vector(parent_val, style_field(parent_name), FALSE)
   )
 
   if (!is.null(subfields)) {
@@ -653,8 +689,7 @@ format_field_for_printing <- function(parent_field = NULL,
       names(subfields),
       ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
-          output,
-          "\n  ",
+          output, "\n  ",
           print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
         )
       }
@@ -718,27 +753,716 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   untruncated
 }
 
-parse_400_error <- function(res) {
+# Request handlers --------------------
+
+# Helper to extract API-provided details for request errors.
+# Will error when handling a response with empty body, so best to wrap
+# in
+parse_response_error <- function(res) {
   response_content <- jsonlite::fromJSON(
-    httr::content(res, "text"),
+    # Avoid default encoding messages
+    suppressMessages(httr::content(res, "text")),
     simplifyVector = FALSE
   )
   response_detail <- response_content$detail
-  response_detail <- unlist(response_detail)
-  error_message <- c(
-    paste0(
-      "Received status code ",
-      res$status_code,
-      " with the following details:"
-    ),
-    purrr::set_names(response_detail, "x")
-  )
-  return(error_message)
+  unlist(response_detail)
+}
+
+# Helper to handle errors and warnings for API requests.
+# Called in ipums_api_request()
+validate_api_request <- function(res, call = caller_env()) {
+  is_downloads_request <- fostr_detect(res$url, "downloads/")
+  is_extract_request <- !is_downloads_request &&
+    fostr_detect(res$url, "extracts/")
+
+  status <- httr::status_code(res)
+
+  if (httr::http_status(res)$category != "Success") {
+    # Attempt to get details from response. NULL if response has empty body
+    error_details <- tryCatch(
+      purrr::set_names(parse_response_error(res), "x"),
+      error = function(cnd) {
+        NULL
+      }
+    )
+
+    # Standard error message
+    error_message <- paste0("API request failed with status ", status, ".")
+
+    # Authorization errors could be related to invalid registration or key
+    if (status %in% c(401, 403)) {
+      # The API provides details for invalid registration cases, so check
+      # if any error details exist.
+      if (length(error_details) > 0) {
+        rlang::abort(
+          c("Invalid IPUMS registration.", error_details),
+          call = call
+        )
+      }
+
+      # Otherwise we should be dealing with a valid registration but invalid key
+      rlang::abort(
+        c(
+          "The provided API key is either missing or invalid.",
+          "i" = paste0(
+            "Please provide your API key to the `api_key` argument ",
+            "or request a key at https://account.ipums.org/api_keys"
+          ),
+          "i" = "Use `set_ipums_api_key()` to save your key for future use."
+        ),
+        call = call
+      )
+    }
+
+    # If a downloads request, add hint to inform of possible issue
+    if (is_downloads_request) {
+      rlang::abort(
+        c(
+          error_message,
+          "i" = paste0(
+            "The extract may have expired. Check its status ",
+            "with `get_extract_info()`"
+          )
+        ),
+        call = call
+      )
+    }
+
+    # 404 extract request with no details is an invalid extract number error
+    if (status == 404 && is_extract_request && is_null(error_details)) {
+      url_parts <- fostr_split(res$url, "/")[[1]]
+      url_tail <- url_parts[length(url_parts)]
+      number <- as.numeric(fostr_split(url_tail, "\\?")[[1]][[1]])
+
+      rlang::abort(
+        c(
+          error_message,
+          "x" = paste0(
+            "Extract number ", number, " does not exist for this collection."
+          )
+        ),
+        call = call
+      )
+    }
+
+    if (status == 429) {
+      rlang::abort(
+        c(error_message, "x" = "Rate limit exceeded."),
+        call = call
+      )
+    }
+
+    # Other errors should get the general message
+    rlang::abort(
+      c(error_message, error_details),
+      call = call
+    )
+  }
+
+  # Download requests do not return JSON by design
+  if (!is_downloads_request && httr::http_type(res) != "application/json") {
+    rlang::abort("API request did not return JSON", call = call)
+  }
+
+  invisible(res)
+}
+
+api_extract_warnings <- function(extract_number, warnings) {
+  warnings <- unlist(warnings)
+
+  if (length(warnings) > 0) {
+    rlang::warn(c(
+      paste0(
+        "Extract number ", extract_number, " contains unsupported features:"
+      ),
+      warnings
+    ))
+  }
 }
 
 add_user_auth_header <- function(api_key) {
   httr::add_headers("Authorization" = api_key)
 }
+
+api_base_url <- function() {
+  api_instance <- active_api_instance()
+
+  if (api_instance == "") {
+    url <- "https://api.ipums.org/"
+  } else {
+    url <- paste0("https://", api_instance, ".api.ipums.org/")
+  }
+
+  url
+}
+
+#' Generate an URL for IPUMS API requests
+#'
+#' @param collection The IPUMS data collection for the extract.
+#' @param path Extensions to add to the base url. Helpers
+#'   `extract_request_path()` and `metadata_request_path()` can be used
+#'   to form URL paths for different endpoints.
+#' @param queries A named list of key value pairs to be added to the standard
+#'   query in the call to [httr::modify_url].
+#'
+#' @return A character containing the URL for a request to an IPUMS API extract
+#'   endpoint.
+#'
+#' @noRd
+api_request_url <- function(collection, path, queries = NULL) {
+  check_api_support(collection)
+
+  queries_is_null_or_named_list <- is.null(queries) ||
+    is.list(queries) && is_named(queries)
+
+  if (!queries_is_null_or_named_list) {
+    rlang::abort("`queries` argument must be `NULL` or a named list")
+  }
+
+  api_url <- httr::modify_url(
+    api_base_url(),
+    path = path,
+    query = c(
+      list(collection = collection, version = ipums_api_version()),
+      queries
+    )
+  )
+
+  api_url
+}
+
+#' Helper to construct URL paths for API extract endpoints
+#'
+#' @param number Number of the extract to include in the path. Used for
+#'   endpoints that request information for a single extract. If `NULL`, only
+#'   the base extract path is returned.
+#'
+#' @return Path to include in the URL for an API extract request.
+#'   This will be of the form `"extracts/{number}"` if `number` is provided.
+#'   Otherwise, it will return `"extracts/"`.
+#'
+#' @noRd
+extract_request_path <- function(number = NULL) {
+  if (!rlang::is_null(number)) {
+    number <- format(number, scientific = FALSE)
+  }
+  paste0("extracts/", number)
+}
+
+#' Helper to construct URL paths for API metadata endpoints
+#'
+#' @param collection Collection associated with the metadata endpoint
+#' @param path List of elements to add to the URL path. If list is named,
+#'   each element name is placed ahead of its associated value in the
+#'   resulting URL. Elements with `NULL` values are fully removed, allowing
+#'   for the specification of multiple possible path parameters that may
+#'   or may not be present. This is useful as some metadata endpoints include
+#'   multiple parameters (e.g. `data_tables` and `datasets` for NHGIS).
+#'
+#'   For instance, `list(datasets = "DS", data_tables = NULL)` would produce
+#'   a path `"metadata/{collection}/datasets/DS/"`.
+#'
+#'   Unnamed elements are inserted in the order that they are provided.
+#'
+#' @return Path to include in the URL for an API metadata request.
+#'
+#' @noRd
+metadata_request_path <- function(collection, ...) {
+  path_args <- purrr::compact(rlang::list2(...))
+  path_fields <- names(path_args)
+
+  path_args <- c("metadata", collection, rbind(path_fields, unlist(path_args)))
+
+  # Avoids extra `/` for unnamed args in `path`
+  path_args <- path_args[which(path_args != "")]
+
+  paste(path_args, collapse = "/")
+}
+
+#' Low-level function to make basic requests to the IPUMS API.
+#'
+#' A basic wrapper of `httr::VERB()` to add ipumsr user agent and API key
+#' authorization and produce desired error messages on invalid responses.
+#' This is wrapped in higher-level functions to attach endpoint-specific
+#' behavior.
+#'
+#' @param verb `"GET"` or `"POST"`
+#' @param url API url for the request.
+#' @param body The body of the request (e.g. the extract definition), if
+#'   relevant. Use `FALSE` for a body-less request.
+#' @param api_key IPUMS API key
+#' @param ... Additional parameters passed to `httr::VERB()`
+#'
+#' @return An `httr::response()` object
+#'
+#' @noRd
+ipums_api_request <- function(verb,
+                              url,
+                              body = FALSE,
+                              api_key = Sys.getenv("IPUMS_API_KEY"),
+                              ...) {
+  response <- httr::VERB(
+    verb = verb,
+    url = url,
+    body = body,
+    httr::user_agent(
+      paste0(
+        "https://github.com/ipums/ipumsr ",
+        as.character(utils::packageVersion("ipumsr"))
+      )
+    ),
+    add_user_auth_header(api_key),
+    ...
+  )
+
+  validate_api_request(response)
+
+  response
+}
+
+#' Make requests to paginated API endpoints
+#'
+#' For a starting URL, makes an API request and continue requesting additional
+#' pages until the provided `max_pages` is reached. Use `max_pages = Inf` to
+#' request all pages available. Pages are stored in the `links$nextPage` field
+#' of the JSON response.
+#'
+#' @param url API url for the request
+#' @param delay Number of seconds to delay between
+#'   successive API requests. This is highly unlikely to be needed and is
+#'   included only as a fallback for users to avoid hitting the rate limit.
+#' @param api_key IPUMS API key
+#' @param ... Additional arguments passed to `httr::VERB()`
+#'
+#' @return A list of `httr::response()` objects
+#'
+#' @noRd
+ipums_api_paged_request <- function(url,
+                                    max_pages = Inf,
+                                    delay = 0,
+                                    api_key = Sys.getenv("IPUMS_API_KEY"),
+                                    ...) {
+  response <- ipums_api_request(
+    "GET",
+    url = url,
+    body = FALSE,
+    api_key = api_key,
+    ...
+  )
+
+  json_content <- jsonlite::fromJSON(
+    httr::content(response, "text"),
+    simplifyVector = FALSE
+  )
+
+  all_responses <- list(response)
+  page_no <- 1
+
+  while (page_no < max_pages && !is.null(json_content$links$nextPage)) {
+    # Fallback in case someone hits the rate limit.
+    Sys.sleep(delay)
+
+    response <- ipums_api_request(
+      "GET",
+      url = json_content$links$nextPage,
+      body = FALSE,
+      api_key = api_key,
+      ...
+    )
+
+    json_content <- jsonlite::fromJSON(
+      httr::content(response, "text"),
+      simplifyVector = FALSE
+    )
+
+    all_responses <- c(all_responses, list(response))
+    page_no <- page_no + 1
+  }
+
+  all_responses
+}
+
+#' Convenience function to create an `ipums_json` from an API extract request.
+#'
+#' @noRd
+ipums_api_extracts_request <- function(verb,
+                                       collection,
+                                       url,
+                                       body = FALSE,
+                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
+  response <- ipums_api_request(
+    verb = verb,
+    url = url,
+    body = body,
+    api_key = api_key,
+    httr::content_type_json()
+  )
+
+  new_ipums_json(
+    httr::content(response, "text"),
+    collection = collection
+  )
+}
+
+#' Writes the given url to file_path. Returns the file path of the
+#' downloaded data.
+#'
+#' @noRd
+ipums_api_download_request <- function(url,
+                                       file_path,
+                                       overwrite,
+                                       progress = TRUE,
+                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
+  if (file.exists(file_path) && !overwrite) {
+    rlang::abort(
+      c(
+        paste0("File `", file_path, "` already exists."),
+        "To overwrite, set `overwrite = TRUE`"
+      )
+    )
+  }
+
+  if (progress) {
+    progress <- httr::progress()
+  } else {
+    progress <- NULL
+  }
+
+  ipums_api_request(
+    "GET",
+    url = url,
+    body = FALSE,
+    api_key = api_key,
+    httr::write_disk(file_path, overwrite = TRUE),
+    progress
+  )
+
+  file_path
+}
+
+# Helper to set the page size limit for each
+# endpoint type. Currently, extract endpoints have a different
+# limits as it is more expensive to provide large numbers of extract
+# definitions than metadata records.
+api_page_size_limit <- function(type) {
+  if (type == "extracts") {
+    limit <- 1500
+  } else if (type == "metadata") {
+    limit <- 2500
+  } else {
+    rlang::abort("Unrecognized endpoint type.")
+  }
+
+  limit
+}
+
+#' Get the active API instance to use for API requests
+#'
+#' @description
+#' Edit the IPUMS_API_INSTANCE environment variable to test in-development
+#' API functionality that has not yet been deployed to live. Development
+#' features will typically be present on the `"demo"` instance.
+#'
+#' Note that non-live instances require their own unique API keys.
+#'
+#' @details
+#' Set the IPUMS_API_INSTANCE envvar to `"demo"` to test in-development API
+#' work.
+#'
+#' Note that `"internal"` is an accepted instance, but may have a different URL
+#' construction and therefore may still produce invalid requests.
+#'
+#' Any invalid IPUMS_API_INSTANCE values are coerced to the standard live URL.
+#'
+#' Also note that ipumsr tests assume that the live API is active, not demo.
+#'
+#' @noRd
+active_api_instance <- function() {
+  api_instance <- Sys.getenv("IPUMS_API_INSTANCE")
+
+  if (!api_instance %in% c("", "demo", "internal")) {
+    api_instance <- ""
+  }
+
+  api_instance
+}
+
+#' Get the current API verison for a specified IPUMS collection
+#'
+#' Get current API version for a collection.
+#'
+#' @param collection IPUMS collection
+#'
+#' @noRd
+ipums_api_version <- function() {
+  api_version <- Sys.getenv("IPUMS_API_VERSION")
+
+  if (api_version == "") {
+    2
+  } else {
+    api_version
+  }
+}
+
+# `spec` helpers -------------
+
+#' Cast a vector or list to a list of `ipums_spec` objects
+#'
+#' This function is used to power the use of character strings as variable
+#' names in extract definition functions. It is also used in extract revisions
+#' to ensure a standardized input when interpreting revision arguments.
+#'
+#' @param x Vector or list of objects to cast to a list of `ipums_spec` objects.
+#'   Vector elements are interpreted as names for the resulting `ipums_spec`
+#'   objects. Objects in `x` that are already `ipums_spec` objects are
+#'   unchanged.
+#' @param class Character indicating the subclass (e.g. `"var_spec"`) of the
+#'   output list elements. Elements that are not modified retain their original
+#'   class.
+#'
+#' @return list of `ipums_spec` objects
+#'
+#' @noRd
+spec_cast <- function(x, class) {
+  if (inherits(x, "ipums_spec")) {
+    x <- list(x)
+  } else {
+    # Named entries should be from combination of spec objects
+    # with character strings in a vector, which is not allowed.
+    to_cast <- purrr::map_lgl(x, ~ !inherits(.x, "ipums_spec"))
+
+    if (any(rlang::have_name(to_cast) & to_cast)) {
+      rlang::warn(c(
+        paste0("Unexpected names in input when converting to `", class, "`"),
+        paste0(
+          "You may have combined `",
+          class, "` objects with `c()` instead of `list()`"
+        )
+      ))
+    }
+
+    if (any(to_cast)) {
+      x[to_cast] <- purrr::map(
+        x[to_cast],
+        ~ new_ipums_spec(.x, class = class)
+      )
+    }
+  }
+
+  x
+}
+
+#' Compare extract specifications and remove values
+#'
+#' This powers the logic in `remove_from_extract()` by comparing extract
+#' definition specifications and specifications provided as arguments to
+#' that function.
+#'
+#' The entries in `extract_spec` are matched to those in `spec` by name, and
+#' values for detailed specifications are removed where they match.
+#'
+#' @param extract_spec List of `ipums_spec` objects containing the
+#'   specifications contained in an extract definition.
+#' @param spec List of `ipums_spec` objects containing the values to remove
+#'   from those in `extract_spec`
+#'
+#' @return A list of `ipums_spec` objects
+#'
+#' @noRd
+spec_remove <- function(extract_spec, spec) {
+  spec_names <- purrr::map_chr(spec, ~ .x$name)
+
+  extract_spec <- purrr::compact(
+    purrr::map(
+      extract_spec,
+      function(x) {
+        if (x$name %in% spec_names) {
+          i <- which(spec_names == x$name)
+          spec_setdiff(x, spec[[i]])
+        } else {
+          x
+        }
+      }
+    )
+  )
+
+  if (length(extract_spec) == 0) {
+    extract_spec <- NULL
+  }
+
+  extract_spec
+}
+
+#' Compare extract specifications and add values
+#'
+#' This powers the logic in `add_to_extract()` by comparing extract
+#' definition specifications and specifications provided as arguments to
+#' that function.
+#'
+#' The entries in `extract_spec` are matched to those in `spec` by name, and
+#' values for detailed specifications are added where they do not match.
+#'
+#' @param extract_spec List of `ipums_spec` objects containing the
+#'   specifications contained in an extract definition.
+#' @param spec List of `ipums_spec` objects containing the values to add
+#'   to those in `extract_spec`
+#'
+#' @return A list of `ipums_spec` objects
+#'
+#' @noRd
+spec_add <- function(extract_spec, spec) {
+  spec_names <- purrr::map_chr(spec, ~ .x$name)
+
+  if (!rlang::is_null(extract_spec)) {
+    extract_spec_names <- purrr::map_chr(extract_spec, ~ .x$name)
+    new_spec <- spec[which(!spec_names %in% extract_spec_names)]
+
+    extract_spec <- purrr::compact(
+      purrr::map(
+        extract_spec,
+        function(x) {
+          if (x$name %in% spec_names) {
+            i <- which(spec_names == x$name)
+            spec_union(x, spec[[i]])
+          } else {
+            x
+          }
+        }
+      )
+    )
+
+    extract_spec <- c(extract_spec, new_spec)
+  } else {
+    extract_spec <- spec
+  }
+
+  extract_spec
+}
+
+# Helper to drive the logic comparing two spec objects and removing
+# the detailed specification values present in both from the first spec object.
+spec_setdiff <- function(spec, spec_mod, validate = FALSE) {
+  UseMethod("spec_setdiff")
+}
+
+#' @export
+spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  if (length(args) == 0) {
+    return(NULL)
+  }
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  cs_type <- spec$case_selection_type
+
+  if (length(args) == 0) {
+    return(NULL)
+  }
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  # `case_selections` may have been modified, but we want to ensure that
+  # `case_selection_type` is retained if needed and removed if all case
+  # selections are removed.
+  if (!is_null(spec$case_selections)) {
+    spec$case_selection_type <- cs_type
+  } else {
+    spec$case_selection_type <- NULL
+  }
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+# Helper to drive the logic comparing two spec objects and unioning
+# the detailed specification values present in the second with the first.
+spec_union <- function(spec, spec_mod, validate = FALSE) {
+  UseMethod("spec_union")
+}
+
+#' @export
+spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  purrr::walk(
+    args,
+    function(x) {
+      spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  args <- setdiff(names(spec_mod), "name")
+
+  purrr::walk(
+    args,
+    function(x) {
+      if (x == "case_selection_type") {
+        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+      } else {
+        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+      }
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+# Misc ------------------
 
 copy_ipums_extract <- function(extract) {
   extract$submitted <- FALSE
@@ -749,51 +1473,42 @@ copy_ipums_extract <- function(extract) {
   extract
 }
 
-api_base_url <- function() {
-  api_url <- Sys.getenv("IPUMS_API_URL")
-  if (api_url == "") {
-    return("https://api.ipums.org/extracts/")
-  }
-  api_url
-}
-
-api_extracts_path <- function() {
-  basename(api_base_url())
-}
-
-#' Get the current API verison for a specified IPUMS collection
-#'
-#' Get current API version for a collection or throw an error if that collection
-#' is not currently supported by API.
-#'
-#' @param collection IPUMS collection
-#'
-#' @noRd
-ipums_api_version <- function(collection) {
-  versions <- dplyr::filter(
-    ipums_data_collections(),
-    .data$api_support != "none"
-  )
+check_api_support <- function(collection) {
+  versions <- dplyr::filter(ipums_data_collections(), .data$api_support)
 
   if (!collection %in% versions$code_for_api) {
     rlang::abort(
       c(
-        paste0("No API version found for collection \"", collection, "\""),
+        paste0(
+          "Unrecognized collection: \"", collection, "\""
+        ),
         "i" = paste0(
-          "The IPUMS API currently supports the following collections: \"",
+          "The IPUMS API supports collections: \"",
           paste0(versions$code_for_api, collapse = "\", \""), "\""
         )
       )
     )
   }
 
-  api_version <- Sys.getenv("IPUMS_API_VERSION")
+  invisible(collection)
+}
 
-  if (api_version == "") {
-    versions[[which(versions$code_for_api == collection), "api_support"]]
-  } else {
-    api_version
+# Determine if a collection is considered microdata or aggregate data
+collection_type <- function(collection) {
+  if (is_empty(collection) || is_na(collection)) {
+    return("ipums")
   }
+
+  collections <- ipums_data_collections()
+  type <- collections[collections$code_for_api == collection, ]$collection_type
+
+  if (type == "microdata") {
+    collection_type <- "micro"
+  } else {
+    collection_type <- "agg"
+  }
+
+  collection_type
 }
 
 #' Get API version from a JSON file
@@ -804,35 +1519,12 @@ api_version_from_json <- function(extract_json) {
     extract_json,
     simplifyVector = FALSE
   )
-  extract$api_version
+  # Handles inconsistency between old API version JSON defs, which include
+  # api_version, not version
+  extract$version %||% extract$api_version
 }
 
 EMPTY_NAMED_LIST <- purrr::set_names(list(), character(0))
-
-#' Convert geog extent values from names to codes and vice versa
-#'
-#' Allows users to specify geographic extents (currently states) by providing
-#' full names, abbreviations, or NHGIS codes. These are converted to codes
-#' before submitting to the API and converted to abbreviations for use in R.
-#'
-#' @param values Geog extent values to match to their associated abbreviations
-#' @param lookup_key Named vector whose names match `values` and whose values
-#'   represent the associated name to convert those values to
-#'
-#' @return A vector of length `values` with the recoded values
-#'
-#' @noRd
-geog_extent_lookup <- function(values, lookup_key) {
-  values_lower <- tolower(values)
-
-  if (length(values_lower) == 0) {
-    return(NULL)
-  }
-
-  recoded <- toupper(dplyr::recode(values_lower, !!!lookup_key))
-
-  recoded
-}
 
 resubmission_hint <- function(is_extract) {
   if (!is_extract) {
@@ -848,4 +1540,21 @@ resubmission_hint <- function(is_extract) {
   }
 
   hint
+}
+
+# Helper to convert metadata camelCase names to snake_case
+# for consistency with ipums_extract object naming.
+to_snake_case <- function(x) {
+  x <- tolower(gsub("([A-Z])", "\\_\\1", x))
+  x <- gsub("_{2,}", "_", x)
+  gsub("^_", "", x)
+}
+
+to_camel_case <- function(x) {
+  gsub("\\_(\\w?)", "\\U\\1", x, perl = TRUE)
+}
+
+# Helper to check whether a given URL exists in an extract's download links
+has_url <- function(links, name) {
+  is.list(links[[name]]) && is.character(links[[name]][["url"]])
 }

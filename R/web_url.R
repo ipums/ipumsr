@@ -3,12 +3,16 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Launch a browser window to the ipums website
+#' Launch a browser window to an IPUMS metadata page
 #'
+#' @description
 #' Using an [ipums_ddi] object or IPUMS project
 #' along with a variable name, guesses the most appropriate URL for
 #' the variable's page on the IPUMS website.
 #'
+#' Currently, this is only available for Windows operating systems.
+#'
+#' @details
 #' Note that some IPUMS projects (e.g. NHGIS) do not have variable-specific
 #' pages.
 #'
@@ -31,15 +35,13 @@
 #' @param homepage_if_missing If `TRUE`, return the project homepage if the
 #'   project does not provide variable-specific web pages.
 #'
-#' @return The URL to the page on ipums.org (silently if launch is `TRUE`)
+#' @return The URL to the IPUMS webpage for the indicated project and variable
+#'   (silently if launch is `TRUE`)
 #'
 #' @export
 #'
 #' @examples
-#' ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
-#'
-#' # Get URL for information about a particular variable
-#' ipums_website(ddi, "MONTH", launch = FALSE)
+#' ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 #'
 #' \dontrun{
 #' # Launch webpage for particular variable

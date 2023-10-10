@@ -21,7 +21,7 @@ data into R for analysis.
 For more information about IPUMS data and how to generate and download a
 data extract, see the [introduction](ipums.html) to IPUMS data.
 
-## IPUMS Extract Structure
+## IPUMS extract structure
 
 IPUMS extracts will be organized slightly differently for different
 [IPUMS projects](https://www.ipums.org/overview). In general, all
@@ -46,7 +46,7 @@ them in your data processing pipeline. See the vignette about [value
 labels](value-labels.html) for more information on working with these
 labels.
 
-## Reading Microdata Extracts
+## Reading microdata extracts
 
 Microdata extracts typically provide their metadata in a DDI (.xml) file
 separate from the compressed data (.dat.gz) files.
@@ -59,7 +59,7 @@ library(ipumsr)
 library(dplyr)
 
 # Example data
-cps_ddi_file <- ipums_example("cps_00006.xml")
+cps_ddi_file <- ipums_example("cps_00157.xml")
 
 cps_data <- read_ipums_micro(cps_ddi_file)
 
@@ -126,7 +126,7 @@ cps_data2 <- set_ipums_var_attributes(cps_data2, cps_ddi)
 ipums_val_labels(cps_data2$MONTH)
 ```
 
-### Hierarchical Extracts
+### Hierarchical extracts
 
 IPUMS microdata can come in either "rectangular" or "hierarchical"
 format.
@@ -144,7 +144,7 @@ Hierarchical data can be loaded in list format or long format.
 `read_ipums_micro()` will read in long format:
 
 ```{r}
-cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00010.xml"))
+cps_hier_ddi <- read_ipums_ddi(ipums_example("cps_00159.xml"))
 
 read_ipums_micro(cps_hier_ddi)
 ```
@@ -167,7 +167,7 @@ read_ipums_micro_list(cps_hier_ddi)
 loading by selecting only a subset of columns or a limited number of
 rows. See the documentation for more details about other options.
 
-## Reading Aggregate Data Extracts
+## Reading IPUMS NHGIS extracts
 
 Unlike microdata projects, NHGIS extracts provide their data and
 metadata files bundled into a single .zip archive. `read_nhgis()`
@@ -192,9 +192,9 @@ attributes(nhgis_data$D6Z001)
 Variable metadata for NHGIS data are slightly different than those
 provided by microdata products. First, they come from a .txt codebook
 file rather than an .xml DDI file. Codebooks can still be loaded into an
-`ipums_ddi` object, but many fields that do not apply to aggregate data
+`ipums_ddi` object, but fields that do not apply to aggregate data
 will be empty. In general, NHGIS codebooks provide only variable labels
-and descriptions along with citation information.
+and descriptions, along with citation information.
 
 ```{r}
 nhgis_cb <- read_nhgis_codebook(nhgis_ex1)
@@ -274,8 +274,8 @@ read_nhgis(nhgis_ex2, file_select = 1)
 
 NHGIS data are most easily handled when in .csv format. `read_nhgis()`
 uses `readr::read_csv()` to handle the generation of column type
-specifications. If the guessed specifications are incorrect, you can use
-`read_csv()` arguments to adjust. This is most likely to occur for
+specifications. If the guessed specifications are incorrect, you can use the
+`col_types` argument to adjust. This is most likely to occur for
 columns that contain geographic codes that are stored as numeric values:
 
 ```{r}
@@ -286,12 +286,6 @@ read_nhgis(
   verbose = FALSE
 )
 ```
-
-Note that some readr options may conflict with ipumsr data loading
-conventions. For instance, codebook metadata are attached by matching on
-column name. Altering names on load will prevent the addition of
-metadata for these columns (though the metadata can still be viewed in
-the codebook itself).
 
 #### Fixed-width data
 
@@ -311,11 +305,8 @@ driven by the column parsing information contained in the .do file
 provided in the .zip archive. This contains information not only about
 column positions and data types, but also implicit decimals in the data.
 
-It is possible to load fixed-width data manually using arguments passed
-to `readr::read_fwf()` but this will not include handling of implicit
-decimals, and you may end up with confusing or incorrect values. In
-general, if you no longer have access to the .do file, it is best to
-resubmit and/or re-download the extract (you can also consider
+If you no longer have access to the .do file, it is best to
+resubmit and/or re-download the extract (you may also consider
 converting to .csv format in the process). If you have moved the .do
 file, provide its file path to the `do_file` argument to use its column
 parsing information.
@@ -326,7 +317,7 @@ still handled by providing the path to the *data file*, not the
 `data_file` argument of `read_nhgis()`). This is for syntactical
 consistency with the loading of NHGIS .csv files.
 
-## Reading Spatial Data
+## Reading spatial data
 
 IPUMS distributes spatial data for several projects.
 
@@ -383,7 +374,7 @@ columns.
 Once joined, data include both statistical and spatial information along
 with the variable metadata.
 
-#### Harmonized vs. non-harmonized data
+### Harmonized vs. non-harmonized data
 
 Longitudinal analysis of geographic data is complicated by the fact that
 geographic boundaries shift over time. IPUMS therefore provides multiple

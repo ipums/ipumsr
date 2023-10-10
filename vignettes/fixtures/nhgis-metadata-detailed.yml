@@ -1,0 +1,150 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/1900_cAg?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 13 Jul 2023 16:51:20 GMT
+      etag: W/"d05cc1e6cb02f78834fef6cc4a36f845"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: f00d2ab3-4ca0-4c35-b430-24b6ad4db39c
+      x-runtime: '0.008456'
+      x-xss-protection: '0'
+      content-length: '6923'
+    body:
+      encoding: ''
+      file: no
+      string: '{"name":"1900_cAg","nhgisId":"ds30","group":"1900 Census","description":"Agriculture
+        Data [US, States \u0026 Counties]","sequence":1401,"hasMultipleDataTypes":false,"dataTables":[{"name":"NT1","nhgisCode":"AWS","description":"Total
+        Population","sequence":1},{"name":"NT2","nhgisCode":"AW3","description":"Number
+        of Farms","sequence":2},{"name":"NT3","nhgisCode":"AXE","description":"Average
+        Farm Size","sequence":3},{"name":"NT4","nhgisCode":"AXP","description":"Farm
+        Acreage","sequence":4},{"name":"NT5","nhgisCode":"AXZ","description":"Farm
+        Management","sequence":5},{"name":"NT6","nhgisCode":"AYA","description":"Race
+        of Farmer","sequence":6},{"name":"NT7","nhgisCode":"AYJ","description":"Race
+        of Farmer by Detailed Management","sequence":7},{"name":"NT8","nhgisCode":"AYK","description":"Number
+        of Farms","sequence":8},{"name":"NT9","nhgisCode":"AYL","description":"Farms
+        with Buildings","sequence":9},{"name":"NT10","nhgisCode":"AWT","description":"Acres
+        of Farmland","sequence":10},{"name":"NT11","nhgisCode":"AWU","description":"Improved
+        Acres of Farmland","sequence":11},{"name":"NT12","nhgisCode":"AWV","description":"Value
+        of Farm Property (Including Land, Buildings, Equipment, and Livestock)","sequence":12},{"name":"NT13","nhgisCode":"AWW","description":"Value
+        of Farm Property","sequence":13},{"name":"NT14","nhgisCode":"AWX","description":"Value
+        of Farm Products Not Fed to Livestock, 1899","sequence":14},{"name":"NT15","nhgisCode":"AWY","description":"Expenditures
+        for Farm Labor, 1899","sequence":15},{"name":"NT16","nhgisCode":"AWZ","description":"Expenditures
+        for Fertilizer, 1899","sequence":16},{"name":"NT17","nhgisCode":"AW0","description":"Land
+        Surface Area","sequence":17},{"name":"NT18","nhgisCode":"AW1","description":"Farms
+        Reporting Animals","sequence":18},{"name":"NT19","nhgisCode":"AW2","description":"Total
+        Value of Domestic Animals of Reporting Farms","sequence":19},{"name":"NT20","nhgisCode":"AW4","description":"Location
+        of Domestic Livestock by Type of Animal","sequence":20},{"name":"NT21","nhgisCode":"AW5","description":"Value
+        of Animals Sold Live and Slaughtered, 1899","sequence":21},{"name":"NT22","nhgisCode":"AW6","description":"Farms
+        Reporting Domestic Animals Not on Farms or Inclosures","sequence":22},{"name":"NT23","nhgisCode":"AW7","description":"Livestock
+        Not on Farms or Ranges","sequence":23},{"name":"NT24","nhgisCode":"AW8","description":"Farms
+        Reporting Dairy Products","sequence":24},{"name":"NT25","nhgisCode":"AW9","description":"Value
+        of All Dairy Products, 1899","sequence":25},{"name":"NT26","nhgisCode":"AXA","description":"Value
+        of All Dairy Products Consumed on the Farm, 1899","sequence":26},{"name":"NT27","nhgisCode":"AXB","description":"Dairy
+        Products Produced, 1899","sequence":27},{"name":"NT28","nhgisCode":"AXC","description":"Dairy
+        Products Sold, 1899","sequence":28},{"name":"NT29","nhgisCode":"AXD","description":"Number
+        of Fowl, 3 Months Old and Older","sequence":29},{"name":"NT30","nhgisCode":"AXF","description":"Total
+        Value of All Poultry, 1899","sequence":30},{"name":"NT31","nhgisCode":"AXG","description":"Value
+        of All Poultry Raised in 1899","sequence":31},{"name":"NT32","nhgisCode":"AXH","description":"Dozens
+        of Eggs Produced, 1899","sequence":32},{"name":"NT33","nhgisCode":"AXI","description":"Number
+        of Swarms of Bees","sequence":33},{"name":"NT34","nhgisCode":"AXJ","description":"Value
+        of Bees, 1899","sequence":34},{"name":"NT35","nhgisCode":"AXK","description":"Bee
+        Products","sequence":35},{"name":"NT36","nhgisCode":"AXL","description":"Fleeces
+        Shorn, Fall, 1899 and Spring, 1900","sequence":36},{"name":"NT37","nhgisCode":"AXM","description":"Pounds
+        of Unwashed Fleeces Shorn, Fall, 1899 and Spring, 1900","sequence":37},{"name":"NT38","nhgisCode":"AXN","description":"Crop
+        Acreage, 1899","sequence":38},{"name":"NT39","nhgisCode":"AXO","description":"Crop
+        Production, 1899","sequence":39},{"name":"NT40","nhgisCode":"AXQ","description":"Square
+        Feet of Land Under Glass","sequence":40},{"name":"NT42","nhgisCode":"AXR","description":"500-Pound
+        Bales Reported by Ginners by Cotton Type, 1899","sequence":41},{"name":"NT43","nhgisCode":"AXS","description":"Average
+        Gross Weight of Bales by Cotton Type and Bale Type, 1899","sequence":42},{"name":"NT44","nhgisCode":"AXT","description":"Amount
+        of Sugar Sold by Sugar Type, 1899","sequence":43},{"name":"NT45","nhgisCode":"AXU","description":"Value
+        of Miscellaneous Crops, 1899","sequence":44},{"name":"NT46","nhgisCode":"AXV","description":"Orchard
+        Trees","sequence":45},{"name":"NT47","nhgisCode":"AXW","description":"Miscellaneous
+        Fruit and Nut Products, 1899","sequence":46},{"name":"NT48","nhgisCode":"AXX","description":"Number
+        of Grape Vines","sequence":47},{"name":"NT49","nhgisCode":"AXY","description":"Subtropical
+        Fruit and Nut Trees","sequence":48},{"name":"NT50","nhgisCode":"AX0","description":"Small
+        Fruit Acreage, 1899","sequence":49},{"name":"NT51","nhgisCode":"AX1","description":"Fruit
+        and Nut Production, 1899","sequence":50},{"name":"NT52","nhgisCode":"AX2","description":"Value
+        of Miscellaneous Products, 1899","sequence":51},{"name":"NT53","nhgisCode":"AX3","description":"Value
+        of Fruit and Nut Production, 1899","sequence":52},{"name":"NT54","nhgisCode":"AX4","description":"Flower
+        and Plant, Nursery, and Seed Acreage, 1899","sequence":53},{"name":"NT55","nhgisCode":"AX5","description":"Value
+        of Flower and Plant, Nursery, and Seed Products Sold, 1899","sequence":54},{"name":"NT56","nhgisCode":"AX6","description":"Square
+        Feet of Glass Surface at Florists'' Establishments, 1899","sequence":55},{"name":"NT57","nhgisCode":"AX7","description":"Number
+        of Irrigators, 1899","sequence":56},{"name":"NT58","nhgisCode":"AX8","description":"Irrigated
+        Acres, 1899","sequence":57},{"name":"NT59","nhgisCode":"AX9","description":"Number
+        of Irrigated Farms, 1899","sequence":58},{"name":"NT60","nhgisCode":"AYB","description":"Improved
+        Acres Irrigated, 1899","sequence":59},{"name":"NT61","nhgisCode":"AYC","description":"Acres
+        Irrigated by Irrigation Systems, 1899","sequence":60},{"name":"NT62","nhgisCode":"AYD","description":"Number
+        of Irrigation Systems Operated by Type, 1899","sequence":61},{"name":"NT63","nhgisCode":"AYE","description":"Miles
+        of Stream and Ditch Irrigation Systems Operated, 1899","sequence":62},{"name":"NT64","nhgisCode":"AYF","description":"Cost
+        of Irrigation by Type, 1899","sequence":63},{"name":"NT65","nhgisCode":"AYG","description":"Cost
+        of Irrigation System Construction","sequence":64},{"name":"NT66","nhgisCode":"AYH","description":"Farm
+        Homes","sequence":65},{"name":"NT67","nhgisCode":"AYI","description":"Farm
+        Homes by Tenure","sequence":66}],"geogLevels":[{"name":"nation","description":"Nation","hasGeogExtentSelection":false,"sequence":1},{"name":"state","description":"State","hasGeogExtentSelection":false,"sequence":4},{"name":"county","description":"State--County","hasGeogExtentSelection":false,"sequence":25}]}'
+  recorded_at: 2023-07-13 16:51:20 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/nhgis/datasets/1900_cAg/data_tables/NT2?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Thu, 13 Jul 2023 16:51:20 GMT
+      etag: W/"0d18004dc21f56f8ac68449668304dcf"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: a29daa50-4cb8-4111-ba19-cd887db658f0
+      x-runtime: '0.008697'
+      x-xss-protection: '0'
+      content-length: '180'
+    body:
+      encoding: ''
+      file: no
+      string: '{"name":"NT2","description":"Number of Farms","universe":"Farms","nhgisCode":"AW3","sequence":2,"datasetName":"1900_cAg","variables":[{"description":"Total","nhgisCode":"AW3001"}]}'
+  recorded_at: 2023-07-13 16:51:20 GMT
+  recorded_with: vcr/1.2.0, webmockr/0.9.0

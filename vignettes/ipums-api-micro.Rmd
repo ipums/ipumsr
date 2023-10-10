@@ -1,0 +1,452 @@
+---
+title: "Microdata API Requests"
+author: "Institute for Social Research and Data Innovation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Microdata API Requests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, echo=FALSE, results="hide"}
+library(vcr)
+
+vcr_dir <- "fixtures"
+
+have_api_access <- TRUE
+
+if (!nzchar(Sys.getenv("IPUMS_API_KEY"))) {
+  if (dir.exists(vcr_dir) && length(dir(vcr_dir)) > 0) {
+    # Fake API token to fool ipumsr API functions
+    Sys.setenv("IPUMS_API_KEY" = "foobar")
+  } else {
+    # If there are no mock files nor API token, can't run API tests
+    have_api_access <- FALSE
+  }
+}
+
+vcr_configure(
+  filter_sensitive_data = list(
+    "<<<IPUMS_API_KEY>>>" = Sys.getenv("IPUMS_API_KEY")
+  ),
+  write_disk_path = vcr_dir,
+  dir = vcr_dir
+)
+
+check_cassette_names()
+```
+
+This vignette details the options available for requesting data from IPUMS
+microdata projects via the IPUMS API.
+
+If you haven't yet learned the basics of the IPUMS API workflow, you may want
+to start with the [IPUMS API introduction](ipums-api.html). The code below
+assumes you have registered and set up your API key as described there.
+
+## Supported microdata collections
+
+IPUMS provides several data collections that are classified as microdata. 
+Currently, the following microdata collections are supported by the IPUMS 
+API (shown with the codes used to refer to them in ipumsr):
+
+* IPUMS USA (`"usa"`)
+* IPUMS CPS (`"cps"`)
+* IPUMS International (`"ipumsi"`)
+
+API support will continue to be added for more collections in the future. 
+See the [API documentation](https://developer.ipums.org/docs/apiprogram/)
+for more information on upcoming additions to the API.
+
+In addition to microdata projects, the IPUMS API also supports IPUMS NHGIS
+data. For details about obtaining IPUMS NHGIS data using ipumsr, see
+the [NHGIS-specific vignette](ipums-api-nhgis.html).
+
+Before getting started, we'll load ipumsr and 
+[dplyr](https://dplyr.tidyverse.org/), which will be helpful for this demo:
+
+```{r, message=FALSE}
+library(ipumsr)
+library(dplyr)
+```
+
+## Basic IPUMS microdata concepts
+
+Every microdata extract definition must contain a set of requested _samples_ and
+_variables_.
+
+In an IPUMS microdata collection, a _sample_ refers to a distinct combination 
+of records and variables. A record is a set of values that describe 
+the characteristics of a single unit of measurement (e.g. a single
+person or a single household), and _variables_ define the characteristics 
+that were measured.
+
+A single sample can contain multiple record types (e.g. person records, 
+household records, or activity records, and more), each of which correspond to 
+different units of measurement.
+
+Note that our usage of 
+the term "sample" does not correspond perfectly to the statistical sense of a 
+subset of individuals from a population. Many IPUMS samples are samples in 
+the statistical sense, but some are "full-count" samples, meaning they contain 
+all individuals in a population.
+
+## IPUMS microdata metadata (forthcoming)
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+insert_cassette("micro-sample-ids")
+```
+
+Of course, to request samples and variables, we have to know 
+the codes that the API uses to refer to them. For samples, the IPUMS API uses 
+special codes that don't appear in the web-based extract builder. For variables,
+the API uses the same variable names that appear on the web.
+
+While the IPUMS API does not yet provide a comprehensive set of metadata 
+endpoints for IPUMS microdata collections, users can use the `get_sample_info()`
+function to identify the codes used to refer to specific samples when 
+communicating with the API.
+
+```{r}
+cps_samps <- get_sample_info("cps")
+
+head(cps_samps)
+```
+
+The values listed in the `name` column correspond to the code that you would 
+use to request that sample when creating an extract definition to be submitted 
+to the IPUMS API.
+
+We can use basic functions from dplyr to 
+filter the metadata to samples of
+interest. For instance, to find all IPUMS International samples for Mexico, we
+could do the following:
+
+```{r}
+ipumsi_samps <- get_sample_info("ipumsi")
+
+ipumsi_samps %>% 
+  filter(grepl("Mexico", description))
+```
+
+IPUMS intends to add support for accessing variable metadata via API 
+in the future. Until then, use the web-based extract builder for a given 
+collection to find variable names and availability by sample. 
+See the 
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/) 
+for links to the extract builder for each microdata collection with API support.
+
+Alternatively, if you have made an extract previously through the web 
+interface, you can use `get_extract_info()` to identify the variable names it 
+includes. See the [IPUMS API introduction](ipums-api.html) for more 
+details.
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+eject_cassette("micro-sample-ids")
+```
+
+## Defining an IPUMS microdata extract request
+
+Each IPUMS collection has its own extract definition function that is
+used to specify the parameters of a new extract request from scratch.
+These functions take the form `define_extract_*()`. For microdata collections,
+we have:
+
+-   IPUMS USA: `define_extract_usa()`
+-   IPUMS CPS: `define_extract_cps()`
+-   IPUMS International: `define_extract_ipumsi()`
+
+When you define an extract request, you can specify the data to be
+included in the extract and indicate the desired format and layout.
+
+While each microdata collection has its own extract definition function,
+each uses the same syntax. The examples in this vignette use multiple
+collections, but the syntax they demonstrate can be applied to all of the
+supported microdata collections.
+
+A simple extract definition needs only to contain the names of the
+samples and variables to include in the request:
+
+```{r}
+cps_ext <- define_extract_cps(
+  description = "Example CPS extract",
+  samples = c("cps2018_03s", "cps2019_03s"),
+  variables = c("AGE", "SEX", "RACE", "STATEFIP")
+)
+
+cps_ext
+```
+
+This produces an `ipums_extract` object containing the extract request
+specifications that is ready to be submitted to the IPUMS API.
+
+When you request a variable in your extract definition, the resulting data 
+extract will include that variable for all requested samples where it is 
+available. If you request a variable that is not available for any requested 
+samples, the IPUMS API will throw an informative error when you try to submit 
+your request.
+
+Beyond just specifying samples and variables, there are several additional 
+options available to refine the data 
+requested in a microdata extract request.
+
+## Detailed variable specifications
+
+The IPUMS API supports several detailed specification options that can be 
+applied to individual variables in an extract request: case selections,
+attached characteristics, and data quality flags.
+
+Before we describe each of these options in depth, we'll introduce the syntax
+used to add them to your extract definition.
+
+### Syntax
+
+To add any of these options to a variable, we need to 
+introduce the `var_spec()` helper function.
+
+`var_spec()` bundles all the selections for a given variable together into a 
+single object (in this case, a `var_spec` object):
+
+```{r}
+var <- var_spec("SEX", case_selections = "2")
+
+str(var)
+```
+
+To include this specification in our extract, we simply provide it to the
+`variables` argument of our extract definition. When multiple variables are
+included, pass a `list` of `var_spec` objects:
+
+```{r}
+define_extract_cps(
+  description = "Case selection example",
+  samples = c("cps2018_03s", "cps2019_03s"),
+  variables = list(
+    var_spec("SEX", case_selections = "2"),
+    var_spec("AGE", attached_characteristics = "head")
+  )
+)
+```
+
+In fact, if you investigate our original extract object from above, you'll 
+notice that the variables have automatically been converted to 
+`var_spec` objects, even though they were provided as character vectors:
+
+```{r}
+str(cps_ext$variables)
+```
+
+So, a `var_spec` object with no additional specifications will produce
+the default data for a given variable. That is, the following are equivalent:
+
+```{r, eval=FALSE}
+define_extract_cps(
+  description = "Example CPS extract",
+  samples = "cps2018_03s",
+  variables = "AGE"
+)
+
+define_extract_cps(
+  description = "Example CPS extract",
+  samples = "cps2018_03s",
+  variables = var_spec("AGE")
+)
+```
+
+Because all specified variables are converted to `var_spec` objects, you can 
+also pass a list where some elements are `var_spec` objects and some are just 
+variable names. This is convenient when you only have detailed specifications 
+for a subset of variables:
+
+```{r}
+define_extract_cps(
+  description = "Case selection example",
+  samples = c("cps2018_03s", "cps2019_03s"),
+  variables = list(
+    var_spec("SEX", case_selections = "2"),
+    "AGE"
+  )
+)
+```
+
+
+(Samples are also converted to their own `samp_spec` objects, but as
+there currently aren't any additional specifications available for samples,
+there is no reason to use anything other than a character vector in the 
+`samples` argument.)
+
+Now that we've covered the basic syntax for including detailed variable
+specifications, we can describe the available options in more depth.
+
+### Case selections
+
+Case selections allow us to limit the data to those
+records that match a particular value on the specified variable.
+
+For instance, the following specification would indicate that
+only records with a value of `"27"` (Minnesota) or 
+`"19"` (Iowa) for the variable `"STATEFIP"` should be included:
+
+```{r}
+var <- var_spec("STATEFIP", case_selections = c("27", "19"))
+```
+
+Some variables have versions with both general and detailed coding schemes.
+By default, case selections are interpreted to refer to the general codes:
+
+```{r}
+var$case_selection_type
+```
+
+For variables with detailed versions, you can also select on the detailed codes. 
+
+For instance, the IPUMS USA variable RACE is available in both general and detailed 
+versions. If you wanted to limit your extract to persons identifying as 
+"Two major races", you could do so by specifying a case selection of `"8"`.
+However, if you wanted to limit your extract to only persons identifying as 
+"White and Chinese" or "White and Japanese", you would need to specify 
+_detailed_ codes `"811"` and `"812"`.
+
+To include case selections for detailed codes, set 
+`case_selection_type = "detailed"`:
+
+```{r}
+# General case selection is the default
+var_spec("RACE", case_selections = "8")
+
+# For detailed case selection, change the `case_selection_type`
+var_spec(
+  "RACE", 
+  case_selections = c("811", "812"), 
+  case_selection_type = "detailed"
+)
+```
+
+
+As noted above, IPUMS intends to add support for accessing variable metadata via API 
+in the future, such that users will be able to query variable coding schemes 
+right from their R sessions.
+Until then, use the IPUMS web interface for a given collection to 
+find general and detailed variable codes for the purposes of case selection. 
+See the 
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/) 
+for relevant links.
+
+By default, case selection on person-level variables produces a data file that 
+includes only those individuals who match the specified 
+values for the specified variables. It's also possible to use case selection to 
+include matching individuals _and_ all other members of their households, using 
+the `case_select_who` parameter.
+
+The `case_select_who` parameter must be the same for all case selections in an 
+extract, and thus is set at the extract level rather than the `var_spec` level. 
+To include all household members of matching individuals,
+set `case_select_who = "households"` in the extract definition:
+
+```{r}
+define_extract_usa(
+  description = "Household level case selection",
+  samples = "us2021a",
+  variables = var_spec("RACE", case_selections = "8"),
+  case_select_who = "households"
+)
+```
+
+### Attached characteristics
+
+IPUMS allows users to create variables that reflect the characteristics of other 
+household members. To do so, use the `attached_characteristics` argument of
+`var_spec()`.
+
+For instance, to attach the spouse's SEX value to a record:
+
+```{r}
+var_spec("SEX", attached_characteristics = "spouse")
+```
+
+This will add a new variable (in this case, SEX_SP) to the output data that 
+will contain the sex of a person's spouse (if no such record exists, the 
+value will be 0).
+
+Multiple attached characteristics can be attached for a single variable:
+
+```{r}
+var_spec("AGE", attached_characteristics = c("mother", "father"))
+```
+
+Acceptable values are `"spouse"`, `"mother"`, `"father"`, and `"head"`.
+
+### Data quality flags
+
+Some variables in the IPUMS have been edited for missing, illegible, and 
+inconsistent values. Data quality flags indicate which values are edited
+or allocated.
+
+To include data quality flags for an individual variable, use the 
+`data_quality_flags` argument to `var_spec()`:
+
+```{r}
+var_spec("RACE", data_quality_flags = TRUE)
+```
+
+This will produce a new variable (QRACE) containing the data quality flag for 
+the given variable.
+
+To add data quality flags for all variables that have them, set
+`data_quality_flags = TRUE` in your extract definition directly:
+
+```{r}
+usa_ext <- define_extract_usa(
+  description = "Data quality flags",
+  samples = "us2021a",
+  variables = list(
+    var_spec("RACE", case_selections = "8"),
+    var_spec("AGE")
+  ),
+  data_quality_flags = TRUE
+)
+```
+
+Each data quality flag corresponds to one or more variables, and the codes for 
+each flag vary based on the sample. See the documentation for the IPUMS
+collection of interest for more information about data quality flag codes.
+
+## Data structure and file format
+
+By default, microdata extract definitions will request data in a rectangular
+structure and fixed-width file format. 
+
+Rectangular data are data where only person records are included, and any 
+household-level variables are converted to person-level variables by copying the 
+values from the associated household record onto all household members. 
+
+To instead create a hierarchical extract, which includes separate records for 
+households and persons, set `data_structure = "hierarchical"` in your extract 
+definition.
+
+See the [IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
+for more information about loading hierarchical data into R.
+
+To request a file format other than fixed-width, adjust the `data_format` 
+argument. Note that
+while you can request data in a variety of formats (Stata, SPSS, etc.), 
+ipumsr's `read_ipums_micro()` function only supports fixed-width and csv files.
+
+## Next steps
+
+Once you have defined an extract request, you can submit the extract for
+processing:
+
+```{r, eval=FALSE}
+usa_ext_submitted <- submit_extract(usa_ext)
+```
+
+The workflow for submitting and monitoring an extract request and downloading
+its files when complete is described in the 
+[IPUMS API introduction](ipums-api.html).

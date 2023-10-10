@@ -47,10 +47,16 @@
 ipums_bind_rows <- function(..., .id = NULL) {
   # TODO: Rewrite in C++?
   # Definitely not exactly the same logic as dplyr, but should cover most cases
-  d_list <- rlang::squash_if(
-    rlang::dots_values(...),
-    function(x) is.list(x) && !is.data.frame(x)
-  )
+  d_list <- purrr::list_flatten(list(...))
+
+  if (!all(purrr::map_lgl(d_list, is.data.frame))) {
+    rlang::abort(
+      paste0(
+        "Each argument to `ipums_bind_rows()` must be a data.frame or a ",
+        "list of data.frames."
+      )
+    )
+  }
 
   unique_var_names <- unique(purrr::flatten_chr(purrr::map(d_list, names)))
 

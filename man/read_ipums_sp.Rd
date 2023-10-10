@@ -15,8 +15,8 @@ read_ipums_sp(
 )
 }
 \arguments{
-\item{shape_file}{Path to a single .shp file, or a .zip archive or
-directory containing at least one .shp file. See Details section.}
+\item{shape_file}{Path to a single .shp file or a .zip archive
+containing at least one .shp file. See Details section.}
 
 \item{shape_layer}{If \code{shape_file} contains multiple files, an expression
 identifying the files to load. Accepts a character string specifying the
@@ -39,8 +39,8 @@ not be able to be combined (e.g. \code{SpatialPolygonsDataFrame} and
 \code{SpatialPointsDataFrame}).}
 
 \item{add_layer_var}{If \code{TRUE}, add a variable to the output data indicating
-the file that each row originates from. Defaults to \code{TRUE} if
-\code{bind_multiple = TRUE} and \code{FALSE} otherwise.
+the file that each row originates from. Defaults to \code{FALSE} unless
+\code{bind_multiple = TRUE} and multiple files exist in \code{shape_file}.
 
 The column name will always be prefixed with \code{"layer"}, but will be
 adjusted to avoid name conflicts if another column named \code{"layer"} already
@@ -54,8 +54,7 @@ A \code{SpatialPolygonsDataFrame} or \code{SpatialPointsDataFrame} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Read spatial data from an IPUMS extract into R using the
-\href{https://cran.r-project.org/web/packages/sp/index.html}{\code{sp}} package.
+Read spatial data from an IPUMS extract into R using the \code{sp} package.
 
 This function has been deprecated because of the upcoming retirement
 of the rgdal package. For more information, click
@@ -81,7 +80,7 @@ shape_file <- ipums_example("nhgis0972_shape_small.zip")
 
 # If sp package is available, can load as SpatialPolygonsDataFrame
 if (require(sp) && require(rgdal)) {
-  sp_data <- read_ipums_sp(shape_file)
+  sp_data <- read_ipums_sp(shape_file, verbose = FALSE)
 }
 }
 \keyword{internal}

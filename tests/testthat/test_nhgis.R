@@ -18,7 +18,7 @@ test_that("Can read NHGIS extract: single dataset", {
   )
 
   expect_message(
-    read_nhgis(nhgis_single_csv, verbose = FALSE, show_col_types = TRUE),
+    read_nhgis(nhgis_single_csv),
     "Column specification"
   )
 
@@ -95,43 +95,24 @@ test_that("Can read NHGIS extract: fixed-width files", {
     )
   )
 
-  expect_warning(
+  expect_error(
     read_nhgis(
       nhgis_multi_fwf,
       file_select = 1,
       do_file = FALSE,
       verbose = FALSE
-    ),
-    "Data loaded from NHGIS fixed-width files may not be consistent"
+    )
   )
 
-  expect_warning(
+  expect_error(
     read_nhgis(
       nhgis_multi_fwf,
       file_select = 1,
       do_file = "asdf",
       verbose = FALSE
     ),
-    "Could not find the provided `do_file`..+"
+    "Could not find the provided `do_file`."
   )
-
-  expect_warning(
-    nhgis_fwf2 <- read_nhgis(
-      nhgis_multi_fwf,
-      file_select = 1,
-      do_file = "asdf",
-      col_positions = readr::fwf_widths(1),
-      verbose = FALSE
-    ),
-    paste0(
-      "Only one of `col_positions` or `do_file` can be provided. ",
-      "Setting `do_file = FALSE`"
-    )
-  )
-
-  expect_equal(nrow(nhgis_fwf1), nrow(nhgis_fwf2))
-  expect_equal(ncol(nhgis_fwf2), 1)
-  expect_equal(colnames(nhgis_fwf2), "X1")
 
   expect_equal(
     attributes(nhgis_fwf1$AJWBE001),
@@ -260,16 +241,38 @@ test_that("Can still find codebook if file_select matches data file only", {
   )
 })
 
+test_that("Can still find codebook if direct data file path provided", {
+  temp_dir <- tempfile()
+  dir.create(temp_dir)
+  unzipped <- utils::unzip(nhgis_single_csv, exdir = temp_dir)
+  on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE, after = FALSE)
+
+  data_file <- unzipped[fostr_detect(unzipped, ".csv$")]
+
+  expect_message(
+    x <- read_nhgis(data_file),
+    "Use of data from NHGIS"
+  )
+
+  expect_equal(
+    ipums_var_info(x)$var_name,
+    colnames(x)
+  )
+
+  expect_equal(
+    ipums_var_info(x)$var_label,
+    unname(purrr::map_chr(x, ~attributes(.x)$label))
+  )
+})
+
 # Can read data when provided in zip, dir, and shp formats -------
 
-test_that("We can pass arguments to underlying reader functions", {
+test_that("We can specify available readr options in read_nhgis()", {
   expect_silent(
     nhgis_data <- read_nhgis(
       nhgis_single_csv,
       verbose = FALSE,
-      col_names = FALSE,
       col_types = readr::cols(.default = readr::col_character()),
-      skip = 1,
       remove_extra_header = TRUE
     )
   )
@@ -279,32 +282,36 @@ test_that("We can pass arguments to underlying reader functions", {
       nhgis_multi_fwf,
       file_select = 1,
       verbose = FALSE,
-      col_positions = readr::fwf_widths(c(4, 2, 2, 1)),
+      vars = 1:4,
       col_types = "ccil"
     ),
-    "Data loaded from NHGIS fixed-width files may not be consistent"
+    "One or more parsing issues"
   )
 
-  nhgis_data2 <- read_nhgis(
-    nhgis_single_csv,
+  nhgis_data_fwf2 <- read_nhgis(
+    nhgis_multi_fwf,
+    file_select = 1,
     verbose = FALSE,
-    col_names = c("A", "B"),
-    remove_extra_header = FALSE
+    vars = c(YEAR, STUSAB)
   )
 
-  expect_equal(nrow(nhgis_data), rows - 1)
-  expect_equal(colnames(nhgis_data), paste0("X", 1:vars_data))
+  expect_equal(nrow(nhgis_data), rows)
+  expect_equal(ncol(nhgis_data), vars_data)
   expect_equal(unique(purrr::map_chr(nhgis_data, class)), "character")
 
   expect_equal(nrow(nhgis_data_fwf), 1)
   expect_equal(ncol(nhgis_data_fwf), 4)
   expect_equal(
-    purrr::map_chr(nhgis_data_fwf, class),
-    c(X1 = "character", X2 = "character", X3 = "integer", X4 = "logical")
+    unname(purrr::map_chr(nhgis_data_fwf, class)),
+    c("character", "character", "integer", "logical")
   )
 
-  expect_equal(colnames(nhgis_data2)[1:2], c("A", "B"))
-  expect_equal(nhgis_data2[[1]][1], "GIS Join Match Code")
+  expect_equal(colnames(nhgis_data_fwf2), c("YEAR", "STUSAB"))
+
+  expect_equal(
+    nrow(read_nhgis(nhgis_single_csv, n_max = 10)),
+    10
+  )
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
@@ -408,80 +415,16 @@ test_that("Can read NHGIS codebook", {
   )
 })
 
-test_that("Can read certain unzipped structures", {
-  sps_tmpfile <- file.path(tempdir(), "test.sps")
-  csv_tmpfile1 <- file.path(tempdir(), "test1.csv")
-  csv_tmpfile2 <- file.path(tempdir(), "test2.csv")
-  dat_tmpfile <- file.path(tempdir(), "test.dat")
+test_that("Can read unzipped NHGIS files", {
+  test_path <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
 
-  on.exit(unlink(sps_tmpfile), add = TRUE, after = FALSE)
-  on.exit(unlink(csv_tmpfile1), add = TRUE, after = FALSE)
-  on.exit(unlink(csv_tmpfile2), add = TRUE, after = FALSE)
-  on.exit(unlink(dat_tmpfile), add = TRUE, after = FALSE)
-
-  # Non-csv or dat file should not interfere with reading:
-  readr::write_lines("A", sps_tmpfile)
-
-  expect_error(
-    read_nhgis(tempdir()),
-    "No .csv or .dat files found"
+  x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1))
+  x2 <- read_nhgis(
+    file.path(test_path, "test1.csv"),
+    var_attrs = NULL,
+    verbose = FALSE
   )
 
-  # Single file should read normally, but should warn
-  # that no codebook is available.
-  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile1)
-
-  expect_warning(
-    x1 <- read_nhgis(tempdir()),
-    "Unable to read codebook"
-  )
-
-  expect_message(
-    x2 <- read_nhgis(file.path(tempdir(), "test1.csv"), var_attrs = NULL),
-    "Use of data from NHGIS"
-  )
-
-  # NB: First row is removed because read_nhgis thinks this fake extract has an
-  # extra header row. Not a concern here.
   expect_equal(x1$a, "b")
   expect_equal(x1, x2)
-
-  # Multiple files should throw same errors even if unzipped:
-  readr::write_csv(tibble::tibble(a = c("a", "b")), csv_tmpfile2)
-
-  expect_error(
-    read_nhgis(tempdir()),
-    "Multiple files found"
-  )
-
-  expect_equal(
-    read_nhgis(tempdir(), file_select = 1, var_attrs = NULL),
-    x1
-  )
-
-  # Both csv and dat is ambiguous:
-  readr::write_csv(tibble::tibble(a = "a"), dat_tmpfile)
-
-  expect_error(
-    read_nhgis(tempdir()),
-    "Both .csv and .dat files found.+Use the `file_type` argument"
-  )
-
-  suppressWarnings(
-    x3 <- read_nhgis(tempdir(), file_type = "csv", file_select = 1)
-  )
-
-  expect_equal(x3, x1)
-
-  # Direct data file errors if mismatched extension
-  expect_error(
-    read_nhgis_fwf(csv_tmpfile1),
-    "Expected `file` to match extension"
-  )
-
-  # Reading a direct data file should ignore data layer
-  expect_equal(
-    suppressWarnings(read_nhgis(csv_tmpfile1, file_select = 3)),
-    x2
-  )
 })

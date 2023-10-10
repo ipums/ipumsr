@@ -2,7 +2,7 @@
 % Please edit documentation in R/web_url.R
 \name{ipums_website}
 \alias{ipums_website}
-\title{Launch a browser window to the ipums website}
+\title{Launch a browser window to an IPUMS metadata page}
 \usage{
 ipums_website(
   x,
@@ -38,12 +38,15 @@ Only used if specifying \code{project}, not \code{x}.}
 project does not provide variable-specific web pages.}
 }
 \value{
-The URL to the page on ipums.org (silently if launch is \code{TRUE})
+The URL to the IPUMS webpage for the indicated project and variable
+(silently if launch is \code{TRUE})
 }
 \description{
 Using an \link{ipums_ddi} object or IPUMS project
 along with a variable name, guesses the most appropriate URL for
 the variable's page on the IPUMS website.
+
+Currently, this is only available for Windows operating systems.
 }
 \details{
 Note that some IPUMS projects (e.g. NHGIS) do not have variable-specific
@@ -53,10 +56,7 @@ The generated URL may not work for variables that are constructed during the
 extract creation process.
 }
 \examples{
-ddi <- read_ipums_ddi(ipums_example("cps_00006.xml"))
-
-# Get URL for information about a particular variable
-ipums_website(ddi, "MONTH", launch = FALSE)
+ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
 
 \dontrun{
 # Launch webpage for particular variable

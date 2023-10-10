@@ -1,4 +1,4 @@
 library(testthat)
 library(ipumsr)
 
-test_check("ipumsr")
+test_check("ipumsr", reporter = "location")

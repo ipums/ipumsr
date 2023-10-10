@@ -1,17 +1,11 @@
-
 # Make down-sampled version of a CPS extract for use in the big data vignette
 #
-# As part of our effort to remove the soft-dependence of ipumsr on the
-# ipumsexamples package, we needed to create a smaller version of the CPS
+# We needed to create a smaller version of the CPS
 # extract used as example data in the big data vignette.
 #
 # This script produces:
 #   * inst/extdata/cps_00097.xml
 #   * inst/extdata/cps_00097.dat.gz
-#
-# Which are down-sampled versions of what was previously:
-#   * ipumsexamples/inst/extdata/cps_00011.xml
-#   * ipumsexamples/inst/extdata/cps_00011.dat.gz
 #
 # Used in big data vignette
 devtools::load_all()
