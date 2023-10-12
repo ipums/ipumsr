@@ -9,7 +9,8 @@
 # Default to ISO-8859-1 (eg latin1), because most IPUMS data appears to
 # use this. Notably, DDI's explicitly declare it often, and NHGIS is
 # (some county names have diacritics).
-# However, UTF-8 appears in Terrapop Area extracts (and maybe microdata?)
+# However, UTF-8 formerly appeared in Terrapop Area extracts (and maybe
+# microdata?)
 ipums_locale <- function(encoding = NULL) {
   if (is.null(encoding)) {
     encoding <- "ISO-8859-1"

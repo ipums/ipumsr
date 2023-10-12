@@ -494,8 +494,6 @@ test_that("Download extract errors on incomplete extract", {
 test_that("Can read downloaded files with ipumsr readers", {
   skip_if_no_api_access(have_api_access)
   skip_if_not_installed("sf")
-  skip_if_not_installed("rgdal")
-  skip_if_not_installed("sp")
 
   vcr::use_cassette("submitted-nhgis-extract", {
     submitted_nhgis_extract <- submit_extract(test_nhgis_extract())

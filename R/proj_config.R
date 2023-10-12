@@ -24,7 +24,6 @@
 # IHIS Ex: https://ihis.ipums.org/ihis-action/variables/ABGASTRUBYR
 # Higher Ed Ex: https://highered.ipums.org/highered-action/variables/ACADV
 # NHGIS Ex: https://data2.nhgis.org/main (can't get to specific variable...)
-# Terrapop Ex: https://data.terrapop.org/ (can't get to specific variable...)
 
 # Project specific configurations ------
 

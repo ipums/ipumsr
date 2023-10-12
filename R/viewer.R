@@ -60,18 +60,6 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
 
   htmltools::save_html(html_page, out_file)
 
-  on.exit(
-    unlink(list.files(tempdir(), ".html", full.names = TRUE)),
-    add = TRUE,
-    after = FALSE
-  )
-
-  on.exit(
-    unlink(file.path(tempdir(), "lib"), recursive = TRUE),
-    add = TRUE,
-    after = FALSE
-  )
-
   if (launch) {
     if (requireNamespace("rstudioapi", quietly = TRUE)) {
       rstudioapi::viewer(out_file)
@@ -147,11 +135,19 @@ display_ipums_var_row <- function(var_name,
   code_instr <- split_double_linebreaks_to_ptags(code_instr)
 
   if (nrow(val_labels) > 0) {
+    # The line below is a hacky solution to a problem that collapses the
+    # height of the value labels table such that no rows are visible when viewed
+    # in the RStudio Viewer pane
+    val_lbls_height_in_pixels <- paste0(
+      200 + min(nrow(val_labels), 10) * 30,
+      "px"
+    )
     value_labels <- DT::datatable(
       val_labels,
       style = "bootstrap",
       rownames = FALSE,
-      width = "100%"
+      width = "100%",
+      height = val_lbls_height_in_pixels
     )
   } else {
     value_labels <- htmltools::tags$p("N/A")
@@ -166,7 +162,8 @@ display_ipums_var_row <- function(var_name,
     ),
     silent = TRUE
   )
-  if (inherits(class(url)[1], "try-error")) {
+
+  if (inherits(url, "try-error")) {
     link <- NULL
   } else {
     link <- htmltools::a(href = url, "More details")
@@ -231,7 +228,7 @@ expandable_div <- function(title, subtitle, content) {
 }
 
 split_double_linebreaks_to_ptags <- function(x) {
-  if (is.null(x)) {
+  if (is.null(x) || x == "") {
     return("")
   }
   out <- fostr_split(x, "\n\n")[[1]]
@@ -239,7 +236,7 @@ split_double_linebreaks_to_ptags <- function(x) {
 }
 
 convert_single_linebreak_to_brtags <- function(x) {
-  if (is.null(x)) {
+  if (is.null(x) || x == "") {
     return(NULL)
   }
 

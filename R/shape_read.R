@@ -110,20 +110,6 @@ read_ipums_sf <- function(shape_file,
 
   dir_read_deprecated(shape_file)
 
-  # dots <- rlang::list2(...)
-  #
-  # if (!missing(verbose)) {
-  #   lifecycle::deprecate_soft(
-  #     "0.6.0",
-  #     "read_ipums_sf(verbose = )",
-  #     "read_ipums_sf(quiet = )"
-  #   )
-  #
-  #   if (!"quiet" %in% names(dots)) {
-  #     dots$quiet <- !verbose
-  #   }
-  # }
-
   vars <- enquo(vars)
   load_sf_namespace()
 
@@ -144,33 +130,6 @@ read_ipums_sf <- function(shape_file,
   )
 
   encoding <- determine_encoding(read_shape_files, encoding)
-  #
-  # if (!any(grepl("ENCODING", dots$options))) {
-  #   dots$options <- c(paste0("ENCODING=", encoding), dots$options)
-  # } else {
-  #   rlang::warn(
-  #     paste0(
-  #       "Encoding specified in both `encoding` and `options` arguments. ",
-  #       "Using the value provided to `options`"
-  #     )
-  #   )
-  # }
-  #
-  # out <- purrr::map2(
-  #   read_shape_files,
-  #   encoding,
-  #   function(.x, .y) {
-  #     args <- c(list(.x), dots)
-  #
-  #     this_sf <- rlang::exec(sf::read_sf, !!!args)
-  #
-  #     if (!rlang::quo_is_null(vars)) {
-  #       this_sf <- dplyr::select(this_sf, !!vars)
-  #     }
-  #
-  #     this_sf
-  #   }
-  # )
 
   out <- purrr::map2(
     read_shape_files,
@@ -302,11 +261,8 @@ careful_sf_rbind <- function(sf_list, add_layer_var = NULL) {
 ## IPUMSI: Brazil has a cpg file indicating the encoding is ANSI 1252,
 ##         while China has UTF-8 (but only english characters)
 ## USA:   Also have cpg files.
-## Terrapop: Always UTF-8 (and sometimes has been ruined if the
-##           shape file comes from IPUMS International and wasn't
-##           UTF-8 to begin with.)
 # Current solution: If user specified encoding (or possibly came from
-# defaults of functions eg read_terra says UTF-8, but read_nghis says latin1),
+# defaults of functions eg read_nghis says latin1),
 # then use that. If not, and a cpg file exists, use that. Else, assume latin1.
 determine_encoding <- function(shape_file_vector, encoding = NULL) {
   if (!is.null(encoding)) {
