@@ -888,7 +888,7 @@ api_base_url <- function() {
   api_instance <- active_api_instance()
 
   if (api_instance == "" || api_instance == "internal") {
-    url <- "https://api.ipums.org"
+    url <- "https://api.ipums.org/"
   } else {
     url <- paste0("https://", api_instance, ".api.ipums.org/")
   }
