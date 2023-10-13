@@ -64,7 +64,7 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
     if (requireNamespace("rstudioapi", quietly = TRUE)) {
       rstudioapi::viewer(out_file)
     } else {
-      shell.exec(out_file)
+      utils::browseURL(out_file)
     }
     invisible(out_file)
   } else {
