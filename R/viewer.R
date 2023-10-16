@@ -65,8 +65,8 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
       rstudioapi::viewer(out_file)
     } else {
       rlang::abort(c(
-        "The rstudioapi package is required to use `ipums_view()`",
-        "i" = "Install it with `install.packages(\"rstudioapi\")`"
+        "RStudio and the rstudioapi package are required to use `ipums_view()`",
+        "i" = "Install rstudioapi with `install.packages(\"rstudioapi\")`"
       ))
     }
     invisible(out_file)
