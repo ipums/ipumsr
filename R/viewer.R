@@ -61,10 +61,13 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
   htmltools::save_html(html_page, out_file)
 
   if (launch) {
-    if (requireNamespace("rstudioapi", quietly = TRUE)) {
+    if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(out_file)
     } else {
-      utils::browseURL(out_file)
+      rlang::abort(c(
+        "The rstudioapi package is required to use `ipums_view()`",
+        "i" = "Install it with `install.packages(\"rstudioapi\")`"
+      ))
     }
     invisible(out_file)
   } else {
