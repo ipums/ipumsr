@@ -122,7 +122,7 @@ ipums_website.ipums_ddi <- function(x,
   )
 
   if (launch) {
-    system2("open", url)
+    utils::browseURL(url)
     invisible(url)
   } else {
     url
@@ -180,7 +180,7 @@ ipums_website.character <- function(x,
   )
 
   if (launch) {
-    system2("open", url)
+    utils::browseURL(url)
     invisible(url)
   } else {
     url
