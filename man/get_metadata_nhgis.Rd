@@ -76,29 +76,29 @@ data sources.
 \itemize{
 \item \strong{\code{name}:} The unique identifier for the dataset. This is the value that
 is used to refer to the dataset when interacting with the IPUMS API.
-\item \strong{\verb{group:}} The group of datasets to which the dataset belongs.
+\item \strong{\code{group}:} The group of datasets to which the dataset belongs.
 For instance, 5 separate datasets are part of the
 \code{"2015 American Community Survey"} group.
-\item \strong{\verb{description:}} A short description of the dataset.
-\item \strong{\verb{sequence:}} Order in which the dataset will appear in the metadata API
+\item \strong{\code{description}:} A short description of the dataset.
+\item \strong{\code{sequence}:} Order in which the dataset will appear in the metadata API
 and extracts.
-\item \strong{\verb{has_multiple_data_types:}} Logical value indicating whether multiple
+\item \strong{\code{has_multiple_data_types}:} Logical value indicating whether multiple
 data types exist for this dataset. For example, ACS
 datasets include both estimates and margins of error.
-\item \strong{\verb{data_tables:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
+\item \strong{\code{data_tables}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 codes, and descriptions for all data tables available for the dataset.
-\item \strong{\verb{geog_levels:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
+\item \strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 descriptions, and extent information for the geographic levels available
 for the dataset. The \code{has_geog_extent_selection} field contains logical
 values indicating whether extent selection is allowed (and required) for
 the associated geographic level. See \code{geographic_instances} below.
-\item \strong{\verb{breakdowns:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
+\item \strong{\code{breakdowns}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 types, descriptions, and breakdown values for all breakdowns available
 for the dataset.
-\item \strong{\verb{years:}} A vector of years for which the dataset is available. This
+\item \strong{\code{years}:} A vector of years for which the dataset is available. This
 field is only present if a dataset is available for multiple years. Note
 that ACS datasets are not considered to be available for multiple years.
-\item \strong{\verb{geographic_instances:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing
+\item \strong{\code{geographic_instances}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing
 names and descriptions for all valid geographic extents for the
 dataset. This field is only present if at least one of the dataset's
 \code{geog_levels} allows geographic extent selection.
@@ -120,8 +120,8 @@ code.
 API and extracts.
 \item \strong{\code{dataset_name}:} Name of the dataset to which this data table belongs.
 \item \strong{\code{n_variables}:} Number of variables included in this data table.
-\item \strong{\verb{variables:}} A \code{\link[tibble:tbl_df-class]{tibble}} containing variable
-descriptions and codes for the variables included in the data table.
+\item \strong{\code{variables}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing variable
+descriptions and codes for the variables included in the data table
 }
 }
 
