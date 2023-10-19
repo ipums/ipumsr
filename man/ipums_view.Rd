@@ -2,30 +2,48 @@
 % Please edit documentation in R/viewer.R
 \name{ipums_view}
 \alias{ipums_view}
-\title{View a static webpage with variable information from a IPUMS extract}
+\title{View a static webpage with variable metadata from an IPUMS extract}
 \usage{
 ipums_view(x, out_file = NULL, launch = TRUE)
 }
 \arguments{
-\item{x}{An \link{ipums_ddi} object or a data frame with IPUMS attributes
+\item{x}{An \code{ipums_ddi} object or a data frame with IPUMS attributes
 attached.
 
-Note that the file-level information (e.g. extract notes) are only
-available when providing an \code{ipums_ddi} object.}
+Note that file-level information (e.g. extract notes) is only
+available when \code{x} is an \code{ipums_ddi} object.}
 
-\item{out_file}{Optional location to save produced HTML file. If \code{NULL},
+\item{out_file}{Optional location to save the output HTML file. If \code{NULL},
 makes a temporary file.}
 
-\item{launch}{Logical indicating whether to launch the website.}
+\item{launch}{Logical indicating whether to launch the HTML file in the
+RStudio viewer pane. If \code{TRUE}, RStudio and rstudioapi must be available.}
 }
 \value{
-The filepath to the html (silently if \code{launch = TRUE})
+The file path to the output HTML file (invisibly, if \code{launch = TRUE})
 }
 \description{
-Requires that htmltools, shiny and DT are installed.
+For a given \code{\link{ipums_ddi}} object or data frame, display metadata about
+its contents in the RStudio viewer pane. This includes extract-level
+information as well as metadata for the variables included in the
+input object.
+
+It is also possible to save the output to an external HTML file without
+launching the RStudio viewer.
+}
+\details{
+\code{ipums_view()} requires that the htmltools, shiny, and DT packages are
+installed. If \code{launch = TRUE}, RStudio and the rstudioapi package must
+also be available.
+
+Note that if \code{launch = FALSE} and \code{out_file} is unspecified, the output
+file will be written to a temporary directory. Some operating systems
+may be unable to open the HTML file from the temporary directory; we
+suggest that you manually specify the \code{out_file} location in this case.
 }
 \examples{
 ddi <- read_ipums_ddi(ipums_example("cps_00157.xml"))
+
 \dontrun{
 ipums_view(ddi)
 ipums_view(ddi, "codebook.html", launch = FALSE)
