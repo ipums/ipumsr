@@ -36,29 +36,29 @@
 #'
 #' - **`name`:** The unique identifier for the dataset. This is the value that
 #'   is used to refer to the dataset when interacting with the IPUMS API.
-#' - **`group:`** The group of datasets to which the dataset belongs.
+#' - **`group`:** The group of datasets to which the dataset belongs.
 #'   For instance, 5 separate datasets are part of the
 #'   `"2015 American Community Survey"` group.
-#' - **`description:`** A short description of the dataset.
-#' - **`sequence:`** Order in which the dataset will appear in the metadata API
+#' - **`description`:** A short description of the dataset.
+#' - **`sequence`:** Order in which the dataset will appear in the metadata API
 #'   and extracts.
-#' - **`has_multiple_data_types:`** Logical value indicating whether multiple
+#' - **`has_multiple_data_types`:** Logical value indicating whether multiple
 #'   data types exist for this dataset. For example, ACS
 #'   datasets include both estimates and margins of error.
-#' - **`data_tables:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#' - **`data_tables`:** A [`tibble`][tibble::tbl_df-class] containing names,
 #'   codes, and descriptions for all data tables available for the dataset.
-#' - **`geog_levels:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#' - **`geog_levels`:** A [`tibble`][tibble::tbl_df-class] containing names,
 #'   descriptions, and extent information for the geographic levels available
 #'   for the dataset. The `has_geog_extent_selection` field contains logical
 #'   values indicating whether extent selection is allowed (and required) for
 #'   the associated geographic level. See `geographic_instances` below.
-#' - **`breakdowns:`** A [`tibble`][tibble::tbl_df-class] containing names,
+#' - **`breakdowns`:** A [`tibble`][tibble::tbl_df-class] containing names,
 #'   types, descriptions, and breakdown values for all breakdowns available
 #'   for the dataset.
-#' - **`years:`** A vector of years for which the dataset is available. This
+#' - **`years`:** A vector of years for which the dataset is available. This
 #'   field is only present if a dataset is available for multiple years. Note
 #'   that ACS datasets are not considered to be available for multiple years.
-#' - **`geographic_instances:`** A [`tibble`][tibble::tbl_df-class] containing
+#' - **`geographic_instances`:** A [`tibble`][tibble::tbl_df-class] containing
 #'   names and descriptions for all valid geographic extents for the
 #'   dataset. This field is only present if at least one of the dataset's
 #'   `geog_levels` allows geographic extent selection.
@@ -77,8 +77,9 @@
 #' - **`sequence`:** Order in which the data table will appear in the metadata
 #'   API and extracts.
 #' - **`dataset_name`:** Name of the dataset to which this data table belongs.
+#' - **`n_variables`:** Number of variables included in this data table.
 #' - **`variables`:** A [`tibble`][tibble::tbl_df-class] containing variable
-#'   descriptions and codes for the data table
+#'   descriptions and codes for the variables included in the data table
 #'
 #' ## Time series tables:
 #'
@@ -121,10 +122,10 @@
 #'   metadata API and extracts.
 #'
 #' @inheritParams submit_extract
-#' @param type One of `"datasets"`, `"time_series_tables"`, or `"shapefiles"`
-#'   indicating the type of summary metadata to retrieve. Leave `NULL` if
-#'   requesting metadata for a single `dataset`, `data_table`, or
-#'   `time_series_table`.
+#' @param type One of `"datasets"`, `"data_tables"`, `"time_series_tables"`,
+#'   or `"shapefiles"` indicating the type of summary metadata to retrieve.
+#'   Leave `NULL` if requesting metadata for a single `dataset`, `data_table`,
+#'   or `time_series_table`.
 #' @param dataset Name of an individual dataset for which to retrieve metadata.
 #' @param data_table Name of an individual data table for which to retrieve
 #'   metadata. If provided, an associated `dataset` must also be specified.
@@ -181,6 +182,22 @@
 #' # Detailed metadata is also provided for datasets and data tables
 #' get_metadata_nhgis(dataset = "1990_STF1")
 #' get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
+#'
+#' # Iterate over data sources to retrieve detailed metadata for several
+#' # records. For instance, to get variable metadata for a set of data tables:
+#' tables <- c("NP1", "NP2", "NP10")
+#'
+#' var_meta <- purrr::map(
+#'   tables,
+#'   function(dt) {
+#'     dt_meta <- get_metadata_nhgis(dataset = "1990_STF1", data_table = dt)
+#'
+#'     # This ensures you avoid hitting rate limit for large numbers of tables
+#'     Sys.sleep(1)
+#'
+#'     dt_meta$variables
+#'   }
+#' )
 #' }
 get_metadata_nhgis <- function(type = NULL,
                                dataset = NULL,
