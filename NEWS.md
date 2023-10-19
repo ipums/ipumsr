@@ -1,5 +1,47 @@
 # ipumsr (development version)
 
+## Function retirements
+
+* ipumsr no longer suggests raster, rgdal, and sp (#23). Removing these
+  dependencies requires the retirement of several previously deprecated 
+  functions:
+  
+  * All `read_terra_*()` functions
+  * `read_ipums_sp()` (use `read_ipums_sf()` to load spatial data in sf format)
+  * `read_ipums_codebook()` (use `read_nhgis_codebook()` to load an NHGIS 
+    codebook)
+  * `ipums_list_*()` helper functions (instead, use `ipums_list_files()`)
+  * `read_nhgis_sf()` and `read_nhgis_sp()` (instead, use `read_ipums_sf()` and 
+    `read_nhgis()` to load spatial and tabular data separately, then join
+    with an `ipums_shape_join_*()` function)
+  
+## Other updates
+  
+* Fixes bug in `ipums_view()` where content would not display properly in
+  viewer pane (#19)
+  
+* RStudio is now explicitly required to launch files in the viewer pane using 
+  `ipums_view()`. R console users can still generate stand-alone HTML files
+  that can be viewed in a different browser.
+
+* Updates the UI and fixes various bugs in `ipums_website()` (#54):
+
+  * Accepted project names are now consistent with those provided in 
+  `ipums_ddi` objects. Shorthand project names as used by the IPUMS API are 
+    also accepted.
+  * Users can now use the same syntax regardless of whether providing
+    an `ipums_ddi` object or a project name. The `project` argument has been
+    deprecated.
+  * MacOS is now supported
+  * The `var` argument is no longer required. Omitting `var` will launch the 
+    URL to the homepage for the specified IPUMS project.
+  * The `homepage_if_missing` argument now defaults to `FALSE`.
+  * The `var_label` argument has been deprecated
+
+* Updates IPUMS projects listed in `ipums_data_collections()`.
+
+* Various documentation updates
+
 # ipumsr 0.6.3
 
 * The ability to read an IPUMS DDI file contained within a zip archive using
