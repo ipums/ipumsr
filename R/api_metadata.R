@@ -77,8 +77,7 @@
 #' - **`sequence`:** Order in which the data table will appear in the metadata
 #'   API and extracts.
 #' - **`dataset_name`:** Name of the dataset to which this data table belongs.
-#' - **`variables`:** A [`tibble`][tibble::tbl_df-class] containing variable
-#'   descriptions and codes for the data table
+#' - **`n_variables`:** Number of variables included in this table.
 #'
 #' ## Time series tables:
 #'

@@ -119,8 +119,7 @@ code.
 \item \strong{\code{sequence}:} Order in which the data table will appear in the metadata
 API and extracts.
 \item \strong{\code{dataset_name}:} Name of the dataset to which this data table belongs.
-\item \strong{\code{variables}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing variable
-descriptions and codes for the data table
+\item \strong{\code{n_variables}:} Number of variables included in this table.
 }
 }
 
