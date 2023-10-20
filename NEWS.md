@@ -1,4 +1,4 @@
-# ipumsr (development version)
+# ipumsr 0.7.0
 
 ## Function retirements
 
