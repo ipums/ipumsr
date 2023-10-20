@@ -31,7 +31,7 @@ NHGIS extract definitions in vignette("ipums-api-nhgis").'><meta property="og:im
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -152,10 +152,10 @@ NHGIS extract definitions in <code><a href="../articles/ipums-api-nhgis.html">vi
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>type</dt>
-<dd><p>One of <code>"datasets"</code>, <code>"time_series_tables"</code>, or <code>"shapefiles"</code>
-indicating the type of summary metadata to retrieve. Leave <code>NULL</code> if
-requesting metadata for a single <code>dataset</code>, <code>data_table</code>, or
-<code>time_series_table</code>.</p></dd>
+<dd><p>One of <code>"datasets"</code>, <code>"data_tables"</code>, <code>"time_series_tables"</code>,
+or <code>"shapefiles"</code> indicating the type of summary metadata to retrieve.
+Leave <code>NULL</code> if requesting metadata for a single <code>dataset</code>, <code>data_table</code>,
+or <code>time_series_table</code>.</p></dd>
 
 
 <dt>dataset</dt>
@@ -208,29 +208,29 @@ data sources.</p><div class="section">
 
 <ul><li><p><strong><code>name</code>:</strong> The unique identifier for the dataset. This is the value that
 is used to refer to the dataset when interacting with the IPUMS API.</p></li>
-<li><p><strong><code>group:</code></strong> The group of datasets to which the dataset belongs.
+<li><p><strong><code>group</code>:</strong> The group of datasets to which the dataset belongs.
 For instance, 5 separate datasets are part of the
 <code>"2015 American Community Survey"</code> group.</p></li>
-<li><p><strong><code>description:</code></strong> A short description of the dataset.</p></li>
-<li><p><strong><code>sequence:</code></strong> Order in which the dataset will appear in the metadata API
+<li><p><strong><code>description</code>:</strong> A short description of the dataset.</p></li>
+<li><p><strong><code>sequence</code>:</strong> Order in which the dataset will appear in the metadata API
 and extracts.</p></li>
-<li><p><strong><code>has_multiple_data_types:</code></strong> Logical value indicating whether multiple
+<li><p><strong><code>has_multiple_data_types</code>:</strong> Logical value indicating whether multiple
 data types exist for this dataset. For example, ACS
 datasets include both estimates and margins of error.</p></li>
-<li><p><strong><code>data_tables:</code></strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
+<li><p><strong><code>data_tables</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
 codes, and descriptions for all data tables available for the dataset.</p></li>
-<li><p><strong><code>geog_levels:</code></strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
+<li><p><strong><code>geog_levels</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
 descriptions, and extent information for the geographic levels available
 for the dataset. The <code>has_geog_extent_selection</code> field contains logical
 values indicating whether extent selection is allowed (and required) for
 the associated geographic level. See <code>geographic_instances</code> below.</p></li>
-<li><p><strong><code>breakdowns:</code></strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
+<li><p><strong><code>breakdowns</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
 types, descriptions, and breakdown values for all breakdowns available
 for the dataset.</p></li>
-<li><p><strong><code>years:</code></strong> A vector of years for which the dataset is available. This
+<li><p><strong><code>years</code>:</strong> A vector of years for which the dataset is available. This
 field is only present if a dataset is available for multiple years. Note
 that ACS datasets are not considered to be available for multiple years.</p></li>
-<li><p><strong><code>geographic_instances:</code></strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing
+<li><p><strong><code>geographic_instances</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing
 names and descriptions for all valid geographic extents for the
 dataset. This field is only present if at least one of the dataset's
 <code>geog_levels</code> allows geographic extent selection.</p></li>
@@ -251,8 +251,9 @@ code.</p></li>
 <li><p><strong><code>sequence</code>:</strong> Order in which the data table will appear in the metadata
 API and extracts.</p></li>
 <li><p><strong><code>dataset_name</code>:</strong> Name of the dataset to which this data table belongs.</p></li>
+<li><p><strong><code>n_variables</code>:</strong> Number of variables included in this data table.</p></li>
 <li><p><strong><code>variables</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing variable
-descriptions and codes for the data table</p></li>
+descriptions and codes for the variables included in the data table</p></li>
 </ul></div>
 
 <div class="section">
@@ -337,6 +338,22 @@ metadata API and extracts.</p></li>
 <span class="r-in"><span><span class="co"># Detailed metadata is also provided for datasets and data tables</span></span></span>
 <span class="r-in"><span><span class="fu">get_metadata_nhgis</span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_metadata_nhgis</span><span class="op">(</span>data_table <span class="op">=</span> <span class="st">"NP1"</span>, dataset <span class="op">=</span> <span class="st">"1990_STF1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Iterate over data sources to retrieve detailed metadata for several</span></span></span>
+<span class="r-in"><span><span class="co"># records. For instance, to get variable metadata for a set of data tables:</span></span></span>
+<span class="r-in"><span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NP1"</span>, <span class="st">"NP2"</span>, <span class="st">"NP10"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">var_meta</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">tables</span>,</span></span>
+<span class="r-in"><span>  <span class="kw">function</span><span class="op">(</span><span class="va">dt</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="va">dt_meta</span> <span class="op">&lt;-</span> <span class="fu">get_metadata_nhgis</span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"1990_STF1"</span>, data_table <span class="op">=</span> <span class="va">dt</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="co"># This ensures you avoid hitting rate limit for large numbers of tables</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="va">dt_meta</span><span class="op">$</span><span class="va">variables</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

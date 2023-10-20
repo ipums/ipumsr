@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -802,23 +802,7 @@ syntax we would use with dplyr:</p>
 <code class="sourceCode R"><span><span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"cps"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Source:   SQL [?? x 14]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.41.2 []</span></span></span>
-<span><span class="co">#&gt;     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      1 2.01<span style="color: #949494;">e</span>13   308.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      2 2.01<span style="color: #949494;">e</span>13   217.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      3 2.01<span style="color: #949494;">e</span>13   249.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      1 2.01<span style="color: #949494;">e</span>13   266.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      2 2.01<span style="color: #949494;">e</span>13   266.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      3 2.01<span style="color: #949494;">e</span>13   265.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>011     46     3 2.01<span style="color: #949494;">e</span>13        1    266.        1      4 2.01<span style="color: #949494;">e</span>13   296.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      1 2.01<span style="color: #949494;">e</span>13   241.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      2 2.01<span style="color: #949494;">e</span>13   241.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>011     64     3 2.01<span style="color: #949494;">e</span>13        1    241.        1      3 2.01<span style="color: #949494;">e</span>13   278.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: AGE &lt;int&gt;, EMPSTAT &lt;int&gt;, AHRSWORKT &lt;dbl&gt;, HEALTH &lt;int&gt;</span></span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span></span></code></pre></div>
 <p>dbplyr shows us a nice preview of the first rows of the result of our
 query, but the data still exist only in the database. You can use
 <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::collect()</a></code> to load the full results of the query into
@@ -831,9 +815,7 @@ metadata:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Variable metadata is missing</span></span>
-<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span></code></pre></div>
 <p>Instead, use <code><a href="../reference/ipums_collect.html">ipums_collect()</a></code>, which uses a provided
 <code>ipums_ddi</code> object to reattach the metadata while loading
 into the R environment:</p>
@@ -842,22 +824,7 @@ into the R environment:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/ipums_collect.html">ipums_collect</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
-<span><span class="co">#&gt;      val lbl      </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 January  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2 February </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3 March    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4 April    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5 May      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6 June     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7 July     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8 August   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9 September</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10 October  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span></code></pre></div>
 <p>For more about variable metadata in IPUMS data, see
 <code><a href="../articles/value-labels.html">vignette("value-labels")</a></code>.</p>
 </div>

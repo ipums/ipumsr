@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ipumsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -106,6 +106,40 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.7.0" id="ipumsr-070">ipumsr 0.7.0<a class="anchor" aria-label="anchor" href="#ipumsr-070"></a></h2>
+<div class="section level3">
+<h3 id="function-retirements-0-7-0">Function retirements<a class="anchor" aria-label="anchor" href="#function-retirements-0-7-0"></a></h3>
+<ul><li>
+<p>ipumsr no longer suggests raster, rgdal, and sp (<a href="https://github.com/ipums/ipumsr/issues/23" class="external-link">#23</a>). Removing these dependencies requires the retirement of several previously deprecated functions:</p>
+<ul><li>All <code>read_terra_*()</code> functions</li>
+<li>
+<code>read_ipums_sp()</code> (use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> to load spatial data in sf format)</li>
+<li>
+<code>read_ipums_codebook()</code> (use <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> to load an NHGIS codebook)</li>
+<li>
+<code>ipums_list_*()</code> helper functions (instead, use <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>)</li>
+<li>
+<code>read_nhgis_sf()</code> and <code>read_nhgis_sp()</code> (instead, use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> to load spatial and tabular data separately, then join with an <code>ipums_shape_join_*()</code> function)</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-updates-0-7-0">Other updates<a class="anchor" aria-label="anchor" href="#other-updates-0-7-0"></a></h3>
+<ul><li><p>Fixes bug in <code><a href="../reference/ipums_view.html">ipums_view()</a></code> where content would not display properly in viewer pane (<a href="https://github.com/ipums/ipumsr/issues/19" class="external-link">#19</a>)</p></li>
+<li><p>RStudio is now explicitly required to launch files in the viewer pane using <code><a href="../reference/ipums_view.html">ipums_view()</a></code>. R console users can still generate stand-alone HTML files that can be viewed in a different browser.</p></li>
+<li>
+<p>Updates the UI and fixes various bugs in <code><a href="../reference/ipums_website.html">ipums_website()</a></code> (<a href="https://github.com/ipums/ipumsr/issues/54" class="external-link">#54</a>):</p>
+<ul><li>Accepted project names are now consistent with those provided in <code>ipums_ddi</code> objects. Shorthand project names as used by the IPUMS API are also accepted.</li>
+<li>Users can now use the same syntax regardless of whether providing an <code>ipums_ddi</code> object or a project name. The <code>project</code> argument has been deprecated.</li>
+<li>MacOS is now supported</li>
+<li>The <code>var</code> argument is no longer required. Omitting <code>var</code> will launch the URL to the homepage for the specified IPUMS project.</li>
+<li>The <code>homepage_if_missing</code> argument now defaults to <code>FALSE</code>.</li>
+<li>The <code>var_label</code> argument has been deprecated</li>
+</ul></li>
+<li><p>Updates IPUMS projects listed in <code><a href="../reference/ipums_data_collections.html">ipums_data_collections()</a></code>.</p></li>
+<li><p>Various documentation updates</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.3" id="ipumsr-063">ipumsr 0.6.3<small>2023-09-01</small><a class="anchor" aria-label="anchor" href="#ipumsr-063"></a></h2>
 <ul><li>
 <p>The ability to read an IPUMS DDI file contained within a zip archive using <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> has been deprecated. Users must now load DDI files by providing the direct path to the uncompressed .xml file.</p>
@@ -152,7 +186,7 @@
 </ul></div>
 <div class="section level4">
 <h4 id="ipums-readers-0-6-0">IPUMS Readers<a class="anchor" aria-label="anchor" href="#ipums-readers-0-6-0"></a></h4>
-<ul><li><p><code><a href="../reference/read_nhgis_sf.html">read_nhgis_sf()</a></code> and <code><a href="../reference/read_nhgis_sf.html">read_nhgis_sp()</a></code> have been deprecated. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> to load spatial and tabular data, respectively. Join data with an <code>ipums_shape_*_join()</code> function.</p></li>
+<ul><li><p><code>read_nhgis_sf()</code> and <code>read_nhgis_sp()</code> have been deprecated. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> to load spatial and tabular data, respectively. Join data with an <code>ipums_shape_*_join()</code> function.</p></li>
 <li><p><code>data_layer</code> and <code>shape_layer</code> arguments have been deprecated in favor of <code>file_select</code> throughout ipumsr. This provides clarity on the intended purpose of this argument. Deprecated functions that use the original argument names remain unchanged.</p></li>
 <li>
 <p>Support for objects from the sp package has been deprecated because of the upcoming retirement of rgdal. Use <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> to load spatial data as an <code>sf</code> object. To convert to a <code>Spatial*</code> object, use <code><a href="https://r-spatial.github.io/sf/reference/coerce-methods.html" class="external-link">sf::as_Spatial()</a></code>.</p>
@@ -160,13 +194,13 @@
 </li>
 <li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> no longer defaults to <code>bind_multiple = TRUE</code>.</p></li>
 <li><p>Individual <code>ipums_list_*()</code> functions have been moved to <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>.</p></li>
-<li><p><code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code> has been deprecated. Use <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> to read NHGIS codebook files. IPUMS Terra codebook files are no longer supported (see below)</p></li>
+<li><p><code>read_ipums_codebook()</code> has been deprecated. Use <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> to read NHGIS codebook files. IPUMS Terra codebook files are no longer supported (see below)</p></li>
 <li><p>Example files in <code><a href="../reference/ipums_example.html">ipums_example()</a></code> have been updated and include new file names.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="ipums-terra-0-6-0">IPUMS Terra<a class="anchor" aria-label="anchor" href="#ipums-terra-0-6-0"></a></h4>
 <ul><li>
-<p>Support for IPUMS Terra has been discontinued. This includes deprecations to all <code>read_terra_*()</code> functions, the <code>types = "raster"</code> option in <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>, and <code><a href="../reference/read_ipums_codebook.html">read_ipums_codebook()</a></code>.</p>
+<p>Support for IPUMS Terra has been discontinued. This includes deprecations to all <code>read_terra_*()</code> functions, the <code>types = "raster"</code> option in <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>, and <code>read_ipums_codebook()</code>.</p>
 <p>For more on IPUMS Terra decommissioning, click <a href="https://terra.ipums.org/decommissioning" class="external-link">here</a>.</p>
 </li>
 </ul></div>
@@ -268,14 +302,14 @@ creating a new labelled vector from an unlabelled one (<a href="https://github.c
 </ul></li>
 <li><p>Added pillar printing for labelled classes in tibbles. This means that the label will print the labels alongside the values when printed in a tibble (in a subtle grey color when the terminal supports it). To turn this feature off, use command `options(“ipumsr.show_pillar_labels” = FALSE).</p></li>
 <li><p>The approach to reading hierarchical data files is much faster.</p></li>
-<li><p>Arguments to <code><a href="../reference/read_ipums_sp.html">read_ipums_sp()</a></code> are now in the same order as <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code></p></li>
-<li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code><a href="../reference/read_ipums_sp.html">read_ipums_sp()</a></code> gain 2 new arguments <code>vars</code> which allows you to pick a subset of variables, and <code>add_layer_var</code> which lets you add a variable indicating which layer it came from.</p></li>
+<li><p>Arguments to <code>read_ipums_sp()</code> are now in the same order as <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code></p></li>
+<li><p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> and <code>read_ipums_sp()</code> gain 2 new arguments <code>vars</code> which allows you to pick a subset of variables, and <code>add_layer_var</code> which lets you add a variable indicating which layer it came from.</p></li>
 <li><p>You can now use your inside voice for variable names with the new argument <code>lower_vars</code> for <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> and <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> family of functions so that the variable names are lower case.</p></li>
 <li><p>ipumsr is compatible with versions of haven newer than 2.0 (while maintaining compatibility with earlier versions). (<a href="https://github.com/ipums/ipumsr/issues/31" class="external-link">#31</a>)</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="ipumsr-020">ipumsr 0.2.0<small>2018-04-20</small><a class="anchor" aria-label="anchor" href="#ipumsr-020"></a></h2>
-<ul><li><p>IPUMS Terra is now officially supported! Read raster, area or microdata extracts using functions <code><a href="../reference/read_terra_raster.html">read_terra_raster()</a></code>, <code><a href="../reference/read_terra_raster.html">read_terra_raster_list()</a></code>, <code><a href="../reference/read_terra_area.html">read_terra_area()</a></code>, <code><a href="../reference/read_terra_area.html">read_terra_area_sf()</a></code>, and <code><a href="../reference/read_terra_micro.html">read_terra_micro()</a></code></p></li>
+<ul><li><p>IPUMS Terra is now officially supported! Read raster, area or microdata extracts using functions <code>read_terra_raster()</code>, <code>read_terra_raster_list()</code>, <code>read_terra_area()</code>, <code>read_terra_area_sf()</code>, and <code>read_terra_micro()</code></p></li>
 <li><p>Add support for keyvar in DDI, which will (eventually) help link data across record types in hierarchical extracts. To be effective, this requires more support on the ipums.org website, which is hopefully coming soon (<a href="https://github.com/ipums/ipumsr/issues/25" class="external-link">#25</a> - thanks <a href="https://github.com/mpadge" class="external-link">@mpadge</a>!)</p></li>
 <li><p>Improved main vignette instructions for Safari users (<a href="https://github.com/ipums/ipumsr/issues/27" class="external-link">#27</a>)</p></li>
 <li><p>Fix for selecting columns from csv extracts (<a href="https://github.com/ipums/ipumsr/issues/26" class="external-link">#26</a> - thanks forum user JCambon_OIS!)</p></li>
