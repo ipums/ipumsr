@@ -112,9 +112,6 @@
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_file_info.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/ipums_list_data.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/ipums_list_files.html</loc>
   </url>
   <url>
@@ -154,12 +151,6 @@
     <loc>http://tech.popdata.org/ipumsr/reference/lbl_relabel.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/make_ddi_from_scratch.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_ipums_codebook.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/read_ipums_ddi.html</loc>
   </url>
   <url>
@@ -175,25 +166,10 @@
     <loc>http://tech.popdata.org/ipumsr/reference/read_ipums_sf.html</loc>
   </url>
   <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_ipums_sp.html</loc>
-  </url>
-  <url>
     <loc>http://tech.popdata.org/ipumsr/reference/read_nhgis.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/read_nhgis_codebook.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_nhgis_sf.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_terra_area.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_terra_micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/reference/read_terra_raster.html</loc>
   </url>
   <url>
     <loc>http://tech.popdata.org/ipumsr/reference/reexports.html</loc>
