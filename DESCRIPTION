@@ -48,7 +48,7 @@ Suggests:
     knitr,
     rmapshaper,
     rmarkdown,
-    RSQLite,
+    RSQLite (>= 2.3.3),
     rstudioapi,
     scales,
     sf,
