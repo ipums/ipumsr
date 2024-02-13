@@ -1,18 +1,28 @@
 url: http://tech.popdata.org/ipumsr/
+
 template:
-  params:
-    docsearch:
-      api_key: 4ffa912ace97d2493f6ed39f20e94316
-      index_name: ipumsr
-footer:
-  structure:
-    left: Developed by [IPUMS](https://www.ipums.org) at the University of Minnesota
-    right: built_with
+  bootstrap: 5
+  bootswatch: minty
+  bslib:
+    primary: "#00263A"
+    dropdown-bg: "#f1f5f7"
+    dropdown-link-hover-bg: "#7a99ac"
+    dropdown-link-active-bg: "#00263A"
+    dropdown-link-active-color: "white"
+    table-border-color: "#c1d4e0"
+    link-color: "#4e6c7d"
+    secondary: "#bed2dd"
+    base_font: "cabrito_sans_norm_regular"
+    heading_font: "cabrito_sans_cond_demi"
+    body-color: "#00263a"
+    headings-color: "#00263a"
+    table-hover-bg: "rgba(17,55,75,0.15)"
+
 development:
   mode: release
+
 navbar:
   title: "ipumsr"
-  type: inverse
   left:
     - icon: "fa-home"
       href: index.html
@@ -49,10 +59,21 @@ navbar:
       href: https://forum.ipums.org
     - icon: fa-globe
       href: https://www.ipums.org/
+
 home:
   links:
   - text: Ask a question
     href: http://forum.ipums.org
+
+footer:
+  structure:
+    left: ipums-devel
+    right: built_with
+  components:
+    ipums-devel: |
+      Developed by [IPUMS](https://www.ipums.org) at the
+      University of Minnesota.
+
 reference:
   - title: "Read IPUMS data"
     desc: "Load IPUMS data and metadata files into R"

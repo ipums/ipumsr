@@ -1,0 +1,83 @@
+@import url('https://assets.ipums.org/_css/font-faces.css');
+
+/* core fonts */
+p {
+  font-family: 'cabrito_sans_norm_regular'
+}
+
+h1 {
+  font-family: 'cabrito_sans_norm_regular';
+}
+
+h2 {
+  font-family: "cabrito_sans_cond_demi";
+}
+
+h3 {
+  font-family: "cabrito_sans_cond_demi";
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-family: 'cabrito_sans_norm_regular';
+  font-size: 1.25rem;
+}
+
+.navbar {
+  font-family: "cabrito_sans_norm_regular";
+  font-weight: 100;
+}
+
+b, strong {
+  font-family: "cabrito_sans_cond_demi";
+  font-weight: 100;
+}
+
+/* active navbar tab styling */
+.navbar-dark .navbar-nav .active > .nav-link {
+  background: #00263A;
+  color: white;
+}
+
+/* searchbar */
+#search-input {
+  background-color: white;
+  color: #00263A;
+  background-clip: padding-box;
+}
+
+/* HTML table formatting to resemble IPUMS website tables */
+.table {
+  vertical-align: middle;
+}
+
+thead th {
+  text-align: center !important; /* override kable() formatting */
+  vertical-align: middle;
+}
+
+thead {
+  background-color: #11374b;
+  color: white;
+}
+
+/* Reduce font size for README table to simplify page */
+.table-proj-summary {
+  font-size: 14px;
+}
+
+/* navbar tab hover background */
+.navbar-dark .navbar-nav .nav-item > .nav-link:hover,
+.navbar-dark .navbar-nav .nav-item > .nav-link:active,
+.navbar-dark .navbar-nav .nav-item > .nav-link:focus
+{
+  background-color: #11374b;
+}
+
+/* sidebar tab hover background */
+#toc > .nav a.nav-link:hover,
+#toc > .nav a.nav-link.active,
+#toc > .nav a.nav-link:focus
+{
+  background-color: #f1f5f7;
+}

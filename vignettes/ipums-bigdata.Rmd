@@ -1,6 +1,5 @@
 ---
 title: "Big IPUMS Data"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Big IPUMS Data}

@@ -1,6 +1,5 @@
 ---
 title: "Value Labels in IPUMS data"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Value Labels in IPUMS data}

@@ -62,17 +62,211 @@ different data products.
 ipumsr supports different levels of functionality for each IPUMS
 project:
 
-| Project / Collection                                                  | Data Type      | Description                                                                                                                                                                                                                                             | Read Data Extracts | Request & Download Data | Get Metadata |
-|:----------------------------------------------------------------------|:---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:------------------------|:-------------|
-| [IPUMS USA](https://usa.ipums.org/usa/)                               | Microdata      | U.S. Census and American Community Survey microdata (1850-present)                                                                                                                                                                                      | X                  | X                       |              |
-| [IPUMS CPS](https://cps.ipums.org/cps/)                               | Microdata      | Current Population Survey microdata including basic monthly surveys and supplements (1962-present)                                                                                                                                                      | X                  | X                       |              |
-| [IPUMS International](https://international.ipums.org/international/) | Microdata      | Census microdata covering over 100 countries, contemporary and historical                                                                                                                                                                               | X                  | X                       |              |
-| [IPUMS NHGIS](https://www.nhgis.org/)                                 | Aggregate Data | Tabular U.S. Census data and GIS mapping files (1790-present)                                                                                                                                                                                           | X                  | X                       | X            |
-| [IPUMS IHGIS](https://ihgis.ipums.org/)                               | Aggregate Data | Tabular and GIS data from population, housing, and agricultural censuses around the world                                                                                                                                                               |                    |                         |              |
-| [IPUMS Time Use](https://timeuse.ipums.org/)                          | Microdata      | Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)                                                                                                                                                             | X                  |                         |              |
-| [IPUMS Health Surveys](https://healthsurveys.ipums.org/)              | Microdata      | Microdata from the U.S. [National Health Interview Survey (NHIS)](https://nhis.ipums.org/nhis/) (1963-present) and [Medical Expenditure Panel Survey (MEPS)](https://meps.ipums.org/meps/) (1996-present)                                               | X                  |                         |              |
-| [IPUMS Global Health](https://globalhealth.ipums.org/)                | Microdata      | Health survey microdata for low- and middle-income countries, including harmonized data collections for [Demographic and Health Surveys (DHS)](https://www.idhsdata.org/) and [Performance Monitoring for Action (PMA)](https://pma.ipums.org/) surveys | X                  |                         |              |
-| [IPUMS Higher Ed](https://highered.ipums.org/highered/)               | Microdata      | Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013                                                                                                                                                                 | X                  |                         |              |
+<table class="table-hover table-bordered table-proj-summary">
+<thead>
+<tr>
+<th style="text-align:left;">
+Project / Collection
+</th>
+<th style="text-align:left;">
+Data Type
+</th>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:center;">
+Read Data Extracts
+</th>
+<th style="text-align:center;">
+Request & Download Data
+</th>
+<th style="text-align:center;">
+Browse Metadata
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href='https://usa.ipums.org/usa/'>IPUMS USA</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+U.S. Census and American Community Survey microdata (1850-present)
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://cps.ipums.org/cps/'>IPUMS CPS</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Current Population Survey microdata including basic monthly surveys and
+supplements (1962-present)
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://international.ipums.org/international/'>IPUMS
+International</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Census microdata covering over 100 countries, contemporary and
+historical
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://www.nhgis.org/'>IPUMS NHGIS</a>
+</td>
+<td style="text-align:left;">
+Aggregate Data
+</td>
+<td style="text-align:left;">
+Tabular U.S. Census data and GIS mapping files (1790-present)
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://ihgis.ipums.org/'>IPUMS IHGIS</a>
+</td>
+<td style="text-align:left;">
+Aggregate Data
+</td>
+<td style="text-align:left;">
+Tabular and GIS data from population, housing, and agricultural censuses
+around the world
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://timeuse.ipums.org/'>IPUMS Time Use</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Time use microdata from the U.S. (1930-present) and thirteen other
+countries (1965-present)
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://healthsurveys.ipums.org/'>IPUMS Health Surveys</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Microdata from the U.S. <a href='https://nhis.ipums.org/nhis/'>National
+Health Interview Survey (NHIS)</a> (1963-present) and
+<a href='https://meps.ipums.org/meps/'>Medical Expenditure Panel Survey
+(MEPS)</a> (1996-present)
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://globalhealth.ipums.org/'>IPUMS Global Health</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Health survey microdata for low- and middle-income countries, including
+harmonized data collections for
+<a href='https://www.idhsdata.org/'>Demographic and Health Surveys
+(DHS)</a> and <a href='https://pma.ipums.org/'>Performance Monitoring
+for Action (PMA)</a> surveys
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href='https://highered.ipums.org/highered/'>IPUMS Higher Ed</a>
+</td>
+<td style="text-align:left;">
+Microdata
+</td>
+<td style="text-align:left;">
+Survey microdata on the science and engineering workforce in the U.S.
+from 1993 to 2013
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+</tbody>
+</table>
 
 ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data
 requests, download data extracts, and get metadata, so the scope of

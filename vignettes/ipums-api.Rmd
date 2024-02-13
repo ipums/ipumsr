@@ -1,6 +1,5 @@
 ---
 title: "Introduction to the IPUMS API for R Users"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to the IPUMS API for R Users}
