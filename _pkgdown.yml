@@ -3,6 +3,7 @@ url: http://tech.popdata.org/ipumsr/
 template:
   bootstrap: 5
   bootswatch: minty
+  theme: arrow-light
   bslib:
     primary: "#00263A"
     dropdown-bg: "#f1f5f7"

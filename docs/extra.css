@@ -81,3 +81,31 @@ thead {
 {
   background-color: #f1f5f7;
 }
+
+/* CSS for project summary table in README */
+
+/* Maintain minimum size for logo column */
+.table-proj-summary tr td:first-child {
+  min-width: 2.5rem;
+}
+
+.table-proj-summary tr td:first-child {
+  padding-right: 0px;
+}
+
+.icon-check {
+  max-width: 1.2rem;
+}
+
+/* Add table borders, but not between logo and project columns */
+.table-proj-summary tr td:not(:first-child):not(:last-child),
+.table-proj-summary th:not(:first-child):not(:last-child)
+{
+  border-right: solid 1px #c1d4e0;
+}
+
+.table-proj-summary {
+  border-left: solid 1px #c1d4e0;
+  border-right: solid 1px #c1d4e0;
+}
+
