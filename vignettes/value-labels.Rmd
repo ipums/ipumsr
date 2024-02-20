@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## IPUMS Variable Metadata
+## IPUMS variable metadata
 
 IPUMS data come with three primary types of variable-level metadata:
 

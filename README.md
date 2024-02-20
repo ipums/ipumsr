@@ -60,7 +60,7 @@ different data products.
   GIS mapping files.
 
 ipumsr supports different levels of functionality for each IPUMS
-project:
+project, as summarized in the following table:
 
 <table class="table-hover table-proj-summary">
 <thead>
@@ -308,30 +308,24 @@ projects, we aim to extend ipumsr capabilities accordingly.
 If you’re new to IPUMS data, learn more about what’s available through
 the [IPUMS Projects Overview](https://www.ipums.org/overview).
 
-For an overview of how to find, request, download, and read IPUMS data
-into R, see [IPUMS Data and
-R](https://tech.popdata.org/ipumsr/articles/ipums.html).
+The package vignettes are the best place to learn about what’s available
+in ipumsr itself:
 
-To learn how ipumsr interfaces with the IPUMS extract system via the
-IPUMS API, see the [Introduction to the IPUMS API for R
-Users](https://tech.popdata.org/ipumsr/articles/ipums-api.html).
-
-Additional demonstration vignettes are also available as
-[Articles](https://tech.popdata.org/ipumsr/articles/) on the package
-website or by using the `vignette()` function in R (e.g.
-`vignette("ipums-read", package = "ipumsr")`). These include vignettes
-for accessing
-[microdata](https://tech.popdata.org/ipumsr/articles/ipums-api-micro.html)
-and [NHGIS data and
-metadata](https://tech.popdata.org/ipumsr/articles/ipums-api-nhgis.html)
-via the API.
+- To read IPUMS data extracts into R, see `vignette("ipums-read")`.
+- To interact with the IPUMS extract system via the IPUMS API, see
+  `vignette("ipums-api")`.
+- For additional details about microdata and NHGIS extract requests, see
+  `vignette("ipums-api-micro")` and `vignette("ipums-api-nhgis")`.
+- To work with labelled values in IPUMS data, see
+  `vignette("value-labels")`.
+- For techniques for working with large data extracts, see
+  `vignette("ipums-bigdata")`.
 
 The [IPUMS support website](https://www.ipums.org/support) also houses
 many project-specific R-based [training
-exercises](https://www.ipums.org/support/exercises). (As of September
-2023, these exercises have not yet been updated to incorporate the major
-API data and metadata access capabilities added to ipumsr in version
-0.6.0.)
+exercises](https://www.ipums.org/support/exercises). However, note that
+some of these exercises may not be be up to date with ipumsr’s current
+functionality.
 
 ## Related work
 
