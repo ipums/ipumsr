@@ -33,12 +33,6 @@ b, strong {
   font-weight: 100;
 }
 
-/* active navbar tab styling */
-.navbar-dark .navbar-nav .active > .nav-link {
-  background: #00263A;
-  color: white;
-}
-
 /* searchbar */
 #search-input {
   background-color: white;
@@ -56,8 +50,8 @@ thead th {
   vertical-align: middle;
 }
 
-thead {
-  background-color: #11374b;
+.table > :not(caption) > * > th {
+  background-color: #00263A;
   color: white;
 }
 
@@ -71,6 +65,11 @@ thead {
 .navbar-dark .navbar-nav .nav-item > .nav-link:active,
 .navbar-dark .navbar-nav .nav-item > .nav-link:focus
 {
+  background-color: #11374b;
+  color: white;
+}
+
+.navbar-dark .navbar-nav .active > .nav-link {
   background-color: #11374b;
 }
 
@@ -107,5 +106,5 @@ thead {
 .table-proj-summary {
   border-left: solid 1px #c1d4e0;
   border-right: solid 1px #c1d4e0;
+  border-top: solid 1px #c1d4e0;
 }
-
