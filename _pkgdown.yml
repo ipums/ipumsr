@@ -21,7 +21,7 @@ template:
     table-bg: "white"
 
 development:
-  mode: release
+  mode: auto
 
 navbar:
   bg: primary
