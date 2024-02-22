@@ -18,11 +18,14 @@ template:
     body-color: "#00263a"
     headings-color: "#00263a"
     table-hover-bg: "rgba(17,55,75,0.15)"
+    table-bg: "white"
 
 development:
   mode: release
 
 navbar:
+  bg: primary
+  type: dark
   title: "ipumsr"
   left:
     - icon: "fa-home"
