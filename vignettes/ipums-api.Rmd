@@ -1,6 +1,5 @@
 ---
 title: "Introduction to the IPUMS API for R Users"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to the IPUMS API for R Users}
@@ -103,7 +102,7 @@ library(dplyr)
 library(purrr)
 ```
 
-## API Availability
+## API availability
 
 IPUMS **extract** support is currently available via API for the
 following collections:
@@ -130,14 +129,10 @@ with `ipums_data_collections()`.
 ipums_data_collections()
 ```
 
-### Note: New features currently in development
-
-The tools in ipumsr may not necessarily support all the functionality
+Note that the tools in ipumsr may not necessarily support all the functionality
 currently supported by the IPUMS API. See the [API
 documentation](https://developer.ipums.org/docs/apiprogram/) for more
-information about its latest features. Furthermore, the API tools in
-ipumsr are in active development, and some functionality may not yet be
-stable.
+information about its latest features.
 
 ## Set up your API key {#set-key}
 

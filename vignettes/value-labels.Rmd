@@ -1,6 +1,5 @@
 ---
 title: "Value Labels in IPUMS data"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Value Labels in IPUMS data}
@@ -15,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## IPUMS Variable Metadata
+## IPUMS variable metadata
 
 IPUMS data come with three primary types of variable-level metadata:
 

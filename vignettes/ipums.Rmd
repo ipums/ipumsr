@@ -1,6 +1,5 @@
 ---
 title: "IPUMS Data and R"
-author: "Institute for Social Research and Data Innovation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{IPUMS Data and R}
@@ -47,9 +46,9 @@ system only for [certain IPUMS
 projects](https://developer.ipums.org/docs/v2/apiprogram/apis/), which
 also determines the functionality that ipumsr can support.
 
-### Obtaining data via an IPUMS website
+### Obtaining data via an IPUMS project website
 
-To create a new extract request via IPUMS websites, navigate to the
+To create a new extract request via an IPUMS project website, navigate to the
 extract interface for the IPUMS project of interest by clicking **Select
 Data** in the heading of the project website. The project extract
 interface allows you to explore what's available, find documentation
