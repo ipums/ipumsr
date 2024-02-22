@@ -73,6 +73,21 @@ thead th {
   background-color: #11374b;
 }
 
+.nav-link {
+  color: #99a8b0;
+}
+
+.text-muted {
+  color: #888888 !important;
+}
+
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:active,
+.navbar-brand:focus {
+  color:white;
+}
+
 /* sidebar tab hover background */
 #toc > .nav a.nav-link:hover,
 #toc > .nav a.nav-link.active,
