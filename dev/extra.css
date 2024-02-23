@@ -1,0 +1,125 @@
+@import url('https://assets.ipums.org/_css/font-faces.css');
+
+/* core fonts */
+p {
+  font-family: 'cabrito_sans_norm_regular'
+}
+
+h1 {
+  font-family: 'cabrito_sans_norm_regular';
+}
+
+h2 {
+  font-family: "cabrito_sans_cond_demi";
+}
+
+h3 {
+  font-family: "cabrito_sans_cond_demi";
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-family: 'cabrito_sans_cond_demi';
+  font-size: 1.25rem;
+}
+
+.navbar {
+  font-family: "cabrito_sans_norm_regular";
+  font-weight: 100;
+}
+
+b, strong {
+  font-family: "cabrito_sans_cond_demi";
+  font-weight: 100;
+}
+
+/* searchbar */
+#search-input {
+  background-color: white;
+  color: #00263A;
+  background-clip: padding-box;
+}
+
+/* HTML table formatting to resemble IPUMS website tables */
+.table {
+  vertical-align: middle;
+}
+
+thead th {
+  text-align: center !important; /* override kable() formatting */
+  vertical-align: middle;
+}
+
+.table > :not(caption) > * > th {
+  background-color: #00263A;
+  color: white;
+}
+
+/* Reduce font size for README table to simplify page */
+.table-proj-summary {
+  font-size: 14px;
+}
+
+/* navbar tab hover background */
+.navbar-dark .navbar-nav .nav-item > .nav-link:hover,
+.navbar-dark .navbar-nav .nav-item > .nav-link:active,
+.navbar-dark .navbar-nav .nav-item > .nav-link:focus
+{
+  background-color: #11374b;
+  color: white;
+}
+
+.navbar-dark .navbar-nav .active > .nav-link {
+  background-color: #11374b;
+}
+
+.nav-link {
+  color: #99a8b0;
+}
+
+.text-muted {
+  color: #888888 !important;
+}
+
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:active,
+.navbar-brand:focus {
+  color:white;
+}
+
+/* sidebar tab hover background */
+#toc > .nav a.nav-link:hover,
+#toc > .nav a.nav-link.active,
+#toc > .nav a.nav-link:focus
+{
+  background-color: #f1f5f7;
+}
+
+/* CSS for project summary table in README */
+
+/* Maintain minimum size for logo column */
+.table-proj-summary tr td:first-child {
+  min-width: 2.5rem;
+}
+
+.table-proj-summary tr td:first-child {
+  padding-right: 0px;
+}
+
+.icon-check {
+  max-width: 1.2rem;
+}
+
+/* Add table borders, but not between logo and project columns */
+.table-proj-summary tr td:not(:first-child):not(:last-child),
+.table-proj-summary th:not(:first-child):not(:last-child)
+{
+  border-right: solid 1px #c1d4e0;
+}
+
+.table-proj-summary {
+  border-left: solid 1px #c1d4e0;
+  border-right: solid 1px #c1d4e0;
+  border-top: solid 1px #c1d4e0;
+}
