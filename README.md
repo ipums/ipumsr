@@ -346,9 +346,9 @@ We greatly appreciate feedback and development contributions. Please
 submit any bug reports, pull requests, or other suggestions on
 [GitHub](https://github.com/ipums/ipumsr/issues). Before contributing,
 please be sure to read the [Contributing
-Guidelines](https://github.com/ipums/ipumsr/blob/master/CONTRIBUTING.md)
+Guidelines](https://github.com/ipums/ipumsr/blob/main/CONTRIBUTING.md)
 and the [Code of
-Conduct](https://github.com/ipums/ipumsr/blob/master/CONDUCT.md).
+Conduct](https://github.com/ipums/ipumsr/blob/main/.github/CODE_OF_CONDUCT.md).
 
 If you have general questions or concerns about IPUMS data, check out
 our [user forum](https://forum.ipums.org) or send an email to
