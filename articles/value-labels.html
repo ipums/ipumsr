@@ -133,47 +133,44 @@ descriptions of the contents of a variable. These provide more
 information about what a given variable measures.</p></li>
 <li><p><strong><em>Value labels</em></strong> link particular data
 values to more meaningful text labels. For instance, the
-<code>HEALTH</code> variable has data values including 1 and 2, but
-these are actually stand-ins for “Excellent” and “Very good” health.
-This mapping would be contained in a value-label pair that includes a
-value and its associated label.</p></li>
+<code>HEALTH</code> variable may have data values including
+<code>1</code> and <code>2</code>, but these are actually stand-ins for
+“Excellent” and “Very good” health. This mapping would be contained in a
+value-label pair that includes a value and its associated
+label.</p></li>
 </ul>
 <p>The rest of this article will focus on value labels; for more about
-variable labels and descriptions, see
-<code><a href="../articles/ipums.html">vignette("ipums")</a></code>.</p>
+variable labels and descriptions, see <code><a href="../reference/ipums_var_info.html">?ipums_var_info</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="value-labels">Value labels<a class="anchor" aria-label="anchor" href="#value-labels"></a>
 </h2>
-<p>ipumsr uses the <code>labelled</code> <a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">class</a>
-from the <a href="https://haven.tidyverse.org/index.html" class="external-link">haven</a>
-package to handle value labels.</p>
+<p>ipumsr uses the <a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link"><code>labelled</code></a>
+class from the <a href="https://haven.tidyverse.org" class="external-link">haven</a> package to handle value labels.</p>
 <p>You can see this in the column data types when loading IPUMS data.
-Note that <code>&lt;int+lbl&gt;</code> appears below
-<code>STATEFIP</code>, <code>ASECFLAG</code>, and other variables:</p>
+Note that <code>&lt;int+lbl&gt;</code> appears below <code>MONTH</code>
+and <code>ASECFLAG</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/" class="external-link">ipumsr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00160.xml"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">cps</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10,883 × 15</span></span></span>
-<span><span class="co">#&gt;     YEAR SERIAL MONTH      CPSID ASECFLAG ASECWTH STATEFIP PERNUM  CPSIDP ASECWT</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lb&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>138 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">3</span>249. 55<span style="color: #949494;"> [Wis…</span>      1 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">3</span>249.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>139 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">3</span>154. 55<span style="color: #949494;"> [Wis…</span>      1 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">3</span>154.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>139 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">3</span>154. 55<span style="color: #949494;"> [Wis…</span>      2 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">3</span>154.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>652. 55<span style="color: #949494;"> [Wis…</span>      1 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>652.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>652. 55<span style="color: #949494;"> [Wis…</span>      2 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>503.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>652. 55<span style="color: #949494;"> [Wis…</span>      3 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>652.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>141 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">3</span>049. 55<span style="color: #949494;"> [Wis…</span>      1 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">3</span>049.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>637. 55<span style="color: #949494;"> [Wis…</span>      1 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>637.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>637. 55<span style="color: #949494;"> [Wis…</span>      2 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>637.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [Marc…</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span>   <span style="text-decoration: underline;">1</span>637. 55<span style="color: #949494;"> [Wis…</span>      3 2.02<span style="color: #949494;">e</span>13  <span style="text-decoration: underline;">1</span>887.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10,873 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: AGE &lt;int+lbl&gt;, EDUC &lt;int+lbl&gt;, INCTOT &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   MIGRATE1 &lt;int+lbl&gt;, HEALTH &lt;int+lbl&gt;</span></span></span></code></pre></div>
+<span><span class="va">cps</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10,883 × 5</span></span></span>
+<span><span class="co">#&gt;     YEAR SERIAL MONTH       CPSID ASECFLAG </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>138 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>139 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>139 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>140 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>141 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>016  <span style="text-decoration: underline;">24</span>142 3<span style="color: #949494;"> [March]</span> 2.02<span style="color: #949494;">e</span>13 1<span style="color: #949494;"> [ASEC]</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10,873 more rows</span></span></span></code></pre></div>
 <p>This indicates that the data contained in these columns are integers
 but include value labels. You can use the function
 <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">is.labelled()</a></code> to determine if a variable is indeed
@@ -289,14 +286,16 @@ values:</p>
 <p>While <code>labelled</code> variables provide the benefits described
 above, they also present challenges.</p>
 <p>For example, you may have noticed that <em>both</em> of the means
-calculated above are suspect.</p>
-<p>In the case of <code>AGE_FACTOR</code>, the values have been remapped
-during conversion and several are inconsistent with the original
-data.</p>
-<p>In the case of <code>AGE</code>, we have considered all people over
+calculated above are suspect:</p>
+<ul>
+<li>In the case of <code>AGE_FACTOR</code>, the values have been
+remapped during conversion and several are inconsistent with the
+original data.</li>
+<li>In the case of <code>AGE</code>, we have considered all people over
 90 to be exactly 90, and all people over 99 to be exactly
 99—<code>labelled</code> variables don’t ensure that calculations are
-correct any more than factors do!</p>
+correct any more than factors do!</li>
+</ul>
 <p>Furthermore, many R functions ignore value labels or even actively
 remove them from the data:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -425,10 +424,10 @@ pairs whose values should be converted to <code>NA</code>.</p>
 recoding of value-label pairs. ipumsr provides a syntax to easily
 reference the values and labels in this user-defined function:</p>
 <ul>
-<li><p>The <code>.val</code> argument references the
-<em>values</em></p></li>
-<li><p>The <code>.lbl</code> argument references the
-<em>labels</em></p></li>
+<li>The <code>.val</code> argument references the <em>values</em>
+</li>
+<li>The <code>.lbl</code> argument references the <em>labels</em>
+</li>
 </ul>
 <p>For instance, to convert all values equal to <code>999999999</code>
 to <code>NA</code>, we can provide a function that uses the
@@ -484,11 +483,11 @@ values—unlabelled values are not affected:</p>
 pairs, often to recombine existing labels into more general categories.
 It takes a two-sided formula to handle the relabeling:</p>
 <ul>
-<li><p>On the left-hand side, use the <code><a href="../reference/lbl.html">lbl()</a></code> helper to
-define a new value-label pair.</p></li>
-<li><p>On the right-hand side, provide a function that returns
+<li>On the left-hand side, use the <code><a href="../reference/lbl.html">lbl()</a></code> helper to define a
+new value-label pair.</li>
+<li>On the right-hand side, provide a function that returns
 <code>TRUE</code> for those value-label pairs that should be relabelled
-with the new value-label pair from the left-hand side.</p></li>
+with the new value-label pair from the left-hand side.</li>
 </ul>
 <p>The function again uses the <code>.val</code> and <code>.lbl</code>
 <a href="#syntax">syntax</a> mentioned above to refer to values and
@@ -728,18 +727,17 @@ pipeline.</p>
 <div class="section level2">
 <h2 id="other-resources">Other resources<a class="anchor" aria-label="anchor" href="#other-resources"></a>
 </h2>
-<p>The <a href="https://haven.tidyverse.org/index.html" class="external-link">haven</a>
-package, which underlies ipumsr’s handling of value labels, provides
-more details on the <code>labelled</code> class. See
-<code><a href="https://haven.tidyverse.org/articles/semantics.html" class="external-link">vignette("semantics", package = "haven")</a></code>.</p>
-<p>The <a href="http://larmarange.github.io/labelled/articles/intro_labelled.html" class="external-link">labelled</a>
-package provides other methods for manipulating value labels, some of
-which overlap those provided by ipumsr.</p>
-<p>The <a href="https://juba.github.io/questionr/" class="external-link">questionr</a> package
-includes functions for exploring <code>labelled</code> variables. In
-particular, the functions <code>describe</code>, <code>freq</code> and
-<code>lookfor</code> all print out to console information about the
-variable using the value labels.</p>
+<p>The <a href="https://haven.tidyverse.org" class="external-link">haven</a> package, which underlies ipumsr’s handling
+of value labels, provides more details on the <code>labelled</code>
+class. See <code><a href="https://haven.tidyverse.org/articles/semantics.html" class="external-link">vignette("semantics", package = "haven")</a></code>.</p>
+<p>The <a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a> package provides other methods for
+manipulating value labels, some of which overlap those provided by
+ipumsr.</p>
+<p>The <a href="https://juba.github.io/questionr/" class="external-link">questionr</a> package includes functions for exploring
+<code>labelled</code> variables. In particular, the functions
+<code>describe</code>, <code>freq</code> and <code>lookfor</code> all
+print out to console information about the variable using the value
+labels.</p>
 <p>Finally, the <a href="https://cran.r-project.org/package=foreign" class="external-link">foreign</a> and <a href="https://cran.r-project.org/package=prettyR" class="external-link">prettyR</a> packages
 don’t use the <code>labelled</code> class, but provide similar
 functionality for handling value labels, which could be adapted for use

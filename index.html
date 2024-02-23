@@ -142,15 +142,15 @@
 <div class="section level2">
 <h2 id="what-is-ipums">What is IPUMS?<a class="anchor" aria-label="anchor" href="#what-is-ipums"></a>
 </h2>
-<p><a href="https://www.ipums.org/mission-purpose" class="external-link">IPUMS</a> is the world’s largest publicly available population database, providing census and survey data from around the world integrated across time and space. IPUMS integration and documentation make it easy to study change, conduct comparative research, merge information across data types, and analyze individuals within family and community context. Data and services are available free of charge.</p>
-<p>IPUMS consists of multiple projects, or collections, that provide different data products.</p>
+<p><a href="https://www.ipums.org" class="external-link">IPUMS</a> is the world’s largest publicly available population database, providing census and survey data from around the world integrated across time and space. IPUMS integration and documentation make it easy to study change, conduct comparative research, merge information across data types, and analyze individuals within family and community context. Data and services are available free of charge.</p>
+<p>IPUMS consists of multiple projects, or <em>collections</em>, that provide different data products.</p>
 <ul>
 <li>
 <strong>Microdata</strong> projects distribute data for individual survey units, like people or households.</li>
 <li>
 <strong>Aggregate data</strong> projects distribute summary tables of aggregate statistics for particular geographic units along with corresponding GIS mapping files.</li>
 </ul>
-<p>ipumsr supports different levels of functionality for each IPUMS project, as summarized in the following table:</p>
+<p>ipumsr supports different levels of functionality for each IPUMS project, as summarized in the table below.</p>
 <table class="table table-hover table-proj-summary">
 <thead><tr>
 <th style="text-align:center;">
@@ -369,19 +369,19 @@ Survey microdata on the science and engineering workforce in the U.S. from 1993 
 </tr>
 </tbody>
 </table>
-<p>ipumsr uses the <a href="https://developer.ipums.org/" class="external-link">IPUMS API</a> to submit data requests, download data extracts, and get metadata, so the scope of ipumsr functionality generally corresponds to the <a href="https://developer.ipums.org/docs/v2/apiprogram/apis/" class="external-link">available API functionality</a>. As the IPUMS team extends the API to support more functionality for more projects, we aim to extend ipumsr capabilities accordingly.</p>
+<p>ipumsr uses the <a href="https://developer.ipums.org/" class="external-link">IPUMS API</a> to submit data requests, download data extracts, and get metadata, so the scope of functionality generally corresponds to that <a href="https://developer.ipums.org/docs/v2/apiprogram/apis/" class="external-link">available via the API</a>. As the IPUMS team extends the API to support more functionality for more projects, we aim to extend ipumsr capabilities accordingly.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>If you’re new to IPUMS data, learn more about what’s available through the <a href="https://www.ipums.org/overview" class="external-link">IPUMS Projects Overview</a>.</p>
-<p>The package vignettes are the best place to learn about what’s available in ipumsr itself:</p>
+<p>If you’re new to IPUMS data, learn more about what’s available through the <a href="https://www.ipums.org/overview" class="external-link">IPUMS Projects Overview</a>. Then, see <code><a href="articles/ipums.html">vignette("ipums")</a></code> for an overview of how to obtain IPUMS data.</p>
+<p>The package vignettes are the best place to explore what ipumsr has to offer:</p>
 <ul>
-<li>To read IPUMS data extracts into R, see <code><a href="articles/ipums-read.html">vignette("ipums-read")</a></code>.</li>
-<li>To interact with the IPUMS extract system via the IPUMS API, see <code><a href="articles/ipums-api.html">vignette("ipums-api")</a></code>.</li>
-<li>For additional details about microdata and NHGIS extract requests, see <code><a href="articles/ipums-api-micro.html">vignette("ipums-api-micro")</a></code> and <code><a href="articles/ipums-api-nhgis.html">vignette("ipums-api-nhgis")</a></code>.</li>
-<li>To work with labelled values in IPUMS data, see <code><a href="articles/value-labels.html">vignette("value-labels")</a></code>.</li>
-<li>For techniques for working with large data extracts, see <code><a href="articles/ipums-bigdata.html">vignette("ipums-bigdata")</a></code>.</li>
+<li><p>To read IPUMS data extracts into R, see <code><a href="articles/ipums-read.html">vignette("ipums-read")</a></code>.</p></li>
+<li><p>To interact with the IPUMS extract and metadata system via the IPUMS API, see <code><a href="articles/ipums-api.html">vignette("ipums-api")</a></code>.</p></li>
+<li><p>For additional details about microdata and NHGIS extract requests, see <code><a href="articles/ipums-api-micro.html">vignette("ipums-api-micro")</a></code> and <code><a href="articles/ipums-api-nhgis.html">vignette("ipums-api-nhgis")</a></code>.</p></li>
+<li><p>To work with labelled values in IPUMS data, see <code><a href="articles/value-labels.html">vignette("value-labels")</a></code>.</p></li>
+<li><p>For techniques for working with large data extracts, see <code><a href="articles/ipums-bigdata.html">vignette("ipums-bigdata")</a></code>.</p></li>
 </ul>
 <p>The <a href="https://www.ipums.org/support" class="external-link">IPUMS support website</a> also houses many project-specific R-based <a href="https://www.ipums.org/support/exercises" class="external-link">training exercises</a>. However, note that some of these exercises may not be be up to date with ipumsr’s current functionality.</p>
 </div>
@@ -397,7 +397,7 @@ Survey microdata on the science and engineering workforce in the U.S. from 1993 
 <div class="section level2">
 <h2 id="getting-help--contributing">Getting help + contributing<a class="anchor" aria-label="anchor" href="#getting-help--contributing"></a>
 </h2>
-<p>We greatly appreciate feedback and development contributions. Please submit any bug reports, pull requests, or other suggestions on <a href="https://github.com/ipums/ipumsr/issues" class="external-link">GitHub</a>. Before contributing, please be sure to read the <a href="https://github.com/ipums/ipumsr/blob/master/CONTRIBUTING.md" class="external-link">Contributing Guidelines</a> and the <a href="https://github.com/ipums/ipumsr/blob/master/CONDUCT.md" class="external-link">Code of Conduct</a>.</p>
+<p>We greatly appreciate feedback and development contributions. Please submit any bug reports, pull requests, or other suggestions on <a href="https://github.com/ipums/ipumsr/issues" class="external-link">GitHub</a>. Before contributing, please be sure to read the <a href="https://tech.popdata.org/ipumsr/CONTRIBUTING.html" class="external-link">Contributing Guidelines</a> and the <a href="https://tech.popdata.org/ipumsr/CODE_OF_CONDUCT.html" class="external-link">Code of Conduct</a>.</p>
 <p>If you have general questions or concerns about IPUMS data, check out our <a href="https://forum.ipums.org" class="external-link">user forum</a> or send an email to <a href="mailto:ipums@umn.edu" class="email">ipums@umn.edu</a>.</p>
 </div>
 </div>
