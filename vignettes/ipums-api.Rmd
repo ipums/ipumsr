@@ -45,16 +45,16 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
                                                fixture_path = NULL,
                                                n_requests = 1) {
   fixture_path <- fixture_path %||% vcr::vcr_test_path("fixtures")
-  
+
   ready_extract_cassette_file <- file.path(
     fixture_path, cassette_file_name
   )
-  
+
   ready_lines <- readLines(ready_extract_cassette_file)
   request_lines <- which(grepl("^- request:", ready_lines))
-  
+
   start_line <- request_lines[length(request_lines) - n_requests + 1]
-  
+
   writeLines(
     c(
       ready_lines[[1]],
@@ -250,7 +250,7 @@ submit it to the IPUMS API for processing.
 insert_cassette("submit-placeholder-extract-usa")
 
 # We submit these extracts so that the output of requests for things like
-# `get_extract_history` below is more "natural". 
+# `get_extract_history` below is more "natural".
 # Otherwise the output is a bunch of duplicate extract requests for the
 # primary extract in this vignette, as this vignette usually gets rebuilt
 # several times during editing before it is complete.

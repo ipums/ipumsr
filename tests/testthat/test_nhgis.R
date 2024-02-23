@@ -261,7 +261,7 @@ test_that("Can still find codebook if direct data file path provided", {
 
   expect_equal(
     ipums_var_info(x)$var_label,
-    unname(purrr::map_chr(x, ~attributes(.x)$label))
+    unname(purrr::map_chr(x, ~ attributes(.x)$label))
   )
 })
 

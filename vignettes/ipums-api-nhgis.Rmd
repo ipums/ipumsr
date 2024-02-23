@@ -55,14 +55,14 @@ get_truncated_metadata <- function(collection,
     path = ipumsr:::metadata_request_path(collection, type),
     queries = list(pageNumber = 1, pageSize = page_size)
   )
-  
+
   responses <- ipumsr:::ipums_api_paged_request(
     url = url,
     max_pages = max_pages,
     delay = 0,
     api_key = api_key
   )
-  
+
   metadata <- purrr::map_dfr(
     responses,
     function(res) {
@@ -70,11 +70,11 @@ get_truncated_metadata <- function(collection,
         httr::content(res, "text"),
         simplifyVector = TRUE
       )
-      
+
       content$data
     }
   )
-  
+
   # Recursively convert all metadata data.frames to tibbles and all
   # camelCase names to snake_case
   ipumsr:::convert_metadata(metadata)
@@ -158,9 +158,9 @@ wanted to find all the data sources related to agriculture from the 1900
 Census, we could filter on `group` and `description`:
 
 ```{r}
-ds %>% 
+ds %>%
   filter(
-    group == "1900 Census", 
+    group == "1900 Census",
     grepl("Agriculture", description)
   )
 ```
@@ -295,8 +295,8 @@ this case, a `ds_spec` object):
 
 ```{r}
 dataset <- ds_spec(
-  "1900_cAg", 
-  data_tables = c("NT1", "NT2"), 
+  "1900_cAg",
+  data_tables = c("NT1", "NT2"),
   geog_levels = "state"
 )
 
@@ -331,7 +331,7 @@ a geographic level selection, and allow an optional selection of years:
 define_extract_nhgis(
   description = "Example time series table request",
   time_series_tables = tst_spec(
-    "CW3", 
+    "CW3",
     geog_levels = c("county", "tract"),
     years = c("1990", "2000")
   )

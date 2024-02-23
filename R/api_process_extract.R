@@ -766,7 +766,7 @@ extract_is_completed_and_has_links.micro_extract <- function(extract) {
   is_complete <- extract$status == "completed"
 
   has_codebook <- has_url(download_links, "ddi_codebook")
-  has_data <-  has_url(download_links, "data")
+  has_data <- has_url(download_links, "data")
 
   is_complete && has_codebook && has_data
 }

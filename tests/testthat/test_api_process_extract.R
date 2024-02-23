@@ -281,8 +281,10 @@ test_that("Can download microdata extract with extract object", {
 
   expect_equal(
     names(ready_usa_extract$download_links),
-    c("r_command_file", "basic_codebook", "data", "stata_command_file",
-      "sas_command_file", "spss_command_file", "ddi_codebook")
+    c(
+      "r_command_file", "basic_codebook", "data", "stata_command_file",
+      "sas_command_file", "spss_command_file", "ddi_codebook"
+    )
   )
   expect_equal(
     names(ready_usa_extract$download_links$data),
