@@ -1,6 +1,6 @@
 # Contributing
 Thank you for considering improving this project! By participating, you
-agree to abide by the [code of conduct](https://github.com/ipums/ipumsr/blob/master/CONDUCT.md).
+agree to abide by the [code of conduct](https://tech.popdata.org/ipumsr/CODE_OF_CONDUCT.html).
 
 # Issues (Reporting a problem or suggestion)
 If you've experience a problem with the package, or have a suggestion for it, 
@@ -17,6 +17,7 @@ We'll do our best to answer your question.
 
 # Pull Requests (Making changes to the package)
 We appreciate pull requests that follow these guidelines:
+
 1) Make sure that tests pass (and add new ones if possible). 
 
 2) Do your best to conform to the code style of the package, currently

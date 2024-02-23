@@ -27,24 +27,23 @@ IPUMS data come with three primary types of variable-level metadata:
     given variable measures.
 
 -   ***Value labels*** link particular data values to more meaningful
-    text labels. For instance, the `HEALTH` variable has data values
-    including 1 and 2, but these are actually stand-ins for "Excellent"
+    text labels. For instance, the `HEALTH` variable may have data values
+    including `1` and `2`, but these are actually stand-ins for "Excellent"
     and "Very good" health. This mapping would be contained in a
     value-label pair that includes a value and its associated label.
 
 The rest of this article will focus on value labels; for more about
-variable labels and descriptions, see `vignette("ipums")`.
+variable labels and descriptions, see `?ipums_var_info`.
 
 ## Value labels
 
-ipumsr uses the `labelled`
-[class](https://haven.tidyverse.org/reference/labelled.html) from the
-[haven](https://haven.tidyverse.org/index.html) package to handle value
+ipumsr uses the 
+[`labelled`](https://haven.tidyverse.org/reference/labelled.html) class from the
+`{haven}` package to handle value
 labels.
 
 You can see this in the column data types when loading IPUMS data. Note
-that `<int+lbl>` appears below `STATEFIP`, `ASECFLAG`, and other
-variables:
+that `<int+lbl>` appears below `MONTH` and `ASECFLAG`:
 
 ```{r, message=FALSE}
 library(ipumsr)
@@ -52,7 +51,7 @@ library(ipumsr)
 ddi <- read_ipums_ddi(ipums_example("cps_00160.xml"))
 cps <- read_ipums_micro(ddi, verbose = FALSE)
 
-cps
+cps[, 1:5]
 ```
 
 This indicates that the data contained in these columns are integers but
@@ -137,12 +136,11 @@ While `labelled` variables provide the benefits described above, they
 also present challenges.
 
 For example, you may have noticed that *both* of the means calculated
-above are suspect.
+above are suspect:
 
-In the case of `AGE_FACTOR`, the values have been remapped during
+-   In the case of `AGE_FACTOR`, the values have been remapped during
 conversion and several are inconsistent with the original data.
-
-In the case of `AGE`, we have considered all people over 90 to be
+-   In the case of `AGE`, we have considered all people over 90 to be
 exactly 90, and all people over 99 to be exactly 99---`labelled`
 variables don't ensure that calculations are correct any more than
 factors do!
@@ -251,7 +249,6 @@ provides a syntax to easily reference the values and labels in this
 user-defined function:
 
 -   The `.val` argument references the *values*
-
 -   The `.lbl` argument references the *labels*
 
 For instance, to convert all values equal to `999999999` to `NA`, we can
@@ -310,7 +307,6 @@ two-sided formula to handle the relabeling:
 
 -   On the left-hand side, use the `lbl()` helper to define a new
     value-label pair.
-
 -   On the right-hand side, provide a function that returns `TRUE` for
     those value-label pairs that should be relabelled with the new
     value-label pair from the left-hand side.
@@ -454,16 +450,14 @@ or numeric values, the data can move forward in the processing pipeline.
 
 ## Other resources
 
-The [haven](https://haven.tidyverse.org/index.html) package, which
+The `{haven}` package, which
 underlies ipumsr's handling of value labels, provides more details on
 the `labelled` class. See `vignette("semantics", package = "haven")`.
 
-The
-[labelled](http://larmarange.github.io/labelled/articles/intro_labelled.html)
-package provides other methods for manipulating value labels, some of
-which overlap those provided by ipumsr.
+The `{labelled}` package provides other methods for manipulating value labels, 
+some of which overlap those provided by ipumsr.
 
-The [questionr](https://juba.github.io/questionr/) package includes
+The `{questionr}` package includes
 functions for exploring `labelled` variables. In particular, the
 functions `describe`, `freq` and `lookfor` all print out to console
 information about the variable using the value labels.

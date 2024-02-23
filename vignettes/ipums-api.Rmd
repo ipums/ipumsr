@@ -45,16 +45,16 @@ modify_ready_extract_cassette_file <- function(cassette_file_name,
                                                fixture_path = NULL,
                                                n_requests = 1) {
   fixture_path <- fixture_path %||% vcr::vcr_test_path("fixtures")
-  
+
   ready_extract_cassette_file <- file.path(
     fixture_path, cassette_file_name
   )
-  
+
   ready_lines <- readLines(ready_extract_cassette_file)
   request_lines <- which(grepl("^- request:", ready_lines))
-  
+
   start_line <- request_lines[length(request_lines) - n_requests + 1]
-  
+
   writeLines(
     c(
       ready_lines[[1]],
@@ -70,7 +70,6 @@ ipumsr:
 
 -   **IPUMS extract** endpoints can be used to submit extract requests
     for processing and download completed extract files.
-
 -   **IPUMS metadata** endpoints can be used to discover and explore
     available IPUMS data as well as retrieve codes, names, and other
     extract parameters necessary to form extract requests.
@@ -251,7 +250,7 @@ submit it to the IPUMS API for processing.
 insert_cassette("submit-placeholder-extract-usa")
 
 # We submit these extracts so that the output of requests for things like
-# `get_extract_history` below is more "natural". 
+# `get_extract_history` below is more "natural".
 # Otherwise the output is a bunch of duplicate extract requests for the
 # primary extract in this vignette, as this vignette usually gets rebuilt
 # several times during editing before it is complete.
@@ -544,8 +543,8 @@ eject_cassette("check-extract-history")
 One exciting feature enabled by the IPUMS API is the ability to share a
 standardized extract definition with other IPUMS users so that they can
 create an identical extract request themselves. The terms of use for
-most IPUMS collections prohibit the redistribution of IPUMS data, but
-don't prohibit sharing data extract definitions.
+most IPUMS collections prohibit the public redistribution of IPUMS data, but
+don't prohibit the sharing of data extract definitions.
 
 ipumsr facilitates this type of sharing with `save_extract_as_json()`
 and `define_extract_from_json()`, which read and write `ipums_extract`

@@ -9,7 +9,7 @@ vignette: >
 
 Browsing for IPUMS data can be a little like grocery shopping when
 you're hungry---you show up to grab a couple things, but everything
-looks so good that you end up with an overflowing cart[^1].
+looks so good that you end up with an overflowing cart.[^1]
 Unfortunately, this can lead to extracts so large that they don't fit in
 your computer's memory.
 
@@ -117,7 +117,7 @@ define_extract_usa(
 )
 ```
 
-If you're using the online interface, the "Select Cases" option will be 
+If you're using the online interface, the **Select Cases** option will be 
 available on the last page before submitting an extract request.
 
 ### Use a sampled subset of the data
@@ -126,11 +126,11 @@ Yet another option (also only for microdata projects) is to take a
 random subsample of the data before producing your extract.
 
 Sampled data is not available via the IPUMS API, but you can use the
-"Customize Sample Size" option in the online interface to do so. This also 
+**Customize Sample Size** option in the online interface to do so. This also 
 appears on the final page before submitting an extract request.
 
-If you've already submitted the extract, you can click the "REVISE" link
-on the "Download or Revise Extracts" page to access these features and
+If you've already submitted the extract, you can click the **REVISE** link
+on the *Download or Revise Extracts* page to access these features and
 produce a new data extract.
 
 ## Option 3: Process the data in pieces
@@ -144,7 +144,6 @@ increments:
     the readr
     [framework](https://readr.tidyverse.org/reference/read_delim_chunked.html)
     for reading chunked data.
-
 -   *Yielded* functions allow more flexibility by returning control to
     the user between the loading of each piece of data. These functions
     are unique to ipumsr and fixed-width data.
@@ -173,9 +172,8 @@ cps_ddi_file <- ipums_example("cps_00097.xml")
 Imagine we wanted to find the percent of people in the workforce grouped
 by their self-reported health. Since our example extract is small enough
 to fit in memory, we could load the full dataset with
-`read_ipums_micro()`, relabel the `EMPSTAT` variable into a binary
-variable (see `vignette("value-labels")`), and count the people in each
-group.
+`read_ipums_micro()`, use `lbl_relabel()` to relabel the `EMPSTAT` variable 
+into a binary variable, and count the people in each group.
 
 ```{r}
 read_ipums_micro(cps_ddi_file, verbose = FALSE) %>%
@@ -245,8 +243,8 @@ regression models discussed [below](#chunked-reg)).
 In this case, we want to row-bind the data frames returned by
 `cb_function()`, so we use `IpumsDataFrameCallback`.
 
-Callback objects are [R6](https://CRAN.R-project.org/package=R6)
-objects, but you don't need to be familiar with R6 to use them[^2]. To
+Callback objects are `{R6}`
+objects, but you don't need to be familiar with R6 to use them.[^2] To
 initialize a callback object, simply use `$new()`:
 
 [^2]: If you're interested in learning more about R6, check out Hadley
@@ -543,16 +541,13 @@ benefits and drawbacks, and the database you choose to use will be
 specific to your use case. However, once you've chosen a database, there
 will be two general steps:
 
--   Importing data into the database
-
--   Connecting the database to R
+1.   Importing data into the database
+2.   Connecting the database to R
 
 R has several tools that support database integration, including
-[DBI](https://dbi.r-dbi.org/), [dbplyr](https://dbplyr.tidyverse.org/),
-[sparklyr](https://spark.rstudio.com/),
-[sparkR](https://spark.apache.org/docs/latest/sparkr.html),
-[bigrquery](https://bigrquery.r-dbi.org/), and others. In this example,
-we'll use RSQLite to load the data into an in-memory database. (We use
+`{DBI}`, `{dbplyr}`, `{sparklyr}`, `{bigrquery}`, and others. 
+In this example,
+we'll use `{RSQLite}` to load the data into an in-memory database. (We use
 RSQLite because it is easy to set up, but it is likely not efficient
 enough to fully resolve issues with large IPUMS data, so it may be wise
 to consider an alternative in practice.)
@@ -566,8 +561,8 @@ support CSV format), then you can use an ipumsr `chunked` function to
 load the data into a database without needing to store the entire
 dataset in R.
 
-(For more about rectangular vs. hierarchical extracts, see the
-"Hierarchical extracts" section of `vignette("ipums-read")`.)
+See the [IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
+for more about rectangular vs. hierarchical extracts.
 
 ```{r, eval=installed_db_pkgs, results="hide"}
 library(DBI)
@@ -638,8 +633,8 @@ data <- example %>%
 ipums_val_labels(data$MONTH)
 ```
 
-For more about variable metadata in IPUMS data, see
-`vignette("value-labels")`.
+See the [value labels vignette](value-labels.html) more about variable 
+metadata in IPUMS data.
 
 ## Learning more
 

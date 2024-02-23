@@ -61,8 +61,10 @@ ipums_view <- function(x, out_file = NULL, launch = TRUE) {
   if (is.null(out_file)) {
     if (!launch) {
       rlang::warn(c(
-        paste0("Some operating systems may have trouble opening an HTML ",
-               "file from a temporary directory."),
+        paste0(
+          "Some operating systems may have trouble opening an HTML ",
+          "file from a temporary directory."
+        ),
         "i" = "Use `out_file` to specify an alternate output location."
       ))
     }

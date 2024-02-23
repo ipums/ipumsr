@@ -442,9 +442,11 @@ test_that("We can get correct API version info for each collection", {
 
   expect_setequal(
     collections$collection_name,
-    c("IPUMS USA", "IPUMS CPS", "IPUMS International", "IPUMS NHGIS",
+    c(
+      "IPUMS USA", "IPUMS CPS", "IPUMS International", "IPUMS NHGIS",
       "IPUMS IHGIS", "IPUMS ATUS", "IPUMS AHTUS", "IPUMS MTUS", "IPUMS DHS",
-      "IPUMS PMA", "IPUMS MICS", "IPUMS NHIS", "IPUMS MEPS", "IPUMS Higher Ed")
+      "IPUMS PMA", "IPUMS MICS", "IPUMS NHIS", "IPUMS MEPS", "IPUMS Higher Ed"
+    )
   )
 
   has_support <- dplyr::filter(collections, .data$api_support)

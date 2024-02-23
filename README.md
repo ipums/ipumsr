@@ -42,15 +42,15 @@ remotes::install_github("ipums/ipumsr")
 
 ## What is IPUMS?
 
-[IPUMS](https://www.ipums.org/mission-purpose) is the world’s largest
-publicly available population database, providing census and survey data
-from around the world integrated across time and space. IPUMS
-integration and documentation make it easy to study change, conduct
-comparative research, merge information across data types, and analyze
-individuals within family and community context. Data and services are
-available free of charge.
+[IPUMS](https://www.ipums.org) is the world’s largest publicly available
+population database, providing census and survey data from around the
+world integrated across time and space. IPUMS integration and
+documentation make it easy to study change, conduct comparative
+research, merge information across data types, and analyze individuals
+within family and community context. Data and services are available
+free of charge.
 
-IPUMS consists of multiple projects, or collections, that provide
+IPUMS consists of multiple projects, or *collections*, that provide
 different data products.
 
 - **Microdata** projects distribute data for individual survey units,
@@ -60,7 +60,7 @@ different data products.
   GIS mapping files.
 
 ipumsr supports different levels of functionality for each IPUMS
-project, as summarized in the following table:
+project, as summarized in the table below.
 
 <table class="table-hover table-proj-summary">
 <thead>
@@ -298,26 +298,31 @@ from 1993 to 2013
 
 ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data
 requests, download data extracts, and get metadata, so the scope of
-ipumsr functionality generally corresponds to the [available API
-functionality](https://developer.ipums.org/docs/v2/apiprogram/apis/). As
-the IPUMS team extends the API to support more functionality for more
-projects, we aim to extend ipumsr capabilities accordingly.
+functionality generally corresponds to that [available via the
+API](https://developer.ipums.org/docs/v2/apiprogram/apis/). As the IPUMS
+team extends the API to support more functionality for more projects, we
+aim to extend ipumsr capabilities accordingly.
 
 ## Getting started
 
 If you’re new to IPUMS data, learn more about what’s available through
-the [IPUMS Projects Overview](https://www.ipums.org/overview).
+the [IPUMS Projects Overview](https://www.ipums.org/overview). Then, see
+`vignette("ipums")` for an overview of how to obtain IPUMS data.
 
-The package vignettes are the best place to learn about what’s available
-in ipumsr itself:
+The package vignettes are the best place to explore what ipumsr has to
+offer:
 
 - To read IPUMS data extracts into R, see `vignette("ipums-read")`.
-- To interact with the IPUMS extract system via the IPUMS API, see
-  `vignette("ipums-api")`.
+
+- To interact with the IPUMS extract and metadata system via the IPUMS
+  API, see `vignette("ipums-api")`.
+
 - For additional details about microdata and NHGIS extract requests, see
   `vignette("ipums-api-micro")` and `vignette("ipums-api-nhgis")`.
+
 - To work with labelled values in IPUMS data, see
   `vignette("value-labels")`.
+
 - For techniques for working with large data extracts, see
   `vignette("ipums-bigdata")`.
 
@@ -346,9 +351,8 @@ We greatly appreciate feedback and development contributions. Please
 submit any bug reports, pull requests, or other suggestions on
 [GitHub](https://github.com/ipums/ipumsr/issues). Before contributing,
 please be sure to read the [Contributing
-Guidelines](https://github.com/ipums/ipumsr/blob/master/CONTRIBUTING.md)
-and the [Code of
-Conduct](https://github.com/ipums/ipumsr/blob/master/CONDUCT.md).
+Guidelines](https://tech.popdata.org/ipumsr/CONTRIBUTING.html) and the
+[Code of Conduct](https://tech.popdata.org/ipumsr/CODE_OF_CONDUCT.html).
 
 If you have general questions or concerns about IPUMS data, check out
 our [user forum](https://forum.ipums.org) or send an email to
