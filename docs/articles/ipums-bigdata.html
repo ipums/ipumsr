@@ -121,8 +121,8 @@
     
 <p>Browsing for IPUMS data can be a little like grocery shopping when
 you’re hungry—you show up to grab a couple things, but everything looks
-so good that you end up with an overflowing cart<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Bonus joke: why is the IPUMS website better than any
-grocery store? More free samples.&lt;/p&gt;"><sup>1</sup></a>. Unfortunately, this
+so good that you end up with an overflowing cart.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Bonus joke: why is the IPUMS website better than any
+grocery store? More free samples.&lt;/p&gt;"><sup>1</sup></a> Unfortunately, this
 can lead to extracts so large that they don’t fit in your computer’s
 memory.</p>
 <p>If you’ve got an extract that’s too big, both the IPUMS website and
@@ -208,8 +208,9 @@ for married women:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2013a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(2 total) MARST, SEX</span></span></code></pre></div>
-<p>If you’re using the online interface, the “Select Cases” option will
-be available on the last page before submitting an extract request.</p>
+<p>If you’re using the online interface, the <strong>Select
+Cases</strong> option will be available on the last page before
+submitting an extract request.</p>
 </div>
 <div class="section level3">
 <h3 id="use-a-sampled-subset-of-the-data">Use a sampled subset of the data<a class="anchor" aria-label="anchor" href="#use-a-sampled-subset-of-the-data"></a>
@@ -217,11 +218,12 @@ be available on the last page before submitting an extract request.</p>
 <p>Yet another option (also only for microdata projects) is to take a
 random subsample of the data before producing your extract.</p>
 <p>Sampled data is not available via the IPUMS API, but you can use the
-“Customize Sample Size” option in the online interface to do so. This
-also appears on the final page before submitting an extract request.</p>
-<p>If you’ve already submitted the extract, you can click the “REVISE”
-link on the “Download or Revise Extracts” page to access these features
-and produce a new data extract.</p>
+<strong>Customize Sample Size</strong> option in the online interface to
+do so. This also appears on the final page before submitting an extract
+request.</p>
+<p>If you’ve already submitted the extract, you can click the
+<strong>REVISE</strong> link on the <em>Download or Revise Extracts</em>
+page to access these features and produce a new data extract.</p>
 </div>
 </div>
 <div class="section level2">
@@ -230,14 +232,16 @@ and produce a new data extract.</p>
 <p>ipumsr provides two related options for reading data sources in
 increments:</p>
 <ul>
-<li><p><em>Chunked</em> functions allow you to specify a function that
-will be called on each chunk of data as it is read in as well as how you
+<li>
+<em>Chunked</em> functions allow you to specify a function that will
+be called on each chunk of data as it is read in as well as how you
 would like the chunks to be combined at the end. These functions use the
 readr <a href="https://readr.tidyverse.org/reference/read_delim_chunked.html" class="external-link">framework</a>
-for reading chunked data.</p></li>
-<li><p><em>Yielded</em> functions allow more flexibility by returning
+for reading chunked data.</li>
+<li>
+<em>Yielded</em> functions allow more flexibility by returning
 control to the user between the loading of each piece of data. These
-functions are unique to ipumsr and fixed-width data.</p></li>
+functions are unique to ipumsr and fixed-width data.</li>
 </ul>
 <div class="section level3">
 <h3 id="reading-chunked-data">Reading chunked data<a class="anchor" aria-label="anchor" href="#reading-chunked-data"></a>
@@ -262,10 +266,9 @@ legitimate!</em></p>
 <p>Imagine we wanted to find the percent of people in the workforce
 grouped by their self-reported health. Since our example extract is
 small enough to fit in memory, we could load the full dataset with
-<code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code>, relabel the <code>EMPSTAT</code>
-variable into a binary variable (see
-<code><a href="../articles/value-labels.html">vignette("value-labels")</a></code>), and count the people in each
-group.</p>
+<code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code>, use <code><a href="../reference/lbl_relabel.html">lbl_relabel()</a></code> to
+relabel the <code>EMPSTAT</code> variable into a binary variable, and
+count the people in each group.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_ddi_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -345,11 +348,11 @@ regression models discussed <a href="#chunked-reg">below</a>).</p>
 <p>In this case, we want to row-bind the data frames returned by
 <code>cb_function()</code>, so we use
 <code>IpumsDataFrameCallback</code>.</p>
-<p>Callback objects are <a href="https://CRAN.R-project.org/package=R6" class="external-link">R6</a> objects, but you
-don’t need to be familiar with R6 to use them<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;If you’re interested in learning more about R6, check
+<p>Callback objects are <a href="https://r6.r-lib.org" class="external-link">R6</a> objects, but you don’t need to
+be familiar with R6 to use them.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;If you’re interested in learning more about R6, check
 out Hadley Wickham’s &lt;a href="https://adv-r.hadley.nz/r6.html?q=R6#r6" class="external-link"&gt;Advanced R&lt;/a&gt; book,
-which is available for free online.&lt;/p&gt;'><sup>2</sup></a>. To initialize a
-callback object, simply use <code>$new()</code>:</p>
+which is available for free online.&lt;/p&gt;'><sup>2</sup></a> To initialize a callback object, simply use
+<code>$new()</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/ipums_callback.html">IpumsDataFrameCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">cb_function</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, we’re ready to load the data in chunks. We use
@@ -715,15 +718,17 @@ be loaded into R.</p>
 benefits and drawbacks, and the database you choose to use will be
 specific to your use case. However, once you’ve chosen a database, there
 will be two general steps:</p>
-<ul>
-<li><p>Importing data into the database</p></li>
-<li><p>Connecting the database to R</p></li>
-</ul>
-<p>R has several tools that support database integration, including <a href="https://dbi.r-dbi.org/" class="external-link">DBI</a>, <a href="https://dbplyr.tidyverse.org/" class="external-link">dbplyr</a>, <a href="https://spark.rstudio.com/" class="external-link">sparklyr</a>, <a href="https://spark.apache.org/docs/latest/sparkr.html" class="external-link">sparkR</a>, <a href="https://bigrquery.r-dbi.org/" class="external-link">bigrquery</a>, and others. In this
-example, we’ll use RSQLite to load the data into an in-memory database.
-(We use RSQLite because it is easy to set up, but it is likely not
-efficient enough to fully resolve issues with large IPUMS data, so it
-may be wise to consider an alternative in practice.)</p>
+<ol style="list-style-type: decimal">
+<li>Importing data into the database</li>
+<li>Connecting the database to R</li>
+</ol>
+<p>R has several tools that support database integration, including
+<a href="https://dbi.r-dbi.org" class="external-link">DBI</a>, <a href="https://dbplyr.tidyverse.org/" class="external-link">dbplyr</a>, <a href="https://spark.rstudio.com/" class="external-link">sparklyr</a>,
+<a href="https://bigrquery.r-dbi.org" class="external-link">bigrquery</a>, and others. In this example, we’ll use RSQLite
+to load the data into an in-memory database. (We use RSQLite because it
+is easy to set up, but it is likely not efficient enough to fully
+resolve issues with large IPUMS data, so it may be wise to consider an
+alternative in practice.)</p>
 <div class="section level4">
 <h4 id="importing-data-into-the-database">Importing data into the database<a class="anchor" aria-label="anchor" href="#importing-data-into-the-database"></a>
 </h4>
@@ -733,9 +738,9 @@ working with a hierarchical extract (or your database software doesn’t
 support CSV format), then you can use an ipumsr <code>chunked</code>
 function to load the data into a database without needing to store the
 entire dataset in R.</p>
-<p>(For more about rectangular vs. hierarchical extracts, see the
-“Hierarchical extracts” section of
-<code><a href="../articles/ipums-read.html">vignette("ipums-read")</a></code>.)</p>
+<p>See the <a href="ipums-read.html#hierarchical-extracts">IPUMS data
+reading vignette</a> for more about rectangular vs. hierarchical
+extracts.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsqlite.r-dbi.org" class="external-link">RSQLite</a></span><span class="op">)</span></span>
@@ -830,8 +835,8 @@ into the R environment:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10 October  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
-<p>For more about variable metadata in IPUMS data, see
-<code><a href="../articles/value-labels.html">vignette("value-labels")</a></code>.</p>
+<p>See the <a href="value-labels.html">value labels vignette</a> more
+about variable metadata in IPUMS data.</p>
 </div>
 </div>
 <div class="section level2">

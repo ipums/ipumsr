@@ -152,7 +152,7 @@ ds <- get_metadata_nhgis(type = "datasets")
 head(ds)
 ```
 
-We can use basic functions from [dplyr](https://dplyr.tidyverse.org/) to
+We can use basic functions from `{dplyr}` to
 filter the metadata to those records of interest. For instance, if we
 wanted to find all the data sources related to agriculture from the 1900
 Census, we could filter on `group` and `description`:
@@ -202,7 +202,7 @@ tst$geog_levels[[1]]
 ```
 
 To filter on these columns, we can use `map_lgl()` from
-[purrr](https://purrr.tidyverse.org/). For instance, to find all time
+`{purrr}`. For instance, to find all time
 series tables that include data from a particular year:
 
 ```{r}
@@ -212,9 +212,8 @@ tst %>%
   filter(map_lgl(years, ~ "1840" %in% .x$name))
 ```
 
-For more details on working with nested data frames, see the
-documentation for [dplyr](https://dplyr.tidyverse.org/) and
-[purrr](https://purrr.tidyverse.org/).
+For more details on working with nested data frames, see this
+[tidyr article](https://tidyr.tidyverse.org/articles/nest.html).
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 eject_cassette("nhgis-metadata-summary")
@@ -235,7 +234,7 @@ cAg_meta <- get_metadata_nhgis(dataset = "1900_cAg")
 ```
 
 This provides a comprehensive list of the possible specifications for
-the input data source. For instance, for the 1900_cAg dataset, we have
+the input data source. For instance, for the `1900_cAg` dataset, we have
 66 tables to choose from, and 3 possible geographic levels:
 
 ```{r}
@@ -277,13 +276,15 @@ included in the extract and indicate the desired format and layout.
 ### Basic extract definitions
 
 Let's say we're interested in getting state-level data on the number of
-farms and their average size from the 1900_cAg dataset that we
+farms and their average size from the `1900_cAg` dataset that we
 identified above. As we can see in the metadata, these data are
-contained in tables NT2 and NT3:
+contained in tables `NT2` and `NT3`:
 
 ```{r}
 cAg_meta$data_tables
 ```
+
+#### Dataset specifications
 
 To request these data, we need to make an explicit *dataset
 specification*. All datasets must be associated with a selection of data
@@ -314,8 +315,10 @@ nhgis_ext <- define_extract_nhgis(
 nhgis_ext
 ```
 
-(Dataset specifications can also include selections for `years` and
-`breakdown_values`, but these are not available for all datasets.)
+Dataset specifications can also include selections for `years` and
+`breakdown_values`, but these are not available for all datasets.
+
+#### Time series table specifications
 
 Similarly, to make a request for time series tables, use the
 `tst_spec()` helper. This makes a `tst_spec` object containing a time
@@ -335,6 +338,20 @@ define_extract_nhgis(
 )
 ```
 
+#### Shapefile specifications
+
+Shapefiles don't have any additional specification options, and
+therefore can be requested simply by providing their names:
+
+```{r}
+define_extract_nhgis(
+  description = "Example shapefiles request",
+  shapefiles = c("us_county_2021_tl2021", "us_county_2020_tl2020")
+)
+```
+
+#### Invalid specifications
+
 An attempt to define an extract that does not have all the required
 specifications for a given dataset or time series table will throw an
 error:
@@ -347,19 +364,9 @@ define_extract_nhgis(
 ```
 
 Note that it is still possible to make invalid extract requests (for
-instance, by requesting a dataset or table that doesn't exist). This
+instance, by requesting a dataset or data table that doesn't exist). This
 kind of issue will be caught upon submission to the API, not upon the
 creation of the extract definition.
-
-Shapefiles don't have any additional specification options, and
-therefore can be requested simply by providing their names:
-
-```{r}
-define_extract_nhgis(
-  description = "Example shapefiles request",
-  shapefiles = c("us_county_2021_tl2021", "us_county_2020_tl2020")
-)
-```
 
 ### More complicated extract definitions
 
@@ -382,7 +389,7 @@ For extracts with multiple datasets or time series tables, it may be
 easier to generate the specifications independently before creating your
 extract request object. You can quickly create multiple `ds_spec`
 objects by iterating across the specifications you want to include.
-Here, we use purrr to do so, but you could also use a `for` loop:
+Here, we use `{purrr}` to do so, but you could also use a `for` loop:
 
 ```{r}
 ds_names <- c("2019_ACS1", "2018_ACS1")
@@ -393,11 +400,7 @@ geogs <- c("county", "state")
 # data tabels and geog levels indicated above
 datasets <- purrr::map(
   ds_names,
-  ~ ds_spec(
-    name = .x, 
-    data_tables = tables, 
-    geog_levels = geogs
-  )
+  ~ ds_spec(name = .x, data_tables = tables, geog_levels = geogs)
 )
 
 nhgis_ext <- define_extract_nhgis(

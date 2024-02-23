@@ -188,10 +188,10 @@ shapefiles.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1820_cPop 1820 Census Population Data [US, States &amp; Counties]       401</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 1830_cPop 1830 Census Population Data [US, States &amp; Counties]       501</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1840_cAg  1840 Census Agriculture Data [US, States &amp; Counties]      601</span></span></code></pre></div>
-<p>We can use basic functions from <a href="https://dplyr.tidyverse.org/" class="external-link">dplyr</a> to filter the metadata to
-those records of interest. For instance, if we wanted to find all the
-data sources related to agriculture from the 1900 Census, we could
-filter on <code>group</code> and <code>description</code>:</p>
+<p>We can use basic functions from <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a> to filter the
+metadata to those records of interest. For instance, if we wanted to
+find all the data sources related to agriculture from the 1900 Census,
+we could filter on <code>group</code> and <code>description</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
@@ -249,8 +249,9 @@ list columns, where each entry is itself a data frame:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> state  State                4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> county State--County       25</span></span></code></pre></div>
-<p>To filter on these columns, we can use <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl()</a></code> from <a href="https://purrr.tidyverse.org/" class="external-link">purrr</a>. For instance, to find all
-time series tables that include data from a particular year:</p>
+<p>To filter on these columns, we can use <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl()</a></code> from
+<a href="https://purrr.tidyverse.org/" class="external-link">purrr</a>. For instance, to find all time series tables that
+include data from a particular year:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Iterate over each `years` entry, identifying whether that entry</span></span>
 <span><span class="co"># contains "1840" in its `name` column.</span></span>
@@ -262,9 +263,8 @@ time series tables that include data from a particular year:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> A00   Total Population   Nominal                    100. <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> A08   Persons by Sex [2] Nominal                    102. <span style="color: #949494;">&lt;tibble&gt;</span>    <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: geog_levels &lt;list&gt;</span></span></span></code></pre></div>
-<p>For more details on working with nested data frames, see the
-documentation for <a href="https://dplyr.tidyverse.org/" class="external-link">dplyr</a> and
-<a href="https://purrr.tidyverse.org/" class="external-link">purrr</a>.</p>
+<p>For more details on working with nested data frames, see this <a href="https://tidyr.tidyverse.org/articles/nest.html" class="external-link">tidyr
+article</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="detailed-metadata">Detailed metadata<a class="anchor" aria-label="anchor" href="#detailed-metadata"></a>
@@ -275,8 +275,9 @@ corresponding argument of <code><a href="../reference/get_metadata_nhgis.html">g
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cAg_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_metadata_nhgis.html">get_metadata_nhgis</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"1900_cAg"</span><span class="op">)</span></span></code></pre></div>
 <p>This provides a comprehensive list of the possible specifications for
-the input data source. For instance, for the 1900_cAg dataset, we have
-66 tables to choose from, and 3 possible geographic levels:</p>
+the input data source. For instance, for the <code>1900_cAg</code>
+dataset, we have 66 tables to choose from, and 3 possible geographic
+levels:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cAg_meta</span><span class="op">$</span><span class="va">data_tables</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 66 × 4</span></span></span>
@@ -352,9 +353,9 @@ included in the extract and indicate the desired format and layout.</p>
 <h3 id="basic-extract-definitions">Basic extract definitions<a class="anchor" aria-label="anchor" href="#basic-extract-definitions"></a>
 </h3>
 <p>Let’s say we’re interested in getting state-level data on the number
-of farms and their average size from the 1900_cAg dataset that we
-identified above. As we can see in the metadata, these data are
-contained in tables NT2 and NT3:</p>
+of farms and their average size from the <code>1900_cAg</code> dataset
+that we identified above. As we can see in the metadata, these data are
+contained in tables <code>NT2</code> and <code>NT3</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cAg_meta</span><span class="op">$</span><span class="va">data_tables</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 66 × 4</span></span></span>
@@ -371,6 +372,9 @@ contained in tables NT2 and NT3:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> NT9   AYL        Farms with Buildings                         9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> NT10  AWT        Acres of Farmland                           10</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 56 more rows</span></span></span></code></pre></div>
+<div class="section level4">
+<h4 id="dataset-specifications">Dataset specifications<a class="anchor" aria-label="anchor" href="#dataset-specifications"></a>
+</h4>
 <p>To request these data, we need to make an explicit <em>dataset
 specification</em>. All datasets must be associated with a selection of
 data tables and geographic levels. We can use the <code><a href="../reference/ds_spec.html">ds_spec()</a></code>
@@ -406,9 +410,13 @@ definition:</p>
 <span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">Dataset: </span>1900_cAg</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">Tables: </span>NT1, NT2</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>state</span></span></code></pre></div>
-<p>(Dataset specifications can also include selections for
+<p>Dataset specifications can also include selections for
 <code>years</code> and <code>breakdown_values</code>, but these are not
-available for all datasets.)</p>
+available for all datasets.</p>
+</div>
+<div class="section level4">
+<h4 id="time-series-table-specifications">Time series table specifications<a class="anchor" aria-label="anchor" href="#time-series-table-specifications"></a>
+</h4>
 <p>Similarly, to make a request for time series tables, use the
 <code><a href="../reference/ds_spec.html">tst_spec()</a></code> helper. This makes a <code>tst_spec</code>
 object containing a time series table specification.</p>
@@ -430,24 +438,13 @@ years:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00; font-weight: bold;">Time Series Table: </span>CW3</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">Geog Levels: </span>county, tract</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">Years: </span>1990, 2000</span></span></code></pre></div>
-<p>An attempt to define an extract that does not have all the required
-specifications for a given dataset or time series table will throw an
-error:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
-<span>  description <span class="op">=</span> <span class="st">"Invalid extract"</span>,</span>
-<span>  datasets <span class="op">=</span> <span class="fu"><a href="../reference/ds_spec.html">ds_spec</a></span><span class="op">(</span><span class="st">"1900_STF1"</span>, data_tables <span class="op">=</span> <span class="st">"NP1"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `validate_ipums_extract()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Invalid `ds_spec` specification:</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> `geog_levels` must not contain missing values.</span></span></code></pre></div>
-<p>Note that it is still possible to make invalid extract requests (for
-instance, by requesting a dataset or table that doesn’t exist). This
-kind of issue will be caught upon submission to the API, not upon the
-creation of the extract definition.</p>
+</div>
+<div class="section level4">
+<h4 id="shapefile-specifications">Shapefile specifications<a class="anchor" aria-label="anchor" href="#shapefile-specifications"></a>
+</h4>
 <p>Shapefiles don’t have any additional specification options, and
 therefore can be requested simply by providing their names:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
 <span>  description <span class="op">=</span> <span class="st">"Example shapefiles request"</span>,</span>
 <span>  shapefiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us_county_2021_tl2021"</span>, <span class="st">"us_county_2020_tl2020"</span><span class="op">)</span></span>
@@ -456,6 +453,26 @@ therefore can be requested simply by providing their names:</p>
 <span><span class="co">#&gt; Description: Example shapefiles request</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Shapefiles: </span>us_county_2021_tl2021, us_county_2020_tl2020</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="invalid-specifications">Invalid specifications<a class="anchor" aria-label="anchor" href="#invalid-specifications"></a>
+</h4>
+<p>An attempt to define an extract that does not have all the required
+specifications for a given dataset or time series table will throw an
+error:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span>  description <span class="op">=</span> <span class="st">"Invalid extract"</span>,</span>
+<span>  datasets <span class="op">=</span> <span class="fu"><a href="../reference/ds_spec.html">ds_spec</a></span><span class="op">(</span><span class="st">"1900_STF1"</span>, data_tables <span class="op">=</span> <span class="st">"NP1"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `validate_ipums_extract()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Invalid `ds_spec` specification:</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> `geog_levels` must not contain missing values.</span></span></code></pre></div>
+<p>Note that it is still possible to make invalid extract requests (for
+instance, by requesting a dataset or data table that doesn’t exist).
+This kind of issue will be caught upon submission to the API, not upon
+the creation of the extract definition.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="more-complicated-extract-definitions">More complicated extract definitions<a class="anchor" aria-label="anchor" href="#more-complicated-extract-definitions"></a>
@@ -489,8 +506,8 @@ objects in <code><a href="../reference/define_extract_nhgis.html">define_extract
 easier to generate the specifications independently before creating your
 extract request object. You can quickly create multiple
 <code>ds_spec</code> objects by iterating across the specifications you
-want to include. Here, we use purrr to do so, but you could also use a
-<code>for</code> loop:</p>
+want to include. Here, we use <a href="https://purrr.tidyverse.org/" class="external-link">purrr</a> to do so, but you
+could also use a <code>for</code> loop:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ds_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2019_ACS1"</span>, <span class="st">"2018_ACS1"</span><span class="op">)</span></span>
 <span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B01001"</span>, <span class="st">"B01002"</span><span class="op">)</span></span>
@@ -500,11 +517,7 @@ want to include. Here, we use purrr to do so, but you could also use a
 <span><span class="co"># data tabels and geog levels indicated above</span></span>
 <span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>  <span class="va">ds_names</span>,</span>
-<span>  <span class="op">~</span> <span class="fu"><a href="../reference/ds_spec.html">ds_spec</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="va">.x</span>, </span>
-<span>    data_tables <span class="op">=</span> <span class="va">tables</span>, </span>
-<span>    geog_levels <span class="op">=</span> <span class="va">geogs</span></span>
-<span>  <span class="op">)</span></span>
+<span>  <span class="op">~</span> <span class="fu"><a href="../reference/ds_spec.html">ds_spec</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">.x</span>, data_tables <span class="op">=</span> <span class="va">tables</span>, geog_levels <span class="op">=</span> <span class="va">geogs</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nhgis_ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>

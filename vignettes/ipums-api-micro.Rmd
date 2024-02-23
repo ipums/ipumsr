@@ -67,8 +67,8 @@ In addition to microdata projects, the IPUMS API also supports IPUMS NHGIS
 data. For details about obtaining IPUMS NHGIS data using ipumsr, see
 the [NHGIS-specific vignette](ipums-api-nhgis.html).
 
-Before getting started, we'll load ipumsr and 
-[dplyr](https://dplyr.tidyverse.org/), which will be helpful for this demo:
+Before getting started, we'll load ipumsr and `{dplyr}`, which will be 
+helpful for this demo:
 
 ```{r, message=FALSE}
 library(ipumsr)
@@ -363,13 +363,13 @@ IPUMS allows users to create variables that reflect the characteristics of other
 household members. To do so, use the `attached_characteristics` argument of
 `var_spec()`.
 
-For instance, to attach the spouse's SEX value to a record:
+For instance, to attach the spouse's `SEX` value to a record:
 
 ```{r}
 var_spec("SEX", attached_characteristics = "spouse")
 ```
 
-This will add a new variable (in this case, SEX_SP) to the output data that 
+This will add a new variable (in this case, `SEX_SP`) to the output data that 
 will contain the sex of a person's spouse (if no such record exists, the 
 value will be 0).
 
@@ -394,7 +394,7 @@ To include data quality flags for an individual variable, use the
 var_spec("RACE", data_quality_flags = TRUE)
 ```
 
-This will produce a new variable (QRACE) containing the data quality flag for 
+This will produce a new variable (`QRACE`) containing the data quality flag for 
 the given variable.
 
 To add data quality flags for all variables that have them, set

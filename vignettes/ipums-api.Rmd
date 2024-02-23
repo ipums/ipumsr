@@ -70,7 +70,6 @@ ipumsr:
 
 -   **IPUMS extract** endpoints can be used to submit extract requests
     for processing and download completed extract files.
-
 -   **IPUMS metadata** endpoints can be used to discover and explore
     available IPUMS data as well as retrieve codes, names, and other
     extract parameters necessary to form extract requests.
@@ -544,8 +543,8 @@ eject_cassette("check-extract-history")
 One exciting feature enabled by the IPUMS API is the ability to share a
 standardized extract definition with other IPUMS users so that they can
 create an identical extract request themselves. The terms of use for
-most IPUMS collections prohibit the redistribution of IPUMS data, but
-don't prohibit sharing data extract definitions.
+most IPUMS collections prohibit the public redistribution of IPUMS data, but
+don't prohibit the sharing of data extract definitions.
 
 ipumsr facilitates this type of sharing with `save_extract_as_json()`
 and `define_extract_from_json()`, which read and write `ipums_extract`

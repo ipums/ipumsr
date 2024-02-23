@@ -53,7 +53,7 @@ remotes::install_github("ipums/ipumsr")
 
 ## What is IPUMS?
 
-[IPUMS](https://www.ipums.org/mission-purpose) is the world's largest
+[IPUMS](https://www.ipums.org) is the world's largest
 publicly available population database, providing census and survey data
 from around the world integrated across time and space. IPUMS
 integration and documentation make it easy to study change, conduct
@@ -61,7 +61,7 @@ comparative research, merge information across data types, and analyze
 individuals within family and community context. Data and services are
 available free of charge.
 
-IPUMS consists of multiple projects, or collections, that provide
+IPUMS consists of multiple projects, or *collections*, that provide
 different data products.
 
 -   **Microdata** projects distribute data for individual survey units,
@@ -71,7 +71,7 @@ statistics for particular geographic units along with corresponding
 GIS mapping files.
 
 ipumsr supports different levels of functionality for each IPUMS project, as
-summarized in the following table:
+summarized in the table below.
 
 ```{r}
 #| echo: false
@@ -196,25 +196,28 @@ knitr::kable(
 
 ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data
 requests, download data extracts, and get metadata, so the scope of
-ipumsr functionality generally corresponds to the [available API
-functionality](https://developer.ipums.org/docs/v2/apiprogram/apis/). As
+functionality generally corresponds to that [available via the API](https://developer.ipums.org/docs/v2/apiprogram/apis/). As
 the IPUMS team extends the API to support more functionality for more
 projects, we aim to extend ipumsr capabilities accordingly.
 
 ## Getting started
 
 If you're new to IPUMS data, learn more about what's available through
-the [IPUMS Projects Overview](https://www.ipums.org/overview).
+the [IPUMS Projects Overview](https://www.ipums.org/overview). Then, see
+`vignette("ipums")` for an overview of how to obtain IPUMS data.
 
-The package vignettes are the best place to learn about what's available in 
-ipumsr itself:
+The package vignettes are the best place to explore what ipumsr has to offer:
 
 -   To read IPUMS data extracts into R, see `vignette("ipums-read")`.
--   To interact with the IPUMS extract system via the IPUMS API, see 
-    `vignette("ipums-api")`.
+
+-   To interact with the IPUMS extract and metadata system via the IPUMS API, 
+    see `vignette("ipums-api")`.
+    
 -   For additional details about microdata and NHGIS extract requests, see 
     `vignette("ipums-api-micro")` and `vignette("ipums-api-nhgis")`.
+    
 -   To work with labelled values in IPUMS data, see `vignette("value-labels")`.
+
 -   For techniques for working with large data extracts, see
     `vignette("ipums-bigdata")`.
 
