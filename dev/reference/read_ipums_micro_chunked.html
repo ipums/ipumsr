@@ -396,25 +396,25 @@ extract.</p>
 <span class="r-in"><span><span class="co"># the full dataset in memory</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"biglm"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">lm_results</span> <span class="op">&lt;-</span> <span class="fu">read_ipums_micro_chunked</span><span class="op">(</span></span></span>
-<span class="r-in"><span>   <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00160.xml"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>   <span class="va"><a href="ipums_callback.html">IpumsBiglmCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>     <span class="va">INCTOT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="va">HEALTH</span>, <span class="co"># Model formula</span></span></span>
-<span class="r-in"><span>     <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>       <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>           INCTOT <span class="op">=</span> <span class="fu"><a href="lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>             <span class="va">INCTOT</span>,</span></span>
-<span class="r-in"><span>             <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Missing|N.I.U."</span>, <span class="va">.lbl</span><span class="op">)</span></span></span>
-<span class="r-in"><span>           <span class="op">)</span>,</span></span>
-<span class="r-in"><span>           HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span></span></span>
-<span class="r-in"><span>         <span class="op">)</span></span></span>
-<span class="r-in"><span>     <span class="op">}</span></span></span>
-<span class="r-in"><span>   <span class="op">)</span>,</span></span>
-<span class="r-in"><span>   chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span></span>
-<span class="r-in"><span>   verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
-<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00160.xml"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va"><a href="ipums_callback.html">IpumsBiglmCallback</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="va">INCTOT</span> <span class="op">~</span> <span class="va">AGE</span> <span class="op">+</span> <span class="va">HEALTH</span>, <span class="co"># Model formula</span></span></span>
+<span class="r-in"><span>      <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">pos</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>        <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>            INCTOT <span class="op">=</span> <span class="fu"><a href="lbl_na_if.html">lbl_na_if</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>              <span class="va">INCTOT</span>,</span></span>
+<span class="r-in"><span>              <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Missing|N.I.U."</span>, <span class="va">.lbl</span><span class="op">)</span></span></span>
+<span class="r-in"><span>            <span class="op">)</span>,</span></span>
+<span class="r-in"><span>            HEALTH <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">HEALTH</span><span class="op">)</span></span></span>
+<span class="r-in"><span>          <span class="op">)</span></span></span>
+<span class="r-in"><span>      <span class="op">}</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span>,</span></span>
+<span class="r-in"><span>    chunk_size <span class="op">=</span> <span class="fl">1000</span>,</span></span>
+<span class="r-in"><span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm_results</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm_results</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: biglm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Large data regression model: biglm(INCTOT ~ AGE + HEALTH, data, ...)</span>
