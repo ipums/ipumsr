@@ -1,5 +1,7 @@
 # ipumsr (development version)
 
+* Minor updates to README and vignettes
+
 # ipumsr 0.7.0
 
 ## Function retirements
