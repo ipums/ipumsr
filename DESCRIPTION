@@ -53,7 +53,7 @@ Suggests:
     scales,
     sf,
     shiny,
-    testthat (>= 3.0.0),
+    testthat (>= 3.2.0),
     tidyr,
     vcr (>= 0.6.0),
     withr
