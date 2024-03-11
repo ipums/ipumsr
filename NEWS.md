@@ -1,5 +1,7 @@
 # ipumsr (development version)
 
+* Fix for CRAN checks
+
 # ipumsr 0.7.1
 
 * Minor updates to README and vignettes
