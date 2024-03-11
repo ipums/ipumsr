@@ -94,6 +94,7 @@ test_that("Can read extract at multiple file levels", {
 
 test_that("We get informative errors when reading shapefiles", {
   skip_if_not_installed("sf")
+  skip_if_not_installed("tidyselect", "1.2.1")
 
   nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 

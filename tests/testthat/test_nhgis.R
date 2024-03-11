@@ -308,6 +308,8 @@ test_that("We can specify available readr options in read_nhgis()", {
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
+  skip_if_not_installed("tidyselect", "1.2.1")
+
   expect_error(
     read_nhgis("FAKE_FILE.zip", verbose = FALSE),
     "Could not find file"
