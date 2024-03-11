@@ -87,6 +87,7 @@ test_that("Can read extract at multiple file levels", {
 
 test_that("We get informative errors when reading shapefiles", {
   skip_if_not_installed("sf")
+  testthat::local_edition(3)
 
   nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
@@ -96,9 +97,9 @@ test_that("We get informative errors when reading shapefiles", {
     "Multiple files found.+To combine files"
   )
 
-  expect_error(
+  expect_snapshot(
     read_ipums_sf(nhgis_multi_shp, file_select = 4),
-    "Can't subset files past the end.+Available files:"
+    error = TRUE
   )
 
   expect_warning(

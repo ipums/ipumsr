@@ -315,6 +315,7 @@ test_that("We can specify available readr options in read_nhgis()", {
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
+  testthat::local_edition(3)
   expect_error(
     read_nhgis("FAKE_FILE.zip", verbose = FALSE),
     "Could not find file"
@@ -345,10 +346,9 @@ test_that("We get informative error messages when reading NHGIS extracts", {
     ),
     "Multiple files found, please use the `file_select`"
   )
-
-  expect_error(
+  expect_snapshot(
     read_nhgis(nhgis_multi_ds, file_select = 3, verbose = FALSE),
-    "Can't subset files past the end.+Available files:"
+    error = TRUE
   )
   expect_error(
     read_nhgis(
