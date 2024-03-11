@@ -26,13 +26,15 @@ test_that("Can check microdata extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(test_usa_extract())
+    )
   })
 
   extract_number <- submitted_usa_extract$number
 
   vcr::use_cassette("ready-usa-extract", {
-    wait_for_extract(submitted_usa_extract)
+    wait_for_extract(submitted_usa_extract, verbose = FALSE)
   })
 
   # Use same cassette for each status check. If request is incompatible,
@@ -71,13 +73,15 @@ test_that("Can check NHGIS extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
 
   extract_number <- submitted_nhgis_extract$number
 
   vcr::use_cassette("ready-nhgis-extract", {
-    wait_for_extract(submitted_nhgis_extract)
+    wait_for_extract(submitted_nhgis_extract, verbose = FALSE)
   })
 
   vcr::use_cassette("get-nhgis-extract-info", {
@@ -129,10 +133,15 @@ test_that("We avoid superfluous checks when getting extract status", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+    ready_nhgis_extract <- wait_for_extract(
+      submitted_nhgis_extract,
+      verbose = FALSE
+    )
   })
 
   # This should not make an API request because the extract is already
@@ -229,14 +238,16 @@ test_that("Can get extract info for default collection", {
 
   withr::with_envvar(new = c("IPUMS_DEFAULT_COLLECTION" = "nhgis"), {
     vcr::use_cassette("submitted-nhgis-extract", {
-      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+      suppressMessages(
+        submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+      )
     })
 
     extract_number <- submitted_nhgis_extract$number
 
     vcr::use_cassette("ready-nhgis-extract", {
       expect_equal(
-        wait_for_extract(extract_number)$status,
+        wait_for_extract(extract_number, verbose = FALSE)$status,
         "completed"
       )
     })
@@ -346,23 +357,27 @@ test_that("Can get extract history for more records than page size", {
 
 test_that("Tibble of recent micro extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   usa_extract <- test_usa_extract()
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(usa_extract)
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(usa_extract)
+    )
   })
 
   submitted_number <- submitted_usa_extract$number
 
   vcr::use_cassette("ready-usa-extract", {
-    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+    ready_usa_extract <- wait_for_extract(
+      submitted_usa_extract,
+      verbose = FALSE
+    )
   })
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    lifecycle::expect_deprecated(
-      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
-    )
+    recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
   })
 
   recent_numbers <- recent_usa_extracts_tbl$number
@@ -412,20 +427,24 @@ test_that("Tibble of recent micro extracts has expected structure", {
 
 test_that("Tibble of recent NHGIS extracts has expected structure", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
 
   submitted_number <- submitted_nhgis_extract$number
 
   vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+    ready_nhgis_extract <- wait_for_extract(
+      submitted_nhgis_extract,
+      verbose = FALSE
+    )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    lifecycle::expect_deprecated(
-      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
-    )
+    recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
   })
 
   recent_numbers <- recent_nhgis_extracts_tbl$number
@@ -490,20 +509,18 @@ test_that("Tibble of recent NHGIS extracts has expected structure", {
 
 test_that("Can get specific number of recent extracts in tibble format", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
+
   vcr::use_cassette("recent-usa-extracts-tbl-two", {
-    lifecycle::expect_deprecated(
-      two_recent_usa_extracts <- get_recent_extracts_info_tbl(
-        "usa",
-        how_many = 2
-      )
+    two_recent_usa_extracts <- get_recent_extracts_info_tbl(
+      "usa",
+      how_many = 2
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-two", {
-    lifecycle::expect_deprecated(
-      two_recent_nhgis_extracts <- get_recent_extracts_info_tbl(
-        "nhgis",
-        how_many = 2
-      )
+    two_recent_nhgis_extracts <- get_recent_extracts_info_tbl(
+      "nhgis",
+      how_many = 2
     )
   })
 
@@ -525,11 +542,10 @@ test_that("Error on invalid number of records", {
 
 test_that("Microdata tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   vcr::use_cassette("recent-usa-extracts-tbl", {
-    lifecycle::expect_deprecated(
-      recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
-    )
+    recent_usa_extracts_tbl <- get_recent_extracts_info_tbl("usa")
   })
   vcr::use_cassette("recent-usa-extracts-list", {
     recent_usa_extracts_list <- get_extract_history("usa")
@@ -552,14 +568,15 @@ test_that("Microdata tbl/list conversion works", {
 
 test_that("NHGIS tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl", {
-    lifecycle::expect_deprecated(
-      recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
-    )
+    recent_nhgis_extracts_tbl <- get_recent_extracts_info_tbl("nhgis")
   })
   vcr::use_cassette("recent-nhgis-extracts-list", {
     recent_nhgis_extracts_list <- get_extract_history("nhgis")
@@ -604,21 +621,23 @@ test_that("NHGIS tbl/list conversion works", {
 # least one of datasets, time_series_tables, or shapefiles in past.
 test_that("NHGIS shapefile-only tbl/list conversion works", {
   skip_if_no_api_access(have_api_access)
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   vcr::use_cassette("submitted-nhgis-extract-shp", {
-    submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+    suppressMessages(
+      submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract-shp", {
     ready_nhgis_extract_shp <- wait_for_extract(
-      c("nhgis", submitted_nhgis_extract_shp$number)
+      c("nhgis", submitted_nhgis_extract_shp$number),
+      verbose = FALSE
     )
   })
   vcr::use_cassette("recent-nhgis-extracts-tbl-one", {
-    lifecycle::expect_deprecated(
-      nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl(
-        "nhgis",
-        how_many = 1
-      )
+    nhgis_extract_tbl_shp <- get_recent_extracts_info_tbl(
+      "nhgis",
+      how_many = 1
     )
   })
 

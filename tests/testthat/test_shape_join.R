@@ -6,7 +6,7 @@ test_that("Basic join works", {
 
   joined <- ipums_shape_inner_join(data, shape, by = "GISJOIN")
 
-  expect_null(join_failures(joined))
+  expect_message(expect_null(join_failures(joined)))
   expect_equal(nrow(data), nrow(joined))
   expect_equal(attr(joined, "sf_column"), "geometry")
 })
@@ -77,9 +77,9 @@ test_that("Join failures are mentioned", {
 
   jf <- join_failures(joined_fail)
   expect_equal(nrow(jf$data), 1)
-  expect_equivalent(jf$data$GISJOIN, "ABC")
+  expect_equal(jf$data$GISJOIN, "ABC", ignore_attr = TRUE)
   expect_equal(nrow(jf$shape), 1)
-  expect_equivalent(jf$shape$GISJOIN, "XYZ")
+  expect_equal(jf$shape$GISJOIN, "XYZ", ignore_attr = TRUE)
 
   filtered_regular <- dplyr::filter(joined_regular, .data$GISJOIN != "G1120")
 
@@ -102,7 +102,7 @@ test_that("Character -> Integer conversion works (#16)", {
 
   joined <- ipums_shape_inner_join(data, shape, by = c("id" = "id_shape"))
 
-  expect_null(join_failures(joined))
+  expect_message(expect_null(join_failures(joined)))
   expect_equal(nrow(data), nrow(joined))
   expect_equal(attr(joined, "sf_column"), "geometry")
 })

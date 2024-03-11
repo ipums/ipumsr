@@ -127,8 +127,15 @@ test_that("Can't read Rectangular into list format", {
 })
 
 test_that("Can read microdata from an `ipums_ddi` object", {
-  x1 <- read_ipums_micro(ipums_example("cps_00157.xml"))
-  x2 <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00157.xml")))
+  expect_message(
+    x1 <- read_ipums_micro(ipums_example("cps_00157.xml")),
+    "Use of data from IPUMS CPS"
+  )
+
+  expect_message(
+    x2 <- read_ipums_micro(read_ipums_ddi(ipums_example("cps_00157.xml"))),
+    "Use of data from IPUMS CPS"
+  )
 
   expect_identical(x1, x2)
 })

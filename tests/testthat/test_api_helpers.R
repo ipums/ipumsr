@@ -138,7 +138,10 @@ test_that("set_ipums_envvar sets environment variable", {
 
   # Ensure no envvar value exists before setting
   Sys.setenv(IPUMS_API_KEY = "")
-  set_ipums_envvar(IPUMS_API_KEY = "testapikey")
+  expect_message(
+    set_ipums_envvar(IPUMS_API_KEY = "testapikey"),
+    "IPUMS_API_KEY has been set"
+  )
 
   expect_equal(Sys.getenv("IPUMS_API_KEY"), "testapikey")
 })
@@ -161,8 +164,13 @@ test_that("set_ipums_envvar sets environment variable and saves to .Renviron", {
 
   Sys.setenv(IPUMS_API_KEY = "")
   Sys.setenv(HOME = tempdir())
-  set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE)
-  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
+  expect_message(
+    set_ipums_envvar(IPUMS_API_KEY = "testapikey", save = TRUE),
+    "IPUMS_API_KEY has been set"
+  )
+  suppressMessages(
+    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "testcollect", overwrite = TRUE)
+  )
 
   renviron_lines <- readLines(temp_renviron_file)
 
@@ -191,7 +199,9 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
   Sys.setenv(IPUMS_DEFAULT_COLLECTION = "")
   Sys.setenv(HOME = tempdir())
   writeLines("OTHER_ENV_VAR=\"value\"", con = temp_renviron_file)
-  set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
+  suppressMessages(
+    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "usa", save = TRUE)
+  )
 
   renviron_lines <- readLines(temp_renviron_file)
   renviron_backup_lines <- readLines(temp_renviron_file_backup)
@@ -201,15 +211,20 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
   expect_true("IPUMS_DEFAULT_COLLECTION=\"usa\"" %in% renviron_lines)
 
   expect_error(
-    set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE),
+    suppressMessages(
+      set_ipums_envvar(IPUMS_DEFAULT_COLLECTION = "nhgis", save = TRUE)
+    ),
     "IPUMS_DEFAULT_COLLECTION already exists"
   )
   expect_message(
-    set_ipums_envvar(
-      IPUMS_DEFAULT_COLLECTION = "nhgis",
-      overwrite = TRUE
+    expect_message(
+      set_ipums_envvar(
+        IPUMS_DEFAULT_COLLECTION = "nhgis",
+        overwrite = TRUE
+      ),
+      "Existing \\.Renviron file copied"
     ),
-    "Existing \\.Renviron file copied"
+    "IPUMS_DEFAULT_COLLECTION has been set"
   )
 
   renviron_lines <- readLines(temp_renviron_file)
@@ -225,7 +240,13 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 
   expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "nhgis")
 
-  unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION")
+  expect_message(
+    expect_message(
+      unset_ipums_envvar("IPUMS_DEFAULT_COLLECTION"),
+      "Unsetting environment variable IPUMS_DEFAULT_COLLECTION"
+    ),
+    "Existing \\.Renviron file copied"
+  )
 
   expect_equal(Sys.getenv("IPUMS_DEFAULT_COLLECTION"), "")
   expect_false("IPUMS_DEFAULT_COLLECTION" %in% renviron_lines)
@@ -393,7 +414,9 @@ test_that("We warn users about unsupported features detected in an extract", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-cps-extract", {
-    cps_extract <- submit_extract(test_cps_extract())
+    expect_message(
+      cps_extract <- submit_extract(test_cps_extract())
+    )
   })
 
   # Make request with version 1, as features included in our test CPS
@@ -505,3 +528,4 @@ test_that("Can toggle demo API URL", {
     )
   })
 })
+
