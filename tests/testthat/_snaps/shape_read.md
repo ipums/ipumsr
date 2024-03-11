@@ -4,7 +4,7 @@
       read_ipums_sf(nhgis_multi_shp, file_select = 4)
     Condition
       Error in `find_files_in()`:
-      ! Can't select files past the end.
+      ! Can't subset files past the end.
       i Location 4 doesn't exist.
       i There are only 3 files.
       Available files:

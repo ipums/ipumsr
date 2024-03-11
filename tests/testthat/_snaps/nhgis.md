@@ -20,7 +20,7 @@
       read_nhgis(nhgis_multi_ds, file_select = 3, verbose = FALSE)
     Condition
       Error in `find_files_in()`:
-      ! Can't select files past the end.
+      ! Can't subset files past the end.
       i Location 3 doesn't exist.
       i There are only 2 files.
       Available files:
