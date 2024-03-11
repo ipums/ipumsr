@@ -12,14 +12,10 @@ vars_data <- 25
 # Read single files -------------------------------
 
 test_that("Can read NHGIS extract: single dataset", {
-  expect_message(
-    nhgis_csv <- read_nhgis(nhgis_single_csv),
-    "Use of data from NHGIS is subject"
-  )
-
-  expect_message(
-    read_nhgis(nhgis_single_csv),
-    "Column specification"
+  # Use snapshot since several forms of output are produced by default
+  # (IPUMS conditions, col spec, and additional col spec info)
+  expect_snapshot(
+    nhgis_csv <- read_nhgis(nhgis_single_csv)
   )
 
   expect_equal(nrow(nhgis_csv), rows)
@@ -249,10 +245,7 @@ test_that("Can still find codebook if direct data file path provided", {
 
   data_file <- unzipped[fostr_detect(unzipped, ".csv$")]
 
-  expect_message(
-    x <- read_nhgis(data_file),
-    "Use of data from NHGIS"
-  )
+  x <- read_nhgis(data_file, verbose = FALSE)
 
   expect_equal(
     ipums_var_info(x)$var_name,
@@ -309,13 +302,12 @@ test_that("We can specify available readr options in read_nhgis()", {
   expect_equal(colnames(nhgis_data_fwf2), c("YEAR", "STUSAB"))
 
   expect_equal(
-    nrow(read_nhgis(nhgis_single_csv, n_max = 10)),
+    nrow(read_nhgis(nhgis_single_csv, n_max = 10, verbose = FALSE)),
     10
   )
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
-  testthat::local_edition(3)
   expect_error(
     read_nhgis("FAKE_FILE.zip", verbose = FALSE),
     "Could not find file"
@@ -407,7 +399,7 @@ test_that("Can read NHGIS codebook", {
   # Confirm that data types and universe are added to labels
   expect_equal(
     attr(d_fwf$AJWBE009, "label"),
-    "Estimates: Male: 21 years",
+    "Estimates: Male: 21 years"
   )
   expect_equal(
     attr(d_fwf$AJWBE009, "var_desc"),
@@ -418,7 +410,7 @@ test_that("Can read NHGIS codebook", {
 test_that("Can read unzipped NHGIS files", {
   test_path <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
 
-  x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1))
+  x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1, verbose = FALSE))
   x2 <- read_nhgis(
     file.path(test_path, "test1.csv"),
     var_attrs = NULL,

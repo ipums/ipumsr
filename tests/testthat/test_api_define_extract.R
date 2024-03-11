@@ -695,7 +695,7 @@ test_that("Can add subfields to existing `ipums_*` fields", {
 
   expect_equal(
     purrr::map(nhgis_revised$datasets, ~ .x$name),
-    purrr::map(nhgis_extract$datasets, ~ .x$name),
+    purrr::map(nhgis_extract$datasets, ~ .x$name)
   )
   expect_equal(
     unname(purrr::map(nhgis_revised$datasets, ~ .x$data_tables)),

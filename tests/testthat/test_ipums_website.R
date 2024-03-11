@@ -79,13 +79,16 @@ test_that("Can get URL when multiple vars specified", {
 
 test_that("We use IPUMS homepage if invalid project", {
   expect_warning(
-    url <- ipums_website(
-      "foobar",
-      var = "foobar",
-      launch = FALSE,
-      homepage_if_missing = TRUE
+    expect_warning(
+      url <- ipums_website(
+        "foobar",
+        var = "foobar",
+        launch = FALSE,
+        homepage_if_missing = TRUE
+      ),
+      "Redirecting to IPUMS homepage"
     ),
-    "Redirecting to IPUMS homepage"
+    "Cannot give a variable-specific URL"
   )
   expect_equal(url, "https://www.ipums.org")
   expect_error(

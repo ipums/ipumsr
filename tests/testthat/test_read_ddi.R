@@ -24,13 +24,18 @@ test_that("We ignore layer selection for direct .xml files", {
   expect_identical(ddi1, ddi2)
 })
 
-test_that("Can read ddi from zip archives", {
+test_that("Reading DDI through zip is deprecated", {
   zipped_ddi <- file.path(vcr::vcr_test_path("fixtures"), "zipped_ddi.zip")
 
   lifecycle::expect_deprecated(
     try(read_ipums_ddi(zipped_ddi), silent = TRUE),
     "Reading DDI files through a zip archive"
   )
+})
+
+test_that("Can read ddi from zip archives", {
+  zipped_ddi <- file.path(vcr::vcr_test_path("fixtures"), "zipped_ddi.zip")
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   expect_error(
     suppressWarnings(read_ipums_ddi(zipped_ddi)),

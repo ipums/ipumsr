@@ -48,7 +48,9 @@ test_that("Can submit a USA extract", {
   usa_extract <- test_usa_extract()
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(usa_extract)
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(usa_extract)
+    )
   })
 
   expect_s3_class(submitted_usa_extract, "usa_extract")
@@ -108,7 +110,9 @@ test_that("Can submit a CPS extract", {
   cps_extract <- test_cps_extract()
 
   vcr::use_cassette("submitted-cps-extract", {
-    submitted_cps_extract <- submit_extract(cps_extract)
+    suppressMessages(
+      submitted_cps_extract <- submit_extract(cps_extract)
+    )
   })
 
   expect_s3_class(submitted_cps_extract, "cps_extract")
@@ -168,7 +172,9 @@ test_that("Can submit an NHGIS extract of multiple types", {
   nhgis_extract <- test_nhgis_extract()
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(nhgis_extract)
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(nhgis_extract)
+    )
   })
 
   expect_s3_class(submitted_nhgis_extract, c("nhgis_extract", "ipums_extract"))
@@ -188,7 +194,9 @@ test_that("Can submit an NHGIS extract of a single type", {
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
   vcr::use_cassette("submitted-nhgis-extract-shp", {
-    submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
+    suppressMessages(
+      submitted_nhgis_extract_shp <- submit_extract(nhgis_extract_shp)
+    )
   })
 
   expect_s3_class(
@@ -211,13 +219,20 @@ test_that("Can resubmit an extract", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+    ready_nhgis_extract <- wait_for_extract(
+      submitted_nhgis_extract,
+      verbose = FALSE
+    )
   })
   vcr::use_cassette("resubmitted-nhgis-extract", {
-    resubmitted_nhgis_extract <- submit_extract(ready_nhgis_extract)
+    suppressMessages(
+      resubmitted_nhgis_extract <- submit_extract(ready_nhgis_extract)
+    )
   })
 
   # Number, download links, etc. won't be same, but core extract will:
@@ -273,10 +288,15 @@ test_that("Can download microdata extract with extract object", {
   on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(test_usa_extract())
+    )
   })
   vcr::use_cassette("ready-usa-extract", {
-    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+    ready_usa_extract <- wait_for_extract(
+      submitted_usa_extract,
+      verbose = FALSE
+    )
   })
 
   expect_equal(
@@ -326,10 +346,15 @@ test_that("Can download NHGIS extract with extract object", {
   on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract", {
-    ready_nhgis_extract <- wait_for_extract(submitted_nhgis_extract)
+    ready_nhgis_extract <- wait_for_extract(
+      submitted_nhgis_extract,
+      verbose = FALSE
+    )
   })
 
   expect_equal(
@@ -393,10 +418,15 @@ test_that("Can download extract with extract id", {
   on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(test_usa_extract())
+    )
   })
   vcr::use_cassette("ready-usa-extract", {
-    ready_usa_extract <- wait_for_extract(submitted_usa_extract)
+    ready_usa_extract <- wait_for_extract(
+      submitted_usa_extract,
+      verbose = FALSE
+    )
   })
 
   expect_message(
@@ -449,10 +479,15 @@ test_that("Can download shapefile-only extract", {
   on.exit(unlink(download_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
   vcr::use_cassette("submitted-nhgis-extract-shp", {
-    submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+    suppressMessages(
+      submitted_nhgis_extract_shp <- submit_extract(test_nhgis_extract_shp())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract-shp", {
-    ready_nhgis_extract_shp <- wait_for_extract(submitted_nhgis_extract_shp)
+    ready_nhgis_extract_shp <- wait_for_extract(
+      submitted_nhgis_extract_shp,
+      verbose = FALSE
+    )
   })
 
   expect_message(
@@ -481,7 +516,9 @@ test_that("Can download shapefile-only extract", {
 test_that("Download extract errors on incomplete extract", {
   vcr::use_cassette("download-extract-not-ready", {
     expect_error(
-      download_extract(submit_extract(test_usa_extract())),
+      suppressMessages(
+        download_extract(submit_extract(test_usa_extract()))
+      ),
       "not ready to download.+Use `wait_for_extract\\(\\)`"
     )
   })
@@ -498,10 +535,15 @@ test_that("Can read downloaded files with ipumsr readers", {
   skip_if_not_installed("sf")
 
   vcr::use_cassette("submitted-nhgis-extract", {
-    submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    suppressMessages(
+      submitted_nhgis_extract <- submit_extract(test_nhgis_extract())
+    )
   })
   vcr::use_cassette("ready-nhgis-extract", {
-    number <- wait_for_extract(submitted_nhgis_extract)$number
+    number <- wait_for_extract(
+      submitted_nhgis_extract,
+      verbose = FALSE
+    )$number
   })
 
   table_data_file_path <- list.files(
@@ -555,7 +597,9 @@ test_that("Can add to a submitted extract", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(test_usa_extract())
+    )
   })
 
   revised_extract <- add_to_extract(
@@ -581,7 +625,9 @@ test_that("We can export to and import from JSON, submitted extract", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("submitted-usa-extract", {
-    submitted_usa_extract <- submit_extract(test_usa_extract())
+    suppressMessages(
+      submitted_usa_extract <- submit_extract(test_usa_extract())
+    )
   })
 
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")

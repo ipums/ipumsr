@@ -59,13 +59,17 @@ test_that("Can read extract at multiple file levels", {
 
   # Read dir of zip of shp ------------
 
-  shp_unzip_dir <- read_ipums_sf(file.path(temp_dir, "nhgis0972_shape"))
+  lifecycle::expect_deprecated(
+    shp_unzip_dir <- read_ipums_sf(file.path(temp_dir, "nhgis0972_shape"))
+  )
 
   expect_identical(shp_unzip, shp_unzip_dir)
 
   # Informative error when reading a directory with no shapefiles
   expect_error(
-    read_ipums_sf(temp_dir),
+    lifecycle::expect_deprecated(
+      read_ipums_sf(temp_dir)
+    ),
     "No .shp or .zip files found in the provided `shape_file`"
   )
 
@@ -79,7 +83,10 @@ test_that("Can read extract at multiple file levels", {
   unzipped_shp <- unzipped_shp[grepl(".shp$", unzipped_shp)]
 
   shp_direct <- read_ipums_sf(unzipped_shp)
-  dir_of_shp <- read_ipums_sf(dirname(unzipped_shp))
+
+  lifecycle::expect_deprecated(
+    dir_of_shp <- read_ipums_sf(dirname(unzipped_shp))
+  )
 
   expect_identical(shp_unzip_dir, shp_direct)
   expect_identical(shp_direct, dir_of_shp)
@@ -87,7 +94,6 @@ test_that("Can read extract at multiple file levels", {
 
 test_that("We get informative errors when reading shapefiles", {
   skip_if_not_installed("sf")
-  testthat::local_edition(3)
 
   nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
 
@@ -132,12 +138,10 @@ test_that("Careful rbind handles various data types", {
   sf3 <- sf::st_sf(b = 3, layer.1 = FALSE, layer = 4, geometry = g3)
 
   expect_warning(
-    careful_sf_rbind(list(a = sf1, b = sf2, c = sf3)),
-    "Adding layer information to column \"layer.2\""
-  )
-
-  expect_warning(
-    sf_bind <- careful_sf_rbind(list(a = sf1, b = sf2, c = sf3)),
+    expect_warning(
+      sf_bind <- careful_sf_rbind(list(a = sf1, b = sf2, c = sf3)),
+      "Adding layer information to column \"layer.2\""
+    ),
     paste0(
       "Some variables .+ ",
       "\"geometry\" \\(c\\(\"sfc_POINT\", \"sfc\"\\) vs..+",
