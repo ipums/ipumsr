@@ -311,6 +311,109 @@ define_extract_ipumsi <- function(description,
   )
 }
 
+define_extract_atus <- function(description,
+                                samples,
+                                variables,
+                                time_use_variables = NULL,
+                                sample_members = NULL,
+                                data_format = "fixed_width",
+                                data_structure = "rectangular",
+                                rectangular_on = NULL,
+                                data_quality_flags = NULL) {
+  define_extract_micro(
+    collection = "atus",
+    description = description,
+    samples = samples,
+    variables = variables,
+    time_use_variables = time_use_variables,
+    sample_members = sample_members,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_quality_flags = data_quality_flags
+  )
+}
+
+define_extract_ahtus <- function(description,
+                                 samples,
+                                 variables,
+                                 time_use_variables = NULL,
+                                 data_format = "fixed_width",
+                                 data_structure = "rectangular",
+                                 rectangular_on = NULL,
+                                 data_quality_flags = NULL) {
+  define_extract_micro(
+    collection = "ahtus",
+    description = description,
+    samples = samples,
+    variables = variables,
+    time_use_variables = time_use_variables,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_quality_flags = data_quality_flags
+  )
+}
+
+define_extract_mtus <- function(description,
+                                samples,
+                                variables,
+                                time_use_variables = NULL,
+                                data_format = "fixed_width",
+                                data_structure = "rectangular",
+                                rectangular_on = NULL,
+                                data_quality_flags = NULL) {
+  define_extract_micro(
+    collection = "mtus",
+    description = description,
+    samples = samples,
+    variables = variables,
+    time_use_variables = time_use_variables,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_quality_flags = data_quality_flags
+  )
+}
+
+define_extract_nhis <- function(description,
+                                samples,
+                                variables,
+                                data_format = "fixed_width",
+                                data_structure = "rectangular",
+                                rectangular_on = NULL,
+                                data_quality_flags = NULL) {
+  define_extract_micro(
+    collection = "nhis",
+    description = description,
+    samples = samples,
+    variables = variables,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_quality_flags = data_quality_flags
+  )
+}
+
+define_extract_meps <- function(description,
+                                samples,
+                                variables,
+                                data_format = "fixed_width",
+                                data_structure = "rectangular",
+                                rectangular_on = NULL,
+                                data_quality_flags = NULL) {
+  define_extract_micro(
+    collection = "meps",
+    description = description,
+    samples = samples,
+    variables = variables,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    data_quality_flags = data_quality_flags
+  )
+}
+
 #' Define an IPUMS NHGIS extract request
 #'
 #' @description
@@ -616,6 +719,10 @@ var_spec <- function(name,
 #' @rdname var_spec
 samp_spec <- function(name) {
   new_ipums_spec(name, class = "samp_spec")
+}
+
+tu_var_spec <- function(name) {
+  new_ipums_spec(name, class = "tu_var_spec")
 }
 
 #' Create dataset and time series table specifications for IPUMS NHGIS extract
@@ -1839,6 +1946,8 @@ define_extract_micro <- function(collection,
                                  description,
                                  samples,
                                  variables,
+                                 time_use_variables = NULL,
+                                 sample_members = NULL,
                                  data_format = "fixed_width",
                                  data_structure = "rectangular",
                                  rectangular_on = NULL,
@@ -1850,12 +1959,14 @@ define_extract_micro <- function(collection,
 
   samples <- spec_cast(samples, "samp_spec")
   variables <- spec_cast(variables, "var_spec")
+  time_use_variables <- spec_cast(time_use_variables, "tu_var_spec")
 
   extract <- new_ipums_extract(
     collection = collection,
     description = description,
     samples = set_nested_names(samples),
     variables = set_nested_names(variables),
+    time_use_variables = set_nested_names(time_use_variables),
     data_format = data_format,
     data_structure = data_structure,
     rectangular_on = rectangular_on,
@@ -2886,6 +2997,11 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
         )
       )
 
+      time_use_variables <- purrr::map(
+        names(def$timeUseVariables),
+        ~ tu_var_spec(.x)
+      )
+
       if (!is_empty(x$downloadLinks)) {
         names(x$downloadLinks) <- to_snake_case(names(x$downloadLinks))
       }
@@ -2895,6 +3011,8 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
         description = def$description,
         samples = set_nested_names(samples),
         variables = set_nested_names(variables),
+        time_use_variables = set_nested_names(time_use_variables),
+        sample_members = def$sample_members,
         data_format = def$dataFormat,
         data_structure = names(def$dataStructure),
         rectangular_on = def$dataStructure$rectangular$on,

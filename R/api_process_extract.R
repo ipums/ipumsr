@@ -524,8 +524,13 @@ extract_to_request_json.micro_extract <- function(extract) {
       extract$rectangular_on
     ),
     dataFormat = extract$data_format,
+    sampleMembers = list(
+      includeNonRespondents = "include_non_respondents" %in% extract$sample_members,
+      includeHouseholdMembers = "include_household_members" %in% extract$sample_members
+    ),
     samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
     variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
+    timeUseVariables = purrr::flatten(purrr::map(extract$time_use_variables, format_for_json)),
     caseSelectWho = extract$case_select_who,
     dataQualityFlags = extract$data_quality_flags,
     collection = extract$collection,
