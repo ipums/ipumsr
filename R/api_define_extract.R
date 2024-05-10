@@ -2201,18 +2201,6 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
   # Use collection-specific class for clarity
   error_header <- paste0("Invalid `", class(x)[1], "` object:")
 
-  if (length(x$data_structure) > 0 && x$data_structure == "rectangular") {
-    if (length(x$rectangular_on) > 0 && x$rectangular_on != "P") {
-      ipums_extract_error(
-        error_header,
-        paste0(
-          "Currently, the `rectangular_on` argument must be equal to \"P\"; ",
-          "in the future, the API will also support `rectangular_on = \"H\"."
-        )
-      )
-    }
-  }
-
   if (is_empty(x$samples) || is_na(x$samples)) {
     ipums_extract_error(
       error_header,
@@ -2285,7 +2273,7 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
     list(
       field = "data_structure",
       required = TRUE,
-      choices = c("rectangular", "hierarchical"),
+      choices = c("rectangular", "hierarchical", "householdOnly"),
       length = 1,
       type = "character"
     ),
@@ -2293,7 +2281,7 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
       field = "rectangular_on",
       required = isTRUE(x$data_structure == "rectangular"),
       allowed = isTRUE(x$data_structure == "rectangular"),
-      choices = c("P", "H"),
+      choices = c("P", "A", "I", "R"),
       must_be_present_msg = " when `data_structure` is \"rectangular\"",
       must_be_missing_msg = " when `data_structure` is \"hierarchical\"",
       length = 1,

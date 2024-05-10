@@ -605,14 +605,14 @@ format_for_json.default <- function(x) {
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
   if (is.null(data_structure) || is.na(data_structure)) {
-    return(EMPTY_NAMED_LIST)
+    ds_json <- EMPTY_NAMED_LIST
   } else if (data_structure == "rectangular") {
-    return(list(rectangular = list(on = rectangular_on)))
-  } else if (data_structure == "hierarchical") {
-    return(list(hierarchical = EMPTY_NAMED_LIST))
+    ds_json <- list(rectangular = list(on = rectangular_on))
   } else {
-    return(EMPTY_NAMED_LIST)
+    ds_json <- purrr::set_names(list(EMPTY_NAMED_LIST), data_structure)
   }
+
+  ds_json
 }
 
 
