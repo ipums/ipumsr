@@ -367,7 +367,7 @@ get_summary_metadata <- function(collection,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
-    path = metadata_request_path(collection, type),
+    path = metadata_request_path(type),
     queries = list(pageNumber = 1, pageSize = api_page_size_limit("metadata"))
   )
 
@@ -418,7 +418,7 @@ get_detailed_metadata <- function(collection,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
-    path = metadata_request_path(collection = collection, ...)
+    path = metadata_request_path(...)
   )
 
   response <- ipums_api_request(

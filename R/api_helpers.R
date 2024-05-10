@@ -967,7 +967,7 @@ extract_request_path <- function(number = NULL) {
 #' @return Path to include in the URL for an API metadata request.
 #'
 #' @noRd
-metadata_request_path <- function(collection, ...) {
+metadata_request_path <- function(...) {
   path_args <- purrr::compact(rlang::list2(...))
   path_fields <- names(path_args)
 
@@ -977,11 +977,7 @@ metadata_request_path <- function(collection, ...) {
     metadata_path <- "metadata"
   }
 
-  path_args <- c(
-    metadata_path,
-    collection,
-    rbind(path_fields, unlist(path_args))
-  )
+  path_args <- c(metadata_path, rbind(path_fields, unlist(path_args)))
 
   # Avoids extra `/` for unnamed args in `path`
   path_args <- path_args[which(path_args != "")]
