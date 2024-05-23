@@ -721,8 +721,8 @@ samp_spec <- function(name) {
   new_ipums_spec(name, class = "samp_spec")
 }
 
-tu_var_spec <- function(name) {
-  new_ipums_spec(name, class = "tu_var_spec")
+tu_var_spec <- function(name, owner) {
+  new_ipums_spec(name, owner = owner, class = "tu_var_spec")
 }
 
 #' Create dataset and time series table specifications for IPUMS NHGIS extract
@@ -2987,7 +2987,7 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
 
       time_use_variables <- purrr::map(
         names(def$timeUseVariables),
-        ~ tu_var_spec(.x)
+        ~ tu_var_spec(.x, owner = unlist(def$timeUseVariables[[.x]]$owner))
       )
 
       if (!is_empty(x$downloadLinks)) {
