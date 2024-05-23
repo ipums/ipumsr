@@ -1967,6 +1967,7 @@ define_extract_micro <- function(collection,
     samples = set_nested_names(samples),
     variables = set_nested_names(variables),
     time_use_variables = set_nested_names(time_use_variables),
+    sample_members = sample_members,
     data_format = data_format,
     data_structure = data_structure,
     rectangular_on = rectangular_on,
@@ -2994,13 +2995,15 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
         names(x$downloadLinks) <- to_snake_case(names(x$downloadLinks))
       }
 
+      sample_members <- c("include_non_respondents", "include_household_members")
+
       out <- new_ipums_extract(
         collection = def$collection,
         description = def$description,
         samples = set_nested_names(samples),
         variables = set_nested_names(variables),
         time_use_variables = set_nested_names(time_use_variables),
-        sample_members = def$sample_members,
+        sample_members = sample_members[unlist(def$sampleMembers)],
         data_format = def$dataFormat,
         data_structure = names(def$dataStructure),
         rectangular_on = def$dataStructure$rectangular$on,
