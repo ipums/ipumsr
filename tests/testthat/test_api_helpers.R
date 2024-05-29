@@ -78,13 +78,12 @@ test_that("NHGIS extract print coloring works", {
         "Geog Levels: " = "C"
       ),
       parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
-      subfield_style = extract_field_styler("bold"),
-      padding = 1
+      subfield_style = extract_field_styler("italic")
     ),
     paste0(
       "\n\033[34m\033[1mDataset: ",
-      "\033[22m\033[39mA\n  \033[1mTables: ",
-      "\033[22mB\n  \033[1mGeog Levels: \033[22mC"
+      "\033[22m\033[39mA\n  \033[3mTables: ",
+      "\033[23mB\n  \033[3mGeog Levels: \033[23mC\n"
     )
   )
 
@@ -97,7 +96,7 @@ test_that("NHGIS extract print coloring works", {
       )
     ),
     paste0(
-      "\n\n\033[0mDataset: ",
+      "\n\033[0mDataset: ",
       "\033[0m\033[22m\033[23m\033[24m",
       "\033[27m\033[28m\033[29m\033[39m\033[49mA\n  ",
       "\033[0mTables: ",
@@ -119,10 +118,9 @@ test_that("NHGIS extract print coloring works", {
         "Geog Levels: " = "C"
       ),
       parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
-      subfield_style = extract_field_styler("bold"),
-      padding = 2
+      subfield_style = extract_field_styler("italic")
     ),
-    "\n\nDataset: A\n  Tables: B\n  Geog Levels: C"
+    "\nDataset: A\n  Tables: B\n  Geog Levels: C\n"
   )
 })
 

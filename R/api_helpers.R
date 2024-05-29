@@ -501,45 +501,22 @@ print.ipums_extract <- function(x, ...) {
 print.micro_extract <- function(x, ...) {
   styler <- extract_field_styler("bold")
 
-  samps_to_cat <- purrr::compact(
-    purrr::map(
-      x$samples,
-      function(x) {
-        if (inherits(x, "samp_spec")) {
-          x$name
-        }
-      }
-    )
-  )
+  samps <- purrr::map(x$samples, ~ .x$name)
+  vars <- purrr::map(x$variables, ~ .x$name)
+  tu_vars <- purrr::map(x$time_use_variables, ~ .x$name)
 
-  vars_to_cat <- purrr::compact(
-    purrr::map(
-      x$variables,
-      function(x) {
-        if (inherits(x, "var_spec")) {
-          x$name
-        }
-      }
-    )
+  header <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), "")
   )
 
   to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n",
-    print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n\n",
-    print_truncated_vector(
-      samps_to_cat,
-      styler("Samples: ")
-    ),
-    "\n",
-    print_truncated_vector(
-      vars_to_cat,
-      styler("Variables: ")
-    ),
-    "\n"
+    header, "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE), "\n",
+    print_truncated_vector(samps, styler("Samples: ")),
+    print_truncated_vector(vars, styler("Variables: ")),
+    print_truncated_vector(tu_vars, styler("Time Use Variables: "))
   )
 
   cat(to_cat)
@@ -550,24 +527,23 @@ print.micro_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
-  ds_to_cat <- purrr::compact(purrr::map(
+
+  ds_to_cat <- purrr::map(
     x$datasets,
     function(d) {
-      if (inherits(d, "ds_spec")) {
-        format_field_for_printing(
-          parent_field = list("Dataset: " = d$name),
-          subfields = list(
-            "Tables: " = d$data_tables,
-            "Geog Levels: " = d$geog_levels,
-            "Years: " = d$years,
-            "Breakdowns: " = d$breakdown_values
-          ),
-          parent_style = style_ds,
-          subfield_style = extract_field_styler("bold")
-        )
-      }
+      format_field_for_printing(
+        parent_field = list("Dataset: " = d$name),
+        subfields = list(
+          "Tables: " = d$data_tables,
+          "Geog Levels: " = d$geog_levels,
+          "Years: " = d$years,
+          "Breakdowns: " = d$breakdown_values
+        ),
+        parent_style = style_ds,
+        subfield_style = extract_field_styler("italic")
+      )
     }
-  ))
+  )
 
   if (length(ds_to_cat) > 0) {
     ds_to_cat <- c(
@@ -579,25 +555,23 @@ print.nhgis_extract <- function(x, ...) {
     )
   }
 
-  tst_to_cat <- purrr::compact(purrr::map(
+  tst_to_cat <- purrr::map(
     x$time_series_tables,
     function(t) {
-      if (inherits(t, "tst_spec")) {
-        format_field_for_printing(
-          parent_field = list("Time Series Table: " = t$name),
-          subfields = list(
-            "Geog Levels: " = t$geog_levels,
-            "Years: " = t$years
-          ),
-          parent_style = extract_field_styler(
-            nhgis_print_color("time_series_table"),
-            "bold"
-          ),
-          subfield_style = extract_field_styler("bold")
-        )
-      }
+      format_field_for_printing(
+        parent_field = list("Time Series Table: " = t$name),
+        subfields = list(
+          "Geog Levels: " = t$geog_levels,
+          "Years: " = t$years
+        ),
+        parent_style = extract_field_styler(
+          nhgis_print_color("time_series_table"),
+          "bold"
+        ),
+        subfield_style = extract_field_styler("italic")
+      )
     }
-  ))
+  )
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
@@ -607,15 +581,18 @@ print.nhgis_extract <- function(x, ...) {
     )
   )
 
-  to_cat <- paste0(
+  header <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n",
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n"
+  )
+
+  to_cat <- paste0(
+    header,
     print_truncated_vector(x$description, "Description: ", FALSE),
     paste0(ds_to_cat, collapse = ""),
     paste0(tst_to_cat, collapse = ""),
-    shp_to_cat,
-    "\n"
+    shp_to_cat
   )
 
   cat(to_cat)
@@ -658,8 +635,7 @@ format_collection_for_printing <- function(collection) {
 format_field_for_printing <- function(parent_field = NULL,
                                       subfields = NULL,
                                       parent_style = NULL,
-                                      subfield_style = NULL,
-                                      padding_top = 2) {
+                                      subfield_style = NULL) {
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -673,7 +649,7 @@ format_field_for_printing <- function(parent_field = NULL,
   style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    paste0(rep("\n", padding_top), collapse = ""),
+    "\n",
     print_truncated_vector(parent_val, style_field(parent_name), FALSE)
   )
 
@@ -682,7 +658,7 @@ format_field_for_printing <- function(parent_field = NULL,
       names(subfields),
       ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
-          output, "\n  ",
+          output, "  ",
           print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
         )
       }
@@ -713,15 +689,19 @@ nhgis_print_color <- function(type) {
   type <- match.arg(type, c("dataset", "time_series_table", "shapefile"))
 
   switch(type,
-    dataset = "blue",
-    time_series_table = "green",
-    shapefile = "yellow"
+         dataset = "blue",
+         time_series_table = "green",
+         shapefile = "yellow"
   )
 }
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 
 print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
+  if (rlang::is_empty(x)) {
+    return(NULL)
+  }
+
   max_width <- min(getOption("width"), 80)
   max_width <- max(max_width, 20) # don't allow width less than 20
 
@@ -740,10 +720,10 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   }
 
   if (count_chr(untruncated) > max_width) {
-    return(paste0(substr(untruncated, 1, max_width - 3), "..."))
+    return(paste0(substr(untruncated, 1, max_width - 3), "...\n"))
   }
 
-  untruncated
+  paste0(untruncated, "\n")
 }
 
 # Request handlers --------------------
