@@ -257,27 +257,6 @@ test_that("Vector to `ipums_spec` casting logic is as expected", {
 
 # Extract validation ------------------------
 
-test_that("Attempt to rectangularize on H records throws an error", {
-  expect_error(
-    define_extract_cps(
-      "Test",
-      samples = "us2017b",
-      variables = "YEAR",
-      rectangular_on = "H"
-    ),
-    "Currently, the `rectangular_on` argument must be equal to \"P\""
-  )
-  expect_error(
-    define_extract_usa(
-      "Test",
-      samples = "us2017b",
-      variables = "YEAR",
-      rectangular_on = "H"
-    ),
-    "Currently, the `rectangular_on` argument must be equal to \"P\""
-  )
-})
-
 test_that("Succesful validation returns identical object", {
   cps_extract <- test_cps_extract()
   usa_extract <- test_usa_extract()
@@ -355,6 +334,20 @@ test_that("Can validate core microdata extract fields", {
       "`rectangular_on` must not contain missing values when ",
       "`data_structure` is \"rectangular\"."
     )
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "usa",
+        description = "",
+        samples = list(samp_spec("Test")),
+        variables = list(var_spec("Test")),
+        data_structure = "rectangular",
+        rectangular_on = "H",
+        data_format = "csv"
+      )
+    ),
+    "`rectangular_on` must be one of"
   )
 })
 
