@@ -313,7 +313,7 @@ define_extract_ipumsi <- function(description,
 
 define_extract_atus <- function(description,
                                 samples,
-                                variables,
+                                variables = NULL,
                                 time_use_variables = NULL,
                                 sample_members = NULL,
                                 data_format = "fixed_width",
@@ -2233,13 +2233,6 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
     )
   }
 
-  if (is_empty(x$variables) || is_na(x$variables)) {
-    ipums_extract_error(
-      error_header,
-      "Extract definition must contain values for `variables`"
-    )
-  }
-
   if (!all(purrr::map_lgl(x$samples, ~ inherits(.x, "samp_spec")))) {
     ipums_extract_error(
       error_header,
@@ -2280,6 +2273,26 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
     )
   }
 
+  if (!all(purrr::map_lgl(x$time_use_variables, ~ inherits(.x, "tu_var_spec")))) {
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `time_use_variables` to be a `tu_var_spec` object ",
+        "or a list of `tu_var_spec` objects."
+      )
+    )
+  } else {
+    withCallingHandlers(
+      purrr::walk(
+        x$time_use_variables,
+        ~ validate_ipums_extract(.x, call = caller_env())
+      ),
+      purrr_error_indexed = function(err) {
+        rlang::cnd_signal(err$parent)
+      }
+    )
+  }
+
   if (anyDuplicated(purrr::map(x$variables, ~ .x$name)) != 0) {
     ipums_extract_error(
       error_header,
@@ -2291,6 +2304,13 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
     ipums_extract_error(
       error_header,
       "Extract definition cannot contain multiple `samples` of same name."
+    )
+  }
+
+  if (anyDuplicated(purrr::map(x$time_use_variables, ~ .x$name)) != 0) {
+    ipums_extract_error(
+      error_header,
+      "Extract definition cannot contain multiple `time_use_variables` of same name."
     )
   }
 
@@ -2526,6 +2546,56 @@ validate_ipums_extract.var_spec <- function(x, call = caller_env()) {
 
   if (length(extract_issues) > 0) {
     ipums_extract_error("Invalid `var_spec` specification:", extract_issues)
+  }
+
+  invisible(x)
+}
+
+#' @export
+validate_ipums_extract.tu_var_spec <- function(x, call = caller_env()) {
+  unexpected_names <- names(x)[!names(x) %in% c("name", "owner")]
+
+  if (length(unexpected_names) > 0) {
+    ipums_extract_error(
+      "Invalid `tu_var_spec` specification:",
+      paste0(
+        "Unrecognized fields: `",
+        paste0(unexpected_names, collapse = "`, `"), "`"
+      )
+    )
+  }
+
+  spec <- list(
+    list(
+      field = "name",
+      required = TRUE,
+      length = 1,
+      type = "character"
+    ),
+    list(
+      field = "owner",
+      required = TRUE,
+      type = "character",
+      length = 1
+    )
+  )
+
+  # Validate based on each argument's validation specifications
+  # Collect errors and display together.
+  extract_issues <- purrr::map(
+    spec,
+    ~ tryCatch(
+      rlang::exec("validate_extract_field", !!!.x, extract = x),
+      error = function(cnd) {
+        conditionMessage(cnd)
+      }
+    )
+  )
+
+  extract_issues <- unlist(purrr::compact(extract_issues))
+
+  if (length(extract_issues) > 0) {
+    ipums_extract_error("Invalid `tu_var_spec` specification:", extract_issues)
   }
 
   invisible(x)
