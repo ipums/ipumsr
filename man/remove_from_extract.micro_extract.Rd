@@ -5,7 +5,13 @@
 \title{Remove values from an existing extract definition for an IPUMS microdata
 project}
 \usage{
-\method{remove_from_extract}{micro_extract}(extract, samples = NULL, variables = NULL, ...)
+\method{remove_from_extract}{micro_extract}(
+  extract,
+  samples = NULL,
+  variables = NULL,
+  time_use_variables = NULL,
+  ...
+)
 }
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
@@ -16,6 +22,10 @@ definition.}
 \item{variables}{Names of the variables to remove from the extract
 definition. All variable-specific fields for the indicated variables
 will also be removed.}
+
+\item{time_use_variables}{Names of the time use variables to remove from the
+extract definition. All time use variable-specific fields for the indicated
+time use variables will also be removed.}
 
 \item{...}{Ignored}
 }

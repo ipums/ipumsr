@@ -11,6 +11,8 @@ collection}
   description = NULL,
   samples = NULL,
   variables = NULL,
+  time_use_variables = NULL,
+  sample_members = NULL,
   data_format = NULL,
   data_structure = NULL,
   rectangular_on = NULL,
@@ -34,6 +36,10 @@ containing specifications for all variables to include in the extract.
 
 If a variable already exists in the extract, its specifications
 will be added to those that already exist for that variable.}
+
+\item{time_use_variables}{Character vector of time use variable names or a
+list of \code{tu_var_spec} objects created by \code{\link[=tu_var_spec]{tu_var_spec()}} containing
+specifications for all variables to include in the extract.}
 
 \item{data_format}{Format for the output extract data file. Either
 \code{"fixed_width"} or \code{"csv"}.

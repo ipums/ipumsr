@@ -1336,6 +1336,9 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #'   If a variable already exists in the extract, its specifications
 #'   will be added to those that already exist for that variable.
+#' @param time_use_variables Character vector of time use variable names or a
+#'   list of `tu_var_spec` objects created by [tu_var_spec()] containing
+#'   specifications for all variables to include in the extract.
 #' @param data_format Format for the output extract data file. Either
 #'   `"fixed_width"` or `"csv"`.
 #'
@@ -1404,6 +1407,8 @@ add_to_extract.micro_extract <- function(extract,
                                          description = NULL,
                                          samples = NULL,
                                          variables = NULL,
+                                         time_use_variables = NULL,
+                                         sample_members = NULL,
                                          data_format = NULL,
                                          data_structure = NULL,
                                          rectangular_on = NULL,
@@ -1430,9 +1435,7 @@ add_to_extract.micro_extract <- function(extract,
 
   samples <- spec_cast(samples, "samp_spec")
   variables <- spec_cast(variables, "var_spec")
-
-  samp_names <- purrr::map_chr(samples, ~ .x$name)
-  var_names <- purrr::map_chr(variables, ~ .x$name)
+  time_use_variables <- spec_cast(time_use_variables, "tu_var_spec")
 
   error_header <- paste0("Invalid `", class(extract)[1], "` object:")
 
@@ -1456,14 +1459,27 @@ add_to_extract.micro_extract <- function(extract,
     )
   }
 
+  if (!all(purrr::map_lgl(time_use_variables, ~ inherits(.x, "tu_var_spec")))) {
+    ipums_extract_error(
+      error_header,
+      paste0(
+        "Expected `time_use_variables` to be a `tu_var_spec` object ",
+        "or a list of `tu_var_spec` objects."
+      )
+    )
+  }
+
   samples <- spec_add(extract$samples, samples)
   variables <- spec_add(extract$variables, variables)
+  time_use_variables <- spec_add(extract$time_use_variables, time_use_variables)
 
   extract <- new_ipums_extract(
     collection = extract$collection,
     description = description %||% extract$description,
     samples = set_nested_names(samples),
     variables = set_nested_names(variables),
+    time_use_variables = set_nested_names(time_use_variables),
+    sample_members = union(extract$sample_members, sample_members),
     data_format = data_format %||% extract$data_format,
     data_structure = data_structure %||% extract$data_structure,
     rectangular_on = rectangular_on,
@@ -1792,6 +1808,9 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' @param variables Names of the variables to remove from the extract
 #'   definition. All variable-specific fields for the indicated variables
 #'   will also be removed.
+#' @param time_use_variables Names of the time use variables to remove from the
+#'   extract definition. All time use variable-specific fields for the indicated
+#'   time use variables will also be removed.
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1849,6 +1868,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 remove_from_extract.micro_extract <- function(extract,
                                               samples = NULL,
                                               variables = NULL,
+                                              time_use_variables = NULL,
                                               ...) {
   dots <- rlang::list2(...)
 
@@ -1866,18 +1886,22 @@ remove_from_extract.micro_extract <- function(extract,
     ))
   }
 
-  # Coerce all dataset and tst names to `spec` objects for consistency
+  # Coerce all samples/variables to `spec` objects for consistency
   samples <- spec_cast(samples, "samp_spec")
   variables <- spec_cast(variables, "var_spec")
+  time_use_variables <- spec_cast(time_use_variables, "tu_var_spec")
 
   samples <- spec_remove(extract$samples, samples)
   variables <- spec_remove(extract$variables, variables)
+  time_use_variables <- spec_remove(extract$time_use_variables, time_use_variables)
 
   extract <- new_ipums_extract(
     collection = extract$collection,
     description = extract$description,
     samples = samples,
     variables = variables,
+    time_use_variables = time_use_variables,
+    sample_members = extract$sample_members,
     data_format = extract$data_format,
     data_structure = extract$data_structure,
     rectangular_on = extract$rectangular_on,
@@ -2969,41 +2993,57 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
 
       api_extract_warnings(x$number, x$warnings)
 
-      samples <- purrr::map(
-        names(def$samples),
-        ~ samp_spec(.x)
+      samples <- set_nested_names(
+        purrr::map(names(def$samples), ~ samp_spec(.x))
       )
 
-      variables <- purrr::map(
-        names(def$variables),
-        ~ var_spec(
-          .x,
-          case_selections = unlist(def$variables[[.x]]$caseSelections[[1]]),
-          case_selection_type = names(def$variables[[.x]]$caseSelections),
-          attached_characteristics = unlist(def$variables[[.x]]$attachedCharacteristics),
-          data_quality_flags = def$variables[[.x]]$dataQualityFlags,
-          preselected = def$variables[[.x]]$preselected
+      if (!is_empty(names(def$variables))) {
+        variables <- purrr::map(
+          names(def$variables),
+          ~ var_spec(
+            .x,
+            case_selections = unlist(def$variables[[.x]]$caseSelections[[1]]),
+            case_selection_type = names(def$variables[[.x]]$caseSelections),
+            attached_characteristics = unlist(def$variables[[.x]]$attachedCharacteristics),
+            data_quality_flags = def$variables[[.x]]$dataQualityFlags,
+            preselected = def$variables[[.x]]$preselected
+          )
         )
-      )
 
-      time_use_variables <- purrr::map(
-        names(def$timeUseVariables),
-        ~ tu_var_spec(.x, owner = unlist(def$timeUseVariables[[.x]]$owner))
-      )
+        variables <- set_nested_names(variables)
+      } else {
+        variables <- NULL
+      }
+
+      if (!is_empty(names(def$timeUseVariables))) {
+        time_use_variables <- purrr::map(
+          names(def$timeUseVariables),
+          ~ tu_var_spec(.x, owner = unlist(def$timeUseVariables[[.x]]$owner))
+        )
+
+        time_use_variables <- set_nested_names(time_use_variables)
+      } else {
+        time_use_variables <- NULL
+      }
 
       if (!is_empty(x$downloadLinks)) {
         names(x$downloadLinks) <- to_snake_case(names(x$downloadLinks))
       }
 
-      sample_members <- c("include_non_respondents", "include_household_members")
+      if (any(unlist(def$sampleMembers))) {
+        sm_opts <- c("include_non_respondents", "include_household_members")
+        sample_members <- sm_opts[unlist(def$sampleMembers)]
+      } else {
+        sample_members <- NULL
+      }
 
       out <- new_ipums_extract(
         collection = def$collection,
         description = def$description,
-        samples = set_nested_names(samples),
-        variables = set_nested_names(variables),
-        time_use_variables = set_nested_names(time_use_variables),
-        sample_members = sample_members[unlist(def$sampleMembers)],
+        samples = samples,
+        variables = variables,
+        time_use_variables = time_use_variables,
+        sample_members = sample_members,
         data_format = def$dataFormat,
         data_structure = names(def$dataStructure),
         rectangular_on = def$dataStructure$rectangular$on,
