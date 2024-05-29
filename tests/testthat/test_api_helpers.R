@@ -472,7 +472,10 @@ test_that("We can get correct API version info for each collection", {
 
   has_support <- dplyr::filter(collections, .data$api_support)
 
-  expect_equal(has_support$code_for_api, c("usa", "cps", "ipumsi", "nhgis"))
+  expect_setequal(
+    has_support$code_for_api,
+    c("usa", "cps", "ipumsi", "nhgis", "atus", "ahtus", "mtus", "nhis", "meps")
+  )
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(
