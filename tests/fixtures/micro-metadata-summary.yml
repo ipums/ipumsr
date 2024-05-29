@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/cps/samples?collection=cps&version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/samples?collection=cps&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
@@ -17,10 +17,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 03 May 2023 21:55:39 GMT
-      etag: W/"28243a275ffb901ba346b204d5a9ccba"
+      date: Wed, 29 May 2024 17:38:40 GMT
+      etag: W/"8b72c3838654e729605a8901deede8d3"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -29,10 +29,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 5e135cb3-a6d3-4ace-8680-a82e22f905d6
-      x-runtime: '0.008361'
+      x-request-id: 1ccd487d-6583-42a2-bbe8-58a645b0866e
+      x-runtime: '0.319363'
       x-xss-protection: '0'
-      content-length: '39089'
+      content-length: '39881'
     body:
       encoding: ''
       file: no
@@ -139,7 +139,7 @@ http_interactions:
         December 2008"},{"name":"cps2009_01s","description":"IPUMS-CPS, January 2009"},{"name":"cps2009_02b","description":"IPUMS-CPS,
         February 2009"},{"name":"cps2009_04b","description":"IPUMS-CPS, April 2009"},{"name":"cps2009_05b","description":"IPUMS-CPS,
         May 2009"},{"name":"cps2009_06b","description":"IPUMS-CPS, June 2009"},{"name":"cps2009_07b","description":"IPUMS-CPS,
-        July 2009"},{"name":"cps2009_10s","description":"IPUMS-CPS, October 20097"},{"name":"cps2009_12s","description":"IPUMS-CPS,
+        July 2009"},{"name":"cps2009_10s","description":"IPUMS-CPS, October 2009"},{"name":"cps2009_12s","description":"IPUMS-CPS,
         December 2009"},{"name":"cps2010_01s","description":"IPUMS-CPS, January 2010"},{"name":"cps2010_02b","description":"IPUMS-CPS,
         February 2010"},{"name":"cps2010_04b","description":"IPUMS-CPS, April 2010"},{"name":"cps1976_03b","description":"IPUMS-CPS,
         March 1976"},{"name":"cps1977_03b","description":"IPUMS-CPS, March 1977"},{"name":"cps1978_03b","description":"IPUMS-CPS,
@@ -325,8 +325,7 @@ http_interactions:
         October 2018"},{"name":"cps2018_11s","description":"IPUMS-CPS, November 2018"},{"name":"cps2018_12s","description":"IPUMS-CPS,
         December 2018"},{"name":"cps2019_01s","description":"IPUMS-CPS, January 2019"},{"name":"cps2019_02s","description":"IPUMS-CPS,
         February 2019"},{"name":"cps2019_03b","description":"IPUMS-CPS, March 2019"},{"name":"cps2019_04b","description":"IPUMS-CPS,
-        April 2019"},{"name":"cps2019_05s","description":"IPUMS-CPS, May 2019"},{"name":"cps2018_03r","description":"IPUMS-CPS,
-        ASEC Research File 2018"},{"name":"cps2019_06s","description":"IPUMS-CPS,
+        April 2019"},{"name":"cps2019_05s","description":"IPUMS-CPS, May 2019"},{"name":"cps2019_06s","description":"IPUMS-CPS,
         June 2019"},{"name":"cps2019_03s","description":"IPUMS-CPS, ASEC 2019"},{"name":"cps2019_08s","description":"IPUMS-CPS,
         August 2019"},{"name":"cps2019_09s","description":"IPUMS-CPS, September 2019"},{"name":"cps2019_10s","description":"IPUMS-CPS,
         October 2019"},{"name":"cps2019_11s","description":"IPUMS-CPS, November 2019"},{"name":"cps2019_12s","description":"IPUMS-CPS,
@@ -346,14 +345,21 @@ http_interactions:
         September 2021"},{"name":"cps2021_10s","description":"IPUMS-CPS, October 2021"},{"name":"cps2021_11s","description":"IPUMS-CPS,
         November 2021"},{"name":"cps2021_12s","description":"IPUMS-CPS, December 2021"},{"name":"cps2005_01s","description":"IPUMS-CPS,
         January 2005"},{"name":"cps2005_07s","description":"IPUMS-CPS, July 2005"},{"name":"cps2005_11s","description":"IPUMS-CPS,
-        November 2005"},{"name":"cps2022_01s","description":"IPUMS-CPS, January 2022"},{"name":"cps2022_02b","description":"IPUMS-CPS,
-        February 2022"},{"name":"cps2022_03b","description":"IPUMS-CPS, March 2022"},{"name":"cps2021_07s","description":"IPUMS-CPS,
-        July 2021"},{"name":"cps2022_04s","description":"IPUMS-CPS, April 2022"},{"name":"cps2022_05b","description":"IPUMS-CPS,
-        May 2022"},{"name":"cps2022_06s","description":"IPUMS-CPS, June 2022"},{"name":"cps2022_07s","description":"IPUMS-CPS,
+        November 2005"},{"name":"cps2022_01s","description":"IPUMS-CPS, January 2022"},{"name":"cps2022_03b","description":"IPUMS-CPS,
+        March 2022"},{"name":"cps2021_07s","description":"IPUMS-CPS, July 2021"},{"name":"cps2022_04s","description":"IPUMS-CPS,
+        April 2022"},{"name":"cps2022_06s","description":"IPUMS-CPS, June 2022"},{"name":"cps2022_07s","description":"IPUMS-CPS,
         July 2022"},{"name":"cps2022_08s","description":"IPUMS-CPS, August 2022"},{"name":"cps2022_03s","description":"IPUMS-CPS,
         ASEC 2022"},{"name":"cps2022_09s","description":"IPUMS-CPS, September 2022"},{"name":"cps2022_10s","description":"IPUMS-CPS,
         October 2022"},{"name":"cps2022_11s","description":"IPUMS-CPS, November 2022"},{"name":"cps2022_12s","description":"IPUMS-CPS,
         December 2022"},{"name":"cps2023_01s","description":"IPUMS-CPS, January 2023"},{"name":"cps2023_02s","description":"IPUMS-CPS,
-        February 2023"},{"name":"cps2023_03b","description":"IPUMS-CPS, March 2023"}],"pageNumber":1,"pageSize":2500,"totalCount":629,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-05-03 21:55:40 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        February 2023"},{"name":"cps2023_03b","description":"IPUMS-CPS, March 2023"},{"name":"cps2023_04b","description":"IPUMS-CPS,
+        April 2023"},{"name":"cps2023_05b","description":"IPUMS-CPS, May 2023"},{"name":"cps2023_06s","description":"IPUMS-CPS,
+        June 2023"},{"name":"cps2023_07s","description":"IPUMS-CPS, July 2023"},{"name":"cps2023_08s","description":"IPUMS-CPS,
+        August 2023"},{"name":"cps2023_03s","description":"IPUMS-CPS, ASEC 2023"},{"name":"cps2023_09s","description":"IPUMS-CPS,
+        September 2023"},{"name":"cps2023_10s","description":"IPUMS-CPS, October 2023"},{"name":"cps2023_11s","description":"IPUMS-CPS,
+        November 2023"},{"name":"cps2023_12s","description":"IPUMS-CPS, December 2023"},{"name":"cps2022_02s","description":"IPUMS-CPS,
+        February 2022"},{"name":"cps2022_05s","description":"IPUMS-CPS, May 2022"},{"name":"cps2024_01s","description":"IPUMS-CPS,
+        January 2024"},{"name":"cps2024_02b","description":"IPUMS-CPS, February 2024"},{"name":"cps2024_03b","description":"IPUMS-CPS,
+        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":642,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-05-29 17:38:40 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

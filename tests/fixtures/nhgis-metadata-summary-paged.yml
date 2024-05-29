@@ -17,10 +17,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 22:10:29 GMT
-      etag: W/"c63aabce6b18c5158336911c0a2ecc37"
+      date: Wed, 29 May 2024 17:37:39 GMT
+      etag: W/"6714d628621217f9611bbb1a52ab0188"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -29,10 +29,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: a39877de-d191-4c83-88de-755b0dd52984
-      x-runtime: '0.012016'
+      x-request-id: 6ad97c7c-df77-4990-bb93-3cee5473a476
+      x-runtime: '0.049588'
       x-xss-protection: '0'
-      content-length: '13683'
+      content-length: '13705'
     body:
       encoding: ''
       file: no
@@ -147,23 +147,23 @@ http_interactions:
         \u0026 Counties]","sequence":2801},{"name":"1939_1959_cVS","group":"1939-1959
         Vital Statistics","description":"Natality \u0026 Mortality Data [US, States
         \u0026 Counties]","sequence":2901},{"name":"1940_cAge","group":"1940 Census","description":"Detailed
-        Age Data [US, States \u0026 Counties]","sequence":3002},{"name":"1940_sOcc","group":"1940
-        Census","description":"Occupation Data [US \u0026 States]","sequence":3003},{"name":"1940_cPHAE","group":"1940
+        Age Data [US, States \u0026 Counties]","sequence":3001},{"name":"1940_sOcc","group":"1940
+        Census","description":"Occupation Data [US \u0026 States]","sequence":3002},{"name":"1940_cPHAE","group":"1940
         Census","description":"Population, Housing, Agriculture \u0026 Economic Data
-        [US, States \u0026 Counties]","sequence":3004},{"name":"1940_tPH_Major","group":"1940
+        [US, States \u0026 Counties]","sequence":3003},{"name":"1940_tPH_Major","group":"1940
         Census","description":"Population \u0026 Housing Data [Tracts \u0026 NY Health
-        Areas: Major Cities \u0026 Surrounds]","sequence":3005},{"name":"1940_tPH_NYC","group":"1940
-        Census","description":"Population \u0026 Housing Data [Tracts: New York NY]","sequence":3006},{"name":"1940_tPop_HI","group":"1940
-        Census","description":"Population Data [Tracts: Hawaii]","sequence":3007},{"name":"1950_cAge","group":"1950
-        Census","description":"Detailed Age Data [US, States \u0026 Counties]","sequence":3202},{"name":"1950_sOcc","group":"1950
-        Census","description":"Occupation Data [US \u0026 States]","sequence":3203},{"name":"1950_cPHA","group":"1950
+        Areas: Major Cities \u0026 Surrounds]","sequence":3004},{"name":"1940_tPH_NYC","group":"1940
+        Census","description":"Population \u0026 Housing Data [Tracts: New York NY]","sequence":3005},{"name":"1940_tPop_HI","group":"1940
+        Census","description":"Population Data [Tracts: Hawaii]","sequence":3006},{"name":"1950_cAge","group":"1950
+        Census","description":"Detailed Age Data [US, States \u0026 Counties]","sequence":3201},{"name":"1950_sOcc","group":"1950
+        Census","description":"Occupation Data [US \u0026 States]","sequence":3202},{"name":"1950_cPHA","group":"1950
         Census","description":"Population, Housing \u0026 Agriculture Data [US, States
-        \u0026 Counties]","sequence":3204},{"name":"1950_tPH_Major","group":"1950
+        \u0026 Counties]","sequence":3203},{"name":"1950_tPH_Major","group":"1950
         Census","description":"Population \u0026 Housing Data [Tracts: Major Cities
-        \u0026 Surrounds]","sequence":3205},{"name":"1950_tPop_Misc","group":"1950
+        \u0026 Surrounds]","sequence":3204},{"name":"1950_tPop_Misc","group":"1950
         Census","description":"Population Totals [Tracts: Selected Areas in GA, HI,
-        IA, NJ \u0026 SC]","sequence":3206},{"name":"1950_tPrP_LA","group":"1950 Census","description":"Preliminary
-        Population Data [Tracts: Los Angeles CA]","sequence":3207},{"name":"1952_cRelig","group":"1952
+        IA, NJ \u0026 SC]","sequence":3205},{"name":"1950_tPrP_LA","group":"1950 Census","description":"Preliminary
+        Population Data [Tracts: Los Angeles CA]","sequence":3206},{"name":"1952_cRelig","group":"1952
         Survey of Churches and Church Membership","description":"Religious Bodies
         Data [States \u0026 Counties]","sequence":3301},{"name":"1959_1972_cVS","group":"1959-1972
         Vital Statistics","description":"Natality \u0026 Mortality Data [US, States
@@ -173,12 +173,12 @@ http_interactions:
         \u0026 Counties]","sequence":3602},{"name":"1960_cPop","group":"1960 Census","description":"Population
         Data [US, States, Counties]","sequence":3603},{"name":"1960_tPH","group":"1960
         Census","description":"Population \u0026 Housing Data [Tracts: Major Cities
-        \u0026 Surrounds]","sequence":3604}],"pageNumber":1,"pageSize":100,"totalCount":253,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=2\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2023-04-26 22:10:29 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        \u0026 Surrounds]","sequence":3604}],"pageNumber":1,"pageSize":100,"totalCount":261,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2"}}'
+  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?pageNumber=2&pageSize=100&version=2
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&pageNumber=2&pageSize=100&version=2
     body:
       encoding: ''
       string: ''
@@ -194,10 +194,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 22:10:29 GMT
-      etag: W/"5c33cc2fdd8e37e9729e5224e4bf6278"
+      date: Wed, 29 May 2024 17:37:40 GMT
+      etag: W/"51677d750bdb2179acb35c4012f91359"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -206,10 +206,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 73481869-f8e5-4302-8a12-605e6501af8f
-      x-runtime: '0.009824'
+      x-request-id: d63fe214-4f4b-40a0-8a3d-b454feab5be3
+      x-runtime: '0.036369'
       x-xss-protection: '0'
-      content-length: '13719'
+      content-length: '13763'
     body:
       encoding: ''
       file: no
@@ -352,12 +352,12 @@ http_interactions:
         American Community Survey","description":"5-Year Data [2007-2011, Tracts \u0026
         Larger Areas]","sequence":4904},{"name":"2007_2011_ACS5c","group":"2011 American
         Community Survey","description":"5-Year Data [2007-2011, Summary by Residence
-        1 Year Ago]","sequence":4905}],"pageNumber":2,"pageSize":100,"totalCount":253,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=1\u0026pageSize=100\u0026version=2","nextPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=3\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2023-04-26 22:10:29 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        1 Year Ago]","sequence":4905}],"pageNumber":2,"pageSize":100,"totalCount":261,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=1\u0026pageSize=100\u0026version=2","nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=3\u0026pageSize=100\u0026version=2"}}'
+  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?pageNumber=3&pageSize=100&version=2
+    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&pageNumber=3&pageSize=100&version=2
     body:
       encoding: ''
       string: ''
@@ -373,10 +373,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 22:10:29 GMT
-      etag: W/"b56d756004ae83ff8d6acd919de6a535"
+      date: Wed, 29 May 2024 17:37:40 GMT
+      etag: W/"1cb8295a7cd80a10e3af63233084281f"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -385,10 +385,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 1540949b-2335-4675-aa26-a63c25f33e47
-      x-runtime: '0.009641'
+      x-request-id: 2e3e638e-93c8-4e4a-b384-7e3d9a82db62
+      x-runtime: '0.030232'
       x-xss-protection: '0'
-      content-length: '7834'
+      content-length: '8995'
     body:
       encoding: ''
       file: no
@@ -476,8 +476,12 @@ http_interactions:
         1 Year Ago]","sequence":5804},{"name":"2016_2020_ACS5d","group":"2020 American
         Community Survey","description":"5-Year Data [2016-2020, Summary by Place
         of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
-        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
-        American Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
+        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2020_DHCa","group":"2020
+        Census","description":"DHC - P \u0026 H Tables [Blocks \u0026 Larger Areas]","sequence":5902},{"name":"2020_DHCb","group":"2020
+        Census","description":"DHC - PCT \u0026 HCT Tables [Tracts \u0026 Larger Areas]","sequence":5903},{"name":"2020_DHCc","group":"2020
+        Census","description":"DHC - PCO Tables (Group Quarters Population Only) [Counties
+        \u0026 Larger Areas]","sequence":5904},{"name":"2021_ACS1","group":"2021 American
+        Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
         American Community Survey","description":"5-Year Data [2017-2021, Block Groups
         \u0026 Larger Areas]","sequence":6002},{"name":"2017_2021_ACS5b","group":"2021
         American Community Survey","description":"5-Year Data [2017-2021, Tracts \u0026
@@ -485,6 +489,15 @@ http_interactions:
         Community Survey","description":"5-Year Data [2017-2021, Summary by Residence
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
-        of Work]","sequence":6005}],"pageNumber":3,"pageSize":100,"totalCount":253,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?pageNumber=2\u0026pageSize=100\u0026version=2","nextPage":null}}'
-  recorded_at: 2023-04-26 22:10:29 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        of Work]","sequence":6005},{"name":"2022_ACS1","group":"2022 American Community
+        Survey","description":"1-Year Data","sequence":6101},{"name":"2018_2022_ACS5a","group":"2022
+        American Community Survey","description":"5-Year Data [2018-2022, Block Groups
+        \u0026 Larger Areas]","sequence":6102},{"name":"2018_2022_ACS5b","group":"2022
+        American Community Survey","description":"5-Year Data [2018-2022, Tracts \u0026
+        Larger Areas]","sequence":6103},{"name":"2018_2022_ACS5c","group":"2022 American
+        Community Survey","description":"5-Year Data [2018-2022, Summary by Residence
+        1 Year Ago]","sequence":6104},{"name":"2018_2022_ACS5d","group":"2022 American
+        Community Survey","description":"5-Year Data [2018-2022, Summary by Place
+        of Work]","sequence":6105}],"pageNumber":3,"pageSize":100,"totalCount":261,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2","nextPage":null}}'
+  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
