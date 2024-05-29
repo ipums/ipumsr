@@ -63,7 +63,8 @@ get_last_extract_info("nhgis")
 
 # To browse your extract history by particular criteria, you can
 # loop through the extract objects. We'll create a sample list of 2 extracts:
-extract1 <- define_extract_usa(
+extract1 <- define_extract_micro(
+  collection = "usa",
   description = "2013 ACS",
   samples = "us2013a",
   variables = var_spec(
@@ -73,7 +74,8 @@ extract1 <- define_extract_usa(
   )
 )
 
-extract2 <- define_extract_usa(
+extract2 <- define_extract_micro(
+  collection = "usa",
   description = "2014 ACS",
   samples = "us2014a",
   variables = list(

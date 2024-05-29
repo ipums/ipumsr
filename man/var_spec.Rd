@@ -2,6 +2,7 @@
 % Please edit documentation in R/api_define_extract.R
 \name{var_spec}
 \alias{var_spec}
+\alias{tu_var_spec}
 \alias{samp_spec}
 \title{Create variable and sample specifications for IPUMS microdata extract
 requests}
@@ -15,10 +16,12 @@ var_spec(
   preselected = NULL
 )
 
+tu_var_spec(name, owner)
+
 samp_spec(name)
 }
 \arguments{
-\item{name}{Name of the sample or variable.}
+\item{name}{Name of the sample, variable, or time use variable.}
 
 \item{case_selections}{A character vector of values of the given variable
 that should be used to select cases. Values should be specified exactly as
@@ -49,15 +52,22 @@ included.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
 This is not needed for external use.}
+
+\item{owner}{Email of user account associated with this time use variable.
+Currently this must match the email for the user submitting the extract
+request that contains this time use variable.}
 }
 \value{
-A \code{var_spec} or \code{samp_spec} object.
+A \code{var_spec}, \code{tu_var_spec}, or \code{samp_spec} object.
 }
 \description{
 Provide specifications for individual variables when defining an
 IPUMS microdata extract request.
 
 Currently, no additional specifications are available for IPUMS samples.
+
+Note that not all variable-level options are available across all IPUMS
+data collections.
 
 Learn more about microdata extract definitions in
 \code{vignette("ipums-api-micro")}.
@@ -77,7 +87,8 @@ var2 <- var_spec(
 )
 
 # Use variable specifications in a microdata extract definition:
-extract <- define_extract_usa(
+extract <- define_extract_micro(
+  collection = "usa",
   description = "Example extract",
   samples = "us2017b",
   variables = list(var1, var2)

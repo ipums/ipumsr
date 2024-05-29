@@ -16,6 +16,8 @@
 #' * IPUMS USA (`"usa"`)
 #' * IPUMS CPS (`"cps"`)
 #' * IPUMS International (`"ipumsi"`)
+#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
+#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
 #' * IPUMS NHGIS (`"nhgis"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -26,9 +28,6 @@
 #'   status of API support for the collection.
 #'
 #' @export
-#'
-#' @examples
-#' ipums_data_collections()
 ipums_data_collections <- function() {
   purrr::map_dfr(
     proj_config(),

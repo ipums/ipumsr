@@ -49,7 +49,8 @@ To browse definitions of your previously submitted extract requests, see
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_usa(
+my_extract <- define_extract_micro(
+  collection = "usa",
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")

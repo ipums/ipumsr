@@ -54,7 +54,7 @@ get_sample_info("ipumsi")
 }
 }
 \seealso{
-\code{\link[=define_extract-micro]{define_extract_*()}} to create an IPUMS microdata
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create an IPUMS microdata
 extract definition.
 }
 \keyword{internal}

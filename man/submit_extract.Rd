@@ -29,7 +29,8 @@ request number.
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_cps(
+my_extract <- define_extract_micro(
+  collection = "cps",
   description = "2018-2019 CPS Data",
   samples = c("cps2018_05s", "cps2019_05s"),
   variables = c("SEX", "AGE", "YEAR")

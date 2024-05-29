@@ -29,6 +29,8 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS USA
 \item IPUMS CPS
 \item IPUMS International
+\item IPUMS Time Use (ATUS, AHTUS, MTUS)
+\item IPUMS Health Surveys (NHIS, MEPS)
 }
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
@@ -51,7 +53,8 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 # Microdata extracts
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "USA example",
   samples = c("us2013a", "us2014a"),
   variables = list(

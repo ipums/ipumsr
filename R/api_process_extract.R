@@ -37,7 +37,8 @@
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_cps(
+#' my_extract <- define_extract_micro(
+#'   collection = "cps",
 #'   description = "2018-2019 CPS Data",
 #'   samples = c("cps2018_05s", "cps2019_05s"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -124,7 +125,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' no longer available), these functions will warn that the extract request
 #' must be resubmitted.
 #'
-#' @inheritParams define_extract_usa
+#' @inheritParams define_extract_micro
 #' @inheritParams download_extract
 #' @inheritParams get_extract_info
 #' @inheritParams submit_extract
@@ -168,7 +169,8 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_ipumsi(
+#' my_extract <- define_extract_micro(
+#'   collection = "ipumsi",
 #'   description = "Botswana data",
 #'   samples = c("bw2001a", "bw2011a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -339,7 +341,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' associated .gz data file.
 #'
 #' @inheritParams wait_for_extract
-#' @inheritParams define_extract_usa
+#' @inheritParams define_extract_micro
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
@@ -366,7 +368,8 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013-2014 ACS Data",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = c("SEX", "AGE", "YEAR")

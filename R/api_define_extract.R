@@ -24,6 +24,11 @@
 #'     + IPUMS USA (`"usa_extract"`)
 #'     + IPUMS CPS (`"cps_extract"`)
 #'     + IPUMS International (`"ipumsi_extract"`)
+#'     + IPUMS ATUS (`"atus_extract"`)
+#'     + IPUMS AHTUS (`"ahtus_extract"`)
+#'     + IPUMS MTUS (`"mtus_extract"`)
+#'     + IPUMS NHIS (`"nhis_extract"`)
+#'     + IPUMS MEPS (`"meps_extract"`)
 #' - IPUMS aggregate data (`"agg_extract"`)
 #'     + IPUMS NHGIS (`"nhgis_extract"`)
 #'
@@ -95,9 +100,12 @@ NULL
 #' Currently, ipumsr supports extract definitions for the following
 #' collections:
 #'
-#' - **IPUMS USA**: [define_extract_usa()]
-#' - **IPUMS CPS**: [define_extract_cps()]
-#' - **IPUMS International**: [define_extract_ipumsi()]
+#' - **IPUMS Microdata collections**: [define_extract_micro()]
+#'    + IPUMS USA
+#'    + IPUMS CPS
+#'    + IPUMS International
+#'    + IPUMS Time Use
+#'    + IPUMS Health Surveys
 #' - **IPUMS NHGIS**: [define_extract_nhgis()]
 #'
 #' @section Value:
@@ -116,14 +124,22 @@ NULL
 #' Define the parameters of an IPUMS microdata extract request to be submitted
 #' via the IPUMS API.
 #'
-#' Currently supported microdata collections include:
-#' - **IPUMS USA**: `define_extract_usa()`
-#' - **IPUMS CPS**: `define_extract_cps()`
-#' - **IPUMS International**: `define_extract_ipumsi()`
+#' The IPUMS API currently supports the following microdata collections:
+#'    + IPUMS USA
+#'    + IPUMS CPS
+#'    + IPUMS International
+#'    + IPUMS ATUS
+#'    + IPUMS AHTUS
+#'    + IPUMS MTUS
+#'    + IPUMS NHIS
+#'    + IPUMS MEPS
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' microdata extract definitions in `vignette("ipums-api-micro")`.
 #'
+#' @param collection Code for the IPUMS collection represented by this
+#'   extract request. See [ipums_data_collections()] for supported microdata
+#'   collection codes.
 #' @param description Description of the extract.
 #' @param samples Vector of samples to include in the extract
 #'   request. Use [get_sample_info()] to identify
@@ -132,6 +148,19 @@ NULL
 #'   variable specifications to include in the extract
 #'   request. Use [var_spec()] to create a `var_spec` object containing a
 #'   detailed variable specification. See examples.
+#' @param time_use_variables List of specifications for all time use variables
+#'   to include in the extract request. Use [tu_var_spec()] to create a
+#'   `tu_var_spec` object containing a time use variable specification. See
+#'   examples.
+#'
+#'   Time use variables are only supported for IPUMS Time Use collections
+#'   (`"atus"`, `"ahtus"`, and `"mtus"`).
+#' @param sample_members Indication of whether to include additional sample
+#'   members in the extract request. If provided, must be one of
+#'   `"include_non_respondents"`, `"include_household_members"`, or both.
+#'
+#'   Sample member selection is only supported for IPUMS Time Use collections
+#'   (`"atus"`, `"ahtus"`, and `"mtus"`).
 #' @param data_format Format for the output extract data file. Either
 #'   `"fixed_width"` or `"csv"`.
 #'
@@ -147,8 +176,7 @@ NULL
 #'
 #'   Defaults to `"rectangular"`.
 #' @param rectangular_on If `data_structure` is `"rectangular"`,
-#'   records on which to rectangularize. Currently only `"P"` (person records)
-#'   is supported.
+#'   records on which to rectangularize.
 #'
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
@@ -172,16 +200,19 @@ NULL
 #' @return An object of class [`micro_extract`][ipums_extract-class] containing
 #'   the extract definition.
 #'
+#' @aliases define_extract_usa define_extract_cps define_extract_ipumsi
+#'   define_extract_atus define_extract_ahtus define_extract_mtus
+#'   define_extract_nhis define_extract_meps
+#'
 #' @seealso
 #' [submit_extract()] to submit an extract request for processing.
 #'
 #' [save_extract_as_json()] and [define_extract_from_json()] to share an
 #'   extract definition.
 #'
-#' @name define_extract-micro
-#'
 #' @examples
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013-2014 ACS Data",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -190,7 +221,8 @@ NULL
 #' usa_extract
 #'
 #' # Use `var_spec()` to created detailed variable specifications:
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "Example USA extract definition",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = var_spec(
@@ -202,7 +234,8 @@ NULL
 #'
 #' # For multiple variables, provide a list of `var_spec` objects and/or
 #' # variable names.
-#' cps_extract <- define_extract_cps(
+#' cps_extract <- define_extract_micro(
+#'   collection = "cps",
 #'   description = "Example CPS extract definition",
 #'   samples = c("cps2020_02s", "cps2020_03s"),
 #'   variables = list(
@@ -223,7 +256,8 @@ NULL
 #'   ~ var_spec(.x, attached_characteristics = "mother")
 #' )
 #'
-#' ipumsi_extract <- define_extract_ipumsi(
+#' ipumsi_extract <- define_extract_micro(
+#'   collection = "ipumsi",
 #'   description = "Extract definition with predefined variables",
 #'   samples = c("br2010a", "cl2017a"),
 #'   variables = my_vars
@@ -236,14 +270,72 @@ NULL
 #'
 #' ipumsi_extract$variables$AGE
 #'
+#' # IPUMS Time Use collections allow selection of user-defined time use
+#' # variables:
+#' define_extract_micro(
+#'   collection = "atus",
+#'   description = "ATUS extract with personal time use variables",
+#'   samples = "at2007",
+#'   time_use_variables = tu_var_spec(
+#'     "MYTIMEUSEVAR",
+#'     owner = "example@example.com"
+#'   )
+#' )
+#'
 #' \dontrun{
 #' # Use the extract definition to submit an extract request to the API
 #' submit_extract(usa_extract)
 #' }
-NULL
+define_extract_micro <- function(collection,
+                                 description,
+                                 samples,
+                                 variables = NULL,
+                                 time_use_variables = NULL,
+                                 sample_members = NULL,
+                                 data_format = "fixed_width",
+                                 data_structure = "rectangular",
+                                 rectangular_on = NULL,
+                                 case_select_who = "individuals",
+                                 data_quality_flags = NULL) {
+  if (collection == "nhgis") {
+    rlang::abort(c(
+      "\"nhgis\" is not an IPUMS microdata collection",
+      "i" = "Use `define_extract_nhgis()` to define an NHGIS extract request."
+    ))
+  }
+
+  check_api_support(collection)
+
+  if (data_structure == "rectangular") {
+    rectangular_on <- rectangular_on %||% "P"
+  }
+
+  samples <- spec_cast(samples, "samp_spec")
+  variables <- spec_cast(variables, "var_spec")
+  time_use_variables <- spec_cast(time_use_variables, "tu_var_spec")
+
+  extract <- new_ipums_extract(
+    collection = collection,
+    description = description,
+    samples = set_nested_names(samples),
+    variables = set_nested_names(variables),
+    time_use_variables = set_nested_names(time_use_variables),
+    sample_members = sample_members,
+    data_format = data_format,
+    data_structure = data_structure,
+    rectangular_on = rectangular_on,
+    case_select_who = case_select_who,
+    data_quality_flags = data_quality_flags
+  )
+
+  extract <- validate_ipums_extract(extract)
+
+  extract
+}
+
 
 #' @export
-#' @rdname define_extract-micro
+#' @keywords internal
 define_extract_usa <- function(description,
                                samples,
                                variables,
@@ -252,6 +344,12 @@ define_extract_usa <- function(description,
                                rectangular_on = NULL,
                                case_select_who = "individuals",
                                data_quality_flags = NULL) {
+  lifecycle::deprecate_warn(
+    "0.8.0",
+    "define_extract_usa()",
+    "define_extract_micro()"
+  )
+
   define_extract_micro(
     collection = "usa",
     description = description,
@@ -266,7 +364,7 @@ define_extract_usa <- function(description,
 }
 
 #' @export
-#' @rdname define_extract-micro
+#' @keywords internal
 define_extract_cps <- function(description,
                                samples,
                                variables,
@@ -275,6 +373,12 @@ define_extract_cps <- function(description,
                                rectangular_on = NULL,
                                case_select_who = "individuals",
                                data_quality_flags = NULL) {
+  lifecycle::deprecate_warn(
+    "0.8.0",
+    "define_extract_cps()",
+    "define_extract_micro()"
+  )
+
   define_extract_micro(
     collection = "cps",
     description = description,
@@ -289,7 +393,7 @@ define_extract_cps <- function(description,
 }
 
 #' @export
-#' @rdname define_extract-micro
+#' @keywords internal
 define_extract_ipumsi <- function(description,
                                   samples,
                                   variables,
@@ -298,6 +402,12 @@ define_extract_ipumsi <- function(description,
                                   rectangular_on = NULL,
                                   case_select_who = "individuals",
                                   data_quality_flags = NULL) {
+  lifecycle::deprecate_warn(
+    "0.8.0",
+    "define_extract_ipumsi()",
+    "define_extract_micro()"
+  )
+
   define_extract_micro(
     collection = "ipumsi",
     description = description,
@@ -307,109 +417,6 @@ define_extract_ipumsi <- function(description,
     data_structure = data_structure,
     rectangular_on = rectangular_on,
     case_select_who = case_select_who,
-    data_quality_flags = data_quality_flags
-  )
-}
-
-define_extract_atus <- function(description,
-                                samples,
-                                variables = NULL,
-                                time_use_variables = NULL,
-                                sample_members = NULL,
-                                data_format = "fixed_width",
-                                data_structure = "rectangular",
-                                rectangular_on = NULL,
-                                data_quality_flags = NULL) {
-  define_extract_micro(
-    collection = "atus",
-    description = description,
-    samples = samples,
-    variables = variables,
-    time_use_variables = time_use_variables,
-    sample_members = sample_members,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    data_quality_flags = data_quality_flags
-  )
-}
-
-define_extract_ahtus <- function(description,
-                                 samples,
-                                 variables,
-                                 time_use_variables = NULL,
-                                 data_format = "fixed_width",
-                                 data_structure = "rectangular",
-                                 rectangular_on = NULL,
-                                 data_quality_flags = NULL) {
-  define_extract_micro(
-    collection = "ahtus",
-    description = description,
-    samples = samples,
-    variables = variables,
-    time_use_variables = time_use_variables,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    data_quality_flags = data_quality_flags
-  )
-}
-
-define_extract_mtus <- function(description,
-                                samples,
-                                variables,
-                                time_use_variables = NULL,
-                                data_format = "fixed_width",
-                                data_structure = "rectangular",
-                                rectangular_on = NULL,
-                                data_quality_flags = NULL) {
-  define_extract_micro(
-    collection = "mtus",
-    description = description,
-    samples = samples,
-    variables = variables,
-    time_use_variables = time_use_variables,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    data_quality_flags = data_quality_flags
-  )
-}
-
-define_extract_nhis <- function(description,
-                                samples,
-                                variables,
-                                data_format = "fixed_width",
-                                data_structure = "rectangular",
-                                rectangular_on = NULL,
-                                data_quality_flags = NULL) {
-  define_extract_micro(
-    collection = "nhis",
-    description = description,
-    samples = samples,
-    variables = variables,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    data_quality_flags = data_quality_flags
-  )
-}
-
-define_extract_meps <- function(description,
-                                samples,
-                                variables,
-                                data_format = "fixed_width",
-                                data_structure = "rectangular",
-                                rectangular_on = NULL,
-                                data_quality_flags = NULL) {
-  define_extract_micro(
-    collection = "meps",
-    description = description,
-    samples = samples,
-    variables = variables,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
     data_quality_flags = data_quality_flags
   )
 }
@@ -634,10 +641,13 @@ define_extract_nhgis <- function(description = "",
 #'
 #' Currently, no additional specifications are available for IPUMS samples.
 #'
+#' Note that not all variable-level options are available across all IPUMS
+#' data collections.
+#'
 #' Learn more about microdata extract definitions in
 #' `vignette("ipums-api-micro")`.
 #'
-#' @param name Name of the sample or variable.
+#' @param name Name of the sample, variable, or time use variable.
 #' @param case_selections A character vector of values of the given variable
 #'   that should be used to select cases. Values should be specified exactly as
 #'   they appear in the "CODES" tab for the given variable in the web-based
@@ -664,7 +674,7 @@ define_extract_nhgis <- function(description = "",
 #' @param preselected Logical indicating whether the variable is preselected.
 #'   This is not needed for external use.
 #'
-#' @return A `var_spec` or `samp_spec` object.
+#' @return A `var_spec`, `tu_var_spec`, or `samp_spec` object.
 #'
 #' @export
 #'
@@ -685,7 +695,8 @@ define_extract_nhgis <- function(description = "",
 #' )
 #'
 #' # Use variable specifications in a microdata extract definition:
-#' extract <- define_extract_usa(
+#' extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "Example extract",
 #'   samples = "us2017b",
 #'   variables = list(var1, var2)
@@ -717,13 +728,20 @@ var_spec <- function(name,
 
 #' @export
 #' @rdname var_spec
+#'
+#' @param owner Email of user account associated with this time use variable.
+#'   Currently this must match the email for the user submitting the extract
+#'   request that contains this time use variable.
+tu_var_spec <- function(name, owner) {
+  new_ipums_spec(name, owner = owner, class = "tu_var_spec")
+}
+
+#' @export
+#' @rdname var_spec
 samp_spec <- function(name) {
   new_ipums_spec(name, class = "samp_spec")
 }
 
-tu_var_spec <- function(name, owner) {
-  new_ipums_spec(name, owner = owner, class = "tu_var_spec")
-}
 
 #' Create dataset and time series table specifications for IPUMS NHGIS extract
 #' requests
@@ -878,7 +896,8 @@ tst_spec <- function(name,
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
+#' my_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013-2014 ACS Data",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -984,6 +1003,8 @@ define_extract_from_json <- function(extract_json) {
 #'     + IPUMS USA
 #'     + IPUMS CPS
 #'     + IPUMS International
+#'     + IPUMS Time Use (ATUS, AHTUS, MTUS)
+#'     + IPUMS Health Surveys (NHIS, MEPS)
 #' - To add to an **IPUMS NHGIS** extract definition, click
 #'   [here][add_to_extract.nhgis_extract]
 #'
@@ -1028,7 +1049,8 @@ define_extract_from_json <- function(extract_json) {
 #'
 #' @examples
 #' # Microdata extracts
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013 ACS Data",
 #'   samples = "us2013a",
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -1307,7 +1329,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract-micro] functions.
+#' definitions with [define_extract_micro()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1328,7 +1350,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' To modify variable-specific parameters for variables that already exist
 #' in the extract, create a new variable specification with [var_spec()].
 #'
-#' @inheritParams define_extract-micro
+#' @inheritParams define_extract_micro
 #' @inheritParams add_to_extract
 #' @param variables Character vector of variable names or a list of
 #'   `var_spec` objects created by [var_spec()]
@@ -1357,7 +1379,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [`define_extract_*()`][define_extract-micro] to create a new extract
+#' [define_extract_micro] to create a new extract
 #'   definition from scratch
 #'
 #' @export
@@ -1365,7 +1387,8 @@ add_to_extract.nhgis_extract <- function(extract,
 #' @name add_to_extract_micro
 #'
 #' @examples
-#' extract <- define_extract_usa(
+#' extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013 ACS Data",
 #'   samples = "us2013a",
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -1506,6 +1529,8 @@ add_to_extract.micro_extract <- function(extract,
 #'     + IPUMS USA
 #'     + IPUMS CPS
 #'     + IPUMS International
+#'     + IPUMS Time Use (ATUS, AHTUS, MTUS)
+#'     + IPUMS Health Surveys (NHIS, MEPS)
 #' - To remove from an **IPUMS NHGIS** extract definition, click
 #'   [here][remove_from_extract.nhgis_extract]
 #'
@@ -1545,7 +1570,8 @@ add_to_extract.micro_extract <- function(extract,
 #'
 #' @examples
 #' # Microdata extracts
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "USA example",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = list(
@@ -1780,7 +1806,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract-micro] functions.
+#' definitions with [define_extract_micro()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1801,7 +1827,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' To retain a variable while modifying its particular specifications, first
 #' remove that variable, then add a new specification using `add_to_extract()`.
 #'
-#' @inheritParams define_extract-micro
+#' @inheritParams define_extract_micro
 #' @inheritParams remove_from_extract
 #' @param samples Character vector of sample names to remove from the extract
 #'   definition.
@@ -1824,13 +1850,14 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [`define_extract_*()`][define_extract-micro] to create a new extract
+#' [define_extract_micro] to create a new extract
 #'   definition from scratch.
 #'
 #' @export
 #'
 #' @examples
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "USA example",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = list(
@@ -1964,44 +1991,6 @@ new_ipums_extract <- function(collection = NA_character_,
       class(out)
     )
   )
-}
-
-define_extract_micro <- function(collection,
-                                 description,
-                                 samples,
-                                 variables,
-                                 time_use_variables = NULL,
-                                 sample_members = NULL,
-                                 data_format = "fixed_width",
-                                 data_structure = "rectangular",
-                                 rectangular_on = NULL,
-                                 case_select_who = "individuals",
-                                 data_quality_flags = NULL) {
-  if (data_structure == "rectangular") {
-    rectangular_on <- rectangular_on %||% "P"
-  }
-
-  samples <- spec_cast(samples, "samp_spec")
-  variables <- spec_cast(variables, "var_spec")
-  time_use_variables <- spec_cast(time_use_variables, "tu_var_spec")
-
-  extract <- new_ipums_extract(
-    collection = collection,
-    description = description,
-    samples = set_nested_names(samples),
-    variables = set_nested_names(variables),
-    time_use_variables = set_nested_names(time_use_variables),
-    sample_members = sample_members,
-    data_format = data_format,
-    data_structure = data_structure,
-    rectangular_on = rectangular_on,
-    case_select_who = case_select_who,
-    data_quality_flags = data_quality_flags
-  )
-
-  extract <- validate_ipums_extract(extract)
-
-  extract
 }
 
 #' Create a new IPUMS JSON object

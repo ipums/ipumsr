@@ -62,7 +62,8 @@ will be returned, as it is sufficient for reading the data provided in the
 associated .gz data file.
 }
 \examples{
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")

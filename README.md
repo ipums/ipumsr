@@ -218,6 +218,7 @@ countries (1965-present)
 <img src='man/figures/check-solid.svg' class='icon-check'>
 </td>
 <td style="text-align:center;">
+<img src='man/figures/check-solid.svg' class='icon-check'>
 </td>
 <td style="text-align:center;">
 </td>
@@ -242,6 +243,7 @@ Health Interview Survey (NHIS)</a> (1963-present) and
 <img src='man/figures/check-solid.svg' class='icon-check'>
 </td>
 <td style="text-align:center;">
+<img src='man/figures/check-solid.svg' class='icon-check'>
 </td>
 <td style="text-align:center;">
 </td>

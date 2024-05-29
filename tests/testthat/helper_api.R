@@ -1,6 +1,7 @@
 # Sample extracts for use in api unit testing
 test_usa_extract <- function() {
-  define_extract_usa(
+  define_extract_micro(
+    collection = "usa",
     description = "Test USA extract",
     samples = samp_spec("us2017b"),
     variables = list(
@@ -18,7 +19,8 @@ test_usa_extract <- function() {
 }
 
 test_cps_extract <- function() {
-  define_extract_cps(
+  define_extract_micro(
+    collection = "cps",
     description = "Compare age-sex-race breakdowns 1976",
     samples = c("cps2018_03s", "cps2019_03s"),
     variables = list(
@@ -46,7 +48,8 @@ test_cps_extract <- function() {
 }
 
 test_ipumsi_extract <- function() {
-  define_extract_ipumsi(
+  define_extract_micro(
+    collection = "ipumsi",
     description = "Test IPUMSI extract",
     samples = c("mx2015a", "cl2017a"),
     variables = list(

@@ -101,9 +101,7 @@ reference:
   - title: "Interact with the IPUMS API"
     desc: "Request and download IPUMS data within R"
   - contents:
-      - define_extract_usa
-      - define_extract_cps
-      - define_extract_ipumsi
+      - define_extract_micro
       - define_extract_nhgis
       - get_sample_info
       - get_metadata_nhgis

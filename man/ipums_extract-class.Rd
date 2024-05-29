@@ -22,6 +22,11 @@ Currently supported collections are:
 \item IPUMS USA (\code{"usa_extract"})
 \item IPUMS CPS (\code{"cps_extract"})
 \item IPUMS International (\code{"ipumsi_extract"})
+\item IPUMS ATUS (\code{"atus_extract"})
+\item IPUMS AHTUS (\code{"ahtus_extract"})
+\item IPUMS MTUS (\code{"mtus_extract"})
+\item IPUMS NHIS (\code{"nhis_extract"})
+\item IPUMS MEPS (\code{"meps_extract"})
 }
 \item IPUMS aggregate data (\code{"agg_extract"})
 \itemize{

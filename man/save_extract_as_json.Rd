@@ -65,7 +65,8 @@ introduced in version 2.
 }
 
 \examples{
-my_extract <- define_extract_usa(
+my_extract <- define_extract_micro(
+  collection = "usa",
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")

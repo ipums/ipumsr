@@ -41,6 +41,13 @@ will be added to those that already exist for that variable.}
 list of \code{tu_var_spec} objects created by \code{\link[=tu_var_spec]{tu_var_spec()}} containing
 specifications for all variables to include in the extract.}
 
+\item{sample_members}{Indication of whether to include additional sample
+members in the extract request. If provided, must be one of
+\code{"include_non_respondents"}, \code{"include_household_members"}, or both.
+
+Sample member selection is only supported for IPUMS Time Use collections
+(\code{"atus"}, \code{"ahtus"}, and \code{"mtus"}).}
+
 \item{data_format}{Format for the output extract data file. Either
 \code{"fixed_width"} or \code{"csv"}.
 
@@ -57,8 +64,7 @@ information attached to respective household members.
 Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
-records on which to rectangularize. Currently only \code{"P"} (person records)
-is supported.
+records on which to rectangularize.
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -99,7 +105,7 @@ will replace the existing value with the supplied value.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -121,7 +127,8 @@ To modify variable-specific parameters for variables that already exist
 in the extract, create a new variable specification with \code{\link[=var_spec]{var_spec()}}.
 }
 \examples{
-extract <- define_extract_usa(
+extract <- define_extract_micro(
+  collection = "usa",
   description = "2013 ACS Data",
   samples = "us2013a",
   variables = c("SEX", "AGE", "YEAR")
@@ -167,7 +174,7 @@ values from an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+\link{define_extract_micro} to create a new extract
 definition from scratch
 }
 \keyword{internal}

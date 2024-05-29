@@ -46,7 +46,8 @@
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_usa(
+#' my_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013-2014 ACS Data",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -157,7 +158,8 @@ get_extract_info <- function(extract,
 #'
 #' # To browse your extract history by particular criteria, you can
 #' # loop through the extract objects. We'll create a sample list of 2 extracts:
-#' extract1 <- define_extract_usa(
+#' extract1 <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013 ACS",
 #'   samples = "us2013a",
 #'   variables = var_spec(
@@ -167,7 +169,8 @@ get_extract_info <- function(extract,
 #'   )
 #' )
 #'
-#' extract2 <- define_extract_usa(
+#' extract2 <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2014 ACS",
 #'   samples = "us2014a",
 #'   variables = list(

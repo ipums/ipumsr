@@ -41,7 +41,7 @@ fields are optional, and if omitted, will be unchanged.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -63,7 +63,8 @@ To retain a variable while modifying its particular specifications, first
 remove that variable, then add a new specification using \code{add_to_extract()}.
 }
 \examples{
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "USA example",
   samples = c("us2013a", "us2014a"),
   variables = list(
@@ -106,7 +107,7 @@ to an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+\link{define_extract_micro} to create a new extract
 definition from scratch.
 }
 \keyword{internal}

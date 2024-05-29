@@ -87,11 +87,11 @@ lbl_relabel(x, 11 ~ .val == 10)
 }
 \seealso{
 Other lbl_helpers: 
+\code{\link{lbl}()},
 \code{\link{lbl_add}()},
 \code{\link{lbl_clean}()},
 \code{\link{lbl_define}()},
 \code{\link{lbl_na_if}()},
-\code{\link{lbl}()},
 \code{\link{zap_ipums_attributes}()}
 }
 \concept{lbl_helpers}

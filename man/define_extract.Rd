@@ -15,9 +15,14 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 Currently, ipumsr supports extract definitions for the following
 collections:
 \itemize{
-\item \strong{IPUMS USA}: \code{\link[=define_extract_usa]{define_extract_usa()}}
-\item \strong{IPUMS CPS}: \code{\link[=define_extract_cps]{define_extract_cps()}}
-\item \strong{IPUMS International}: \code{\link[=define_extract_ipumsi]{define_extract_ipumsi()}}
+\item \strong{IPUMS Microdata collections}: \code{\link[=define_extract_micro]{define_extract_micro()}}
+\itemize{
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS International
+\item IPUMS Time Use
+\item IPUMS Health Surveys
+}
 \item \strong{IPUMS NHGIS}: \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
 }
 }

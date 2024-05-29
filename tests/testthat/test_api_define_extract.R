@@ -192,7 +192,8 @@ test_that("Microdata variables get correct default values", {
 })
 
 test_that("We cast vectors to `ipums_spec` objects", {
-  x <- define_extract_cps(
+  x <- define_extract_micro(
+    collection = "cps",
     description = "",
     samples = "A",
     variables = list("B", "C")
@@ -208,7 +209,8 @@ test_that("We cast vectors to `ipums_spec` objects", {
   # to a spec argument is unexpected. But we do still coerce since the input
   # values are in a vector, which we can handle.
   expect_warning(
-    x <- define_extract_cps(
+    x <- define_extract_micro(
+      collection = "cps",
       description = "",
       samples = "A",
       variables = c(var_spec("A"), var_spec("B"))
@@ -271,7 +273,7 @@ test_that("Succesful validation returns identical object", {
 
 test_that("Can validate core microdata extract fields", {
   expect_error(
-    validate_ipums_extract(define_extract_usa()),
+    validate_ipums_extract(define_extract_micro(collection = "usa")),
     "argument \"samples\" is missing"
   )
   expect_error(
@@ -448,7 +450,8 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
     "Expected `time_series_tables` to be a `tst_spec` object or a list of"
   )
   expect_silent(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       description = "test",
       samples = "sample",
       variables = list(
@@ -463,7 +466,8 @@ test_that("Can validate `*_spec` objects within extracts", {
   samps <- samp_spec("A")
 
   expect_error(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       description = "",
       samples = samps,
       variables = var_spec("A", case_selection_type = "detailed")
@@ -474,7 +478,8 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       description = "",
       samples = samps,
       variables = var_spec(
@@ -486,7 +491,8 @@ test_that("Can validate `*_spec` objects within extracts", {
     "`case_selection_type` must be one of \"general\", \"detailed\""
   )
   expect_error(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       description = "",
       samples = samps,
       variables = var_spec(
@@ -501,7 +507,8 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       description = "",
       variables = var_spec("A"),
       samples = list(new_ipums_spec("A", foo = "bar", class = "samp_spec"))
@@ -553,7 +560,8 @@ test_that("Can validate `*_spec` objects within extracts", {
 # subfield specifications are different.
 test_that("We avoid adding multiple `*_spec` objects of same name", {
   expect_error(
-    define_extract_usa(
+    define_extract_micro(
+      collection = "usa",
       "",
       samples = "A",
       variables = c("A", "A")
@@ -561,7 +569,8 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
     "cannot contain multiple `variables` of same name"
   )
   expect_error(
-    define_extract_cps(
+    define_extract_micro(
+      collection = "cps",
       "",
       samples = c("A", "A"),
       variables = "A"
