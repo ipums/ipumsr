@@ -16,7 +16,7 @@ var_spec(
   preselected = NULL
 )
 
-tu_var_spec(name, owner)
+tu_var_spec(name, owner = NULL)
 
 samp_spec(name)
 }
@@ -53,9 +53,9 @@ included.}
 \item{preselected}{Logical indicating whether the variable is preselected.
 This is not needed for external use.}
 
-\item{owner}{Email of user account associated with this time use variable.
-Currently this must match the email for the user submitting the extract
-request that contains this time use variable.}
+\item{owner}{For user-defined time use variables, the email of the user
+account associated with the time use variable. Currently, only the email
+of the user submitting the extract request is supported.}
 }
 \value{
 A \code{var_spec}, \code{tu_var_spec}, or \code{samp_spec} object.

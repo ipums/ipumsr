@@ -729,10 +729,10 @@ var_spec <- function(name,
 #' @export
 #' @rdname var_spec
 #'
-#' @param owner Email of user account associated with this time use variable.
-#'   Currently this must match the email for the user submitting the extract
-#'   request that contains this time use variable.
-tu_var_spec <- function(name, owner) {
+#' @param owner For user-defined time use variables, the email of the user
+#'   account associated with the time use variable. Currently, only the email
+#'   of the user submitting the extract request is supported.
+tu_var_spec <- function(name, owner = NULL) {
   new_ipums_spec(name, owner = owner, class = "tu_var_spec")
 }
 
@@ -2563,9 +2563,9 @@ validate_ipums_extract.tu_var_spec <- function(x, call = caller_env()) {
     ),
     list(
       field = "owner",
-      required = TRUE,
-      type = "character",
-      length = 1
+      required = FALSE,
+      length = 1,
+      type = "character"
     )
   )
 
