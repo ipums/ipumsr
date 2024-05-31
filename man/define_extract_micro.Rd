@@ -5,11 +5,6 @@
 \alias{define_extract_usa}
 \alias{define_extract_cps}
 \alias{define_extract_ipumsi}
-\alias{define_extract_atus}
-\alias{define_extract_ahtus}
-\alias{define_extract_mtus}
-\alias{define_extract_nhis}
-\alias{define_extract_meps}
 \title{Define an extract request for an IPUMS microdata collection}
 \usage{
 define_extract_micro(
@@ -75,7 +70,9 @@ information attached to respective household members.
 Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
-records on which to rectangularize.
+records on which to rectangularize. One of \code{"P"} (person), \code{"A"}
+(activity), \code{"I"} (injury) or \code{"R"} (round). Note that not all record
+types are supported across all collections.
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -112,11 +109,8 @@ The IPUMS API currently supports the following microdata collections:
 \item IPUMS USA
 \item IPUMS CPS
 \item IPUMS International
-\item IPUMS ATUS
-\item IPUMS AHTUS
-\item IPUMS MTUS
-\item IPUMS NHIS
-\item IPUMS MEPS
+\item IPUMS Time Use (ATUS, AHTUS, MTUS)
+\item IPUMS Health Surveys (NHIS, MEPS)
 }
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and

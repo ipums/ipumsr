@@ -107,7 +107,7 @@ to an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\link{define_extract_micro} to create a new extract
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create a new extract
 definition from scratch.
 }
 \keyword{internal}

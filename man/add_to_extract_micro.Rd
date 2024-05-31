@@ -64,7 +64,9 @@ information attached to respective household members.
 Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
-records on which to rectangularize.
+records on which to rectangularize. One of \code{"P"} (person), \code{"A"}
+(activity), \code{"I"} (injury) or \code{"R"} (round). Note that not all record
+types are supported across all collections.
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -174,7 +176,7 @@ values from an extract definition.
 \code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
 extract request.
 
-\link{define_extract_micro} to create a new extract
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create a new extract
 definition from scratch
 }
 \keyword{internal}

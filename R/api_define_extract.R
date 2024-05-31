@@ -20,17 +20,14 @@
 #'
 #' Currently supported collections are:
 #'
-#' - IPUMS microdata (`"micro_extract"`)
-#'     + IPUMS USA (`"usa_extract"`)
-#'     + IPUMS CPS (`"cps_extract"`)
-#'     + IPUMS International (`"ipumsi_extract"`)
-#'     + IPUMS ATUS (`"atus_extract"`)
-#'     + IPUMS AHTUS (`"ahtus_extract"`)
-#'     + IPUMS MTUS (`"mtus_extract"`)
-#'     + IPUMS NHIS (`"nhis_extract"`)
-#'     + IPUMS MEPS (`"meps_extract"`)
-#' - IPUMS aggregate data (`"agg_extract"`)
-#'     + IPUMS NHGIS (`"nhgis_extract"`)
+#' - IPUMS microdata
+#'     + IPUMS USA
+#'     + IPUMS CPS
+#'     + IPUMS International
+#'     + IPUMS Time Use (ATUS, AHTUS, MTUS)
+#'     + IPUMS Health Surveys (NHIS, MEPS)
+#' - IPUMS aggregate data
+#'     + IPUMS NHGIS
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -57,10 +54,11 @@
 #'   One of `"unsubmitted"`, `"queued"`, `"started"`, `"produced"`,
 #'   `"canceled"`, `"failed"`, or `"completed"`.
 #'
-#' @section Creating an extract:
+#' @section Creating or obtaining an extract:
 #' * Create an `ipums_extract` object from scratch with the appropriate
-#'   [`define_extract_*()`][define_extract] function. These functions take the
-#'   form `define_extract_{collection}`.
+#'   `define_extract_*()` function.
+#'     + For microdata extracts, use [define_extract_micro()]
+#'     + For NHGIS extracts, use [define_extract_nhgis()]
 #' * Use [get_extract_info()] to get the latest status of a submitted extract
 #'   request.
 #' * Use [get_extract_history()] to obtain the extract definitions of
@@ -87,37 +85,6 @@
 #' @aliases ipums_extract
 NULL
 
-#' Define an IPUMS extract object
-#'
-#' @description
-#' Specify the parameters for a new IPUMS extract request object to be
-#' submitted via the IPUMS API. An extract request contains the specifications
-#' required to obtain a particular set of data from an IPUMS collection.
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @section Supported collections:
-#' Currently, ipumsr supports extract definitions for the following
-#' collections:
-#'
-#' - **IPUMS Microdata collections**: [define_extract_micro()]
-#'    + IPUMS USA
-#'    + IPUMS CPS
-#'    + IPUMS International
-#'    + IPUMS Time Use
-#'    + IPUMS Health Surveys
-#' - **IPUMS NHGIS**: [define_extract_nhgis()]
-#'
-#' @section Value:
-#' These functions produce an [`ipums_extract`][ipums_extract-class] object
-#' with a subclass based on the collection corresponding to the extract request.
-#' The core ipumsr API client tools are designed to handle these objects.
-#'
-#' @keywords internal
-#'
-#' @name define_extract
-NULL
-
 #' Define an extract request for an IPUMS microdata collection
 #'
 #' @description
@@ -128,11 +95,8 @@ NULL
 #'    + IPUMS USA
 #'    + IPUMS CPS
 #'    + IPUMS International
-#'    + IPUMS ATUS
-#'    + IPUMS AHTUS
-#'    + IPUMS MTUS
-#'    + IPUMS NHIS
-#'    + IPUMS MEPS
+#'    + IPUMS Time Use (ATUS, AHTUS, MTUS)
+#'    + IPUMS Health Surveys (NHIS, MEPS)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' microdata extract definitions in `vignette("ipums-api-micro")`.
@@ -176,7 +140,9 @@ NULL
 #'
 #'   Defaults to `"rectangular"`.
 #' @param rectangular_on If `data_structure` is `"rectangular"`,
-#'   records on which to rectangularize.
+#'   records on which to rectangularize. One of `"P"` (person), `"A"`
+#'   (activity), `"I"` (injury) or `"R"` (round). Note that not all record
+#'   types are supported across all collections.
 #'
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
@@ -201,8 +167,6 @@ NULL
 #'   the extract definition.
 #'
 #' @aliases define_extract_usa define_extract_cps define_extract_ipumsi
-#'   define_extract_atus define_extract_ahtus define_extract_mtus
-#'   define_extract_nhis define_extract_meps
 #'
 #' @seealso
 #' [submit_extract()] to submit an extract request for processing.
@@ -867,8 +831,8 @@ tst_spec <- function(name,
 #' `"dataFormat"`, and so on. You will also need to change the `"api_version"`
 #' field to `"version"` and set it equal to `2`. If you are unable to create
 #' a valid extract by modifying the file, you may have to recreate the
-#' definition manually using the appropriate
-#' [`define_extract_*()`][define_extract] function.
+#' definition manually using the [define_extract_micro()] or
+#' [define_extract_nhgis()].
 #'
 #' See the IPUMS developer documentation for more details on
 #' [API versioning](https://developer.ipums.org/docs/apiprogram/versioning/) and
@@ -884,7 +848,8 @@ tst_spec <- function(name,
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract] to define an extract request manually.
+#' [define_extract_micro()] or [define_extract_nhgis()] to define an
+#' extract request manually
 #'
 #' [get_extract_info()] to obtain a past extract to save.
 #'
@@ -1011,7 +976,7 @@ define_extract_from_json <- function(extract_json) {
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract] functions.
+#' definitions with [define_extract_micro()] or [define_extract_nhgis()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1028,9 +993,9 @@ define_extract_from_json <- function(extract_json) {
 #' @param ... Additional arguments specifying the extract fields and values to
 #'   add to the extract definition.
 #'
-#'   All arguments available in a collection's
-#'   [`define_extract_*()`][define_extract] function can be
-#'   passed to `add_to_extract()`.
+#'   All arguments available in [define_extract_micro()] (for microdata
+#'   extract requests) or [define_extract_nhgis()] (for NHGIS extract requests)
+#'   can be passed to `add_to_extract()`.
 #'
 #' @return An object of the same class as `extract` containing the modified
 #'   extract definition
@@ -1040,8 +1005,8 @@ define_extract_from_json <- function(extract_json) {
 #' @seealso
 #' [remove_from_extract()] to remove values from an extract definition.
 #'
-#' [`define_extract_*()`][define_extract] to create a new extract request from
-#' scratch.
+#' [define_extract_micro()] or [define_extract_nhgis()] to define an
+#' extract request manually
 #'
 #' [submit_extract()] to submit an extract request for processing.
 #'
@@ -1379,7 +1344,7 @@ add_to_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [define_extract_micro] to create a new extract
+#' [define_extract_micro()] to create a new extract
 #'   definition from scratch
 #'
 #' @export
@@ -1537,7 +1502,7 @@ add_to_extract.micro_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [`define_extract_*()`][define_extract] functions.
+#' definitions with [define_extract_micro()] or [define_extract_nhgis()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1559,8 +1524,8 @@ add_to_extract.micro_extract <- function(extract,
 #' @seealso
 #' [add_to_extract()] to add values to an extract definition.
 #'
-#' [`define_extract_*()`][define_extract] to create a new extract definition
-#' from scratch.
+#' [define_extract_micro()] or [define_extract_nhgis()] to define an
+#' extract request manually
 #'
 #' [submit_extract()] to submit an extract request for processing.
 #'
@@ -1850,7 +1815,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' [submit_extract()] and [download_extract()] to submit and process an
 #'   extract request.
 #'
-#' [define_extract_micro] to create a new extract
+#' [define_extract_micro()] to create a new extract
 #'   definition from scratch.
 #'
 #' @export
