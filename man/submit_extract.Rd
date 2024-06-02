@@ -22,9 +22,9 @@ Note that some unspecified extract fields may be populated with default
 values and therefore change slightly upon submission.
 }
 \description{
-Submit an extract request via the IPUMS API and return an \link{ipums_extract}
-object containing the extract definition with a newly-assigned extract
-request number.
+Submit an extract request via the IPUMS API and return an
+\code{\link[=ipums_extract-class]{ipums_extract}} object containing the extract
+definition with a newly-assigned extract request number.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }

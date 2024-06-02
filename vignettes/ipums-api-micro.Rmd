@@ -58,6 +58,13 @@ API (shown with the codes used to refer to them in ipumsr):
 * IPUMS USA (`"usa"`)
 * IPUMS CPS (`"cps"`)
 * IPUMS International (`"ipumsi"`)
+* IPUMS Time Use
+    * IPUMS ATUS (`"atus"`)
+    * IPUMS AHTUS (`"ahtus"`)
+    * IPUMS MTUS (`"mtus"`)
+* IPUMS Health Surveys
+    * IPUMS NHIS (`"nhis"`)
+    * IPUMS MEPS (`"meps"`)
 
 API support will continue to be added for more collections in the future. 
 See the [API documentation](https://developer.ipums.org/docs/apiprogram/)
@@ -77,8 +84,8 @@ library(dplyr)
 
 ## Basic IPUMS microdata concepts
 
-Every microdata extract definition must contain a set of requested _samples_ and
-_variables_.
+Every microdata extract definition must contain a set of requested _samples_
+and _variables_.
 
 In an IPUMS microdata collection, a _sample_ refers to a distinct combination 
 of records and variables. A record is a set of values that describe 
@@ -138,7 +145,7 @@ IPUMS intends to add support for accessing variable metadata via API
 in the future. Until then, use the web-based extract builder for a given 
 collection to find variable names and availability by sample. 
 See the 
-[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/) 
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/)
 for links to the extract builder for each microdata collection with API support.
 
 Alternatively, if you have made an extract previously through the web 
@@ -152,28 +159,17 @@ eject_cassette("micro-sample-ids")
 
 ## Defining an IPUMS microdata extract request
 
-Each IPUMS collection has its own extract definition function that is
-used to specify the parameters of a new extract request from scratch.
-These functions take the form `define_extract_*()`. For microdata collections,
-we have:
+Define an extract for an IPUMS microdata collections with
+`define_extract_micro()`. When you define an extract request, you 
+specify the collection for the extract, the data to be included, and
+the desired format and layout.
 
--   IPUMS USA: `define_extract_usa()`
--   IPUMS CPS: `define_extract_cps()`
--   IPUMS International: `define_extract_ipumsi()`
-
-When you define an extract request, you can specify the data to be
-included in the extract and indicate the desired format and layout.
-
-While each microdata collection has its own extract definition function,
-each uses the same syntax. The examples in this vignette use multiple
-collections, but the syntax they demonstrate can be applied to all of the
-supported microdata collections.
-
-A simple extract definition needs only to contain the names of the
-samples and variables to include in the request:
+A simple extract definition needs only to contain the IPUMS collection
+along with the names of the samples and variables to include in the request:
 
 ```{r}
-cps_ext <- define_extract_cps(
+cps_ext <- define_extract_micro(
+  collection = "cps",
   description = "Example CPS extract",
   samples = c("cps2018_03s", "cps2019_03s"),
   variables = c("AGE", "SEX", "RACE", "STATEFIP")
@@ -191,18 +187,11 @@ available. If you request a variable that is not available for any requested
 samples, the IPUMS API will throw an informative error when you try to submit 
 your request.
 
-Beyond just specifying samples and variables, there are several additional 
-options available to refine the data 
-requested in a microdata extract request.
-
 ## Detailed variable specifications
 
-The IPUMS API supports several detailed specification options that can be 
-applied to individual variables in an extract request: case selections,
-attached characteristics, and data quality flags.
-
-Before we describe each of these options in depth, we'll introduce the syntax
-used to add them to your extract definition.
+You can refine your extract request by providing detailed 
+specification options for individual variables included in the request, like
+case selections, attached characteristics, and data quality flags.
 
 ### Syntax
 
@@ -223,7 +212,8 @@ To include this specification in our extract, we simply provide it to the
 included, pass a `list` of `var_spec` objects:
 
 ```{r}
-define_extract_cps(
+define_extract_micro(
+  "cps",
   description = "Case selection example",
   samples = c("cps2018_03s", "cps2019_03s"),
   variables = list(
@@ -245,13 +235,15 @@ So, a `var_spec` object with no additional specifications will produce
 the default data for a given variable. That is, the following are equivalent:
 
 ```{r, eval=FALSE}
-define_extract_cps(
+define_extract_micro(
+  "cps",
   description = "Example CPS extract",
   samples = "cps2018_03s",
   variables = "AGE"
 )
 
-define_extract_cps(
+define_extract_micro(
+  "cps",
   description = "Example CPS extract",
   samples = "cps2018_03s",
   variables = var_spec("AGE")
@@ -264,7 +256,8 @@ variable names. This is convenient when you only have detailed specifications
 for a subset of variables:
 
 ```{r}
-define_extract_cps(
+define_extract_micro(
+  "cps",
   description = "Case selection example",
   samples = c("cps2018_03s", "cps2019_03s"),
   variables = list(
@@ -273,12 +266,6 @@ define_extract_cps(
   )
 )
 ```
-
-
-(Samples are also converted to their own `samp_spec` objects, but as
-there currently aren't any additional specifications available for samples,
-there is no reason to use anything other than a character vector in the 
-`samples` argument.)
 
 Now that we've covered the basic syntax for including detailed variable
 specifications, we can describe the available options in more depth.
@@ -349,7 +336,8 @@ To include all household members of matching individuals,
 set `case_select_who = "households"` in the extract definition:
 
 ```{r}
-define_extract_usa(
+define_extract_micro(
+  "usa",
   description = "Household level case selection",
   samples = "us2021a",
   variables = var_spec("RACE", case_selections = "8"),
@@ -379,7 +367,8 @@ Multiple attached characteristics can be attached for a single variable:
 var_spec("AGE", attached_characteristics = c("mother", "father"))
 ```
 
-Acceptable values are `"spouse"`, `"mother"`, `"father"`, and `"head"`.
+Acceptable values are `"spouse"`, `"mother"`, `"father"`, `"head"`, `"mother2"`,
+and `"father2"`.
 
 ### Data quality flags
 
@@ -401,7 +390,8 @@ To add data quality flags for all variables that have them, set
 `data_quality_flags = TRUE` in your extract definition directly:
 
 ```{r}
-usa_ext <- define_extract_usa(
+usa_ext <- define_extract_micro(
+  "usa",
   description = "Data quality flags",
   samples = "us2021a",
   variables = list(
@@ -415,6 +405,35 @@ usa_ext <- define_extract_usa(
 Each data quality flag corresponds to one or more variables, and the codes for 
 each flag vary based on the sample. See the documentation for the IPUMS
 collection of interest for more information about data quality flag codes.
+
+## Time use variables
+
+For IPUMS Time Use collections (ATUS, AHTUS, and MTUS), users can request
+time use variables using the `time_use_variables` argument.
+
+For pre-defined time use variables, simply provide the name:
+
+```{r}
+define_extract_micro(
+  "atus",
+  description = "Time use variable demo",
+  samples = "at2017",
+  time_use_variables = "ACT-PCARE"
+)
+```
+
+You can also request time use variables that you have defined yourself. In this
+case, use the `tu_var_spec()` helper to provide the time use variable name
+and your user email to identify the account the variable was created under:
+
+```{r, eval=FALSE}
+define_extract_micro(
+  "atus",
+  description = "Time use variable demo",
+  samples = "at2017",
+  time_use_variables = tu_var_spec("MYTUVAR", owner = "user@example.com")
+)
+```
 
 ## Data structure and file format
 

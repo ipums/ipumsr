@@ -98,6 +98,9 @@ NULL
 #'    + IPUMS Time Use (ATUS, AHTUS, MTUS)
 #'    + IPUMS Health Surveys (NHIS, MEPS)
 #'
+#' Note that not all extract request parameters and options apply to all
+#' collections.
+#'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' microdata extract definitions in `vignette("ipums-api-micro")`.
 #'
@@ -137,12 +140,12 @@ NULL
 #'   - `"rectangular"` provides person records with all requested household
 #'   information attached to respective household members.
 #'   - `"hierarchical"` provides household records followed by person records.
+#'   - `"household_only"` provides household records only.
 #'
 #'   Defaults to `"rectangular"`.
 #' @param rectangular_on If `data_structure` is `"rectangular"`,
 #'   records on which to rectangularize. One of `"P"` (person), `"A"`
-#'   (activity), `"I"` (injury) or `"R"` (round). Note that not all record
-#'   types are supported across all collections.
+#'   (activity), `"I"` (injury) or `"R"` (round).
 #'
 #'   Defaults to `"P"` if `data_structure` is `"rectangular"` and `NULL`
 #'   otherwise.
@@ -165,6 +168,8 @@ NULL
 #'
 #' @return An object of class [`micro_extract`][ipums_extract-class] containing
 #'   the extract definition.
+#'
+#' @export
 #'
 #' @aliases define_extract_usa define_extract_cps define_extract_ipumsi
 #'

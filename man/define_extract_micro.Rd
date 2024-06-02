@@ -65,14 +65,14 @@ Defaults to \code{"fixed_width"}.}
 \item \code{"rectangular"} provides person records with all requested household
 information attached to respective household members.
 \item \code{"hierarchical"} provides household records followed by person records.
+\item \code{"household_only"} provides household records only.
 }
 
 Defaults to \code{"rectangular"}.}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
 records on which to rectangularize. One of \code{"P"} (person), \code{"A"}
-(activity), \code{"I"} (injury) or \code{"R"} (round). Note that not all record
-types are supported across all collections.
+(activity), \code{"I"} (injury) or \code{"R"} (round).
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -112,6 +112,9 @@ The IPUMS API currently supports the following microdata collections:
 \item IPUMS Time Use (ATUS, AHTUS, MTUS)
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
+
+Note that not all extract request parameters and options apply to all
+collections.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
 microdata extract definitions in \code{vignette("ipums-api-micro")}.

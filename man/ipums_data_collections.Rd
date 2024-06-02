@@ -28,3 +28,6 @@ Currently, ipumsr supports extract definitions for the following collections:
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
+\examples{
+ipums_data_collections()
+}

@@ -109,6 +109,8 @@ following collections:
 -   IPUMS USA
 -   IPUMS CPS
 -   IPUMS International
+-   IPUMS Time Use (ATUS, AHTUS, MTUS)
+-   IPUMS Health Surveys (NHIS, MEPS)
 -   IPUMS NHGIS
 
 Note that this support only includes data available via a collection's
@@ -137,17 +139,8 @@ information about its latest features.
 
 To interact with the IPUMS API, you'll need to register for access with
 the IPUMS project you'll be using. If you have not yet registered, you
-can find links to register for each of the API-supported IPUMS
-collections below:
-
--   [IPUMS
-    USA](https://uma.pop.umn.edu/usa/user/new?return_url=https%3A%2F%2Fusa.ipums.org%2Fusa-action%2Fmenu)
--   [IPUMS
-    CPS](https://uma.pop.umn.edu/cps/user/new?return_url=https%3A%2F%2Fcps.ipums.org%2Fcps-action%2Fmenu)
--   [IPUMS
-    International](https://uma.pop.umn.edu/ipumsi/user/new?return_url=https%3A%2F%2Fipumsi.ipums.org%2Fipumsi-action%2Fmenu)
--   [IPUMS
-    NHGIS](https://uma.pop.umn.edu/nhgis/user/new?return_url=https%3A%2F%2Fnhgis.ipums.org%2Fnhgis-action%2Fmenu)
+can find the link to register for each project at the top of its website, which 
+can be accessed from [ipums.org](https://www.ipums.org).
 
 Once you're registered, you'll be able to [create an API
 key](https://account.ipums.org/api_keys).
@@ -173,14 +166,12 @@ stored it in the `IPUMS_API_KEY` environment variable.
 
 ## Define an extract request {#define}
 
-Each IPUMS collection has its own extract definition function that is
-used to specify the parameters of a new extract request from scratch.
-These functions take the form `define_extract_*()`:
+ipumsr contains two extract definition functions used to specify the parameters
+of a new extract request from scratch.
 
--   `define_extract_usa()`
--   `define_extract_cps()`
--   `define_extract_ipumsi()`
--   `define_extract_nhgis()`
+  -   For microdata projects (USA, CPS, International, Time Use, 
+      and Health Surveys), use `define_extract_micro()`.
+  -   For NHGIS, use `define_extract_nhgis()`.
 
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
@@ -190,7 +181,8 @@ for the `AGE`, `SEX`, `RACE`, `STATEFIP`, and `MARST` variables from the
 2018 and 2019 American Community Survey (ACS):
 
 ```{r}
-usa_ext_def <- define_extract_usa(
+usa_ext_def <- define_extract_micro(
+  collection = "usa",
   description = "USA extract for API vignette",
   samples = c("us2018a", "us2019a"),
   variables = c("AGE", "SEX", "RACE", "STATEFIP", "MARST")
@@ -210,10 +202,10 @@ to work with the sample IPUMS USA extract definition created above.
 
 ### Extract request objects
 
-`define_extract_*()` functions always produce an `ipums_extract` object,
-which can be handled by other API functions (see `?ipums_extract`).
-Furthermore, these objects will have a subclass for the particular
-collection with which they are associated.
+`define_extract_micro()` and `define_extract_nhgis()` always produce an 
+`ipums_extract` object, which can be handled by other API functions 
+(see `?ipums_extract`). Furthermore, these objects will have a subclass for 
+the particular collection with which they are associated.
 
 ```{r}
 class(usa_ext_def)
@@ -255,7 +247,8 @@ insert_cassette("submit-placeholder-extract-usa")
 # primary extract in this vignette, as this vignette usually gets rebuilt
 # several times during editing before it is complete.
 submit_extract(
-  define_extract_usa(
+  define_extract_micro(
+    "usa",
     description = "Data from 2017 PRCS",
     samples = "us2017b",
     variables = c("RACE", "YEAR")
@@ -263,7 +256,8 @@ submit_extract(
 )
 
 submit_extract(
-  define_extract_usa(
+  define_extract_micro(
+    "usa",
     description = "Data from long ago",
     samples = "us1880a",
     variables = c("SEX", "AGE", "LABFORCE")
@@ -601,10 +595,11 @@ that they can be combined into a single pipeline that requests,
 downloads, and reads your extract data into an R data frame:
 
 ```{r, eval=FALSE}
-usa_data <- define_extract_usa(
+usa_data <- define_extract_micro(
+  "usa",
   "USA extract for API vignette",
-  c("us2018a", "us2019a"),
-  c("AGE", "SEX", "RACE", "STATEFIP")
+  samples = c("us2018a", "us2019a"),
+  variables = c("AGE", "SEX", "RACE", "STATEFIP")
 ) %>%
   submit_extract() %>%
   wait_for_extract() %>%

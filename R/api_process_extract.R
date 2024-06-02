@@ -8,9 +8,9 @@
 #' Submit an extract request via the IPUMS API
 #'
 #' @description
-#' Submit an extract request via the IPUMS API and return an [ipums_extract]
-#' object containing the extract definition with a newly-assigned extract
-#' request number.
+#' Submit an extract request via the IPUMS API and return an
+#' [`ipums_extract`][ipums_extract-class] object containing the extract
+#' definition with a newly-assigned extract request number.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'

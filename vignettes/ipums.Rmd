@@ -100,28 +100,22 @@ for the following collections:
 -   IPUMS USA
 -   IPUMS CPS
 -   IPUMS International
+-   IPUMS Time Use (ATUS, AHTUS, MTUS)
+-   IPUMS Health Surveys (NHIS, MEPS)
 -   IPUMS NHGIS
 
 #### Metadata support
 
-ipumsr provides access to comprehensive metadata via the IPUMS API for the 
-following collections:
-
--   IPUMS NHGIS
-
-Users can query NHGIS metadata to explore available data when specifying 
+For IPUMS NHGIS, ipumsr provides access to comprehensive metadata via the IPUMS
+API. Users can query NHGIS metadata to explore available data when specifying 
 NHGIS extract requests.
 
-A listing of available samples is provided for the following collections:
-
--   IPUMS USA
--   IPUMS CPS
--   IPUMS International
-
-Increased access to metadata for these projects is in progress. Currently,
-creating extract requests for these projects requires using the
-corresponding project websites to find samples and variables of interest 
-and obtain their API identifiers for use in R extract definitions.
+Increased access to metadata for microdata projects is in 
+progress. Currently, the IPUMS API only provides a listing of available
+samples for each microdata collection. At this time, creating extract requests 
+for these projects requires using the corresponding project websites to find 
+samples and variables of interest and obtain their API identifiers for use 
+in R extract definitions.
 
 #### Workflow
 
@@ -135,12 +129,15 @@ request](ipums-api-nhgis.html) vignettes for more details on defining an
 extract.
 
 ```{r}
-cps_extract_request <- define_extract_cps(
+# Define a microdata extract request, e.g. for IPUMS CPS
+cps_extract_request <- define_extract_micro(
+  collection = "cps",
   description = "2018-2019 CPS Data",
   samples = c("cps2018_05s", "cps2019_05s"),
   variables = c("SEX", "AGE", "YEAR")
 )
 
+# Define an NHGIS extract request
 nhgis_extract_request <- define_extract_nhgis(
   description = "NHGIS Data via IPUMS API",
   datasets = ds_spec(

@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/datasets?collection=nhgis&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
@@ -17,10 +17,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 13 Jul 2023 16:57:26 GMT
-      etag: W/"5614a90688b0e21bba44b934b9af6d77"
+      date: Sun, 02 Jun 2024 12:37:21 GMT
+      etag: W/"d6ab1d6e90c76bbdcb476c59cd9ea7ca"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -29,10 +29,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 17587501-94b1-4e29-8f48-580d884a2893
-      x-runtime: '0.012467'
+      x-request-id: 56f65c69-b965-436a-83e8-d5a417a58f99
+      x-runtime: '0.022237'
       x-xss-protection: '0'
-      content-length: '34675'
+      content-length: '35814'
     body:
       encoding: ''
       file: no
@@ -397,8 +397,12 @@ http_interactions:
         1 Year Ago]","sequence":5804},{"name":"2016_2020_ACS5d","group":"2020 American
         Community Survey","description":"5-Year Data [2016-2020, Summary by Place
         of Work]","sequence":5805},{"name":"2020_PL94171","group":"2020 Census","description":"P.L.
-        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2021_ACS1","group":"2021
-        American Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
+        94-171 Redistricting Data Summary File","sequence":5901},{"name":"2020_DHCa","group":"2020
+        Census","description":"DHC - P \u0026 H Tables [Blocks \u0026 Larger Areas]","sequence":5902},{"name":"2020_DHCb","group":"2020
+        Census","description":"DHC - PCT \u0026 HCT Tables [Tracts \u0026 Larger Areas]","sequence":5903},{"name":"2020_DHCc","group":"2020
+        Census","description":"DHC - PCO Tables (Group Quarters Population Only) [Counties
+        \u0026 Larger Areas]","sequence":5904},{"name":"2021_ACS1","group":"2021 American
+        Community Survey","description":"1-Year Data","sequence":6001},{"name":"2017_2021_ACS5a","group":"2021
         American Community Survey","description":"5-Year Data [2017-2021, Block Groups
         \u0026 Larger Areas]","sequence":6002},{"name":"2017_2021_ACS5b","group":"2021
         American Community Survey","description":"5-Year Data [2017-2021, Tracts \u0026
@@ -406,9 +410,18 @@ http_interactions:
         Community Survey","description":"5-Year Data [2017-2021, Summary by Residence
         1 Year Ago]","sequence":6004},{"name":"2017_2021_ACS5d","group":"2021 American
         Community Survey","description":"5-Year Data [2017-2021, Summary by Place
-        of Work]","sequence":6005}],"pageNumber":1,"pageSize":2500,"totalCount":253,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-07-13 16:57:27 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        of Work]","sequence":6005},{"name":"2022_ACS1","group":"2022 American Community
+        Survey","description":"1-Year Data","sequence":6101},{"name":"2018_2022_ACS5a","group":"2022
+        American Community Survey","description":"5-Year Data [2018-2022, Block Groups
+        \u0026 Larger Areas]","sequence":6102},{"name":"2018_2022_ACS5b","group":"2022
+        American Community Survey","description":"5-Year Data [2018-2022, Tracts \u0026
+        Larger Areas]","sequence":6103},{"name":"2018_2022_ACS5c","group":"2022 American
+        Community Survey","description":"5-Year Data [2018-2022, Summary by Residence
+        1 Year Ago]","sequence":6104},{"name":"2018_2022_ACS5d","group":"2022 American
+        Community Survey","description":"5-Year Data [2018-2022, Summary by Place
+        of Work]","sequence":6105}],"pageNumber":1,"pageSize":2500,"totalCount":261,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-06-02 12:37:22 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis&version=2&pageNumber=1&pageSize=10
@@ -427,10 +440,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 13 Jul 2023 16:57:27 GMT
-      etag: W/"8c502f178ade002523da0e0e99e2f0c7"
+      date: Sun, 02 Jun 2024 12:37:22 GMT
+      etag: W/"f08786e556898358455b9abdb3850861"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -439,70 +452,70 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 6096bc90-1dd9-4498-b1e6-a827a96cf508
-      x-runtime: '0.054670'
+      x-request-id: 9b038706-fa05-4e63-8b89-3b026c01d4cc
+      x-runtime: '0.098888'
       x-xss-protection: '0'
-      content-length: '13786'
+      content-length: '13954'
     body:
       encoding: ''
       file: no
       string: '{"data":[{"name":"A00","description":"Total Population","geographicIntegration":"Nominal","sequence":100.01,"timeSeries":[{"name":"AA","description":"Persons:
         Total","sequence":1}],"years":[{"name":"1790","description":"1790","sequence":1},{"name":"1800","description":"1800","sequence":2},{"name":"1810","description":"1810","sequence":3},{"name":"1820","description":"1820","sequence":4},{"name":"1830","description":"1830","sequence":5},{"name":"1840","description":"1840","sequence":6},{"name":"1850","description":"1850","sequence":7},{"name":"1860","description":"1860","sequence":8},{"name":"1870","description":"1870","sequence":12},{"name":"1880","description":"1880","sequence":22},{"name":"1890","description":"1890","sequence":29},{"name":"1900","description":"1900","sequence":30},{"name":"1910","description":"1910","sequence":32},{"name":"1920","description":"1920","sequence":38},{"name":"1930","description":"1930","sequence":48},{"name":"1940","description":"1940","sequence":58},{"name":"1950","description":"1950","sequence":68},{"name":"1960","description":"1960","sequence":78},{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"2020","description":"2020","sequence":155}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25}]},{"name":"AV0","description":"Total
         Population","geographicIntegration":"Nominal","sequence":100.02,"timeSeries":[{"name":"AA","description":"Persons:
-        Total","sequence":1}],"years":[{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"2020","description":"2020","sequence":155},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145}]},{"name":"B78","description":"Total
+        Total","sequence":1}],"years":[{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"2020","description":"2020","sequence":155},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158},{"name":"225","description":"2018-2022","sequence":160}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
+        Tract","sequence":66},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148}]},{"name":"B78","description":"Total
         Population","geographicIntegration":"Nominal","sequence":100.03,"timeSeries":[{"name":"AA","description":"Persons:
-        Total","sequence":1}],"years":[{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"2020","description":"2020","sequence":155},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158}],"geogLevels":[{"name":"nation","description":"Nation","sequence":1},{"name":"region","description":"Region","sequence":2},{"name":"division","description":"Division","sequence":3},{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145}]},{"name":"CL8","description":"Total
+        Total","sequence":1}],"years":[{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"2020","description":"2020","sequence":155},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158},{"name":"225","description":"2018-2022","sequence":160}],"geogLevels":[{"name":"nation","description":"Nation","sequence":1},{"name":"region","description":"Region","sequence":2},{"name":"division","description":"Division","sequence":3},{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
+        Tract","sequence":66},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148}]},{"name":"CL8","description":"Total
         Population","geographicIntegration":"Standardized to 2010","sequence":100.04,"timeSeries":[{"name":"AA","description":"Persons:
         Total","sequence":1}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"2020","description":"2020","sequence":155}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"blck_grp","description":"State--County--Census
-        Tract--Block Group","sequence":83},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145},{"name":"cd111th","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)","sequence":210},{"name":"cbsa","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
-        Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
-        Area","sequence":363}]},{"name":"A57","description":"Persons by Urban/Rural
+        Tract","sequence":66},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","sequence":85},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","sequence":217},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
+        Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
+        Area","sequence":382}]},{"name":"A57","description":"Persons by Urban/Rural
         Status [4]","geographicIntegration":"Nominal","sequence":101.01,"timeSeries":[{"name":"AA","description":"Persons:
         Urban","sequence":1},{"name":"AB","description":"Persons: Urban--Inside urbanized
         areas","sequence":2},{"name":"AC","description":"Persons: Urban--Outside urbanized
         areas (in urban clusters)","sequence":3},{"name":"AD","description":"Persons:
         Rural","sequence":4}],"years":[{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145}]},{"name":"A59","description":"Persons
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148}]},{"name":"A59","description":"Persons
         by Urban/Rural Status [4]","geographicIntegration":"Nominal","sequence":101.02,"timeSeries":[{"name":"AA","description":"Persons:
         Urban","sequence":1},{"name":"AB","description":"Persons: Urban--Inside urbanized
         areas","sequence":2},{"name":"AC","description":"Persons: Urban--Outside urbanized
         areas (in urban clusters)","sequence":3},{"name":"AD","description":"Persons:
         Rural","sequence":4}],"years":[{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"nation","description":"Nation","sequence":1},{"name":"region","description":"Region","sequence":2},{"name":"division","description":"Division","sequence":3},{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145}]},{"name":"CL9","description":"Persons
+        Tract","sequence":66},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148}]},{"name":"CL9","description":"Persons
         by Urban/Rural Status [4]","geographicIntegration":"Standardized to 2010","sequence":101.03,"timeSeries":[{"name":"AA","description":"Persons:
         Urban","sequence":1},{"name":"AB","description":"Persons: Urban--Inside urbanized
         areas","sequence":2},{"name":"AC","description":"Persons: Urban--Outside urbanized
         areas (in urban clusters)","sequence":3},{"name":"AD","description":"Persons:
         Rural","sequence":4}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"blck_grp","description":"State--County--Census
-        Tract--Block Group","sequence":83},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145},{"name":"cd111th","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)","sequence":210},{"name":"cbsa","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
-        Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
-        Area","sequence":363}]},{"name":"A08","description":"Persons by Sex [2]","geographicIntegration":"Nominal","sequence":102.01,"timeSeries":[{"name":"AA","description":"Persons:
+        Tract","sequence":66},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","sequence":85},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","sequence":217},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
+        Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
+        Area","sequence":382}]},{"name":"A08","description":"Persons by Sex [2]","geographicIntegration":"Nominal","sequence":102.01,"timeSeries":[{"name":"AA","description":"Persons:
         Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1820","description":"1820","sequence":4},{"name":"1830","description":"1830","sequence":5},{"name":"1840","description":"1840","sequence":6},{"name":"1850","description":"1850","sequence":7},{"name":"1860","description":"1860","sequence":8},{"name":"1870","description":"1870","sequence":12},{"name":"1880","description":"1880","sequence":22},{"name":"1890","description":"1890","sequence":29},{"name":"1900","description":"1900","sequence":30},{"name":"1910","description":"1910","sequence":32},{"name":"1920","description":"1920","sequence":38},{"name":"1930","description":"1930","sequence":48},{"name":"1940","description":"1940","sequence":58},{"name":"1950","description":"1950","sequence":68},{"name":"1960","description":"1960","sequence":78},{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25}]},{"name":"AV1","description":"Persons
         by Sex [2]","geographicIntegration":"Nominal","sequence":102.02,"timeSeries":[{"name":"AA","description":"Persons:
-        Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145}]},{"name":"CM0","description":"Persons
+        Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1970","description":"1970","sequence":88},{"name":"1980","description":"1980","sequence":98},{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131},{"name":"105","description":"2006-2010","sequence":133},{"name":"115","description":"2007-2011","sequence":136},{"name":"125","description":"2008-2012","sequence":139},{"name":"135","description":"2009-2013","sequence":142},{"name":"145","description":"2010-2014","sequence":144},{"name":"155","description":"2011-2015","sequence":146},{"name":"165","description":"2012-2016","sequence":148},{"name":"175","description":"2013-2017","sequence":150},{"name":"185","description":"2014-2018","sequence":152},{"name":"195","description":"2015-2019","sequence":154},{"name":"205","description":"2016-2020","sequence":156},{"name":"215","description":"2017-2021","sequence":158},{"name":"225","description":"2018-2022","sequence":160}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
+        Tract","sequence":66},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148}]},{"name":"CM0","description":"Persons
         by Sex [2]","geographicIntegration":"Standardized to 2010","sequence":102.03,"timeSeries":[{"name":"AA","description":"Persons:
         Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":65},{"name":"blck_grp","description":"State--County--Census
-        Tract--Block Group","sequence":83},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":100},{"name":"place","description":"State--Place","sequence":145},{"name":"cd111th","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)","sequence":210},{"name":"cbsa","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area","sequence":319},{"name":"urb_area","description":"Urban
-        Area","sequence":353},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
-        Area","sequence":363}]}],"pageNumber":1,"pageSize":10,"totalCount":389,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis\u0026pageNumber=2\u0026pageSize=10\u0026version=2"}}'
-  recorded_at: 2023-07-13 16:57:27 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        Tract","sequence":66},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","sequence":85},{"name":"cty_sub","description":"State--County--County
+        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","sequence":217},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
+        Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
+        Area","sequence":382}]}],"pageNumber":1,"pageSize":10,"totalCount":389,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis\u0026pageNumber=2\u0026pageSize=10\u0026version=2"}}'
+  recorded_at: 2024-06-02 12:37:22 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
