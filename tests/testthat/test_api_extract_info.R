@@ -11,6 +11,7 @@ on.exit(
       "ready-usa-extract.yml",
       "ready-cps-extract.yml",
       "ready-nhgis-extract.yml",
+      "ready-atus-extract.yml",
       "ready-nhgis-extract-shp.yml"
     )
   ),
@@ -67,6 +68,39 @@ test_that("Can check microdata extract status", {
   })
 
   expect_true(is_ready && is_ready_id1 && is_ready_id2)
+
+  atus_extract <- test_atus_extract_submittable()
+
+  vcr::use_cassette("submitted-atus-extract", {
+    suppressMessages(
+      submitted_atus_extract <- submit_extract(atus_extract)
+    )
+  })
+
+  vcr::use_cassette("ready-atus-extract", {
+    wait_for_extract(submitted_atus_extract, verbose = FALSE)
+  })
+
+  vcr::use_cassette("get-atus-extract-info", {
+    completed_atus_extract <- get_extract_info(submitted_atus_extract)
+  })
+
+  expect_s3_class(completed_atus_extract$time_use_variables[[1]], "tu_var_spec")
+
+  expect_equal(
+    names(atus_extract$time_use_variables),
+    names(completed_atus_extract$time_use_variables)
+  )
+
+  expect_equal(
+    completed_atus_extract$time_use_variables$screentime$owner,
+    "burkx031@umn.edu"
+  )
+
+  expect_setequal(
+    atus_extract$sample_members,
+    completed_atus_extract$sample_members
+  )
 })
 
 test_that("Can check NHGIS extract status", {

@@ -1,0 +1,43 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=atus&version=2
+    body:
+      encoding: ''
+      string: '{"description":"Test ATUS extract","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":true,"includeHouseholdMembers":true},"samples":{"at2020":{},"at2021":{}},"variables":{"STATEFIP":{},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["mother","father","spouse"]},"SEX":{},"DIFFANY":{},"RELATER":{}},"timeUseVariables":{"ACT_PCARE":{},"screentime":{"owner":"burkx031@umn.edu"}},"caseSelectWho":"individuals","collection":"atus","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-length: '837'
+      content-type: application/json; charset=utf-8
+      date: Wed, 05 Jun 2024 19:55:07 GMT
+      etag: W/"bb245e2a60d17a5785b2385e836a1cc7"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 375411e7-8c1f-4e10-a26f-736a0135102a
+      x-runtime: '1.095193'
+      x-xss-protection: '0'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":14,"status":"queued","email":"burkx031@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
+        ATUS extract","samples":{"at2020":{},"at2021":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"CASEID":{"preselected":true},"SERIAL":{"preselected":true},"STATEFIP":{},"PERNUM":{"preselected":true},"LINENO":{"preselected":true},"WT06":{"preselected":true},"WT20":{"preselected":true},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["spouse","mother","mother2","father","father2"]},"SEX":{},"DIFFANY":{},"RELATER":{}},"timeUseVariables":{"ACT_PCARE":{},"screentime":{"owner":"burkx031@umn.edu"}},"sampleMembers":{"includeNonRespondents":true,"includeHouseholdMembers":true},"collection":"atus"}}'
+  recorded_at: 2024-06-05 19:55:09 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

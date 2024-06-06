@@ -160,6 +160,29 @@ test_that("Can define an NHGIS extract", {
   expect_null(nhgis_extract_shp$time_series_tables)
 })
 
+test_that("Can define an ATUS extract with ATUS-specific features", {
+  atus_extract <- test_atus_extract()
+
+  expect_equal(atus_extract$sample_members, "include_household_members")
+  expect_equal(atus_extract$time_use_variables[[1]]$name, "ACT_PCARE")
+  expect_false("owner" %in% names(atus_extract$time_use_variables[[1]]))
+  expect_s3_class(atus_extract$time_use_variables[[1]], "tu_var_spec")
+  expect_equal(
+    atus_extract$time_use_variables[[2]]$owner,
+    "example@example.com"
+  )
+})
+
+test_that("Can define an ATUS extract with no variables", {
+  atus_no_vars <- define_extract_micro(
+    "atus",
+    "No vars",
+    "at2020",
+    time_use_variables = "ACT_PCARE"
+  )
+  expect_null(atus_no_vars$variables)
+})
+
 test_that("NHGIS extract fields get correct default values", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
@@ -222,6 +245,21 @@ test_that("We cast vectors to `ipums_spec` objects", {
   )
 
   expect_equal(names(x$variables), c("A", "B"))
+
+  expect_warning(
+    x <- define_extract_micro(
+      collection = "atus",
+      description = "",
+      samples = "A",
+      time_use_variables = c(tu_var_spec("A"), tu_var_spec("B"))
+    ),
+    paste0(
+      "Unexpected names in input when converting to `tu_var_spec`.+",
+      "You may have combined `tu_var_spec` objects with `c\\(\\)`"
+    )
+  )
+
+  expect_equal(names(x$time_use_variables), c("A", "B"))
 })
 
 test_that("Vector to `ipums_spec` casting logic is as expected", {
@@ -246,6 +284,14 @@ test_that("Vector to `ipums_spec` casting logic is as expected", {
     list(var_spec("A"), var_spec("B"))
   )
   expect_equal(
+    spec_cast(c("A", "B"), "tu_var_spec"),
+    list(tu_var_spec("A"), tu_var_spec("B"))
+  )
+  expect_equal(
+    spec_cast(list(tu_var_spec("A"), "B"), "tu_var_spec"),
+    list(tu_var_spec("A"), tu_var_spec("B"))
+  )
+  expect_equal(
     spec_cast(list(samp_spec("A"), samp_spec("B"), "C"), "samp_spec"),
     list(samp_spec("A"), samp_spec("B"), samp_spec("C"))
   )
@@ -255,6 +301,9 @@ test_that("Vector to `ipums_spec` casting logic is as expected", {
   expect_warning(
     spec_cast(c(a = "A", "B"), "var_spec")
   )
+  expect_warning(
+    spec_cast(c(tu_var_spec("A"), "B"), "tu_var_spec")
+  )
 })
 
 # Extract validation ------------------------
@@ -262,11 +311,13 @@ test_that("Vector to `ipums_spec` casting logic is as expected", {
 test_that("Succesful validation returns identical object", {
   cps_extract <- test_cps_extract()
   usa_extract <- test_usa_extract()
+  atus_extract <- test_atus_extract()
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
   expect_identical(validate_ipums_extract(cps_extract), cps_extract)
   expect_identical(validate_ipums_extract(usa_extract), usa_extract)
+  expect_identical(validate_ipums_extract(atus_extract), atus_extract)
   expect_identical(validate_ipums_extract(nhgis_extract), nhgis_extract)
   expect_identical(validate_ipums_extract(nhgis_extract_shp), nhgis_extract_shp)
 })
@@ -291,6 +342,7 @@ test_that("Can validate core microdata extract fields", {
         description = "Test",
         samples = list(samp_spec("Test")),
         variables = list(var_spec("Test")),
+        sample_members = "Test",
         data_format = "Test",
         data_structure = "Test",
         case_select_who = "Test",
@@ -298,6 +350,7 @@ test_that("Can validate core microdata extract fields", {
       )
     ),
     paste0(
+      "`sample_members` must be one of.+",
       "`data_structure` must be one of.+",
       "`data_format` must be one of.+",
       "`case_select_who` must be one of.+",
@@ -434,6 +487,32 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
   expect_error(
     validate_ipums_extract(
       new_ipums_extract(
+        "atus",
+        description = "",
+        data_structure = "hierarchical",
+        samples = list(samp_spec("A")),
+        time_use_variables = list("B"),
+        data_format = "csv"
+      )
+    ),
+    "Expected `time_use_variables` to be a `tu_var_spec` object or a list of "
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
+        "atus",
+        description = "",
+        data_structure = "hierarchical",
+        samples = list(samp_spec("A")),
+        time_use_variables = var_spec("B"),
+        data_format = "csv"
+      )
+    ),
+    "Expected `time_use_variables` to be a `tu_var_spec` object or a list of "
+  )
+  expect_error(
+    validate_ipums_extract(
+      new_ipums_extract(
         "nhgis",
         description = "",
         datasets = NA,
@@ -516,6 +595,17 @@ test_that("Can validate `*_spec` objects within extracts", {
     "Invalid `samp_spec` specification:.+Unrecognized fields: `foo`"
   )
   expect_error(
+    define_extract_micro(
+      collection = "atus",
+      description = "",
+      samples = "at2020",
+      time_use_variables = list(
+        new_ipums_spec("A", foo = "bar", class = "tu_var_spec")
+      )
+    ),
+    "Invalid `tu_var_spec` specification:.+Unrecognized fields: `foo`"
+  )
+  expect_error(
     define_extract_nhgis(
       datasets = ds_spec(
         "A00",
@@ -570,6 +660,15 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
   )
   expect_error(
     define_extract_micro(
+      collection = "atus",
+      "",
+      samples = "A",
+      time_use_variables = c("A", "A")
+    ),
+    "cannot contain multiple `time_use_variables` of same name"
+  )
+  expect_error(
+    define_extract_micro(
       collection = "cps",
       "",
       samples = c("A", "A"),
@@ -595,8 +694,9 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
 
 test_that("Can add full fields to a microdata extract", {
   cps_extract <- test_cps_extract()
+  atus_extract <- test_atus_extract()
 
-  revised_extract <- add_to_extract(
+  revised_cps <- add_to_extract(
     cps_extract,
     samples = samp_spec("cps2019_03s"),
     variables = list(
@@ -609,25 +709,37 @@ test_that("Can add full fields to a microdata extract", {
   )
 
   expect_equal(
-    names(revised_extract$samples),
+    names(revised_cps$samples),
     union(names(cps_extract$samples), "cps2019_03s")
   )
   expect_equal(
-    names(revised_extract$variables),
+    names(revised_cps$variables),
     union(names(cps_extract$variables), "RELATE")
   )
   expect_equal(
-    revised_extract$variables$RELATE$case_selections,
+    revised_cps$variables$RELATE$case_selections,
     c("1", "2")
   )
   expect_equal(
-    revised_extract$variables$SEX$data_quality_flags,
+    revised_cps$variables$SEX$data_quality_flags,
     TRUE
   )
-  expect_equal(revised_extract$data_structure, "rectangular")
-  expect_equal(revised_extract$rectangular_on, "P")
-  expect_equal(revised_extract$case_select_who, "households")
-  expect_false(revised_extract$data_quality_flags)
+  expect_equal(revised_cps$data_structure, "rectangular")
+  expect_equal(revised_cps$rectangular_on, "P")
+  expect_equal(revised_cps$case_select_who, "households")
+  expect_false(revised_cps$data_quality_flags)
+
+  revised_atus <- add_to_extract(
+    atus_extract,
+    time_use_variables = tu_var_spec(
+      "new_time_use_var",
+      owner = "example@example.com"
+    )
+  )
+  expect_contains(
+    names(revised_atus$time_use_variables),
+    "new_time_use_var"
+  )
 })
 
 test_that("Can add full fields to an NHGIS extract", {
@@ -669,6 +781,7 @@ test_that("Can add full fields to an NHGIS extract", {
 test_that("Can add subfields to existing `ipums_*` fields", {
   nhgis_extract <- test_nhgis_extract()
   cps_extract <- test_cps_extract()
+  atus_extract <- test_atus_extract()
 
   nhgis_revised <- add_to_extract(
     nhgis_extract,
@@ -679,19 +792,6 @@ test_that("Can add subfields to existing `ipums_*` fields", {
     time_series_tables = list(
       tst_spec("CW3", "G1", "Y1"),
       tst_spec("CW4", "G2")
-    )
-  )
-
-  cps_revised <- add_to_extract(
-    cps_extract,
-    variables = list(
-      var_spec(
-        "RACE",
-        case_selections = "813",
-        case_selection_type = "detailed"
-      ),
-      # Ensure we add case_selection_type when adding new case selections:
-      var_spec("AGE", case_selections = "10")
     )
   )
 
@@ -733,6 +833,19 @@ test_that("Can add subfields to existing `ipums_*` fields", {
     list(c("1990", "Y1"), NULL)
   )
 
+  cps_revised <- add_to_extract(
+    cps_extract,
+    variables = list(
+      var_spec(
+        "RACE",
+        case_selections = "813",
+        case_selection_type = "detailed"
+      ),
+      # Ensure we add case_selection_type when adding new case selections:
+      var_spec("AGE", case_selections = "10")
+    )
+  )
+
   expect_equal(
     names(cps_revised$variables),
     names(cps_extract$variables)
@@ -753,19 +866,30 @@ test_that("Can add subfields to existing `ipums_*` fields", {
     cps_revised$variables$AGE$case_selection_type,
     "general"
   )
+
+  atus_revised <- add_to_extract(
+    atus_extract,
+    time_use_variables = tu_var_spec("ACT_PCARE", owner = "example@example.com")
+  )
+
+  expect_equal(
+    atus_revised$time_use_variables$ACT_PCARE$owner,
+    "example@example.com"
+  )
 })
 
 test_that("Can remove full fields from a microdata extract", {
   usa_extract <- test_usa_extract()
+  atus_extract <- test_atus_extract()
 
-  revised_extract <- add_to_extract(
+  revised_usa <- add_to_extract(
     usa_extract,
     samples = "us2014a",
     variables = c("RELATE", "AGE", "SEX")
   )
 
-  revised_extract <- remove_from_extract(
-    revised_extract,
+  revised_usa <- remove_from_extract(
+    revised_usa,
     samples = "us2017b",
     variables = list(
       var_spec("AGE"),
@@ -774,11 +898,11 @@ test_that("Can remove full fields from a microdata extract", {
   )
 
   expect_equal(
-    revised_extract$samples,
+    revised_usa$samples,
     list(us2014a = samp_spec("us2014a"))
   )
   expect_equal(
-    revised_extract$variables,
+    revised_usa$variables,
     list(
       RACE = var_spec(
         "RACE",
@@ -788,6 +912,21 @@ test_that("Can remove full fields from a microdata extract", {
       ),
       YEAR = var_spec("YEAR"),
       RELATE = var_spec("RELATE")
+    )
+  )
+
+  revised_atus <- remove_from_extract(
+    atus_extract,
+    time_use_variables = "ACT_PCARE"
+  )
+
+  expect_equal(
+    revised_atus$time_use_variables,
+    list(
+      my_time_use_var = tu_var_spec(
+        "my_time_use_var",
+        owner = "example@example.com"
+      )
     )
   )
 })
@@ -908,6 +1047,7 @@ test_that("Can remove full fields and subfields simultaneously", {
 test_that("Improper extract revisions throw warnings or errors", {
   usa_extract <- test_usa_extract()
   nhgis_extract <- test_nhgis_extract()
+  atus_extract <- test_atus_extract()
 
   expect_warning(
     remove_from_extract(
@@ -987,6 +1127,13 @@ test_that("Improper extract revisions throw warnings or errors", {
       "You may have combined `var_spec` objects with `c\\(\\)`"
     )
   )
+  expect_warning(
+    add_to_extract(atus_extract, time_use_variables = c("A", tu_var_spec("B"))),
+    paste0(
+      "Unexpected names in input when converting to `tu_var_spec`.+",
+      "You may have combined `tu_var_spec` objects with `c\\(\\)`"
+    )
+  )
 })
 
 # JSON Conversion ----------------
@@ -995,6 +1142,7 @@ test_that("Can reproduce extract specs from JSON definition", {
   usa_extract <- test_usa_extract()
   cps_extract <- test_cps_extract()
   nhgis_extract <- test_nhgis_extract()
+  atus_extract <- test_atus_extract()
 
   usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
   nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
@@ -1002,10 +1150,12 @@ test_that("Can reproduce extract specs from JSON definition", {
   # .json method should handle appropriately if there is a collection field
   # available
   cps_json <- extract_to_request_json(cps_extract)
+  atus_json <- extract_to_request_json(atus_extract)
 
   expect_s3_class(usa_json, c("usa_json", "ipums_json"))
   expect_s3_class(nhgis_json, c("nhgis_json", "ipums_json"))
   expect_s3_class(cps_json, "json")
+  expect_s3_class(atus_json, "json")
 
   expect_identical(
     extract_list_from_json(usa_json)[[1]],
@@ -1019,26 +1169,36 @@ test_that("Can reproduce extract specs from JSON definition", {
     extract_list_from_json(nhgis_json)[[1]],
     nhgis_extract
   )
+  expect_identical(
+    extract_list_from_json(atus_json)[[1]],
+    atus_extract
+  )
 })
 
 test_that("Can export to and import from JSON", {
   usa_extract <- test_usa_extract()
   nhgis_extract <- test_nhgis_extract()
+  atus_extract <- test_atus_extract()
 
   json_tmpfile_usa <- file.path(tempdir(), "usa_extract.json")
   json_tmpfile_nhgis <- file.path(tempdir(), "nhgis_extract.json")
+  json_tmpfile_atus <- file.path(tempdir(), "atus_extract.json")
 
   on.exit(unlink(json_tmpfile_usa), add = TRUE, after = FALSE)
   on.exit(unlink(json_tmpfile_nhgis), add = TRUE, after = FALSE)
+  on.exit(unlink(json_tmpfile_atus), add = TRUE, after = FALSE)
 
   save_extract_as_json(usa_extract, json_tmpfile_usa)
   save_extract_as_json(nhgis_extract, json_tmpfile_nhgis)
+  save_extract_as_json(atus_extract, json_tmpfile_atus)
 
   copy_of_usa_extract <- define_extract_from_json(json_tmpfile_usa)
   copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile_nhgis)
+  copy_of_atus_extract <- define_extract_from_json(json_tmpfile_atus)
 
   expect_identical(usa_extract, copy_of_usa_extract)
   expect_identical(nhgis_extract, copy_of_nhgis_extract)
+  expect_identical(atus_extract, copy_of_atus_extract)
 
   expect_error(
     save_extract_as_json(nhgis_extract, json_tmpfile_usa),

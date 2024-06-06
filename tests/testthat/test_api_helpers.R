@@ -31,6 +31,30 @@ test_that("Can print microdata extracts", {
       "Variables: .+"
     )
   )
+  expect_output(
+    print(test_atus_extract()),
+    paste0(
+      "Unsubmitted IPUMS ATUS extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+",
+      "Time Use Variables: .+"
+    )
+  )
+})
+
+test_that("Printing excludes Variables field if empty", {
+  atus_extract <- test_atus_extract()
+  atus_extract$variables <- NULL
+  expect_output(
+    print(atus_extract),
+    regexp = paste0(
+      "Samples: (2 total) at2020, at2021\n",
+      "Time Use Variables:"
+    ),
+    fixed = TRUE
+  )
 })
 
 test_that("Can print NHGIS extracts", {

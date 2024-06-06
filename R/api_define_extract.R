@@ -2305,9 +2305,15 @@ validate_ipums_extract.micro_extract <- function(x, call = caller_env()) {
 
   extract_field_spec <- list(
     list(
+      field = "sample_members",
+      required = FALSE,
+      choices = c("include_household_members", "include_non_respondents"),
+      type = "character"
+    ),
+    list(
       field = "data_structure",
       required = TRUE,
-      choices = c("rectangular", "hierarchical", "householdOnly"),
+      choices = c("rectangular", "hierarchical", "household_only"),
       length = 1,
       type = "character"
     ),
@@ -3104,7 +3110,7 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
         time_use_variables = time_use_variables,
         sample_members = sample_members,
         data_format = def$dataFormat,
-        data_structure = names(def$dataStructure),
+        data_structure = to_snake_case(names(def$dataStructure)),
         rectangular_on = def$dataStructure$rectangular$on,
         case_select_who = def$caseSelectWho,
         data_quality_flags = def$dataQualityFlags,

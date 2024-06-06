@@ -612,7 +612,10 @@ format_data_structure_for_json <- function(data_structure, rectangular_on) {
   } else if (data_structure == "rectangular") {
     ds_json <- list(rectangular = list(on = rectangular_on))
   } else {
-    ds_json <- purrr::set_names(list(EMPTY_NAMED_LIST), data_structure)
+    ds_json <- purrr::set_names(
+      list(EMPTY_NAMED_LIST),
+      to_camel_case(data_structure)
+    )
   }
 
   ds_json
