@@ -1453,7 +1453,7 @@ add_to_extract.micro_extract <- function(extract,
   data_structure <- data_structure %||% extract$data_structure
 
   if (data_structure == "rectangular") {
-    rectangular_on <- rectangular_on %||% "P"
+    rectangular_on <- rectangular_on %||% extract$rectangular_on %||% "P"
   }
 
   samples <- spec_cast(samples, "samp_spec")

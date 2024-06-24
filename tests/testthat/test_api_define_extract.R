@@ -742,6 +742,15 @@ test_that("Can add full fields to a microdata extract", {
   )
 })
 
+test_that("Can add full fields to hierarchical-on-round extracts", {
+  meps_extract <- test_meps_extract()
+  revised_meps_extract <- add_to_extract(
+    meps_extract,
+    data_quality_flags = TRUE
+  )
+  expect_equal(revised_meps_extract$rectangular_on, "R")
+})
+
 test_that("Can add full fields to an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
@@ -929,6 +938,15 @@ test_that("Can remove full fields from a microdata extract", {
       )
     )
   )
+})
+
+test_that("Can remove full fields from hierarchical-on-round extracts", {
+  meps_extract <- test_meps_extract()
+  revised_meps_extract <- remove_from_extract(
+    meps_extract,
+    samples = "mp2005"
+  )
+  expect_equal(revised_meps_extract$rectangular_on, "R")
 })
 
 test_that("Can remove full fields from an NHGIS extract", {
