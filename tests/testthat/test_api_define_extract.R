@@ -887,6 +887,42 @@ test_that("Can add subfields to existing `ipums_*` fields", {
   )
 })
 
+test_that("Can replace length-one fields in existing `ipums_spec` objects", {
+  atus_extract <- test_atus_extract()
+
+  revised_atus_extract <- add_to_extract(
+    atus_extract,
+    variables = var_spec("AGE", data_quality_flags = FALSE),
+    time_use_variables = tu_var_spec(
+      "my_time_use_var",
+      owner = "newowner@example.com"
+    )
+  )
+
+  expect_false(revised_atus_extract$variables$AGE$data_quality_flags)
+  expect_equal(
+    revised_atus_extract$time_use_variables$my_time_use_var$owner,
+    "newowner@example.com"
+  )
+
+  usa_extract <- test_usa_extract()
+
+  revised_usa_extract <- add_to_extract(
+    usa_extract,
+    variables = var_spec(
+      "RACE",
+      case_selection_type = "general",
+      preselected = TRUE
+    )
+  )
+
+  expect_equal(
+    revised_usa_extract$variables$RACE$case_selection_type,
+    "general"
+  )
+  expect_true(revised_usa_extract$variables$RACE$preselected)
+})
+
 test_that("Can remove full fields from a microdata extract", {
   usa_extract <- test_usa_extract()
   atus_extract <- test_atus_extract()

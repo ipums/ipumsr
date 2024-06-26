@@ -1427,12 +1427,46 @@ spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  var_spec_fields <- setdiff(names(spec_mod), "name")
+
+  length_one_fields <- c(
+    "case_selection_type",
+    "data_quality_flags",
+    "preselected"
+  )
 
   purrr::walk(
-    args,
+    var_spec_fields,
     function(x) {
-      if (x == "case_selection_type") {
+      if (x %in% length_one_fields) {
+        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+      } else {
+        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+      }
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_union.tu_var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  tu_var_spec_fields <- setdiff(names(spec_mod), "name")
+
+  length_one_fields <- "owner"
+
+  purrr::walk(
+    tu_var_spec_fields,
+    function(x) {
+      if (x %in% length_one_fields) {
         spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
       } else {
         spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
