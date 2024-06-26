@@ -1336,16 +1336,16 @@ spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
-  if (length(args) == 0) {
+  if (length(spec_mod_fields) == 0) {
     return(NULL)
   }
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- setdiff_null(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1362,18 +1362,18 @@ spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   cs_type <- spec$case_selection_type
 
-  if (length(args) == 0) {
+  if (length(spec_mod_fields) == 0) {
     return(NULL)
   }
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- setdiff_null(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1405,12 +1405,12 @@ spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1427,7 +1427,7 @@ spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  var_spec_fields <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   length_one_fields <- c(
     "case_selection_type",
@@ -1436,12 +1436,12 @@ spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
   )
 
   purrr::walk(
-    var_spec_fields,
-    function(x) {
-      if (x %in% length_one_fields) {
-        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+    spec_mod_fields,
+    function(field) {
+      if (field %in% length_one_fields) {
+        spec[[field]] <<- spec_mod[[field]] %||% spec[[field]]
       } else {
-        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+        spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
       }
     }
   )
@@ -1459,17 +1459,17 @@ spec_union.tu_var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  tu_var_spec_fields <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   length_one_fields <- "owner"
 
   purrr::walk(
-    tu_var_spec_fields,
-    function(x) {
-      if (x %in% length_one_fields) {
-        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+    spec_mod_fields,
+    function(field) {
+      if (field %in% length_one_fields) {
+        spec[[field]] <<- spec_mod[[field]] %||% spec[[field]]
       } else {
-        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+        spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
       }
     }
   )

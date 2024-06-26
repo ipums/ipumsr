@@ -976,6 +976,25 @@ test_that("Can remove full fields from a microdata extract", {
   )
 })
 
+test_that("Can remove sample_members from ATUS extract", {
+  revised_atus_extract <- remove_from_extract(
+    test_atus_extract(),
+    sample_members = "include_household_members"
+  )
+
+  expect_null(revised_atus_extract$sample_members)
+
+  revised_atus_extract <- remove_from_extract(
+    add_to_extract(
+      test_atus_extract(),
+      sample_members = "include_non_respondents"
+    ),
+    sample_members = "include_household_members"
+  )
+
+  expect_equal(revised_atus_extract$sample_members, "include_non_respondents")
+})
+
 test_that("Can remove full fields from hierarchical-on-round extracts", {
   meps_extract <- test_meps_extract()
   revised_meps_extract <- remove_from_extract(

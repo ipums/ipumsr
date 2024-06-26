@@ -10,6 +10,7 @@ project}
   samples = NULL,
   variables = NULL,
   time_use_variables = NULL,
+  sample_members = NULL,
   ...
 )
 }
@@ -26,6 +27,8 @@ will also be removed.}
 \item{time_use_variables}{Names of the time use variables to remove from the
 extract definition. All time use variable-specific fields for the indicated
 time use variables will also be removed.}
+
+\item{sample_members}{Sample members to remove from the extract definition.}
 
 \item{...}{Ignored}
 }

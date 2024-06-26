@@ -1837,6 +1837,7 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' @param time_use_variables Names of the time use variables to remove from the
 #'   extract definition. All time use variable-specific fields for the indicated
 #'   time use variables will also be removed.
+#' @param sample_members Sample members to remove from the extract definition.
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1896,6 +1897,7 @@ remove_from_extract.micro_extract <- function(extract,
                                               samples = NULL,
                                               variables = NULL,
                                               time_use_variables = NULL,
+                                              sample_members = NULL,
                                               ...) {
   dots <- rlang::list2(...)
 
@@ -1922,13 +1924,15 @@ remove_from_extract.micro_extract <- function(extract,
   variables <- spec_remove(extract$variables, variables)
   time_use_variables <- spec_remove(extract$time_use_variables, time_use_variables)
 
+  sample_members <- setdiff_null(extract$sample_members, sample_members)
+
   extract <- new_ipums_extract(
     collection = extract$collection,
     description = extract$description,
     samples = samples,
     variables = variables,
     time_use_variables = time_use_variables,
-    sample_members = extract$sample_members,
+    sample_members = sample_members,
     data_format = extract$data_format,
     data_structure = extract$data_structure,
     rectangular_on = extract$rectangular_on,
