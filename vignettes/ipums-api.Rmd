@@ -181,14 +181,14 @@ for the `AGE`, `SEX`, `RACE`, `STATEFIP`, and `MARST` variables from the
 2018 and 2019 American Community Survey (ACS):
 
 ```{r}
-usa_ext_def <- define_extract_micro(
+usa_extract_definition <- define_extract_micro(
   collection = "usa",
   description = "USA extract for API vignette",
   samples = c("us2018a", "us2019a"),
   variables = c("AGE", "SEX", "RACE", "STATEFIP", "MARST")
 )
 
-usa_ext_def
+usa_extract_definition
 ```
 
 The exact extract definition options vary across collections, but all
@@ -208,18 +208,18 @@ to work with the sample IPUMS USA extract definition created above.
 the particular collection with which they are associated.
 
 ```{r}
-class(usa_ext_def)
+class(usa_extract_definition)
 ```
 
 Many of the specifications for a given extract request object can be
 accessed by indexing the object:
 
 ```{r}
-names(usa_ext_def$samples)
+names(usa_extract_definition$samples)
 
-names(usa_ext_def$variables)
+names(usa_extract_definition$variables)
 
-usa_ext_def$data_format
+usa_extract_definition$data_format
 ```
 
 `ipums_extract` objects also contain information about the extract
@@ -228,9 +228,9 @@ serves as an identifier for the extract request. Since this extract
 request is still unsubmitted, it has no request number:
 
 ```{r}
-usa_ext_def$status
+usa_extract_definition$status
 
-usa_ext_def$number
+usa_extract_definition$number
 ```
 
 To obtain the data requested in the extract definition, we must first
@@ -279,15 +279,15 @@ the returned object can be useful for checking the extract request's
 status later.
 
 ```{r}
-usa_ext_submitted <- submit_extract(usa_ext_def)
+usa_extract_submitted <- submit_extract(usa_extract_definition)
 ```
 
 The extract number will be stored in the returned object:
 
 ```{r}
-usa_ext_submitted$number
+usa_extract_submitted$number
 
-usa_ext_submitted$status
+usa_extract_submitted$status
 ```
 
 Note that some fields of a submitted extract may be automatically
@@ -296,7 +296,7 @@ extracts, additional preselected variables may be added to the extract
 even if they weren't specified explicitly in the extract definition.
 
 ```{r}
-names(usa_ext_submitted$variables)
+names(usa_extract_submitted$variables)
 ```
 
 If you forget to store the updated extract object returned by
@@ -305,9 +305,9 @@ request the information for your most recent extract request for a given
 collection:
 
 ```{r}
-usa_ext_submitted <- get_last_extract_info("usa")
+usa_extract_submitted <- get_last_extract_info("usa")
 
-usa_ext_submitted$number
+usa_extract_submitted$number
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -326,7 +326,7 @@ object containing the completed extract definition.
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("wait-for-extract")
 
-usa_ext_complete <- wait_for_extract(usa_ext_submitted)
+usa_extract_complete <- wait_for_extract(usa_extract_submitted)
 
 eject_cassette("wait-for-extract")
 
@@ -343,12 +343,12 @@ insert_cassette("wait-for-extract")
 ```
 
 ```{r}
-usa_ext_complete <- wait_for_extract(usa_ext_submitted)
+usa_extract_complete <- wait_for_extract(usa_extract_submitted)
 
-usa_ext_complete$status
+usa_extract_complete$status
 
 # `download_links` should be populated if the extract is ready for download
-names(usa_ext_complete$download_links)
+names(usa_extract_complete$download_links)
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -369,7 +369,7 @@ insert_cassette("extract-ready")
 ```
 
 ```{r}
-is_extract_ready(usa_ext_submitted)
+is_extract_ready(usa_extract_submitted)
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -387,9 +387,9 @@ insert_cassette("check-extract-info")
 ```
 
 ```{r}
-usa_ext_submitted <- get_extract_info(usa_ext_submitted)
+usa_extract_submitted <- get_extract_info(usa_extract_submitted)
 
-usa_ext_submitted$status
+usa_extract_submitted$status
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -422,7 +422,7 @@ requested data files and/or shapefiles.
 
 ```{r, eval=FALSE}
 # By default, downloads to your current working directory
-filepath <- download_extract(usa_ext_submitted)
+filepath <- download_extract(usa_extract_submitted)
 ```
 
 The files produced by `download_extract()` can be passed directly into
@@ -445,7 +445,7 @@ about loading IPUMS data into R.
 To retrieve the definition corresponding to a particular extract,
 provide its collection and number to `get_extract_info()`. These can be
 provided either as a single string of the form `"collection:number"` or
-as a length-2 vector: `c(collection, number)`. Several other API
+as a length-2 vector: `c("collection", number)`. Several other API
 functions support this syntax as well.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -453,12 +453,12 @@ insert_cassette("check-extract-history")
 ```
 
 ```{r}
-usa_ext <- get_extract_info("usa:47")
+usa_extract <- get_extract_info("usa:47")
 
 # Alternatively:
-usa_ext <- get_extract_info(c("usa", 47))
+usa_extract <- get_extract_info(c("usa", 47))
 
-usa_ext
+usa_extract
 ```
 
 If you know you made a specific extract definition in the past, but you
@@ -522,10 +522,10 @@ Sys.getenv("IPUMS_DEFAULT_COLLECTION")
 usa_last <- get_last_extract_info()
 
 # Request info on extract request "usa:10"
-usa_ext_10 <- get_extract_info(10)
+usa_extract_10 <- get_extract_info(10)
 
 # You can still request other collections as usual:
-cps_ext_10 <- get_extract_info("cps:10")
+cps_extract_10 <- get_extract_info("cps:10")
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -541,22 +541,22 @@ most IPUMS collections prohibit the public redistribution of IPUMS data, but
 don't prohibit the sharing of data extract definitions.
 
 ipumsr facilitates this type of sharing with `save_extract_as_json()`
-and `define_extract_from_json()`, which read and write `ipums_extract`
+and `define_extract_from_json()`, which write and read `ipums_extract`
 objects to and from a standardized JSON-formatted file.
 
 ```{r, eval=FALSE}
-usa_ext_10 <- get_extract_info("usa:10")
-save_extract_as_json(usa_ext_10, file = "usa_extract_10.json")
+usa_extract_10 <- get_extract_info("usa:10")
+save_extract_as_json(usa_extract_10, file = "usa_extract_10.json")
 ```
 
-At this point, you can send `usa_extract_10.json` to another user to
+At this point, you can send `"usa_extract_10.json"` to another user to
 allow them to create a duplicate `ipums_extract` object, which they can
 load and submit to the API themselves (as long as they have [API
 access](#set-key)).
 
 ```{r, eval=FALSE}
-clone_of_usa_ext_10 <- define_extract_from_json("usa_extract_10.json")
-usa_ext_10_resubmitted <- submit_extract(clone_of_usa_ext_10)
+clone_of_usa_extract_10 <- define_extract_from_json("usa_extract_10.json")
+usa_extract_10_resubmitted <- submit_extract(clone_of_usa_extract_10)
 ```
 
 Note that the code in the previous chunk assumes that the file is saved

@@ -25,8 +25,8 @@ extract definition.}
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Read and write an \code{\link[=ipums_extract-class]{ipums_extract}} object to a JSON
-file that contains the extract definition specifications.
+Write an \code{\link[=ipums_extract-class]{ipums_extract}} object to a JSON file, or
+read an extract definition from such a file.
 
 Use these functions to store a copy of an extract definition outside of your
 R environment and/or share an extract definition with another registered

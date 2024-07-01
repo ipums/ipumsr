@@ -119,8 +119,9 @@ in R extract definitions.
 
 #### Workflow
 
-Once you have identified the data you would like to request, the
-workflow for requesting and downloading data via API is straightforward.
+Once you have identified the data you would like to request, you can use ipumsr 
+functions to define your extract request, submit it, wait for it to process, 
+and download the associated data.
 
 First, define the parameters of your extract. The available extract
 definition options will differ by IPUMS data collection. See the
@@ -149,13 +150,13 @@ nhgis_extract_request <- define_extract_nhgis(
 ```
 
 Next, submit your extract definition. After waiting for it to complete,
-you can download the files directly to your local machine without ever
-having to leave R:
+you can download the files directly to your local machine without leaving your 
+R session:
 
 ```{r, eval = FALSE}
 submitted_extract <- submit_extract(cps_extract_request)
 downloadable_extract <- wait_for_extract(submitted_extract)
-data_files <- download_extract(downloadable_extract)
+path_to_data_files <- download_extract(downloadable_extract)
 ```
 
 You can also get the specifications of your previous extract requests,
@@ -195,7 +196,6 @@ metadata file for your extract:
 ```{r}
 cps_file <- ipums_example("cps_00157.xml")
 cps_data <- read_ipums_micro(cps_file)
-
 head(cps_data)
 ```
 

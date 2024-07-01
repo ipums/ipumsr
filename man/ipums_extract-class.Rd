@@ -71,10 +71,10 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \item For microdata extracts, use \code{\link[=define_extract_micro]{define_extract_micro()}}
 \item For NHGIS extracts, use \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
 }
-\item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
-request.
-\item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of
-previously-submitted extract requests.
+\item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the definition and latest status of a
+previously-submitted extract request.
+\item Use \code{\link[=get_extract_history]{get_extract_history()}} to get the definitions and latest status of
+multiple previously-submitted extract requests.
 }
 }
 

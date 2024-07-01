@@ -37,35 +37,41 @@ variable specifications to include in the extract
 request. Use \code{\link[=var_spec]{var_spec()}} to create a \code{var_spec} object containing a
 detailed variable specification. See examples.}
 
-\item{time_use_variables}{List of specifications for all time use variables
+\item{time_use_variables}{Vector of names of IPUMS-defined time use variables
+or a list of specifications for user-defined time use variables
 to include in the extract request. Use \code{\link[=tu_var_spec]{tu_var_spec()}} to create a
 \code{tu_var_spec} object containing a time use variable specification. See
 examples.
 
-Time use variables are only supported for IPUMS Time Use collections
+Time use variables are only available for IPUMS Time Use collections
 (\code{"atus"}, \code{"ahtus"}, and \code{"mtus"}).}
 
 \item{sample_members}{Indication of whether to include additional sample
 members in the extract request. If provided, must be one of
 \code{"include_non_respondents"}, \code{"include_household_members"}, or both.
 
-Sample member selection is only supported for IPUMS Time Use collections
-(\code{"atus"}, \code{"ahtus"}, and \code{"mtus"}).}
+Sample member selection is only available for the IPUMS ATUS collection
+(\code{"atus"}).}
 
 \item{data_format}{Format for the output extract data file. Either
 \code{"fixed_width"} or \code{"csv"}.
 
-Note that while \code{"stata"}, \code{"spss"}, or \code{"sas9"} are also accepted, these
+Note that while \code{"stata"}, \code{"spss"}, and \code{"sas9"} are also accepted, these
 file formats are not supported by ipumsr data-reading functions.
 
 Defaults to \code{"fixed_width"}.}
 
 \item{data_structure}{Data structure for the output extract data.
 \itemize{
-\item \code{"rectangular"} provides person records with all requested household
-information attached to respective household members.
-\item \code{"hierarchical"} provides household records followed by person records.
-\item \code{"household_only"} provides household records only.
+\item \code{"rectangular"} provides data in which every row has the same record type
+(determined by \code{"rectangular_on"}), with variables from other record types
+written onto associated records of the chosen type (e.g. household
+variables written onto person records).
+\item \code{"hierarchical"} provides data that include rows of differing record
+types, with records ordered according to their hierarchical structure (e.g.
+each person record is followed by the activity records for that person).
+\item \code{"household_only"} provides household records only. This data structure
+is only available for the IPUMS USA collection (\code{"usa"}).
 }
 
 Defaults to \code{"rectangular"}.}
@@ -114,7 +120,8 @@ The IPUMS API currently supports the following microdata collections:
 }
 
 Note that not all extract request parameters and options apply to all
-collections.
+collections. For a summary of supported features by collection, see the
+\href{https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/}{IPUMS API documentation}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
 microdata extract definitions in \code{vignette("ipums-api-micro")}.
@@ -179,15 +186,18 @@ names(ipumsi_extract$variables)
 
 ipumsi_extract$variables$AGE
 
-# IPUMS Time Use collections allow selection of user-defined time use
-# variables:
+# IPUMS Time Use collections allow selection of IPUMS-defined and
+# user-defined time use variables:
 define_extract_micro(
   collection = "atus",
-  description = "ATUS extract with personal time use variables",
+  description = "ATUS extract with time use variables",
   samples = "at2007",
-  time_use_variables = tu_var_spec(
-    "MYTIMEUSEVAR",
-    owner = "example@example.com"
+  time_use_variables = list(
+    "ACT_PCARE",
+    tu_var_spec(
+      "MYTIMEUSEVAR",
+      owner = "example@example.com"
+    )
   )
 )
 

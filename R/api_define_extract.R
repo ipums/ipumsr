@@ -59,10 +59,10 @@
 #'   `define_extract_*()` function.
 #'     + For microdata extracts, use [define_extract_micro()]
 #'     + For NHGIS extracts, use [define_extract_nhgis()]
-#' * Use [get_extract_info()] to get the latest status of a submitted extract
-#'   request.
-#' * Use [get_extract_history()] to obtain the extract definitions of
-#'   previously-submitted extract requests.
+#' * Use [get_extract_info()] to get the definition and latest status of a
+#'   previously-submitted extract request.
+#' * Use [get_extract_history()] to get the definitions and latest status of
+#'   multiple previously-submitted extract requests.
 #'
 #' @section Submitting an extract:
 #' * Use [submit_extract()] to submit an extract request for processing through
@@ -99,7 +99,8 @@ NULL
 #'    + IPUMS Health Surveys (NHIS, MEPS)
 #'
 #' Note that not all extract request parameters and options apply to all
-#' collections.
+#' collections. For a summary of supported features by collection, see the
+#' [IPUMS API documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/).
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' microdata extract definitions in `vignette("ipums-api-micro")`.
@@ -115,32 +116,37 @@ NULL
 #'   variable specifications to include in the extract
 #'   request. Use [var_spec()] to create a `var_spec` object containing a
 #'   detailed variable specification. See examples.
-#' @param time_use_variables List of specifications for all time use variables
+#' @param time_use_variables Vector of names of IPUMS-defined time use variables
+#'   or a list of specifications for user-defined time use variables
 #'   to include in the extract request. Use [tu_var_spec()] to create a
 #'   `tu_var_spec` object containing a time use variable specification. See
 #'   examples.
 #'
-#'   Time use variables are only supported for IPUMS Time Use collections
+#'   Time use variables are only available for IPUMS Time Use collections
 #'   (`"atus"`, `"ahtus"`, and `"mtus"`).
 #' @param sample_members Indication of whether to include additional sample
 #'   members in the extract request. If provided, must be one of
 #'   `"include_non_respondents"`, `"include_household_members"`, or both.
 #'
-#'   Sample member selection is only supported for IPUMS Time Use collections
-#'   (`"atus"`, `"ahtus"`, and `"mtus"`).
+#'   Sample member selection is only available for the IPUMS ATUS collection
+#'   (`"atus"`).
 #' @param data_format Format for the output extract data file. Either
 #'   `"fixed_width"` or `"csv"`.
 #'
-#'   Note that while `"stata"`, `"spss"`, or `"sas9"` are also accepted, these
+#'   Note that while `"stata"`, `"spss"`, and `"sas9"` are also accepted, these
 #'   file formats are not supported by ipumsr data-reading functions.
 #'
 #'   Defaults to `"fixed_width"`.
 #' @param data_structure Data structure for the output extract data.
-#'
-#'   - `"rectangular"` provides person records with all requested household
-#'   information attached to respective household members.
-#'   - `"hierarchical"` provides household records followed by person records.
-#'   - `"household_only"` provides household records only.
+#'   - `"rectangular"` provides data in which every row has the same record type
+#'   (determined by `"rectangular_on"`), with variables from other record types
+#'   written onto associated records of the chosen type (e.g. household
+#'   variables written onto person records).
+#'   - `"hierarchical"` provides data that include rows of differing record
+#'   types, with records ordered according to their hierarchical structure (e.g.
+#'   each person record is followed by the activity records for that person).
+#'   - `"household_only"` provides household records only. This data structure
+#'   is only available for the IPUMS USA collection (`"usa"`).
 #'
 #'   Defaults to `"rectangular"`.
 #' @param rectangular_on If `data_structure` is `"rectangular"`,
@@ -239,15 +245,18 @@ NULL
 #'
 #' ipumsi_extract$variables$AGE
 #'
-#' # IPUMS Time Use collections allow selection of user-defined time use
-#' # variables:
+#' # IPUMS Time Use collections allow selection of IPUMS-defined and
+#' # user-defined time use variables:
 #' define_extract_micro(
 #'   collection = "atus",
-#'   description = "ATUS extract with personal time use variables",
+#'   description = "ATUS extract with time use variables",
 #'   samples = "at2007",
-#'   time_use_variables = tu_var_spec(
-#'     "MYTIMEUSEVAR",
-#'     owner = "example@example.com"
+#'   time_use_variables = list(
+#'     "ACT_PCARE",
+#'     tu_var_spec(
+#'       "MYTIMEUSEVAR",
+#'       owner = "example@example.com"
+#'     )
 #'   )
 #' )
 #'
@@ -605,13 +614,14 @@ define_extract_nhgis <- function(description = "",
 #' requests
 #'
 #' @description
-#' Provide specifications for individual variables when defining an
-#' IPUMS microdata extract request.
+#' Provide specifications for individual variables and time use variables when
+#' defining an IPUMS microdata extract request.
 #'
 #' Currently, no additional specifications are available for IPUMS samples.
 #'
 #' Note that not all variable-level options are available across all IPUMS
-#' data collections.
+#' data collections. For a summary of supported features by collection, see the
+#' [IPUMS API documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/).
 #'
 #' Learn more about microdata extract definitions in
 #' `vignette("ipums-api-micro")`.
@@ -635,8 +645,13 @@ define_extract_nhgis <- function(description = "",
 #'   any? Accepted values are `"mother"`, `"father"`, `"spouse"`, `"head"`,
 #'   or a combination. Specifying attached characteristics will add variables to
 #'   your extract that contain the values for the given variable for the
-#'   specified household members (e.g. variable "AGE_MOM" will be added if
-#'   `"mother"` is specified for the variable `"AGE"`).
+#'   specified household members. For example, variable "AGE_MOM" will be added
+#'   if `"mother"` is specified for the variable `"AGE"`.
+#'
+#'   For data collections with information on same-sex couples, specifying
+#'   `"mother"` or `"father"` will attach the characteristics of both mothers or
+#'   both fathers for children with same-sex parents, by adding variables with
+#'   names of the form "AGE_MOM" and "AGE_MOM2".
 #' @param data_quality_flags Logical indicating whether to include data quality
 #'   flags for the given variable. By default, data quality flags are not
 #'   included.
@@ -674,6 +689,27 @@ define_extract_nhgis <- function(description = "",
 #' extract$variables$SCHOOL
 #'
 #' extract$variables$RACE
+#'
+#' # For IPUMS Time Use collections, use `tu_var_spec()` to include user-defined
+#' # time use variables
+#' my_time_use_variable <- tu_var_spec(
+#'   "MYTIMEUSEVAR",
+#'   owner = "example@example.com"
+#' )
+#'
+#' # IPUMS-defined time use variables can be included either as `tu_var_spec`
+#' # objects or with just the variable name:
+#' define_extract_micro(
+#'   collection = "atus",
+#'   description = "Requesting user- and IPUMS-defined time use variables",
+#'   samples = "at2007",
+#'   time_use_variables = list(
+#'     my_time_use_variable,
+#'     tu_var_spec("ACT_PCARE"),
+#'     "ACT_SOCIAL"
+#'   )
+#' )
+#'
 var_spec <- function(name,
                      case_selections = NULL,
                      case_selection_type = NULL,
@@ -807,8 +843,8 @@ tst_spec <- function(name,
 #' Store an extract definition in JSON format
 #'
 #' @description
-#' Read and write an [`ipums_extract`][ipums_extract-class] object to a JSON
-#' file that contains the extract definition specifications.
+#' Write an [`ipums_extract`][ipums_extract-class] object to a JSON file, or
+#' read an extract definition from such a file.
 #'
 #' Use these functions to store a copy of an extract definition outside of your
 #' R environment and/or share an extract definition with another registered
@@ -1011,7 +1047,7 @@ define_extract_from_json <- function(extract_json) {
 #' [remove_from_extract()] to remove values from an extract definition.
 #'
 #' [define_extract_micro()] or [define_extract_nhgis()] to define an
-#' extract request manually
+#' extract request manually.
 #'
 #' [submit_extract()] to submit an extract request for processing.
 #'
@@ -1154,8 +1190,9 @@ add_to_extract <- function(extract, ...) {
 #'
 #' [define_extract_nhgis()] to create a new extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
+#' [submit_extract()] to submit an extract request.
+#'
+#' [download_extract()] to download extract data files.
 #'
 #' @export
 #'
@@ -1328,14 +1365,25 @@ add_to_extract.nhgis_extract <- function(extract,
 #'
 #'   If a variable already exists in the extract, its specifications
 #'   will be added to those that already exist for that variable.
-#' @param time_use_variables Character vector of time use variable names or a
-#'   list of `tu_var_spec` objects created by [tu_var_spec()] containing
-#'   specifications for all variables to include in the extract.
+#' @param time_use_variables Vector of names of IPUMS-defined time use variables
+#'   or a list of specifications for user-defined time use variables
+#'   to include in the extract request. Use [tu_var_spec()] to create a
+#'   `tu_var_spec` object containing a time use variable specification.
 #' @param data_format Format for the output extract data file. Either
 #'   `"fixed_width"` or `"csv"`.
 #'
 #'   Note that while `"stata"`, `"spss"`, or `"sas9"` are also accepted, these
 #'   file formats are not supported by ipumsr data-reading functions.
+#' @param data_structure Data structure for the output extract data.
+#'   - `"rectangular"` provides data in which every row has the same record type
+#'   (determined by `"rectangular_on"`), with variables from other record types
+#'   written onto associated records of the chosen type (e.g. household
+#'   variables written onto person records).
+#'   - `"hierarchical"` provides data that include rows of differing record
+#'   types, with records ordered according to their hierarchical structure (e.g.
+#'   each person record is followed by the activity records for that person).
+#'   - `"household_only"` provides household records only. This data structure
+#'   is only available for the IPUMS USA collection (`"usa"`).
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1346,8 +1394,9 @@ add_to_extract.nhgis_extract <- function(extract,
 #' [`remove_from_extract()`][remove_from_extract.micro_extract()] to remove
 #'   values from an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
+#' [submit_extract()] to submit an extract request.
+#'
+#' [download_extract()] to download extract data files.
 #'
 #' [define_extract_micro()] to create a new extract
 #'   definition from scratch
@@ -1642,8 +1691,9 @@ remove_from_extract <- function(extract, ...) {
 #' [`add_to_extract()`][add_to_extract.nhgis_extract()] to add values
 #' to an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
+#' [submit_extract()] to submit an extract request.
+#'
+#' [download_extract()] to download extract data files.
 #'
 #' [define_extract_nhgis()] to create a new extract definition.
 #'
@@ -1794,19 +1844,19 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' a previously submitted extract request, this function will reset the
 #' definition to an unsubmitted state.
 #'
-#' To retain a variable while modifying its particular specifications, first
-#' remove that variable, then add a new specification using `add_to_extract()`.
-#'
 #' @inheritParams define_extract_micro
 #' @inheritParams remove_from_extract
 #' @param samples Character vector of sample names to remove from the extract
 #'   definition.
 #' @param variables Names of the variables to remove from the extract
 #'   definition. All variable-specific fields for the indicated variables
-#'   will also be removed.
+#'   will also be removed. For removing values from variable-specific fields
+#'   while retaining the variable, see examples.
 #' @param time_use_variables Names of the time use variables to remove from the
 #'   extract definition. All time use variable-specific fields for the indicated
-#'   time use variables will also be removed.
+#'   time use variables will also be removed. For removing time use
+#'   variable-specific fields while retaining the time use variable, see
+#'   examples.
 #' @param ... Ignored
 #'
 #' @return A modified `micro_extract` object
@@ -1817,8 +1867,9 @@ remove_from_extract.nhgis_extract <- function(extract,
 #' [`add_to_extract()`][add_to_extract.micro_extract()] to add values
 #' to an extract definition.
 #'
-#' [submit_extract()] and [download_extract()] to submit and process an
-#'   extract request.
+#' [submit_extract()] to submit an extract request.
+#'
+#' [download_extract()] to download extract data files.
 #'
 #' [define_extract_micro()] to create a new extract
 #'   definition from scratch.
@@ -1845,10 +1896,10 @@ remove_from_extract.nhgis_extract <- function(extract,
 #'   variables = c("AGE", "RACE")
 #' )
 #'
-#' # To remove detailed specifications from a variable, indicate the
-#' # specifications to remove within `var_spec()`. The
-#' # named variable will be retained in the extract, but modified by
-#' # removing the indicated specifications.
+#' # To remove detailed specifications from a variable or time use variable,
+#' # indicate the specifications to remove within `var_spec()` or
+#' # `tu_var_spec()`. The named variable will be retained in the extract, but
+#' # modified by removing the indicated specifications.
 #' remove_from_extract(
 #'   usa_extract,
 #'   variables = var_spec("SEX", case_selections = "1")

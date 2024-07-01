@@ -42,6 +42,8 @@ Currently supported microdata collections are:
 \item IPUMS USA (\code{"usa"})
 \item IPUMS CPS (\code{"cps"})
 \item IPUMS International (\code{"ipumsi"})
+\item IPUMS Time Use (\code{"atus"}, \code{"ahtus"}, \code{"mtus"})
+\item IPUMS Health Surveys (\code{"nhis"}, \code{"meps"})
 }
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
@@ -51,6 +53,8 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 get_sample_info("usa")
 get_sample_info("cps")
 get_sample_info("ipumsi")
+get_sample_info("atus")
+get_sample_info("meps")
 }
 }
 \seealso{

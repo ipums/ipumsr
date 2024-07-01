@@ -128,7 +128,7 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.
 
 \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
-extract request manually
+extract request manually.
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 }

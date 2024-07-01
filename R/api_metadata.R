@@ -288,9 +288,12 @@ get_metadata_nhgis <- function(type = NULL,
 #' Retrieve sample IDs and descriptions for IPUMS microdata collections.
 #'
 #' Currently supported microdata collections are:
-#'   - IPUMS USA (`"usa"`)
-#'   - IPUMS CPS (`"cps"`)
-#'   - IPUMS International (`"ipumsi"`)
+#'
+#' * IPUMS USA (`"usa"`)
+#' * IPUMS CPS (`"cps"`)
+#' * IPUMS International (`"ipumsi"`)
+#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
+#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -325,6 +328,8 @@ get_metadata_nhgis <- function(type = NULL,
 #' get_sample_info("usa")
 #' get_sample_info("cps")
 #' get_sample_info("ipumsi")
+#' get_sample_info("atus")
+#' get_sample_info("meps")
 #' }
 get_sample_info <- function(collection = NULL,
                             delay = 0,

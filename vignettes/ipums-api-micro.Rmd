@@ -87,15 +87,18 @@ library(dplyr)
 Every microdata extract definition must contain a set of requested _samples_
 and _variables_.
 
-In an IPUMS microdata collection, a _sample_ refers to a distinct combination 
-of records and variables. A record is a set of values that describe 
-the characteristics of a single unit of measurement (e.g. a single
-person or a single household), and _variables_ define the characteristics 
-that were measured.
+In an IPUMS microdata collection, the term _sample_ is used to refer to a 
+distinct dataset derived from a census or survey (or in some cases, such as the 
+American Community Survey 5-year samples, multiple surveys). Each sample can be
+thought of as a combination of records and variables. A record is a set of 
+values that describe the characteristics of a single unit of observation (e.g. a
+person or a household), and _variables_ define the characteristics 
+that were observed.
 
-A single sample can contain multiple record types (e.g. person records, 
-household records, or activity records, and more), each of which correspond to 
-different units of measurement.
+A sample can contain multiple record types (e.g. person records, 
+household records, or activity records). See the 
+[section on data structure](#data-structure) below for options regarding how to 
+combine multiple record types in your extract data file.
 
 Note that our usage of 
 the term "sample" does not correspond perfectly to the statistical sense of a 
@@ -145,7 +148,7 @@ IPUMS intends to add support for accessing variable metadata via API
 in the future. Until then, use the web-based extract builder for a given 
 collection to find variable names and availability by sample. 
 See the 
-[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/)
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata/)
 for links to the extract builder for each microdata collection with API support.
 
 Alternatively, if you have made an extract previously through the web 
@@ -159,7 +162,7 @@ eject_cassette("micro-sample-ids")
 
 ## Defining an IPUMS microdata extract request
 
-Define an extract for an IPUMS microdata collections with
+Define an extract for an IPUMS microdata collection with
 `define_extract_micro()`. When you define an extract request, you 
 specify the collection for the extract, the data to be included, and
 the desired format and layout.
@@ -168,14 +171,14 @@ A simple extract definition needs only to contain the IPUMS collection
 along with the names of the samples and variables to include in the request:
 
 ```{r}
-cps_ext <- define_extract_micro(
+cps_extract <- define_extract_micro(
   collection = "cps",
   description = "Example CPS extract",
   samples = c("cps2018_03s", "cps2019_03s"),
   variables = c("AGE", "SEX", "RACE", "STATEFIP")
 )
 
-cps_ext
+cps_extract
 ```
 
 This produces an `ipums_extract` object containing the extract request
@@ -191,7 +194,9 @@ your request.
 
 You can refine your extract request by providing detailed 
 specification options for individual variables included in the request, like
-case selections, attached characteristics, and data quality flags.
+case selections, attached characteristics, and data quality flags. Note that not 
+all variable-level options are available across all IPUMS data collections. For 
+a summary of supported features by collection, see the [IPUMS API documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/).
 
 ### Syntax
 
@@ -199,7 +204,7 @@ To add any of these options to a variable, we need to
 introduce the `var_spec()` helper function.
 
 `var_spec()` bundles all the selections for a given variable together into a 
-single object (in this case, a `var_spec` object):
+single `var_spec` object:
 
 ```{r}
 var <- var_spec("SEX", case_selections = "2")
@@ -223,12 +228,12 @@ define_extract_micro(
 )
 ```
 
-In fact, if you investigate our original extract object from above, you'll 
+In fact, if you inspect our original extract object from above, you'll 
 notice that the variables have automatically been converted to 
 `var_spec` objects, even though they were provided as character vectors:
 
 ```{r}
-str(cps_ext$variables)
+str(cps_extract$variables)
 ```
 
 So, a `var_spec` object with no additional specifications will produce
@@ -284,7 +289,7 @@ var <- var_spec("STATEFIP", case_selections = c("27", "19"))
 ```
 
 Some variables have versions with both general and detailed coding schemes.
-By default, case selections are interpreted to refer to the general codes:
+By default, case selections are assumed to refer to the general codes:
 
 ```{r}
 var$case_selection_type
@@ -321,7 +326,7 @@ right from their R sessions.
 Until then, use the IPUMS web interface for a given collection to 
 find general and detailed variable codes for the purposes of case selection. 
 See the 
-[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata-hp/) 
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/microdata/) 
 for relevant links.
 
 By default, case selection on person-level variables produces a data file that 
@@ -357,9 +362,9 @@ For instance, to attach the spouse's `SEX` value to a record:
 var_spec("SEX", attached_characteristics = "spouse")
 ```
 
-This will add a new variable (in this case, `SEX_SP`) to the output data that 
-will contain the sex of a person's spouse (if no such record exists, the 
-value will be 0).
+This will add a new variable called `SEX_SP` to the output data that 
+will contain the sex of a person's spouse. Person records without a spouse in 
+the household will have a missing value for variable `SEX_SP`.
 
 Multiple attached characteristics can be attached for a single variable:
 
@@ -367,12 +372,14 @@ Multiple attached characteristics can be attached for a single variable:
 var_spec("AGE", attached_characteristics = c("mother", "father"))
 ```
 
-Acceptable values are `"spouse"`, `"mother"`, `"father"`, `"head"`, `"mother2"`,
-and `"father2"`.
+Acceptable values are `"spouse"`, `"mother"`, `"father"`, and `"head"`. For data
+collections with information on same-sex couples, specifying `"mother"` or
+`"father"` will attach the characteristics of both mothers or both fathers for 
+children with same-sex parents.
 
 ### Data quality flags
 
-Some variables in the IPUMS have been edited for missing, illegible, and 
+Some IPUMS variables have been edited for missing, illegible, and 
 inconsistent values. Data quality flags indicate which values are edited
 or allocated.
 
@@ -390,7 +397,7 @@ To add data quality flags for all variables that have them, set
 `data_quality_flags = TRUE` in your extract definition directly:
 
 ```{r}
-usa_ext <- define_extract_micro(
+usa_extract <- define_extract_micro(
   "usa",
   description = "Data quality flags",
   samples = "us2021a",
@@ -411,20 +418,21 @@ collection of interest for more information about data quality flag codes.
 For IPUMS Time Use collections (ATUS, AHTUS, and MTUS), users can request
 time use variables using the `time_use_variables` argument.
 
-For pre-defined time use variables, simply provide the name:
+For IPUMS-defined time use variables, simply provide the name:
 
 ```{r}
 define_extract_micro(
   "atus",
   description = "Time use variable demo",
   samples = "at2017",
-  time_use_variables = "ACT-PCARE"
+  time_use_variables = "ACT_PCARE"
 )
 ```
 
-You can also request time use variables that you have defined yourself. In this
-case, use the `tu_var_spec()` helper to provide the time use variable name
-and your user email to identify the account the variable was created under:
+You can also request time use variables that you have defined yourself using the
+online extract builder. In this case, use the `tu_var_spec()` helper to provide
+the time use variable name and your user email to identify the account the
+variable was created under:
 
 ```{r, eval=FALSE}
 define_extract_micro(
@@ -435,24 +443,95 @@ define_extract_micro(
 )
 ```
 
-## Data structure and file format
+To request multiple user-defined time use variables or a combination of 
+IPUMS-defined and user-defined time use variables, pass a `list` to the 
+`time_use_variables` argument:
 
-By default, microdata extract definitions will request data in a rectangular
-structure and fixed-width file format. 
+```{r, eval=FALSE}
+define_extract_micro(
+  "atus",
+  description = "Time use variable demo",
+  samples = "at2017",
+  time_use_variables = list(
+    "ACT_PCARE",
+    tu_var_spec("MYTUVAR", owner = "user@example.com")
+  )
+)
+```
 
-Rectangular data are data where only person records are included, and any 
+
+## Data structure {#data-structure}
+
+By default, microdata extract definitions will request data in a 
+rectangular-on-persons data structure and a fixed-width file format. 
+
+Rectangular-on-persons data are data where only person records are included, and 
 household-level variables are converted to person-level variables by copying the 
-values from the associated household record onto all household members. 
+values from the associated household record onto all household members.
 
 To instead create a hierarchical extract, which includes separate records for 
-households and persons, set `data_structure = "hierarchical"` in your extract 
-definition.
+each record type present in the data, set `data_structure = "hierarchical"` in 
+your extract definition. 
 
-See the [IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
+```{r eval=FALSE}
+define_extract_micro(
+  "nhis",
+  description = "NHIS hierarchical",
+  samples = "ih2002",
+  variables = c("REGION", "AGE", "SEX", "BMI"),
+  data_structure = "hierarchical"
+)
+```
+
+
+See the 
+[IPUMS data reading vignette](ipums-read.html#hierarchical-extracts) 
 for more information about loading hierarchical data into R.
 
+While all microdata collections provide data in rectangular-on-persons and
+hierarchical data structures, some collections provide data in other rectangular
+structures. To request data in a different rectangular structure, set the 
+`rectangular_on` argument in your extract definition to `"A"` 
+(rectangular-on-activity), `"I"` (rectangular-on-injury), or `"R"` 
+(rectangular-on-round). 
+
+```{r eval=FALSE}
+define_extract_micro(
+  "meps",
+  description = "MEPS rectangular-on-round",
+  samples = "mp2021",
+  variables = c("INCCHLD", "AGERD", "MARSTATRD"),
+  rectangular_on = "R"
+)
+```
+
+For a summary of rectangular structures available by 
+collection, see the 
+[IPUMS API documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/).
+
+Finally, for extracts containing only household-level variables, IPUMS USA can 
+provide data containing only household records. To request a household-only 
+data file, set `data_structure = "household_only"` in your IPUMS USA extract 
+definition.
+
+```{r eval=FALSE}
+define_extract_micro(
+  "usa",
+  description = "USA household only",
+  samples = "us2022a",
+  variables = "STATEFIP",
+  data_structure = "household_only"
+)
+```
+
+
+## Data file format
+
+By default, microdata extract definitions will request data in a fixed-width 
+file format. 
+
 To request a file format other than fixed-width, adjust the `data_format` 
-argument. Note that
+argument in your call to `define_extract_micro()`. Note that
 while you can request data in a variety of formats (Stata, SPSS, etc.), 
 ipumsr's `read_ipums_micro()` function only supports fixed-width and csv files.
 
@@ -462,7 +541,7 @@ Once you have defined an extract request, you can submit the extract for
 processing:
 
 ```{r, eval=FALSE}
-usa_ext_submitted <- submit_extract(usa_ext)
+usa_extract_submitted <- submit_extract(usa_extract)
 ```
 
 The workflow for submitting and monitoring an extract request and downloading
