@@ -43,8 +43,13 @@ Defaults to \code{"general"} if any \code{case_selections} are specified.}
 any? Accepted values are \code{"mother"}, \code{"father"}, \code{"spouse"}, \code{"head"},
 or a combination. Specifying attached characteristics will add variables to
 your extract that contain the values for the given variable for the
-specified household members (e.g. variable "AGE_MOM" will be added if
-\code{"mother"} is specified for the variable \code{"AGE"}).}
+specified household members. For example, variable "AGE_MOM" will be added
+if \code{"mother"} is specified for the variable \code{"AGE"}.
+
+For data collections with information on same-sex couples, specifying
+\code{"mother"} or \code{"father"} will attach the characteristics of both mothers or
+both fathers for children with same-sex parents, by adding variables with
+names of the form "AGE_MOM" and "AGE_MOM2".}
 
 \item{data_quality_flags}{Logical indicating whether to include data quality
 flags for the given variable. By default, data quality flags are not
@@ -61,13 +66,14 @@ of the user submitting the extract request is supported.}
 A \code{var_spec}, \code{tu_var_spec}, or \code{samp_spec} object.
 }
 \description{
-Provide specifications for individual variables when defining an
-IPUMS microdata extract request.
+Provide specifications for individual variables and time use variables when
+defining an IPUMS microdata extract request.
 
 Currently, no additional specifications are available for IPUMS samples.
 
 Note that not all variable-level options are available across all IPUMS
-data collections.
+data collections. For a summary of supported features by collection, see the
+\href{https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/}{IPUMS API documentation}.
 
 Learn more about microdata extract definitions in
 \code{vignette("ipums-api-micro")}.
@@ -97,5 +103,26 @@ extract <- define_extract_micro(
 extract$variables$SCHOOL
 
 extract$variables$RACE
+
+# For IPUMS Time Use collections, use `tu_var_spec()` to include user-defined
+# time use variables
+my_time_use_variable <- tu_var_spec(
+  "MYTIMEUSEVAR",
+  owner = "example@example.com"
+)
+
+# IPUMS-defined time use variables can be included either as `tu_var_spec`
+# objects or with just the variable name:
+define_extract_micro(
+  collection = "atus",
+  description = "Requesting user- and IPUMS-defined time use variables",
+  samples = "at2007",
+  time_use_variables = list(
+    my_time_use_variable,
+    tu_var_spec("ACT_PCARE"),
+    "ACT_SOCIAL"
+  )
+)
+
 }
 \keyword{internal}

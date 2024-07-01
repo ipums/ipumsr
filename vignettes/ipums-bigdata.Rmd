@@ -107,7 +107,8 @@ selections for a variable in an extract definition. For instance, the following
 would produce an extract only including records for married women:
 
 ```{r}
-define_extract_usa(
+define_extract_micro(
+  "usa",
   description = "2013 ACS Data for Married Women",
   samples = "us2013a",
   variables = list(

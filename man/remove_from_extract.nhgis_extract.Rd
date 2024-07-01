@@ -110,8 +110,9 @@ remove_from_extract(
 \code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} to add values
 to an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request.
+
+\code{\link[=download_extract]{download_extract()}} to download extract data files.
 
 \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create a new extract definition.
 }

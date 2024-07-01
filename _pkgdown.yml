@@ -7,9 +7,11 @@ template:
   bslib:
     primary: "#00263A"
     dropdown-bg: "#f1f5f7"
+    dropdown-link-color: "#00263A"
     dropdown-link-hover-bg: "#7a99ac"
     dropdown-link-active-bg: "#00263A"
     dropdown-link-active-color: "white"
+    dropdown-border-color: "#c7cacc"
     table-border-color: "#c1d4e0"
     link-color: "#4e6c7d"
     secondary: "#bed2dd"

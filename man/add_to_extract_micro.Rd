@@ -37,16 +37,17 @@ containing specifications for all variables to include in the extract.
 If a variable already exists in the extract, its specifications
 will be added to those that already exist for that variable.}
 
-\item{time_use_variables}{Character vector of time use variable names or a
-list of \code{tu_var_spec} objects created by \code{\link[=tu_var_spec]{tu_var_spec()}} containing
-specifications for all variables to include in the extract.}
+\item{time_use_variables}{Vector of names of IPUMS-defined time use variables
+or a list of specifications for user-defined time use variables
+to include in the extract request. Use \code{\link[=tu_var_spec]{tu_var_spec()}} to create a
+\code{tu_var_spec} object containing a time use variable specification.}
 
 \item{sample_members}{Indication of whether to include additional sample
 members in the extract request. If provided, must be one of
 \code{"include_non_respondents"}, \code{"include_household_members"}, or both.
 
-Sample member selection is only supported for IPUMS Time Use collections
-(\code{"atus"}, \code{"ahtus"}, and \code{"mtus"}).}
+Sample member selection is only available for the IPUMS ATUS collection
+(\code{"atus"}).}
 
 \item{data_format}{Format for the output extract data file. Either
 \code{"fixed_width"} or \code{"csv"}.
@@ -56,15 +57,20 @@ file formats are not supported by ipumsr data-reading functions.}
 
 \item{data_structure}{Data structure for the output extract data.
 \itemize{
-\item \code{"rectangular"} provides person records with all requested household
-information attached to respective household members.
-\item \code{"hierarchical"} provides household records followed by person records.
-}
-
-Defaults to \code{"rectangular"}.}
+\item \code{"rectangular"} provides data in which every row has the same record type
+(determined by \code{"rectangular_on"}), with variables from other record types
+written onto associated records of the chosen type (e.g. household
+variables written onto person records).
+\item \code{"hierarchical"} provides data that include rows of differing record
+types, with records ordered according to their hierarchical structure (e.g.
+each person record is followed by the activity records for that person).
+\item \code{"household_only"} provides household records only. This data structure
+is only available for the IPUMS USA collection (\code{"usa"}).
+}}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
-records on which to rectangularize.
+records on which to rectangularize. One of \code{"P"} (person), \code{"A"}
+(activity), \code{"I"} (injury) or \code{"R"} (round).
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -171,10 +177,11 @@ add_to_extract(extract, description = "New description")$description
 \code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}} to remove
 values from an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request.
 
-\link{define_extract_micro} to create a new extract
+\code{\link[=download_extract]{download_extract()}} to download extract data files.
+
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create a new extract
 definition from scratch
 }
 \keyword{internal}

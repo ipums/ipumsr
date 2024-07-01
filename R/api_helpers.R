@@ -28,6 +28,9 @@
 #'   status of API support for the collection.
 #'
 #' @export
+#'
+#' @examples
+#' ipums_data_collections()
 ipums_data_collections <- function() {
   purrr::map_dfr(
     proj_config(),
