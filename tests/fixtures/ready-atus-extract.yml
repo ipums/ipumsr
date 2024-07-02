@@ -1,0 +1,43 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/extracts/14?collection=atus&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-length: '2173'
+      content-type: application/json; charset=utf-8
+      date: Wed, 05 Jun 2024 19:55:39 GMT
+      etag: W/"3f3a241a993bada422354f089cf58185"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: e078214f-2c54-443a-9b2c-62f496e61717
+      x-runtime: '0.529716'
+      x-xss-protection: '0'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":14,"status":"completed","email":"burkx031@umn.edu","downloadLinks":{"rCommandFile":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.R","bytes":407,"sha256":"6f82eb6a85f489a5d8022f21bcddc2a8577aaae628edc9b15e9f022b3202595c"},"basicCodebook":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.cbk","bytes":8021,"sha256":"e927cc664491d844b1dee44e2f1dfb8aca6e36a17273b3a97a1a63f734b8a576"},"data":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.dat.gz","bytes":1337302,"sha256":"cb5e290ea454b1d3c305cb51232d54eaeaf368e25cc57fe5cd70e4146b4f39b5"},"stataCommandFile":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.do","bytes":9636,"sha256":"dc4e879b076b2c4c171fa877b06e18f05f5353b87a8327b82f107533bf6b3e87"},"sasCommandFile":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.sas","bytes":5255,"sha256":"3624fba5b7f4f752aab8dd39db17cf649cdfd7c5737ce6bdbc3e018e9d2aae00"},"spssCommandFile":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.sps","bytes":4897,"sha256":"e10b461a2a9f151ff8ce388882537a3d91b9a014dfe94e035f6202968e53cc6f"},"ddiCodebook":{"url":"https://api.ipums.org/downloads/atus/api/v1/extracts/2293232/atus_00014.xml","bytes":34934,"sha256":"3cee566cc841a4bb06d1e3e949788bb791d674d4e847e26cb89f358b29ce559f"}},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","description":"Test
+        ATUS extract","samples":{"at2020":{},"at2021":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"CASEID":{"preselected":true},"SERIAL":{"preselected":true},"STATEFIP":{},"PERNUM":{"preselected":true},"LINENO":{"preselected":true},"WT06":{"preselected":true},"WT20":{"preselected":true},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["spouse","mother","mother2","father","father2"]},"SEX":{},"DIFFANY":{},"RELATER":{}},"timeUseVariables":{"ACT_PCARE":{},"screentime":{"owner":"burkx031@umn.edu"}},"sampleMembers":{"includeNonRespondents":true,"includeHouseholdMembers":true},"collection":"atus"}}'
+  recorded_at: 2024-06-05 19:55:42 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

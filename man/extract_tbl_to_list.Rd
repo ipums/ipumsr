@@ -9,37 +9,10 @@ extract_tbl_to_list(extract_tbl, validate = TRUE)
 
 extract_list_to_tbl(extract_list)
 }
-\arguments{
-\item{extract_tbl}{A \code{\link[tibble:tbl_df-class]{tibble}} (or
-\code{\link[base:data.frame]{data.frame}}) containing the specifications for one
-or more \code{\link[=ipums_extract-class]{ipums_extract}} objects.}
-
-\item{validate}{Logical value indicating whether to
-check that each of the output \code{ipums_extract}
-objects contains a valid and complete extract
-definition. Defaults to \code{TRUE}.}
-
-\item{extract_list}{A list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
-or a single \code{ipums_extract} object.}
-}
-\value{
-For \code{\link[=extract_tbl_to_list]{extract_tbl_to_list()}}, a list of length equal to the number of
-extracts represented in \code{extract_tbl}.
-
-For \code{\link[=extract_list_to_tbl]{extract_list_to_tbl()}}, a \code{\link[tibble:tbl_df-class]{tibble}}
-representing the specifications for each of the extract requests
-represented in \code{extract_list}.
-}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Convert a \code{\link[tibble:tbl_df-class]{tibble}} of extract definition
-specifications to a list of \code{\link[=ipums_extract-class]{ipums_extract}} objects
-or vice versa.
-
-Support for tabular extract history has been deprecated. Instead, use
-\code{\link[=get_extract_history]{get_extract_history()}} to obtain definitions of recently-submitted
-extracts as a list. To identify past extracts that meet certain criteria,
-iterate through this list.
+These functions are now defunct. Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain
+extract history as a list.
 }
 \keyword{internal}

@@ -11,6 +11,7 @@ on.exit(
       c(
         "ready-usa-extract.yml",
         "ready-cps-extract.yml",
+        "ready-atus-extract.yml",
         "ready-nhgis-extract.yml",
         "ready-nhgis-extract-shp.yml"
       )
@@ -104,6 +105,23 @@ test_that("Can submit a USA extract", {
   )
 })
 
+test_that("Can submit a household only USA extract", {
+  skip_if_no_api_access(have_api_access)
+
+  usa_extract <- test_usa_extract_household_only()
+
+  vcr::use_cassette("submitted-household-only-usa-extract", {
+    suppressMessages(
+      submitted_household_only_usa_extract <- submit_extract(usa_extract)
+    )
+  })
+
+  expect_equal(
+    submitted_household_only_usa_extract$data_structure,
+    "household_only"
+  )
+})
+
 test_that("Can submit a CPS extract", {
   skip_if_no_api_access(have_api_access)
 
@@ -163,6 +181,48 @@ test_that("Can submit a CPS extract", {
         cps_extract[[var]]$data_quality_flags
       )
     }
+  )
+})
+
+test_that("Can submit an ATUS extract", {
+  skip_if_no_api_access(have_api_access)
+
+  atus_extract <- test_atus_extract_submittable()
+
+  vcr::use_cassette("submitted-atus-extract", {
+    suppressMessages(
+      submitted_atus_extract <- submit_extract(atus_extract)
+    )
+  })
+
+  expect_s3_class(submitted_atus_extract$time_use_variables[[1]], "tu_var_spec")
+
+  expect_equal(
+    names(atus_extract$time_use_variables),
+    names(submitted_atus_extract$time_use_variables)
+  )
+
+  expect_equal(
+    submitted_atus_extract$time_use_variables$screentime$owner,
+    "burkx031@umn.edu"
+  )
+
+  expect_setequal(
+    atus_extract$sample_members,
+    submitted_atus_extract$sample_members
+  )
+})
+
+test_that("Submission of time-use variable with wrong owner throws error", {
+  skip_if_no_api_access(have_api_access)
+
+  atus_extract <- test_atus_extract()
+
+  expect_error(
+    vcr::use_cassette("atus-submission-error", {
+      submit_extract(atus_extract)
+    }),
+    regexp = "Time Use Variable owner example@example.com doesn't match user"
   )
 })
 

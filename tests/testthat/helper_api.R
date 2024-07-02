@@ -1,6 +1,7 @@
 # Sample extracts for use in api unit testing
 test_usa_extract <- function() {
-  define_extract_usa(
+  define_extract_micro(
+    collection = "usa",
     description = "Test USA extract",
     samples = samp_spec("us2017b"),
     variables = list(
@@ -17,8 +18,19 @@ test_usa_extract <- function() {
   )
 }
 
+test_usa_extract_household_only <- function() {
+  define_extract_micro(
+    collection = "usa",
+    description = "Test USA household-only extract",
+    samples = samp_spec("us2017b"),
+    variables = "STATEFIP",
+    data_structure = "household_only"
+  )
+}
+
 test_cps_extract <- function() {
-  define_extract_cps(
+  define_extract_micro(
+    collection = "cps",
     description = "Compare age-sex-race breakdowns 1976",
     samples = c("cps2018_03s", "cps2019_03s"),
     variables = list(
@@ -46,7 +58,8 @@ test_cps_extract <- function() {
 }
 
 test_ipumsi_extract <- function() {
-  define_extract_ipumsi(
+  define_extract_micro(
+    collection = "ipumsi",
     description = "Test IPUMSI extract",
     samples = c("mx2015a", "cl2017a"),
     variables = list(
@@ -55,6 +68,95 @@ test_ipumsi_extract <- function() {
       "EDATTAIN"
     ),
     data_format = "csv"
+  )
+}
+
+test_atus_extract <- function() {
+  define_extract_micro(
+    collection = "atus",
+    description = "Test ATUS extract",
+    samples = c("at2020", "at2021"),
+    variables = list(
+      "STATEFIP",
+      var_spec(
+        "AGE",
+        attached_characteristics = c("mother", "father", "spouse"),
+        data_quality_flags = TRUE
+      ),
+      "SEX",
+      "DIFFANY",
+      "RELATER"
+    ),
+    time_use_variables = list(
+      "ACT_PCARE",
+      tu_var_spec("my_time_use_var", owner = "example@example.com")
+    ),
+    sample_members = "include_household_members",
+    data_structure = "hierarchical"
+  )
+}
+
+# In order to test that we can request user-created time use variables, this
+# extract request includes a real time use variable created by Derek Burk
+# (burkx031@umn.edu). Using vcr fixtures, tests that use this extract should
+# be runnable by anyone, but if the fixtures aren't available, those tests will
+# fail.
+test_atus_extract_submittable <- function() {
+  define_extract_micro(
+    collection = "atus",
+    description = "Test ATUS extract",
+    samples = c("at2020", "at2021"),
+    variables = list(
+      "STATEFIP",
+      var_spec(
+        "AGE",
+        attached_characteristics = c("mother", "father", "spouse"),
+        data_quality_flags = TRUE
+      ),
+      "SEX",
+      "DIFFANY",
+      "RELATER"
+    ),
+    time_use_variables = list(
+      "ACT_PCARE",
+      tu_var_spec("screentime", owner = "burkx031@umn.edu")
+    ),
+    sample_members = c("include_household_members", "include_non_respondents"),
+    data_structure = "hierarchical"
+  )
+}
+
+
+test_nhis_extract <- function() {
+  define_extract_micro(
+    collection = "nhis",
+    description = "Test NHIS extract",
+    samples = c("ih2010", "ih2011"),
+    variables = list(
+      "LIVINGQTR",
+      "AGE",
+      "SEX",
+      var_spec("BMI", attached_characteristics = c("mother", "father")),
+      "IRCAUSE",
+      "IRMONTH"
+    ),
+    rectangular_on = "I"
+  )
+}
+
+test_meps_extract <- function() {
+  define_extract_micro(
+    collection = "meps",
+    description = "Test MEPS extract",
+    samples = c("mp2005", "mp2006"),
+    variables = list(
+      "REGMEPSRD",
+      "AGERD",
+      "MARSTATRD",
+      "ASTHPINQUICKRD",
+      var_spec("INCCHLD", data_quality_flags = TRUE)
+    ),
+    rectangular_on = "R"
   )
 }
 

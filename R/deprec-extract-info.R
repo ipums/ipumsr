@@ -8,20 +8,16 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Functionality for accessing recent extract information has been moved to
-#' [`get_extract_history()`]. Please use that function instead.
-#'
-#' Additionally, support for tabular extract history has been deprecated.
-#' To identify past extracts that meet certain criteria, iterate through the
-#' list provided by `get_extract_history()`.
-#'
-#' @keywords internal
+#' These functions are now defunct. Use [get_extract_history()] to obtain
+#' extract history as a list.
 #'
 #' @export
+#'
+#' @keywords internal
 get_recent_extracts_info_list <- function(collection = NULL,
                                           how_many = 10,
                                           api_key = Sys.getenv("IPUMS_API_KEY")) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.6.0",
     "get_recent_extracts_info_list()",
     "get_extract_history()"
@@ -39,14 +35,10 @@ get_recent_extracts_info_list <- function(collection = NULL,
 get_recent_extracts_info_tbl <- function(collection = NULL,
                                          how_many = 10,
                                          api_key = Sys.getenv("IPUMS_API_KEY")) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.6.0",
     "get_recent_extracts_info_tbl()",
-    details = c(
-      "Support for tabular extract history will soon be removed.",
-      "Use `get_extract_history()` to obtain extract history as a list."
-    ),
-    id = "extract-tbl"
+    "get_extract_history()"
   )
 
   extracts <- get_extract_history(
@@ -63,42 +55,16 @@ get_recent_extracts_info_tbl <- function(collection = NULL,
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Convert a [`tibble`][tibble::tbl_df-class] of extract definition
-#' specifications to a list of [`ipums_extract`][ipums_extract-class] objects
-#' or vice versa.
-#'
-#' Support for tabular extract history has been deprecated. Instead, use
-#' [`get_extract_history()`] to obtain definitions of recently-submitted
-#' extracts as a list. To identify past extracts that meet certain criteria,
-#' iterate through this list.
-#'
-#' @param extract_tbl A [`tibble`][tibble::tbl_df-class] (or
-#'   [`data.frame`][base::data.frame()]) containing the specifications for one
-#'   or more [`ipums_extract`][ipums_extract-class] objects.
-#' @param validate Logical value indicating whether to
-#'   check that each of the output `ipums_extract`
-#'   objects contains a valid and complete extract
-#'   definition. Defaults to `TRUE`.
-#'
-#' @return For [extract_tbl_to_list()], a list of length equal to the number of
-#'   extracts represented in `extract_tbl`.
-#'
-#'   For [extract_list_to_tbl()], a [`tibble`][tibble::tbl_df-class]
-#'   representing the specifications for each of the extract requests
-#'   represented in `extract_list`.
+#' These functions are now defunct. Use [get_extract_history()] to obtain
+#' extract history as a list.
 #'
 #' @export
 #'
 #' @keywords internal
 extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.6.0",
-    "extract_tbl_to_list()",
-    details = c(
-      "Support for tabular extract history will soon be removed.",
-      "Use `get_extract_history()` to obtain extract history as a list."
-    ),
-    id = "extract-tbl"
+    "extract_tbl_to_list()"
   )
 
   collection <- unique(extract_tbl$collection)
@@ -307,20 +273,11 @@ extract_tbl_to_list <- function(extract_tbl, validate = TRUE) {
 }
 
 #' @rdname extract_tbl_to_list
-#'
-#' @param extract_list A list of [`ipums_extract`][ipums_extract-class] objects
-#'   or a single `ipums_extract` object.
-#'
 #' @export
 extract_list_to_tbl <- function(extract_list) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.6.0",
-    "extract_list_to_tbl()",
-    details = c(
-      "Support for tabular extract history will soon be removed.",
-      "Use `get_extract_history()` to obtain extract history as a list."
-    ),
-    id = "extract-tbl"
+    "extract_list_to_tbl()"
   )
 
   if ("ipums_extract" %in% class(extract_list)) {

@@ -29,6 +29,8 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS USA
 \item IPUMS CPS
 \item IPUMS International
+\item IPUMS Time Use (ATUS, AHTUS, MTUS)
+\item IPUMS Health Surveys (NHIS, MEPS)
 }
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
 \link[=remove_from_extract.nhgis_extract]{here}
@@ -37,7 +39,7 @@ subclass (i.e. collection) of the extract being modified.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -51,7 +53,8 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
 # Microdata extracts
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "USA example",
   samples = c("us2013a", "us2014a"),
   variables = list(
@@ -97,8 +100,8 @@ remove_from_extract(
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
-\code{\link[=define_extract]{define_extract_*()}} to create a new extract definition
-from scratch.
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
+extract request manually
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 }

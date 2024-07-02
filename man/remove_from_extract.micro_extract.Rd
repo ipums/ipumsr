@@ -5,7 +5,14 @@
 \title{Remove values from an existing extract definition for an IPUMS microdata
 project}
 \usage{
-\method{remove_from_extract}{micro_extract}(extract, samples = NULL, variables = NULL, ...)
+\method{remove_from_extract}{micro_extract}(
+  extract,
+  samples = NULL,
+  variables = NULL,
+  time_use_variables = NULL,
+  sample_members = NULL,
+  ...
+)
 }
 \arguments{
 \item{extract}{An \code{\link[=ipums_extract-class]{ipums_extract}} object.}
@@ -15,7 +22,16 @@ definition.}
 
 \item{variables}{Names of the variables to remove from the extract
 definition. All variable-specific fields for the indicated variables
-will also be removed.}
+will also be removed. For removing values from variable-specific fields
+while retaining the variable, see examples.}
+
+\item{time_use_variables}{Names of the time use variables to remove from the
+extract definition. All time use variable-specific fields for the indicated
+time use variables will also be removed. For removing time use
+variable-specific fields while retaining the time use variable, see
+examples.}
+
+\item{sample_members}{Sample members to remove from the extract definition.}
 
 \item{...}{Ignored}
 }
@@ -31,7 +47,7 @@ fields are optional, and if omitted, will be unchanged.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -48,12 +64,10 @@ Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 If the supplied extract definition comes from
 a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
-
-To retain a variable while modifying its particular specifications, first
-remove that variable, then add a new specification using \code{add_to_extract()}.
 }
 \examples{
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "USA example",
   samples = c("us2013a", "us2014a"),
   variables = list(
@@ -71,10 +85,10 @@ remove_from_extract(
   variables = c("AGE", "RACE")
 )
 
-# To remove detailed specifications from a variable, indicate the
-# specifications to remove within `var_spec()`. The
-# named variable will be retained in the extract, but modified by
-# removing the indicated specifications.
+# To remove detailed specifications from a variable or time use variable,
+# indicate the specifications to remove within `var_spec()` or
+# `tu_var_spec()`. The named variable will be retained in the extract, but
+# modified by removing the indicated specifications.
 remove_from_extract(
   usa_extract,
   variables = var_spec("SEX", case_selections = "1")
@@ -93,10 +107,11 @@ remove_from_extract(
 \code{\link[=add_to_extract.micro_extract]{add_to_extract()}} to add values
 to an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request.
 
-\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+\code{\link[=download_extract]{download_extract()}} to download extract data files.
+
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create a new extract
 definition from scratch.
 }
 \keyword{internal}

@@ -1,0 +1,43 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts/?collection=atus&version=2
+    body:
+      encoding: ''
+      string: '{"description":"Test ATUS extract","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":true},"samples":{"at2020":{},"at2021":{}},"variables":{"STATEFIP":{},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["mother","father","spouse"]},"SEX":{},"DIFFANY":{},"RELATER":{}},"timeUseVariables":{"ACT_PCARE":{},"my_time_use_var":{"owner":"example@example.com"}},"caseSelectWho":"individuals","collection":"atus","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Wed, 05 Jun 2024 20:02:26 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 5f9fa026-dc84-4ea7-a209-4498b01f8aef
+      x-runtime: '0.638705'
+      x-xss-protection: '0'
+      content-length: '170'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
+        Request"},"detail":["Time Use Variable owner example@example.com doesn''t
+        match user burkx031@umn.edu"]}'
+  recorded_at: 2024-06-05 20:02:29 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

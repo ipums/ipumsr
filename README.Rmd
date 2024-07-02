@@ -136,7 +136,7 @@ tbl_config <- list(
     type = "Microdata",
     desc = "Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)",
     read = checkmark(),
-    request = "",
+    request = checkmark(),
     metadata = ""
   ),
   list(
@@ -149,7 +149,7 @@ tbl_config <- list(
       "<a href='https://meps.ipums.org/meps/'>Medical Expenditure Panel Survey (MEPS)</a> (1996-present)"
     ),
     read = checkmark(),
-    request = "",
+    request = checkmark(),
     metadata = ""
   ),
   list(

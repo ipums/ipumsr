@@ -85,6 +85,7 @@ proj_config <- function() {
       "IPUMS ATUS",
       url_name = "atus",
       collection_type = "microdata",
+      api_support = TRUE,
       home_url = "https://www.atusdata.org/atus/",
       var_url = function(var = "group") {
         get_var_url("atusdata", "atus", var = var, ipums_domain = FALSE)
@@ -94,6 +95,7 @@ proj_config <- function() {
       "IPUMS AHTUS",
       url_name = "ahtus",
       collection_type = "microdata",
+      api_support = TRUE,
       home_url = "https://www.ahtusdata.org/ahtus/",
       var_url = function(var = "group") {
         get_var_url("ahtusdata", "ahtus", var = var, ipums_domain = FALSE)
@@ -103,6 +105,7 @@ proj_config <- function() {
       "IPUMS MTUS",
       url_name = "mtus",
       collection_type = "microdata",
+      api_support = TRUE,
       home_url = "https://www.mtusdata.org/mtus/",
       var_url = function(var = "group") {
         get_var_url("mtusdata", "mtus", var = var, ipums_domain = FALSE)
@@ -131,11 +134,13 @@ proj_config <- function() {
     new_proj_config(
       "IPUMS NHIS",
       url_name = "nhis",
+      api_support = TRUE,
       collection_type = "microdata"
     ),
     new_proj_config(
       "IPUMS MEPS",
       url_name = "meps",
+      api_support = TRUE,
       collection_type = "microdata"
     ),
     new_proj_config(

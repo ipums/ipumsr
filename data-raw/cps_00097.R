@@ -12,7 +12,8 @@ devtools::load_all()
 
 set.seed(2023 - 3 - 20)
 
-ddi_path <- define_extract_cps(
+ddi_path <- define_extract_micro(
+  collection = "cps",
   description = "Reproducing cps00011 example data",
   samples = "cps2011_03s",
   variables = c(

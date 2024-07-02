@@ -11,6 +11,8 @@ collection}
   description = NULL,
   samples = NULL,
   variables = NULL,
+  time_use_variables = NULL,
+  sample_members = NULL,
   data_format = NULL,
   data_structure = NULL,
   rectangular_on = NULL,
@@ -35,6 +37,18 @@ containing specifications for all variables to include in the extract.
 If a variable already exists in the extract, its specifications
 will be added to those that already exist for that variable.}
 
+\item{time_use_variables}{Vector of names of IPUMS-defined time use variables
+or a list of specifications for user-defined time use variables
+to include in the extract request. Use \code{\link[=tu_var_spec]{tu_var_spec()}} to create a
+\code{tu_var_spec} object containing a time use variable specification.}
+
+\item{sample_members}{Indication of whether to include additional sample
+members in the extract request. If provided, must be one of
+\code{"include_non_respondents"}, \code{"include_household_members"}, or both.
+
+Sample member selection is only available for the IPUMS ATUS collection
+(\code{"atus"}).}
+
 \item{data_format}{Format for the output extract data file. Either
 \code{"fixed_width"} or \code{"csv"}.
 
@@ -43,16 +57,20 @@ file formats are not supported by ipumsr data-reading functions.}
 
 \item{data_structure}{Data structure for the output extract data.
 \itemize{
-\item \code{"rectangular"} provides person records with all requested household
-information attached to respective household members.
-\item \code{"hierarchical"} provides household records followed by person records.
-}
-
-Defaults to \code{"rectangular"}.}
+\item \code{"rectangular"} provides data in which every row has the same record type
+(determined by \code{"rectangular_on"}), with variables from other record types
+written onto associated records of the chosen type (e.g. household
+variables written onto person records).
+\item \code{"hierarchical"} provides data that include rows of differing record
+types, with records ordered according to their hierarchical structure (e.g.
+each person record is followed by the activity records for that person).
+\item \code{"household_only"} provides household records only. This data structure
+is only available for the IPUMS USA collection (\code{"usa"}).
+}}
 
 \item{rectangular_on}{If \code{data_structure} is \code{"rectangular"},
-records on which to rectangularize. Currently only \code{"P"} (person records)
-is supported.
+records on which to rectangularize. One of \code{"P"} (person), \code{"A"}
+(activity), \code{"I"} (injury) or \code{"R"} (round).
 
 Defaults to \code{"P"} if \code{data_structure} is \code{"rectangular"} and \code{NULL}
 otherwise.}
@@ -93,7 +111,7 @@ will replace the existing value with the supplied value.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract-micro]{define_extract_*()}} functions.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -115,7 +133,8 @@ To modify variable-specific parameters for variables that already exist
 in the extract, create a new variable specification with \code{\link[=var_spec]{var_spec()}}.
 }
 \examples{
-extract <- define_extract_usa(
+extract <- define_extract_micro(
+  collection = "usa",
   description = "2013 ACS Data",
   samples = "us2013a",
   variables = c("SEX", "AGE", "YEAR")
@@ -158,10 +177,11 @@ add_to_extract(extract, description = "New description")$description
 \code{\link[=remove_from_extract.micro_extract]{remove_from_extract()}} to remove
 values from an extract definition.
 
-\code{\link[=submit_extract]{submit_extract()}} and \code{\link[=download_extract]{download_extract()}} to submit and process an
-extract request.
+\code{\link[=submit_extract]{submit_extract()}} to submit an extract request.
 
-\code{\link[=define_extract-micro]{define_extract_*()}} to create a new extract
+\code{\link[=download_extract]{download_extract()}} to download extract data files.
+
+\code{\link[=define_extract_micro]{define_extract_micro()}} to create a new extract
 definition from scratch
 }
 \keyword{internal}

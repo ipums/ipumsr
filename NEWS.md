@@ -1,4 +1,7 @@
-# ipumsr (development version)
+# ipumsr 0.8.0
+
+* Require R >= 4.0.0, because we are no longer able to test vignette-building on 
+  R 3.6 due to updated requirements in package evaluate.
 
 # ipumsr 0.7.2
 

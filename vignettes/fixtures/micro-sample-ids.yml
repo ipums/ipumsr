@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/cps/samples?collection=cps&version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/samples?collection=cps&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
@@ -17,10 +17,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 14 Jul 2023 18:15:33 GMT
-      etag: W/"28243a275ffb901ba346b204d5a9ccba"
+      date: Sun, 02 Jun 2024 12:22:23 GMT
+      etag: W/"8b72c3838654e729605a8901deede8d3"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -29,10 +29,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 9405a0c8-7958-4d43-a2c2-133501920663
-      x-runtime: '0.004709'
+      x-request-id: bb1ea6dc-0e27-4363-9861-73efacedf99b
+      x-runtime: '0.445725'
       x-xss-protection: '0'
-      content-length: '39089'
+      content-length: '39881'
     body:
       encoding: ''
       file: no
@@ -139,7 +139,7 @@ http_interactions:
         December 2008"},{"name":"cps2009_01s","description":"IPUMS-CPS, January 2009"},{"name":"cps2009_02b","description":"IPUMS-CPS,
         February 2009"},{"name":"cps2009_04b","description":"IPUMS-CPS, April 2009"},{"name":"cps2009_05b","description":"IPUMS-CPS,
         May 2009"},{"name":"cps2009_06b","description":"IPUMS-CPS, June 2009"},{"name":"cps2009_07b","description":"IPUMS-CPS,
-        July 2009"},{"name":"cps2009_10s","description":"IPUMS-CPS, October 20097"},{"name":"cps2009_12s","description":"IPUMS-CPS,
+        July 2009"},{"name":"cps2009_10s","description":"IPUMS-CPS, October 2009"},{"name":"cps2009_12s","description":"IPUMS-CPS,
         December 2009"},{"name":"cps2010_01s","description":"IPUMS-CPS, January 2010"},{"name":"cps2010_02b","description":"IPUMS-CPS,
         February 2010"},{"name":"cps2010_04b","description":"IPUMS-CPS, April 2010"},{"name":"cps1976_03b","description":"IPUMS-CPS,
         March 1976"},{"name":"cps1977_03b","description":"IPUMS-CPS, March 1977"},{"name":"cps1978_03b","description":"IPUMS-CPS,
@@ -325,8 +325,7 @@ http_interactions:
         October 2018"},{"name":"cps2018_11s","description":"IPUMS-CPS, November 2018"},{"name":"cps2018_12s","description":"IPUMS-CPS,
         December 2018"},{"name":"cps2019_01s","description":"IPUMS-CPS, January 2019"},{"name":"cps2019_02s","description":"IPUMS-CPS,
         February 2019"},{"name":"cps2019_03b","description":"IPUMS-CPS, March 2019"},{"name":"cps2019_04b","description":"IPUMS-CPS,
-        April 2019"},{"name":"cps2019_05s","description":"IPUMS-CPS, May 2019"},{"name":"cps2018_03r","description":"IPUMS-CPS,
-        ASEC Research File 2018"},{"name":"cps2019_06s","description":"IPUMS-CPS,
+        April 2019"},{"name":"cps2019_05s","description":"IPUMS-CPS, May 2019"},{"name":"cps2019_06s","description":"IPUMS-CPS,
         June 2019"},{"name":"cps2019_03s","description":"IPUMS-CPS, ASEC 2019"},{"name":"cps2019_08s","description":"IPUMS-CPS,
         August 2019"},{"name":"cps2019_09s","description":"IPUMS-CPS, September 2019"},{"name":"cps2019_10s","description":"IPUMS-CPS,
         October 2019"},{"name":"cps2019_11s","description":"IPUMS-CPS, November 2019"},{"name":"cps2019_12s","description":"IPUMS-CPS,
@@ -346,20 +345,27 @@ http_interactions:
         September 2021"},{"name":"cps2021_10s","description":"IPUMS-CPS, October 2021"},{"name":"cps2021_11s","description":"IPUMS-CPS,
         November 2021"},{"name":"cps2021_12s","description":"IPUMS-CPS, December 2021"},{"name":"cps2005_01s","description":"IPUMS-CPS,
         January 2005"},{"name":"cps2005_07s","description":"IPUMS-CPS, July 2005"},{"name":"cps2005_11s","description":"IPUMS-CPS,
-        November 2005"},{"name":"cps2022_01s","description":"IPUMS-CPS, January 2022"},{"name":"cps2022_02b","description":"IPUMS-CPS,
-        February 2022"},{"name":"cps2022_03b","description":"IPUMS-CPS, March 2022"},{"name":"cps2021_07s","description":"IPUMS-CPS,
-        July 2021"},{"name":"cps2022_04s","description":"IPUMS-CPS, April 2022"},{"name":"cps2022_05b","description":"IPUMS-CPS,
-        May 2022"},{"name":"cps2022_06s","description":"IPUMS-CPS, June 2022"},{"name":"cps2022_07s","description":"IPUMS-CPS,
+        November 2005"},{"name":"cps2022_01s","description":"IPUMS-CPS, January 2022"},{"name":"cps2022_03b","description":"IPUMS-CPS,
+        March 2022"},{"name":"cps2021_07s","description":"IPUMS-CPS, July 2021"},{"name":"cps2022_04s","description":"IPUMS-CPS,
+        April 2022"},{"name":"cps2022_06s","description":"IPUMS-CPS, June 2022"},{"name":"cps2022_07s","description":"IPUMS-CPS,
         July 2022"},{"name":"cps2022_08s","description":"IPUMS-CPS, August 2022"},{"name":"cps2022_03s","description":"IPUMS-CPS,
         ASEC 2022"},{"name":"cps2022_09s","description":"IPUMS-CPS, September 2022"},{"name":"cps2022_10s","description":"IPUMS-CPS,
         October 2022"},{"name":"cps2022_11s","description":"IPUMS-CPS, November 2022"},{"name":"cps2022_12s","description":"IPUMS-CPS,
         December 2022"},{"name":"cps2023_01s","description":"IPUMS-CPS, January 2023"},{"name":"cps2023_02s","description":"IPUMS-CPS,
-        February 2023"},{"name":"cps2023_03b","description":"IPUMS-CPS, March 2023"}],"pageNumber":1,"pageSize":2500,"totalCount":629,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-07-14 18:15:33 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        February 2023"},{"name":"cps2023_03b","description":"IPUMS-CPS, March 2023"},{"name":"cps2023_04b","description":"IPUMS-CPS,
+        April 2023"},{"name":"cps2023_05b","description":"IPUMS-CPS, May 2023"},{"name":"cps2023_06s","description":"IPUMS-CPS,
+        June 2023"},{"name":"cps2023_07s","description":"IPUMS-CPS, July 2023"},{"name":"cps2023_08s","description":"IPUMS-CPS,
+        August 2023"},{"name":"cps2023_03s","description":"IPUMS-CPS, ASEC 2023"},{"name":"cps2023_09s","description":"IPUMS-CPS,
+        September 2023"},{"name":"cps2023_10s","description":"IPUMS-CPS, October 2023"},{"name":"cps2023_11s","description":"IPUMS-CPS,
+        November 2023"},{"name":"cps2023_12s","description":"IPUMS-CPS, December 2023"},{"name":"cps2022_02s","description":"IPUMS-CPS,
+        February 2022"},{"name":"cps2022_05s","description":"IPUMS-CPS, May 2022"},{"name":"cps2024_01s","description":"IPUMS-CPS,
+        January 2024"},{"name":"cps2024_02b","description":"IPUMS-CPS, February 2024"},{"name":"cps2024_03b","description":"IPUMS-CPS,
+        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":642,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-06-02 12:22:24 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/ipumsi/samples?collection=ipumsi&version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/samples?collection=ipumsi&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
@@ -375,10 +381,10 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Fri, 14 Jul 2023 18:15:33 GMT
-      etag: W/"45d30e35bf1a6c6613e1b27e031bf1ef"
+      date: Sun, 02 Jun 2024 12:22:23 GMT
+      etag: W/"bceab6761d369f80ca1cb0093e076941"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -387,10 +393,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: d91a67de-f642-41a6-b7b0-3c1909670c61
-      x-runtime: '0.007278'
+      x-request-id: b6027180-9e17-45ed-b48d-390813d6585c
+      x-runtime: '0.373411'
       x-xss-protection: '0'
-      content-length: '28249'
+      content-length: '28794'
     body:
       encoding: ''
       file: no
@@ -458,7 +464,7 @@ http_interactions:
         survey"},{"name":"in1993a","description":"India 1993 employment survey"},{"name":"in1999a","description":"India
         1999 employment survey"},{"name":"in2004a","description":"India 2004 employment
         survey"},{"name":"it2001a","description":"Italy 2001"},{"name":"jo2004a","description":"Jordan
-        2004"},{"name":"kg1999a","description":"Kyrgyz Republic 1999"},{"name":"mn1989a","description":"Mongolia
+        2004"},{"name":"kg1999a","description":"Kyrgyzstan 1999"},{"name":"mn1989a","description":"Mongolia
         1989"},{"name":"mn2000a","description":"Mongolia 2000"},{"name":"ro1977a","description":"Romania
         1977"},{"name":"si2002a","description":"Slovenia 2002"},{"name":"za2007a","description":"South
         Africa 2007"},{"name":"ch1970a","description":"Switzerland 1970"},{"name":"ch1980a","description":"Switzerland
@@ -512,7 +518,7 @@ http_interactions:
         2007"},{"name":"ht1971a","description":"Haiti 1971"},{"name":"ht1982a","description":"Haiti
         1982"},{"name":"ht2003a","description":"Haiti 2003"},{"name":"ke1969a","description":"Kenya
         1969"},{"name":"ke1979a","description":"Kenya 1979"},{"name":"ke2009a","description":"Kenya
-        2009"},{"name":"kg2009a","description":"Kyrgyz Republic 2009"},{"name":"pa2010a","description":"Panama
+        2009"},{"name":"kg2009a","description":"Kyrgyzstan 2009"},{"name":"pa2010a","description":"Panama
         2010"},{"name":"ss2008a","description":"South Sudan 2008"},{"name":"us2010a","description":"United
         States 2010"},{"name":"do1960a","description":"Dominican Republic 1960"},{"name":"do1970a","description":"Dominican
         Republic 1970"},{"name":"do1981a","description":"Dominican Republic 1981"},{"name":"do2002a","description":"Dominican
@@ -546,35 +552,33 @@ http_interactions:
         2012"},{"name":"tt1970a","description":"Trinidad and Tobago 1970"},{"name":"tt1980a","description":"Trinidad
         and Tobago 1980"},{"name":"tt1990a","description":"Trinidad and Tobago 1990"},{"name":"tt2000a","description":"Trinidad
         and Tobago 2000"},{"name":"tt2011a","description":"Trinidad and Tobago 2011"},{"name":"ls1996a","description":"Lesotho
-        1996"},{"name":"ls2006a","description":"Lesotho 2006"},{"name":"uy1963x","description":"Uruguay
-        1963"},{"name":"uy1975x","description":"Uruguay 1975"},{"name":"uy1985x","description":"Uruguay
-        1985"},{"name":"uy1996x","description":"Uruguay 1996"},{"name":"uy2011x","description":"Uruguay
-        2011"},{"name":"ca1852a","description":"Canada 1852 (20%)"},{"name":"ca1871a","description":"Canada
-        1871 (5%)"},{"name":"ca1881a","description":"Canada 1881 (100%)"},{"name":"ca1891a","description":"Canada
-        1891 (9%)"},{"name":"ca1901a","description":"Canada 1901 (5%)"},{"name":"ca1911a","description":"Canada
-        1911 (5%)"},{"name":"de1819a","description":"Germany [Mecklenburg-Schwerin]
-        1819 (6%)"},{"name":"dk1787a","description":"Denmark 1787 (100%)"},{"name":"dk1801a","description":"Denmark
-        1801 (100%)"},{"name":"is1703a","description":"Iceland 1703 (100%)"},{"name":"is1729a","description":"Iceland
-        1729 (sample)"},{"name":"is1801a","description":"Iceland 1801 (100%)"},{"name":"is1901a","description":"Iceland
-        1901 (100%)"},{"name":"is1910a","description":"Iceland 1910 (100%)"},{"name":"no1801a","description":"Norway
-        1801 (100%)"},{"name":"no1865a","description":"Norway 1865 (100%)"},{"name":"no1875a","description":"Norway
-        1875 (2%)"},{"name":"no1900a","description":"Norway 1900 (100%)"},{"name":"no1910a","description":"Norway
-        1910 (100%)"},{"name":"se1880a","description":"Sweden 1880 (100%)"},{"name":"se1890a","description":"Sweden
-        1890 (100%)"},{"name":"se1900a","description":"Sweden 1900 (100%)"},{"name":"se1910a","description":"Sweden
-        1910 (100%)"},{"name":"uk1851a","description":"United Kingdom 1851 (100%)
-        [England and Wales]"},{"name":"uk1851b","description":"United Kingdom 1851
-        (100%) [Scotland]"},{"name":"uk1851c","description":"United Kingdom 1851 (2%)
-        [Great Britain]"},{"name":"uk1861a","description":"United Kingdom 1861 (100%)
-        [England and Wales]"},{"name":"uk1861b","description":"United Kingdom 1861
-        (100%) [Scotland]"},{"name":"uk1871b","description":"United Kingdom 1871 (100%)
-        [Scotland]"},{"name":"uk1881a","description":"United Kingdom 1881 (100%) [England
-        and Wales]"},{"name":"uk1881b","description":"United Kingdom 1881 (100%) [Scotland]"},{"name":"uk1891a","description":"United
-        Kingdom 1891 (100%) [England and Wales]"},{"name":"uk1891b","description":"United
-        Kingdom 1891 (100%) [Scotland]"},{"name":"uk1901a","description":"United Kingdom
-        1901 (100%) [England and Wales]"},{"name":"uk1901b","description":"United
-        Kingdom 1901 (100%) [Scotland]"},{"name":"uk1911a","description":"United Kingdom
-        1911 (100%) [England and Wales]"},{"name":"us1850a","description":"United
-        States 1850 (100%)"},{"name":"us1850b","description":"United States 1850 (1%)"},{"name":"us1860a","description":"United
+        1996"},{"name":"ls2006a","description":"Lesotho 2006"},{"name":"ca1852a","description":"Canada
+        1852 (20%)"},{"name":"ca1871a","description":"Canada 1871 (5%)"},{"name":"ca1881a","description":"Canada
+        1881 (100%)"},{"name":"ca1891a","description":"Canada 1891 (9%)"},{"name":"ca1901a","description":"Canada
+        1901 (5%)"},{"name":"ca1911a","description":"Canada 1911 (5%)"},{"name":"de1819a","description":"Germany
+        [Mecklenburg-Schwerin] 1819 (6%)"},{"name":"dk1787a","description":"Denmark
+        1787 (100%)"},{"name":"dk1801a","description":"Denmark 1801 (100%)"},{"name":"is1703a","description":"Iceland
+        1703 (100%)"},{"name":"is1729a","description":"Iceland 1729 (sample)"},{"name":"is1801a","description":"Iceland
+        1801 (100%)"},{"name":"is1901a","description":"Iceland 1901 (100%)"},{"name":"is1910a","description":"Iceland
+        1910 (100%)"},{"name":"no1801a","description":"Norway 1801 (100%)"},{"name":"no1865a","description":"Norway
+        1865 (100%)"},{"name":"no1875a","description":"Norway 1875 (2%)"},{"name":"no1900a","description":"Norway
+        1900 (100%)"},{"name":"no1910a","description":"Norway 1910 (100%)"},{"name":"se1880a","description":"Sweden
+        1880 (100%)"},{"name":"se1890a","description":"Sweden 1890 (100%)"},{"name":"se1900a","description":"Sweden
+        1900 (100%)"},{"name":"se1910a","description":"Sweden 1910 (100%)"},{"name":"uk1851a","description":"United
+        Kingdom 1851 (100%) [England and Wales]"},{"name":"uk1851b","description":"United
+        Kingdom 1851 (100%) [Scotland]"},{"name":"uk1851c","description":"United Kingdom
+        1851 (2%) [Great Britain]"},{"name":"uk1861a","description":"United Kingdom
+        1861 (100%) [England and Wales]"},{"name":"uk1861b","description":"United
+        Kingdom 1861 (100%) [Scotland]"},{"name":"uk1871b","description":"United Kingdom
+        1871 (100%) [Scotland]"},{"name":"uk1881a","description":"United Kingdom 1881
+        (100%) [England and Wales]"},{"name":"uk1881b","description":"United Kingdom
+        1881 (100%) [Scotland]"},{"name":"uk1891a","description":"United Kingdom 1891
+        (100%) [England and Wales]"},{"name":"uk1891b","description":"United Kingdom
+        1891 (100%) [Scotland]"},{"name":"uk1901a","description":"United Kingdom 1901
+        (100%) [England and Wales]"},{"name":"uk1901b","description":"United Kingdom
+        1901 (100%) [Scotland]"},{"name":"uk1911a","description":"United Kingdom 1911
+        (100%) [England and Wales]"},{"name":"us1850a","description":"United States
+        1850 (100%)"},{"name":"us1850b","description":"United States 1850 (1%)"},{"name":"us1860a","description":"United
         States 1860 (1%)"},{"name":"us1870a","description":"United States 1870 (1%)"},{"name":"us1880a","description":"United
         States 1880 (100%)"},{"name":"us1880b","description":"United States 1880 (10%)"},{"name":"us1900a","description":"United
         States 1900 (5%)"},{"name":"us1910a","description":"United States 1910 (1%)"},{"name":"bj1979a","description":"Benin
@@ -584,97 +588,105 @@ http_interactions:
         1988"},{"name":"hn2001a","description":"Honduras 2001"},{"name":"it2011a","description":"Italy
         2011"},{"name":"nl2011a","description":"Netherlands 2011"},{"name":"ph2010a","description":"Philippines
         2010"},{"name":"pg1980a","description":"Papua New Guinea 1980"},{"name":"pg1990a","description":"Papua
-        New Guinea 1990"},{"name":"pg2000a","description":"Papua New Guinea 2000"},{"name":"pg2011a","description":"Papua
-        New Guinea 2011"},{"name":"rw2012a","description":"Rwanda 2012"},{"name":"us2015a","description":"United
-        States 2015"},{"name":"zw2012a","description":"Zimbabwe 2012"},{"name":"kh2004a","description":"Cambodia
-        2004"},{"name":"kh2013a","description":"Cambodia 2013"},{"name":"gt1964a","description":"Guatemala
-        1964"},{"name":"gt1973a","description":"Guatemala 1973"},{"name":"gt1981a","description":"Guatemala
-        1981"},{"name":"gt1994a","description":"Guatemala 1994"},{"name":"gt2002a","description":"Guatemala
-        2002"},{"name":"la2005a","description":"Laos 2005"},{"name":"np2011a","description":"Nepal
-        2011"},{"name":"tg1960a","description":"Togo 1960"},{"name":"tg1970a","description":"Togo
-        1970"},{"name":"tg2010a","description":"Togo 2010"},{"name":"gn2014a","description":"Guinea
-        2014"},{"name":"ie1901a","description":"Ireland 1901 (100%)"},{"name":"ie1911a","description":"Ireland
-        1911 (100%)"},{"name":"ru2002a","description":"Russia 2002"},{"name":"ru2010a","description":"Russia
-        2010"},{"name":"es2018k","description":"Spain 2018 Q4 LFS"},{"name":"fj2014a","description":"Fiji
-        2014"},{"name":"es2005h","description":"Spain 2005 Q1 LFS"},{"name":"es2005i","description":"Spain
-        2005 Q2 LFS"},{"name":"es2005j","description":"Spain 2005 Q3 LFS"},{"name":"es2005k","description":"Spain
-        2005 Q4 LFS"},{"name":"es2006h","description":"Spain 2006 Q1 LFS"},{"name":"es2006i","description":"Spain
-        2006 Q2 LFS"},{"name":"es2006j","description":"Spain 2006 Q3 LFS"},{"name":"es2006k","description":"Spain
-        2006 Q4 LFS"},{"name":"es2007h","description":"Spain 2007 Q1 LFS"},{"name":"es2007i","description":"Spain
-        2007 Q2 LFS"},{"name":"es2007j","description":"Spain 2007 Q3 LFS"},{"name":"es2007k","description":"Spain
-        2007 Q4 LFS"},{"name":"es2008h","description":"Spain 2008 Q1 LFS"},{"name":"es2008i","description":"Spain
-        2008 Q2 LFS"},{"name":"es2008j","description":"Spain 2008 Q3 LFS"},{"name":"es2008k","description":"Spain
-        2008 Q4 LFS"},{"name":"es2009h","description":"Spain 2009 Q1 LFS"},{"name":"es2009i","description":"Spain
-        2009 Q2 LFS"},{"name":"es2009j","description":"Spain 2009 Q3 LFS"},{"name":"es2009k","description":"Spain
-        2009 Q4 LFS"},{"name":"es2010h","description":"Spain 2010 Q1 LFS"},{"name":"es2010i","description":"Spain
-        2010 Q2 LFS"},{"name":"es2010j","description":"Spain 2010 Q3 LFS"},{"name":"es2010k","description":"Spain
-        2010 Q4 LFS"},{"name":"es2011h","description":"Spain 2011 Q1 LFS"},{"name":"es2011i","description":"Spain
-        2011 Q2 LFS"},{"name":"es2011j","description":"Spain 2011 Q3 LFS"},{"name":"es2011k","description":"Spain
-        2011 Q4 LFS"},{"name":"es2012h","description":"Spain 2012 Q1 LFS"},{"name":"es2012i","description":"Spain
-        2012 Q2 LFS"},{"name":"es2012j","description":"Spain 2012 Q3 LFS"},{"name":"es2012k","description":"Spain
-        2012 Q4 LFS"},{"name":"es2013h","description":"Spain 2013 Q1 LFS"},{"name":"es2013i","description":"Spain
-        2013 Q2 LFS"},{"name":"es2013j","description":"Spain 2013 Q3 LFS"},{"name":"es2013k","description":"Spain
-        2013 Q4 LFS"},{"name":"es2014h","description":"Spain 2014 Q1 LFS"},{"name":"es2014i","description":"Spain
-        2014 Q2 LFS"},{"name":"es2014j","description":"Spain 2014 Q3 LFS"},{"name":"es2014k","description":"Spain
-        2014 Q4 LFS"},{"name":"es2015h","description":"Spain 2015 Q1 LFS"},{"name":"es2015i","description":"Spain
-        2015 Q2 LFS"},{"name":"es2015j","description":"Spain 2015 Q3 LFS"},{"name":"es2015k","description":"Spain
-        2015 Q4 LFS"},{"name":"es2016h","description":"Spain 2016 Q1 LFS"},{"name":"es2016i","description":"Spain
-        2016 Q2 LFS"},{"name":"es2016j","description":"Spain 2016 Q3 LFS"},{"name":"es2016k","description":"Spain
-        2016 Q4 LFS"},{"name":"es2017h","description":"Spain 2017 Q1 LFS"},{"name":"es2017i","description":"Spain
-        2017 Q2 LFS"},{"name":"es2017j","description":"Spain 2017 Q3 LFS"},{"name":"es2017k","description":"Spain
-        2017 Q4 LFS"},{"name":"es2018h","description":"Spain 2018 Q1 LFS"},{"name":"es2018i","description":"Spain
-        2018 Q2 LFS"},{"name":"es2018j","description":"Spain 2018 Q3 LFS"},{"name":"it2011h","description":"Italy
-        2011 Q1 LFS"},{"name":"it2012h","description":"Italy 2012 Q1 LFS"},{"name":"it2013h","description":"Italy
-        2013 Q1 LFS"},{"name":"it2014h","description":"Italy 2014 Q1 LFS"},{"name":"it2015h","description":"Italy
-        2015 Q1 LFS"},{"name":"it2016h","description":"Italy 2016 Q1 LFS"},{"name":"it2017h","description":"Italy
-        2017 Q1 LFS"},{"name":"it2018h","description":"Italy 2018 Q1 LFS"},{"name":"bo2012a","description":"Bolivia
-        2012"},{"name":"cu2012a","description":"Cuba 2012"},{"name":"fi2010a","description":"Finland
-        2010"},{"name":"ie2016a","description":"Ireland 2016"},{"name":"il2008a","description":"Israel
-        2008"},{"name":"ma2014a","description":"Morocco 2014"},{"name":"mm2014a","description":"Myanmar
-        2014"},{"name":"mu1990a","description":"Mauritius 1990"},{"name":"mu2000a","description":"Mauritius
-        2000"},{"name":"mu2011a","description":"Mauritius 2011"},{"name":"ps2017a","description":"Palestine
-        2017"},{"name":"sr2004a","description":"Suriname 2004"},{"name":"sr2012a","description":"Suriname
-        2012"},{"name":"ug2014a","description":"Uganda 2014"},{"name":"za2016a","description":"South
-        Africa 2016"},{"name":"es2019h","description":"Spain 2019 Q1 LFS"},{"name":"es2019i","description":"Spain
-        2019 Q2 LFS"},{"name":"es2019j","description":"Spain 2019 Q3 LFS"},{"name":"es2019k","description":"Spain
-        2019 Q4 LFS"},{"name":"it2019h","description":"Italy 2019 Q1 LFS"},{"name":"sn2013a","description":"Senegal
-        2013"},{"name":"cl2017a","description":"Chile 2017"},{"name":"eg1848a","description":"Egypt
-        1848 (1%)"},{"name":"eg1868a","description":"Egypt 1868 (1%)"},{"name":"sl2015a","description":"Sierra
-        Leone 2015"},{"name":"sk1991a","description":"Slovak Republic 1991"},{"name":"sk2001a","description":"Slovak
-        Republic 2001"},{"name":"sk2011a","description":"Slovak Republic 2011"},{"name":"es2020h","description":"Spain
-        2020 Q1 LFS"},{"name":"es2020i","description":"Spain 2020 Q2 LFS"},{"name":"es2020j","description":"Spain
-        2020 Q3 LFS"},{"name":"es2020k","description":"Spain 2020 Q4 LFS"},{"name":"it2020h","description":"Italy
-        2020 Q1 LFS"},{"name":"mx2005h","description":"Mexico 2005 Q1 LFS"},{"name":"mx2005i","description":"Mexico
-        2005 Q2 LFS"},{"name":"mx2005j","description":"Mexico 2005 Q3 LFS"},{"name":"mx2005k","description":"Mexico
-        2005 Q4 LFS"},{"name":"mx2006h","description":"Mexico 2006 Q1 LFS"},{"name":"mx2006i","description":"Mexico
-        2006 Q2 LFS"},{"name":"mx2006j","description":"Mexico 2006 Q3 LFS"},{"name":"mx2006k","description":"Mexico
-        2006 Q4 LFS"},{"name":"mx2007h","description":"Mexico 2007 Q1 LFS"},{"name":"mx2007i","description":"Mexico
-        2007 Q2 LFS"},{"name":"mx2007j","description":"Mexico 2007 Q3 LFS"},{"name":"mx2007k","description":"Mexico
-        2007 Q4 LFS"},{"name":"mx2008h","description":"Mexico 2008 Q1 LFS"},{"name":"mx2008i","description":"Mexico
-        2008 Q2 LFS"},{"name":"mx2008j","description":"Mexico 2008 Q3 LFS"},{"name":"mx2008k","description":"Mexico
-        2008 Q4 LFS"},{"name":"mx2009h","description":"Mexico 2009 Q1 LFS"},{"name":"mx2009i","description":"Mexico
-        2009 Q2 LFS"},{"name":"mx2009j","description":"Mexico 2009 Q3 LFS"},{"name":"mx2009k","description":"Mexico
-        2009 Q4 LFS"},{"name":"mx2010h","description":"Mexico 2010 Q1 LFS"},{"name":"mx2010i","description":"Mexico
-        2010 Q2 LFS"},{"name":"mx2010j","description":"Mexico 2010 Q3 LFS"},{"name":"mx2010k","description":"Mexico
-        2010 Q4 LFS"},{"name":"mx2011h","description":"Mexico 2011 Q1 LFS"},{"name":"mx2011i","description":"Mexico
-        2011 Q2 LFS"},{"name":"mx2011j","description":"Mexico 2011 Q3 LFS"},{"name":"mx2011k","description":"Mexico
-        2011 Q4 LFS"},{"name":"mx2012h","description":"Mexico 2012 Q1 LFS"},{"name":"mx2012i","description":"Mexico
-        2012 Q2 LFS"},{"name":"mx2012j","description":"Mexico 2012 Q3 LFS"},{"name":"mx2012k","description":"Mexico
-        2012 Q4 LFS"},{"name":"mx2013h","description":"Mexico 2013 Q1 LFS"},{"name":"mx2013i","description":"Mexico
-        2013 Q2 LFS"},{"name":"mx2013j","description":"Mexico 2013 Q3 LFS"},{"name":"mx2013k","description":"Mexico
-        2013 Q4 LFS"},{"name":"mx2014h","description":"Mexico 2014 Q1 LFS"},{"name":"mx2014i","description":"Mexico
-        2014 Q2 LFS"},{"name":"mx2014j","description":"Mexico 2014 Q3 LFS"},{"name":"mx2014k","description":"Mexico
-        2014 Q4 LFS"},{"name":"mx2015h","description":"Mexico 2015 Q1 LFS"},{"name":"mx2015i","description":"Mexico
-        2015 Q2 LFS"},{"name":"mx2015j","description":"Mexico 2015 Q3 LFS"},{"name":"mx2015k","description":"Mexico
-        2015 Q4 LFS"},{"name":"mx2016h","description":"Mexico 2016 Q1 LFS"},{"name":"mx2016i","description":"Mexico
-        2016 Q2 LFS"},{"name":"mx2016j","description":"Mexico 2016 Q3 LFS"},{"name":"mx2016k","description":"Mexico
-        2016 Q4 LFS"},{"name":"mx2017h","description":"Mexico 2017 Q1 LFS"},{"name":"mx2017i","description":"Mexico
-        2017 Q2 LFS"},{"name":"mx2017j","description":"Mexico 2017 Q3 LFS"},{"name":"mx2017k","description":"Mexico
-        2017 Q4 LFS"},{"name":"mx2018h","description":"Mexico 2018 Q1 LFS"},{"name":"mx2018i","description":"Mexico
-        2018 Q2 LFS"},{"name":"mx2018j","description":"Mexico 2018 Q3 LFS"},{"name":"mx2018k","description":"Mexico
-        2018 Q4 LFS"},{"name":"mx2019h","description":"Mexico 2019 Q1 LFS"},{"name":"mx2019i","description":"Mexico
-        2019 Q2 LFS"},{"name":"mx2019j","description":"Mexico 2019 Q3 LFS"},{"name":"mx2019k","description":"Mexico
-        2019 Q4 LFS"},{"name":"mx2020h","description":"Mexico 2020 Q1 LFS"},{"name":"mx2020j","description":"Mexico
-        2020 Q3 LFS"}],"pageNumber":1,"pageSize":2500,"totalCount":547,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2023-07-14 18:15:33 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        New Guinea 1990"},{"name":"pg2000a","description":"Papua New Guinea 2000"},{"name":"rw2012a","description":"Rwanda
+        2012"},{"name":"us2015a","description":"United States 2015"},{"name":"zw2012a","description":"Zimbabwe
+        2012"},{"name":"kh2004a","description":"Cambodia 2004"},{"name":"kh2013a","description":"Cambodia
+        2013"},{"name":"gt1964a","description":"Guatemala 1964"},{"name":"gt1973a","description":"Guatemala
+        1973"},{"name":"gt1981a","description":"Guatemala 1981"},{"name":"gt1994a","description":"Guatemala
+        1994"},{"name":"gt2002a","description":"Guatemala 2002"},{"name":"la2005a","description":"Laos
+        2005"},{"name":"np2011a","description":"Nepal 2011"},{"name":"tg1960a","description":"Togo
+        1960"},{"name":"tg1970a","description":"Togo 1970"},{"name":"tg2010a","description":"Togo
+        2010"},{"name":"gn2014a","description":"Guinea 2014"},{"name":"ie1901a","description":"Ireland
+        1901 (100%)"},{"name":"ie1911a","description":"Ireland 1911 (100%)"},{"name":"ru2002a","description":"Russia
+        2002"},{"name":"ru2010a","description":"Russia 2010"},{"name":"es2018k","description":"Spain
+        2018 Q4 LFS"},{"name":"fj2014a","description":"Fiji 2014"},{"name":"es2005h","description":"Spain
+        2005 Q1 LFS"},{"name":"es2005i","description":"Spain 2005 Q2 LFS"},{"name":"es2005j","description":"Spain
+        2005 Q3 LFS"},{"name":"es2005k","description":"Spain 2005 Q4 LFS"},{"name":"es2006h","description":"Spain
+        2006 Q1 LFS"},{"name":"es2006i","description":"Spain 2006 Q2 LFS"},{"name":"es2006j","description":"Spain
+        2006 Q3 LFS"},{"name":"es2006k","description":"Spain 2006 Q4 LFS"},{"name":"es2007h","description":"Spain
+        2007 Q1 LFS"},{"name":"es2007i","description":"Spain 2007 Q2 LFS"},{"name":"es2007j","description":"Spain
+        2007 Q3 LFS"},{"name":"es2007k","description":"Spain 2007 Q4 LFS"},{"name":"es2008h","description":"Spain
+        2008 Q1 LFS"},{"name":"es2008i","description":"Spain 2008 Q2 LFS"},{"name":"es2008j","description":"Spain
+        2008 Q3 LFS"},{"name":"es2008k","description":"Spain 2008 Q4 LFS"},{"name":"es2009h","description":"Spain
+        2009 Q1 LFS"},{"name":"es2009i","description":"Spain 2009 Q2 LFS"},{"name":"es2009j","description":"Spain
+        2009 Q3 LFS"},{"name":"es2009k","description":"Spain 2009 Q4 LFS"},{"name":"es2010h","description":"Spain
+        2010 Q1 LFS"},{"name":"es2010i","description":"Spain 2010 Q2 LFS"},{"name":"es2010j","description":"Spain
+        2010 Q3 LFS"},{"name":"es2010k","description":"Spain 2010 Q4 LFS"},{"name":"es2011h","description":"Spain
+        2011 Q1 LFS"},{"name":"es2011i","description":"Spain 2011 Q2 LFS"},{"name":"es2011j","description":"Spain
+        2011 Q3 LFS"},{"name":"es2011k","description":"Spain 2011 Q4 LFS"},{"name":"es2012h","description":"Spain
+        2012 Q1 LFS"},{"name":"es2012i","description":"Spain 2012 Q2 LFS"},{"name":"es2012j","description":"Spain
+        2012 Q3 LFS"},{"name":"es2012k","description":"Spain 2012 Q4 LFS"},{"name":"es2013h","description":"Spain
+        2013 Q1 LFS"},{"name":"es2013i","description":"Spain 2013 Q2 LFS"},{"name":"es2013j","description":"Spain
+        2013 Q3 LFS"},{"name":"es2013k","description":"Spain 2013 Q4 LFS"},{"name":"es2014h","description":"Spain
+        2014 Q1 LFS"},{"name":"es2014i","description":"Spain 2014 Q2 LFS"},{"name":"es2014j","description":"Spain
+        2014 Q3 LFS"},{"name":"es2014k","description":"Spain 2014 Q4 LFS"},{"name":"es2015h","description":"Spain
+        2015 Q1 LFS"},{"name":"es2015i","description":"Spain 2015 Q2 LFS"},{"name":"es2015j","description":"Spain
+        2015 Q3 LFS"},{"name":"es2015k","description":"Spain 2015 Q4 LFS"},{"name":"es2016h","description":"Spain
+        2016 Q1 LFS"},{"name":"es2016i","description":"Spain 2016 Q2 LFS"},{"name":"es2016j","description":"Spain
+        2016 Q3 LFS"},{"name":"es2016k","description":"Spain 2016 Q4 LFS"},{"name":"es2017h","description":"Spain
+        2017 Q1 LFS"},{"name":"es2017i","description":"Spain 2017 Q2 LFS"},{"name":"es2017j","description":"Spain
+        2017 Q3 LFS"},{"name":"es2017k","description":"Spain 2017 Q4 LFS"},{"name":"es2018h","description":"Spain
+        2018 Q1 LFS"},{"name":"es2018i","description":"Spain 2018 Q2 LFS"},{"name":"es2018j","description":"Spain
+        2018 Q3 LFS"},{"name":"it2011h","description":"Italy 2011 Q1 LFS"},{"name":"it2012h","description":"Italy
+        2012 Q1 LFS"},{"name":"it2013h","description":"Italy 2013 Q1 LFS"},{"name":"it2014h","description":"Italy
+        2014 Q1 LFS"},{"name":"it2015h","description":"Italy 2015 Q1 LFS"},{"name":"it2016h","description":"Italy
+        2016 Q1 LFS"},{"name":"it2017h","description":"Italy 2017 Q1 LFS"},{"name":"it2018h","description":"Italy
+        2018 Q1 LFS"},{"name":"bo2012a","description":"Bolivia 2012"},{"name":"cu2012a","description":"Cuba
+        2012"},{"name":"fi2010a","description":"Finland 2010"},{"name":"ie2016a","description":"Ireland
+        2016"},{"name":"il2008a","description":"Israel 2008"},{"name":"ma2014a","description":"Morocco
+        2014"},{"name":"mm2014a","description":"Myanmar 2014"},{"name":"mu1990a","description":"Mauritius
+        1990"},{"name":"mu2000a","description":"Mauritius 2000"},{"name":"mu2011a","description":"Mauritius
+        2011"},{"name":"ps2017a","description":"Palestine 2017"},{"name":"sr2004a","description":"Suriname
+        2004"},{"name":"sr2012a","description":"Suriname 2012"},{"name":"ug2014a","description":"Uganda
+        2014"},{"name":"za2016a","description":"South Africa 2016"},{"name":"es2019h","description":"Spain
+        2019 Q1 LFS"},{"name":"es2019i","description":"Spain 2019 Q2 LFS"},{"name":"es2019j","description":"Spain
+        2019 Q3 LFS"},{"name":"es2019k","description":"Spain 2019 Q4 LFS"},{"name":"it2019h","description":"Italy
+        2019 Q1 LFS"},{"name":"sn2013a","description":"Senegal 2013"},{"name":"cl2017a","description":"Chile
+        2017"},{"name":"eg1848a","description":"Egypt 1848 (1%)"},{"name":"eg1868a","description":"Egypt
+        1868 (1%)"},{"name":"sl2015a","description":"Sierra Leone 2015"},{"name":"sk1991a","description":"Slovakia
+        1991"},{"name":"sk2001a","description":"Slovakia 2001"},{"name":"sk2011a","description":"Slovakia
+        2011"},{"name":"es2020h","description":"Spain 2020 Q1 LFS"},{"name":"es2020i","description":"Spain
+        2020 Q2 LFS"},{"name":"es2020j","description":"Spain 2020 Q3 LFS"},{"name":"es2020k","description":"Spain
+        2020 Q4 LFS"},{"name":"it2020h","description":"Italy 2020 Q1 LFS"},{"name":"mx2005h","description":"Mexico
+        2005 Q1 LFS"},{"name":"mx2005i","description":"Mexico 2005 Q2 LFS"},{"name":"mx2005j","description":"Mexico
+        2005 Q3 LFS"},{"name":"mx2005k","description":"Mexico 2005 Q4 LFS"},{"name":"mx2006h","description":"Mexico
+        2006 Q1 LFS"},{"name":"mx2006i","description":"Mexico 2006 Q2 LFS"},{"name":"mx2006j","description":"Mexico
+        2006 Q3 LFS"},{"name":"mx2006k","description":"Mexico 2006 Q4 LFS"},{"name":"mx2007h","description":"Mexico
+        2007 Q1 LFS"},{"name":"mx2007i","description":"Mexico 2007 Q2 LFS"},{"name":"mx2007j","description":"Mexico
+        2007 Q3 LFS"},{"name":"mx2007k","description":"Mexico 2007 Q4 LFS"},{"name":"mx2008h","description":"Mexico
+        2008 Q1 LFS"},{"name":"mx2008i","description":"Mexico 2008 Q2 LFS"},{"name":"mx2008j","description":"Mexico
+        2008 Q3 LFS"},{"name":"mx2008k","description":"Mexico 2008 Q4 LFS"},{"name":"mx2009h","description":"Mexico
+        2009 Q1 LFS"},{"name":"mx2009i","description":"Mexico 2009 Q2 LFS"},{"name":"mx2009j","description":"Mexico
+        2009 Q3 LFS"},{"name":"mx2009k","description":"Mexico 2009 Q4 LFS"},{"name":"mx2010h","description":"Mexico
+        2010 Q1 LFS"},{"name":"mx2010i","description":"Mexico 2010 Q2 LFS"},{"name":"mx2010j","description":"Mexico
+        2010 Q3 LFS"},{"name":"mx2010k","description":"Mexico 2010 Q4 LFS"},{"name":"mx2011h","description":"Mexico
+        2011 Q1 LFS"},{"name":"mx2011i","description":"Mexico 2011 Q2 LFS"},{"name":"mx2011j","description":"Mexico
+        2011 Q3 LFS"},{"name":"mx2011k","description":"Mexico 2011 Q4 LFS"},{"name":"mx2012h","description":"Mexico
+        2012 Q1 LFS"},{"name":"mx2012i","description":"Mexico 2012 Q2 LFS"},{"name":"mx2012j","description":"Mexico
+        2012 Q3 LFS"},{"name":"mx2012k","description":"Mexico 2012 Q4 LFS"},{"name":"mx2013h","description":"Mexico
+        2013 Q1 LFS"},{"name":"mx2013i","description":"Mexico 2013 Q2 LFS"},{"name":"mx2013j","description":"Mexico
+        2013 Q3 LFS"},{"name":"mx2013k","description":"Mexico 2013 Q4 LFS"},{"name":"mx2014h","description":"Mexico
+        2014 Q1 LFS"},{"name":"mx2014i","description":"Mexico 2014 Q2 LFS"},{"name":"mx2014j","description":"Mexico
+        2014 Q3 LFS"},{"name":"mx2014k","description":"Mexico 2014 Q4 LFS"},{"name":"mx2015h","description":"Mexico
+        2015 Q1 LFS"},{"name":"mx2015i","description":"Mexico 2015 Q2 LFS"},{"name":"mx2015j","description":"Mexico
+        2015 Q3 LFS"},{"name":"mx2015k","description":"Mexico 2015 Q4 LFS"},{"name":"mx2016h","description":"Mexico
+        2016 Q1 LFS"},{"name":"mx2016i","description":"Mexico 2016 Q2 LFS"},{"name":"mx2016j","description":"Mexico
+        2016 Q3 LFS"},{"name":"mx2016k","description":"Mexico 2016 Q4 LFS"},{"name":"mx2017h","description":"Mexico
+        2017 Q1 LFS"},{"name":"mx2017i","description":"Mexico 2017 Q2 LFS"},{"name":"mx2017j","description":"Mexico
+        2017 Q3 LFS"},{"name":"mx2017k","description":"Mexico 2017 Q4 LFS"},{"name":"mx2018h","description":"Mexico
+        2018 Q1 LFS"},{"name":"mx2018i","description":"Mexico 2018 Q2 LFS"},{"name":"mx2018j","description":"Mexico
+        2018 Q3 LFS"},{"name":"mx2018k","description":"Mexico 2018 Q4 LFS"},{"name":"mx2019h","description":"Mexico
+        2019 Q1 LFS"},{"name":"mx2019i","description":"Mexico 2019 Q2 LFS"},{"name":"mx2019j","description":"Mexico
+        2019 Q3 LFS"},{"name":"mx2019k","description":"Mexico 2019 Q4 LFS"},{"name":"mx2020h","description":"Mexico
+        2020 Q1 LFS"},{"name":"mx2020j","description":"Mexico 2020 Q3 LFS"},{"name":"ch2011a","description":"Switzerland
+        2011"},{"name":"ci1988a","description":"Côte d''Ivoire 1988"},{"name":"ci1998a","description":"Côte
+        d''Ivoire 1998"},{"name":"dk1845a","description":"Denmark 1845 (100%)"},{"name":"dk1880a","description":"Denmark
+        1880 (100%)"},{"name":"dk1885a","description":"Denmark 1885 (15%)"},{"name":"kh2019a","description":"Cambodia
+        2019"},{"name":"la1995a","description":"Laos 1995"},{"name":"la2015a","description":"Laos
+        2015"},{"name":"mx2020a","description":"Mexico 2020"},{"name":"pe2017a","description":"Peru
+        2017"},{"name":"pr2015a","description":"Puerto Rico 2015"},{"name":"pr2020a","description":"Puerto
+        Rico 2020"},{"name":"uk1961a","description":"United Kingdom 1961"},{"name":"uk1971a","description":"United
+        Kingdom 1971"},{"name":"us2020a","description":"United States 2020"},{"name":"vn2019a","description":"Vietnam
+        2019"}],"pageNumber":1,"pageSize":2500,"totalCount":558,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-06-02 12:22:24 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

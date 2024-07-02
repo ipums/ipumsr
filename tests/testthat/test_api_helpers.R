@@ -31,6 +31,30 @@ test_that("Can print microdata extracts", {
       "Variables: .+"
     )
   )
+  expect_output(
+    print(test_atus_extract()),
+    paste0(
+      "Unsubmitted IPUMS ATUS extract.+",
+      "Description: Test.+",
+      "\n",
+      "Samples: .+",
+      "Variables: .+",
+      "Time Use Variables: .+"
+    )
+  )
+})
+
+test_that("Printing excludes Variables field if empty", {
+  atus_extract <- test_atus_extract()
+  atus_extract$variables <- NULL
+  expect_output(
+    print(atus_extract),
+    regexp = paste0(
+      "Samples: (2 total) at2020, at2021\n",
+      "Time Use Variables:"
+    ),
+    fixed = TRUE
+  )
 })
 
 test_that("Can print NHGIS extracts", {
@@ -78,13 +102,12 @@ test_that("NHGIS extract print coloring works", {
         "Geog Levels: " = "C"
       ),
       parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
-      subfield_style = extract_field_styler("bold"),
-      padding = 1
+      subfield_style = extract_field_styler("italic")
     ),
     paste0(
       "\n\033[34m\033[1mDataset: ",
-      "\033[22m\033[39mA\n  \033[1mTables: ",
-      "\033[22mB\n  \033[1mGeog Levels: \033[22mC"
+      "\033[22m\033[39mA\n  \033[3mTables: ",
+      "\033[23mB\n  \033[3mGeog Levels: \033[23mC\n"
     )
   )
 
@@ -97,7 +120,7 @@ test_that("NHGIS extract print coloring works", {
       )
     ),
     paste0(
-      "\n\n\033[0mDataset: ",
+      "\n\033[0mDataset: ",
       "\033[0m\033[22m\033[23m\033[24m",
       "\033[27m\033[28m\033[29m\033[39m\033[49mA\n  ",
       "\033[0mTables: ",
@@ -119,10 +142,9 @@ test_that("NHGIS extract print coloring works", {
         "Geog Levels: " = "C"
       ),
       parent_style = extract_field_styler(nhgis_print_color("dataset"), "bold"),
-      subfield_style = extract_field_styler("bold"),
-      padding = 2
+      subfield_style = extract_field_styler("italic")
     ),
-    "\n\nDataset: A\n  Tables: B\n  Geog Levels: C"
+    "\nDataset: A\n  Tables: B\n  Geog Levels: C\n"
   )
 })
 
@@ -474,7 +496,10 @@ test_that("We can get correct API version info for each collection", {
 
   has_support <- dplyr::filter(collections, .data$api_support)
 
-  expect_equal(has_support$code_for_api, c("usa", "cps", "ipumsi", "nhgis"))
+  expect_setequal(
+    has_support$code_for_api,
+    c("usa", "cps", "ipumsi", "nhgis", "atus", "ahtus", "mtus", "nhis", "meps")
+  )
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")
   expect_error(

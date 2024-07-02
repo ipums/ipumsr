@@ -288,9 +288,12 @@ get_metadata_nhgis <- function(type = NULL,
 #' Retrieve sample IDs and descriptions for IPUMS microdata collections.
 #'
 #' Currently supported microdata collections are:
-#'   - IPUMS USA (`"usa"`)
-#'   - IPUMS CPS (`"cps"`)
-#'   - IPUMS International (`"ipumsi"`)
+#'
+#' * IPUMS USA (`"usa"`)
+#' * IPUMS CPS (`"cps"`)
+#' * IPUMS International (`"ipumsi"`)
+#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
+#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -313,7 +316,7 @@ get_metadata_nhgis <- function(type = NULL,
 #'   descriptions for the indicated collection.
 #'
 #' @seealso
-#' [`define_extract_*()`][define_extract-micro] to create an IPUMS microdata
+#' [define_extract_micro()] to create an IPUMS microdata
 #'   extract definition.
 #'
 #' @export
@@ -325,6 +328,8 @@ get_metadata_nhgis <- function(type = NULL,
 #' get_sample_info("usa")
 #' get_sample_info("cps")
 #' get_sample_info("ipumsi")
+#' get_sample_info("atus")
+#' get_sample_info("meps")
 #' }
 get_sample_info <- function(collection = NULL,
                             delay = 0,
@@ -367,7 +372,7 @@ get_summary_metadata <- function(collection,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
-    path = metadata_request_path(collection, type),
+    path = metadata_request_path(type),
     queries = list(pageNumber = 1, pageSize = api_page_size_limit("metadata"))
   )
 
@@ -418,7 +423,7 @@ get_detailed_metadata <- function(collection,
                                   api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
-    path = metadata_request_path(collection = collection, ...)
+    path = metadata_request_path(...)
   )
 
   response <- ipums_api_request(

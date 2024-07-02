@@ -22,14 +22,15 @@ Note that some unspecified extract fields may be populated with default
 values and therefore change slightly upon submission.
 }
 \description{
-Submit an extract request via the IPUMS API and return an \link{ipums_extract}
-object containing the extract definition with a newly-assigned extract
-request number.
+Submit an extract request via the IPUMS API and return an
+\code{\link[=ipums_extract-class]{ipums_extract}} object containing the extract
+definition with a newly-assigned extract request number.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
-my_extract <- define_extract_cps(
+my_extract <- define_extract_micro(
+  collection = "cps",
   description = "2018-2019 CPS Data",
   samples = c("cps2018_05s", "cps2019_05s"),
   variables = c("SEX", "AGE", "YEAR")

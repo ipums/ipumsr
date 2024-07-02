@@ -25,8 +25,8 @@ extract definition.}
 An \code{\link[=ipums_extract-class]{ipums_extract}} object.
 }
 \description{
-Read and write an \code{\link[=ipums_extract-class]{ipums_extract}} object to a JSON
-file that contains the extract definition specifications.
+Write an \code{\link[=ipums_extract-class]{ipums_extract}} object to a JSON file, or
+read an extract definition from such a file.
 
 Use these functions to store a copy of an extract definition outside of your
 R environment and/or share an extract definition with another registered
@@ -55,8 +55,8 @@ all JSON fields written in \code{snake_case} to \code{camelCase}. For instance,
 \code{"dataFormat"}, and so on. You will also need to change the \code{"api_version"}
 field to \code{"version"} and set it equal to \code{2}. If you are unable to create
 a valid extract by modifying the file, you may have to recreate the
-definition manually using the appropriate
-\code{\link[=define_extract]{define_extract_*()}} function.
+definition manually using the \code{\link[=define_extract_micro]{define_extract_micro()}} or
+\code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
 
 See the IPUMS developer documentation for more details on
 \href{https://developer.ipums.org/docs/apiprogram/versioning/}{API versioning} and
@@ -65,7 +65,8 @@ introduced in version 2.
 }
 
 \examples{
-my_extract <- define_extract_usa(
+my_extract <- define_extract_micro(
+  collection = "usa",
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")
@@ -81,7 +82,8 @@ identical(my_extract, copy_of_my_extract)
 file.remove(extract_json_path)
 }
 \seealso{
-\code{\link[=define_extract]{define_extract_*()}} to define an extract request manually.
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
+extract request manually
 
 \code{\link[=get_extract_info]{get_extract_info()}} to obtain a past extract to save.
 

@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/foo?collection=nhgis&version=2&pageNumber=1&pageSize=2500
+    uri: https://api.ipums.org/metadata/foo?collection=nhgis&version=2&pageNumber=1&pageSize=2500
     body:
       encoding: ''
       string: ''
@@ -16,24 +16,24 @@ http_interactions:
       message: 'Client error: (404) Not Found'
     headers:
       content-type: text/html; charset=UTF-8
-      date: Wed, 26 Apr 2023 18:26:44 GMT
-      server: nginx/1.18.0
+      date: Wed, 29 May 2024 17:38:38 GMT
+      server: nginx/1.22.1
       vary: Origin
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 68973b03-85a8-4419-8a6d-99755b1618db
-      x-runtime: '0.003238'
+      x-request-id: 0c6df97c-757f-410e-9849-011c55c5b4d6
+      x-runtime: '0.001984'
       content-length: '0'
     body:
       encoding: ''
       file: no
       string: ''
-  recorded_at: 2023-04-26 18:26:44 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets/foo?collection=nhgis&version=2
+    uri: https://api.ipums.org/metadata/datasets/foo?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -50,9 +50,9 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:26:44 GMT
+      date: Wed, 29 May 2024 17:38:38 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -61,8 +61,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ab45a8b3-dd3d-4101-85c1-57dd730437c0
-      x-runtime: '0.013282'
+      x-request-id: 0beaf84d-5fe5-44aa-beb7-6d2a7ba2948c
+      x-runtime: '0.016329'
       x-xss-protection: '0'
       content-length: '100'
     body:
@@ -70,11 +70,11 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2023-04-26 18:26:44 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/datasets/1980_STF1/data_tables/foo?collection=nhgis&version=2
+    uri: https://api.ipums.org/metadata/datasets/1980_STF1/data_tables/foo?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -91,9 +91,9 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:26:44 GMT
+      date: Wed, 29 May 2024 17:38:38 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -102,8 +102,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 6765ac0b-ceb7-4a01-8c54-09bd342a426b
-      x-runtime: '0.011915'
+      x-request-id: 54fd97f1-18f7-432c-bd22-c31d287ec964
+      x-runtime: '0.014717'
       x-xss-protection: '0'
       content-length: '102'
     body:
@@ -111,11 +111,11 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2023-04-26 18:26:44 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/metadata/nhgis/time_series_tables/foo?collection=nhgis&version=2
+    uri: https://api.ipums.org/metadata/time_series_tables/foo?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -132,9 +132,9 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:26:44 GMT
+      date: Wed, 29 May 2024 17:38:39 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
       x-download-options: noopen
@@ -143,8 +143,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 799f4d30-ed17-4c30-aa94-bff9f2bca85a
-      x-runtime: '0.013651'
+      x-request-id: e2de55b2-f705-4b99-a427-70effe6f7ea3
+      x-runtime: '0.017919'
       x-xss-protection: '0'
       content-length: '108'
     body:
@@ -152,5 +152,5 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2023-04-26 18:26:44 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

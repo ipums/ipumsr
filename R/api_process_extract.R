@@ -8,9 +8,9 @@
 #' Submit an extract request via the IPUMS API
 #'
 #' @description
-#' Submit an extract request via the IPUMS API and return an [ipums_extract]
-#' object containing the extract definition with a newly-assigned extract
-#' request number.
+#' Submit an extract request via the IPUMS API and return an
+#' [`ipums_extract`][ipums_extract-class] object containing the extract
+#' definition with a newly-assigned extract request number.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -37,7 +37,8 @@
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_cps(
+#' my_extract <- define_extract_micro(
+#'   collection = "cps",
 #'   description = "2018-2019 CPS Data",
 #'   samples = c("cps2018_05s", "cps2019_05s"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -124,7 +125,7 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' no longer available), these functions will warn that the extract request
 #' must be resubmitted.
 #'
-#' @inheritParams define_extract_usa
+#' @inheritParams define_extract_micro
 #' @inheritParams download_extract
 #' @inheritParams get_extract_info
 #' @inheritParams submit_extract
@@ -168,7 +169,8 @@ submit_extract <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' my_extract <- define_extract_ipumsi(
+#' my_extract <- define_extract_micro(
+#'   collection = "ipumsi",
 #'   description = "Botswana data",
 #'   samples = c("bw2001a", "bw2011a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -325,7 +327,8 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' Download a completed IPUMS data extract
 #'
 #' @description
-#' Download an IPUMS data extract via the IPUMS API and write to disk.
+#' Download IPUMS data extract files via the IPUMS API and save them on your
+#' computer.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'
@@ -336,14 +339,14 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' For microdata extracts, only the file path to the downloaded .xml DDI file
 #' will be returned, as it is sufficient for reading the data provided in the
-#' associated .gz data file.
+#' associated .dat.gz data file.
 #'
 #' @inheritParams wait_for_extract
-#' @inheritParams define_extract_usa
+#' @inheritParams define_extract_micro
 #' @inheritParams submit_extract
 #' @param download_dir Path to the directory where the files should be written.
 #'   Defaults to current working directory.
-#' @param overwrite If `TRUE`, overwrite any conflicting files that
+#' @param overwrite If `TRUE`, overwrite files with the same name that
 #'   already exist in `download_dir`. Defaults to `FALSE`.
 #' @param progress If `TRUE`, output progress bar showing the status of the
 #'   download request. Defaults to `TRUE`.
@@ -366,7 +369,8 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #' @export
 #'
 #' @examples
-#' usa_extract <- define_extract_usa(
+#' usa_extract <- define_extract_micro(
+#'   collection = "usa",
 #'   description = "2013-2014 ACS Data",
 #'   samples = c("us2013a", "us2014a"),
 #'   variables = c("SEX", "AGE", "YEAR")
@@ -524,8 +528,13 @@ extract_to_request_json.micro_extract <- function(extract) {
       extract$rectangular_on
     ),
     dataFormat = extract$data_format,
+    sampleMembers = list(
+      includeNonRespondents = "include_non_respondents" %in% extract$sample_members,
+      includeHouseholdMembers = "include_household_members" %in% extract$sample_members
+    ),
     samples = purrr::flatten(purrr::map(extract$samples, format_for_json)),
     variables = purrr::flatten(purrr::map(extract$variables, format_for_json)),
+    timeUseVariables = purrr::flatten(purrr::map(extract$time_use_variables, format_for_json)),
     caseSelectWho = extract$case_select_who,
     dataQualityFlags = extract$data_quality_flags,
     collection = extract$collection,
@@ -600,14 +609,17 @@ format_for_json.default <- function(x) {
 
 format_data_structure_for_json <- function(data_structure, rectangular_on) {
   if (is.null(data_structure) || is.na(data_structure)) {
-    return(EMPTY_NAMED_LIST)
+    ds_json <- EMPTY_NAMED_LIST
   } else if (data_structure == "rectangular") {
-    return(list(rectangular = list(on = rectangular_on)))
-  } else if (data_structure == "hierarchical") {
-    return(list(hierarchical = EMPTY_NAMED_LIST))
+    ds_json <- list(rectangular = list(on = rectangular_on))
   } else {
-    return(EMPTY_NAMED_LIST)
+    ds_json <- purrr::set_names(
+      list(EMPTY_NAMED_LIST),
+      to_camel_case(data_structure)
+    )
   }
+
+  ds_json
 }
 
 

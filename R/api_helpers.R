@@ -16,6 +16,8 @@
 #' * IPUMS USA (`"usa"`)
 #' * IPUMS CPS (`"cps"`)
 #' * IPUMS International (`"ipumsi"`)
+#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
+#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
 #' * IPUMS NHGIS (`"nhgis"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
@@ -501,45 +503,22 @@ print.ipums_extract <- function(x, ...) {
 print.micro_extract <- function(x, ...) {
   styler <- extract_field_styler("bold")
 
-  samps_to_cat <- purrr::compact(
-    purrr::map(
-      x$samples,
-      function(x) {
-        if (inherits(x, "samp_spec")) {
-          x$name
-        }
-      }
-    )
-  )
+  samps <- purrr::map(x$samples, ~ .x$name)
+  vars <- purrr::map(x$variables, ~ .x$name)
+  tu_vars <- purrr::map(x$time_use_variables, ~ .x$name)
 
-  vars_to_cat <- purrr::compact(
-    purrr::map(
-      x$variables,
-      function(x) {
-        if (inherits(x, "var_spec")) {
-          x$name
-        }
-      }
-    )
+  header <- paste0(
+    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
+    format_collection_for_printing(x$collection),
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), "")
   )
 
   to_cat <- paste0(
-    ifelse(x$submitted, "Submitted ", "Unsubmitted "),
-    format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""),
-    "\n",
-    print_truncated_vector(x$description, "Description: ", FALSE),
-    "\n\n",
-    print_truncated_vector(
-      samps_to_cat,
-      styler("Samples: ")
-    ),
-    "\n",
-    print_truncated_vector(
-      vars_to_cat,
-      styler("Variables: ")
-    ),
-    "\n"
+    header, "\n",
+    print_truncated_vector(x$description, "Description: ", FALSE), "\n",
+    print_truncated_vector(samps, styler("Samples: ")),
+    print_truncated_vector(vars, styler("Variables: ")),
+    print_truncated_vector(tu_vars, styler("Time Use Variables: "))
   )
 
   cat(to_cat)
@@ -550,24 +529,23 @@ print.micro_extract <- function(x, ...) {
 #' @export
 print.nhgis_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
-  ds_to_cat <- purrr::compact(purrr::map(
+
+  ds_to_cat <- purrr::map(
     x$datasets,
     function(d) {
-      if (inherits(d, "ds_spec")) {
-        format_field_for_printing(
-          parent_field = list("Dataset: " = d$name),
-          subfields = list(
-            "Tables: " = d$data_tables,
-            "Geog Levels: " = d$geog_levels,
-            "Years: " = d$years,
-            "Breakdowns: " = d$breakdown_values
-          ),
-          parent_style = style_ds,
-          subfield_style = extract_field_styler("bold")
-        )
-      }
+      format_field_for_printing(
+        parent_field = list("Dataset: " = d$name),
+        subfields = list(
+          "Tables: " = d$data_tables,
+          "Geog Levels: " = d$geog_levels,
+          "Years: " = d$years,
+          "Breakdowns: " = d$breakdown_values
+        ),
+        parent_style = style_ds,
+        subfield_style = extract_field_styler("italic")
+      )
     }
-  ))
+  )
 
   if (length(ds_to_cat) > 0) {
     ds_to_cat <- c(
@@ -579,25 +557,23 @@ print.nhgis_extract <- function(x, ...) {
     )
   }
 
-  tst_to_cat <- purrr::compact(purrr::map(
+  tst_to_cat <- purrr::map(
     x$time_series_tables,
     function(t) {
-      if (inherits(t, "tst_spec")) {
-        format_field_for_printing(
-          parent_field = list("Time Series Table: " = t$name),
-          subfields = list(
-            "Geog Levels: " = t$geog_levels,
-            "Years: " = t$years
-          ),
-          parent_style = extract_field_styler(
-            nhgis_print_color("time_series_table"),
-            "bold"
-          ),
-          subfield_style = extract_field_styler("bold")
-        )
-      }
+      format_field_for_printing(
+        parent_field = list("Time Series Table: " = t$name),
+        subfields = list(
+          "Geog Levels: " = t$geog_levels,
+          "Years: " = t$years
+        ),
+        parent_style = extract_field_styler(
+          nhgis_print_color("time_series_table"),
+          "bold"
+        ),
+        subfield_style = extract_field_styler("italic")
+      )
     }
-  ))
+  )
 
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
@@ -607,15 +583,18 @@ print.nhgis_extract <- function(x, ...) {
     )
   )
 
-  to_cat <- paste0(
+  header <- paste0(
     ifelse(x$submitted, "Submitted ", "Unsubmitted "),
     format_collection_for_printing(x$collection),
-    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n",
+    " extract ", ifelse(x$submitted, paste0("number ", x$number), ""), "\n"
+  )
+
+  to_cat <- paste0(
+    header,
     print_truncated_vector(x$description, "Description: ", FALSE),
     paste0(ds_to_cat, collapse = ""),
     paste0(tst_to_cat, collapse = ""),
-    shp_to_cat,
-    "\n"
+    shp_to_cat
   )
 
   cat(to_cat)
@@ -658,8 +637,7 @@ format_collection_for_printing <- function(collection) {
 format_field_for_printing <- function(parent_field = NULL,
                                       subfields = NULL,
                                       parent_style = NULL,
-                                      subfield_style = NULL,
-                                      padding_top = 2) {
+                                      subfield_style = NULL) {
   stopifnot(length(parent_field) == 1)
 
   parent_val <- parent_field[[1]]
@@ -673,7 +651,7 @@ format_field_for_printing <- function(parent_field = NULL,
   style_subfield <- subfield_style %||% extract_field_styler("reset")
 
   output <- paste0(
-    paste0(rep("\n", padding_top), collapse = ""),
+    "\n",
     print_truncated_vector(parent_val, style_field(parent_name), FALSE)
   )
 
@@ -682,7 +660,7 @@ format_field_for_printing <- function(parent_field = NULL,
       names(subfields),
       ~ if (!is.null(subfields[[.x]])) {
         output <<- paste0(
-          output, "\n  ",
+          output, "  ",
           print_truncated_vector(subfields[[.x]], style_subfield(.x), FALSE)
         )
       }
@@ -713,15 +691,19 @@ nhgis_print_color <- function(type) {
   type <- match.arg(type, c("dataset", "time_series_table", "shapefile"))
 
   switch(type,
-    dataset = "blue",
-    time_series_table = "green",
-    shapefile = "yellow"
+         dataset = "blue",
+         time_series_table = "green",
+         shapefile = "yellow"
   )
 }
 
 UNKNOWN_DATA_COLLECTION_LABEL <- "Unknown data collection"
 
 print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
+  if (rlang::is_empty(x)) {
+    return(NULL)
+  }
+
   max_width <- min(getOption("width"), 80)
   max_width <- max(max_width, 20) # don't allow width less than 20
 
@@ -740,10 +722,10 @@ print_truncated_vector <- function(x, label = NULL, include_length = TRUE) {
   }
 
   if (count_chr(untruncated) > max_width) {
-    return(paste0(substr(untruncated, 1, max_width - 3), "..."))
+    return(paste0(substr(untruncated, 1, max_width - 3), "...\n"))
   }
 
-  untruncated
+  paste0(untruncated, "\n")
 }
 
 # Request handlers --------------------
@@ -967,7 +949,7 @@ extract_request_path <- function(number = NULL) {
 #' @return Path to include in the URL for an API metadata request.
 #'
 #' @noRd
-metadata_request_path <- function(collection, ...) {
+metadata_request_path <- function(...) {
   path_args <- purrr::compact(rlang::list2(...))
   path_fields <- names(path_args)
 
@@ -977,11 +959,7 @@ metadata_request_path <- function(collection, ...) {
     metadata_path <- "metadata"
   }
 
-  path_args <- c(
-    metadata_path,
-    collection,
-    rbind(path_fields, unlist(path_args))
-  )
+  path_args <- c(metadata_path, rbind(path_fields, unlist(path_args)))
 
   # Avoids extra `/` for unnamed args in `path`
   path_args <- path_args[which(path_args != "")]
@@ -1361,16 +1339,16 @@ spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
-  if (length(args) == 0) {
+  if (length(spec_mod_fields) == 0) {
     return(NULL)
   }
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- setdiff_null(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1387,18 +1365,18 @@ spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   cs_type <- spec$case_selection_type
 
-  if (length(args) == 0) {
+  if (length(spec_mod_fields) == 0) {
     return(NULL)
   }
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- setdiff_null(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- setdiff_null(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1430,12 +1408,12 @@ spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
 
   purrr::walk(
-    args,
-    function(x) {
-      spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+    spec_mod_fields,
+    function(field) {
+      spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
     }
   )
 
@@ -1452,15 +1430,49 @@ spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
     return(spec)
   }
 
-  args <- setdiff(names(spec_mod), "name")
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
+
+  length_one_fields <- c(
+    "case_selection_type",
+    "data_quality_flags",
+    "preselected"
+  )
 
   purrr::walk(
-    args,
-    function(x) {
-      if (x == "case_selection_type") {
-        spec[[x]] <<- spec_mod[[x]] %||% spec[[x]]
+    spec_mod_fields,
+    function(field) {
+      if (field %in% length_one_fields) {
+        spec[[field]] <<- spec_mod[[field]] %||% spec[[field]]
       } else {
-        spec[[x]] <<- union(spec[[x]], spec_mod[[x]])
+        spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
+      }
+    }
+  )
+
+  if (validate) {
+    spec <- validate_ipums_extract(spec)
+  }
+
+  spec
+}
+
+#' @export
+spec_union.tu_var_spec <- function(spec, spec_mod, validate = FALSE) {
+  if (spec$name != spec_mod$name) {
+    return(spec)
+  }
+
+  spec_mod_fields <- setdiff(names(spec_mod), "name")
+
+  length_one_fields <- "owner"
+
+  purrr::walk(
+    spec_mod_fields,
+    function(field) {
+      if (field %in% length_one_fields) {
+        spec[[field]] <<- spec_mod[[field]] %||% spec[[field]]
+      } else {
+        spec[[field]] <<- union(spec[[field]], spec_mod[[field]])
       }
     }
   )

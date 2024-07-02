@@ -85,7 +85,8 @@ no longer available), these functions will warn that the extract request
 must be resubmitted.
 }
 \examples{
-my_extract <- define_extract_ipumsi(
+my_extract <- define_extract_micro(
+  collection = "ipumsi",
   description = "Botswana data",
   samples = c("bw2001a", "bw2011a"),
   variables = c("SEX", "AGE", "YEAR")

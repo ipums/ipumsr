@@ -12,7 +12,8 @@
 # the package. File names must be consistent with the contents of the .xml
 # files, so renaming files for consistency is not advised.
 
-define_extract_cps(
+define_extract_micro(
+  collection = "cps",
   description = "Reproducing cps00006",
   samples = c("cps1962_03s", "cps1963_03s"),
   variables = list(

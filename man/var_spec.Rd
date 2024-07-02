@@ -2,6 +2,7 @@
 % Please edit documentation in R/api_define_extract.R
 \name{var_spec}
 \alias{var_spec}
+\alias{tu_var_spec}
 \alias{samp_spec}
 \title{Create variable and sample specifications for IPUMS microdata extract
 requests}
@@ -15,10 +16,12 @@ var_spec(
   preselected = NULL
 )
 
+tu_var_spec(name, owner = NULL)
+
 samp_spec(name)
 }
 \arguments{
-\item{name}{Name of the sample or variable.}
+\item{name}{Name of the sample, variable, or time use variable.}
 
 \item{case_selections}{A character vector of values of the given variable
 that should be used to select cases. Values should be specified exactly as
@@ -40,8 +43,13 @@ Defaults to \code{"general"} if any \code{case_selections} are specified.}
 any? Accepted values are \code{"mother"}, \code{"father"}, \code{"spouse"}, \code{"head"},
 or a combination. Specifying attached characteristics will add variables to
 your extract that contain the values for the given variable for the
-specified household members (e.g. variable "AGE_MOM" will be added if
-\code{"mother"} is specified for the variable \code{"AGE"}).}
+specified household members. For example, variable "AGE_MOM" will be added
+if \code{"mother"} is specified for the variable \code{"AGE"}.
+
+For data collections with information on same-sex couples, specifying
+\code{"mother"} or \code{"father"} will attach the characteristics of both mothers or
+both fathers for children with same-sex parents, by adding variables with
+names of the form "AGE_MOM" and "AGE_MOM2".}
 
 \item{data_quality_flags}{Logical indicating whether to include data quality
 flags for the given variable. By default, data quality flags are not
@@ -49,15 +57,23 @@ included.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
 This is not needed for external use.}
+
+\item{owner}{For user-defined time use variables, the email of the user
+account associated with the time use variable. Currently, only the email
+of the user submitting the extract request is supported.}
 }
 \value{
-A \code{var_spec} or \code{samp_spec} object.
+A \code{var_spec}, \code{tu_var_spec}, or \code{samp_spec} object.
 }
 \description{
-Provide specifications for individual variables when defining an
-IPUMS microdata extract request.
+Provide specifications for individual variables and time use variables when
+defining an IPUMS microdata extract request.
 
 Currently, no additional specifications are available for IPUMS samples.
+
+Note that not all variable-level options are available across all IPUMS
+data collections. For a summary of supported features by collection, see the
+\href{https://developer.ipums.org/docs/v2/apiprogram/apis/microdata/}{IPUMS API documentation}.
 
 Learn more about microdata extract definitions in
 \code{vignette("ipums-api-micro")}.
@@ -77,7 +93,8 @@ var2 <- var_spec(
 )
 
 # Use variable specifications in a microdata extract definition:
-extract <- define_extract_usa(
+extract <- define_extract_micro(
+  collection = "usa",
   description = "Example extract",
   samples = "us2017b",
   variables = list(var1, var2)
@@ -86,5 +103,26 @@ extract <- define_extract_usa(
 extract$variables$SCHOOL
 
 extract$variables$RACE
+
+# For IPUMS Time Use collections, use `tu_var_spec()` to include user-defined
+# time use variables
+my_time_use_variable <- tu_var_spec(
+  "MYTIMEUSEVAR",
+  owner = "example@example.com"
+)
+
+# IPUMS-defined time use variables can be included either as `tu_var_spec`
+# objects or with just the variable name:
+define_extract_micro(
+  collection = "atus",
+  description = "Requesting user- and IPUMS-defined time use variables",
+  samples = "at2007",
+  time_use_variables = list(
+    my_time_use_variable,
+    tu_var_spec("ACT_PCARE"),
+    "ACT_SOCIAL"
+  )
+)
+
 }
 \keyword{internal}

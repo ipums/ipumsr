@@ -17,15 +17,17 @@ extract options and content across collections.
 
 Currently supported collections are:
 \itemize{
-\item IPUMS microdata (\code{"micro_extract"})
+\item IPUMS microdata
 \itemize{
-\item IPUMS USA (\code{"usa_extract"})
-\item IPUMS CPS (\code{"cps_extract"})
-\item IPUMS International (\code{"ipumsi_extract"})
+\item IPUMS USA
+\item IPUMS CPS
+\item IPUMS International
+\item IPUMS Time Use (ATUS, AHTUS, MTUS)
+\item IPUMS Health Surveys (NHIS, MEPS)
 }
-\item IPUMS aggregate data (\code{"agg_extract"})
+\item IPUMS aggregate data
 \itemize{
-\item IPUMS NHGIS (\code{"nhgis_extract"})
+\item IPUMS NHGIS
 }
 }
 
@@ -60,16 +62,19 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 }
 }
 
-\section{Creating an extract}{
+\section{Creating or obtaining an extract}{
 
 \itemize{
 \item Create an \code{ipums_extract} object from scratch with the appropriate
-\code{\link[=define_extract]{define_extract_*()}} function. These functions take the
-form \verb{define_extract_\{collection\}}.
-\item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the latest status of a submitted extract
-request.
-\item Use \code{\link[=get_extract_history]{get_extract_history()}} to obtain the extract definitions of
-previously-submitted extract requests.
+\verb{define_extract_*()} function.
+\itemize{
+\item For microdata extracts, use \code{\link[=define_extract_micro]{define_extract_micro()}}
+\item For NHGIS extracts, use \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+}
+\item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the definition and latest status of a
+previously-submitted extract request.
+\item Use \code{\link[=get_extract_history]{get_extract_history()}} to get the definitions and latest status of
+multiple previously-submitted extract requests.
 }
 }
 

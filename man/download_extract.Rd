@@ -29,7 +29,7 @@ For a list of codes used to refer to each collection, see
 \item{download_dir}{Path to the directory where the files should be written.
 Defaults to current working directory.}
 
-\item{overwrite}{If \code{TRUE}, overwrite any conflicting files that
+\item{overwrite}{If \code{TRUE}, overwrite files with the same name that
 already exist in \code{download_dir}. Defaults to \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, output progress bar showing the status of the
@@ -48,7 +48,8 @@ files) or \code{"shape"} (for spatial data files) to
 indicate the type of data the file contains.
 }
 \description{
-Download an IPUMS data extract via the IPUMS API and write to disk.
+Download IPUMS data extract files via the IPUMS API and save them on your
+computer.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
@@ -59,10 +60,11 @@ including the file paths to all downloaded files.
 
 For microdata extracts, only the file path to the downloaded .xml DDI file
 will be returned, as it is sufficient for reading the data provided in the
-associated .gz data file.
+associated .dat.gz data file.
 }
 \examples{
-usa_extract <- define_extract_usa(
+usa_extract <- define_extract_micro(
+  collection = "usa",
   description = "2013-2014 ACS Data",
   samples = c("us2013a", "us2014a"),
   variables = c("SEX", "AGE", "YEAR")
