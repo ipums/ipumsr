@@ -254,7 +254,6 @@ You can also get contextual details for specific variables:
 
 ```{r}
 ipums_var_desc(cps_data$INCTOT)
-
 ipums_val_labels(cps_data$STATEFIP)
 ```
 
