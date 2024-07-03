@@ -81,7 +81,6 @@ with `attributes()` or by using ipumsr helpers:
 
 ```{r}
 attributes(cps_data$MONTH)
-
 ipums_val_labels(cps_data$MONTH)
 ```
 
@@ -176,7 +175,6 @@ file without the need to manually extract the files:
 nhgis_ex1 <- ipums_example("nhgis0972_csv.zip")
 
 nhgis_data <- read_nhgis(nhgis_ex1)
-
 nhgis_data
 ```
 
@@ -243,7 +241,6 @@ data:
 
 ```{r}
 attributes(nhgis_data2$AJWBE001)
-
 attributes(nhgis_data3$A00AA1790)
 ```
 
@@ -289,7 +286,6 @@ read_nhgis(
 nhgis_fwf <- ipums_example("nhgis0730_fixed.zip")
 
 nhgis_fwf_data <- read_nhgis(nhgis_fwf, file_select = matches("ts_nominal"))
-
 nhgis_fwf_data
 ```
 

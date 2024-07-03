@@ -6,7 +6,7 @@
     test vignette-building on R 3.6 due to updated requirements in the
     evaluate package.
 
--   Collection-specfic definition functions for IPUMS microdata projects
+-   Collection-specific definition functions for IPUMS microdata projects
     have been deprecated in favor of `define_extract_micro()`. This
     streamlines syntax across all supported microdata collections. Use the 
     `collection` argument to specify the collection for your
@@ -39,7 +39,7 @@
 
 -   Adds support for new rectangularization options for certain
     microdata collections. Use the `rectagular_on` argument in your
-    extract definition to retangularize on records other than person
+    extract definition to rectangularize on records other than person
     (`"P"`) records.
 
 -   Time use variables can be included in IPUMS Time Use extracts. Use
@@ -47,13 +47,12 @@
     `define_extract_micro()` to create a time use variable
     specification.
 
-    This includes both IPUMS-defined time use variables as well as
-    user-defined time use variables. Note that user-defined time use
-    variables cannot currently be created via API. However, if you have
-    defined a time use variable through the IPUMS ATUS web interface,
-    you can request it in an extract via API.
+    This includes both IPUMS-defined and user-defined time use variables. Note 
+    that user-defined time use variables cannot currently be created via API. 
+    However, if you have defined a time use variable through the IPUMS web 
+    interface, you can request it in an extract via API.
 
--   Sample members can be included in IPUMS ATUS extracts. Use the
+-   Sample members can be specified in IPUMS ATUS extracts. Use the
     `sample_members` argument of `define_extract_micro()` to do so.
 
 -   `"household_only"` is now a supported value for `data_structure` in

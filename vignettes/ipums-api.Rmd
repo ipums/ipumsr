@@ -216,9 +216,7 @@ accessed by indexing the object:
 
 ```{r}
 names(usa_extract_definition$samples)
-
 names(usa_extract_definition$variables)
-
 usa_extract_definition$data_format
 ```
 
@@ -229,7 +227,6 @@ request is still unsubmitted, it has no request number:
 
 ```{r}
 usa_extract_definition$status
-
 usa_extract_definition$number
 ```
 
@@ -286,7 +283,6 @@ The extract number will be stored in the returned object:
 
 ```{r}
 usa_extract_submitted$number
-
 usa_extract_submitted$status
 ```
 
@@ -344,9 +340,13 @@ insert_cassette("wait-for-extract")
 
 ```{r}
 usa_extract_complete <- wait_for_extract(usa_extract_submitted)
+```
 
+```{r}
 usa_extract_complete$status
+```
 
+```{r}
 # `download_links` should be populated if the extract is ready for download
 names(usa_extract_complete$download_links)
 ```
@@ -489,7 +489,6 @@ download:
 
 ```{r}
 purrr::keep(usa_extracts, ~ "MARST" %in% names(.x$variables))
-
 purrr::keep(usa_extracts, is_extract_ready)
 ```
 
@@ -517,7 +516,9 @@ set_ipums_default_collection("usa")
 ```{r}
 # Check the default collection:
 Sys.getenv("IPUMS_DEFAULT_COLLECTION")
+```
 
+```{r}
 # Most recent USA extract:
 usa_last <- get_last_extract_info()
 
@@ -527,6 +528,7 @@ usa_extract_10 <- get_extract_info(10)
 # You can still request other collections as usual:
 cps_extract_10 <- get_extract_info("cps:10")
 ```
+
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 eject_cassette("check-extract-history")

@@ -68,10 +68,14 @@ values, but it can be easier to see them by isolating them:
 ```{r}
 # Labels print when accessing the column
 head(cps$MONTH)
+```
 
+
+```{r}
 # Get labels alone
 ipums_val_labels(cps$MONTH)
 ```
+
 
 ## `labelled` vs. `factor`
 
@@ -107,7 +111,10 @@ age0_factor <- cps[cps$AGE == 0, ]$AGE_FACTOR
 
 # The levels look the same
 unique(age0_factor)
+```
 
+
+```{r}
 # But the values have changed
 unique(as.numeric(age0_factor))
 ```
@@ -126,9 +133,12 @@ values:
 
 ```{r}
 mean(cps$AGE)
+```
 
+```{r}
 mean(as.numeric(cps$AGE_FACTOR))
 ```
+
 
 ### Cautions regarding `labelled` variables
 
@@ -150,10 +160,14 @@ remove them from the data:
 
 ```{r}
 ipums_val_labels(cps$HEALTH)
+```
 
+```{r}
 HEALTH2 <- ifelse(cps$HEALTH > 3, 3, cps$HEALTH)
+
 ipums_val_labels(HEALTH2)
 ```
+
 
 So, `labelled` vectors are not intended for use throughout the entire
 analysis process. Instead, they should be used during the initial data
@@ -176,7 +190,6 @@ categories, so we can convert it to a factor right away:
 
 ```{r}
 ipums_val_labels(cps$MONTH)
-
 cps$MONTH <- as_factor(cps$MONTH)
 ```
 
@@ -205,7 +218,10 @@ than factors. In these cases, you can simply remove the labels with
 inctot_num <- zap_labels(cps$INCTOT)
 
 typeof(inctot_num)
+```
 
+
+```{r}
 ipums_val_labels(inctot_num)
 ```
 
@@ -263,10 +279,13 @@ inctot_na <- lbl_na_if(
 
 # All 99999999 values have been converted to NA
 any(inctot_na == 999999999, na.rm = TRUE)
+```
 
+```{r}
 # And the label has been removed:
 ipums_val_labels(inctot_na)
 ```
+
 
 We could achieve the same result by referencing the labels themselves:
 
@@ -319,7 +338,9 @@ all migration within a state is captured in a single category:
 
 ```{r}
 ipums_val_labels(cps$MIGRATE1)
+```
 
+```{r}
 cps$MIGRATE1 <- lbl_relabel(
   cps$MIGRATE1,
   lbl(0, "NIU / Missing / Unknown") ~ .val %in% c(0, 2, 9),
@@ -354,12 +375,15 @@ operator `%/%`:
 # %/% refers to integer division, which divides but discards the remainder
 10 %/% 10
 11 %/% 10
+```
 
+```{r}
 # Convert to groups by tens digit
 cps$EDUC2 <- lbl_collapse(cps$EDUC, ~ .val %/% 10)
 
 ipums_val_labels(cps$EDUC2)
 ```
+
 
 #### Relabeling caveats
 
@@ -390,7 +414,6 @@ variables, so it is often beneficial to remove them with `lbl_clean()`:
 
 ```{r}
 ipums_val_labels(cps$STATEFIP)
-
 ipums_val_labels(lbl_clean(cps$STATEFIP))
 ```
 

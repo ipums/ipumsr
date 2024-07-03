@@ -197,7 +197,6 @@ list columns, where each entry is itself a data frame:
 
 ```{r}
 tst$years[[1]]
-
 tst$geog_levels[[1]]
 ```
 
@@ -239,7 +238,6 @@ the input data source. For instance, for the `1900_cAg` dataset, we have
 
 ```{r}
 cAg_meta$data_tables
-
 cAg_meta$geog_levels
 ```
 

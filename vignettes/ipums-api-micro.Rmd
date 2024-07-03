@@ -310,7 +310,9 @@ To include case selections for detailed codes, set
 ```{r}
 # General case selection is the default
 var_spec("RACE", case_selections = "8")
+```
 
+```{r}
 # For detailed case selection, change the `case_selection_type`
 var_spec(
   "RACE",
