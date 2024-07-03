@@ -82,9 +82,41 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.0" id="ipumsr-080">ipumsr 0.8.0<a class="anchor" aria-label="anchor" href="#ipumsr-080"></a></h2>
-<ul><li>Require R &gt;= 4.0.0, because we are no longer able to test vignette-building on R 3.6 due to updated requirements in package evaluate.</li>
+<h2 class="pkg-version" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes--deprecations-development-version">Breaking Changes + Deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes--deprecations-development-version"></a></h3>
+<ul><li><p>ipumsr now requires R &gt;= 4.0.0, because we are no longer able to test vignette-building on R 3.6 due to updated requirements in the evaluate package.</p></li>
+<li>
+<p>Collection-specfic definition functions for IPUMS microdata projects have been deprecated in favor of <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code>. This streamlines syntax across all supported microdata collections. Use the <code>collection</code> argument to specify the collection for your microdata extract.</p>
+<p>IPUMS NHGIS extracts are still created with <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>.</p>
+</li>
+<li><p>Previously deprecated methods for retrieving extract history are now defunct. Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> instead.</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>
+<p>Adds support for IPUMS API extract endpoints for IPUMS Time Use and IPUMS Health Surveys projects! This includes:</p>
+<ul><li>
+<p>IPUMS Time Use</p>
+<ul><li><p>IPUMS ATUS (<code>"atus"</code>)</p></li>
+<li><p>IPUMS AHTUS (<code>"ahtus"</code>)</p></li>
+<li><p>IPUMS MTUS (<code>"mtus"</code>)</p></li>
+</ul></li>
+<li>
+<p>IPUMS Health Surveys</p>
+<ul><li><p>IPUMS NHIS (<code>"nhis"</code>)</p></li>
+<li><p>IPUMS MEPS (<code>"meps"</code>)</p></li>
+</ul></li>
+</ul></li>
+<li><p>Adds support for new rectangularization options for certain microdata collections. Use the <code>rectagular_on</code> argument in your extract definition to retangularize on records other than person (<code>"P"</code>) records.</p></li>
+<li>
+<p>Time use variables can be included in IPUMS Time Use extracts. Use the <code><a href="../reference/var_spec.html">tu_var_spec()</a></code> helper with the <code>time_use_variables</code> argument of <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code> to create a time use variable specification.</p>
+<p>This includes both IPUMS-defined time use variables as well as user-defined time use variables. Note that user-defined time use variables cannot currently be created via API. However, if you have defined a time use variable through the IPUMS ATUS web interface, you can request it in an extract via API.</p>
+</li>
+<li><p>Sample members can be included in IPUMS ATUS extracts. Use the <code>sample_members</code> argument of <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code> to do so.</p></li>
+<li><p><code>"household_only"</code> is now a supported value for <code>data_structure</code> in IPUMS USA extracts.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.2" id="ipumsr-072">ipumsr 0.7.2<a class="anchor" aria-label="anchor" href="#ipumsr-072"></a></h2><p class="text-muted">CRAN release: 2024-03-12</p>
 <ul><li>Fix for CRAN checks</li>
