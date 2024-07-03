@@ -290,12 +290,10 @@ accessed by indexing the object:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">samples</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "us2018a" "us2019a"</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "AGE"      "SEX"      "RACE"     "STATEFIP" "MARST"</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">data_format</span></span>
+<code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">data_format</span></span>
 <span><span class="co">#&gt; [1] "fixed_width"</span></span></code></pre></div>
 <p><code>ipums_extract</code> objects also contain information about the
 extract request’s processing status and its assigned extract number,
@@ -305,8 +303,7 @@ extract request is still unsubmitted, it has no request number:</p>
 <code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "unsubmitted"</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">number</span></span>
+<code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">number</span></span>
 <span><span class="co">#&gt; [1] NA</span></span></code></pre></div>
 <p>To obtain the data requested in the extract definition, we must first
 submit it to the IPUMS API for processing.</p>
@@ -329,8 +326,7 @@ request’s status later.</p>
 <code class="sourceCode R"><span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">number</span></span>
 <span><span class="co">#&gt; [1] 348</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">status</span></span>
+<code class="sourceCode R"><span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "queued"</span></span></code></pre></div>
 <p>Note that some fields of a submitted extract may be automatically
 updated by the API upon submission. For instance, for microdata
@@ -368,12 +364,10 @@ containing the completed extract definition.</p>
 <span><span class="co">#&gt; Checking extract status...</span></span>
 <span><span class="co">#&gt; IPUMS USA extract 348 is ready to download.</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">usa_extract_complete</span><span class="op">$</span><span class="va">status</span></span>
+<code class="sourceCode R"><span><span class="va">usa_extract_complete</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "completed"</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># `download_links` should be populated if the extract is ready for download</span></span>
+<code class="sourceCode R"><span><span class="co"># `download_links` should be populated if the extract is ready for download</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_complete</span><span class="op">$</span><span class="va">download_links</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "r_command_file"     "basic_codebook"     "data"              </span></span>
 <span><span class="co">#&gt; [4] "stata_command_file" "sas_command_file"   "spss_command_file" </span></span>
@@ -510,8 +504,7 @@ variable or are ready for download:</p>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
 <span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
@@ -552,8 +545,7 @@ collection is specified.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_DEFAULT_COLLECTION"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "usa"</span></span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Most recent USA extract:</span></span>
+<code class="sourceCode R"><span><span class="co"># Most recent USA extract:</span></span>
 <span><span class="va">usa_last</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Request info on extract request "usa:10"</span></span>

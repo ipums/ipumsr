@@ -202,8 +202,7 @@ values, but it can be easier to see them by isolating them:</p>
 <span><span class="co">#&gt;     11  November</span></span>
 <span><span class="co">#&gt;     12  December</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Get labels alone</span></span>
+<code class="sourceCode R"><span><span class="co"># Get labels alone</span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
 <span><span class="co">#&gt;      val lbl      </span></span>
@@ -264,8 +263,7 @@ factors always assign values starting at 1:</p>
 <span><span class="co">#&gt; [1] Under 1 year</span></span>
 <span><span class="co">#&gt; 84 Levels: Under 1 year 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ... 99+</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># But the values have changed</span></span>
+<code class="sourceCode R"><span><span class="co"># But the values have changed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">age0_factor</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <p>Additionally, because not all values exist in the data, high values,
@@ -281,8 +279,7 @@ values:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">AGE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 35.0226</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">AGE_FACTOR</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">AGE_FACTOR</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 35.94836</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="cautions-regarding-labelled-variables">Cautions regarding <code>labelled</code> variables<a class="anchor" aria-label="anchor" href="#cautions-regarding-labelled-variables"></a>
@@ -313,8 +310,8 @@ remove them from the data:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 Fair     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 Poor</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">HEALTH2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">HEALTH</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="fl">3</span>, <span class="va">cps</span><span class="op">$</span><span class="va">HEALTH</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">HEALTH2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">HEALTH</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="fl">3</span>, <span class="va">cps</span><span class="op">$</span><span class="va">HEALTH</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">HEALTH2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></span></code></pre></div>
@@ -357,8 +354,7 @@ away:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>    11 November </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">cps</span><span class="op">$</span><span class="va">MONTH</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cps</span><span class="op">$</span><span class="va">MONTH</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor()</a></code> can also convert all <code>labelled</code>
 variables in a data frame to factors at once. If you prefer to work with
 factors, you can do this conversion immediately after loading data, and
@@ -382,8 +378,7 @@ description:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/typeof.html" class="external-link">typeof</a></span><span class="op">(</span><span class="va">inctot_num</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "double"</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">inctot_num</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">inctot_num</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></span></code></pre></div>
 <p>Note that labelled values are not generally intended to be
@@ -450,8 +445,7 @@ to <code>NA</code>, we can provide a function that uses the
 <span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">inctot_na</span> <span class="op">==</span> <span class="fl">999999999</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># And the label has been removed:</span></span>
+<code class="sourceCode R"><span><span class="co"># And the label has been removed:</span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">inctot_na</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
 <span><span class="co">#&gt;         val lbl                      </span></span>
@@ -517,8 +511,7 @@ in a single category:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>     6 Abroad                              </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span>     9 Unknown</span></span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">cps</span><span class="op">$</span><span class="va">MIGRATE1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">cps</span><span class="op">$</span><span class="va">MIGRATE1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_relabel.html">lbl_relabel</a></span><span class="op">(</span></span>
 <span>  <span class="va">cps</span><span class="op">$</span><span class="va">MIGRATE1</span>,</span>
 <span>  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">0</span>, <span class="st">"NIU / Missing / Unknown"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/lbl.html">lbl</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"Stayed in state"</span><span class="op">)</span> <span class="op">~</span> <span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -576,8 +569,7 @@ group by the tens digit, use the integer division operator
 <code class="sourceCode R"><span><span class="fl">11</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%/%</a></span> <span class="fl">10</span></span>
 <span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Convert to groups by tens digit</span></span>
+<code class="sourceCode R"><span><span class="co"># Convert to groups by tens digit</span></span>
 <span><span class="va">cps</span><span class="op">$</span><span class="va">EDUC2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lbl_relabel.html">lbl_collapse</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">EDUC</span>, <span class="op">~</span> <span class="va">.val</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%/%</a></span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">EDUC2</span><span class="op">)</span></span>
@@ -645,8 +637,7 @@ variables, so it is often beneficial to remove them with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    12 Florida             </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 65 more rows</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="fu"><a href="../reference/lbl_clean.html">lbl_clean</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="fu"><a href="../reference/lbl_clean.html">lbl_clean</a></span><span class="op">(</span><span class="va">cps</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
 <span><span class="co">#&gt;     val lbl         </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span></span>
