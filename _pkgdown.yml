@@ -1,4 +1,4 @@
-url: http://tech.popdata.org/ipumsr/
+url: https://tech.popdata.org/ipumsr/
 
 template:
   bootstrap: 5
@@ -32,6 +32,7 @@ navbar:
   left:
     - icon: "fa-home"
       href: index.html
+      aria-label: Home
     - text: "Get Started"
       href: "articles/ipums.html"
     - text: "Reference"
@@ -61,10 +62,13 @@ navbar:
   right:
     - icon: fa-github
       href: https://github.com/ipums/ipumsr
+      aria-label: Go to ipumsr on GitHub
     - icon: fa-users
       href: https://forum.ipums.org
+      aria-label: Go to the IPUMS User Forum
     - icon: fa-globe
       href: https://www.ipums.org/
+      aria-label: Go to ipums.org
 
 home:
   links:

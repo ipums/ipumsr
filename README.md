@@ -89,7 +89,7 @@ Browse Metadata
 <tbody>
 <tr>
 <td style="text-align:center;">
-<a href='https://usa.ipums.org/usa/'><img src='man/figures/logo-square_usa_50x50.png'></a>
+<a href='https://usa.ipums.org/usa/'><img src='man/figures/logo-square_usa_50x50.png' alt='IPUMS USA logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://usa.ipums.org/usa/'>IPUMS USA</a>
@@ -101,17 +101,17 @@ Microdata
 U.S. Census and American Community Survey microdata (1850-present)
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://cps.ipums.org/cps/'><img src='man/figures/logo-square_cps_50x50.png'></a>
+<a href='https://cps.ipums.org/cps/'><img src='man/figures/logo-square_cps_50x50.png' alt='IPUMS CPS logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://cps.ipums.org/cps/'>IPUMS CPS</a>
@@ -124,17 +124,17 @@ Current Population Survey microdata including basic monthly surveys and
 supplements (1962-present)
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://international.ipums.org/international/'><img src='man/figures/logo-square_international_50x50.png'></a>
+<a href='https://international.ipums.org/international/'><img src='man/figures/logo-square_international_50x50.png' alt='IPUMS International logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://international.ipums.org/international/'>IPUMS
@@ -148,17 +148,17 @@ Census microdata covering over 100 countries, contemporary and
 historical
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://www.nhgis.org/'><img src='man/figures/logo-square_nhgis50x50.png'></a>
+<a href='https://www.nhgis.org/'><img src='man/figures/logo-square_nhgis50x50.png' alt='IPUMS NHGIS logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://www.nhgis.org/'>IPUMS NHGIS</a>
@@ -170,18 +170,18 @@ Aggregate Data
 Tabular U.S. Census data and GIS mapping files (1790-present)
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://ihgis.ipums.org/'><img src='man/figures/logo-square_ihgis_50x50.png'></a>
+<a href='https://ihgis.ipums.org/'><img src='man/figures/logo-square_ihgis_50x50.png' alt='IPUMS IHGIS logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://ihgis.ipums.org/'>IPUMS IHGIS</a>
@@ -202,7 +202,7 @@ around the world
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png'></a>
+<a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png' alt='IPUMS Time Use logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://timeuse.ipums.org/'>IPUMS Time Use</a>
@@ -215,17 +215,17 @@ Time use microdata from the U.S. (1930-present) and thirteen other
 countries (1965-present)
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://healthsurveys.ipums.org/'><img src='man/figures/logo-square_health-surveys_50x50.png'></a>
+<a href='https://healthsurveys.ipums.org/'><img src='man/figures/logo-square_health-surveys_50x50.png' alt='IPUMS Health Surveys logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://healthsurveys.ipums.org/'>IPUMS Health Surveys</a>
@@ -240,17 +240,17 @@ Health Interview Survey (NHIS)</a> (1963-present) and
 (MEPS)</a> (1996-present)
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://globalhealth.ipums.org/'><img src='man/figures/logo-square_global-health_50x50.png'></a>
+<a href='https://globalhealth.ipums.org/'><img src='man/figures/logo-square_global-health_50x50.png' alt='IPUMS Global Health logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://globalhealth.ipums.org/'>IPUMS Global Health</a>
@@ -266,7 +266,7 @@ harmonized data collections for
 for Action (PMA)</a> surveys
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>
@@ -275,7 +275,7 @@ for Action (PMA)</a> surveys
 </tr>
 <tr>
 <td style="text-align:center;">
-<a href='https://highered.ipums.org/highered/'><img src='man/figures/logo-square_higher-ed_50x50.png'></a>
+<a href='https://highered.ipums.org/highered/'><img src='man/figures/logo-square_higher-ed_50x50.png' alt='IPUMS Higher Ed logo'></a>
 </td>
 <td style="text-align:left;">
 <a href='https://highered.ipums.org/highered/'>IPUMS Higher Ed</a>
@@ -288,7 +288,7 @@ Survey microdata on the science and engineering workforce in the U.S.
 from 1993 to 2013
 </td>
 <td style="text-align:center;">
-<img src='man/figures/check-solid.svg' class='icon-check'>
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
 </td>

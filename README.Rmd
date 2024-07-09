@@ -77,7 +77,7 @@ summarized in the table below.
 #| echo: false
 
 checkmark <- function() {
-  "<img src='man/figures/check-solid.svg' class='icon-check'>"
+  "<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>"
 }
 
 # Difficult to use `proj_config()` to auto-produce this table, as we
@@ -86,7 +86,7 @@ checkmark <- function() {
 # manually.
 tbl_config <- list(
   list(
-    img = "<a href='https://usa.ipums.org/usa/'><img src='man/figures/logo-square_usa_50x50.png'></a>",
+    img = "<a href='https://usa.ipums.org/usa/'><img src='man/figures/logo-square_usa_50x50.png' alt='IPUMS USA logo'></a>",
     proj = "<a href='https://usa.ipums.org/usa/'>IPUMS USA</a>",
     type = "Microdata",
     desc = "U.S. Census and American Community Survey microdata (1850-present)",
@@ -95,7 +95,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://cps.ipums.org/cps/'><img src='man/figures/logo-square_cps_50x50.png'></a>",
+    img = "<a href='https://cps.ipums.org/cps/'><img src='man/figures/logo-square_cps_50x50.png' alt='IPUMS CPS logo'></a>",
     proj = "<a href='https://cps.ipums.org/cps/'>IPUMS CPS</a>",
     type = "Microdata",
     desc = "Current Population Survey microdata including basic monthly surveys and supplements (1962-present)",
@@ -104,7 +104,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://international.ipums.org/international/'><img src='man/figures/logo-square_international_50x50.png'></a>",
+    img = "<a href='https://international.ipums.org/international/'><img src='man/figures/logo-square_international_50x50.png' alt='IPUMS International logo'></a>",
     proj = "<a href='https://international.ipums.org/international/'>IPUMS International</a>",
     type = "Microdata",
     desc = "Census microdata covering over 100 countries, contemporary and historical",
@@ -113,7 +113,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://www.nhgis.org/'><img src='man/figures/logo-square_nhgis50x50.png'></a>",
+    img = "<a href='https://www.nhgis.org/'><img src='man/figures/logo-square_nhgis50x50.png' alt='IPUMS NHGIS logo'></a>",
     proj = "<a href='https://www.nhgis.org/'>IPUMS NHGIS</a>",
     type = "Aggregate Data",
     desc = "Tabular U.S. Census data and GIS mapping files (1790-present)",
@@ -122,7 +122,7 @@ tbl_config <- list(
     metadata = checkmark()
   ),
   list(
-    img = "<a href='https://ihgis.ipums.org/'><img src='man/figures/logo-square_ihgis_50x50.png'></a>",
+    img = "<a href='https://ihgis.ipums.org/'><img src='man/figures/logo-square_ihgis_50x50.png' alt='IPUMS IHGIS logo'></a>",
     proj = "<a href='https://ihgis.ipums.org/'>IPUMS IHGIS</a>",
     type = "Aggregate Data",
     desc = "Tabular and GIS data from population, housing, and agricultural censuses around the world",
@@ -131,7 +131,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png'></a>",
+    img = "<a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png' alt='IPUMS Time Use logo'></a>",
     proj = "<a href='https://timeuse.ipums.org/'>IPUMS Time Use</a>",
     type = "Microdata",
     desc = "Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)",
@@ -140,7 +140,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://healthsurveys.ipums.org/'><img src='man/figures/logo-square_health-surveys_50x50.png'></a>",
+    img = "<a href='https://healthsurveys.ipums.org/'><img src='man/figures/logo-square_health-surveys_50x50.png' alt='IPUMS Health Surveys logo'></a>",
     proj = "<a href='https://healthsurveys.ipums.org/'>IPUMS Health Surveys</a>",
     type = "Microdata",
     desc = paste0(
@@ -153,7 +153,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://globalhealth.ipums.org/'><img src='man/figures/logo-square_global-health_50x50.png'></a>",
+    img = "<a href='https://globalhealth.ipums.org/'><img src='man/figures/logo-square_global-health_50x50.png' alt='IPUMS Global Health logo'></a>",
     proj = "<a href='https://globalhealth.ipums.org/'>IPUMS Global Health</a>",
     type = "Microdata",
     desc = paste0(
@@ -166,7 +166,7 @@ tbl_config <- list(
     metadata = ""
   ),
   list(
-    img = "<a href='https://highered.ipums.org/highered/'><img src='man/figures/logo-square_higher-ed_50x50.png'></a>",
+    img = "<a href='https://highered.ipums.org/highered/'><img src='man/figures/logo-square_higher-ed_50x50.png' alt='IPUMS Higher Ed logo'></a>",
     proj = "<a href='https://highered.ipums.org/highered/'>IPUMS Higher Ed</a>",
     type = "Microdata",
     desc = "Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013",

@@ -52,6 +52,8 @@ extract interface for that project by clicking **Select Data** in the
 heading of the project website.
 
 ```{r, echo=FALSE, out.width = "70%", fig.align="center"}
+#| fig.alt: >
+#|   Screenshot of the Select Data link at the top of the IPUMS CPS homepage
 knitr::include_graphics("cps_select_data.jpg")
 ```
 
@@ -71,7 +73,15 @@ Once your extract is ready, click the green **Download** button to
 download the data file. Then, right-click the **DDI** link in the
 Codebook column, and select **Save Link As...** (see below).
 
-![](microdata_annotated_screenshot.png)
+```{r echo=FALSE}
+#| fig.alt: >
+#|   Screenshot of the My Data page on IPUMS USA website, with the "Download 
+#|   .DAT" button and the "DDI" codebook link each surrounded by a red box for 
+#|   emphasis. The right-click menu has been called up on the "DDI" codebook 
+#|   link, and the menu option "Save Link As..." is also surrounded by a red box 
+#|   for emphasis.
+knitr::include_graphics("microdata_annotated_screenshot.png")
+```
 
 Note that some browsers may display different text, but there should be
 an option to download the DDI file as .xml. (For instance, on Safari,
