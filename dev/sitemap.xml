@@ -1,207 +1,71 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api-micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api-nhgis.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-bigdata.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-read.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/ipums.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/articles/value-labels.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/index.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract.nhgis_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract_micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/define_extract_nhgis.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/download_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ds_spec.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/extract_tbl_to_list.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/get_extract_history.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/get_extract_info.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/get_metadata_nhgis.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/get_recent_extracts_info_list.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/get_sample_info.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_bind_rows.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_callback.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_collect.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_data_collections.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_ddi-class.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_example.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_extract-class.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_file_info.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_list_files.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_view.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_website.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/ipumsr-package.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/join_failures.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_add.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_clean.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_define.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_na_if.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_relabel.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_ddi.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_chunked.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_yield.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_sf.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_nhgis.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/read_nhgis_codebook.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.micro_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.nhgis_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/save_extract_as_json.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/selection_language.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_api_key.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_default_collection.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_var_attributes.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/submit_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/var_spec.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/wait_for_extract.html</loc>
-  </url>
-  <url>
-    <loc>http://tech.popdata.org/ipumsr/dev/reference/zap_ipums_attributes.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://tech.popdata.org/ipumsr/dev/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/CONTRIBUTING.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/index.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api-micro.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api-nhgis.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-api.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-bigdata.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums-read.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/ipums.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/articles/value-labels.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/authors.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/index.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/news/index.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract.nhgis_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/add_to_extract_micro.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/define_extract_nhgis.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/download_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ds_spec.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/extract_tbl_to_list.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/get_extract_history.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/get_extract_info.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/get_metadata_nhgis.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/get_recent_extracts_info_list.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/get_sample_info.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/index.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_bind_rows.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_callback.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_collect.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_data_collections.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_ddi-class.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_example.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_extract-class.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_file_info.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_list_files.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_view.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipums_website.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/ipumsr-package.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/join_failures.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_add.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_clean.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_define.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_na_if.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/lbl_relabel.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_ddi.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_chunked.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_yield.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_ipums_sf.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_nhgis.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/read_nhgis_codebook.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/reexports.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.micro_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/remove_from_extract.nhgis_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/save_extract_as_json.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/selection_language.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_api_key.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_default_collection.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/set_ipums_var_attributes.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/submit_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/var_spec.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/wait_for_extract.html</loc></url>
+<url><loc>http://tech.popdata.org/ipumsr/dev/reference/zap_ipums_attributes.html</loc></url>
 </urlset>
+
