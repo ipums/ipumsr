@@ -173,6 +173,16 @@ define_extract_nhgis(
   shapefiles = "us_county_1990_tl2008"
 )
 
+# Geographic extents are applied to all datasets in the definition
+define_extract_nhgis(
+  description = "Extent selection",
+  datasets = list(
+    ds_spec("2018_2022_ACS5a", "B01001", "blck_grp"),
+    ds_spec("2017_2021_ACS5a", "B01001", "blck_grp")
+  ),
+  geographic_extents = c("010", "050")
+)
+
 # Extract specifications can be indexed by name
 names(nhgis_extract$datasets)
 
