@@ -182,7 +182,7 @@ labels to make this process easier.
 
 ## Prepping data with value labels
 
-### Convert labelled values to other data types
+### Convert labelled values to other data types^[Note that if you're reading this article on the ipumsr website, auto-generated links for the function `as_factor()` point to the `{forcats}` package, but the documentation for `haven::as_factor.labelled()` is more informative for working with labelled variables.]
 
 Use `as_factor()` once labels have the correct categories and need no
 further manipulation. For instance, `MONTH` already has sensible
