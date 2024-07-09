@@ -37,7 +37,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home"></span></a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/ipums.html">Get Started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -59,9 +59,9 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipums/ipumsr"><span class="fa fa-github"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://forum.ipums.org"><span class="fa fa-users"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://www.ipums.org/"><span class="fa fa-globe"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipums/ipumsr" aria-label="Go to ipumsr on GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://forum.ipums.org" aria-label="Go to the IPUMS User Forum"><span class="fa fa-users"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://www.ipums.org/" aria-label="Go to ipums.org"><span class="fa fa-globe"></span></a></li>
       </ul>
 </div>
 
@@ -85,7 +85,7 @@
     
 <p>This article provides an overview of how to find, request, download,
 and read IPUMS data into R. For a general introduction to IPUMS and
-ipumsr, see the <a href="https://tech.popdata.org/ipumsr/index.html" class="external-link">ipumsr home
+ipumsr, see the <a href="https://tech.popdata.org/ipumsr/index.html">ipumsr home
 page</a>.</p>
 <div class="section level2">
 <h2 id="obtaining-ipums-data">Obtaining IPUMS data<a class="anchor" aria-label="anchor" href="#obtaining-ipums-data"></a>
@@ -117,7 +117,7 @@ IPUMS projects</a> are currently supported by the IPUMS API.</p>
 <p>To create a new extract request via an IPUMS project website (e.g. <a href="https://cps.ipums.org/cps/" class="external-link">IPUMS CPS</a>), navigate to the
 extract interface for that project by clicking <strong>Select
 Data</strong> in the heading of the project website.</p>
-<p><img src="cps_select_data.jpg" width="70%" style="display: block; margin: auto;"></p>
+<p><img src="cps_select_data.jpg" alt="Screenshot of the Select Data link at the top of the IPUMS CPS homepage" width="70%" style="display: block; margin: auto;"></p>
 <p>The project’s extract interface allows you to explore what’s
 available, find documentation about data concepts and sources, and
 specify the data you’d like to download. The data selection parameters
@@ -134,7 +134,7 @@ page</a>.</p>
 button to download the data file. Then, right-click the
 <strong>DDI</strong> link in the Codebook column, and select
 <strong>Save Link As…</strong> (see below).</p>
-<p><img src="microdata_annotated_screenshot.png"></p>
+<p><img src="microdata_annotated_screenshot.png" alt='Screenshot of the My Data page on IPUMS USA website, with the "Download .DAT" button and the "DDI" codebook link each surrounded by a red box for emphasis. The right-click menu has been called up on the "DDI" codebook link, and the menu option "Save Link As..." is also surrounded by a red box for emphasis.'></p>
 <p>Note that some browsers may display different text, but there should
 be an option to download the DDI file as .xml. (For instance, on Safari,
 select <strong>Download Linked File As…</strong>.) For ipumsr to read

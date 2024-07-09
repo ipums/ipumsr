@@ -37,7 +37,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/ipums.html">Get Started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
@@ -59,9 +59,9 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipums/ipumsr"><span class="fa fa-github"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://forum.ipums.org"><span class="fa fa-users"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://www.ipums.org/"><span class="fa fa-globe"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipums/ipumsr" aria-label="Go to ipumsr on GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://forum.ipums.org" aria-label="Go to the IPUMS User Forum"><span class="fa fa-users"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://www.ipums.org/" aria-label="Go to ipums.org"><span class="fa fa-globe"></span></a></li>
       </ul>
 </div>
 
@@ -115,7 +115,7 @@ class from the <a href="https://haven.tidyverse.org" class="external-link">haven
 Note that <code>&lt;int+lbl&gt;</code> appears below <code>MONTH</code>
 and <code>ASECFLAG</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/" class="external-link">ipumsr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/">ipumsr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00160.xml"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -293,7 +293,11 @@ value labels to make this process easier.</p>
 <h2 id="prepping-data-with-value-labels">Prepping data with value labels<a class="anchor" aria-label="anchor" href="#prepping-data-with-value-labels"></a>
 </h2>
 <div class="section level3">
-<h3 id="convert-labelled-values-to-other-data-types">Convert labelled values to other data types<a class="anchor" aria-label="anchor" href="#convert-labelled-values-to-other-data-types"></a>
+<h3 id="convert-labelled-values-to-other-data-types">Convert labelled values to other data types<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Note that if you’re reading this article on the ipumsr
+website, auto-generated links for the function &lt;code&gt;&lt;a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link"&gt;as_factor()&lt;/a&gt;&lt;/code&gt;
+point to the &lt;a href="https://forcats.tidyverse.org/" class="external-link"&gt;forcats&lt;/a&gt; package, but the documentation for
+&lt;code&gt;&lt;a href="https://haven.tidyverse.org/reference/as_factor.html" class="external-link"&gt;haven::as_factor.labelled()&lt;/a&gt;&lt;/code&gt; is more informative for working
+with labelled variables.&lt;/p&gt;'><sup>1</sup></a><a class="anchor" aria-label="anchor" href="#convert-labelled-values-to-other-data-types"></a>
 </h3>
 <p>Use <code><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor()</a></code> once labels have the correct categories
 and need no further manipulation. For instance, <code>MONTH</code>
@@ -706,6 +710,7 @@ don’t use the <code>labelled</code> class, but provide similar
 functionality for handling value labels, which could be adapted for use
 with <code>labelled</code> vectors.</p>
 </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
