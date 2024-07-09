@@ -1,10 +1,6 @@
 # ipumsr (development version)
 
-## Breaking Changes + Deprecations
-
--   ipumsr now requires R \>= 4.0.0, because we are no longer able to
-    test vignette-building on R 3.6 due to updated requirements in the
-    evaluate package.
+## Breaking changes + deprecations
 
 -   Collection-specific definition functions for IPUMS microdata projects
     have been deprecated in favor of `define_extract_micro()`. This
@@ -18,7 +14,7 @@
 -   Previously deprecated methods for retrieving extract history are now
     defunct. Use `get_extract_history()` instead.
 
-## New Features
+## New features
 
 -   Adds support for IPUMS API extract endpoints for IPUMS Time Use and
     IPUMS Health Surveys projects! This includes:
@@ -57,6 +53,12 @@
 
 -   `"household_only"` is now a supported value for `data_structure` in
     IPUMS USA extracts.
+    
+## Other updates
+
+-   Fixes bug in `add_to_extract.micro_extract()` that caused an error if a user
+    attempted to update the value of `data_quality_flags` in a detailed variable
+    specification.
 
 # ipumsr 0.7.2
 
