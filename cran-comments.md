@@ -2,8 +2,9 @@
 
 0 errors | 0 warnings | 0 notes
 
-## Reverse dependencies
+## revdepcheck results
 
-1 package (Ecfun) lists ipumsr in the 'Suggests' field. This package
-uses ipumsr in one of its vignettes, but the code used in that
-vignette is not impacted by this release.
+We checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages

@@ -54,7 +54,7 @@
 -   `"household_only"` is now a supported value for `data_structure` in
     IPUMS USA extracts.
     
-## Other updates
+## Minor improvements and fixes
 
 -   Fixes bug in `add_to_extract.micro_extract()` that caused an error if a user
     attempted to update the value of `data_quality_flags` in a detailed variable

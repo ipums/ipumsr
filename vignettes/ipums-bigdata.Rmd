@@ -650,6 +650,10 @@ options.
 
 For some past blog posts and articles on the topic, see the following:
 
+-   [*Big Data in
+    R*](https://github.com/smooney27/RWorkshopSER2024/blob/main/EPIC_R_BigData.pdf) -
+    Part of Stephen Mooney's EPIC: Epidemiologic Analysis Using R, June
+    2015 class
 -   [*Statistical Analysis with Open-Source R and RStudio on Amazon
     EMR*](https://aws.amazon.com/blogs/big-data/statistical-analysis-with-open-source-r-and-rstudio-on-amazon-emr/) -
     Markus Schmidberger on the AWS Big Data Blog
