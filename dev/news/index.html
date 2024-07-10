@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.7.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.8.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +49,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="ipumsr-080">ipumsr 0.8.0<a class="anchor" aria-label="anchor" href="#ipumsr-080"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes--deprecations-development-version">Breaking changes + deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes--deprecations-development-version"></a></h3>
+<h3 id="breaking-changes--deprecations-0-8-0">Breaking changes + deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes--deprecations-0-8-0"></a></h3>
 <ul><li>
 <p>Collection-specific definition functions for IPUMS microdata projects have been deprecated in favor of <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code>. This streamlines syntax across all supported microdata collections. Use the <code>collection</code> argument to specify the collection for your microdata extract.</p>
 <p>IPUMS NHGIS extracts are still created with <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>.</p>
@@ -58,7 +61,7 @@
 <li><p>Previously deprecated methods for retrieving extract history are now defunct. Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> instead.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-8-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-8-0"></a></h3>
 <ul><li>
 <p>Adds support for IPUMS API extract endpoints for IPUMS Time Use and IPUMS Health Surveys projects! This includes:</p>
 <ul><li>
@@ -82,7 +85,7 @@
 <li><p><code>"household_only"</code> is now a supported value for <code>data_structure</code> in IPUMS USA extracts.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-improvements-and-fixes-development-version">Minor improvements and fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-fixes-development-version"></a></h3>
+<h3 id="minor-improvements-and-fixes-0-8-0">Minor improvements and fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-fixes-0-8-0"></a></h3>
 <ul><li>Fixes bug in <code><a href="../reference/add_to_extract_micro.html">add_to_extract.micro_extract()</a></code> that caused an error if a user attempted to update the value of <code>data_quality_flags</code> in a detailed variable specification.</li>
 </ul></div>
 </div>
