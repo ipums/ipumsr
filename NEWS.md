@@ -1,4 +1,4 @@
-# ipumsr (development version)
+# ipumsr 0.8.0
 
 ## Breaking changes + deprecations
 
