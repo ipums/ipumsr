@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="ipumsr">
 <title>Reading IPUMS Data • ipumsr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -15,93 +14,57 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Reading IPUMS Data">
-<meta property="og:description" content="ipumsr">
-<meta property="og:image" content="http://tech.popdata.org/ipumsr/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.8.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../articles/ipums.html">Get Started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/ipums.html">Get Started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6>
-    <a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a>
-    <a class="dropdown-item" href="../articles/value-labels.html">Value labels</a>
-    <a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>IPUMS API</h6>
-    <a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a>
-    <a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a>
-    <a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a>
-    <div class="dropdown-divider"></div>
-    <a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
+    <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/ipums/ipumsr">
-    <span class="fa fa-github"></span>
-     
-  </a>
-</li>
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://forum.ipums.org">
-    <span class="fa fa-users"></span>
-     
-  </a>
-</li>
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://www.ipums.org/">
-    <span class="fa fa-globe"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ipums/ipumsr" aria-label="Go to ipumsr on GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://forum.ipums.org" aria-label="Go to the IPUMS User Forum"><span class="fa fa-users"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://www.ipums.org/" aria-label="Go to ipums.org"><span class="fa fa-globe"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -113,7 +76,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Reading IPUMS Data</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/HEAD/vignettes/ipums-read.Rmd" class="external-link"><code>vignettes/ipums-read.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/main/vignettes/ipums-read.Rmd" class="external-link"><code>vignettes/ipums-read.Rmd</code></a></small>
       <div class="d-none name"><code>ipums-read.Rmd</code></div>
     </div>
 
@@ -155,7 +118,7 @@ file separate from the compressed data (.dat.gz) files.</p>
 <p>Provide the path to the DDI file to <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code>
 to directly load its associated data file into R.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/" class="external-link">ipumsr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/">ipumsr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Example data</span></span>
@@ -210,9 +173,7 @@ it with <code><a href="https://rdrr.io/r/base/attributes.html" class="external-l
 <span><span class="co">#&gt; [1] "Month"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
-<span><span class="co">#&gt; [1] "MONTH indicates the calendar month of the CPS interview."</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; [1] "MONTH indicates the calendar month of the CPS interview."</span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
 <span><span class="co">#&gt;      val lbl      </span></span>
@@ -232,7 +193,7 @@ it with <code><a href="https://rdrr.io/r/base/attributes.html" class="external-l
 <p>While this is the most straightforward way to load microdata, it’s
 often advantageous to independently load the DDI file into an
 <code>ipums_ddi</code> object containing the metadata:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cps_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_ddi_file</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cps_ddi</span></span>
@@ -241,7 +202,7 @@ often advantageous to independently load the DDI file into an
 <span><span class="co">#&gt; User notes:  User-provided description: Reproducing cps00006</span></span></code></pre></div>
 <p>This is because many common data processing functions have the
 side-effect of removing these attributes:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This doesn't actually change the data...</span></span>
 <span><span class="va">cps_data2</span> <span class="op">&lt;-</span> <span class="va">cps_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>MONTH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="va">MONTH</span>, <span class="va">MONTH</span><span class="op">)</span><span class="op">)</span></span>
@@ -252,7 +213,7 @@ side-effect of removing these attributes:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: val &lt;dbl&gt;, lbl &lt;chr&gt;</span></span></span></code></pre></div>
 <p>In this case, you can always use the separate DDI as a metadata
 reference:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_ddi</span>, var <span class="op">=</span> <span class="va">MONTH</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
 <span><span class="co">#&gt;      val lbl      </span></span>
@@ -271,7 +232,7 @@ reference:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>    12 December</span></span></code></pre></div>
 <p>Or even reattach the metadata, assuming the variable names still
 match those in the DDI:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cps_data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">cps_data2</span>, <span class="va">cps_ddi</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data2</span><span class="op">$</span><span class="va">MONTH</span><span class="op">)</span></span>
@@ -306,7 +267,7 @@ own row followed by the person records associated with that
 household.</p>
 <p>Hierarchical data can be loaded in list format or long format.
 <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code> will read in long format:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cps_hier_ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00159.xml"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_hier_ddi</span><span class="op">)</span></span>
@@ -333,7 +294,7 @@ be filled with <code>NA</code> in rows of that record type.</p>
 <p>To read data in list format, use
 <code><a href="../reference/read_ipums_micro.html">read_ipums_micro_list()</a></code>. This function returns a list where
 each element contains all the records for a given record type:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro_list</a></span><span class="op">(</span><span class="va">cps_hier_ddi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Use of data from IPUMS CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
 <span><span class="co">#&gt; $HOUSEHOLD</span></span>
@@ -381,7 +342,7 @@ metadata files bundled into a single .zip archive.
 <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> anticipates this structure and can read data
 files directly from this file without the need to manually extract the
 files:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
@@ -394,9 +355,7 @@ files:</p>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">lgl</span>  (3): DIVISIONA, REGIONA, STATEA</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
 <span><span class="va">nhgis_data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 71 × 25</span></span></span>
 <span><span class="co">#&gt;    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span></span>
@@ -418,7 +377,7 @@ files:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Like microdata extracts, the data include variable-level metadata,
 where available:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">D6Z001</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "Total area: 1989 to March 1990"</span></span>
@@ -432,7 +391,7 @@ loaded into an <code>ipums_ddi</code> object, but fields that do not
 apply to aggregate data will be empty. In general, NHGIS codebooks
 provide only variable labels and descriptions, along with citation
 information.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Most useful metadata for NHGIS is for variable labels:</span></span>
@@ -456,7 +415,7 @@ information.</p>
 to interpret their contents in raw format. To view the codebook itself
 without converting to an <code>ipums_ddi</code> object, set
 <code>raw = TRUE</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">nhgis_cb</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
@@ -488,7 +447,7 @@ data sources, the provided .zip archive will contain multiple codebook
 and data files.</p>
 <p>You can view the files contained in an extract to determine if this
 is the case:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0731_csv.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nhgis_ex2</span><span class="op">)</span></span>
@@ -502,20 +461,18 @@ indicate which file to load. <code>file_select</code> supports most
 features of the <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect
 selection language</a>. (See <code><a href="../reference/selection_language.html">?selection_language</a></code> for
 documentation of the features supported in ipumsr.)</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"nation"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nhgis_data3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"ts_nominal_state"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The matching codebook should automatically be loaded and attached to
 the data:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data2</span><span class="op">$</span><span class="va">AJWBE001</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "Estimates: Total"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
-<span><span class="co">#&gt; [1] "Table AJWB: Sex by Age (Universe: Total population)"</span></span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; [1] "Table AJWB: Sex by Age (Universe: Total population)"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data3</span><span class="op">$</span><span class="va">A00AA1790</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "1790: Persons: Total"</span></span>
@@ -527,7 +484,7 @@ load it separately with <code><a href="../reference/read_nhgis_codebook.html">re
 accepts a <code>file_select</code> specification.)</p>
 <p><code>file_select</code> also accepts the full path or the index of
 the file to load:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Match by file name</span></span>
 <span><span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="st">"nhgis0731_csv/nhgis0731_ds239_20185_nation.csv"</span><span class="op">)</span></span>
 <span></span>
@@ -546,7 +503,7 @@ the generation of column type specifications. If the guessed
 specifications are incorrect, you can use the <code>col_types</code>
 argument to adjust. This is most likely to occur for columns that
 contain geographic codes that are stored as numeric values:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert MSA codes to character format</span></span>
 <span><span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span>
 <span>  <span class="va">nhgis_ex1</span>,</span>
@@ -577,7 +534,7 @@ contain geographic codes that are stored as numeric values:</p>
 </h4>
 <p><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> also handles NHGIS files provided in
 fixed-width format:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_fwf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0730_fixed.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nhgis_fwf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_fwf</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"ts_nominal"</span><span class="op">)</span><span class="op">)</span></span>
@@ -589,9 +546,7 @@ fixed-width format:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (24): A00AA1790, A00AA1800, A00AA1810, A00AA1820, A00AA1830, A00AA1840, ...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
 <span><span class="va">nhgis_fwf_data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 84 × 28</span></span></span>
 <span><span class="co">#&gt;    GISJOIN STATE         STATEFP STATENH A00AA1790 A00AA1800 A00AA1810 A00AA1820</span></span>
@@ -651,7 +606,7 @@ these sources as an <code>sf</code> object from <a href="https://r-spatial.githu
 <p><code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> also supports the loading of spatial
 files within .zip archives and the <code>file_select</code> syntax for
 file selection when multiple internal files are present.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_shp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_shape_small.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">shp_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_sf.html">read_ipums_sf</a></span><span class="op">(</span><span class="va">nhgis_shp_file</span><span class="op">)</span></span>
@@ -675,7 +630,7 @@ file selection when multiple internal files are present.</p>
 <p>These data can then be joined to associated tabular data. To preserve
 IPUMS attributes from the tabular data used in the join, use an
 <code>ipums_shape_*_join()</code> function:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">joined_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_shape_join.html">ipums_shape_left_join</a></span><span class="op">(</span></span>
 <span>  <span class="va">nhgis_data</span>,</span>
 <span>  <span class="va">shp_data</span>,</span>
@@ -719,7 +674,7 @@ in your analysis. As always, documentation for the IPUMS project you’re
 working with should explain the different options available.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -730,15 +685,15 @@ working with should explain the different options available.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
