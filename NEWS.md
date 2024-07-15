@@ -1,5 +1,10 @@
 # ipumsr (development version)
 
+## Minor improvements and fixes
+
+-   Small fix to vignette that was previously throwing an error in R CMD Check 
+    with `--no-manual` and `--no-build-vignettes` options (#80).
+
 # ipumsr 0.8.0
 
 ## Breaking changes + deprecations

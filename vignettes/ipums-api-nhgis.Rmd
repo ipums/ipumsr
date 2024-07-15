@@ -354,7 +354,7 @@ An attempt to define an extract that does not have all the required
 specifications for a given dataset or time series table will throw an
 error:
 
-```{r, error=TRUE}
+```{r, error=TRUE, purl=FALSE}
 define_extract_nhgis(
   description = "Invalid extract",
   datasets = ds_spec("1900_STF1", data_tables = "NP1")
