@@ -33,7 +33,7 @@ b, strong {
   font-weight: 100;
 }
 
-/* searchbar */
+/* searchbar + dropdown */
 #search-input {
   background-color: white;
   color: #00263A;
@@ -42,6 +42,20 @@ b, strong {
 
 #search-input::placeholder {
   color: rgba(0, 38, 58, 0.3);
+}
+
+.algolia-autocomplete .aa-dropdown-menu {
+  background-color: white;
+  color: #00263A;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion:hover {
+  background-color: #f1f5f7;
+  color: #00263A;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  border-radius: 10px;
 }
 
 /* HTML table formatting to resemble IPUMS website tables */
@@ -65,9 +79,9 @@ thead th {
 }
 
 /* navbar tab hover background */
-.navbar-nav .nav-item > .nav-link:hover,
-.navbar-nav .nav-item.active > .nav-link,
-.navbar-nav .nav-item > .nav-link:focus
+.navbar-dark .navbar-nav .nav-item > .nav-link:hover,
+.navbar-dark .navbar-nav .nav-item > .nav-link:active,
+.navbar-dark .navbar-nav .nav-item > .nav-link:focus
 {
   background-color: #11374b;
   color: white;
