@@ -79,9 +79,9 @@ thead th {
 }
 
 /* navbar tab hover background */
-.navbar-dark .navbar-nav .nav-item > .nav-link:hover,
-.navbar-dark .navbar-nav .nav-item > .nav-link:active,
-.navbar-dark .navbar-nav .nav-item > .nav-link:focus
+.navbar-nav .nav-item > .nav-link:hover,
+.navbar-nav .nav-item.active > .nav-link,
+.navbar-nav .nav-item > .nav-link:focus
 {
   background-color: #11374b;
   color: white;
