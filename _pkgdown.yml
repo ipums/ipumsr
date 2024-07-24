@@ -27,17 +27,16 @@ development:
 
 navbar:
   bg: primary
-  type: dark
   title: "ipumsr"
-  left:
-    - icon: "fa-home"
-      href: index.html
-      aria-label: Home
-    - text: "Get Started"
-      href: "articles/ipums.html"
-    - text: "Reference"
-      href: "reference/index.html"
-    - text: "Articles"
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github, users, forum]
+  components:
+    intro:
+      text: "Get Started"
+      href: articles/ipums.html
+    articles:
+      text: Articles
       menu:
       - text: "IPUMS Data"
       - text: "Read IPUMS data"
@@ -57,18 +56,14 @@ navbar:
       - text: "------------------"
       - text: "Project-specific exercises"
         href: "https://ipums.org/exercises.shtml"
-    - text: "Changelog"
-      href: "news/index.html"
-  right:
-    - icon: fa-github
-      href: https://github.com/ipums/ipumsr
-      aria-label: Go to ipumsr on GitHub
-    - icon: fa-users
+    users:
+      icon: fa-users
       href: https://forum.ipums.org
-      aria-label: Go to the IPUMS User Forum
-    - icon: fa-globe
+      aria-label: IPUMS User Forum
+    forum:
+      icon: fa-globe
       href: https://www.ipums.org/
-      aria-label: Go to ipums.org
+      aria-label: IPUMS website
 
 home:
   links:
