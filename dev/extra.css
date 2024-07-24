@@ -54,6 +54,10 @@ b, strong {
   color: #00263A;
 }
 
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  border-radius: 10px;
+}
+
 /* HTML table formatting to resemble IPUMS website tables */
 .table {
   vertical-align: middle;
