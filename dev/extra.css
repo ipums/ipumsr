@@ -50,8 +50,8 @@ b, strong {
 }
 
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:hover {
-    background-color: #7a99ac;
-    color: white;
+  background-color: white;
+  color: #f1f5f7;
 }
 
 /* HTML table formatting to resemble IPUMS website tables */
