@@ -33,7 +33,7 @@ b, strong {
   font-weight: 100;
 }
 
-/* searchbar + dropdown */
+/* searchbar */
 #search-input {
   background-color: white;
   color: #00263A;
@@ -42,20 +42,6 @@ b, strong {
 
 #search-input::placeholder {
   color: rgba(0, 38, 58, 0.3);
-}
-
-.algolia-autocomplete .aa-dropdown-menu {
-  background-color: white;
-  color: #00263A;
-}
-
-.algolia-autocomplete .aa-dropdown-menu .aa-suggestion:hover {
-  background-color: #f1f5f7;
-  color: #00263A;
-}
-
-.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-  border-radius: 10px;
 }
 
 /* HTML table formatting to resemble IPUMS website tables */
