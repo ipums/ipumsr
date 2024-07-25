@@ -21,6 +21,8 @@ template:
     headings-color: "#00263a"
     table-hover-bg: "rgba(17,55,75,0.15)"
     table-bg: "white"
+    input-focus-border-color: "#bed2dd"
+    input-focus-box-shadow: "0 0 0 0.2rem rgba(190,210,221,0.5)"
 
 development:
   mode: auto
