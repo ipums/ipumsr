@@ -588,6 +588,26 @@ test_that("Download extract errors on incomplete extract", {
   # but these errors may trigger errors before making the request.
 })
 
+test_that("Can download supplemental data files", {
+  skip_if_no_api_access(have_api_access)
+
+  vcr::use_cassette("download-supplemental-data", {
+    file <- download_supplemental_data(
+      "nhgis",
+      "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip",
+      download_dir = vcr::vcr_test_path("fixtures"),
+      overwrite = TRUE
+    )
+  })
+
+  d <- suppressWarnings(
+    read_nhgis(file, verbose = FALSE)
+  )
+
+  expect_true(file.exists(file))
+  expect_equal(dim(d), c(177, 12))
+})
+
 # Read downloaded files ------------------
 
 test_that("Can read downloaded files with ipumsr readers", {

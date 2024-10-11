@@ -1,0 +1,37 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/supplemental-data/nhgis/crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      accept-ranges: bytes
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis_tr1990_co2010_10.zip"; filename*=UTF-8''nhgis_tr1990_co2010_10.zip
+      content-type: application/zip
+      date: Tue, 26 Nov 2024 15:24:32 GMT
+      etag: '"66c3abac-f86"'
+      last-modified: Mon, 19 Aug 2024 20:31:40 GMT
+      server: nginx/1.18.0
+      set-cookie: _secured_files_session=LV22UENgQu72mQbENjp6yhB3Cs2gaawikl%2B%2FJ1ry7tW5%2FRRnt1UBaKdUjhFgBM5JNysSBqYlw4vruZObbTxt3EggNUHLfE%2FZItjLMJj0f9tdGm%2BJC4FPO%2BSm8vBbMTRX4UHAF%2B9zOPnOgi3ZRQhgt81XM3DtIXCgfRTmvHkPwdvh%2FjzPVjFzBv21pZ8tbMobUAKa5hgFClrOTJK5%2Bnb1s0m6O6NYJKAeZ%2F6T%2BWR0oYQS7rSe%2FLKSowxw4FKTJHZ2Tqpy6FDSlUSyOlpekblzgvnqXy%2FTmzZiSQN0bZlR7pI%3D--XrcU2Pl57cfeF4iy--EUCIMBMVuDjT7i9VMFmEkA%3D%3D;
+        path=/; expires=Tue, 26 Nov 2024 16:24:32 GMT; HttpOnly; SameSite=Lax
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      content-length: '3974'
+    body:
+      encoding: ''
+      file: yes
+      string: ../fixtures/nhgis_tr1990_co2010_10.zip
+  recorded_at: 2024-11-26 15:24:32 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
