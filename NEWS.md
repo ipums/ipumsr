@@ -7,7 +7,7 @@
 -   Small fix to vignette that was previously throwing an error in R CMD Check 
     with `--no-manual` and `--no-build-vignettes` options (#80).
 
--   Small fix to `shape_join.R` that would always give the result of a right_join no matter whether `ipums_shape_left_join()` or `ipums_shape_right_join() is used.
+-   Small fix to `shape_join.R` that would always give the result of a right_join no matter whether `ipums_shape_left_join()` or `ipums_shape_right_join()` is used.
 
 # ipumsr 0.8.0
 
