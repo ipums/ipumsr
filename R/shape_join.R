@@ -130,9 +130,7 @@ ipums_shape_join.sf <- function(data,
 
   if (direction == "left") {
     direction <- "right"
-  }
-
-  if (direction == "right") {
+  } else if (direction == "right") {
     direction <- "left"
   }
 

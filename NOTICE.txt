@@ -10,6 +10,7 @@ Contributors:
   Jacob Kaplan, University of Pennsylvania
   Finn Roberts, IPUMS, University of Minnesota
   Renae Rodgers, IPUMS, University of Minnesota
+  Jia Zhang, Department of Finance, Hong Kong University of Science and Technology
 
 This project is licensed under the Mozilla Public License, version 2.0 (the
 "License"). A copy of the License is in the project file "LICENSE.txt",
