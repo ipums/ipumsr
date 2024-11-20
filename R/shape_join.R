@@ -128,7 +128,11 @@ ipums_shape_join.sf <- function(data,
 
   suffix <- rev(suffix)
 
-  direction <- ifelse(direction == "left", "right", "left")
+  if (direction == "left") {
+  direction <- "right"
+} else if (direction == "right") {
+  direction <- "left"
+}
 
   aligned <- align_id_vars(shape_data, data, by)
 
