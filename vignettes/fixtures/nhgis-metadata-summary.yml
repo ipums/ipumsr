@@ -17,20 +17,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:37:21 GMT
+      date: Fri, 22 Nov 2024 19:52:47 GMT
       etag: W/"d6ab1d6e90c76bbdcb476c59cd9ea7ca"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 56f65c69-b965-436a-83e8-d5a417a58f99
-      x-runtime: '0.022237'
+      x-request-id: 44cfbf52-6e75-4658-8ba2-918e337f0c6c
+      x-runtime: '0.010044'
       x-xss-protection: '0'
       content-length: '35814'
     body:
@@ -420,7 +419,7 @@ http_interactions:
         1 Year Ago]","sequence":6104},{"name":"2018_2022_ACS5d","group":"2022 American
         Community Survey","description":"5-Year Data [2018-2022, Summary by Place
         of Work]","sequence":6105}],"pageNumber":1,"pageSize":2500,"totalCount":261,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2024-06-02 12:37:22 GMT
+  recorded_at: 2024-11-22 19:52:48 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -440,20 +439,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:37:22 GMT
+      date: Fri, 22 Nov 2024 19:52:48 GMT
       etag: W/"f08786e556898358455b9abdb3850861"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 9b038706-fa05-4e63-8b89-3b026c01d4cc
-      x-runtime: '0.098888'
+      x-request-id: d11be891-cad6-4906-9755-9a915fac0621
+      x-runtime: '0.006961'
       x-xss-protection: '0'
       content-length: '13954'
     body:
@@ -517,5 +515,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
         Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":382}]}],"pageNumber":1,"pageSize":10,"totalCount":389,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/time_series_tables?collection=nhgis\u0026pageNumber=2\u0026pageSize=10\u0026version=2"}}'
-  recorded_at: 2024-06-02 12:37:22 GMT
+  recorded_at: 2024-11-22 19:52:48 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

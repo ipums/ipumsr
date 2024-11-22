@@ -311,8 +311,8 @@ test_that("Can parse API request error details in basic requests", {
       ),
       paste0(
         "API request failed.+",
-        "dataStructure.+did not contain.+",
-        "variables.+did not match"
+        "required property of 'dataStructure'.+",
+        "samples.+did not match"
       )
     )
     expect_error(

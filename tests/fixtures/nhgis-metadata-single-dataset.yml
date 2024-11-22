@@ -18,20 +18,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:37:40 GMT
+      date: Mon, 09 Dec 2024 22:06:29 GMT
       etag: W/"76a85ab5228ac40f486b631c02555a73"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: b6889d3e-e86b-4caa-a137-d89deb8b894a
-      x-runtime: '0.008985'
+      x-request-id: 180ab6cc-72bb-4307-9f00-77dd0c6e5f70
+      x-runtime: '0.010826'
       x-xss-protection: '0'
       content-length: '97744'
     body:
@@ -823,5 +822,5 @@ http_interactions:
         New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
         New England city and town area--urban"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"}]}]}'
-  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_at: 2024-12-09 22:06:29 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

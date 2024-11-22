@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1270?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts/1436?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -18,26 +18,25 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 20 Jul 2023 21:22:26 GMT
-      etag: W/"85ecd872d7acfa91674b429aed5ba347"
+      date: Mon, 09 Dec 2024 22:04:10 GMT
+      etag: W/"3c8538deb95561563c6cbc49d79700a6"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 1f6b8a8d-94fb-4186-b0f6-ad5581d2b970
-      x-runtime: '0.645959'
+      x-request-id: 770d90b1-7dd2-4937-8d06-b1c1cca988cc
+      x-runtime: '0.790853'
       x-xss-protection: '0'
       content-length: '1081'
     body:
       encoding: ''
       file: no
-      string: '{"number":1270,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063471/nhgis1270_csv_PREVIEW.zip","bytes":8594,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063471/nhgis1270_csv.zip","bytes":166845,"sha256":null},"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063471/nhgis1270_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
+      string: '{"number":1436,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"codebookPreview":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422497/nhgis1436_csv_PREVIEW.zip","bytes":8662,"sha256":null},"tableData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422497/nhgis1436_csv.zip","bytes":166931,"sha256":null},"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422497/nhgis1436_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
         for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["100","110"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-07-20 21:22:26 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-12-09 22:04:11 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

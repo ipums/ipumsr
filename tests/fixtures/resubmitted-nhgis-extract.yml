@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts?collection=nhgis&version=2
     body:
       encoding: ''
       string: '{"datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"shapefiles":["110_blck_grp_2019_tl2019"],"dataFormat":"csv_no_header","description":"Extract
@@ -19,26 +19,25 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 20 Jul 2023 21:27:57 GMT
-      etag: W/"674998c3d3f907a417fc4e492aeb8dc7"
+      date: Mon, 09 Dec 2024 22:06:33 GMT
+      etag: W/"f3355cd7716d50824e4fcd8e6e064d75"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 2aafe902-7cb7-4f6a-bc22-dc17f3ea3965
-      x-runtime: '0.505576'
+      x-request-id: c45227ab-dd06-4bde-8b1a-751603f5d06c
+      x-runtime: '0.579328'
       x-xss-protection: '0'
       content-length: '674'
     body:
       encoding: ''
       file: no
-      string: '{"number":1272,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
+      string: '{"number":1438,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"dataFormat":"csv_no_header","description":"Extract
         for R client testing","datasets":{"2014_2018_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["nation"],"breakdownValues":["bs32.ge00"]},"2015_2019_ACS5a":{"dataTables":["B01001","B01002"],"geogLevels":["blck_grp"],"breakdownValues":["bs32.ge00"]}},"timeSeriesTables":{"CW3":{"geogLevels":["state"],"years":["1990"]}},"timeSeriesTableLayout":"time_by_row_layout","shapefiles":["110_blck_grp_2019_tl2019"],"geographicExtents":["100","110"],"breakdownAndDataTypeLayout":"single_file","version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-07-20 21:27:57 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-12-09 22:06:34 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

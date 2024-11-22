@@ -1,10 +1,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=usa&version=2
+    uri: https://api.ipums.org/extracts?collection=usa&version=2
     body:
       encoding: ''
-      string: '{"description":"","dataStructure":{},"dataFormat":"","samples":{"foo":{}},"variables":[],"collection":"usa","version":2}'
+      string: '{"description":"","dataFormat":"","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":false},"samples":["foo"],"collection":"usa","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Authorization: <<<IPUMS_API_KEY>>>
@@ -18,36 +18,35 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:52:59 GMT
+      date: Mon, 09 Dec 2024 22:06:21 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 0e665327-ac09-460f-b181-0ec135948ebe
-      x-runtime: '0.077852'
+      x-request-id: 55e9cdb5-1b34-4187-945f-6d316c49c1d8
+      x-runtime: '0.106709'
       x-xss-protection: '0'
-      content-length: '256'
+      content-length: '247'
     body:
       encoding: ''
       file: no
       string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
-        Request"},"detail":["The property ''#/dataStructure'' did not contain a minimum
-        number of properties 1.","The property ''#/variables'' of type array did not
-        match the following type: object."]}'
-  recorded_at: 2023-04-26 18:52:59 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+        Request"},"detail":["The property ''#/'' did not contain a required property
+        of ''dataStructure''.","The property ''#/samples'' of type array did not match
+        the following type: object."]}'
+  recorded_at: 2024-12-09 22:06:22 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts?collection=nhgis&version=2
     body:
       encoding: ''
-      string: '{"datasets":{"foo":{"dataTables":[null],"geogLevels":[null]}},"collection":"nhgis","version":2}'
+      string: '{"datasets":{"foo":{"dataTables":["bar"],"geogLevels":["baz"]}},"collection":"nhgis","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Authorization: <<<IPUMS_API_KEY>>>
@@ -61,19 +60,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:52:59 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 34d09209-327b-42c9-adcc-cbd97d62411c
-      x-runtime: '0.092843'
+      x-request-id: 915697d1-c5be-44f0-9074-ba08113b2be0
+      x-runtime: '0.128681'
       x-xss-protection: '0'
       content-length: '208'
     body:
@@ -82,8 +80,8 @@ http_interactions:
       string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
         Request"},"detail":["Datasets invalid: ''foo''","Data format invalid: '''';
         valid options include ''csv_no_header'', ''csv_header'', ''fixed_width''"]}'
-  recorded_at: 2023-04-26 18:52:59 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-12-09 22:06:22 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
     uri: https://api.ipums.org/foo?collection=nhgis&version=2
@@ -101,11 +99,11 @@ http_interactions:
       message: 'Client error: (404) Not Found'
     headers:
       content-type: text/plain; charset=utf-8
-      date: Wed, 26 Apr 2023 18:52:59 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       content-length: '9'
     body:
       encoding: ''
       file: no
       string: Not Found
-  recorded_at: 2023-04-26 18:52:59 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-12-09 22:06:22 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

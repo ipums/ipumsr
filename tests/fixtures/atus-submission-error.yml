@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=atus&version=2
+    uri: https://api.ipums.org/extracts?collection=atus&version=2
     body:
       encoding: ''
       string: '{"description":"Test ATUS extract","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":true},"samples":{"at2020":{},"at2021":{}},"variables":{"STATEFIP":{},"AGE":{"dataQualityFlags":true,"attachedCharacteristics":["mother","father","spouse"]},"SEX":{},"DIFFANY":{},"RELATER":{}},"timeUseVariables":{"ACT_PCARE":{},"my_time_use_var":{"owner":"example@example.com"}},"caseSelectWho":"individuals","collection":"atus","version":2}'
@@ -18,19 +18,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 05 Jun 2024 20:02:26 GMT
+      date: Mon, 09 Dec 2024 22:06:32 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 5f9fa026-dc84-4ea7-a209-4498b01f8aef
-      x-runtime: '0.638705'
+      x-request-id: b12e91ee-0dac-453b-b91f-959aed2c7bd0
+      x-runtime: '0.601497'
       x-xss-protection: '0'
       content-length: '170'
     body:
@@ -38,6 +37,6 @@ http_interactions:
       file: no
       string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
         Request"},"detail":["Time Use Variable owner example@example.com doesn''t
-        match user burkx031@umn.edu"]}'
-  recorded_at: 2024-06-05 20:02:29 GMT
+        match user robe2037@umn.edu"]}'
+  recorded_at: 2024-12-09 22:06:32 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

@@ -17,22 +17,21 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:38:40 GMT
-      etag: W/"8b72c3838654e729605a8901deede8d3"
+      date: Mon, 09 Dec 2024 22:06:28 GMT
+      etag: W/"23d425ba27efdec99bf2a0063eba2cf7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 1ccd487d-6583-42a2-bbe8-58a645b0866e
-      x-runtime: '0.319363'
+      x-request-id: 6cb7f111-41ac-40dc-a966-063ba2214741
+      x-runtime: '0.186991'
       x-xss-protection: '0'
-      content-length: '39881'
+      content-length: '40310'
     body:
       encoding: ''
       file: no
@@ -360,6 +359,10 @@ http_interactions:
         November 2023"},{"name":"cps2023_12s","description":"IPUMS-CPS, December 2023"},{"name":"cps2022_02s","description":"IPUMS-CPS,
         February 2022"},{"name":"cps2022_05s","description":"IPUMS-CPS, May 2022"},{"name":"cps2024_01s","description":"IPUMS-CPS,
         January 2024"},{"name":"cps2024_02b","description":"IPUMS-CPS, February 2024"},{"name":"cps2024_03b","description":"IPUMS-CPS,
-        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":642,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2024-05-29 17:38:40 GMT
+        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"},{"name":"cps2024_05b","description":"IPUMS-CPS,
+        May 2024"},{"name":"cps2024_06s","description":"IPUMS-CPS, June 2024"},{"name":"cps2024_07s","description":"IPUMS-CPS,
+        July 2024"},{"name":"cps2024_03s","description":"IPUMS-CPS, ASEC 2024"},{"name":"cps2024_08s","description":"IPUMS-CPS,
+        August 2024"},{"name":"cps2024_09s","description":"IPUMS-CPS, September 2024"},{"name":"cps2024_10s","description":"IPUMS-CPS,
+        October 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":649,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-12-09 22:06:28 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

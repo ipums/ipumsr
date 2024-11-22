@@ -1,5 +1,48 @@
 http_interactions:
 - request:
+    method: head
+    uri: https://api.ipums.org/supplemental-data/nhgis/crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip?collection=nhgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis_tr1990_co2010_10.zip"; filename*=UTF-8''nhgis_tr1990_co2010_10.zip
+      content-transfer-encoding: binary
+      content-type: application/zip
+      date: Mon, 09 Dec 2024 22:12:09 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      set-cookie: _secured_files_session=RdAPaMXN2PmdMwIBt1GUU4%2FLuvFbtqH36dQMMB154icVFtzAJucsiFzl7E35CUAutk4HyyB05XXT0bm0RfSwwK8DjyuLzr%2BaKrHVc8XOpFr42pcUtfyf4fCmt4FB5w%2F5%2BXbwVWlpY8qlh4b5FOygk0zXt93S7Pf01xhcoktn3PpP76BVZHOH3PyXQRaocJbKUY5%2FOoxtVGyJpAcHXPjV37Qhqc7Y%2Bbc8SC7V0nv8R5EYvpY1PQDb%2F0hIItE0EEuszzckvtwzx2ZKfF2cdEo5NrWk5BgXife7HIA1Zb6jcM8%3D--nOVEX%2Fya4eejeEC%2B--AoUMhlTtkLM4tqSFp4ZSCw%3D%3D;
+        path=/; expires=Mon, 09 Dec 2024 23:12:09 GMT; HttpOnly; SameSite=Lax
+      vary: Origin
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 9ee81b7e-cfc7-4591-a53f-9f347334930e
+      x-runtime: '0.081822'
+      x-xss-protection: '0'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2024-12-09 22:12:10 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
+- request:
     method: get
     uri: https://api.ipums.org/supplemental-data/nhgis/crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip?collection=nhgis&version=2
     body:
@@ -19,12 +62,12 @@ http_interactions:
       cache-control: no-cache
       content-disposition: attachment; filename="nhgis_tr1990_co2010_10.zip"; filename*=UTF-8''nhgis_tr1990_co2010_10.zip
       content-type: application/zip
-      date: Tue, 26 Nov 2024 15:24:32 GMT
+      date: Mon, 09 Dec 2024 22:12:10 GMT
       etag: '"66c3abac-f86"'
       last-modified: Mon, 19 Aug 2024 20:31:40 GMT
       server: nginx/1.18.0
-      set-cookie: _secured_files_session=LV22UENgQu72mQbENjp6yhB3Cs2gaawikl%2B%2FJ1ry7tW5%2FRRnt1UBaKdUjhFgBM5JNysSBqYlw4vruZObbTxt3EggNUHLfE%2FZItjLMJj0f9tdGm%2BJC4FPO%2BSm8vBbMTRX4UHAF%2B9zOPnOgi3ZRQhgt81XM3DtIXCgfRTmvHkPwdvh%2FjzPVjFzBv21pZ8tbMobUAKa5hgFClrOTJK5%2Bnb1s0m6O6NYJKAeZ%2F6T%2BWR0oYQS7rSe%2FLKSowxw4FKTJHZ2Tqpy6FDSlUSyOlpekblzgvnqXy%2FTmzZiSQN0bZlR7pI%3D--XrcU2Pl57cfeF4iy--EUCIMBMVuDjT7i9VMFmEkA%3D%3D;
-        path=/; expires=Tue, 26 Nov 2024 16:24:32 GMT; HttpOnly; SameSite=Lax
+      set-cookie: _secured_files_session=lCzQvVRgZlyU6cWnCEHA%2BbmMClRjZ0%2BepV%2BaRyTLirLTWm3obbicJTB1KGR8nWvrY%2FrpEDxoSftIB4O%2Fyp0Oq3EUA5hrHd%2FIZa6Qgiw7ELJ3tQCYdEjOgtGRA8J7p2I4tVqLIPwvPYEqzcDeGHQ3CmhfDOo0Gaqg5Y1xAk8oPCNd97O6Y%2FDeTHspA5nQY3Tu44%2BLU1ANq5FmACweUmB9NRX42t9XTE3Y7pmYEpCyRM4IZYUBiUeeaQ8pMceu4wm2CvXYj6AUC0gRIFxkQm2m5aA30szg4w7WfrPS1S96tu8%3D--qm7FFg1gRRLWXqY2--5BHaDYLnPdrDHl14659xXA%3D%3D;
+        path=/; expires=Mon, 09 Dec 2024 23:12:10 GMT; HttpOnly; SameSite=Lax
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
@@ -33,5 +76,5 @@ http_interactions:
       encoding: ''
       file: yes
       string: ../fixtures/nhgis_tr1990_co2010_10.zip
-  recorded_at: 2024-11-26 15:24:32 GMT
+  recorded_at: 2024-12-09 22:12:10 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

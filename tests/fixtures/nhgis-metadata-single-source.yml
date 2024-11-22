@@ -18,20 +18,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:37:40 GMT
+      date: Mon, 09 Dec 2024 22:06:29 GMT
       etag: W/"79ddde730abc0266e0270ba2b33392b7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 8797fddf-aa47-4fde-85ee-39e09f4d04f8
-      x-runtime: '0.028110'
+      x-request-id: c3f2080a-a9d0-4f0d-9c45-c68d57c11e16
+      x-runtime: '0.010695'
       x-xss-protection: '0'
       content-length: '10240'
     body:
@@ -160,5 +159,5 @@ http_interactions:
         Races: Population of six races: White; Black or African American; American
         Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander;
         Some Other Race","nhgisCode":"H72071"}]}'
-  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_at: 2024-12-09 22:06:29 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

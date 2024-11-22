@@ -94,7 +94,7 @@ test_that("Can check microdata extract status", {
 
   expect_equal(
     completed_atus_extract$time_use_variables$screentime$owner,
-    "burkx031@umn.edu"
+    "robe2037@umn.edu"
   )
 
   expect_setequal(
@@ -315,7 +315,7 @@ test_that("Can get extract history for all records", {
   vcr::use_cassette("extract-history-all-records", {
     responses <- ipums_api_paged_request(
       url = api_request_url(
-        collection = "cps",
+        collection = "atus",
         path = extract_request_path(),
         queries = list(pageNumber = 1, pageSize = 30)
       ),
@@ -330,15 +330,15 @@ test_that("Can get extract history for all records", {
         extract_list_from_json(
           new_ipums_json(
             httr::content(res, "text"),
-            collection = "cps"
+            collection = "atus"
           )
         )
       }
     )
   )
 
-  expect_equal(length(extracts), 94)
-  expect_equal(extracts[[94]][["number"]], 1)
+  expect_equal(length(extracts), 41)
+  expect_equal(extracts[[41]][["number"]], 1)
 })
 
 test_that("Can get extract history for more records than page size", {
@@ -347,13 +347,13 @@ test_that("Can get extract history for more records than page size", {
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.
   # This enables us to ensure that multiple pages are requested.
-  how_many <- 91
+  how_many <- 37
   page_limit <- 30
 
   vcr::use_cassette("extract-history-multi-page-records", {
     responses <- ipums_api_paged_request(
       url = api_request_url(
-        collection = "cps",
+        collection = "atus",
         path = extract_request_path(),
         queries = list(pageNumber = 1, pageSize = page_limit)
       ),
@@ -368,7 +368,7 @@ test_that("Can get extract history for more records than page size", {
         extract_list_from_json(
           new_ipums_json(
             httr::content(res, "text"),
-            collection = "cps"
+            collection = "atus"
           )
         )
       }

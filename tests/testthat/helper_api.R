@@ -119,7 +119,7 @@ test_atus_extract_submittable <- function() {
     ),
     time_use_variables = list(
       "ACT_PCARE",
-      tu_var_spec("screentime", owner = "burkx031@umn.edu")
+      tu_var_spec("screentime", owner = "robe2037@umn.edu")
     ),
     sample_members = c("include_household_members", "include_non_respondents"),
     data_structure = "hierarchical"

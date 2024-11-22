@@ -204,7 +204,7 @@ test_that("Can submit an ATUS extract", {
 
   expect_equal(
     submitted_atus_extract$time_use_variables$screentime$owner,
-    "burkx031@umn.edu"
+    "robe2037@umn.edu"
   )
 
   expect_setequal(
