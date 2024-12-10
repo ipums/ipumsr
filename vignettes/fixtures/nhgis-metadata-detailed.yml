@@ -18,20 +18,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:37:22 GMT
+      date: Fri, 22 Nov 2024 19:52:48 GMT
       etag: W/"7a1e09b6ad15a5cf5e44fd3cf2aaf87e"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 12838448-2708-42d2-9d3a-e72d24a1ec3e
-      x-runtime: '0.043866'
+      x-request-id: d07c16d3-31be-4849-af7c-e23c6584e725
+      x-runtime: '0.008451'
       x-xss-protection: '0'
       content-length: '11203'
     body:
@@ -113,7 +112,7 @@ http_interactions:
         of Irrigation System Construction","universe":"Farms","nhgisCode":"AYG","sequence":64,"datasetName":"1900_cAg","nVariables":1},{"name":"NT66","description":"Farm
         Homes","universe":"Farm Homes","nhgisCode":"AYH","sequence":65,"datasetName":"1900_cAg","nVariables":1},{"name":"NT67","description":"Farm
         Homes by Tenure","universe":"Farm Homes","nhgisCode":"AYI","sequence":66,"datasetName":"1900_cAg","nVariables":5}],"geogLevels":[{"name":"nation","description":"Nation","hasGeogExtentSelection":false,"sequence":1},{"name":"state","description":"State","hasGeogExtentSelection":false,"sequence":4},{"name":"county","description":"State--County","hasGeogExtentSelection":false,"sequence":25}]}'
-  recorded_at: 2024-06-02 12:37:23 GMT
+  recorded_at: 2024-11-22 19:52:48 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -134,25 +133,24 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:37:23 GMT
+      date: Fri, 22 Nov 2024 19:52:48 GMT
       etag: W/"0d18004dc21f56f8ac68449668304dcf"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: d6af2bdc-3dcd-436e-8c00-6f410a30cee7
-      x-runtime: '0.046998'
+      x-request-id: 46a1a16b-6a96-4a3b-b231-10ec3f7003f1
+      x-runtime: '0.009157'
       x-xss-protection: '0'
       content-length: '180'
     body:
       encoding: ''
       file: no
       string: '{"name":"NT2","description":"Number of Farms","universe":"Farms","nhgisCode":"AW3","sequence":2,"datasetName":"1900_cAg","variables":[{"description":"Total","nhgisCode":"AW3001"}]}'
-  recorded_at: 2024-06-02 12:37:23 GMT
+  recorded_at: 2024-11-22 19:52:48 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

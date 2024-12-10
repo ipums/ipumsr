@@ -119,6 +119,7 @@ reference:
       - set_ipums_default_collection
       - ipums_data_collections
       - ipums_extract
+      - download_supplemental_data
   - title: "Explore IPUMS variable metadata"
     desc: "Get additional information about IPUMS data contents"
     contents:

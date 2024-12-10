@@ -18,20 +18,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:37:40 GMT
+      date: Mon, 09 Dec 2024 22:06:29 GMT
       etag: W/"2345fa0eb3c427fbfe568bf1052912b8"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 7a4c2711-1b18-43ff-86ef-af9f0771b777
-      x-runtime: '0.044798'
+      x-request-id: 01f125e8-a7c2-4448-a304-77e8a9617cb4
+      x-runtime: '0.010102'
       x-xss-protection: '0'
       content-length: '1214'
     body:
@@ -47,5 +46,5 @@ http_interactions:
         Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
         Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
         Area","sequence":382}]}'
-  recorded_at: 2024-05-29 17:37:40 GMT
+  recorded_at: 2024-12-09 22:06:29 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

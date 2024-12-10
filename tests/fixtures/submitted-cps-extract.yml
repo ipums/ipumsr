@@ -1,10 +1,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.ipums.org/extracts/?collection=cps&version=2
+    uri: https://api.ipums.org/extracts?collection=cps&version=2
     body:
       encoding: ''
-      string: '{"description":"Compare age-sex-race breakdowns 1976","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"AGE":{"dataQualityFlags":false,"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","father"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"caseSelectWho":"individuals","dataQualityFlags":true,"collection":"cps","version":2}'
+      string: '{"description":"Compare age-sex-race breakdowns 1976","dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":false},"samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"AGE":{"dataQualityFlags":false,"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","father"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"caseSelectWho":"individuals","dataQualityFlags":true,"collection":"cps","version":2}'
     headers:
       Accept: application/json, text/xml, application/xml, */*
       Authorization: <<<IPUMS_API_KEY>>>
@@ -18,26 +18,25 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 04 May 2023 21:48:13 GMT
-      etag: W/"e47156271add87337dee6f57087238c5"
+      date: Mon, 09 Dec 2024 22:06:26 GMT
+      etag: W/"09c1ea7a9fbf20d2fb3b7a1088a6e437"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 8c31beb9-01e7-4d17-85da-d5eeaf8b46bf
-      x-runtime: '0.983356'
+      x-request-id: 940aa7ff-09fb-432a-9d5c-52c92cad220d
+      x-runtime: '1.021982'
       x-xss-protection: '0'
-      content-length: '853'
+      content-length: '901'
     body:
       encoding: ''
       file: no
-      string: '{"number":116,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","dataQualityFlags":true,"description":"Compare
-        age-sex-race breakdowns 1976","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"RECTYPE":{},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"ASECFLAG":{"preselected":true},"ASECWTH":{"preselected":true},"PERNUM":{"preselected":true},"CPSIDP":{"preselected":true},"ASECWT":{"preselected":true},"AGE":{"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","mother2","father","father2"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"collection":"cps"}}'
-  recorded_at: 2023-05-04 21:48:14 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+      string: '{"number":175,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"version":2,"dataStructure":{"hierarchical":{}},"dataFormat":"fixed_width","caseSelectWho":"individuals","dataQualityFlags":true,"description":"Compare
+        age-sex-race breakdowns 1976","samples":{"cps2018_03s":{},"cps2019_03s":{}},"variables":{"RECTYPE":{"preselected":true},"YEAR":{"preselected":true},"SERIAL":{"preselected":true},"MONTH":{"preselected":true},"CPSID":{"preselected":true},"ASECFLAG":{"preselected":true},"ASECWTH":{"preselected":true},"PERNUM":{"preselected":true},"CPSIDP":{"preselected":true},"CPSIDV":{"preselected":true},"ASECWT":{"preselected":true},"AGE":{"attachedCharacteristics":["head"]},"SEX":{"caseSelections":{"general":["2"]},"attachedCharacteristics":["mother","mother2","father","father2"]},"RACE":{"caseSelections":{"general":["810","811","812"]}}},"collection":"cps"}}'
+  recorded_at: 2024-12-09 22:06:26 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

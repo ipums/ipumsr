@@ -16,20 +16,20 @@ http_interactions:
       message: 'Client error: (404) Not Found'
     headers:
       content-type: text/html; charset=UTF-8
-      date: Wed, 29 May 2024 17:38:38 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       server: nginx/1.22.1
       vary: Origin
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 0c6df97c-757f-410e-9849-011c55c5b4d6
-      x-runtime: '0.001984'
+      x-request-id: 0282bdfb-5b85-4977-b10d-a13f360ea1f3
+      x-runtime: '0.003190'
       content-length: '0'
     body:
       encoding: ''
       file: no
       string: ''
-  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_at: 2024-12-09 22:06:22 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -50,19 +50,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:38:38 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 0beaf84d-5fe5-44aa-beb7-6d2a7ba2948c
-      x-runtime: '0.016329'
+      x-request-id: 0ffefbfd-1d70-4e32-a0e1-dc3460a497c5
+      x-runtime: '0.016126'
       x-xss-protection: '0'
       content-length: '100'
     body:
@@ -70,7 +69,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find Dataset."}'
-  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_at: 2024-12-09 22:06:22 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -91,19 +90,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:38:38 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 54fd97f1-18f7-432c-bd22-c31d287ec964
-      x-runtime: '0.014717'
+      x-request-id: d0d76ea9-363d-4c91-905d-e9b4d25e70ed
+      x-runtime: '0.014750'
       x-xss-protection: '0'
       content-length: '102'
     body:
@@ -111,7 +109,7 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find DataTable."}'
-  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_at: 2024-12-09 22:06:22 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -132,19 +130,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:38:39 GMT
+      date: Mon, 09 Dec 2024 22:06:22 GMT
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: e2de55b2-f705-4b99-a427-70effe6f7ea3
-      x-runtime: '0.017919'
+      x-request-id: 2fd4ce14-cc47-430b-8395-14a8aa20e4d6
+      x-runtime: '0.016397'
       x-xss-protection: '0'
       content-length: '108'
     body:
@@ -152,5 +149,5 @@ http_interactions:
       file: no
       string: '{"type":"RecordNotFound","status":{"code":404,"name":"Not Found"},"detail":"Couldn''t
         find TimeSeriesTable."}'
-  recorded_at: 2024-05-29 17:38:39 GMT
+  recorded_at: 2024-12-09 22:06:22 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

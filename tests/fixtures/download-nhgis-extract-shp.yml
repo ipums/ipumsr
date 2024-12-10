@@ -1,7 +1,49 @@
 http_interactions:
 - request:
+    method: head
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422504/nhgis1437_shape.zip
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: no-cache
+      content-disposition: attachment; filename="nhgis1437_shape.zip"; filename*=UTF-8''nhgis1437_shape.zip
+      content-transfer-encoding: binary
+      content-type: application/zip
+      date: Mon, 09 Dec 2024 22:06:43 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      set-cookie: _session_id=gxhlX%2BO4OAE6rPNWdmy2IdBIk1M%2Bang2Td2Dx%2FlhE47ReO73lZtqPhsOcfky3lpLQEtF5lOACCiDdCif4sMxitjIPbT%2F6AEMzb7YJOclsVnifW397WAtuQ6jqxMtbVSV5UKGyDidPOvcRoET7FuTeL%2FaXd8o3EiQLoPhBTq1vnSheXTqn4eEZ%2FqeyQzA8RqZr7AErPcMLmRrgxbe2jupRKCt1GBNeSK0nRIdZeUKaLBBoff%2BSi5Fm9tSLzzienM%3D--drnAXS0p3mOeCpXq--7Tecz5j7ne%2FjJOqPC5KOWA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 7f0f957a-1c7e-455e-8f06-fab71f8b29eb
+      x-runtime: '0.123170'
+      x-xss-protection: '0'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2024-12-09 22:06:43 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
+- request:
     method: get
-    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063473/nhgis1271_shape.zip
+    uri: https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422504/nhgis1437_shape.zip
     body:
       encoding: ''
       string: ''
@@ -17,13 +59,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: no-cache
-      content-disposition: attachment; filename="nhgis1271_shape.zip"; filename*=UTF-8''nhgis1271_shape.zip
+      content-disposition: attachment; filename="nhgis1437_shape.zip"; filename*=UTF-8''nhgis1437_shape.zip
       content-type: application/zip
-      date: Thu, 20 Jul 2023 21:27:59 GMT
-      etag: '"64b9a6d4-7ca95"'
-      last-modified: Thu, 20 Jul 2023 21:27:48 GMT
+      date: Mon, 09 Dec 2024 22:06:43 GMT
+      etag: '"675769ec-7ca95"'
+      last-modified: Mon, 09 Dec 2024 22:06:36 GMT
       server: nginx/1.18.0
-      set-cookie: _session_id=9yjtj%2BmiCCsHspRbbXxibG75bHmiAvaUbeKEAQhBPXnVi1RPGmVdl6CmJJXoqcTiUM5lWNF68GfRihlTq2lGMr%2F8GSzN7oFHYZiEW%2BAjaFTEMF0Bo22ktVxokXQNZsKuaGQwsNR%2F85KUEraakv%2FMV6DaBDJvw81mQ0Es4PcG5FHp8db74%2FTuvFKyE%2Fa4JXpuhunTbBMbpAUL9ZovYi0zuTgQ2GjPDYMaqYQTLc%2FgV5cwap0CsyeZn3VIGOcIw%2FE%3D--x9eIgJ%2BXVt2THg%2FY--%2BLrlIk31g72nA2R22M8sRQ%3D%3D;
+      set-cookie: _session_id=cBiywokg6cbtAZpPAJ9ZacJyZXp5YbsU7e5n9Fz99te9EsZz8Z9wEMKZ7XY7RCsiGWk2ZeneUx0BmGomhZppphK2LpobU24NdeQbfj3dt1iLJk%2FTCHiwb%2F1XtdZJ9ij9ZnSiXiEwMoXb61CfVhT6dbmfjhGi1PE%2FF11rY0RR7%2F7JU0eeH2s3ZQQSTePlA55L553Yk7DKBZPriyR5tqLOg0vu7fbUf0Z%2FiOaZrxbyaX1fsXabLPUotSaqO0Y4NK0%3D--UOMMRuCgSZPPyABt--Lonnxg2VQMGFQ%2FUZPoZyVw%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -32,6 +74,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/nhgis1271_shape.zip
-  recorded_at: 2023-07-20 21:28:00 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+      string: ../fixtures/nhgis1437_shape.zip
+  recorded_at: 2024-12-09 22:06:43 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

@@ -747,8 +747,9 @@ parse_response_error <- function(res) {
 # Called in ipums_api_request()
 validate_api_request <- function(res, call = caller_env()) {
   is_downloads_request <- fostr_detect(res$url, "downloads")
+  is_supp_data_request <- fostr_detect(res$url, "supplemental-data")
   is_extract_request <- !is_downloads_request &&
-    fostr_detect(res$url, "extracts/")
+    fostr_detect(res$url, "extracts")
 
   status <- httr::status_code(res)
 
@@ -761,45 +762,32 @@ validate_api_request <- function(res, call = caller_env()) {
       }
     )
 
-    # Standard error message
-    error_message <- paste0("API request failed with status ", status, ".")
-
     # Authorization errors could be related to invalid registration or key
     if (status %in% c(401, 403)) {
       # The API provides details for invalid registration cases, so check
       # if any error details exist.
       if (length(error_details) > 0) {
-        rlang::abort(
-          c("Invalid IPUMS registration.", error_details),
-          call = call
-        )
+        error_details <- c("x" = "Invalid IPUMS registration", error_details)
       }
 
       # Otherwise we should be dealing with a valid registration but invalid key
-      rlang::abort(
-        c(
-          "The provided API key is either missing or invalid.",
-          "i" = paste0(
-            "Please provide your API key to the `api_key` argument ",
-            "or request a key at https://account.ipums.org/api_keys"
-          ),
-          "i" = "Use `set_ipums_api_key()` to save your key for future use."
+      error_details <- c(
+        "x" = "The provided API key is either missing or invalid.",
+        "i" = paste0(
+          "Please provide your API key to the `api_key` argument ",
+          "or request a key at https://account.ipums.org/api_keys"
         ),
-        call = call
+        "i" = "Use `set_ipums_api_key()` to save your key for future use."
       )
     }
 
     # If a downloads request, add hint to inform of possible issue
     if (is_downloads_request) {
-      rlang::abort(
-        c(
-          error_message,
-          "i" = paste0(
-            "The extract may have expired. Check its status ",
-            "with `get_extract_info()`"
-          )
-        ),
-        call = call
+      error_details <- c(
+        "i" = paste0(
+          "The extract may have expired. Check its status ",
+          "with `get_extract_info()`"
+        )
       )
     }
 
@@ -809,37 +797,34 @@ validate_api_request <- function(res, call = caller_env()) {
       url_tail <- url_parts[length(url_parts)]
       number <- as.numeric(fostr_split(url_tail, "\\?")[[1]][[1]])
 
-      rlang::abort(
-        c(
-          error_message,
-          "x" = paste0(
-            "Extract number ", number, " does not exist for this collection."
-          )
-        ),
-        call = call
+      error_details <- c(
+        "x" = paste0(
+          "Extract number ", number, " does not exist for this collection."
+        )
       )
     }
 
     if (status == 429) {
-      rlang::abort(
-        c(error_message, "x" = "Rate limit exceeded."),
-        call = call
-      )
+      error_details <- c("x" = "Rate limit exceeded.")
     }
 
-    # Other errors should get the general message
-    rlang::abort(
-      c(error_message, error_details),
-      call = call
-    )
+    abort_bad_request(status, error_details, call = call)
   }
 
   # Download requests do not return JSON by design
-  if (!is_downloads_request && httr::http_type(res) != "application/json") {
-    rlang::abort("API request did not return JSON", call = call)
+  if (!is_downloads_request && !is_supp_data_request) {
+    if (httr::http_type(res) != "application/json") {
+      rlang::abort("API request did not return JSON", call = call)
+    }
   }
 
   invisible(res)
+}
+
+# Helper to format standard request errors
+abort_bad_request <- function(status, details, call = caller_env()) {
+  error_message <- paste0("API request failed with status ", status, ".")
+  rlang::abort(c(error_message, details), call = call)
 }
 
 api_extract_warnings <- function(extract_number, warnings) {
@@ -922,13 +907,13 @@ extract_request_path <- function(number = NULL) {
     number <- format(number, scientific = FALSE)
   }
 
-  if (active_api_instance() == "internal") {
-    path <- paste0("internal-extracts/", number)
-  } else {
-    path <- paste0("extracts/", number)
-  }
+  extracts_path <- ifelse(
+    active_api_instance() == "internal",
+    "internal-extracts",
+    "extracts"
+  )
 
-  path
+  build_request_path(extracts_path, number)
 }
 
 #' Helper to construct URL paths for API metadata endpoints
@@ -950,16 +935,20 @@ extract_request_path <- function(number = NULL) {
 #'
 #' @noRd
 metadata_request_path <- function(...) {
+  metadata_path <- ifelse(
+    active_api_instance() == "internal",
+    "internal-metadata",
+    "metadata"
+  )
+
+  build_request_path(metadata_path, ...)
+}
+
+build_request_path <- function(...) {
   path_args <- purrr::compact(rlang::list2(...))
   path_fields <- names(path_args)
 
-  if (active_api_instance() == "internal") {
-    metadata_path <- "internal-metadata"
-  } else {
-    metadata_path <- "metadata"
-  }
-
-  path_args <- c(metadata_path, rbind(path_fields, unlist(path_args)))
+  path_args <- rbind(path_fields, unlist(path_args))
 
   # Avoids extra `/` for unnamed args in `path`
   path_args <- path_args[which(path_args != "")]
@@ -1116,6 +1105,14 @@ ipums_api_download_request <- function(url,
     progress <- NULL
   }
 
+  # Make HEAD request to ensure file exists before attempting download
+  ipums_api_request(
+    "HEAD",
+    url = url,
+    body = FALSE,
+    api_key = api_key
+  )
+
   ipums_api_request(
     "GET",
     url = url,
@@ -1125,7 +1122,7 @@ ipums_api_download_request <- function(url,
     progress
   )
 
-  file_path
+  invisible(file_path)
 }
 
 # Helper to set the page size limit for each

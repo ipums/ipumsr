@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/1271?collection=nhgis&version=2
+    uri: https://api.ipums.org/extracts/1437?collection=nhgis&version=2
     body:
       encoding: ''
       string: ''
@@ -18,25 +18,24 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Thu, 20 Jul 2023 21:27:52 GMT
-      etag: W/"54a8c3147dd39f4bd350f87aabeca130"
+      date: Mon, 09 Dec 2024 22:06:43 GMT
+      etag: W/"8a2d00c9c764d0ca82166594a322369f"
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 096c8ee1-5181-4299-9f40-276157d02585
-      x-runtime: '0.675476'
+      x-request-id: ef6c67c9-cf70-49ea-a585-a73012aa66bb
+      x-runtime: '0.757523'
       x-xss-protection: '0'
       content-length: '326'
     body:
       encoding: ''
       file: no
-      string: '{"number":1271,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2063473/nhgis1271_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
-  recorded_at: 2023-07-20 21:27:52 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+      string: '{"number":1437,"status":"completed","email":"robe2037@umn.edu","downloadLinks":{"gisData":{"url":"https://api.ipums.org/downloads/nhgis/api/v1/extracts/2422504/nhgis1437_shape.zip","bytes":510613,"sha256":null}},"extractDefinition":{"description":"","shapefiles":["110_blck_grp_2019_tl2019"],"version":2,"collection":"nhgis"}}'
+  recorded_at: 2024-12-09 22:06:43 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

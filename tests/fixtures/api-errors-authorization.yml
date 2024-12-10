@@ -16,7 +16,7 @@ http_interactions:
       message: 'Client error: (401) Unauthorized'
     headers:
       content-type: application/json
-      date: Wed, 29 May 2024 17:37:36 GMT
+      date: Mon, 09 Dec 2024 22:06:21 GMT
       vary: Origin
       x-generator: tyk.io
       content-length: '46'
@@ -27,11 +27,11 @@ http_interactions:
         {
             "error": "Authorization field missing"
         }
-  recorded_at: 2024-05-29 17:37:36 GMT
+  recorded_at: 2024-12-09 22:06:21 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/extracts/?collection=usa&version=2&pageNumber=1&pageSize=1
+    uri: https://api.ipums.org/extracts?collection=usa&version=2&pageNumber=1&pageSize=1
     body:
       encoding: ''
       string: ''
@@ -46,7 +46,7 @@ http_interactions:
       message: 'Client error: (403) Forbidden'
     headers:
       content-type: application/json
-      date: Wed, 29 May 2024 17:37:36 GMT
+      date: Mon, 09 Dec 2024 22:06:21 GMT
       vary: Origin
       x-generator: tyk.io
       content-length: '57'
@@ -57,5 +57,5 @@ http_interactions:
         {
             "error": "Access to this API has been disallowed"
         }
-  recorded_at: 2024-05-29 17:37:36 GMT
+  recorded_at: 2024-12-09 22:06:21 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

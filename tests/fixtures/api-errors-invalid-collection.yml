@@ -17,19 +17,18 @@ http_interactions:
     headers:
       cache-control: no-cache
       content-type: application/json; charset=utf-8
-      date: Wed, 26 Apr 2023 18:26:46 GMT
+      date: Mon, 09 Dec 2024 22:06:25 GMT
       referrer-policy: strict-origin-when-cross-origin
-      server: nginx/1.18.0
+      server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 5f78a0c7-9a25-42c3-a7ce-51db63bb7738
-      x-runtime: '0.002743'
+      x-request-id: 3ec74910-19b3-4a92-b7ca-dfa411317d92
+      x-runtime: '0.004326'
       x-xss-protection: '0'
       content-length: '268'
     body:
@@ -39,5 +38,5 @@ http_interactions:
         Parameter Invalid"},"detail":"The ''collection'' query parameter is invalid.
         Currently, the only valid values are nhgis, ahtus, atus, cps, dhs, highered,
         ipumsi, meps, mics, mtus, napp, nhis, pma, usa"}'
-  recorded_at: 2023-04-26 18:26:46 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+  recorded_at: 2024-12-09 22:06:25 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
