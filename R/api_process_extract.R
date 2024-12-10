@@ -475,7 +475,7 @@ download_extract <- function(extract,
 #'
 #' Currently, only IPUMS NHGIS files are supported.
 #'
-#' In general, files found on the IPUMS NHGIS website that include
+#' In general, files found on an IPUMS project website that include
 #' `secure-assets` in their URL are available as supplemental data. See the
 #' [IPUMS developer
 #' documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/nhgis/)
@@ -496,9 +496,7 @@ download_extract <- function(extract,
 #' # Download a state-level tract to county crosswalk from NHGIS
 #' file <- download_supplemental_data(
 #'   "nhgis",
-#'   "crosswalks",
-#'   "nhgis_tr1990_co2010_state",
-#'   "nhgis_tr1990_co2010_10.zip"
+#'   "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip"
 #' )
 #'
 #' read_nhgis(file)
@@ -506,8 +504,7 @@ download_extract <- function(extract,
 #' # Download 1980 Minnesota block boundary file
 #' file <- download_supplemental_data(
 #'   "nhgis",
-#'   "blocks-1980",
-#'   "MN_block_1980.zip"
+#'   "blocks-1980/MN_block_1980.zip"
 #' )
 #'
 #' read_ipums_sf(file)
