@@ -126,6 +126,8 @@ API</li>
 examples in this vignette:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tech.popdata.org/ipumsr/">ipumsr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -282,11 +284,11 @@ Storing the returned object can be useful for checking the extract
 request’s status later.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_extract_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Successfully submitted IPUMS USA extract number 348</span></span></code></pre></div>
+<span><span class="co">#&gt; Successfully submitted IPUMS USA extract number 456</span></span></code></pre></div>
 <p>The extract number will be stored in the returned object:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">number</span></span>
-<span><span class="co">#&gt; [1] 348</span></span>
+<span><span class="co">#&gt; [1] 456</span></span>
 <span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "queued"</span></span></code></pre></div>
 <p>Note that some fields of a submitted extract may be automatically
@@ -306,7 +308,7 @@ for your most recent extract request for a given collection:</p>
 <code class="sourceCode R"><span><span class="va">usa_extract_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_extract_info.html">get_last_extract_info</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">usa_extract_submitted</span><span class="op">$</span><span class="va">number</span></span>
-<span><span class="co">#&gt; [1] 348</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 456</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="wait">Wait for an extract request to complete<a class="anchor" aria-label="anchor" href="#wait"></a>
@@ -323,7 +325,7 @@ containing the completed extract definition.</p>
 <span><span class="co">#&gt; Checking extract status...</span></span>
 <span><span class="co">#&gt; Waiting 10 seconds...</span></span>
 <span><span class="co">#&gt; Checking extract status...</span></span>
-<span><span class="co">#&gt; IPUMS USA extract 348 is ready to download.</span></span></code></pre></div>
+<span><span class="co">#&gt; IPUMS USA extract 456 is ready to download.</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_extract_complete</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "completed"</span></span></code></pre></div>
@@ -427,21 +429,21 @@ requests to retrieve with the <code>how_many</code> argument:</p>
 <span></span>
 <span><span class="va">usa_extracts</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 456</span></span>
 <span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 347</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 455</span></span>
 <span><span class="co">#&gt; Description: Data from long ago</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 346</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 454</span></span>
 <span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
@@ -459,28 +461,28 @@ variable or are ready for download:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="op">~</span> <span class="st">"MARST"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 456</span></span>
 <span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
 <span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 348</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 456</span></span>
 <span><span class="co">#&gt; Description: USA extract for API vignette</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 347</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 455</span></span>
 <span><span class="co">#&gt; Description: Data from long ago</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us1880a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(12 total) YEAR, SAMPLE, SERIAL, HHWT, CLUSTER, STRATA, G...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt; Submitted IPUMS USA extract number 346</span></span>
+<span><span class="co">#&gt; Submitted IPUMS USA extract number 454</span></span>
 <span><span class="co">#&gt; Description: Data from 2017 PRCS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(1 total) us2017b</span></span>
