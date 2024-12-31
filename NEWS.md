@@ -5,7 +5,7 @@
 
 -   Fixed bug in `shape_join.R` that would always give the result of a 
     right join no matter whether `ipums_shape_left_join()` or 
-    `ipums_shape_right_join()` was used.
+    `ipums_shape_right_join()` was used (thanks @JiaZhang42!).
 
 # ipumsr 0.8.1
 
