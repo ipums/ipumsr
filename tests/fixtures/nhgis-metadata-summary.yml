@@ -17,20 +17,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Wed, 29 May 2024 17:37:39 GMT
+      date: Mon, 09 Dec 2024 22:06:27 GMT
       etag: W/"90237232fcf47b73a46675385dcf625c"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 39e03aae-e6c0-486b-8a5d-32aff4087d4c
-      x-runtime: '0.033496'
+      x-request-id: e5e86c1c-ea9e-4c3d-8b45-f76b467a2b30
+      x-runtime: '0.010513'
       x-xss-protection: '0'
       content-length: '296915'
     body:
@@ -2288,5 +2287,5 @@ http_interactions:
         Group","extent":"West Virginia","basis":"2022 TIGER/Line +","sequence":1948},{"name":"550_blck_grp_2022_tl2022","year":"2022","geographicLevel":"Block
         Group","extent":"Wisconsin","basis":"2022 TIGER/Line +","sequence":1949},{"name":"560_blck_grp_2022_tl2022","year":"2022","geographicLevel":"Block
         Group","extent":"Wyoming","basis":"2022 TIGER/Line +","sequence":1950}],"pageNumber":1,"pageSize":2500,"totalCount":1950,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2024-05-29 17:37:39 GMT
+  recorded_at: 2024-12-09 22:06:28 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0

@@ -1,13 +1,18 @@
 # ipumsr (development version)
 
+-   Adds `download_supplemental_data()` to enable access to supplemental
+    data files via the IPUMS API.
+
+-   Fixed bug in `shape_join.R` that would always give the result of a 
+    right join no matter whether `ipums_shape_left_join()` or 
+    `ipums_shape_right_join()` was used (thanks @JiaZhang42!).
+
 # ipumsr 0.8.1
 
 ## Minor improvements and fixes
 
 -   Small fix to vignette that was previously throwing an error in R CMD Check 
     with `--no-manual` and `--no-build-vignettes` options (#80).
-
--   Small fix to `shape_join.R` that would always give the result of a right_join no matter whether `ipums_shape_left_join()` or `ipums_shape_right_join()` is used.
 
 # ipumsr 0.8.0
 

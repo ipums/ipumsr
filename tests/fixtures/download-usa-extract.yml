@@ -1,7 +1,49 @@
 http_interactions:
 - request:
+    method: head
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2422494/usa_00468.xml
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: no-cache
+      content-disposition: attachment; filename="usa_00468.xml"; filename*=UTF-8''usa_00468.xml
+      content-transfer-encoding: binary
+      content-type: application/xml
+      date: Mon, 09 Dec 2024 22:06:35 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      set-cookie: _session_id=Bu2DZY%2BIwzR3%2B3OHvMLt6SpslDW9q73XBJYgVx%2FUZGaIXZDOTNYXImu%2FYoTXlTtXN4KN83vEKS5N05nTPy0GV4pZ7dqOamcwe3ndOYmcBK8yxtps%2Bg5p%2BGZnkxYbPhlUopiGnOMDzNUe7BhPJqKzJt2odB6BCrC4qcWIttto9G7r62OwJVn%2F6rRfTz3jf3Rwb%2Be3oF3JcRWF5JvZYk2x9eJJoEjGO16iJEqEQ5B4ZyU1Bk1hozdq2rEgJy9ipdw%3D--nSG1%2FOWSzXUcGPxH--p0%2FZPmTsUBJAl%2Fn5lOxlBA%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 442eb528-f9b1-4cf3-99c8-4fad2d8a9482
+      x-runtime: '0.137036'
+      x-xss-protection: '0'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2024-12-09 22:06:36 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
+- request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.xml
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2422494/usa_00468.xml
     body:
       encoding: ''
       string: ''
@@ -17,27 +59,69 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: no-cache
-      content-disposition: attachment; filename="usa_00301.xml"; filename*=UTF-8''usa_00301.xml
+      content-disposition: attachment; filename="usa_00468.xml"; filename*=UTF-8''usa_00468.xml
       content-type: application/xml
-      date: Thu, 04 May 2023 21:48:17 GMT
-      etag: '"645427ee-10b9b"'
-      last-modified: Thu, 04 May 2023 21:47:26 GMT
+      date: Mon, 09 Dec 2024 22:06:36 GMT
+      etag: '"675768e9-fa46"'
+      last-modified: Mon, 09 Dec 2024 22:02:17 GMT
       server: nginx/1.18.0
-      set-cookie: _session_id=OZu9RhuriMTkp8OS5BWwnd7XMo4bPNcm6vbIdyXo9kZBCzHwQEvaJaJ3lDIIkS7LRqCvxcoYW7w%2FHJX0an7r3uzdNZVAg0hMQtidwgZ2hvA09jdsuiULg0af%2BsyJMzOWM%2FTu%2B6oBezBL3QfbfnKcZ45Elh6U3%2BQLqmuvPePub5aT7MGTEIaMxTfVEfqGHv212Le16S6mQNuztUJWVYjA5EzfhLi25p%2BEZgP4vn5E1bLRva6tSKJCI4wNuWhVdko%3D--MMwGD%2Bgz8CZtSBfI--wjryYFLhqD2DqACin2L%2BGQ%3D%3D;
+      set-cookie: _session_id=5lskLpNwCndJ7Ogf%2Bun6wa%2FhLaGgBKObFFZj%2BUb8ReoENWbE3yD8lkoj8Nx74VFSWP9tA6wpnqizX8gsDeZLyAapXGFJoirHJOItttkk3uTL5S8gJsU3gkafl2TNEA%2BBzxw18EhkGkyjiLb1vkXbyNDX7aBf8oIYbiOPLFqO9Dz%2Ff4gj8J82KYyVNm3vrP7sHvngQnQqk8dJLYbBvbGAA2YQtTxra5pLi3CECQEVsbW%2FlcGhGI8mW47cBUKL0jo%3D--c2%2FqCZjDeSCChzQb--FoQEV9kWIfATO94nNC5hxQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      content-length: '68507'
+      content-length: '64070'
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00301.xml
-  recorded_at: 2023-05-04 21:48:17 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+      string: ../fixtures/usa_00468.xml
+  recorded_at: 2024-12-09 22:06:36 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
+- request:
+    method: head
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2422494/usa_00468.dat.gz
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: no-cache
+      content-disposition: attachment; filename="usa_00468.dat.gz"; filename*=UTF-8''usa_00468.dat.gz
+      content-transfer-encoding: binary
+      content-type: application/gzip
+      date: Mon, 09 Dec 2024 22:06:36 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.18.0
+      set-cookie: _session_id=NyTGkyAez1QQzOlQg7M9e5WNDvF%2BYV1CIdoux5tTn0gCBWEzdS3fnVoEb33J%2BKx5qyulVzPOK11sPz9V%2FdNgOmlXeraitfrTAPYwiMedpTHrD7wHVk%2BkSrqRbv3qP8y89p0UI5v3q%2BeKHWTvMLHdKyDGh70iyXBQ3qXKLi5Ej%2FOFr5R04uvgztf8R0iQxw7WR33rG8PRZuEfpzi7U%2BXK6JIZiz%2FErnUWcdo1IwCjyNDBAKmm8zb1WSw9SrY242g%3D--y3M4MYpbc4YQyoAr--Tk8lXJoU1Ko2Nq9QN4PZkw%3D%3D;
+        path=/; secure; HttpOnly; SameSite=None
+      x-content-type-options: nosniff
+      x-download-options: noopen
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: a91923ec-73b4-4788-9b2b-747553395062
+      x-runtime: '0.125116'
+      x-xss-protection: '0'
+      content-length: '0'
+    body:
+      encoding: ''
+      file: no
+      string: ''
+  recorded_at: 2024-12-09 22:06:36 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
-    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2025305/usa_00301.dat.gz
+    uri: https://api.ipums.org/downloads/usa/api/v1/extracts/2422494/usa_00468.dat.gz
     body:
       encoding: ''
       string: ''
@@ -53,13 +137,13 @@ http_interactions:
     headers:
       accept-ranges: bytes
       cache-control: no-cache
-      content-disposition: attachment; filename="usa_00301.dat.gz"; filename*=UTF-8''usa_00301.dat.gz
+      content-disposition: attachment; filename="usa_00468.dat.gz"; filename*=UTF-8''usa_00468.dat.gz
       content-type: application/gzip
-      date: Thu, 04 May 2023 21:48:17 GMT
-      etag: '"645427f0-1fb7"'
-      last-modified: Thu, 04 May 2023 21:47:28 GMT
+      date: Mon, 09 Dec 2024 22:06:36 GMT
+      etag: '"675768eb-1fb7"'
+      last-modified: Mon, 09 Dec 2024 22:02:19 GMT
       server: nginx/1.18.0
-      set-cookie: _session_id=BKlvrkTTy8krGyvD2TLLlXitR%2FqAMkdR6qtxJf7yNLmPHymogAcXExD1v4RFHcK1D99dVD3YsTcYotaUGz0hE9jcH7w9HLztwk0hqqrv3HzuYP0NljjVfWxC0R7xROmhXklkcbiqkJlrDp0pJDIqP2mr2Gck8onsDY9Zd2cc9bb6bci96Vf3y%2BcNAYMGyVrn7sc%2FzQPtZhRUMpEMFGjrkoZKImRzCa8BJ27IO1ZqdB8Z0lpgoG4H48NXU%2FulKDY%3D--pZbRwiU5PGL%2B5EW4--yv8lF%2Bb82HeyRHPpB%2BlZmA%3D%3D;
+      set-cookie: _session_id=ElUBDMfRlU9Jo8b9BErwKL13syDczZrx7bCqESPIwnjOG3ib26ULD3pMkL9aADmhiSObaMBcPECtLRmY69TuxqAy1Qi06nbK7nB4%2FQVUcqBD8XuTD0bZxStpw9dju6lx3Y8UVu31ZkpjT6g9nVw%2FwGGk1w43behLFoyZY7gBDpV5Q%2BCb8aNZDYjNjHewohdlkCc2F%2F2OEnmcdSQfIg5p0cxa0C8GhvEwQdDsasI5zoVC5caoljUPfI6BPx%2FPRsY%3D--EUBa6wWrx5PBCVzb--qxnGp5maFLQxAlzhQmocyQ%3D%3D;
         path=/; secure; HttpOnly; SameSite=None
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
@@ -68,6 +152,6 @@ http_interactions:
     body:
       encoding: ''
       file: yes
-      string: ../fixtures/usa_00301.dat.gz
-  recorded_at: 2023-05-04 21:48:17 GMT
-  recorded_with: vcr/1.2.0, webmockr/0.9.0
+      string: ../fixtures/usa_00468.dat.gz
+  recorded_at: 2024-12-09 22:06:36 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

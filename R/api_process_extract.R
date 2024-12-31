@@ -465,6 +465,78 @@ download_extract <- function(extract,
   )
 }
 
+
+#' Download IPUMS supplemental data files
+#'
+#' @description
+#' Some IPUMS collections provide supplemental data files that are available
+#' outside of the IPUMS extract system. Use this function to download these
+#' files.
+#'
+#' Currently, only IPUMS NHGIS files are supported.
+#'
+#' In general, files found on an IPUMS project website that include
+#' `secure-assets` in their URL are available as supplemental data. See the
+#' [IPUMS developer
+#' documentation](https://developer.ipums.org/docs/v2/apiprogram/apis/nhgis/)
+#' for more information on available endpoints.
+#'
+#' @inheritParams download_extract
+#' @param collection Code for the IPUMS collection represented by this
+#'   extract request. Currently, only `"nhgis"` is supported.
+#' @param path Path to the supplemental data file to download. See examples.
+#'
+#' @return The path to the downloaded supplemental data file
+#'
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Download a state-level tract to county crosswalk from NHGIS
+#' file <- download_supplemental_data(
+#'   "nhgis",
+#'   "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip"
+#' )
+#'
+#' read_nhgis(file)
+#'
+#' # Download 1980 Minnesota block boundary file
+#' file <- download_supplemental_data(
+#'   "nhgis",
+#'   "blocks-1980/MN_block_1980.zip"
+#' )
+#'
+#' read_ipums_sf(file)
+#' }
+download_supplemental_data <- function(collection,
+                                       path,
+                                       download_dir = getwd(),
+                                       overwrite = FALSE,
+                                       progress = TRUE,
+                                       api_key = Sys.getenv("IPUMS_API_KEY")) {
+  url <- api_request_url(
+    collection,
+    build_request_path("supplemental-data", collection, path)
+  )
+
+  download_dir <- normalizePath(download_dir, winslash = "/", mustWork = FALSE)
+
+  if (!dir.exists(download_dir)) {
+    rlang::abort(
+      paste0("The directory `", download_dir, "` does not exist.")
+    )
+  }
+
+  ipums_api_download_request(
+    url,
+    file_path = file.path(download_dir, basename(path)),
+    overwrite = overwrite,
+    progress = progress,
+    api_key = api_key
+  )
+}
+
 # Non-exported functions ---------------------------------------------------
 
 #' Convert an `ipums_extract` object to a JSON string for API submission

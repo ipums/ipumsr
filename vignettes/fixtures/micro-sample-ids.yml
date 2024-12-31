@@ -17,22 +17,21 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:22:23 GMT
-      etag: W/"8b72c3838654e729605a8901deede8d3"
+      date: Fri, 22 Nov 2024 19:52:32 GMT
+      etag: W/"23d425ba27efdec99bf2a0063eba2cf7"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: bb1ea6dc-0e27-4363-9861-73efacedf99b
-      x-runtime: '0.445725'
+      x-request-id: 40843bb4-5e1f-47f8-9365-fb5868be1b30
+      x-runtime: '0.186151'
       x-xss-protection: '0'
-      content-length: '39881'
+      content-length: '40310'
     body:
       encoding: ''
       file: no
@@ -360,8 +359,12 @@ http_interactions:
         November 2023"},{"name":"cps2023_12s","description":"IPUMS-CPS, December 2023"},{"name":"cps2022_02s","description":"IPUMS-CPS,
         February 2022"},{"name":"cps2022_05s","description":"IPUMS-CPS, May 2022"},{"name":"cps2024_01s","description":"IPUMS-CPS,
         January 2024"},{"name":"cps2024_02b","description":"IPUMS-CPS, February 2024"},{"name":"cps2024_03b","description":"IPUMS-CPS,
-        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":642,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2024-06-02 12:22:24 GMT
+        March 2024"},{"name":"cps2024_04b","description":"IPUMS-CPS, April 2024"},{"name":"cps2024_05b","description":"IPUMS-CPS,
+        May 2024"},{"name":"cps2024_06s","description":"IPUMS-CPS, June 2024"},{"name":"cps2024_07s","description":"IPUMS-CPS,
+        July 2024"},{"name":"cps2024_03s","description":"IPUMS-CPS, ASEC 2024"},{"name":"cps2024_08s","description":"IPUMS-CPS,
+        August 2024"},{"name":"cps2024_09s","description":"IPUMS-CPS, September 2024"},{"name":"cps2024_10s","description":"IPUMS-CPS,
+        October 2024"}],"pageNumber":1,"pageSize":2500,"totalCount":649,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2024-11-22 19:52:33 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
 - request:
     method: get
@@ -381,20 +384,19 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Sun, 02 Jun 2024 12:22:23 GMT
+      date: Fri, 22 Nov 2024 19:52:33 GMT
       etag: W/"bceab6761d369f80ca1cb0093e076941"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
       x-content-type-options: nosniff
-      x-download-options: noopen
       x-frame-options: SAMEORIGIN
       x-permitted-cross-domain-policies: none
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: b6027180-9e17-45ed-b48d-390813d6585c
-      x-runtime: '0.373411'
+      x-request-id: 6f5ad10a-4fae-4636-a8ee-35cac4b61023
+      x-runtime: '0.184131'
       x-xss-protection: '0'
       content-length: '28794'
     body:
@@ -688,5 +690,5 @@ http_interactions:
         Rico 2020"},{"name":"uk1961a","description":"United Kingdom 1961"},{"name":"uk1971a","description":"United
         Kingdom 1971"},{"name":"us2020a","description":"United States 2020"},{"name":"vn2019a","description":"Vietnam
         2019"}],"pageNumber":1,"pageSize":2500,"totalCount":558,"links":{"previousPage":null,"nextPage":null}}'
-  recorded_at: 2024-06-02 12:22:24 GMT
+  recorded_at: 2024-11-22 19:52:33 GMT
   recorded_with: vcr/1.2.2, webmockr/0.9.0
