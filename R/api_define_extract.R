@@ -441,14 +441,12 @@ define_extract_ipumsi <- function(description,
 #' @param shapefiles Names of any [shapefiles](https://www.nhgis.org/gis-files)
 #'   to include in the extract request.
 #' @param geographic_extents Vector of geographic extents to use for
-#'   all of the `datasets` in the extract definition (for instance, to obtain
-#'   data within a particular state). Use `"*"` to select all available extents.
+#'   all of the `datasets` and `time_series_tables` in the extract
+#'   definition (for instance, to obtain data within a specified state).
+#'   By default, selects all available extents.
 #'
-#'   Required when any of the `datasets` included in the extract definition
-#'   include `geog_levels` that require extent selection. See
-#'   [get_metadata_nhgis()] to determine if a geographic level requires extent
-#'   selection. At the time of writing, NHGIS supports extent selection only
-#'   for blocks and block groups.
+#'   Use [get_metadata_nhgis()] to identify the available extents for a given
+#'   dataset or time series table, if any.
 #' @param breakdown_and_data_type_layout The desired layout
 #'   of any `datasets` that have multiple data types or breakdown values.
 #'
@@ -557,7 +555,8 @@ define_extract_ipumsi <- function(description,
 #'   shapefiles = "us_county_1990_tl2008"
 #' )
 #'
-#' # Geographic extents are applied to all datasets in the definition
+#' # Geographic extents are applied to all datasets/time series tables in the
+#' # definition
 #' define_extract_nhgis(
 #'   description = "Extent selection",
 #'   datasets = list(

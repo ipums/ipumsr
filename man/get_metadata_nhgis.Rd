@@ -149,6 +149,11 @@ time series table.
 \item \strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names
 and descriptions for the geographic levels available
 for the time series table.
+\item \strong{\code{geographic_instances}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing
+names and descriptions for all valid geographic extents for the
+time series table. Includes all states or state equivalents that are
+valid for \emph{any} year in the time series table. (Some instances may be valid
+for some but not all years.)
 }
 }
 

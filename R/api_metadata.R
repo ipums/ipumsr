@@ -105,6 +105,11 @@
 #' - **`geog_levels`:** A [`tibble`][tibble::tbl_df-class] containing names
 #'   and descriptions for the geographic levels available
 #'   for the time series table.
+#' - **`geographic_instances`:** A [`tibble`][tibble::tbl_df-class] containing
+#'   names and descriptions for all valid geographic extents for the
+#'   time series table. Includes all states or state equivalents that are
+#'   valid for *any* year in the time series table. (Some instances may be valid
+#'   for some but not all years.)
 #'
 #' ## Shapefiles:
 #'
