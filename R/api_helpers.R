@@ -547,16 +547,6 @@ print.nhgis_extract <- function(x, ...) {
     }
   )
 
-  if (length(ds_to_cat) > 0) {
-    ds_to_cat <- c(
-      ds_to_cat,
-      format_field_for_printing(
-        parent_field = list("Geographic extents: " = x$geographic_extents),
-        parent_style = style_ds
-      )
-    )
-  }
-
   tst_to_cat <- purrr::map(
     x$time_series_tables,
     function(t) {
@@ -575,6 +565,18 @@ print.nhgis_extract <- function(x, ...) {
     }
   )
 
+  ds_tst_to_cat <- c(ds_to_cat, tst_to_cat)
+
+  if (length(ds_tst_to_cat) > 0) {
+    ds_tst_to_cat <- c(
+      ds_tst_to_cat,
+      format_field_for_printing(
+        parent_field = list("Geographic extents: " = x$geographic_extents),
+        parent_style = extract_field_styler("italic")
+      )
+    )
+  }
+
   shp_to_cat <- format_field_for_printing(
     parent_field = list("Shapefiles: " = x$shapefiles),
     parent_style = extract_field_styler(
@@ -592,8 +594,7 @@ print.nhgis_extract <- function(x, ...) {
   to_cat <- paste0(
     header,
     print_truncated_vector(x$description, "Description: ", FALSE),
-    paste0(ds_to_cat, collapse = ""),
-    paste0(tst_to_cat, collapse = ""),
+    paste0(ds_tst_to_cat, collapse = ""),
     shp_to_cat
   )
 
