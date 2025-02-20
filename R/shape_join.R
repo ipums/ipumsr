@@ -95,6 +95,7 @@ ipums_shape_join <- function(data,
   UseMethod("ipums_shape_join", shape_data)
 }
 
+#' @export
 ipums_shape_join.sf <- function(data,
                                 shape_data,
                                 by,

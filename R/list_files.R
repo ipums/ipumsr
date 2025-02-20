@@ -16,14 +16,10 @@
 #'
 #'   While less useful, this can also be provided as a string specifying an
 #'   exact file name or an integer to match files by index position.
-#' @param types One or more of `"data"` or `"shape"` indicating
+#' @param types One or more of `"data"`, `"shape"`, or `"codebook"` indicating
 #'   the type of files to include in the output. `"data"` refers to
-#'   tabular data sources, while `"shape"` refers to spatial data sources.
-#'
-#'   The use of `"raster"` has been deprecated and will be removed in a
-#'   future release.
-#' @param data_layer,shape_layer,raster_layer `r lifecycle::badge("deprecated")`
-#'   Please use `file_select` instead.
+#'   tabular data sources, `"shape"` refers to spatial data sources, and
+#'   `"codebook"` refers to metadata text files that accompany data files.
 #'
 #' @return A [`tibble`][tibble::tbl_df-class] containing the types and names of
 #'   the available files.
@@ -43,16 +39,7 @@
 #'
 #' # Look for files that match a particular pattern:
 #' ipums_list_files(nhgis_file, file_select = matches("ds136"))
-ipums_list_files <- function(file,
-                             file_select = NULL,
-                             types = NULL,
-                             data_layer = deprecated(),
-                             shape_layer = deprecated(),
-                             raster_layer = deprecated()) {
-  has_dl <- !missing(data_layer)
-  has_sl <- !missing(shape_layer)
-  has_rl <- !missing(raster_layer)
-
+ipums_list_files <- function(file, file_select = NULL, types = NULL) {
   if (file_is_dir(file)) {
     lifecycle::deprecate_warn(
       "0.6.3",
@@ -62,80 +49,40 @@ ipums_list_files <- function(file,
     )
   }
 
-  if (any(c(has_dl, has_sl, has_rl))) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      what = I(paste0(
-        "Use of `data_layer`, `shape_layer`, and `raster_layer`",
-        " in `ipums_list_files()`"
-      )),
-      with = "ipums_list_files(file_select = )"
-    )
-  }
-
-  if ("raster" %in% types) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "ipums_list_files(types = 'must be one of \"data\" or \"shape\"')"
-    )
-  }
-
-  if (has_dl) {
-    data_layer <- enquo(data_layer)
-  } else {
-    data_layer <- enquo(file_select)
-  }
-
-  if (has_sl) {
-    shape_layer <- enquo(shape_layer)
-  } else {
-    shape_layer <- enquo(file_select)
-  }
-
-  if (has_rl) {
-    raster_layer <- enquo(raster_layer)
-  } else {
-    raster_layer <- enquo(file_select)
-  }
-
+  cb_files <- NULL
   data_files <- NULL
   shape_files <- NULL
-  raster_files <- NULL
 
-  if (is.null(types) | "data" %in% types) {
-    data_layer <- enquo(data_layer)
+  file_select <- enquo(file_select)
 
+  if (is.null(types) || "codebook" %in% types) {
+    cb_files <- tibble::tibble(
+      file = find_files_in(
+        file,
+        "(xml|txt)$",
+        file_select,
+        multiple_ok = TRUE
+      )
+    )
+  }
+
+  if (is.null(types) || "data" %in% types) {
     data_files <- tibble::tibble(
       file = find_files_in(
         file,
-        "(dat|csv)(\\.gz)?",
-        data_layer,
+        "(dat|csv)(\\.gz)?$",
+        file_select,
         multiple_ok = TRUE
       )
     )
   }
 
-  if (is.null(types) | "shape" %in% types) {
-    shape_layer <- enquo(shape_layer)
-
+  if (is.null(types) || "shape" %in% types) {
     shape_files <- tibble::tibble(
       file = find_files_in(
         file,
-        "(zip|shp)",
-        shape_layer,
-        multiple_ok = TRUE
-      )
-    )
-  }
-
-  if (is.null(types) | "raster" %in% types) {
-    raster_layer <- enquo(raster_layer)
-
-    raster_files <- tibble::tibble(
-      file = find_files_in(
-        file,
-        "tiff",
-        raster_layer,
+        "(zip|shp)$",
+        file_select,
         multiple_ok = TRUE
       )
     )
@@ -144,7 +91,7 @@ ipums_list_files <- function(file,
   dplyr::bind_rows(
     data = data_files,
     shape = shape_files,
-    raster = raster_files,
+    codebook = cb_files,
     .id = "type"
   )
 }
