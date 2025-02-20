@@ -1,4 +1,10 @@
 # ipumsr (development version)
+    
+-   Adds codebook files to output of `ipums_list_files()`.
+
+-   Removes deprecated `ipums_list_files()` arguments `data_layer`, 
+    `shape_layer`, and `raster_layer`. Use `file_select` instead. Also removes
+    support for listing raster file types.
 
 -   The `"*"` wildcard is no longer required to select all `geographic_extents`
     in `define_extract_nhgis()`. Instead, all available geographic extents
