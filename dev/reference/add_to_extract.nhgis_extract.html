@@ -154,13 +154,11 @@ series table.</p></dd>
 
 <dt id="arg-geographic-extents">geographic_extents<a class="anchor" aria-label="anchor" href="#arg-geographic-extents"></a></dt>
 <dd><p>Vector of geographic extents to use for
-all of the <code>datasets</code> in the extract definition (for instance, to obtain
-data within a particular state). Use <code>"*"</code> to select all available extents.</p>
-<p>Required when any of the <code>datasets</code> included in the extract definition
-include <code>geog_levels</code> that require extent selection. See
-<code><a href="get_metadata_nhgis.html">get_metadata_nhgis()</a></code> to determine if a geographic level requires extent
-selection. At the time of writing, NHGIS supports extent selection only
-for blocks and block groups.</p></dd>
+all of the <code>datasets</code> and <code>time_series_tables</code> in the extract
+definition (for instance, to obtain data within a specified state).
+By default, selects all available extents.</p>
+<p>Use <code><a href="get_metadata_nhgis.html">get_metadata_nhgis()</a></code> to identify the available extents for a given
+dataset or time series table, if any.</p></dd>
 
 
 <dt id="arg-shapefiles">shapefiles<a class="anchor" aria-label="anchor" href="#arg-shapefiles"></a></dt>
