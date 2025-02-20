@@ -40,14 +40,12 @@ specifications will be added to those that already exist for that time
 series table.}
 
 \item{geographic_extents}{Vector of geographic extents to use for
-all of the \code{datasets} in the extract definition (for instance, to obtain
-data within a particular state). Use \code{"*"} to select all available extents.
+all of the \code{datasets} and \code{time_series_tables} in the extract
+definition (for instance, to obtain data within a specified state).
+By default, selects all available extents.
 
-Required when any of the \code{datasets} included in the extract definition
-include \code{geog_levels} that require extent selection. See
-\code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to determine if a geographic level requires extent
-selection. At the time of writing, NHGIS supports extent selection only
-for blocks and block groups.}
+Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to identify the available extents for a given
+dataset or time series table, if any.}
 
 \item{shapefiles}{Names of any \href{https://www.nhgis.org/gis-files}{shapefiles}
 to include in the extract request.}

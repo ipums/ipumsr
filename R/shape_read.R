@@ -81,7 +81,7 @@
 #' read_ipums_sf(shape_ex2, file_select = matches("us_pmsa_1990"))
 #'
 #' # Or row-bind files with `bind_multiple`. This may be useful for files of
-#' # the same geographic level that cover different extents)
+#' # the same geographic level that cover different extents
 #' read_ipums_sf(
 #'   shape_ex2,
 #'   file_select = matches("us_pmsa"),

@@ -1,47 +1,10 @@
 # Print extract ------------------------
 
 test_that("Can print microdata extracts", {
-  expect_output(
-    print(test_usa_extract()),
-    paste0(
-      "Unsubmitted IPUMS USA extract.+",
-      "Description: Test.+",
-      "\n",
-      "Samples: .+",
-      "Variables: .+"
-    )
-  )
-  expect_output(
-    print(test_cps_extract()),
-    paste0(
-      "Unsubmitted IPUMS CPS extract.+",
-      "Description: Compare.+",
-      "\n",
-      "Samples: .+",
-      "Variables: .+"
-    )
-  )
-  expect_output(
-    print(test_ipumsi_extract()),
-    paste0(
-      "Unsubmitted IPUMS International extract.+",
-      "Description: Test.+",
-      "\n",
-      "Samples: .+",
-      "Variables: .+"
-    )
-  )
-  expect_output(
-    print(test_atus_extract()),
-    paste0(
-      "Unsubmitted IPUMS ATUS extract.+",
-      "Description: Test.+",
-      "\n",
-      "Samples: .+",
-      "Variables: .+",
-      "Time Use Variables: .+"
-    )
-  )
+  expect_snapshot(print(test_usa_extract()))
+  expect_snapshot(print(test_cps_extract()))
+  expect_snapshot(print(test_ipumsi_extract()))
+  expect_snapshot(print(test_atus_extract()))
 })
 
 test_that("Printing excludes Variables field if empty", {
@@ -58,38 +21,8 @@ test_that("Printing excludes Variables field if empty", {
 })
 
 test_that("Can print NHGIS extracts", {
-  expect_output(
-    print(test_nhgis_extract()),
-    paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: Extract for R client testing",
-      "\n",
-      "\nDataset: 2014_2018_ACS5a",
-      "\n  Tables: B01001, B01002",
-      "\n  Geog Levels: nation",
-      "\n",
-      "\nDataset: 2015_2019_ACS5a",
-      "\n  Tables: B01001, B01002",
-      "\n  Geog Levels: blck_grp",
-      "\n",
-      "\nGeographic extents: 110, 100",
-      "\n",
-      "\nTime Series Table: CW3",
-      "\n  Geog Levels: state",
-      "\n  Years: 1990",
-      "\n",
-      "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
-  )
-  expect_output(
-    print(test_nhgis_extract_shp()),
-    paste0(
-      "Unsubmitted IPUMS NHGIS extract ",
-      "\nDescription: ",
-      "\n",
-      "\nShapefiles: 110_blck_grp_2019_tl2019"
-    )
-  )
+  expect_snapshot(print(test_nhgis_extract()))
+  expect_snapshot(print(test_nhgis_extract_shp()))
 })
 
 test_that("NHGIS extract print coloring works", {
