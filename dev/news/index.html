@@ -50,7 +50,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
-<ul><li><p>The <code>"*"</code> wildcard is no longer required to select all <code>geographic_extents</code> in <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>. Instead, all available geographic extents are selected by default. The <code>"*"</code> syntax is still supported.</p></li>
+<ul><li><p>Adds codebook files to output of <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code>.</p></li>
+<li><p>Removes deprecated <code><a href="../reference/ipums_list_files.html">ipums_list_files()</a></code> arguments <code>data_layer</code>, <code>shape_layer</code>, and <code>raster_layer</code>. Use <code>file_select</code> instead. Also removes support for listing raster file types.</p></li>
+<li><p>The <code>"*"</code> wildcard is no longer required to select all <code>geographic_extents</code> in <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>. Instead, all available geographic extents are selected by default. The <code>"*"</code> syntax is still supported.</p></li>
 <li><p>Adds <code><a href="../reference/download_supplemental_data.html">download_supplemental_data()</a></code> to enable access to supplemental data files via the IPUMS API.</p></li>
 <li><p>Fixed bug in <code>shape_join.R</code> that would always give the result of a right join no matter whether <code><a href="../reference/ipums_shape_join.html">ipums_shape_left_join()</a></code> or <code><a href="../reference/ipums_shape_join.html">ipums_shape_right_join()</a></code> was used (thanks <a href="https://github.com/JiaZhang42" class="external-link">@JiaZhang42</a>!).</p></li>
 </ul></div>

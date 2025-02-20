@@ -454,11 +454,13 @@ is the case:</p>
 <code class="sourceCode R"><span><span class="va">nhgis_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0731_csv.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nhgis_ex2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
-<span><span class="co">#&gt;   type  file                                          </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> data  nhgis0731_csv/nhgis0731_ds239_20185_nation.csv</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> data  nhgis0731_csv/nhgis0731_ts_nominal_state.csv</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   type     file                                                   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> data     nhgis0731_csv/nhgis0731_ds239_20185_nation.csv         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> data     nhgis0731_csv/nhgis0731_ts_nominal_state.csv           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> codebook nhgis0731_csv/nhgis0731_ds239_20185_nation_codebook.txt</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> codebook nhgis0731_csv/nhgis0731_ts_nominal_state_codebook.txt</span></span></code></pre></div>
 <p>In these cases, you can use the <code>file_select</code> argument to
 indicate which file to load. <code>file_select</code> supports most
 features of the <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect
