@@ -1,5 +1,9 @@
 # ipumsr (development version)
 
+-   The `"*"` wildcard is no longer required to select all `geographic_extents`
+    in `define_extract_nhgis()`. Instead, all available geographic extents
+    are selected by default. The `"*"` syntax is still supported.
+
 -   Adds `download_supplemental_data()` to enable access to supplemental
     data files via the IPUMS API.
 
