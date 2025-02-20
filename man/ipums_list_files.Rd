@@ -4,14 +4,7 @@
 \alias{ipums_list_files}
 \title{List files contained within a zipped IPUMS extract}
 \usage{
-ipums_list_files(
-  file,
-  file_select = NULL,
-  types = NULL,
-  data_layer = deprecated(),
-  shape_layer = deprecated(),
-  raster_layer = deprecated()
-)
+ipums_list_files(file, file_select = NULL, types = NULL)
 }
 \arguments{
 \item{file}{Path to a .zip archive containing the IPUMS extract to be
@@ -25,15 +18,10 @@ will be included.
 While less useful, this can also be provided as a string specifying an
 exact file name or an integer to match files by index position.}
 
-\item{types}{One or more of \code{"data"} or \code{"shape"} indicating
+\item{types}{One or more of \code{"data"}, \code{"shape"}, or \code{"codebook"} indicating
 the type of files to include in the output. \code{"data"} refers to
-tabular data sources, while \code{"shape"} refers to spatial data sources.
-
-The use of \code{"raster"} has been deprecated and will be removed in a
-future release.}
-
-\item{data_layer, shape_layer, raster_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Please use \code{file_select} instead.}
+tabular data sources, \code{"shape"} refers to spatial data sources, and
+\code{"codebook"} refers to metadata text files that accompany data files.}
 }
 \value{
 A \code{\link[tibble:tbl_df-class]{tibble}} containing the types and names of
