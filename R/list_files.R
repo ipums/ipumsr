@@ -34,7 +34,7 @@
 #' @examples
 #' nhgis_file <- ipums_example("nhgis0712_csv.zip")
 #'
-#' # 2 available files in this extract
+#' # 2 available data files in this extract (with codebooks)
 #' ipums_list_files(nhgis_file)
 #'
 #' # Look for files that match a particular pattern:
