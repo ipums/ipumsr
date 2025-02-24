@@ -13,7 +13,7 @@
 #' [read_ipums_micro_chunked()] using R6.
 #'
 #' Two files are required to load IPUMS microdata extracts:
-#' - A [DDI codebook](https://ddialliance.org/learn/what-is-ddi) file
+#' - A [DDI codebook](https://ddialliance.org/introduction-to-ddi) file
 #'   (.xml) used to parse the extract's data file
 #' - A data file (either .dat.gz or .csv.gz)
 #'

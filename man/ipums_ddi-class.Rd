@@ -11,7 +11,7 @@ used when loading IPUMS data, but can also be
 used to explore metadata for an IPUMS extract.
 \itemize{
 \item For microdata projects, this information is provided in
-\href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook}
+\href{https://ddialliance.org/introduction-to-ddi}{DDI codebook}
 (.xml) files.
 \item For NHGIS, this information is provided in .txt codebook files.
 }

@@ -73,7 +73,7 @@ a single time. They represent a more flexible implementation of
 
 Two files are required to load IPUMS microdata extracts:
 \itemize{
-\item A \href{https://ddialliance.org/learn/what-is-ddi}{DDI codebook} file
+\item A \href{https://ddialliance.org/introduction-to-ddi}{DDI codebook} file
 (.xml) used to parse the extract's data file
 \item A data file (either .dat.gz or .csv.gz)
 }

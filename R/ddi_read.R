@@ -12,7 +12,7 @@
 #' used to explore metadata for an IPUMS extract.
 #'
 #' - For microdata projects, this information is provided in
-#' [DDI codebook](https://ddialliance.org/learn/what-is-ddi)
+#' [DDI codebook](https://ddialliance.org/introduction-to-ddi)
 #' (.xml) files.
 #' - For NHGIS, this information is provided in .txt codebook files.
 #'
@@ -61,7 +61,7 @@ NULL
 #'
 #' @description
 #' Reads the metadata about an IPUMS extract from a
-#' [DDI codebook](https://ddialliance.org/learn/what-is-ddi) into an
+#' [DDI codebook](https://ddialliance.org/introduction-to-ddi) into an
 #' [ipums_ddi] object.
 #'
 #' These metadata contains parsing instructions for the associated fixed-width

@@ -661,6 +661,6 @@ For some past blog posts and articles on the topic, see the following:
     Azure*](https://www.jumpingrivers.com/blog/hosting-rstudio-server-on-azure/) -
     Colin Gillespie's blog post on using Rstudio on Azure
 -   [*Improving DBI: A
-    Retrospect*](https://www.r-consortium.org/blog/2017/05/15/improving-dbi-a-retrospect) -
+    Retrospect*](https://archive.r-consortium.org/blog/2017/05/15/improving-dbi-a-retrospect) -
     Kirill Müller's report on the R Consortium grant to improve database
     support in R
