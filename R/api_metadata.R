@@ -50,7 +50,7 @@
 #' - **`geog_levels`:** A [`tibble`][tibble::tbl_df-class] containing names,
 #'   descriptions, and extent information for the geographic levels available
 #'   for the dataset. The `has_geog_extent_selection` field contains logical
-#'   values indicating whether extent selection is allowed (and required) for
+#'   values indicating whether extent selection is allowed for
 #'   the associated geographic level. See `geographic_instances` below.
 #' - **`breakdowns`:** A [`tibble`][tibble::tbl_df-class] containing names,
 #'   types, descriptions, and breakdown values for all breakdowns available
@@ -104,7 +104,9 @@
 #'   time series table.
 #' - **`geog_levels`:** A [`tibble`][tibble::tbl_df-class] containing names
 #'   and descriptions for the geographic levels available
-#'   for the time series table.
+#'   for the time series table. The `has_geog_extent_selection` field contains
+#'   logical values indicating whether extent selection is allowed for
+#'   the associated geographic level.
 #' - **`geographic_instances`:** A [`tibble`][tibble::tbl_df-class] containing
 #'   names and descriptions for all valid geographic extents for the
 #'   time series table. Includes all states or state equivalents that are

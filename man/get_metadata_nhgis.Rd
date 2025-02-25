@@ -90,7 +90,7 @@ codes, and descriptions for all data tables available for the dataset.
 \item \strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 descriptions, and extent information for the geographic levels available
 for the dataset. The \code{has_geog_extent_selection} field contains logical
-values indicating whether extent selection is allowed (and required) for
+values indicating whether extent selection is allowed for
 the associated geographic level. See \code{geographic_instances} below.
 \item \strong{\code{breakdowns}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names,
 types, descriptions, and breakdown values for all breakdowns available
@@ -148,7 +148,9 @@ information on the available data years for the
 time series table.
 \item \strong{\code{geog_levels}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing names
 and descriptions for the geographic levels available
-for the time series table.
+for the time series table. The \code{has_geog_extent_selection} field contains
+logical values indicating whether extent selection is allowed for
+the associated geographic level.
 \item \strong{\code{geographic_instances}:} A \code{\link[tibble:tbl_df-class]{tibble}} containing
 names and descriptions for all valid geographic extents for the
 time series table. Includes all states or state equivalents that are
