@@ -180,7 +180,7 @@ codes, and descriptions for all data tables available for the dataset.</p></li>
 <li><p><strong><code>geog_levels</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
 descriptions, and extent information for the geographic levels available
 for the dataset. The <code>has_geog_extent_selection</code> field contains logical
-values indicating whether extent selection is allowed (and required) for
+values indicating whether extent selection is allowed for
 the associated geographic level. See <code>geographic_instances</code> below.</p></li>
 <li><p><strong><code>breakdowns</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names,
 types, descriptions, and breakdown values for all breakdowns available
@@ -238,7 +238,9 @@ information on the available data years for the
 time series table.</p></li>
 <li><p><strong><code>geog_levels</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing names
 and descriptions for the geographic levels available
-for the time series table.</p></li>
+for the time series table. The <code>has_geog_extent_selection</code> field contains
+logical values indicating whether extent selection is allowed for
+the associated geographic level.</p></li>
 <li><p><strong><code>geographic_instances</code>:</strong> A <code><a href="https://tibble.tidyverse.org/reference/tbl_df-class.html" class="external-link">tibble</a></code> containing
 names and descriptions for all valid geographic extents for the
 time series table. Includes all states or state equivalents that are
