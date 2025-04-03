@@ -75,10 +75,10 @@ Codebook column, and select **Save Link As...** (see below).
 
 ```{r echo=FALSE}
 #| fig.alt: >
-#|   Screenshot of the My Data page on IPUMS USA website, with the "Download 
-#|   .DAT" button and the "DDI" codebook link each surrounded by a red box for 
-#|   emphasis. The right-click menu has been called up on the "DDI" codebook 
-#|   link, and the menu option "Save Link As..." is also surrounded by a red box 
+#|   Screenshot of the My Data page on IPUMS USA website, with the 'Download 
+#|   .DAT' button and the 'DDI' codebook link each surrounded by a red box for 
+#|   emphasis. The right-click menu has been called up on the 'DDI' codebook 
+#|   link, and the menu option 'Save Link As...' is also surrounded by a red box 
 #|   for emphasis.
 knitr::include_graphics("microdata_annotated_screenshot.png")
 ```
