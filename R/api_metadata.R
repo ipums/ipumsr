@@ -3,26 +3,306 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-# Exported functions -----------------------------------------------------------
+#' Retrieve a catalog of available data sources for an IPUMS collection
+#'
+#' @description
+#' Retrieve summary metadata containing API codes and descriptions for all
+#' available data sources of a given type for an IPUMS data collection.
+#' See the [IPUMS developer documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/)
+#' for details about the metadata provided for individual data collections
+#' and API endpoints.
+#'
+#' To retrieve detailed metadata about a particular data source,
+#' use [get_metadata()].
+#'
+#' Currently, comprehensive metadata is only available for IPUMS NHGIS
+#' and IPUMS IHGIS, but a listing of samples is available for IPUMS microdata
+#' collections.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @inheritParams submit_extract
+#' @param collection Character string indicating the IPUMS collection for which
+#'   to retrieve metadata.
+#' @param metadata_type The type of data source for which to retrieve summary
+#'   metadata. See [catalog_types()] for a list of accepted endpoints
+#'   for a given collection.
+#' @param delay Number of seconds to delay between
+#'   successive API requests, if multiple requests are needed to retrieve all
+#'   records.
+#'
+#'   A delay is highly unlikely to be necessary and is intended only as a
+#'   fallback in the event that you cannot retrieve all metadata records without
+#'   exceeding the API rate limit.
+#'
+#' @return A [`tibble`][tibble::tbl_df-class] containing the catalog of
+#'   all data sources for the given `collection` and `metadata_type`.
+#'
+#' @export
+#'
+#' @seealso
+#' [get_metadata()] to obtain detailed metadata for a single data source.
+#'
+#' [define_extract_nhgis()] to create an IPUMS NHGIS extract definition.
+#'
+#' [define_extract_micro()] to create an IPUMS microdata extract definition.
+#'
+#' @examples
+#' \dontrun{
+#' # Get summary metadata for all available sources of a given data type
+#' get_metadata_catalog("nhgis", "datasets")
+#'
+#' # Filter to identify data sources of interest by their metadata values
+#' all_tsts <- get_metadata_catalog("nhgis", "time_series_tables")
+#'
+#' tsts <- all_tsts %>%
+#'   filter(
+#'     grepl("Children", description),
+#'     grepl("Families", description),
+#'     geographic_integration == "Standardized to 2010"
+#'   )
+#'
+#' tsts$name
+#' }
+get_metadata_catalog <- function(collection,
+                                 metadata_type,
+                                 delay = 0,
+                                 api_key = Sys.getenv("IPUMS_API_KEY")) {
+  check_api_support(collection)
+
+  rlang::arg_match(metadata_type, catalog_types(collection))
+
+  get_summary_metadata(
+    collection = collection,
+    metadata_type = metadata_type,
+    delay = delay,
+    api_key = api_key
+  )
+}
+
+#' Retrieve detailed metadata about an IPUMS data source
+#'
+#' @description
+#' Retrieve metadata containing API codes and descriptions for an IPUMS data
+#' source. See the [IPUMS developer documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/)
+#' for details about the metadata provided for individual data collections
+#' and API endpoints.
+#'
+#' To retrieve a summary of all available data sources of a particular
+#' type, use [get_metadata_catalog()]. This output be used to identify the names
+#' of data sources for which to request detailed metadata.
+#'
+#' Currently, comprehensive metadata is only available for IPUMS NHGIS
+#' and IPUMS IHGIS. See [get_sample_info()] to list basic sample information
+#' for IPUMS microdata collections.
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @inheritParams get_metadata_catalog
+#' @param dataset Name of an individual dataset from an IPUMS aggregate data
+#'   collection for which to retrieve metadata.
+#' @param data_table Name of an individual data table from an IPUMS aggregate
+#'   data collection for which to retrieve metadata. If provided, an associated
+#'   `dataset` must also be specified.
+#' @param time_series_table Name of an individual time series table from IPUMS
+#'   NHGIS for which to retrieve metadata. Only available if
+#'   `collection = "nhgis"`.
+#'
+#' @return A named list of metadata for the specified data source.
+#'
+#' @export
+#'
+#' @seealso
+#' [get_metadata_catalog()] to obtain a summary of available data sources for
+#' a given IPUMS data collection.
+#'
+#' [define_extract_nhgis()] to create an IPUMS NHGIS extract definition.
+#'
+#' @examples
+#' \dontrun{
+#' library(dplyr)
+#'
+#' # Get detailed metadata for a single source with its associated argument:
+#' cs5_meta <- get_metadata("nhgis", time_series_table = "CS5")
+#' cs5_meta$geog_levels
+#'
+#' # Use the available values when defining an NHGIS extract request
+#' define_extract_nhgis(
+#'   time_series_tables = tst_spec("CS5", geog_levels = "state")
+#' )
+#'
+#' # Detailed metadata is also provided for datasets and data tables
+#' get_metadata("nhgis", dataset = "1990_STF1")
+#' get_metadata("nhgis", data_table = "NP1", dataset = "1990_STF1")
+#'
+#' # Iterate over data sources to retrieve detailed metadata for several
+#' # records. For instance, to get variable metadata for a set of data tables:
+#' tables <- c("NP1", "NP2", "NP10")
+#'
+#' var_meta <- purrr::map(
+#'   tables,
+#'   function(dt) {
+#'     dt_meta <- get_metadata("nhgis", dataset = "1990_STF1", data_table = dt)
+#'
+#'     # This ensures you avoid hitting rate limit for large numbers of tables
+#'     Sys.sleep(1)
+#'
+#'     dt_meta$variables
+#'   }
+#' )
+#' }
+get_metadata <- function(collection,
+                         dataset = NULL,
+                         data_table = NULL,
+                         time_series_table = NULL,
+                         api_key = Sys.getenv("IPUMS_API_KEY")) {
+  check_api_support(collection)
+
+  ds_req <- !is.null(dataset)
+  dt_req <- !is.null(data_table)
+  tst_req <- !is.null(time_series_table)
+
+  if (sum(ds_req, tst_req) > 1) {
+    rlang::abort(
+      paste0(
+        "Only one of `dataset`, or `time_series_table` may be ",
+        "specified at a time."
+      )
+    )
+  }
+
+  if (dt_req && !ds_req) {
+    rlang::abort(
+      "`data_table` must be specified with a corresponding `dataset`."
+    )
+  }
+
+  if (!any(ds_req, tst_req)) {
+    rlang::abort(
+      "One of `dataset`, or `time_series_table` must be specified."
+    )
+  }
+
+  is_too_long <- purrr::map_lgl(
+    list(dataset, data_table, time_series_table),
+    ~ length(.x) > 1
+  )
+
+  if (any(is_too_long)) {
+    rlang::abort(
+      paste0(
+        "Can only retrieve metadata for one `",
+        paste0(
+          c("dataset", "data_table", "time_series_table")[is_too_long],
+          collapse = "`, `"
+        ),
+        "` at a time."
+      )
+    )
+  }
+
+  metadata <- get_detailed_metadata(
+    collection = collection,
+    datasets = dataset,
+    data_tables = data_table,
+    time_series_tables = time_series_table,
+    api_key = api_key
+  )
+
+  metadata
+}
+
+#' List available samples for IPUMS microdata collections
+#'
+#' @description
+#' Retrieve sample IDs and descriptions for IPUMS microdata collections.
+#'
+#' Currently supported microdata collections are:
+#'
+#' * IPUMS USA (`"usa"`)
+#' * IPUMS CPS (`"cps"`)
+#' * IPUMS International (`"ipumsi"`)
+#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
+#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
+#'
+#' Learn more about the IPUMS API in `vignette("ipums-api")`.
+#'
+#' @inheritParams get_metadata_catalog
+#' @param collection Character string indicating the IPUMS microdata collection
+#'   for which to retrieve sample information.
+#'
+#' @return A [`tibble`][tibble::tbl_df-class] containing sample IDs and
+#'   descriptions for the indicated collection.
+#'
+#' @seealso
+#' [define_extract_micro()] to create an IPUMS microdata
+#'   extract definition.
+#'
+#' @export
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' get_sample_info("usa")
+#' get_sample_info("cps")
+#' get_sample_info("ipumsi")
+#' get_sample_info("atus")
+#' get_sample_info("meps")
+#' }
+get_sample_info <- function(collection = NULL,
+                            delay = 0,
+                            api_key = Sys.getenv("IPUMS_API_KEY")) {
+  get_summary_metadata(
+    collection = collection %||% get_default_collection(),
+    metadata_type = "samples",
+    delay = delay,
+    api_key = api_key
+  )
+}
+
+#' List valid metadata types for an IPUMS data collection
+#'
+#' List the available metadata catalog endpoints for a particular IPUMS data
+#' collection. For use with [get_metadata_catalog()].
+#'
+#' @inheritParams get_metadata_catalog
+#'
+#' @returns Character vector of valid endpoints
+#' @export
+#'
+#' @keywords internal
+#'
+#' @examples
+#' catalog_types("nhgis")
+catalog_types <- function(collection) {
+  check_api_support(collection)
+
+  endpts <- list(
+    "nhgis" = c("datasets", "data_tables", "time_series_tables", "shapefiles"),
+    "ihgis" = c("datasets", "data_tables", "tabulation_geographies"),
+    "usa" = "samples",
+    "cps" = "samples",
+    "ipumsi" = "samples",
+    "atus" = "samples",
+    "ahtus" = "samples",
+    "mtus" = "samples",
+    "nhis" = "samples",
+    "meps" = "samples"
+  )
+
+  endpts[[collection]]
+}
 
 #' List available data sources from IPUMS NHGIS
 #'
 #' @description
-#' Retrieve information about available NHGIS data sources, including
-#' [datasets](https://www.nhgis.org/overview-nhgis-datasets),
-#' data tables (summary tables),
-#' [time series tables](https://www.nhgis.org/time-series-tables),
-#' and [shapefiles](https://www.nhgis.org/gis-files) (GIS files).
+#' `r lifecycle::badge("deprecated")`
 #'
-#' To retrieve summary metadata for all available data sources of a particular
-#' type, use the `type` argument. To retrieve detailed metadata for a
-#' single data source, use the `dataset`, `data_table`, or `time_series_table`
-#' argument. See the *metadata availability* section below for information on
-#' the metadata provided for each data type.
-#'
-#' For general information, see the NHGIS
-#' [data source overview](https://www.nhgis.org/data-availability) and the
-#' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
+#' This function has been deprecated because the IPUMS API now supports
+#' metadata endpoints for multiple data collections. To obtain summary metadata,
+#' please use [get_metadata_catalog()]. To obtain detailed metadata, please use
+#' [get_metadata()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
@@ -156,6 +436,8 @@
 #' @seealso
 #' [define_extract_nhgis()] to create an IPUMS NHGIS extract definition.
 #'
+#' @keywords internal
+#'
 #' @export
 #'
 #' @examples
@@ -163,47 +445,24 @@
 #' library(dplyr)
 #'
 #' # Get summary metadata for all available sources of a given data type
+#' # Previously:
 #' get_metadata_nhgis("datasets")
 #'
-#' # Filter to identify data sources of interest by their metadata values
-#' all_tsts <- get_metadata_nhgis("time_series_tables")
+#' # Now:
+#' get_metadata_catalog("nhgis", "datasets")
 #'
-#' tsts <- all_tsts %>%
-#'   filter(
-#'     grepl("Children", description),
-#'     grepl("Families", description),
-#'     geographic_integration == "Standardized to 2010"
-#'   )
-#'
-#' tsts$name
-#'
-#' # Get detailed metadata for a single source with its associated argument:
+#' # Get detailed metadata for a single source with its associated argument
+#' # Previously:
 #' cs5_meta <- get_metadata_nhgis(time_series_table = "CS5")
+#'
+#' # Now:
+#' cs5_meta <- get_metadata("nhgis", time_series_table = "CS5")
+#'
 #' cs5_meta$geog_levels
 #'
 #' # Use the available values when defining an NHGIS extract request
 #' define_extract_nhgis(
 #'   time_series_tables = tst_spec("CS5", geog_levels = "state")
-#' )
-#'
-#' # Detailed metadata is also provided for datasets and data tables
-#' get_metadata_nhgis(dataset = "1990_STF1")
-#' get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
-#'
-#' # Iterate over data sources to retrieve detailed metadata for several
-#' # records. For instance, to get variable metadata for a set of data tables:
-#' tables <- c("NP1", "NP2", "NP10")
-#'
-#' var_meta <- purrr::map(
-#'   tables,
-#'   function(dt) {
-#'     dt_meta <- get_metadata_nhgis(dataset = "1990_STF1", data_table = dt)
-#'
-#'     # This ensures you avoid hitting rate limit for large numbers of tables
-#'     Sys.sleep(1)
-#'
-#'     dt_meta$variables
-#'   }
 #' )
 #' }
 get_metadata_nhgis <- function(type = NULL,
@@ -212,6 +471,15 @@ get_metadata_nhgis <- function(type = NULL,
                                time_series_table = NULL,
                                delay = 0,
                                api_key = Sys.getenv("IPUMS_API_KEY")) {
+  lifecycle::deprecate_warn(
+    "0.9.0",
+    "get_metadata_nhgis()",
+    details = paste0(
+      "Please use `get_metadata_catalog()` to obtain summary metadata or ",
+      "`get_metadata()` to obtain detailed metadata."
+    )
+  )
+
   summary_req <- !is.null(type)
   ds_req <- !is.null(dataset)
   dt_req <- !is.null(data_table)
@@ -289,70 +557,6 @@ get_metadata_nhgis <- function(type = NULL,
   metadata
 }
 
-#' List available samples for IPUMS microdata collections
-#'
-#' @description
-#' Retrieve sample IDs and descriptions for IPUMS microdata collections.
-#'
-#' Currently supported microdata collections are:
-#'
-#' * IPUMS USA (`"usa"`)
-#' * IPUMS CPS (`"cps"`)
-#' * IPUMS International (`"ipumsi"`)
-#' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
-#' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
-#'
-#' Learn more about the IPUMS API in `vignette("ipums-api")`.
-#'
-#' @inheritParams get_metadata_nhgis
-#' @param collection Character string of the IPUMS collection for which to
-#'   retrieve sample IDs. Defaults to the current default collection,
-#'   if it exists. See [set_ipums_default_collection()].
-#'
-#'   For a list of codes used to refer to each collection, see
-#'   [ipums_data_collections()].
-#' @param delay Number of seconds to delay between
-#'   successive API requests, if multiple requests are needed to retrieve all
-#'   records.
-#'
-#'   A delay is highly unlikely to be necessary and is intended only as a
-#'   fallback in the event that you cannot retrieve all sample IDs without
-#'   exceeding the API rate limit.
-#'
-#' @return A [`tibble`][tibble::tbl_df-class] containing sample IDs and
-#'   descriptions for the indicated collection.
-#'
-#' @seealso
-#' [define_extract_micro()] to create an IPUMS microdata
-#'   extract definition.
-#'
-#' @export
-#'
-#' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' get_sample_info("usa")
-#' get_sample_info("cps")
-#' get_sample_info("ipumsi")
-#' get_sample_info("atus")
-#' get_sample_info("meps")
-#' }
-get_sample_info <- function(collection = NULL,
-                            delay = 0,
-                            api_key = Sys.getenv("IPUMS_API_KEY")) {
-  collection <- collection %||% get_default_collection()
-
-  metadata <- get_summary_metadata(
-    collection = collection,
-    type = "samples",
-    delay = delay,
-    api_key = api_key
-  )
-
-  metadata
-}
-
 # Internal functions -----------------------------------------------------------
 
 #' Get summary metadata
@@ -374,12 +578,12 @@ get_sample_info <- function(collection = NULL,
 #'
 #' @noRd
 get_summary_metadata <- function(collection,
-                                 type,
+                                 metadata_type,
                                  delay = 0,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
   url <- api_request_url(
     collection = collection,
-    path = metadata_request_path(type),
+    path = metadata_request_path(metadata_type),
     queries = list(pageNumber = 1, pageSize = api_page_size_limit("metadata"))
   )
 
@@ -410,7 +614,7 @@ get_summary_metadata <- function(collection,
 #' Get detailed metadata for a particular data source
 #'
 #' @inheritParams get_sample_info
-#' @inheritParams get_metadata_nhgis
+#' @inheritParams get_metadata_catalog
 #' @param ... Arbitrary number of named and/or unnamed arguments to be passed
 #'   to `metadata_request_path()`. This constructs the URL for the metadata
 #'   request. Named arguments will have their names placed before their

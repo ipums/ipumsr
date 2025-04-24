@@ -44,7 +44,7 @@ all of the \code{datasets} and \code{time_series_tables} in the extract
 definition (for instance, to obtain data within a specified state).
 By default, selects all available extents.
 
-Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to identify the available extents for a given
+Use \code{\link[=get_metadata]{get_metadata()}} to identify the available extents for a given
 dataset or time series table, if any.}
 
 \item{shapefiles}{Names of any \href{https://www.nhgis.org/gis-files}{shapefiles}
@@ -61,7 +61,7 @@ own file
 
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
-multiple breakdown values specified. See \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to
+multiple breakdown values specified. See \code{\link[=get_metadata]{get_metadata()}} to
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in

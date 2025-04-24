@@ -405,7 +405,7 @@ define_extract_ipumsi <- function(description,
 #' Define the parameters of an IPUMS NHGIS extract request to be submitted via
 #' the IPUMS API.
 #'
-#' Use [get_metadata_nhgis()] to browse and identify data sources for use
+#' Use [get_metadata_catalog()] to browse and identify data sources for use
 #' in NHGIS extract definitions. For general information, see the NHGIS
 #' [data source overview](https://www.nhgis.org/data-availability) and the
 #' [FAQ](https://www.nhgis.org/frequently-asked-questions-faq).
@@ -445,7 +445,7 @@ define_extract_ipumsi <- function(description,
 #'   definition (for instance, to obtain data within a specified state).
 #'   By default, selects all available extents.
 #'
-#'   Use [get_metadata_nhgis()] to identify the available extents for a given
+#'   Use [get_metadata()] to identify the available extents for a given
 #'   dataset or time series table, if any.
 #' @param breakdown_and_data_type_layout The desired layout
 #'   of any `datasets` that have multiple data types or breakdown values.
@@ -457,7 +457,7 @@ define_extract_ipumsi <- function(description,
 #'
 #'   Required if any `datasets` included in the extract definition consist of
 #'   multiple data types (for instance, estimates and margins of error) or have
-#'   multiple breakdown values specified. See [get_metadata_nhgis()] to
+#'   multiple breakdown values specified. See [get_metadata()] to
 #'   determine whether a requested dataset has multiple data types.
 #' @param tst_layout The desired layout of all `time_series_tables` included in
 #'   the extract definition.
@@ -488,7 +488,7 @@ define_extract_ipumsi <- function(description,
 #'   the extract definition.
 #'
 #' @seealso
-#' [get_metadata_nhgis()] to find data to include in an extract definition.
+#' [get_metadata_catalog()] to find data to include in an extract definition.
 #'
 #' [submit_extract()] to submit an extract request for processing.
 #'
@@ -764,7 +764,7 @@ samp_spec <- function(name) {
 #' Provide specifications for individual datasets and time series
 #' tables when defining an IPUMS NHGIS extract request.
 #'
-#' Use [get_metadata_nhgis()] to identify available values for dataset and
+#' Use [get_metadata()] to identify available values for dataset and
 #' time series table specification parameters.
 #'
 #' Learn more about NHGIS extract definitions in
@@ -791,7 +791,7 @@ samp_spec <- function(name) {
 #'
 #'   For time series tables, all years are selected by default. For datasets,
 #'   use `"*"` to select all available years. Use
-#'   [get_metadata_nhgis()] to determine if a dataset allows year selection.
+#'   [get_metadata()] to determine if a dataset allows year selection.
 #' @param breakdown_values [Breakdown
 #'   values](https://www.nhgis.org/frequently-asked-questions-faq#breakdowns)
 #'   to apply to the given dataset.

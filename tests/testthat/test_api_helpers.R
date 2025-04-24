@@ -215,7 +215,7 @@ test_that("We handle API auth errors for extract and metadata endpoints", {
   vcr::use_cassette("api-errors-authorization", {
     expect_error(
       withr::with_envvar(new = c("IPUMS_API_KEY" = NA), {
-        get_metadata_nhgis("datasets")
+        get_metadata_catalog("nhgis", "datasets")
       }),
       "API key is either missing or invalid"
     )
@@ -287,19 +287,19 @@ test_that("Can parse API request error details in basic requests", {
 
   vcr::use_cassette("api-errors-invalid-metadata", {
     expect_error(
-      get_summary_metadata("nhgis", type = "foo"),
+      get_summary_metadata("nhgis", metadata_type = "foo"),
       "API request failed with status 404.$"
     )
     expect_error(
-      get_metadata_nhgis(dataset = "foo"),
+      get_metadata("nhgis", dataset = "foo"),
       "API request failed.+Couldn\'t find Dataset"
     )
     expect_error(
-      get_metadata_nhgis(data_table = "foo", dataset = "1980_STF1"),
+      get_metadata("nhgis", data_table = "foo", dataset = "1980_STF1"),
       "API request failed.+Couldn\'t find DataTable"
     )
     expect_error(
-      get_metadata_nhgis(time_series_table = "foo"),
+      get_metadata("nhgis", time_series_table = "foo"),
       "API request failed.+Couldn\'t find TimeSeriesTable"
     )
   })

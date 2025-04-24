@@ -11,19 +11,15 @@ get_sample_info(
 )
 }
 \arguments{
-\item{collection}{Character string of the IPUMS collection for which to
-retrieve sample IDs. Defaults to the current default collection,
-if it exists. See \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}}.
-
-For a list of codes used to refer to each collection, see
-\code{\link[=ipums_data_collections]{ipums_data_collections()}}.}
+\item{collection}{Character string indicating the IPUMS microdata collection
+for which to retrieve sample information.}
 
 \item{delay}{Number of seconds to delay between
 successive API requests, if multiple requests are needed to retrieve all
 records.
 
 A delay is highly unlikely to be necessary and is intended only as a
-fallback in the event that you cannot retrieve all sample IDs without
+fallback in the event that you cannot retrieve all metadata records without
 exceeding the API rate limit.}
 
 \item{api_key}{API key associated with your user account. Defaults to the

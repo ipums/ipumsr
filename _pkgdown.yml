@@ -106,8 +106,9 @@ reference:
   - contents:
       - define_extract_micro
       - define_extract_nhgis
+      - get_metadata_catalog
+      - get_metadata
       - get_sample_info
-      - get_metadata_nhgis
       - submit_extract
       - wait_for_extract
       - download_extract

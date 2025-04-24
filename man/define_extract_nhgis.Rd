@@ -37,7 +37,7 @@ all of the \code{datasets} and \code{time_series_tables} in the extract
 definition (for instance, to obtain data within a specified state).
 By default, selects all available extents.
 
-Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to identify the available extents for a given
+Use \code{\link[=get_metadata]{get_metadata()}} to identify the available extents for a given
 dataset or time series table, if any.}
 
 \item{breakdown_and_data_type_layout}{The desired layout
@@ -51,7 +51,7 @@ own file
 
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
-multiple breakdown values specified. See \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to
+multiple breakdown values specified. See \code{\link[=get_metadata]{get_metadata()}} to
 determine whether a requested dataset has multiple data types.}
 
 \item{tst_layout}{The desired layout of all \code{time_series_tables} included in
@@ -90,7 +90,7 @@ the extract definition.
 Define the parameters of an IPUMS NHGIS extract request to be submitted via
 the IPUMS API.
 
-Use \code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to browse and identify data sources for use
+Use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to browse and identify data sources for use
 in NHGIS extract definitions. For general information, see the NHGIS
 \href{https://www.nhgis.org/data-availability}{data source overview} and the
 \href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
@@ -193,7 +193,7 @@ submit_extract(nhgis_extract)
 }
 }
 \seealso{
-\code{\link[=get_metadata_nhgis]{get_metadata_nhgis()}} to find data to include in an extract definition.
+\code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to find data to include in an extract definition.
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.
 

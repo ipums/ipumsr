@@ -2,7 +2,7 @@ test_that("We can get summary metadata", {
   skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("nhgis-metadata-summary", {
-    shp_meta <- get_metadata_nhgis("shapefiles")
+    shp_meta <- get_metadata_catalog("nhgis", "shapefiles")
   })
   vcr::use_cassette("micro-metadata-summary", {
     cps_meta <- get_sample_info("cps")
@@ -61,7 +61,7 @@ test_that("We can get metadata for single dataset", {
   ds <- "2010_SF1a"
 
   vcr::use_cassette("nhgis-metadata-single-dataset", {
-    single_ds_meta <- get_metadata_nhgis(dataset = ds)
+    single_ds_meta <- get_metadata("nhgis", dataset = ds)
   })
 
   expect_true(is_list(single_ds_meta))
@@ -92,7 +92,7 @@ test_that("We can get metadata for single time series table", {
   tst <- "CM0"
 
   vcr::use_cassette("nhgis-metadata-single-tst", {
-    single_tst_meta <- get_metadata_nhgis(time_series_table = tst)
+    single_tst_meta <- get_metadata("nhgis", time_series_table = tst)
   })
 
   expect_true(is_list(single_tst_meta))
@@ -121,7 +121,7 @@ test_that("We can get metadata for single data table", {
   dt <- "P8"
 
   vcr::use_cassette("nhgis-metadata-single-source", {
-    single_dt_meta <- get_metadata_nhgis(dataset = ds, data_table = dt)
+    single_dt_meta <- get_metadata("nhgis", dataset = ds, data_table = dt)
   })
 
   expect_equal(length(single_dt_meta), 7)
@@ -139,33 +139,87 @@ test_that("We can get metadata for single data table", {
 test_that("We throw errors on bad metadata specs prior to making request", {
   # Only one source per metadata request
   expect_error(
-    get_metadata_nhgis(dataset = c("A", "B")),
+    get_metadata("nhgis", dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_metadata_nhgis(time_series_table = c("A", "B")),
+    get_metadata("nhgis", time_series_table = c("A", "B")),
     "Can only retrieve metadata"
   )
   expect_error(
-    get_metadata_nhgis(data_table = "A", dataset = c("A", "B")),
+    get_metadata("nhgis", data_table = "A", dataset = c("A", "B")),
     "Can only retrieve metadata"
   )
 
   # Table metadata needs dataset
   expect_error(
-    get_metadata_nhgis(data_table = c("A", "B")),
+    get_metadata("nhgis", data_table = c("A", "B")),
     "`data_table` must be specified with a corresponding `dataset`"
   )
   expect_error(
-    get_metadata_nhgis(data_table = "P8"),
+    get_metadata("nhgis", data_table = "P8"),
     "`data_table` must be specified with a corresponding `dataset`"
   )
 
-  # This produces a low-level curl error and therefore is not submitted
-  # but on other OS it is submitted and would therefore need to be mocked.
-  # TODO: if we truly want to handle these errors ourselves we will
-  # likely need to validate the resulting request URL before submitting.
-  # expect_error(
-  #   get_metadata_nhgis(data_table = "bad table", dataset = "1980_STF1")
-  # )
+  # Invalid collection and/or catalog endpoints
+  expect_error(
+    get_metadata("foobar", dataset = "P8"),
+    "Unrecognized collection"
+  )
+  expect_error(
+    get_metadata_catalog("foobar", "datasets"),
+    "Unrecognized collection"
+  )
+  expect_error(
+    get_metadata_catalog("nhgis", "foobar"),
+    paste0(
+      "`metadata_type` must be one of \"datasets\", \"data_tables\", ",
+      "\"time_series_tables\", or \"shapefiles\""
+    )
+  )
+  expect_error(
+    get_metadata_catalog("usa", "datasets"),
+    "`metadata_type` must be one of \"samples\""
+  )
+})
+
+test_that("get_metadata_nhgis() is deprecated", {
+  vcr::use_cassette("nhgis-metadata-summary", {
+    lifecycle::expect_deprecated(
+      shp_meta <- get_metadata_nhgis("shapefiles")
+    )
+  })
+
+  ds <- "2010_SF1a"
+
+  vcr::use_cassette("nhgis-metadata-single-dataset", {
+    lifecycle::expect_deprecated(
+      single_ds_meta <- get_metadata_nhgis(dataset = ds)
+    )
+  })
+
+  expect_true(tibble::is_tibble(shp_meta))
+  expect_true(!is_empty(shp_meta))
+  expect_equal(shp_meta$name[[1]], "us_state_1790_tl2000")
+
+  expect_true(is_list(single_ds_meta))
+  expect_equal(length(single_ds_meta), 10)
+  expect_equal(
+    names(single_ds_meta),
+    c(
+      "name", "nhgis_id", "group", "description", "sequence",
+      "has_multiple_data_types", "data_tables", "geog_levels",
+      "geographic_instances", "breakdowns"
+    )
+  )
+  expect_equal(single_ds_meta$name, ds)
+  expect_true(
+    all(
+      tibble::is_tibble(single_ds_meta$data_tables),
+      tibble::is_tibble(single_ds_meta$geog_levels),
+      tibble::is_tibble(single_ds_meta$geographic_instances),
+      tibble::is_tibble(single_ds_meta$breakdowns),
+      tibble::is_tibble(single_ds_meta$breakdowns$breakdown_values[[1]])
+    )
+  )
 })

@@ -130,7 +130,7 @@ series tables, and shapefiles.
 Of course, to make a request for any of these data sources, we have to
 know the codes that the API uses to refer to them. Fortunately, we can
 browse the metadata for all available IPUMS NHGIS data sources with
-`get_metadata_nhgis()`.
+`get_metadata_catalog()` and `get_metadata()`.
 
 Users can view summary metadata for all available data sources of a
 given data type, or detailed metadata for a specific data source by
@@ -147,7 +147,7 @@ use the `type` argument. This returns a data frame containing the
 available datasets, data tables, time series tables, or shapefiles.
 
 ```{r}
-ds <- get_metadata_nhgis(type = "datasets")
+ds <- get_metadata_catalog("nhgis", metadata_type = "datasets")
 
 head(ds)
 ```
@@ -181,7 +181,7 @@ tst <- get_truncated_metadata("nhgis", "time_series_tables")
 ```
 
 ```{r, eval=FALSE}
-tst <- get_metadata_nhgis("time_series_tables")
+tst <- get_metadata_catalog("nhgis", "time_series_tables")
 ```
 
 While some of the metadata fields are consistent across different data
@@ -226,10 +226,10 @@ insert_cassette("nhgis-metadata-detailed")
 
 Once we have identified a data source of interest, we can find out more
 about its detailed options by providing its name to the corresponding
-argument of `get_metadata_nhgis()`:
+argument of `get_metadata()`:
 
 ```{r}
-cAg_meta <- get_metadata_nhgis(dataset = "1900_cAg")
+cAg_meta <- get_metadata("nhgis", dataset = "1900_cAg")
 ```
 
 This provides a comprehensive list of the possible specifications for
@@ -246,15 +246,15 @@ data tables belong to specific datasets, both need to be specified to
 identify a data table:
 
 ```{r}
-get_metadata_nhgis(dataset = "1900_cAg", data_table = "NT2")
+get_metadata("nhgis", dataset = "1900_cAg", data_table = "NT2")
 ```
 
 Note that the `name` element is the one that contains the codes used for
 interacting with the IPUMS API. The `nhgis_code` element refers to the
 prefix attached to individual variables in the output data, and the API
 will throw an error if you use it in an extract definition. For more
-details on interpreting each of the provided metadata elements, see the
-documentation for `get_metadata_nhgis()`.
+details on interpreting each of the provided metadata elements, see the 
+[IPUMS developer documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/).
 
 Now that we have identified some of our options, we can go ahead and
 define an extract request to submit to the IPUMS API.
