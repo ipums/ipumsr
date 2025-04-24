@@ -75,6 +75,7 @@ proj_config <- function() {
       "IPUMS IHGIS",
       url_name = "ihgis",
       collection_type = "aggregate data",
+      api_support = TRUE,
       has_var_url = FALSE,
       home_url = "https://ihgis.ipums.org/",
       var_url = function(var = NULL) {
