@@ -171,16 +171,17 @@ get_metadata <- function(collection,
     )
   }
 
-  if (dt_req && !ds_req) {
+  if (dt_req && !ds_req && collection == "nhgis") {
     rlang::abort(
-      "`data_table` must be specified with a corresponding `dataset`."
+      paste0(
+        "`data_table` must be specified with a corresponding `dataset` ",
+        "when `collection = \"nhgis\"`."
+      )
     )
   }
 
-  if (!any(ds_req, tst_req)) {
-    rlang::abort(
-      "One of `dataset`, or `time_series_table` must be specified."
-    )
+  if (!any(ds_req, dt_req, tst_req)) {
+    rlang::abort("A data source name must be specified.")
   }
 
   is_too_long <- purrr::map_lgl(

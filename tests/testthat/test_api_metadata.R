@@ -136,6 +136,24 @@ test_that("We can get metadata for single data table", {
   expect_true(tibble::is_tibble(single_dt_meta$variables))
 })
 
+test_that("We can get metadata for a single IHGIS data table", {
+  # Only run on demo until features are released to live
+  skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
+
+  vcr::use_cassette("ihgis-metadata-data-table", {
+    ihgis_dt_meta <- get_metadata("ihgis", data_table = "AL2001pop.AAA")
+  })
+
+  expect_length(ihgis_dt_meta, 9)
+  expect_equal(
+    names(ihgis_dt_meta),
+    c(
+      "name", "data_set_name", "label", "universe", "table_num",
+      "sequence", "tabulation_geography_names", "footnotes", "agg_data_vars"
+    )
+  )
+})
+
 test_that("We throw errors on bad metadata specs prior to making request", {
   # Only one source per metadata request
   expect_error(
