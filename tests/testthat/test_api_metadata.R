@@ -139,6 +139,7 @@ test_that("We can get metadata for single data table", {
 test_that("We can get metadata for a single IHGIS data table", {
   # Only run on demo until features are released to live
   skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
+  skip_if_no_api_access(have_api_access)
 
   vcr::use_cassette("ihgis-metadata-data-table", {
     ihgis_dt_meta <- get_metadata("ihgis", data_table = "AL2001pop.AAA")

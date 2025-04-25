@@ -69,7 +69,7 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \verb{define_extract_*()} function.
 \itemize{
 \item For microdata extracts, use \code{\link[=define_extract_micro]{define_extract_micro()}}
-\item For NHGIS extracts, use \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+\item For NHGIS extracts, use \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}
 }
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the definition and latest status of a
 previously-submitted extract request.

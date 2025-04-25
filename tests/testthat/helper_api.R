@@ -161,7 +161,8 @@ test_meps_extract <- function() {
 }
 
 test_nhgis_extract <- function() {
-  define_extract_nhgis(
+  define_extract_agg_data(
+    "nhgis",
     description = "Extract for R client testing",
     datasets = list(
       ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
@@ -176,8 +177,18 @@ test_nhgis_extract <- function() {
 }
 
 test_nhgis_extract_shp <- function() {
-  define_extract_nhgis(
-    shapefiles = "110_blck_grp_2019_tl2019"
+  define_extract_agg_data("nhgis", shapefiles = "110_blck_grp_2019_tl2019")
+}
+
+test_ihgis_extract <- function() {
+  define_extract_agg_data(
+    "ihgis",
+    "Extract for R client testing",
+    datasets = ds_spec(
+      "AL2001pop",
+      c("AL2001pop.ADF", "AL2001pop.ADG"),
+      tabulation_geographies = c("AL2001pop.g0", "AL2001pop.g1")
+    )
   )
 }
 

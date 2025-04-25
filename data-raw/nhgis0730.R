@@ -14,7 +14,8 @@
 # updated with new extract numbers. Code that references these files will
 # need to be updated accordingly.
 
-define_extract_nhgis(
+define_extract_agg_data(
+  "nhgis",
   description = "Data for fixed-width testing",
   datasets = ds_spec(
     "2014_2018_ACS5a",

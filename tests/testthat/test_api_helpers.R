@@ -20,9 +20,10 @@ test_that("Printing excludes Variables field if empty", {
   )
 })
 
-test_that("Can print NHGIS extracts", {
+test_that("Can print aggregate data extracts", {
   expect_snapshot(print(test_nhgis_extract()))
   expect_snapshot(print(test_nhgis_extract_shp()))
+  expect_snapshot(print(test_ihgis_extract()))
 })
 
 test_that("NHGIS extract print coloring works", {

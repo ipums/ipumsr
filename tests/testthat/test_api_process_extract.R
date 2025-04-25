@@ -275,6 +275,37 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_identical(submitted_nhgis_extract_shp$download_links, EMPTY_NAMED_LIST)
 })
 
+
+test_that("Can submit an IHGIS extract", {
+  skip_if_no_api_access(have_api_access)
+  skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
+
+  ihgis_extract <- test_ihgis_extract()
+
+  vcr::use_cassette("submitted-ihgis-extract", {
+    suppressMessages(
+      submitted_ihgis_extract <- submit_extract(ihgis_extract)
+    )
+  })
+
+  expect_s3_class(
+    submitted_ihgis_extract,
+    c("ihgis_extract", "ipums_extract")
+  )
+  expect_equal(submitted_ihgis_extract$collection, "ihgis")
+  expect_equal(
+    submitted_ihgis_extract$datasets,
+    ihgis_extract$datasets
+  )
+  expect_null(submitted_ihgis_extract$time_series_tables)
+  expect_null(submitted_ihgis_extract$tst_layout)
+  expect_null(submitted_ihgis_extract$data_format)
+  expect_null(submitted_ihgis_extract$shapefiles)
+  expect_true(submitted_ihgis_extract$submitted)
+  expect_equal(submitted_ihgis_extract$status, "queued")
+  expect_identical(submitted_ihgis_extract$download_links, EMPTY_NAMED_LIST)
+})
+
 test_that("Can resubmit an extract", {
   skip_if_no_api_access(have_api_access)
 

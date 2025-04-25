@@ -33,13 +33,13 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
 \item To remove from an \strong{IPUMS NHGIS} extract definition, click
-\link[=remove_from_extract.nhgis_extract]{here}
+\link[=remove_from_extract.agg_extract]{here}
 }
 
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -78,7 +78,8 @@ remove_from_extract(
 )
 
 # NHGIS extracts
-nhgis_extract <- define_extract_nhgis(
+nhgis_extract <- define_extract_agg_data(
+  "nhgis",
   datasets = ds_spec(
     "1990_STF1",
     data_tables = c("NP1", "NP2", "NP3"),
@@ -100,7 +101,7 @@ remove_from_extract(
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
-\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to define an
 extract request manually
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.

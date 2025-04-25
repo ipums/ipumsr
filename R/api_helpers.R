@@ -527,7 +527,7 @@ print.micro_extract <- function(x, ...) {
 }
 
 #' @export
-print.nhgis_extract <- function(x, ...) {
+print.agg_extract <- function(x, ...) {
   style_ds <- extract_field_styler(nhgis_print_color("dataset"), "bold")
 
   ds_to_cat <- purrr::map(
@@ -539,7 +539,8 @@ print.nhgis_extract <- function(x, ...) {
           "Tables: " = d$data_tables,
           "Geog Levels: " = d$geog_levels,
           "Years: " = d$years,
-          "Breakdowns: " = d$breakdown_values
+          "Breakdowns: " = d$breakdown_values,
+          "Tabulation Geogs: " = d$tabulation_geographies
         ),
         parent_style = style_ds,
         subfield_style = extract_field_styler("italic")
@@ -1327,12 +1328,12 @@ spec_add <- function(extract_spec, spec) {
 
 # Helper to drive the logic comparing two spec objects and removing
 # the detailed specification values present in both from the first spec object.
-spec_setdiff <- function(spec, spec_mod, validate = FALSE) {
+spec_setdiff <- function(spec, spec_mod) {
   UseMethod("spec_setdiff")
 }
 
 #' @export
-spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+spec_setdiff.ipums_spec <- function(spec, spec_mod) {
   if (spec$name != spec_mod$name) {
     return(spec)
   }
@@ -1350,15 +1351,11 @@ spec_setdiff.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     }
   )
 
-  if (validate) {
-    spec <- validate_ipums_extract(spec)
-  }
-
   spec
 }
 
 #' @export
-spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
+spec_setdiff.var_spec <- function(spec, spec_mod) {
   if (spec$name != spec_mod$name) {
     return(spec)
   }
@@ -1387,21 +1384,17 @@ spec_setdiff.var_spec <- function(spec, spec_mod, validate = FALSE) {
     spec$case_selection_type <- NULL
   }
 
-  if (validate) {
-    spec <- validate_ipums_extract(spec)
-  }
-
   spec
 }
 
 # Helper to drive the logic comparing two spec objects and unioning
 # the detailed specification values present in the second with the first.
-spec_union <- function(spec, spec_mod, validate = FALSE) {
+spec_union <- function(spec, spec_mod) {
   UseMethod("spec_union")
 }
 
 #' @export
-spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
+spec_union.ipums_spec <- function(spec, spec_mod) {
   if (spec$name != spec_mod$name) {
     return(spec)
   }
@@ -1415,15 +1408,11 @@ spec_union.ipums_spec <- function(spec, spec_mod, validate = FALSE) {
     }
   )
 
-  if (validate) {
-    spec <- validate_ipums_extract(spec)
-  }
-
   spec
 }
 
 #' @export
-spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
+spec_union.var_spec <- function(spec, spec_mod) {
   if (spec$name != spec_mod$name) {
     return(spec)
   }
@@ -1447,15 +1436,11 @@ spec_union.var_spec <- function(spec, spec_mod, validate = FALSE) {
     }
   )
 
-  if (validate) {
-    spec <- validate_ipums_extract(spec)
-  }
-
   spec
 }
 
 #' @export
-spec_union.tu_var_spec <- function(spec, spec_mod, validate = FALSE) {
+spec_union.tu_var_spec <- function(spec, spec_mod) {
   if (spec$name != spec_mod$name) {
     return(spec)
   }
@@ -1474,10 +1459,6 @@ spec_union.tu_var_spec <- function(spec, spec_mod, validate = FALSE) {
       }
     }
   )
-
-  if (validate) {
-    spec <- validate_ipums_extract(spec)
-  }
 
   spec
 }

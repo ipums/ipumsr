@@ -207,7 +207,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-    timeout_seconds > 0)
+              timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -551,7 +551,7 @@ extract_to_request_json <- function(extract) {
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(extract) {
+extract_to_request_json.agg_extract <- function(extract) {
   if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
@@ -759,11 +759,11 @@ ipums_extract_specific_download.micro_extract <- function(extract,
 }
 
 #' @export
-ipums_extract_specific_download.nhgis_extract <- function(extract,
-                                                          download_dir,
-                                                          overwrite,
-                                                          progress,
-                                                          api_key) {
+ipums_extract_specific_download.agg_extract <- function(extract,
+                                                        download_dir,
+                                                        overwrite,
+                                                        progress,
+                                                        api_key) {
   table_url <- extract$download_links$table_data$url
   gis_url <- extract$download_links$gis_data$url
 
@@ -856,7 +856,7 @@ extract_is_completed_and_has_links.micro_extract <- function(extract) {
 }
 
 #' @export
-extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
+extract_is_completed_and_has_links.agg_extract <- function(extract) {
   download_links <- extract$download_links
   is_complete <- extract$status == "completed"
 

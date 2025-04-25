@@ -13,8 +13,8 @@ add_to_extract(extract, ...)
 add to the extract definition.
 
 All arguments available in \code{\link[=define_extract_micro]{define_extract_micro()}} (for microdata
-extract requests) or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} (for NHGIS extract requests)
-can be passed to \code{add_to_extract()}.}
+extract requests) or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} (for aggregate data
+extract requests) can be passed to \code{add_to_extract()}.}
 }
 \value{
 An object of the same class as \code{extract} containing the modified
@@ -37,13 +37,13 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
 \item To add to an \strong{IPUMS NHGIS} extract definition, click
-\link[=add_to_extract.nhgis_extract]{here}
+\link[=add_to_extract.agg_extract]{here}
 }
 
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -88,7 +88,8 @@ add_to_extract(
 )
 
 # NHGIS extracts
-nhgis_extract <- define_extract_nhgis(
+nhgis_extract <- define_extract_agg_data(
+  "nhgis",
   datasets = ds_spec(
     "1990_STF1",
     data_tables = c("NP1", "NP2"),
@@ -127,7 +128,7 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \seealso{
 \code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.
 
-\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to define an
 extract request manually.
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.

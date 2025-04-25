@@ -11,7 +11,8 @@ ds_spec(
   data_tables = NULL,
   geog_levels = NULL,
   years = NULL,
-  breakdown_values = NULL
+  breakdown_values = NULL,
+  tabulation_geographies = NULL
 )
 
 tst_spec(name, geog_levels = NULL, years = NULL)
@@ -56,8 +57,8 @@ time series table specifications.
 However, it is possible to make a temporary specification for an incomplete
 dataset or time series table by omitting these values. This supports the
 syntax used when modifying an existing extract (see
-\code{\link[=add_to_extract.nhgis_extract]{add_to_extract()}} or
-\code{\link[=remove_from_extract.nhgis_extract]{remove_from_extract()}}).
+\code{\link[=add_to_extract.agg_extract]{add_to_extract()}} or
+\code{\link[=remove_from_extract.agg_extract]{remove_from_extract()}}).
 }
 \examples{
 dataset <- ds_spec(
@@ -73,7 +74,8 @@ tst <- tst_spec(
 )
 
 # Use variable specifications in an extract definition:
-define_extract_nhgis(
+define_extract_agg_data(
+  "nhgis",
   description = "Example extract",
   datasets = dataset,
   time_series_tables = tst

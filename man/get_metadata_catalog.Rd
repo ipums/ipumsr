@@ -72,7 +72,8 @@ tsts$name
 \seealso{
 \code{\link[=get_metadata]{get_metadata()}} to obtain detailed metadata for a single data source.
 
-\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create an IPUMS NHGIS extract definition.
+\code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to create an IPUMS aggregate data extract
+definition.
 
 \code{\link[=define_extract_micro]{define_extract_micro()}} to create an IPUMS microdata extract definition.
 }

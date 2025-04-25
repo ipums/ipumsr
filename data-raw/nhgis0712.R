@@ -18,7 +18,8 @@
 
 # NHGIS PMSA data. Multiple files in both data and shapefiles ------------
 
-files <- define_extract_nhgis(
+files <- define_extract_agg_data(
+  "nhgis",
   description = "New ipumsr example data: multiple datasets and shapefiles",
   datasets = list(
     ds_spec("1990_SSTF09", "NP001", "pmsa"),

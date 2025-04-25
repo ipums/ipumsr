@@ -87,110 +87,18 @@ An object of class \code{\link[=ipums_extract-class]{nhgis_extract}} containing
 the extract definition.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 Define the parameters of an IPUMS NHGIS extract request to be submitted via
 the IPUMS API.
 
-Use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to browse and identify data sources for use
-in NHGIS extract definitions. For general information, see the NHGIS
-\href{https://www.nhgis.org/data-availability}{data source overview} and the
-\href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
+This function has been deprecated in favor of \code{\link[=define_extract_agg_data]{define_extract_agg_data()}},
+which can be used to define extracts for both IPUMS aggregate data
+collections (IPUMS NHGIS and IPUMS IHGIS). All NHGIS extract request
+parameters are supported by \code{define_extract_agg_data()}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
 NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
-}
-\details{
-An NHGIS extract definition must include at least one dataset, time series
-table, or shapefile specification.
-
-Create an NHGIS dataset specification with \code{\link[=ds_spec]{ds_spec()}}. Each dataset
-must be associated with a selection of \code{data_tables} and \code{geog_levels}. Some
-datasets also support the selection of \code{years} and \code{breakdown_values}.
-
-Create an NHGIS time series table specification with \code{\link[=tst_spec]{tst_spec()}}. Each time
-series table must be associated with a selection of \code{geog_levels} and
-may optionally be associated with a selection of \code{years}.
-
-See examples or \code{vignette("ipums-api-nhgis")} for more details about
-specifying datasets and time series tables in an NHGIS extract definition.
-}
-\examples{
-# Extract definition for tables from an NHGIS dataset
-# Use `ds_spec()` to create an NHGIS dataset specification
-nhgis_extract <- define_extract_nhgis(
-  description = "Example NHGIS extract",
-  datasets = ds_spec(
-    "1990_STF3",
-    data_tables = "NP57",
-    geog_levels = c("county", "tract")
-  )
-)
-
-nhgis_extract
-
-# Use `tst_spec()` to create an NHGIS time series table specification
-define_extract_nhgis(
-  description = "Example NHGIS extract",
-  time_series_tables = tst_spec("CL8", geog_levels = "county"),
-  tst_layout = "time_by_row_layout"
-)
-
-# To request multiple datasets, provide a list of `ds_spec` objects
-define_extract_nhgis(
-  description = "Extract definition with multiple datasets",
-  datasets = list(
-    ds_spec("2014_2018_ACS5a", "B01001", c("state", "county")),
-    ds_spec("2015_2019_ACS5a", "B01001", c("state", "county"))
-  )
-)
-
-# If you need to specify the same table or geographic level for
-# many datasets, you may want to make a set of datasets before defining
-# your extract request:
-dataset_names <- c("2014_2018_ACS5a", "2015_2019_ACS5a")
-
-dataset_spec <- purrr::map(
-  dataset_names,
-  ~ ds_spec(
-    .x,
-    data_tables = "B01001",
-    geog_levels = c("state", "county")
-  )
-)
-
-define_extract_nhgis(
-  description = "Extract definition with multiple datasets",
-  datasets = dataset_spec
-)
-
-# You can request datasets, time series tables, and shapefiles in the same
-# definition:
-define_extract_nhgis(
-  description = "Extract with datasets and time series tables",
-  datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county"),
-  time_series_tables = tst_spec("CL6", "state"),
-  shapefiles = "us_county_1990_tl2008"
-)
-
-# Geographic extents are applied to all datasets/time series tables in the
-# definition
-define_extract_nhgis(
-  description = "Extent selection",
-  datasets = list(
-    ds_spec("2018_2022_ACS5a", "B01001", "blck_grp"),
-    ds_spec("2017_2021_ACS5a", "B01001", "blck_grp")
-  ),
-  geographic_extents = c("010", "050")
-)
-
-# Extract specifications can be indexed by name
-names(nhgis_extract$datasets)
-
-nhgis_extract$datasets[["1990_STF3"]]
-
-\dontrun{
-# Use the extract definition to submit an extract request to the API
-submit_extract(nhgis_extract)
-}
 }
 \seealso{
 \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to find data to include in an extract definition.
@@ -200,3 +108,4 @@ submit_extract(nhgis_extract)
 \code{\link[=save_extract_as_json]{save_extract_as_json()}} and \code{\link[=define_extract_from_json]{define_extract_from_json()}} to share an
 extract definition.
 }
+\keyword{internal}
