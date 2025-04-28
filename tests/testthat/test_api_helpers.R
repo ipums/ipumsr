@@ -211,7 +211,7 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 # API Request Errors ----------------------------------------
 
 test_that("We handle API auth errors for extract and metadata endpoints", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-authorization", {
     expect_error(
@@ -228,7 +228,7 @@ test_that("We handle API auth errors for extract and metadata endpoints", {
 })
 
 test_that("Can parse API request error details in basic requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-invalid-extract", {
     expect_error(
@@ -307,7 +307,7 @@ test_that("Can parse API request error details in basic requests", {
 })
 
 test_that("Can parse API request error details in paged requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-paged-extract", {
     expect_error(
@@ -324,7 +324,7 @@ test_that("Can parse API request error details in paged requests", {
 })
 
 test_that("We inform user about invalid extract number request", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # API itself returns empty-bodied response for an invalid extract number
   # for a given collection, but we want to inform user that the error
@@ -343,7 +343,7 @@ test_that("We inform user about invalid extract number request", {
 })
 
 test_that("We catch invalid collection specifications during requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # Ideally we'd catch before request, as API message suggests all ipums
   # collections are available.
@@ -367,7 +367,7 @@ test_that("We catch invalid collection specifications during requests", {
 })
 
 test_that("We warn users about unsupported features detected in an extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-cps-extract", {
     expect_message(

@@ -24,7 +24,7 @@ on.exit(
 # Check extract status -----------------
 
 test_that("Can check microdata extract status", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-usa-extract", {
     suppressMessages(
@@ -104,7 +104,7 @@ test_that("Can check microdata extract status", {
 })
 
 test_that("Can check NHGIS extract status", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-nhgis-extract", {
     suppressMessages(
@@ -165,7 +165,7 @@ test_that("Cannot check status for an extract with no number", {
 })
 
 test_that("We avoid superfluous checks when getting extract status", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-nhgis-extract", {
     suppressMessages(
@@ -265,7 +265,7 @@ test_that("Can parse default collection", {
 })
 
 test_that("Can get extract info for default collection", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("recent-nhgis-extracts-list", {
     recent_nhgis_extracts_list <- get_extract_history("nhgis")
@@ -308,7 +308,7 @@ test_that("Can get extract info for default collection", {
 # Extract history ------------------------
 
 test_that("Can get extract history for all records", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.
@@ -343,7 +343,7 @@ test_that("Can get extract history for all records", {
 })
 
 test_that("Can get extract history for more records than page size", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # We reproduce the internal workings of `get_extract_history()`
   # so we can update the page size parameter, which is otherwise not exposed.

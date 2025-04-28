@@ -309,8 +309,22 @@ convert_to_relative_path <- function(path) {
   )
 }
 
-skip_if_no_api_access <- function(have_api_access) {
-  if (!have_api_access) {
+have_api_access <- function() {
+  api_access <- TRUE
+  vcr_dir <- vcr::vcr_test_path("fixtures")
+
+  if (!nzchar(Sys.getenv("IPUMS_API_KEY"))) {
+    if (!dir.exists(vcr_dir) || length(dir(vcr_dir)) == 0) {
+      # If there are no mock files nor API token, can't run API tests
+      api_access <- FALSE
+    }
+  }
+
+  api_access
+}
+
+skip_if_no_api_access <- function() {
+  if (!have_api_access()) {
     return(testthat::skip("no API access and no saved API responses"))
   }
 }

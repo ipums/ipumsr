@@ -1,5 +1,5 @@
 test_that("We can get summary metadata", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("nhgis-metadata-summary", {
     shp_meta <- get_metadata_catalog("nhgis", "shapefiles")
@@ -18,7 +18,7 @@ test_that("We can get summary metadata", {
 })
 
 test_that("We can iterate through pages to get all records", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   page_size <- 100
 
@@ -56,7 +56,7 @@ test_that("We can iterate through pages to get all records", {
 })
 
 test_that("We can get metadata for single dataset", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   ds <- "2010_SF1a"
 
@@ -87,7 +87,7 @@ test_that("We can get metadata for single dataset", {
 })
 
 test_that("We can get metadata for single time series table", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   tst <- "CM0"
 
@@ -115,7 +115,7 @@ test_that("We can get metadata for single time series table", {
 })
 
 test_that("We can get metadata for single data table", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   ds <- "2010_SF1a"
   dt <- "P8"
@@ -139,7 +139,7 @@ test_that("We can get metadata for single data table", {
 test_that("We can get metadata for a single IHGIS data table", {
   # Only run on demo until features are released to live
   skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("ihgis-metadata-data-table", {
     ihgis_dt_meta <- get_metadata("ihgis", data_table = "AL2001pop.AAA")
