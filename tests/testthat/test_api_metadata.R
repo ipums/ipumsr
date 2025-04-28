@@ -149,7 +149,7 @@ test_that("We can get metadata for a single IHGIS data table", {
   expect_equal(
     names(ihgis_dt_meta),
     c(
-      "name", "data_set_name", "label", "universe", "table_num",
+      "name", "dataset_name", "label", "universe", "table_num",
       "sequence", "tabulation_geography_names", "footnotes", "agg_data_vars"
     )
   )
