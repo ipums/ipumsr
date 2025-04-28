@@ -92,12 +92,12 @@ the extract definition.
 Define the parameters of an IPUMS NHGIS extract request to be submitted via
 the IPUMS API.
 
-This function has been deprecated in favor of \code{\link[=define_extract_agg_data]{define_extract_agg_data()}},
+This function has been deprecated in favor of \code{\link[=define_extract_agg]{define_extract_agg()}},
 which can be used to define extracts for both IPUMS aggregate data
 collections (IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
 
 All NHGIS extract request parameters supported by \code{define_extract_nhgis()}
-are supported by \code{define_extract_agg_data()}.
+are supported by \code{define_extract_agg()}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
 NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
@@ -114,7 +114,7 @@ nhgis_extract <- define_extract_nhgis(
 )
 
 # Now, use the following:
-nhgis_extract <- define_extract_agg_data(
+nhgis_extract <- define_extract_agg(
   collection = "nhgis",
   description = "Example NHGIS extract",
   datasets = ds_spec(

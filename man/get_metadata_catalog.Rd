@@ -86,7 +86,7 @@ tsts$name
 \seealso{
 \code{\link[=get_metadata]{get_metadata()}} to obtain detailed metadata for a single data source.
 
-\code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to create an IPUMS aggregate data extract
+\code{\link[=define_extract_agg]{define_extract_agg()}} to create an IPUMS aggregate data extract
 definition.
 
 \code{\link[=define_extract_micro]{define_extract_micro()}} to create an IPUMS microdata extract definition.

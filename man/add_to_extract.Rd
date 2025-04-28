@@ -13,7 +13,7 @@ add_to_extract(extract, ...)
 add to the extract definition.
 
 All arguments available in \code{\link[=define_extract_micro]{define_extract_micro()}} (for microdata
-extract requests) or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} (for aggregate data
+extract requests) or \code{\link[=define_extract_agg]{define_extract_agg()}} (for aggregate data
 extract requests) can be passed to \code{add_to_extract()}.}
 }
 \value{
@@ -43,7 +43,7 @@ subclass (i.e. collection) of the extract being modified.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg]{define_extract_agg()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -88,7 +88,7 @@ add_to_extract(
 )
 
 # NHGIS extracts
-nhgis_extract <- define_extract_agg_data(
+nhgis_extract <- define_extract_agg(
   "nhgis",
   datasets = ds_spec(
     "1990_STF1",
@@ -128,7 +128,7 @@ add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
 \seealso{
 \code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.
 
-\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to define an
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg]{define_extract_agg()}} to define an
 extract request manually.
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.

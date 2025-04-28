@@ -47,7 +47,7 @@
 #' @seealso
 #' [get_metadata()] to obtain detailed metadata for a single data source.
 #'
-#' [define_extract_agg_data()] to create an IPUMS aggregate data extract
+#' [define_extract_agg()] to create an IPUMS aggregate data extract
 #' definition.
 #'
 #' [define_extract_micro()] to create an IPUMS microdata extract definition.
@@ -127,7 +127,7 @@ get_metadata_catalog <- function(collection,
 #' [get_metadata_catalog()] to obtain a summary of available data sources for
 #' a given IPUMS data collection.
 #'
-#' [define_extract_agg_data()] to create an IPUMS aggregate data extract
+#' [define_extract_agg()] to create an IPUMS aggregate data extract
 #' definition.
 #'
 #' @examples
@@ -139,7 +139,7 @@ get_metadata_catalog <- function(collection,
 #' cs5_meta$geog_levels
 #'
 #' # Use the available values when defining an NHGIS extract request
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   time_series_tables = tst_spec("CS5", geog_levels = "state")
 #' )
@@ -437,7 +437,7 @@ catalog_types <- function(collection) {
 #'   `data_table`, or `time_series_table`.
 #'
 #' @seealso
-#' [define_extract_agg_data()] to create an IPUMS aggregate data extract
+#' [define_extract_agg()] to create an IPUMS aggregate data extract
 #' definition.
 #'
 #' @keywords internal
@@ -465,7 +465,7 @@ catalog_types <- function(collection) {
 #' cs5_meta$geog_levels
 #'
 #' # Use the available values when defining an NHGIS extract request
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   time_series_tables = tst_spec("CS5", geog_levels = "state")
 #' )

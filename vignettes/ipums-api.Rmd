@@ -172,7 +172,7 @@ of a new extract request from scratch.
   -   For microdata projects (USA, CPS, International, Time Use, 
       and Health Surveys), use `define_extract_micro()`.
   -   For aggregate data projects (NHGIS and IHGIS), use 
-      `define_extract_agg_data()`.
+      `define_extract_agg()`.
 
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
@@ -203,7 +203,7 @@ to work with the sample IPUMS USA extract definition created above.
 
 ### Extract request objects
 
-`define_extract_micro()` and `define_extract_agg_data()` always produce an 
+`define_extract_micro()` and `define_extract_agg()` always produce an 
 `ipums_extract` object, which can be handled by other API functions 
 (see `?ipums_extract`). Furthermore, these objects will have a subclass for 
 the particular collection with which they are associated.

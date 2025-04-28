@@ -202,7 +202,7 @@ test_that("define_extract_nhgis() is deprecated", {
   )
 
   expect_identical(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       description = "Extract for R client testing",
       datasets = list(
@@ -235,14 +235,14 @@ test_that("NHGIS extract fields get correct default values", {
 
   expect_equal(nhgis_extract$breakdown_and_data_type_layout, "single_file")
   expect_equal(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = tst_spec("A00", "A1")
     )$tst_layout,
     "time_by_column_layout"
   )
   expect_equal(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = tst_spec("A00", "A1")
     )$data_format,
@@ -471,7 +471,7 @@ test_that("Can validate core aggregate data extract fields", {
     "`description` must not contain missing values"
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       description = "",
       datasets = ds_spec("a", "b", "c"),
@@ -509,7 +509,7 @@ test_that("Can validate core aggregate data extract fields", {
     "`data_format` must be missing when no `datasets` or `time_series_tables`",
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = tst_spec("A", "B"),
       tst_layout = c("time_by_row_layout", "time_by_row_layout")
@@ -517,7 +517,7 @@ test_that("Can validate core aggregate data extract fields", {
     "`tst_layout` must be length 1."
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "ihgis",
       datasets = ds_spec("A", "B", tabulation_geographies = "C"),
       time_series_tables = tst_spec("A", "B"),
@@ -531,7 +531,7 @@ test_that("Can validate core aggregate data extract fields", {
     )
   )
   expect_error(
-    define_extract_agg_data("usa"),
+    define_extract_agg("usa"),
     paste0(
       "Unrecognized aggregate data collection: \"usa\".+",
       "The IPUMS API supports the following aggregate data collections: \"nhgis\".+"
@@ -604,7 +604,7 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
     "Expected `datasets` to be a `ds_spec` object or a list of"
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       description = "",
       time_series_tables = c("a", "b", "c")
@@ -689,7 +689,7 @@ test_that("Can validate `*_spec` objects within extracts", {
     "Invalid `tu_var_spec` specification:.+Unrecognized fields: `foo`"
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       datasets = ds_spec(
         "A00",
@@ -706,7 +706,7 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "ihgis",
       datasets = ds_spec(
         "A00",
@@ -722,7 +722,7 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "ihgis",
       datasets = ds_spec(
         "A00",
@@ -738,7 +738,7 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = tst_spec(
         NULL,
@@ -752,7 +752,7 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = tst_spec(
         c("A", "B"),
@@ -795,14 +795,14 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
     "cannot contain multiple `samples` of same name"
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       datasets = list(ds_spec("A", "A", "A"), ds_spec("A", "B", "C"))
     ),
     "cannot contain multiple `datasets` of same name"
   )
   expect_error(
-    define_extract_agg_data(
+    define_extract_agg(
       "nhgis",
       time_series_tables = list(tst_spec("A", "A", "A"), tst_spec("A", "B"))
     ),
@@ -1162,7 +1162,7 @@ test_that("Unused revisions do not alter unsubmitted extracts", {
 
   # Test on an NHGIS extract of a single type
   # to ensure we do not alter missing datasets/tsts on revision of other fields
-  nhgis_extract1 <- define_extract_agg_data("nhgis", shapefiles = "Test")
+  nhgis_extract1 <- define_extract_agg("nhgis", shapefiles = "Test")
 
   expect_identical(nhgis_extract1, add_to_extract(nhgis_extract1))
   expect_identical(nhgis_extract1, remove_from_extract(nhgis_extract1))

@@ -70,7 +70,7 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \verb{define_extract_*()} function.
 \itemize{
 \item For microdata extracts, use \code{\link[=define_extract_micro]{define_extract_micro()}}
-\item For aggregate data extracts, use \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}
+\item For aggregate data extracts, use \code{\link[=define_extract_agg]{define_extract_agg()}}
 }
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the definition and latest status of a
 previously-submitted extract request.

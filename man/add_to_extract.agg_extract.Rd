@@ -111,7 +111,7 @@ the supplied value.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}.
+definitions with \code{\link[=define_extract_agg]{define_extract_agg()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -135,7 +135,7 @@ a previously submitted extract request, this function will reset the
 definition to an unsubmitted state.
 }
 \examples{
-extract <- define_extract_agg_data(
+extract <- define_extract_agg(
   "nhgis",
   datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county")
 )
@@ -176,7 +176,7 @@ add_to_extract(extract, data_format = "fixed_width")$data_format
 \code{\link[=remove_from_extract.agg_extract]{remove_from_extract()}} to remove
 values from an extract definition.
 
-\code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to create a new extract definition.
+\code{\link[=define_extract_agg]{define_extract_agg()}} to create a new extract definition.
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request.
 

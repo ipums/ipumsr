@@ -149,7 +149,7 @@ cps_extract_request <- define_extract_micro(
 )
 
 # Define an NHGIS extract request
-nhgis_extract_request <- define_extract_agg_data(
+nhgis_extract_request <- define_extract_agg(
   "nhgis",
   description = "NHGIS Data via IPUMS API",
   datasets = ds_spec(

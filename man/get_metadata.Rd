@@ -58,7 +58,7 @@ cs5_meta <- get_metadata("nhgis", time_series_table = "CS5")
 cs5_meta$geog_levels
 
 # Use the available values when defining an NHGIS extract request
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   time_series_tables = tst_spec("CS5", geog_levels = "state")
 )
@@ -89,6 +89,6 @@ var_meta <- purrr::map(
 \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to obtain a summary of available data sources for
 a given IPUMS data collection.
 
-\code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to create an IPUMS aggregate data extract
+\code{\link[=define_extract_agg]{define_extract_agg()}} to create an IPUMS aggregate data extract
 definition.
 }

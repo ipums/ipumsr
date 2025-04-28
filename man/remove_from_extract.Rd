@@ -39,7 +39,7 @@ subclass (i.e. collection) of the extract being modified.
 This function is marked as experimental because it is typically not the best
 option for maintaining reproducible extract definitions and may be retired
 in the future. For reproducibility, users should strive to build extract
-definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}}.
+definitions with \code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg]{define_extract_agg()}}.
 
 If you have a complicated extract definition to revise, but do not have
 the original extract definition code that created it, we suggest that you
@@ -78,7 +78,7 @@ remove_from_extract(
 )
 
 # NHGIS extracts
-nhgis_extract <- define_extract_agg_data(
+nhgis_extract <- define_extract_agg(
   "nhgis",
   datasets = ds_spec(
     "1990_STF1",
@@ -101,7 +101,7 @@ remove_from_extract(
 \seealso{
 \code{\link[=add_to_extract]{add_to_extract()}} to add values to an extract definition.
 
-\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg_data]{define_extract_agg_data()}} to define an
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg]{define_extract_agg()}} to define an
 extract request manually
 
 \code{\link[=submit_extract]{submit_extract()}} to submit an extract request for processing.

@@ -161,7 +161,7 @@ test_meps_extract <- function() {
 }
 
 test_nhgis_extract <- function() {
-  define_extract_agg_data(
+  define_extract_agg(
     "nhgis",
     description = "Extract for R client testing",
     datasets = list(
@@ -177,11 +177,11 @@ test_nhgis_extract <- function() {
 }
 
 test_nhgis_extract_shp <- function() {
-  define_extract_agg_data("nhgis", shapefiles = "110_blck_grp_2019_tl2019")
+  define_extract_agg("nhgis", shapefiles = "110_blck_grp_2019_tl2019")
 }
 
 test_ihgis_extract <- function() {
-  define_extract_agg_data(
+  define_extract_agg(
     "ihgis",
     "Extract for R client testing",
     datasets = ds_spec(

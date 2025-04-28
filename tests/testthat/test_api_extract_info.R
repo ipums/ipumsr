@@ -151,7 +151,7 @@ test_that("Can check NHGIS extract status", {
 test_that("Cannot check status for an extract with no number", {
   expect_error(
     get_extract_info(
-      define_extract_agg_data(
+      define_extract_agg(
         "nhgis",
         datasets = ds_spec("a", "B", "C")
       )

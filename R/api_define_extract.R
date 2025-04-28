@@ -59,7 +59,7 @@
 #' * Create an `ipums_extract` object from scratch with the appropriate
 #'   `define_extract_*()` function.
 #'     + For microdata extracts, use [define_extract_micro()]
-#'     + For aggregate data extracts, use [define_extract_agg_data()]
+#'     + For aggregate data extracts, use [define_extract_agg()]
 #' * Use [get_extract_info()] to get the definition and latest status of a
 #'   previously-submitted extract request.
 #' * Use [get_extract_history()] to get the definitions and latest status of
@@ -429,7 +429,7 @@ define_extract_micro <- function(collection,
 #' @examples
 #' # Extract definition for tables from an NHGIS dataset
 #' # Use `ds_spec()` to create an NHGIS dataset specification
-#' nhgis_extract <- define_extract_agg_data(
+#' nhgis_extract <- define_extract_agg(
 #'   "nhgis",
 #'   description = "Example NHGIS extract",
 #'   datasets = ds_spec(
@@ -442,7 +442,7 @@ define_extract_micro <- function(collection,
 #' nhgis_extract
 #'
 #' # Extract definition for tables from an IHGIS dataset
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "ihgis",
 #'   description = "Example IHGIS extract",
 #'   datasets = ds_spec(
@@ -453,7 +453,7 @@ define_extract_micro <- function(collection,
 #' )
 #'
 #' # Use `tst_spec()` to create an NHGIS time series table specification
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Example NHGIS extract",
 #'   time_series_tables = tst_spec("CL8", geog_levels = "county"),
@@ -461,7 +461,7 @@ define_extract_micro <- function(collection,
 #' )
 #'
 #' # To request multiple datasets, provide a list of `ds_spec` objects
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Extract definition with multiple datasets",
 #'   datasets = list(
@@ -484,7 +484,7 @@ define_extract_micro <- function(collection,
 #'   )
 #' )
 #'
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Extract definition with multiple datasets",
 #'   datasets = dataset_spec
@@ -492,7 +492,7 @@ define_extract_micro <- function(collection,
 #'
 #' # You can request datasets, time series tables, and shapefiles in the same
 #' # definition:
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Extract with datasets and time series tables",
 #'   datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county"),
@@ -502,7 +502,7 @@ define_extract_micro <- function(collection,
 #'
 #' # Geographic extents are applied to all datasets/time series tables in the
 #' # definition
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Extent selection",
 #'   datasets = list(
@@ -522,7 +522,7 @@ define_extract_micro <- function(collection,
 #' submit_extract(nhgis_extract)
 #' }
 #'
-define_extract_agg_data <- function(collection,
+define_extract_agg <- function(collection,
                                     description = "",
                                     datasets = NULL,
                                     time_series_tables = NULL,
@@ -666,12 +666,12 @@ define_extract_ipumsi <- function(description,
 #' Define the parameters of an IPUMS NHGIS extract request to be submitted via
 #' the IPUMS API.
 #'
-#' This function has been deprecated in favor of [define_extract_agg_data()],
+#' This function has been deprecated in favor of [define_extract_agg()],
 #' which can be used to define extracts for both IPUMS aggregate data
 #' collections (IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
 #'
 #' All NHGIS extract request parameters supported by `define_extract_nhgis()`
-#' are supported by `define_extract_agg_data()`.
+#' are supported by `define_extract_agg()`.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
 #' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
@@ -759,7 +759,7 @@ define_extract_ipumsi <- function(description,
 #' )
 #'
 #' # Now, use the following:
-#' nhgis_extract <- define_extract_agg_data(
+#' nhgis_extract <- define_extract_agg(
 #'   collection = "nhgis",
 #'   description = "Example NHGIS extract",
 #'   datasets = ds_spec(
@@ -779,10 +779,10 @@ define_extract_nhgis <- function(description = "",
   lifecycle::deprecate_warn(
     "0.9.0",
     "define_extract_nhgis()",
-    "define_extract_agg_data()"
+    "define_extract_agg()"
   )
 
-  define_extract_agg_data(
+  define_extract_agg(
     collection = "nhgis",
     description = description,
     datasets = datasets,
@@ -1008,7 +1008,7 @@ samp_spec <- function(name) {
 #' )
 #'
 #' # Use variable specifications in an extract definition:
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "nhgis",
 #'   description = "Example extract",
 #'   datasets = dataset,
@@ -1016,7 +1016,7 @@ samp_spec <- function(name) {
 #' )
 #'
 #' # IHGIS datasets need a `tabulation_geographies` specification:
-#' define_extract_agg_data(
+#' define_extract_agg(
 #'   "ihgis",
 #'   description = "Example extract",
 #'   datasets = ds_spec(
@@ -1088,7 +1088,7 @@ tst_spec <- function(name,
 #' field to `"version"` and set it equal to `2`. If you are unable to create
 #' a valid extract by modifying the file, you may have to recreate the
 #' definition manually using the [define_extract_micro()] or
-#' [define_extract_agg_data()].
+#' [define_extract_agg()].
 #'
 #' See the IPUMS developer documentation for more details on
 #' [API versioning](https://developer.ipums.org/docs/apiprogram/versioning/) and
@@ -1104,7 +1104,7 @@ tst_spec <- function(name,
 #' @return An [`ipums_extract`][ipums_extract-class] object.
 #'
 #' @seealso
-#' [define_extract_micro()] or [define_extract_agg_data()] to define an
+#' [define_extract_micro()] or [define_extract_agg()] to define an
 #' extract request manually
 #'
 #' [get_extract_info()] to obtain a past extract to save.
@@ -1232,7 +1232,7 @@ define_extract_from_json <- function(extract_json) {
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [define_extract_micro()] or [define_extract_agg_data()].
+#' definitions with [define_extract_micro()] or [define_extract_agg()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1250,7 +1250,7 @@ define_extract_from_json <- function(extract_json) {
 #'   add to the extract definition.
 #'
 #'   All arguments available in [define_extract_micro()] (for microdata
-#'   extract requests) or [define_extract_agg_data()] (for aggregate data
+#'   extract requests) or [define_extract_agg()] (for aggregate data
 #'   extract requests) can be passed to `add_to_extract()`.
 #'
 #' @return An object of the same class as `extract` containing the modified
@@ -1261,7 +1261,7 @@ define_extract_from_json <- function(extract_json) {
 #' @seealso
 #' [remove_from_extract()] to remove values from an extract definition.
 #'
-#' [define_extract_micro()] or [define_extract_agg_data()] to define an
+#' [define_extract_micro()] or [define_extract_agg()] to define an
 #' extract request manually.
 #'
 #' [submit_extract()] to submit an extract request for processing.
@@ -1300,7 +1300,7 @@ define_extract_from_json <- function(extract_json) {
 #' )
 #'
 #' # NHGIS extracts
-#' nhgis_extract <- define_extract_agg_data(
+#' nhgis_extract <- define_extract_agg(
 #'   "nhgis",
 #'   datasets = ds_spec(
 #'     "1990_STF1",
@@ -1354,7 +1354,7 @@ add_to_extract <- function(extract, ...) {
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [define_extract_agg_data()].
+#' definitions with [define_extract_agg()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1377,7 +1377,7 @@ add_to_extract <- function(extract, ...) {
 #' a previously submitted extract request, this function will reset the
 #' definition to an unsubmitted state.
 #'
-#' @inheritParams define_extract_agg_data
+#' @inheritParams define_extract_agg
 #' @inheritParams add_to_extract
 #' @param datasets List of `ds_spec` objects created by [ds_spec()]
 #'   containing the specifications
@@ -1404,7 +1404,7 @@ add_to_extract <- function(extract, ...) {
 #' [`remove_from_extract()`][remove_from_extract.agg_extract()] to remove
 #' values from an extract definition.
 #'
-#' [define_extract_agg_data()] to create a new extract definition.
+#' [define_extract_agg()] to create a new extract definition.
 #'
 #' [submit_extract()] to submit an extract request.
 #'
@@ -1413,7 +1413,7 @@ add_to_extract <- function(extract, ...) {
 #' @export
 #'
 #' @examples
-#' extract <- define_extract_agg_data(
+#' extract <- define_extract_agg(
 #'   "nhgis",
 #'   datasets = ds_spec("1990_STF1", c("NP1", "NP2"), "county")
 #' )
@@ -1773,7 +1773,7 @@ add_to_extract.micro_extract <- function(extract,
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [define_extract_micro()] or [define_extract_agg_data()].
+#' definitions with [define_extract_micro()] or [define_extract_agg()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1795,7 +1795,7 @@ add_to_extract.micro_extract <- function(extract,
 #' @seealso
 #' [add_to_extract()] to add values to an extract definition.
 #'
-#' [define_extract_micro()] or [define_extract_agg_data()] to define an
+#' [define_extract_micro()] or [define_extract_agg()] to define an
 #' extract request manually
 #'
 #' [submit_extract()] to submit an extract request for processing.
@@ -1831,7 +1831,7 @@ add_to_extract.micro_extract <- function(extract,
 #' )
 #'
 #' # NHGIS extracts
-#' nhgis_extract <- define_extract_agg_data(
+#' nhgis_extract <- define_extract_agg(
 #'   "nhgis",
 #'   datasets = ds_spec(
 #'     "1990_STF1",
@@ -1865,7 +1865,7 @@ remove_from_extract <- function(extract, ...) {
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
 #' in the future. For reproducibility, users should strive to build extract
-#' definitions with [define_extract_agg_data()].
+#' definitions with [define_extract_agg()].
 #'
 #' If you have a complicated extract definition to revise, but do not have
 #' the original extract definition code that created it, we suggest that you
@@ -1913,12 +1913,12 @@ remove_from_extract <- function(extract, ...) {
 #'
 #' [download_extract()] to download extract data files.
 #'
-#' [define_extract_agg_data()] to create a new extract definition.
+#' [define_extract_agg()] to create a new extract definition.
 #'
 #' @export
 #'
 #' @examples
-#' extract <- define_extract_agg_data(
+#' extract <- define_extract_agg(
 #'   "nhgis",
 #'   datasets = ds_spec(
 #'     "1990_STF1",

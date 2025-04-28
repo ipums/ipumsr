@@ -91,7 +91,7 @@ tst <- tst_spec(
 )
 
 # Use variable specifications in an extract definition:
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   description = "Example extract",
   datasets = dataset,
@@ -99,7 +99,7 @@ define_extract_agg_data(
 )
 
 # IHGIS datasets need a `tabulation_geographies` specification:
-define_extract_agg_data(
+define_extract_agg(
   "ihgis",
   description = "Example extract",
   datasets = ds_spec(

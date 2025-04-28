@@ -105,7 +105,7 @@ reference:
     desc: "Request and download IPUMS data within R"
   - contents:
       - define_extract_micro
-      - define_extract_agg_data
+      - define_extract_agg
       - get_metadata_catalog
       - get_metadata
       - get_sample_info

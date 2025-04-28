@@ -266,7 +266,7 @@ eject_cassette("nhgis-metadata-detailed")
 ## Defining an IPUMS NHGIS extract request
 
 To create an extract definition containing the specifications for a
-specific set of IPUMS NHGIS data, use `define_extract_agg_data()`.
+specific set of IPUMS NHGIS data, use `define_extract_agg()`.
 
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
@@ -305,7 +305,7 @@ This dataset specification can then be provided to the extract
 definition:
 
 ```{r}
-nhgis_ext <- define_extract_agg_data(
+nhgis_ext <- define_extract_agg(
   "nhgis",
   description = "Example farm data in 1900",
   datasets = dataset
@@ -327,7 +327,7 @@ Time series tables do not contain individual data tables, but do require
 a geographic level selection, and allow an optional selection of years:
 
 ```{r}
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   description = "Example time series table request",
   time_series_tables = tst_spec(
@@ -344,7 +344,7 @@ Shapefiles don't have any additional specification options, and
 therefore can be requested simply by providing their names:
 
 ```{r}
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   description = "Example shapefiles request",
   shapefiles = c("us_county_2021_tl2021", "us_county_2020_tl2020")
@@ -358,7 +358,7 @@ specifications for a given dataset or time series table will throw an
 error:
 
 ```{r, error=TRUE, purl=FALSE}
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   description = "Invalid extract",
   datasets = ds_spec("1900_STF1", data_tables = "NP1")
@@ -374,10 +374,10 @@ creation of the extract definition.
 
 It's possible to request data for multiple datasets (or time series
 tables) in a single extract definition. To do so, pass a `list` of
-`ds_spec` or `tst_spec` objects in `define_extract_agg_data()`:
+`ds_spec` or `tst_spec` objects in `define_extract_agg()`:
 
 ```{r}
-define_extract_agg_data(
+define_extract_agg(
   "nhgis",
   description = "Slightly more complicated extract request",
   datasets = list(
@@ -406,7 +406,7 @@ datasets <- purrr::map(
   ~ ds_spec(name = .x, data_tables = tables, geog_levels = geogs)
 )
 
-nhgis_ext <- define_extract_agg_data(
+nhgis_ext <- define_extract_agg(
   "nhgis",
   description = "Slightly more complicated extract request",
   datasets = datasets
@@ -439,7 +439,7 @@ estimates and margins of error, like the ACS.
 File formats can be specified with the `data_format` argument. IPUMS
 NHGIS currently distributes files in csv and fixed-width format.
 
-See the documentation for `define_extract_agg_data()` for more details on
+See the documentation for `define_extract_agg()` for more details on
 these options.
 
 ## Next steps
