@@ -39,21 +39,20 @@ If a time series table already exists in the extract, its new
 specifications will be added to those that already exist for that time
 series table.}
 
-\item{geographic_extents}{Vector of geographic extents to use for
-all of the \code{datasets} and \code{time_series_tables} in the extract
-definition (for instance, to obtain data within a specified state).
-By default, selects all available extents. Available for
-\code{collection = "nhgis"}.
+\item{geographic_extents}{If \code{collection = "nhgis"}, vector of geographic
+extents to use for all of the \code{datasets} and \code{time_series_tables} in the
+extract definition (for instance, to obtain data within a specified state).
+By default, selects all available extents.
 
 Use \code{\link[=get_metadata]{get_metadata()}} to identify the available extents for a given
 dataset or time series table, if any.}
 
-\item{shapefiles}{Names of any
+\item{shapefiles}{If \code{collection = "nhgis"}, names of any
 \href{https://www.nhgis.org/gis-files}{shapefiles} to include in the extract
-request. Available for \code{collection = "nhgis"}.}
+request.}
 
-\item{breakdown_and_data_type_layout}{The desired layout
-of any \code{datasets} that have multiple data types or breakdown values.
+\item{breakdown_and_data_type_layout}{If \code{collection = "nhgis"}, the desired
+layout of any \code{datasets} that have multiple data types or breakdown values.
 \itemize{
 \item \code{"single_file"} (default) keeps all data types and breakdown values in
 one file
@@ -64,12 +63,10 @@ own file
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
 multiple breakdown values specified. See \code{\link[=get_metadata]{get_metadata()}} to
-determine whether a requested dataset has multiple data types.
+determine whether a requested dataset has multiple data types.}
 
-Available for \code{collection = "nhgis"}.}
-
-\item{tst_layout}{The desired layout of all \code{time_series_tables} included in
-the extract definition.
+\item{tst_layout}{If \code{collection = "nhgis"}, the desired layout of all
+\code{time_series_tables} included in the extract definition.
 \itemize{
 \item \code{"time_by_column_layout"} (wide format, default): rows correspond to
 geographic units, columns correspond to different times in the time
@@ -80,11 +77,10 @@ geographic unit at a single point in time
 separate files
 }
 
-Required when an extract definition includes any \code{time_series_tables}.
+Required when an extract definition includes any \code{time_series_tables}.}
 
-Available for \code{collection = "nhgis"}.}
-
-\item{data_format}{The desired format of the extract data file.
+\item{data_format}{If \code{collection = "nhgis"}, the desired format of the
+extract data file.
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
 row
@@ -96,7 +92,7 @@ Note that by default, \code{\link[=read_nhgis]{read_nhgis()}} removes the additi
 \code{"csv_header"} files.
 
 Required when an extract definition includes any \code{datasets} or
-\code{time_series_tables}. Available for \code{collection = "nhgis"}.}
+\code{time_series_tables}.}
 
 \item{...}{Ignored}
 }

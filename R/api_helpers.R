@@ -19,6 +19,7 @@
 #' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
 #' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
 #' * IPUMS NHGIS (`"nhgis"`)
+#' * IPUMS IHGIS (`"ihgis"`)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.
 #'

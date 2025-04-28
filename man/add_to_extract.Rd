@@ -27,7 +27,7 @@ Add or replace values in an existing \code{ipums_extract} object.
 This function is an S3 generic whose behavior will depend on the
 subclass (i.e. collection) of the extract being modified.
 \itemize{
-\item To add to an \strong{IPUMS Microdata} extract definition, click
+\item To add to an \strong{IPUMS microdata} extract definition, click
 \link[=add_to_extract.micro_extract]{here}. This includes:
 \itemize{
 \item IPUMS USA
@@ -36,7 +36,7 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS Time Use (ATUS, AHTUS, MTUS)
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
-\item To add to an \strong{IPUMS NHGIS} extract definition, click
+\item To add to an \strong{IPUMS aggregate data} extract definition, click
 \link[=add_to_extract.agg_extract]{here}
 }
 

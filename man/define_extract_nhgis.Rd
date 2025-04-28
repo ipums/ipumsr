@@ -94,11 +94,35 @@ the IPUMS API.
 
 This function has been deprecated in favor of \code{\link[=define_extract_agg_data]{define_extract_agg_data()}},
 which can be used to define extracts for both IPUMS aggregate data
-collections (IPUMS NHGIS and IPUMS IHGIS). All NHGIS extract request
-parameters are supported by \code{define_extract_agg_data()}.
+collections (IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
+
+All NHGIS extract request parameters supported by \code{define_extract_nhgis()}
+are supported by \code{define_extract_agg_data()}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
 NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
+}
+\examples{
+# Previously, you could create an NHGIS extract definition like so:
+nhgis_extract <- define_extract_nhgis(
+  description = "Example NHGIS extract",
+  datasets = ds_spec(
+    "1990_STF3",
+    data_tables = "NP57",
+    geog_levels = c("county", "tract")
+  )
+)
+
+# Now, use the following:
+nhgis_extract <- define_extract_agg_data(
+  collection = "nhgis",
+  description = "Example NHGIS extract",
+  datasets = ds_spec(
+    "1990_STF3",
+    data_tables = "NP57",
+    geog_levels = c("county", "tract")
+  )
+)
 }
 \seealso{
 \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to find data to include in an extract definition.

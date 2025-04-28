@@ -3,8 +3,8 @@
 \name{ds_spec}
 \alias{ds_spec}
 \alias{tst_spec}
-\title{Create dataset and time series table specifications for IPUMS NHGIS extract
-requests}
+\title{Create dataset and time series table specifications for IPUMS aggregate data
+extract definitions}
 \usage{
 ds_spec(
   name,
@@ -18,44 +18,61 @@ ds_spec(
 tst_spec(name, geog_levels = NULL, years = NULL)
 }
 \arguments{
-\item{name}{Name of the dataset or time series table.}
+\item{name}{Name of the dataset or (for IPUMS NHGIS) time series table.}
 
 \item{data_tables}{Vector of summary tables to retrieve for the given
 dataset.}
 
-\item{geog_levels}{Geographic levels (e.g. \code{"county"} or \code{"state"})
-at which to obtain data for the given dataset or time series table.}
+\item{geog_levels}{Geographic levels
+(e.g. \code{"county"} or \code{"state"}) at which to obtain data for the given
+dataset or time series table.
+
+Only applicable for IPUMS NHGIS extract definitions.}
 
 \item{years}{Years for which to obtain the data for the given dataset or time
 series table.
 
 For time series tables, all years are selected by default. For datasets,
 use \code{"*"} to select all available years. Use
-\code{\link[=get_metadata]{get_metadata()}} to determine if a dataset allows year selection.}
+\code{\link[=get_metadata]{get_metadata()}} to determine if a dataset allows year selection.
+
+Only applicable for IPUMS NHGIS extract definitions.}
 
 \item{breakdown_values}{\href{https://www.nhgis.org/frequently-asked-questions-faq#breakdowns}{Breakdown values}
-to apply to the given dataset.}
+to apply to the given dataset.
+
+Only applicable for IPUMS NHGIS extract definitions.}
+
+\item{tabulation_geographies}{Tabulation geographies to apply to the given
+dataset. These represent the level of geographic aggregation for the
+requested data.
+
+Only applicable for IPUMS IHGIS extract definitions.}
 }
 \value{
 A \code{ds_spec} or \code{tst_spec} object.
 }
 \description{
 Provide specifications for individual datasets and time series
-tables when defining an IPUMS NHGIS extract request.
+tables when defining an IPUMS aggregate data extract request. This includes
+extract requests for IPUMS NHGIS and IPUMS IHGIS.
 
 Use \code{\link[=get_metadata]{get_metadata()}} to identify available values for dataset and
 time series table specification parameters.
 
-Learn more about NHGIS extract definitions in
+Learn more about aggregate data extract definitions in
 \code{vignette("ipums-api-nhgis")}.
 }
 \details{
-In general, \code{data_tables} and \code{geog_levels} are required for all
-dataset specifications, and \code{geog_levels} are required for all
-time series table specifications.
+For IPUMS NHGIS extract definitions, \code{data_tables} and \code{geog_levels} are
+required for all dataset specifications, and \code{geog_levels} are required
+for all time series table specifications.
+
+For IPUMS IHGIS extract definitions, \code{data_tables} and
+\code{tabulation_geographies} are required for all dataset specifications.
 
 However, it is possible to make a temporary specification for an incomplete
-dataset or time series table by omitting these values. This supports the
+dataset or time series table by omitting required values. This supports the
 syntax used when modifying an existing extract (see
 \code{\link[=add_to_extract.agg_extract]{add_to_extract()}} or
 \code{\link[=remove_from_extract.agg_extract]{remove_from_extract()}}).
@@ -79,6 +96,17 @@ define_extract_agg_data(
   description = "Example extract",
   datasets = dataset,
   time_series_tables = tst
+)
+
+# IHGIS datasets need a `tabulation_geographies` specification:
+define_extract_agg_data(
+  "ihgis",
+  description = "Example extract",
+  datasets = ds_spec(
+    "AL2001pop",
+    data_tables = "AL2001pop.ADF",
+    tabulation_geographies = c("AL2001pop.g0", "AL2001pop.g1")
+  )
 )
 }
 \keyword{internal}

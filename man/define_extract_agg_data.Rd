@@ -2,7 +2,6 @@
 % Please edit documentation in R/api_define_extract.R
 \name{define_extract_agg_data}
 \alias{define_extract_agg_data}
-\alias{define_extract_nhgis}
 \title{Define an extract request for an IPUMS aggregate data collection}
 \usage{
 define_extract_agg_data(
@@ -27,28 +26,27 @@ extract request. Currently, \code{"nhgis"} and \code{"ihgis"} are supported.}
 datasets to include in the extract request. Use \code{\link[=ds_spec]{ds_spec()}} to create a
 \code{ds_spec} object containing a dataset specification. See examples.}
 
-\item{time_series_tables}{List of time series
+\item{time_series_tables}{If \code{collection = "nhgis"}, list of time series
 table specifications for any
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
 to include in the extract request. Use \code{\link[=tst_spec]{tst_spec()}} to create a
 \code{tst_spec} object containing a time series table specification. See
-examples. Available for \code{collection = "nhgis"}.}
+examples.}
 
-\item{shapefiles}{Names of any
+\item{shapefiles}{If \code{collection = "nhgis"}, names of any
 \href{https://www.nhgis.org/gis-files}{shapefiles} to include in the extract
-request. Available for \code{collection = "nhgis"}.}
+request.}
 
-\item{geographic_extents}{Vector of geographic extents to use for
-all of the \code{datasets} and \code{time_series_tables} in the extract
-definition (for instance, to obtain data within a specified state).
-By default, selects all available extents. Available for
-\code{collection = "nhgis"}.
+\item{geographic_extents}{If \code{collection = "nhgis"}, vector of geographic
+extents to use for all of the \code{datasets} and \code{time_series_tables} in the
+extract definition (for instance, to obtain data within a specified state).
+By default, selects all available extents.
 
 Use \code{\link[=get_metadata]{get_metadata()}} to identify the available extents for a given
 dataset or time series table, if any.}
 
-\item{breakdown_and_data_type_layout}{The desired layout
-of any \code{datasets} that have multiple data types or breakdown values.
+\item{breakdown_and_data_type_layout}{If \code{collection = "nhgis"}, the desired
+layout of any \code{datasets} that have multiple data types or breakdown values.
 \itemize{
 \item \code{"single_file"} (default) keeps all data types and breakdown values in
 one file
@@ -59,12 +57,10 @@ own file
 Required if any \code{datasets} included in the extract definition consist of
 multiple data types (for instance, estimates and margins of error) or have
 multiple breakdown values specified. See \code{\link[=get_metadata]{get_metadata()}} to
-determine whether a requested dataset has multiple data types.
+determine whether a requested dataset has multiple data types.}
 
-Available for \code{collection = "nhgis"}.}
-
-\item{tst_layout}{The desired layout of all \code{time_series_tables} included in
-the extract definition.
+\item{tst_layout}{If \code{collection = "nhgis"}, the desired layout of all
+\code{time_series_tables} included in the extract definition.
 \itemize{
 \item \code{"time_by_column_layout"} (wide format, default): rows correspond to
 geographic units, columns correspond to different times in the time
@@ -75,11 +71,10 @@ geographic unit at a single point in time
 separate files
 }
 
-Required when an extract definition includes any \code{time_series_tables}.
+Required when an extract definition includes any \code{time_series_tables}.}
 
-Available for \code{collection = "nhgis"}.}
-
-\item{data_format}{The desired format of the extract data file.
+\item{data_format}{If \code{collection = "nhgis"}, the desired format of the
+extract data file.
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
 row
@@ -91,7 +86,7 @@ Note that by default, \code{\link[=read_nhgis]{read_nhgis()}} removes the additi
 \code{"csv_header"} files.
 
 Required when an extract definition includes any \code{datasets} or
-\code{time_series_tables}. Available for \code{collection = "nhgis"}.}
+\code{time_series_tables}.}
 }
 \value{
 An object of class \code{\link[=ipums_extract-class]{agg_extract}} containing
@@ -109,13 +104,14 @@ The IPUMS API currently supports the following aggregate data collections:
 
 Note that not all extract request parameters and options apply to all
 collections. For a summary of supported features by collection, see the
+details below and the
 \href{https://developer.ipums.org/docs/v2/apiprogram/apis/}{IPUMS API documentation}.
 
-Use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} to browse and identify data sources for use
-in an extract definition.
+Use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} and \code{\link[=get_metadata]{get_metadata()}} to browse and identify
+data sources for use in an extract definition.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
-NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
+aggregate data extract definitions in \code{vignette("ipums-api-nhgis")}.
 }
 \details{
 \subsection{IPUMS NHGIS}{
@@ -160,6 +156,17 @@ nhgis_extract <- define_extract_agg_data(
 )
 
 nhgis_extract
+
+# Extract definition for tables from an IHGIS dataset
+define_extract_agg_data(
+  "ihgis",
+  description = "Example IHGIS extract",
+  datasets = ds_spec(
+    "KZ2009pop",
+    data_tables = c("KZ2009pop.AAA", "KZ2009pop.AAB"),
+    tabulation_geographies = c("KZ2009pop.g0", "KZ2009pop.g1")
+  )
+)
 
 # Use `tst_spec()` to create an NHGIS time series table specification
 define_extract_agg_data(

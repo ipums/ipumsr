@@ -2,6 +2,7 @@
 % Please edit documentation in R/api_metadata.R
 \name{get_metadata_catalog}
 \alias{get_metadata_catalog}
+\alias{catalog_types}
 \title{Retrieve a catalog of available data sources for an IPUMS collection}
 \usage{
 get_metadata_catalog(
@@ -10,13 +11,15 @@ get_metadata_catalog(
   delay = 0,
   api_key = Sys.getenv("IPUMS_API_KEY")
 )
+
+catalog_types(collection)
 }
 \arguments{
 \item{collection}{Character string indicating the IPUMS collection for which
 to retrieve metadata.}
 
 \item{metadata_type}{The type of data source for which to retrieve summary
-metadata. See \code{\link[=catalog_types]{catalog_types()}} for a list of accepted endpoints
+metadata. Use \code{catalog_types()} for a list of accepted endpoints
 for a given collection.}
 
 \item{delay}{Number of seconds to delay between
@@ -34,13 +37,17 @@ value of the \code{IPUMS_API_KEY} environment variable. See
 \value{
 A \code{\link[tibble:tbl_df-class]{tibble}} containing the catalog of
 all data sources for the given \code{collection} and \code{metadata_type}.
+
+For \code{catalog_types()}, a character vector of valid catalog endpoints
+for a given collection.
 }
 \description{
 Retrieve summary metadata containing API codes and descriptions for all
 available data sources of a given type for an IPUMS data collection.
 See the \href{https://developer.ipums.org/docs/v2/workflows/explore_metadata/}{IPUMS developer documentation}
 for details about the metadata provided for individual data collections
-and API endpoints.
+and API endpoints. Use \code{catalog_types()} to determine available metadata
+endpoints by collection.
 
 To retrieve detailed metadata about a particular data source,
 use \code{\link[=get_metadata]{get_metadata()}}.
@@ -52,9 +59,16 @@ collections.
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
 \examples{
+# List available metadata catalog endpoints:
+catalog_types("nhgis")
+
+catalog_types("ihgis")
+
 \dontrun{
 # Get summary metadata for all available sources of a given data type
 get_metadata_catalog("nhgis", "datasets")
+
+get_metadata_catalog("ihgis", "tabulation_geographies")
 
 # Filter to identify data sources of interest by their metadata values
 all_tsts <- get_metadata_catalog("nhgis", "time_series_tables")

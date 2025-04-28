@@ -20,12 +20,11 @@ to retrieve metadata.}
 collection for which to retrieve metadata.}
 
 \item{data_table}{Name of an individual data table from an IPUMS aggregate
-data collection for which to retrieve metadata. If provided, an associated
-\code{dataset} must also be specified.}
+data collection for which to retrieve metadata. If provided and
+\code{collection = "nhgis"}, an associated \code{dataset} must also be specified.}
 
-\item{time_series_table}{Name of an individual time series table from IPUMS
-NHGIS for which to retrieve metadata. Only available if
-\code{collection = "nhgis"}.}
+\item{time_series_table}{If \code{collection = "nhgis"}, name of an individual
+time series table from IPUMS NHGIS for which to retrieve metadata.}
 
 \item{api_key}{API key associated with your user account. Defaults to the
 value of the \code{IPUMS_API_KEY} environment variable. See
@@ -67,6 +66,7 @@ define_extract_agg_data(
 # Detailed metadata is also provided for datasets and data tables
 get_metadata("nhgis", dataset = "1990_STF1")
 get_metadata("nhgis", data_table = "NP1", dataset = "1990_STF1")
+get_metadata("ihgis", dataset = "KZ2009pop")
 
 # Iterate over data sources to retrieve detailed metadata for several
 # records. For instance, to get variable metadata for a set of data tables:

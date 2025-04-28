@@ -10,7 +10,8 @@
 #' available data sources of a given type for an IPUMS data collection.
 #' See the [IPUMS developer documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/)
 #' for details about the metadata provided for individual data collections
-#' and API endpoints.
+#' and API endpoints. Use `catalog_types()` to determine available metadata
+#' endpoints by collection.
 #'
 #' To retrieve detailed metadata about a particular data source,
 #' use [get_metadata()].
@@ -25,7 +26,7 @@
 #' @param collection Character string indicating the IPUMS collection for which
 #'   to retrieve metadata.
 #' @param metadata_type The type of data source for which to retrieve summary
-#'   metadata. See [catalog_types()] for a list of accepted endpoints
+#'   metadata. Use `catalog_types()` for a list of accepted endpoints
 #'   for a given collection.
 #' @param delay Number of seconds to delay between
 #'   successive API requests, if multiple requests are needed to retrieve all
@@ -38,6 +39,9 @@
 #' @return A [`tibble`][tibble::tbl_df-class] containing the catalog of
 #'   all data sources for the given `collection` and `metadata_type`.
 #'
+#'   For `catalog_types()`, a character vector of valid catalog endpoints
+#'   for a given collection.
+#'
 #' @export
 #'
 #' @seealso
@@ -49,9 +53,16 @@
 #' [define_extract_micro()] to create an IPUMS microdata extract definition.
 #'
 #' @examples
+#' # List available metadata catalog endpoints:
+#' catalog_types("nhgis")
+#'
+#' catalog_types("ihgis")
+#'
 #' \dontrun{
 #' # Get summary metadata for all available sources of a given data type
 #' get_metadata_catalog("nhgis", "datasets")
+#'
+#' get_metadata_catalog("ihgis", "tabulation_geographies")
 #'
 #' # Filter to identify data sources of interest by their metadata values
 #' all_tsts <- get_metadata_catalog("nhgis", "time_series_tables")
@@ -103,11 +114,10 @@ get_metadata_catalog <- function(collection,
 #' @param dataset Name of an individual dataset from an IPUMS aggregate data
 #'   collection for which to retrieve metadata.
 #' @param data_table Name of an individual data table from an IPUMS aggregate
-#'   data collection for which to retrieve metadata. If provided, an associated
-#'   `dataset` must also be specified.
-#' @param time_series_table Name of an individual time series table from IPUMS
-#'   NHGIS for which to retrieve metadata. Only available if
-#'   `collection = "nhgis"`.
+#'   data collection for which to retrieve metadata. If provided and
+#'   `collection = "nhgis"`, an associated `dataset` must also be specified.
+#' @param time_series_table If `collection = "nhgis"`, name of an individual
+#'   time series table from IPUMS NHGIS for which to retrieve metadata.
 #'
 #' @return A named list of metadata for the specified data source.
 #'
@@ -137,6 +147,7 @@ get_metadata_catalog <- function(collection,
 #' # Detailed metadata is also provided for datasets and data tables
 #' get_metadata("nhgis", dataset = "1990_STF1")
 #' get_metadata("nhgis", data_table = "NP1", dataset = "1990_STF1")
+#' get_metadata("ihgis", dataset = "KZ2009pop")
 #'
 #' # Iterate over data sources to retrieve detailed metadata for several
 #' # records. For instance, to get variable metadata for a set of data tables:
@@ -265,20 +276,8 @@ get_sample_info <- function(collection = NULL,
   )
 }
 
-#' List valid metadata types for an IPUMS data collection
-#'
-#' List the available metadata catalog endpoints for a particular IPUMS data
-#' collection. For use with [get_metadata_catalog()].
-#'
-#' @inheritParams get_metadata_catalog
-#'
-#' @returns Character vector of valid endpoints
+#' @rdname get_metadata_catalog
 #' @export
-#'
-#' @keywords internal
-#'
-#' @examples
-#' catalog_types("nhgis")
 catalog_types <- function(collection) {
   check_api_support(collection)
 
@@ -309,7 +308,7 @@ catalog_types <- function(collection) {
 #' [get_metadata()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
-#' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
+#' aggregate data extract definitions in `vignette("ipums-api-nhgis")`.
 #'
 #' @section Metadata availability:
 #' The following sections summarize the metadata fields provided for each data
