@@ -1474,17 +1474,23 @@ copy_ipums_extract <- function(extract) {
   extract
 }
 
-check_api_support <- function(collection) {
+check_api_support <- function(collection, collection_type = NULL) {
   versions <- dplyr::filter(ipums_data_collections(), .data$api_support)
+
+  if (!rlang::is_null(collection_type)) {
+    versions <- versions[versions[["collection_type"]] == collection_type, ]
+    collection_type <- paste0(" ", collection_type) # For better printing
+  }
 
   if (!collection %in% versions$code_for_api) {
     rlang::abort(
       c(
         paste0(
-          "Unrecognized collection: \"", collection, "\""
+          "Unrecognized", collection_type, " collection: \"", collection, "\""
         ),
         "i" = paste0(
-          "The IPUMS API supports collections: \"",
+          "The IPUMS API supports the following",
+          collection_type, " collections: \"",
           paste0(versions$code_for_api, collapse = "\", \""), "\""
         )
       )

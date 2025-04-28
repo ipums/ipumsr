@@ -275,14 +275,7 @@ define_extract_micro <- function(collection,
                                  rectangular_on = NULL,
                                  case_select_who = "individuals",
                                  data_quality_flags = NULL) {
-  if (collection == "nhgis") {
-    rlang::abort(c(
-      "\"nhgis\" is not an IPUMS microdata collection",
-      "i" = "Use `define_extract_agg_data()` to define an NHGIS extract request."
-    ))
-  }
-
-  check_api_support(collection)
+  check_api_support(collection, "microdata")
 
   if (data_structure == "rectangular") {
     rectangular_on <- rectangular_on %||% "P"
@@ -532,6 +525,8 @@ define_extract_agg_data <- function(collection,
                                     breakdown_and_data_type_layout = NULL,
                                     tst_layout = NULL,
                                     data_format = NULL) {
+  check_api_support(collection, "aggregate data")
+
   if (!is_null(datasets) && collection == "nhgis") {
     # Both NHGIS and IHGIS have datasets, but only NHGIS has these
     # related parameters

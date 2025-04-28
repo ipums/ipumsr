@@ -456,6 +456,13 @@ test_that("Can validate core microdata extract fields", {
     ),
     "`rectangular_on` must be one of"
   )
+  expect_error(
+    define_extract_micro("nhgis"),
+    paste0(
+      "Unrecognized microdata collection: \"nhgis\".+",
+      "The IPUMS API supports the following microdata collections:"
+    )
+  )
 })
 
 test_that("Can validate core aggregate data extract fields", {
@@ -522,7 +529,13 @@ test_that("Can validate core aggregate data extract fields", {
       "`tst_layout` must be missing.+",
       "`data_format` must be missing"
     )
-
+  )
+  expect_error(
+    define_extract_agg_data("usa"),
+    paste0(
+      "Unrecognized aggregate data collection: \"usa\".+",
+      "The IPUMS API supports the following aggregate data collections: \"nhgis\".+"
+    )
   )
 })
 
