@@ -194,10 +194,13 @@ Tabular and GIS data from population, housing, and agricultural censuses
 around the world
 </td>
 <td style="text-align:center;">
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 <td style="text-align:center;">
+<img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
 </tr>
 <tr>
@@ -319,8 +322,9 @@ offer:
 - To interact with the IPUMS extract and metadata system via the IPUMS
   API, see `vignette("ipums-api")`.
 
-- For additional details about microdata and NHGIS extract requests, see
-  `vignette("ipums-api-micro")` and `vignette("ipums-api-nhgis")`.
+- For additional details about microdata and aggregate data extract
+  requests, see `vignette("ipums-api-micro")` and
+  `vignette("ipums-api-nhgis")`.
 
 - To work with labelled values in IPUMS data, see
   `vignette("value-labels")`.
