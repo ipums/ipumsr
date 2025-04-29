@@ -40,8 +40,8 @@ for details about the metadata provided for individual data collections
 and API endpoints.
 
 To retrieve a summary of all available data sources of a particular
-type, use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}}. This output be used to identify the names
-of data sources for which to request detailed metadata.
+type, use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}}. This output can be used to identify the
+names of data sources for which to request detailed metadata.
 
 Currently, comprehensive metadata is only available for IPUMS NHGIS
 and IPUMS IHGIS. See \code{\link[=get_sample_info]{get_sample_info()}} to list basic sample information

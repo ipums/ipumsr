@@ -101,8 +101,8 @@ get_metadata_catalog <- function(collection,
 #' and API endpoints.
 #'
 #' To retrieve a summary of all available data sources of a particular
-#' type, use [get_metadata_catalog()]. This output be used to identify the names
-#' of data sources for which to request detailed metadata.
+#' type, use [get_metadata_catalog()]. This output can be used to identify the
+#' names of data sources for which to request detailed metadata.
 #'
 #' Currently, comprehensive metadata is only available for IPUMS NHGIS
 #' and IPUMS IHGIS. See [get_sample_info()] to list basic sample information
