@@ -159,6 +159,7 @@ read_nhgis <- function(data_file,
   data_files <- find_files_in(
     data_file,
     name_ext = "csv|dat",
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = TRUE,
     none_ok = TRUE
   )
@@ -339,6 +340,7 @@ read_nhgis_csv <- function(data_file,
     data_file,
     name_ext = "csv",
     file_select = file_select,
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = FALSE,
     none_ok = FALSE
   )
@@ -359,6 +361,7 @@ read_nhgis_csv <- function(data_file,
     file <- file.path(data_file, file)
   }
 
+  # TODO: This is not adjusted for the cb files so indexing is wrong!
   header_info <- check_header_row(data_file, file_select = !!file_select)
 
   # Skip to avoid loading extra header
@@ -487,6 +490,7 @@ check_header_row <- function(data_file, file_select = NULL) {
     data_file,
     name_ext = "csv",
     file_select = file_select,
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = FALSE,
     none_ok = FALSE
   )

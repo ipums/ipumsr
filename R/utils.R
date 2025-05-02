@@ -36,29 +36,18 @@ select_var_rows <- function(df, vars, filter_var = "var_name") {
 find_files_in <- function(file,
                           name_ext = NULL,
                           file_select = quo(NULL),
+                          pattern_exclude = NULL,
                           multiple_ok = FALSE,
                           none_ok = TRUE) {
   stopifnot(length(file) == 1)
+  file_names <- character(0)
 
   if (file_is_zip(file)) {
     file_names <- sort(utils::unzip(file, list = TRUE)$Name)
   } else if (file_is_dir(file)) {
     file_names <- sort(dir(file))
   } else {
-    if (!grepl(name_ext, file)) {
-      if (none_ok) {
-        file <- character(0)
-      } else {
-        rlang::abort(
-          paste0(
-            "Expected `file` to match extension \"", name_ext,
-            "\", but got \"", tools::file_ext(file), "\"."
-          )
-        )
-      }
-    }
-
-    return(file)
+    file_names <- file
   }
 
   if (!is.null(name_ext)) {
@@ -72,6 +61,10 @@ find_files_in <- function(file,
         name_ext, "\" in the provided file path."
       )
     )
+  }
+
+  if (!is.null(pattern_exclude)) {
+    file_names <- fostr_subset(file_names, pattern_exclude, negate = TRUE)
   }
 
   if (!quo_is_null(file_select)) {
