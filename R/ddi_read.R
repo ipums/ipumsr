@@ -447,21 +447,282 @@ get_var_info_from_ddi <- function(ddi_xml,
   )
 }
 
+#' Read metadata from an IHGIS extract's codebook files
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Read the variable metadata contained in an IHGIS extract into an
+#' [`ipums_ddi`] object.
+#'
+#' Because IHGIS variable metadata do not adhere to all the standards of
+#' microdata DDI files, some of the `ipums_ddi` fields will not be populated.
+#'
+#' This function is marked as experimental while we determine whether there
+#' may be a more robust way to standardize codebook reading across IPUMS
+#' aggregate data collections.
+#'
+#' @details
+#' IHGIS extracts store variable and geographic metadata in multiple
+#' files:
+#'
+#'   * `_datadict.csv` contains the data dictionary with metadata
+#'   about the variables included across all files in the extract.
+#'   * `_tables.csv` contains metadata about all IHGIS
+#'   tables included in the extract.
+#'   * `_geog.csv` contains metadata about the tabulation geographies included
+#'   for any tables in the extract.
+#'
+#' `read_ihgis_codebook()` uses information from both the `_datadict.csv` and
+#' `_tables.csv` file and assumes both exist in the provided extract (.zip)
+#' file or directory. If you have unzipped your IHGIS extract and moved the
+#' `_tables.csv` file, you will need to provide the path to that file in the
+#' `tbls_file` argument.
+#'
+#' IHGIS extracts also include a `_codebook.txt` file, which contains
+#' table and variable metadata in a human readable form. You can view this
+#' file in the R console by setting `raw = TRUE`.
+#'
+#' @param cb_file Path to a .zip archive containing an IHGIS extract, an IHGIS
+#'   data dictionary (`_datadict.csv`) file, or an IHGIS codebook (.txt) file.
+#' @param tbls_file If `cb_file` is the path to an IHGIS data dictionary .csv
+#'   file, path to the `_tables.csv` metadata file from the same IHGIS extract.
+#'   If these files are in the same directory, this file will be automatically
+#'   loaded. If you have moved this file, provide the path to it here.
+#' @param raw If `TRUE` return a character vector containing the lines of
+#'   `cb_file` rather than an `ipums_ddi` object. Defaults to `FALSE`.
+#'
+#'    If `TRUE`, `cb_file` must be a .zip archive or a .txt codebook file.
+#'
+#' @returns
+#' If `raw = FALSE`, an `ipums_ddi` object with metadata about the variables
+#' contained in the data for the extract associated with the given `cb_file`.
+#'
+#' If `raw = TRUE`, a character vector with one element for each line of the
+#' given `cb_file`.
+#'
+#' @export
+read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
+  custom_check_file_exists(cb_file)
+
+  is_zip <- file_is_zip(cb_file)
+  is_dir <- file_is_dir(cb_file)
+
+  if (raw) {
+    return(load_ihgis_txt_cb(cb_file))
+  }
+
+  if (is_zip || is_dir) {
+    dd_file <- find_files_in(
+      cb_file,
+      name_ext = "csv",
+      file_select = quo(tidyselect::matches("_datadict")),
+      multiple_ok = FALSE,
+      none_ok = FALSE
+    )
+
+    tryCatch(
+      {
+        tbls_file <- find_files_in(
+          cb_file,
+          name_ext = "csv",
+          file_select = quo(tidyselect::matches("_tables")),
+          multiple_ok = FALSE,
+          none_ok = FALSE
+        )
+      },
+      error = function(cnd) {
+        tbls_file <- NULL
+      }
+    )
+
+    if (length(tbls_file) == 0) {
+      rlang::abort(
+        c(
+          paste0("Could not find `_tables.csv` codebook file in ",  cb_file),
+          "i" = "Use `tbls_file` to provide the path to this file."
+        )
+      )
+    }
+
+    txt_file <- try(
+      find_files_in(
+        cb_file,
+        name_ext = "txt",
+        multiple_ok = FALSE,
+        none_ok = FALSE
+      ),
+      silent = TRUE
+    )
+
+    if (is_zip) {
+      dd_file <- unz(cb_file, dd_file)
+      tbls_file <- unz(cb_file, tbls_file)
+
+      if (!inherits(txt_file, "try-error")) {
+        txt_file <- unz(cb_file, txt_file)
+      } else {
+        txt_file <- NULL
+      }
+    } else {
+      dd_file <- file.path(cb_file, dd_file)
+      tbls_file <- file.path(cb_file, tbls_file)
+
+      if (!inherits(txt_file, "try-error")) {
+        txt_file <- file.path(cb_file, txt_file)
+      } else {
+        txt_file <- NULL
+      }
+    }
+  } else {
+    if (!fostr_detect(cb_file, "_datadict\\.csv$")) {
+      rlang::abort(
+        c(
+          "Expected `cb_file` to be a zipped IPUMS extract or a `_datadict.csv`.",
+          "i" = "Set `raw = TRUE` to load a .txt codebook file."
+        )
+      )
+    }
+
+    dd_file <- cb_file
+
+    # Look for _tables.csv file in same dir
+    tryCatch(
+      {
+        tbls_file <- find_files_in(
+          dirname(cb_file),
+          name_ext = "csv",
+          file_select = quo(tidyselect::matches("_tables")),
+          multiple_ok = FALSE,
+          none_ok = FALSE
+        )
+
+        tbls_file <- file.path(dirname(cb_file), tbls_file)
+      },
+      error = function(cnd) {
+        tbls_file <- NULL
+      }
+    )
+
+    if (length(tbls_file) == 0) {
+      rlang::abort(
+        c(
+          paste0("Could not find `_tables.csv` codebook file in ",  dirname(cb_file)),
+          "i" = "Use `tbls_file` to provide the path to this file."
+        )
+      )
+    } else {
+      custom_check_file_exists(tbls_file)
+    }
+
+    tryCatch(
+      {
+        txt_file <- find_files_in(
+          dirname(cb_file),
+          name_ext = "txt$",
+          file_select = quo(matches("_codebook")),
+          multiple_ok = FALSE,
+          none_ok = FALSE
+        )
+
+        txt_file <- file.path(dirname(cb_file), txt_file)
+      },
+      error = function(cnd) {
+        txt_file <- NULL
+      }
+    )
+  }
+
+  dd <- readr::read_csv(dd_file, progress = FALSE, show_col_types = FALSE)
+  tb <- readr::read_csv(tbls_file, progress = FALSE, show_col_types = FALSE)
+  cb <- try(readr::read_lines(txt_file, progress = FALSE), silent = TRUE)
+
+  dd <- dplyr::left_join(dd, tb, by = c("dataset", "table"))
+
+  var_info <- make_var_info_from_scratch(
+    var_name = dd$table_var,
+    var_label = dd$label,
+    var_desc = ifelse(
+      dd$table_var == "GISJOIN", # Don't attach table info for GISJOIN as we cannot ensure that set_ipums_var_attributes() will link correct one.
+      "",
+      paste0(
+        "Table ", dd$table, ": ", dd$title,
+        " (Universe: ", dd$table_universe, ")"
+      )
+    )
+  )
+
+  if (!inherits(cb, "try-error")) {
+    # Get License and Condition section
+    conditions_text <- find_cb_section(
+      cb,
+      "^Citation and Use of .+ Data",
+      section_markers = which(fostr_detect(cb, "^[-]{5,}$"))
+    )
+
+    conditions_text <- paste(conditions_text, collapse = "\n")
+  } else {
+    rlang::warn(c(
+      "Unable to load IPUMS conditions for this extract.",
+      "See https://www.ipums.org/about/citation for citation information."
+    ))
+
+    conditions_text <- NULL
+  }
+
+  new_ipums_ddi(
+    file_name = basename(cb_file),
+    file_type = "rectangular",
+    ipums_project = get_proj_name("ihgis"),
+    var_info = var_info,
+    conditions = conditions_text
+  )
+}
+
+load_ihgis_txt_cb <- function(cb_file) {
+  is_zip <- file_is_zip(cb_file)
+  is_txt <- !is_zip && fostr_detect(cb_file, "\\.txt$")
+
+  if (!(is_zip || is_txt)) {
+    rlang::abort(
+      c(
+        "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
+        "i" = "Set `raw = FALSE` to load a csv codebook files."
+      )
+    )
+  }
+
+  if (is_zip) {
+    cb_name <- find_files_in(
+      cb_file,
+      "txt",
+      multiple_ok = FALSE,
+      none_ok = FALSE
+    )
+
+    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
+  } else {
+    cb <- readr::read_lines(cb_file, progress = FALSE)
+  }
+
+  cb
+}
+
 #' Read metadata from an NHGIS codebook (.txt) file
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
 #' Read the variable metadata contained in the .txt codebook file included with
-#' NHGIS extracts into an [ipums_ddi] object.
+#' NHGIS extracts into an [`ipums_ddi`] object.
 #'
 #' Because NHGIS variable metadata do not
 #' adhere to all the standards of microdata DDI files, some of the `ipums_ddi`
 #' fields will not be populated.
 #'
-#' This function is marked as experimental while we determine whether
-#' there may be a more robust way to standardize codebook and DDI reading across
-#' IPUMS collections.
+#' This function is marked as experimental while we determine whether there
+#' may be a more robust way to standardize codebook reading across IPUMS
+#' aggregate data collections.
 #'
 #' @param cb_file Path to a .zip archive containing an NHGIS extract or to an
 #'   NHGIS codebook (.txt) file.
@@ -474,7 +735,7 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'   of `cb_file` rather than an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
 #'
-#' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
+#' @return If `raw = FALSE`, an `ipums_ddi` object with metadata about the
 #'   variables contained in the data for the extract associated with the given
 #'   `cb_file`.
 #'
@@ -666,7 +927,7 @@ read_nhgis_codebook <- function(cb_file,
   new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
-    ipums_project = "NHGIS",
+    ipums_project = get_proj_name("nhgis"),
     var_info = var_info,
     conditions = conditions_text
   )

@@ -361,7 +361,6 @@ read_nhgis_csv <- function(data_file,
     file <- file.path(data_file, file)
   }
 
-  # TODO: This is not adjusted for the cb files so indexing is wrong!
   header_info <- check_header_row(data_file, file_select = !!file_select)
 
   # Skip to avoid loading extra header
@@ -459,7 +458,7 @@ load_codebook <- function(data_file, filename, verbose = FALSE) {
 
   # If still no codebook info, return empty DDI
   if (cb_error) {
-    cb_ddi_info <- NHGIS_EMPTY_DDI
+    cb_ddi_info <- ipums_agg_empty_ddi("nhgis")
 
     if (verbose) {
       rlang::warn(
@@ -608,13 +607,16 @@ warn_default_fwf_parsing <- function() {
   )
 }
 
-# Fills in a default condition if we can't find codebook for nhgis
-NHGIS_EMPTY_DDI <- new_ipums_ddi(
-  ipums_project = "NHGIS",
-  file_type = "rectangular",
-  conditions = paste0(
-    "Use of data from NHGIS is subject to conditions including that users ",
-    "should cite the data appropriately. ",
-    "Please see www.nhgis.org for more information."
+ipums_agg_empty_ddi <- function(collection) {
+  new_ipums_ddi(
+    ipums_project = get_proj_name(collection),
+    file_type = "rectangular",
+    conditions = paste0(
+      "Use of data from ", get_proj_name(collection),
+      " is subject to conditions including that users ",
+      "should cite the data appropriately. ",
+      "Please see ", get_proj_config(collection)$home_url,
+      " for more information."
+    )
   )
-)
+}

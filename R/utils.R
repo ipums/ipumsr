@@ -67,6 +67,18 @@ find_files_in <- function(file,
     file_names <- fostr_subset(file_names, pattern_exclude, negate = TRUE)
   }
 
+  if (!none_ok && length(file_names) == 0) {
+    rlang::abort(
+      c(
+        "Unexpected data file.",
+        "i" = paste0(
+          "This may occur if you have changed your extract ",
+          "files from their original names."
+        )
+      )
+    )
+  }
+
   if (!quo_is_null(file_select)) {
     names(file_names) <- file_names
 
