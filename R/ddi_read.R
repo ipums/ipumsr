@@ -321,131 +321,6 @@ read_ipums_ddi <- function(ddi_file,
   )
 }
 
-xml_text_from_path_first <- function(xml, path) {
-  xml2::xml_text(xml2::xml_find_first(xml, path))
-}
-
-xml_text_from_path_collapsed <- function(xml, path, collapse = "\n\n") {
-  out <- xml2::xml_text(xml2::xml_find_all(xml, path))
-  paste(out, collapse = collapse)
-}
-
-xml_text_from_path_all <- function(xml, path) {
-  xml2::xml_text(xml2::xml_find_all(xml, path))
-}
-
-get_var_info_from_ddi <- function(ddi_xml,
-                                  file_type,
-                                  rt_idvar,
-                                  rectype_labels) {
-  var_info_xml <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:dataDscr/d1:var")
-
-  if (length(var_info_xml) == 0) {
-    return(NULL)
-  }
-
-  var_name <- xml2::xml_attr(var_info_xml, "name")
-  start <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@StartPos")
-  )
-  end <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@EndPos")
-  )
-  width <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@width")
-  )
-  var_label <- xml_text_from_path_first(var_info_xml, "d1:labl")
-  var_desc <- xml_text_from_path_first(var_info_xml, "d1:txt")
-  imp_decim <- as.numeric(
-    xml2::xml_attr(var_info_xml, "dcml")
-  )
-
-  var_type <- xml_text_from_path_first(var_info_xml, "d1:varFormat/@type")
-  var_intrvl <- xml2::xml_attr(var_info_xml, "intrvl")
-  var_type <- dplyr::case_when(
-    var_type == "numeric" & var_intrvl == "discrete" & (width < 10) ~ "integer",
-    var_type == "numeric" ~ "numeric",
-    var_type == "character" ~ "character",
-    TRUE ~ "character" # Default to character if it's unexpected
-  )
-
-  code_instr <- fostr_replace(
-    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
-    "^Codes",
-    ""
-  )
-
-  if (file_type == "hierarchical") {
-    rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
-  } else {
-    rectype_by_var <- NA
-  }
-
-  # Value labels
-  # Some come from parsed code sections
-  lbls_from_code_instr <- parse_labels_from_code_instr(code_instr, var_type)
-
-  # For hierarchical, RECTYPE comes from elsewhere in the DDI
-  if (file_type == "hierarchical") {
-    # If var is numeric, need to convert
-    rt_type <- var_type[var_name == rt_idvar]
-
-    if (length(rt_type) == 1 && rt_type %in% c("numeric", "integer")) {
-      rectype_labels$val <- suppressWarnings(as.numeric(rectype_labels$val))
-    }
-
-    rectype_labels <- dplyr::filter(rectype_labels, !is.na(.data$val))
-    rectype_labels <- dplyr::arrange(rectype_labels, .data$val)
-
-    # Replace in the code_instructions
-    if (nrow(rectype_labels) > 0) {
-      lbls_from_code_instr[[which(var_name == rt_idvar)]] <- rectype_labels
-    }
-  }
-
-  val_labels <- purrr::pmap(
-    list(var_info_xml, var_type, lbls_from_code_instr),
-    function(vvv, vtype, extra_labels) {
-      lbls <- xml2::xml_find_all(vvv, "d1:catgry")
-
-      if (length(lbls) == 0) {
-        return(extra_labels)
-      }
-
-      lbls <- tibble::tibble(
-        val = xml_text_from_path_all(lbls, "d1:catValu"),
-        lbl = xml_text_from_path_all(lbls, "d1:labl")
-      )
-
-      if (vtype %in% c("numeric", "integer")) lbls$val <- as.numeric(lbls$val)
-
-      # Drop labels that are the same as the value
-      # But leading 0's can be ignored if numeric
-      if (vtype %in% c("numeric", "integer")) {
-        lnum <- suppressWarnings(as.numeric(lbls$lbl))
-        lbls <- dplyr::filter(lbls, (is.na(lnum) | .data$val != lnum))
-      } else {
-        lbls <- dplyr::filter(lbls, .data$val != .data$lbl)
-      }
-
-      out <- dplyr::bind_rows(lbls, extra_labels)
-      dplyr::arrange(out, .data$val)
-    }
-  )
-
-  make_var_info_from_scratch(
-    var_name = var_name,
-    var_label = var_label,
-    var_desc = var_desc,
-    val_labels = val_labels,
-    code_instr = code_instr,
-    start = start,
-    end = end,
-    imp_decim = imp_decim,
-    var_type = var_type,
-    rectypes = rectype_by_var
-  )
-}
 
 #' Read metadata from an IHGIS extract's codebook files
 #'
@@ -679,35 +554,6 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
   )
 }
 
-load_ihgis_txt_cb <- function(cb_file) {
-  is_zip <- file_is_zip(cb_file)
-  is_txt <- !is_zip && fostr_detect(cb_file, "\\.txt$")
-
-  if (!(is_zip || is_txt)) {
-    rlang::abort(
-      c(
-        "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
-        "i" = "Set `raw = FALSE` to load a csv codebook files."
-      )
-    )
-  }
-
-  if (is_zip) {
-    cb_name <- find_files_in(
-      cb_file,
-      "txt",
-      multiple_ok = FALSE,
-      none_ok = FALSE
-    )
-
-    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
-  } else {
-    cb <- readr::read_lines(cb_file, progress = FALSE)
-  }
-
-  cb
-}
-
 #' Read metadata from an NHGIS codebook (.txt) file
 #'
 #' @description
@@ -931,6 +777,163 @@ read_nhgis_codebook <- function(cb_file,
     var_info = var_info,
     conditions = conditions_text
   )
+}
+
+# Internal ---------------------------------------------------------------------
+
+xml_text_from_path_first <- function(xml, path) {
+  xml2::xml_text(xml2::xml_find_first(xml, path))
+}
+
+xml_text_from_path_collapsed <- function(xml, path, collapse = "\n\n") {
+  out <- xml2::xml_text(xml2::xml_find_all(xml, path))
+  paste(out, collapse = collapse)
+}
+
+xml_text_from_path_all <- function(xml, path) {
+  xml2::xml_text(xml2::xml_find_all(xml, path))
+}
+
+get_var_info_from_ddi <- function(ddi_xml,
+                                  file_type,
+                                  rt_idvar,
+                                  rectype_labels) {
+  var_info_xml <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:dataDscr/d1:var")
+
+  if (length(var_info_xml) == 0) {
+    return(NULL)
+  }
+
+  var_name <- xml2::xml_attr(var_info_xml, "name")
+  start <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@StartPos")
+  )
+  end <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@EndPos")
+  )
+  width <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@width")
+  )
+  var_label <- xml_text_from_path_first(var_info_xml, "d1:labl")
+  var_desc <- xml_text_from_path_first(var_info_xml, "d1:txt")
+  imp_decim <- as.numeric(
+    xml2::xml_attr(var_info_xml, "dcml")
+  )
+
+  var_type <- xml_text_from_path_first(var_info_xml, "d1:varFormat/@type")
+  var_intrvl <- xml2::xml_attr(var_info_xml, "intrvl")
+  var_type <- dplyr::case_when(
+    var_type == "numeric" & var_intrvl == "discrete" & (width < 10) ~ "integer",
+    var_type == "numeric" ~ "numeric",
+    var_type == "character" ~ "character",
+    TRUE ~ "character" # Default to character if it's unexpected
+  )
+
+  code_instr <- fostr_replace(
+    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
+    "^Codes",
+    ""
+  )
+
+  if (file_type == "hierarchical") {
+    rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
+  } else {
+    rectype_by_var <- NA
+  }
+
+  # Value labels
+  # Some come from parsed code sections
+  lbls_from_code_instr <- parse_labels_from_code_instr(code_instr, var_type)
+
+  # For hierarchical, RECTYPE comes from elsewhere in the DDI
+  if (file_type == "hierarchical") {
+    # If var is numeric, need to convert
+    rt_type <- var_type[var_name == rt_idvar]
+
+    if (length(rt_type) == 1 && rt_type %in% c("numeric", "integer")) {
+      rectype_labels$val <- suppressWarnings(as.numeric(rectype_labels$val))
+    }
+
+    rectype_labels <- dplyr::filter(rectype_labels, !is.na(.data$val))
+    rectype_labels <- dplyr::arrange(rectype_labels, .data$val)
+
+    # Replace in the code_instructions
+    if (nrow(rectype_labels) > 0) {
+      lbls_from_code_instr[[which(var_name == rt_idvar)]] <- rectype_labels
+    }
+  }
+
+  val_labels <- purrr::pmap(
+    list(var_info_xml, var_type, lbls_from_code_instr),
+    function(vvv, vtype, extra_labels) {
+      lbls <- xml2::xml_find_all(vvv, "d1:catgry")
+
+      if (length(lbls) == 0) {
+        return(extra_labels)
+      }
+
+      lbls <- tibble::tibble(
+        val = xml_text_from_path_all(lbls, "d1:catValu"),
+        lbl = xml_text_from_path_all(lbls, "d1:labl")
+      )
+
+      if (vtype %in% c("numeric", "integer")) lbls$val <- as.numeric(lbls$val)
+
+      # Drop labels that are the same as the value
+      # But leading 0's can be ignored if numeric
+      if (vtype %in% c("numeric", "integer")) {
+        lnum <- suppressWarnings(as.numeric(lbls$lbl))
+        lbls <- dplyr::filter(lbls, (is.na(lnum) | .data$val != lnum))
+      } else {
+        lbls <- dplyr::filter(lbls, .data$val != .data$lbl)
+      }
+
+      out <- dplyr::bind_rows(lbls, extra_labels)
+      dplyr::arrange(out, .data$val)
+    }
+  )
+
+  make_var_info_from_scratch(
+    var_name = var_name,
+    var_label = var_label,
+    var_desc = var_desc,
+    val_labels = val_labels,
+    code_instr = code_instr,
+    start = start,
+    end = end,
+    imp_decim = imp_decim,
+    var_type = var_type,
+    rectypes = rectype_by_var
+  )
+}
+
+load_ihgis_txt_cb <- function(cb_file) {
+  is_zip <- file_is_zip(cb_file)
+  is_txt <- !is_zip && fostr_detect(cb_file, "\\.txt$")
+
+  if (!(is_zip || is_txt)) {
+    rlang::abort(
+      c(
+        "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
+        "i" = "Set `raw = FALSE` to load a csv codebook files."
+      )
+    )
+  }
+
+  if (is_zip) {
+    cb_name <- find_files_in(
+      cb_file,
+      "txt",
+      multiple_ok = FALSE,
+      none_ok = FALSE
+    )
+
+    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
+  } else {
+    cb <- readr::read_lines(cb_file, progress = FALSE)
+  }
+
+  cb
 }
 
 #' Parse NHGIS codebook lines with data type or breakdown info
