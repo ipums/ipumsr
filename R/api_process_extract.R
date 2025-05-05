@@ -359,7 +359,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   indicate the type of data the file contains.
 #'
 #' @seealso
-#' [read_ipums_micro()] or [read_nhgis()] to read tabular
+#' [read_ipums_micro()] or [read_ipums_agg()] to read tabular
 #'   data from an IPUMS extract.
 #'
 #' [read_ipums_sf()] to read spatial data from an IPUMS extract.
@@ -392,7 +392,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # NHGIS extracts return a path to both the tabular and spatial data files,
 #' # as applicable.
-#' nhgis_data <- read_nhgis(data = nhgis_files["data"])
+#' nhgis_data <- read_ipums_agg(data = nhgis_files["data"])
 #'
 #' # Load NHGIS spatial data
 #' nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
@@ -499,7 +499,7 @@ download_extract <- function(extract,
 #'   "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip"
 #' )
 #'
-#' read_nhgis(file)
+#' read_ipums_agg(file)
 #'
 #' # Download 1980 Minnesota block boundary file
 #' file <- download_supplemental_data(

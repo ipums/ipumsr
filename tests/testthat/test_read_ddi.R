@@ -17,7 +17,7 @@ test_that("We ignore layer selection for direct .xml files", {
   lifecycle::expect_deprecated(
     ddi2 <- read_ipums_ddi(
       file.path(vcr::vcr_test_path("fixtures"), "mtus_00002.xml"),
-      file_select = 4
+      file_select = 1
     ),
     "The `file_select` argument"
   )

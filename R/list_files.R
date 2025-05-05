@@ -26,7 +26,7 @@
 #'
 #' @export
 #'
-#' @seealso [read_ipums_micro()] or [read_nhgis()] to read tabular data
+#' @seealso [read_ipums_micro()] or [read_ipums_agg()] to read tabular data
 #'   from an IPUMS extract.
 #'
 #'   [read_ipums_sf()] to read spatial data from an IPUMS extract.

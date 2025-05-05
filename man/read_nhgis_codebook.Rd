@@ -56,12 +56,12 @@ ipums_var_label(codebook, "PMSA")
 
 # If variable metadata have been lost from a data source, reattach from
 # the corresponding `ipums_ddi` object:
-nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
+nhgis_data <- read_ipums_agg(nhgis_file, verbose = FALSE)
 
 nhgis_data <- zap_ipums_attributes(nhgis_data)
 ipums_var_label(nhgis_data$PMSA)
 
-nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
+nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook)
 ipums_var_label(nhgis_data$PMSA)
 
 # You can also load the codebook in raw format to display in the console
@@ -71,7 +71,7 @@ codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
 cat(codebook_raw[1:20], sep = "\n")
 }
 \seealso{
-\code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from an IPUMS NHGIS extract.
+\code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular data from an IPUMS NHGIS extract.
 
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
 

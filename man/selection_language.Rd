@@ -93,7 +93,7 @@ read_ipums_micro(
 
 # Other selection arguments also support this syntax.
 # For instance, load a particular file based on a tidyselect match:
-read_nhgis(
+read_ipums_agg(
   ipums_example("nhgis0731_csv.zip"),
   file_select = contains("nominal_state"),
   verbose = FALSE

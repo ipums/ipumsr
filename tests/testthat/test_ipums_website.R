@@ -23,7 +23,7 @@ test_that("Can get URL for projects that do not have variables", {
   )
   expect_warning(
     url <- ipums_website(ddi, var = "GISJOIN", launch = FALSE),
-    "Cannot give a variable-specific URL for project \"NHGIS\""
+    "Cannot give a variable-specific URL for project \"IPUMS NHGIS\""
   )
   expect_equal(url, "https://data2.nhgis.org/main/")
 })

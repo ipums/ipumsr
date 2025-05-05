@@ -88,8 +88,8 @@ row
 \item \code{"fixed_width"} provides data in a fixed width format
 }
 
-Note that by default, \code{\link[=read_nhgis]{read_nhgis()}} removes the additional header row in
-\code{"csv_header"} files.
+Note that by default, \code{\link[=read_ipums_agg]{read_ipums_agg()}} removes the additional header row
+in \code{"csv_header"} files.
 
 Required when an extract definition includes any \code{datasets} or
 \code{time_series_tables}.}

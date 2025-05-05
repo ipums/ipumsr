@@ -22,13 +22,13 @@
 #' @examples
 #' file <- ipums_example("nhgis0712_csv.zip")
 #'
-#' d1 <- read_nhgis(
+#' d1 <- read_ipums_agg(
 #'   file,
 #'   file_select = 1,
 #'   verbose = FALSE
 #' )
 #'
-#' d2 <- read_nhgis(
+#' d2 <- read_ipums_agg(
 #'   file,
 #'   file_select = 2,
 #'   verbose = FALSE

@@ -55,7 +55,7 @@ file <- download_supplemental_data(
   "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip"
 )
 
-read_nhgis(file)
+read_ipums_agg(file)
 
 # Download 1980 Minnesota block boundary file
 file <- download_supplemental_data(

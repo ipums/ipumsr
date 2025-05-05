@@ -1,0 +1,3 @@
+dataset,table,dataset_table,title,table_num,table_universe,tabulation_geogs,tabulation_geog_labels,source_pub_eng,country
+KZ2009pop,AAA,KZ2009pop.AAA,"Urban and rural population","2.1.1","Total population",g0; g1,Nation; Regions/Oblasts,"Results of the 2009 National Population Census of the Republic of Kazakhstan",Kazakhstan
+KZ2009pop,AAB,KZ2009pop.AAB,"Demographic burden on working-age population","2.2.1","Persons 0-14 and 65 years and above",g0; g1,Nation; Regions/Oblasts,"Results of the 2009 National Population Census of the Republic of Kazakhstan",Kazakhstan

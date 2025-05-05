@@ -632,7 +632,7 @@ test_that("Can download supplemental data files", {
   })
 
   d <- suppressWarnings(
-    read_nhgis(file, verbose = FALSE)
+    read_ipums_agg(file, verbose = FALSE)
   )
 
   expect_true(file.exists(file))
@@ -669,7 +669,7 @@ test_that("Can read downloaded files with ipumsr readers", {
     full.names = TRUE
   )
 
-  data <- read_nhgis(
+  data <- read_ipums_agg(
     table_data_file_path,
     file_select = contains("blck_grp"),
     verbose = FALSE

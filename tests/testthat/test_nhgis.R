@@ -1,25 +1,22 @@
-nhgis_single_csv <- ipums_example("nhgis0972_csv.zip")
-nhgis_single_shp <- ipums_example("nhgis0972_shape_small.zip")
-
-nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
-nhgis_multi_shp <- ipums_example("nhgis0712_shape_small.zip")
-
-nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
-
-rows <- 71
-vars_data <- 25
-
-# Read single files -------------------------------
+test_that("read_nhgis() is deprecated", {
+  lifecycle::expect_deprecated(
+    read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
+  )
+})
 
 test_that("Can read NHGIS extract: single dataset", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_single_csv <- ipums_example("nhgis0972_csv.zip")
+
   # Use snapshot since several forms of output are produced by default
   # (IPUMS conditions, col spec, and additional col spec info)
   expect_snapshot(
     nhgis_csv <- read_nhgis(nhgis_single_csv)
   )
 
-  expect_equal(nrow(nhgis_csv), rows)
-  expect_equal(ncol(nhgis_csv), vars_data)
+  expect_equal(nrow(nhgis_csv), 71)
+  expect_equal(ncol(nhgis_csv), 25)
   expect_equal(
     attr(nhgis_csv$D6Z001, "label"),
     "Total area: 1989 to March 1990"
@@ -36,6 +33,11 @@ test_that("Can read NHGIS extract: single dataset", {
 })
 
 test_that("Can read NHGIS extract: fixed-width files", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+  nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
+
   expect_error(
     read_nhgis(nhgis_multi_fwf, verbose = FALSE),
     "Multiple files found"
@@ -123,6 +125,11 @@ test_that("Can read NHGIS extract: fixed-width files", {
 })
 
 test_that("Can read NHGIS extract: single time series table", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+  nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
+
   tst <- read_nhgis(
     nhgis_multi_fwf,
     file_select = contains("ts"),
@@ -159,17 +166,57 @@ test_that("Can read NHGIS extract: single time series table", {
   )
 })
 
-# Select files when multiple exist -------------------------------
+test_that("Can read IHGIS extract", {
+  fp <- ipums_example("ihgis0014.zip")
 
-test_that("Can select data files by index", {
+  x <- read_ipums_agg(fp, file_select = matches("AAA_g0"), verbose = FALSE)
+
+  expect_s3_class(x, "tbl_df")
+  expect_equal(dim(x), c(1, 11))
+  expect_equal(zap_ipums_attributes(x[["GISJOIN"]]), "KZ")
+  expect_equal(zap_ipums_attributes(x[["g0"]]), "Kazakhstan")
+  expect_true(all(fostr_detect(colnames(x)[3:ncol(x)], "AAA")))
+  expect_identical(
+    attributes(x$AAA001),
+    list(
+      label = "Total population : 1999",
+      var_desc = "Table AAA: Urban and rural population (Universe: Total population)"
+    )
+  )
+  expect_false(is.null(ipums_var_info(x)))
+
+  x <- read_ipums_agg(
+    fp,
+    file_select = matches("AAA_g0"),
+    vars = c(GISJOIN, "AAA003"),
+    remove_extra_header = FALSE,
+    var_attrs = "var_desc",
+    verbose = FALSE
+  )
+
+  expect_s3_class(x, "tbl_df")
+  expect_equal(dim(x), c(1, 2))
+  expect_equal(zap_ipums_attributes(x[["GISJOIN"]]), "KZ")
+  expect_equal(zap_ipums_attributes(x[["AAA003"]]), 106.9)
+  expect_identical(
+    attributes(x$AAA003),
+    list(
+      var_desc = "Table AAA: Urban and rural population (Universe: Total population)"
+    )
+  )
+})
+
+test_that("Can select data files from an extract", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+
   nhgis1 <- read_nhgis(nhgis_multi_ds, file_select = 1, verbose = FALSE)
   nhgis2 <- read_nhgis(nhgis_multi_ds, file_select = 2, verbose = FALSE)
 
   expect_equal(dim(nhgis1), c(1, 115))
   expect_equal(dim(nhgis2), c(84, 28))
 
-  expect_false(identical(nhgis1, nhgis2))
-
   expect_true("AJWBE001" %in% colnames(nhgis1))
   expect_true("A00AA1790" %in% colnames(nhgis2))
 
@@ -181,42 +228,51 @@ test_that("Can select data files by index", {
   expect_equal(
     attributes(nhgis2$GISJOIN),
     list(label = "GIS Join Match Code", var_desc = "")
+  )
+
+  expect_identical(
+    nhgis1,
+    read_nhgis(
+      nhgis_multi_ds,
+      file_select = contains("ds239"),
+      verbose = FALSE
+    )
+  )
+  expect_identical(
+    nhgis2,
+    read_nhgis(
+      nhgis_multi_ds,
+      file_select = contains("ts_nominal"),
+      verbose = FALSE
+    )
   )
 })
 
-test_that("Can select data files with tidyselect", {
-  nhgis1 <- read_nhgis(
-    nhgis_multi_ds,
-    file_select = contains("ds239"),
-    verbose = FALSE
+test_that("Don't show metadata files for IHGIS extract file selection", {
+  fp <- ipums_example("ihgis0014.zip")
+
+  expect_error(
+    read_ipums_agg(fp),
+    paste0(
+      "Multiple files found.+KZ2009popAAA_g0.+KZ2009popAAA_g1.+",
+      "KZ2009popAAB_g0.+KZ2009popAAB_g1"
+    )
   )
-
-  nhgis2 <- read_nhgis(
-    nhgis_multi_ds,
-    file_select = contains("ts_nominal"),
-    verbose = FALSE
+  expect_error(
+    read_ipums_agg(fp, file_select = 5),
+    "There are only 4 files"
   )
-
-  expect_equal(dim(nhgis1), c(1, 115))
-  expect_equal(dim(nhgis2), c(84, 28))
-
-  expect_false(identical(nhgis1, nhgis2))
-
-  expect_true("AJWBE001" %in% colnames(nhgis1))
-  expect_true("A00AA1790" %in% colnames(nhgis2))
-
-  expect_equal(
-    attributes(nhgis1$GISJOIN),
-    list(label = "GIS Join Match Code", var_desc = "")
-  )
-
-  expect_equal(
-    attributes(nhgis2$GISJOIN),
-    list(label = "GIS Join Match Code", var_desc = "")
+  expect_error(
+    read_ipums_agg(fp, file_select = matches("datadict")),
+    "did not select any of the available files"
   )
 })
 
 test_that("Can still find codebook if file_select matches data file only", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+
   nhgis <- read_nhgis(
     nhgis_multi_ds,
     file_select = matches("nation.csv"),
@@ -238,9 +294,11 @@ test_that("Can still find codebook if file_select matches data file only", {
 })
 
 test_that("Can still find codebook if direct data file path provided", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
   temp_dir <- tempfile()
   dir.create(temp_dir)
-  unzipped <- utils::unzip(nhgis_single_csv, exdir = temp_dir)
+  unzipped <- utils::unzip(ipums_example("nhgis0972_csv.zip"), exdir = temp_dir)
   on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE, after = FALSE)
 
   data_file <- unzipped[fostr_detect(unzipped, ".csv$")]
@@ -258,12 +316,14 @@ test_that("Can still find codebook if direct data file path provided", {
   )
 })
 
-# Can read data when provided in zip, dir, and shp formats -------
-
 test_that("We can specify available readr options in read_nhgis()", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
+
   expect_silent(
     nhgis_data <- read_nhgis(
-      nhgis_single_csv,
+      ipums_example("nhgis0972_csv.zip"),
       verbose = FALSE,
       col_types = readr::cols(.default = readr::col_character()),
       remove_extra_header = TRUE
@@ -288,8 +348,8 @@ test_that("We can specify available readr options in read_nhgis()", {
     vars = c(YEAR, STUSAB)
   )
 
-  expect_equal(nrow(nhgis_data), rows)
-  expect_equal(ncol(nhgis_data), vars_data)
+  expect_equal(nrow(nhgis_data), 71)
+  expect_equal(ncol(nhgis_data), 25)
   expect_equal(unique(purrr::map_chr(nhgis_data, class)), "character")
 
   expect_equal(nrow(nhgis_data_fwf), 1)
@@ -302,13 +362,20 @@ test_that("We can specify available readr options in read_nhgis()", {
   expect_equal(colnames(nhgis_data_fwf2), c("YEAR", "STUSAB"))
 
   expect_equal(
-    nrow(read_nhgis(nhgis_single_csv, n_max = 10, verbose = FALSE)),
+    nrow(
+      read_nhgis(ipums_example("nhgis0972_csv.zip"), n_max = 10, verbose = FALSE)
+    ),
     10
   )
 })
 
 test_that("We get informative error messages when reading NHGIS extracts", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
   skip_if_not_installed("tidyselect", "1.2.1")
+
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+  nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
 
   expect_error(
     read_nhgis("FAKE_FILE.zip", verbose = FALSE),
@@ -355,18 +422,24 @@ test_that("We get informative error messages when reading NHGIS extracts", {
 })
 
 test_that("Can read NHGIS codebook", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
+  nhgis_single_csv <- ipums_example("nhgis0972_csv.zip")
+  nhgis_multi_ds <- ipums_example("nhgis0731_csv.zip")
+  nhgis_multi_fwf <- ipums_example("nhgis0730_fixed.zip")
+
   expect_error(
     read_nhgis_codebook(nhgis_multi_ds),
     "Multiple files found"
   )
 
-  # Single dataset ----------------
+  # Single dataset
 
   d_csv <- read_nhgis(nhgis_single_csv, verbose = FALSE)
 
   cb_csv <- read_nhgis_codebook(nhgis_single_csv)
 
-  # FWF with ACS ----------------
+  # FWF with ACS
 
   # Includes multiple data types which changes codebook slightly
 
@@ -378,7 +451,7 @@ test_that("Can read NHGIS codebook", {
 
   cb_fwf <- read_nhgis_codebook(nhgis_multi_fwf, file_select = 1)
 
-  # Time series table ----------
+  # Time series table
 
   d_fwf_tst <- read_nhgis(
     nhgis_multi_fwf,
@@ -409,7 +482,120 @@ test_that("Can read NHGIS codebook", {
   )
 })
 
+test_that("Can read IHGIS metadata from extract", {
+  cb <- read_ihgis_codebook(ipums_example("ihgis0014.zip"))
+
+  expect_s3_class(cb, "ipums_ddi")
+  expect_equal(dim(cb$var_info), c(17, 10))
+  expect_true(all(fostr_detect(cb$var_info$var_name, "GISJOIN|AAA|AAB")))
+  expect_true(all(fostr_detect(cb$var_info$var_desc, "|Table AA")))
+  expect_equal(cb$var_info[2, ]$var_name, "AAA001")
+  expect_equal(cb$var_info[2, ]$var_label, "Total population : 1999")
+  expect_equal(cb$var_info[2, ]$var_desc, "Table AAA: Urban and rural population (Universe: Total population)")
+})
+
+test_that("Can read IHGIS metadata if no txt codebook", {
+  fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
+
+  expect_warning(
+    cb <- read_ihgis_codebook(fp),
+    "Unable to load IPUMS conditions"
+  )
+  cb2 <- read_ihgis_codebook(ipums_example("ihgis0014.zip"))
+
+  expect_null(cb$conditions)
+  expect_false(is.null(cb2$conditions))
+  expect_identical(cb$var_info, cb2$var_info)
+})
+
+test_that("Correctly handle missing files when loading IHGIS metadata", {
+  fp1 <- vcr::vcr_test_path("fixtures", "ihgis0014")
+  fp2 <- vcr::vcr_test_path("fixtures", "ihgis0014_incomplete")
+  fp3 <- file.path(fp2, "ihgis0014_datadict.csv")
+
+  expect_error(
+    read_ihgis_codebook(ipums_example("nhgis0972_csv.zip")),
+    "Could not find `_datadict\\.csv`"
+  )
+  expect_warning(
+    d1 <- read_ihgis_codebook(fp1),
+    "Unable to load IPUMS conditions"
+  )
+  expect_error(
+    read_ihgis_codebook(fp2),
+    "Could not find `_tables.csv`.+Use `tbls_file`"
+  )
+  expect_warning(
+    lifecycle::expect_deprecated(read_ipums_agg(fp2, verbose = FALSE)),
+    "Unable to read codebook"
+  )
+  expect_error(read_ihgis_codebook(fp3), "Could not find `_tables\\.csv`")
+  expect_error(
+    read_ihgis_codebook(fp2, tbls_file = "foobar/ihgis0014_tables.csv"),
+    "Could not find file `foobar/ihgis0014_tables.csv`"
+  )
+
+  d2 <- read_ihgis_codebook(
+    fp2,
+    tbls_file = file.path(fp1, "ihgis0014_tables.csv")
+  )
+
+  expect_identical(d1$var_info, d2$var_info)
+  expect_equal(dim(d1$var_info), c(17, 10))
+  expect_true(!is.null(d2$conditions))
+})
+
+test_that("Error when providing cb or data file to wrong IHGIS reader", {
+  fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
+
+  expect_error(
+    read_ihgis_codebook(file.path(fp, "KZ2009popAAA_g0.csv")),
+    "Expected `cb_file` to be a zipped IPUMS extract or a `_datadict\\.csv`"
+  )
+  expect_error(
+    read_ipums_agg(file.path(fp, "ihgis0014_datadict.csv")),
+    "Unexpected data file"
+  )
+})
+
+test_that("Can read raw IHGIS codebook", {
+  fp <- vcr::vcr_test_path("fixtures", "ihgis0014_incomplete")
+
+  expect_error(
+    read_ihgis_codebook(file.path(fp, "ihgis0014_codebook.txt")),
+    "Expected `cb_file` to be a zipped IPUMS extract or a `_datadict\\.csv`"
+  )
+
+  x <- read_ihgis_codebook(ipums_example("ihgis0014.zip"), raw = TRUE)
+
+  expect_equal(length(x), 70)
+  expect_equal(class(x), "character")
+})
+
+test_that("We get relevant subset of IHGIS metadata after attaching to data", {
+  fp <- ipums_example("ihgis0014.zip")
+
+  d1 <- read_ipums_agg(fp, file_select = 1, verbose = FALSE)
+  d2 <- read_ipums_agg(fp, file_select = 1, verbose = FALSE, var_attrs = NULL)
+  c1 <- read_ihgis_codebook(fp)
+
+  expect_true(all(is.na(ipums_var_info(d2)$var_label)))
+
+  expect_equal(dim(ipums_var_info(c1)), c(17, 10))
+  expect_equal(nrow(ipums_var_info(d1)), ncol(d1))
+  expect_equal(nrow(ipums_var_info(d1)), 11)
+
+  expect_true(all(ipums_var_info(d1)$var_name %in% colnames(d1)))
+
+  expect_equal(
+    setdiff(ipums_var_info(d1)$var_name, ipums_var_info(c1)$var_name),
+    "g0"
+  )
+})
+
 test_that("Can read unzipped NHGIS files", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+
   test_path <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
 
   x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1, verbose = FALSE))
@@ -421,4 +607,34 @@ test_that("Can read unzipped NHGIS files", {
 
   expect_equal(x1$a, "b")
   expect_equal(x1, x2)
+})
+
+test_that("Can read unzipped IHGIS files", {
+  fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
+
+  # This is because this test case uses a file path with no txt codebook
+  expect_warning(
+    d <- read_ipums_agg(file.path(fp, "KZ2009popAAB_g1.csv"), verbose = FALSE),
+    "Unable to load IPUMS conditions"
+  )
+
+  expect_identical(
+    d,
+    read_ipums_agg(
+      ipums_example("ihgis0014.zip"),
+      file_select = "KZ2009popAAB_g1.csv",
+      verbose = FALSE
+    )
+  )
+  expect_error(
+    read_ipums_agg(file.path(fp, "foobar.csv"), verbose = FALSE),
+    "Could not find file"
+  )
+
+  # Dir reading is currently deprecated but for now it should still work
+  suppressWarnings(
+    d2 <- read_ipums_agg(fp, file_select = matches("AAB_g1"), verbose = FALSE)
+  )
+
+  expect_identical(d, d2)
 })

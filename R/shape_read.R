@@ -54,7 +54,7 @@
 #'
 #' @return An [sf][sf::sf()] object
 #'
-#' @seealso [read_ipums_micro()] or [read_nhgis()] to read tabular data from
+#' @seealso [read_ipums_micro()] or [read_ipums_agg()] to read tabular data from
 #'   an IPUMS extract.
 #'
 #'  [ipums_list_files()] to list files in an IPUMS extract.
@@ -64,7 +64,7 @@
 #' @examplesIf requireNamespace("sf")
 #' # Example shapefile from NHGIS
 #' shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-#' data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
+#' data_ex1 <- read_ipums_agg(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 #'
 #' sf_data <- read_ipums_sf(shape_ex1)
 #'

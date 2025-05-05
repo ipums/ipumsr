@@ -40,7 +40,7 @@ ipums_list_files(nhgis_file)
 ipums_list_files(nhgis_file, file_select = matches("ds136"))
 }
 \seealso{
-\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular data
 from an IPUMS extract.
 
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.

@@ -407,8 +407,8 @@ define_extract_micro <- function(collection,
 #'   - `"csv_header"` includes a second, more descriptive header row.
 #'   - `"fixed_width"` provides data in a fixed width format
 #'
-#'   Note that by default, [read_nhgis()] removes the additional header row in
-#'   `"csv_header"` files.
+#'   Note that by default, [read_ipums_agg()] removes the additional header row
+#'   in `"csv_header"` files.
 #'
 #'   Required when an extract definition includes any `datasets` or
 #'   `time_series_tables`.
@@ -726,8 +726,8 @@ define_extract_ipumsi <- function(description,
 #'   - `"csv_header"` includes a second, more descriptive header row.
 #'   - `"fixed_width"` provides data in a fixed width format
 #'
-#'   Note that by default, [read_nhgis()] removes the additional header row in
-#'   `"csv_header"` files.
+#'   Note that by default, [read_ipums_agg()] removes the additional header row
+#'   in `"csv_header"` files.
 #'
 #'   Required when an extract definition includes any `datasets` or
 #'   `time_series_tables`.

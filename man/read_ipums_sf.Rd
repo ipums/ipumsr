@@ -77,7 +77,7 @@ need to manually unzip the downloaded file before loading it into R.
 \dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
+data_ex1 <- read_ipums_agg(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 sf_data <- read_ipums_sf(shape_ex1)
 
@@ -103,7 +103,7 @@ read_ipums_sf(
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular data from
 an IPUMS extract.
 
 \code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.

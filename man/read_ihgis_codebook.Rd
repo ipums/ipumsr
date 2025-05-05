@@ -59,6 +59,38 @@ file or directory. If you have unzipped your IHGIS extract and moved the
 \code{tbls_file} argument.
 
 IHGIS extracts also include a \verb{_codebook.txt} file, which contains
-table and variable metadata in a human readable form. You can view this
+table and variable metadata in a human readable form as well as
+citation information for IHGIS data. You can view this
 file in the R console by setting \code{raw = TRUE}.
+}
+\examples{
+ihgis_file <- ipums_example("ihgis0014.zip")
+
+ihgis_cb <- read_ihgis_codebook(ihgis_file)
+
+# Variable labels and descriptions
+ihgis_cb$var_info
+
+# Citation information
+ihgis_cb$conditions
+
+# If variable metadata have been lost from a data source, reattach from
+# the corresponding `ipums_ddi` object:
+ihgis_data <- read_ipums_agg(
+  ihgis_file,
+  file_select = matches("AAA_g0"),
+  verbose = FALSE
+)
+
+ihgis_data <- zap_ipums_attributes(ihgis_data)
+ipums_var_label(ihgis_data$AAA001)
+
+ihgis_data <- set_ipums_var_attributes(ihgis_data, ihgis_cb)
+ipums_var_label(ihgis_data$AAA001)
+
+# Load in raw format
+ihgis_cb_raw <- read_ihgis_codebook(ihgis_file, raw = TRUE)
+
+# Use `cat()` to display in the R console in human readable format
+cat(ihgis_cb_raw[1:20], sep = "\n")
 }
