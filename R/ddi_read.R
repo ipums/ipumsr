@@ -1060,7 +1060,7 @@ find_ihgis_metadata_files <- function(cb_file,
   file
 }
 
-find_ihgis_datadict_cb <- function(cb_file) {
+find_ihgis_datadict_cb <- function(cb_file, call = caller_env()) {
   find_ihgis_metadata_files(
     cb_file,
     name_ext = "csv",
@@ -1070,13 +1070,13 @@ find_ihgis_datadict_cb <- function(cb_file) {
     on_error = function(cnd) {
       rlang::abort(
         paste0("Could not find `_datadict.csv` codebook file in ",  cb_file),
-        call = caller_env(4)
+        call = call
       )
     }
   )
 }
 
-find_ihgis_tbls_cb <- function(cb_file) {
+find_ihgis_tbls_cb <- function(cb_file, call = caller_env()) {
   find_ihgis_metadata_files(
     cb_file,
     name_ext = "csv",
@@ -1084,10 +1084,9 @@ find_ihgis_tbls_cb <- function(cb_file) {
     multiple_ok = FALSE,
     none_ok = FALSE,
     on_error = function(cnd) {
-      rlang::abort(c(
+      rlang::abort(
         paste0("Could not find `_tables.csv` codebook file in ",  cb_file),
-        "i" = "Use `tbls_file` to provide the path to this file."),
-        call = caller_env(4)
+        call = call
       )
     }
   )

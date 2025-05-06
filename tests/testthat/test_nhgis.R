@@ -530,7 +530,7 @@ test_that("Correctly handle missing files when loading IHGIS metadata", {
   )
   expect_error(
     read_ihgis_codebook(fp2),
-    "Could not find `_tables.csv`.+Use `tbls_file`"
+    "Could not find `_tables.csv`"
   )
   expect_warning(
     lifecycle::expect_deprecated(read_ipums_agg(fp2, verbose = FALSE)),
