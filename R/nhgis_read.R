@@ -172,7 +172,7 @@ read_ipums_agg <- function(data_file,
   data <- readr::read_csv(
     file,
     skip = skip,
-    col_select = !!vars,
+    col_select = !!enquo(vars),
     col_names = header_info$col_names, # Reattach skipped colnames
     locale = ipums_locale(cb_ddi_info$file_encoding),
     progress = show_readr_progress(verbose),
@@ -307,7 +307,7 @@ read_nhgis <- function(data_file,
     data <- read_ipums_agg(
       data_file,
       file_select = !!file_select,
-      vars = vars,
+      vars = !!enquo(vars),
       col_types = col_types,
       n_max = n_max,
       guess_max = guess_max,
