@@ -486,12 +486,19 @@ test_that("Can read IHGIS metadata from extract", {
   cb <- read_ihgis_codebook(ipums_example("ihgis0014.zip"))
 
   expect_s3_class(cb, "ipums_ddi")
-  expect_equal(dim(cb$var_info), c(17, 10))
-  expect_true(all(fostr_detect(cb$var_info$var_name, "GISJOIN|AAA|AAB")))
-  expect_true(all(fostr_detect(cb$var_info$var_desc, "|Table AA")))
-  expect_equal(cb$var_info[2, ]$var_name, "AAA001")
-  expect_equal(cb$var_info[2, ]$var_label, "Total population : 1999")
-  expect_equal(cb$var_info[2, ]$var_desc, "Table AAA: Urban and rural population (Universe: Total population)")
+  expect_equal(dim(cb$var_info), c(18, 10))
+  expect_true(all(fostr_detect(cb$var_info$var_name, "GISJOIN|^g|AAA|AAB")))
+  expect_true(
+    all(
+      fostr_detect(
+        cb$var_info$var_desc[which(!fostr_detect(cb$var_info$var_name, "GISJOIN|^g"))]
+        , "Table AA"
+      )
+    )
+  )
+  expect_equal(cb$var_info[4, ]$var_name, "AAA001")
+  expect_equal(cb$var_info[4, ]$var_label, "Total population : 1999")
+  expect_equal(cb$var_info[4, ]$var_desc, "Table AAA: Urban and rural population (Universe: Total population)")
 })
 
 test_that("Can read IHGIS metadata if no txt codebook", {
@@ -535,13 +542,20 @@ test_that("Correctly handle missing files when loading IHGIS metadata", {
     "Could not find file `foobar/ihgis0014_tables.csv`"
   )
 
-  d2 <- read_ihgis_codebook(
-    fp2,
-    tbls_file = file.path(fp1, "ihgis0014_tables.csv")
+  expect_warning(
+    d2 <- read_ihgis_codebook(
+      fp2,
+      tbls_file = file.path(fp1, "ihgis0014_tables.csv")
+    ),
+    "Unable to load tabulation geography metadata for this file"
   )
 
-  expect_identical(d1$var_info, d2$var_info)
-  expect_equal(dim(d1$var_info), c(17, 10))
+  expect_equal(
+    setdiff(d1$var_info$var_name, d2$var_info$var_name),
+    c("g0", "g1")
+  )
+  expect_equal(dim(d1$var_info), c(18, 10))
+  expect_equal(dim(d2$var_info), c(16, 10))
   expect_true(!is.null(d2$conditions))
 })
 
@@ -581,15 +595,18 @@ test_that("We get relevant subset of IHGIS metadata after attaching to data", {
 
   expect_true(all(is.na(ipums_var_info(d2)$var_label)))
 
-  expect_equal(dim(ipums_var_info(c1)), c(17, 10))
+  expect_equal(dim(ipums_var_info(c1)), c(18, 10))
   expect_equal(nrow(ipums_var_info(d1)), ncol(d1))
   expect_equal(nrow(ipums_var_info(d1)), 11)
 
   expect_true(all(ipums_var_info(d1)$var_name %in% colnames(d1)))
-
-  expect_equal(
-    setdiff(ipums_var_info(d1)$var_name, ipums_var_info(c1)$var_name),
-    "g0"
+  expect_true(
+    all(
+      fostr_detect(
+        setdiff(ipums_var_info(c1)$var_name, ipums_var_info(d1)$var_name),
+        "g1|^AAB"
+      )
+    )
   )
 })
 

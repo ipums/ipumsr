@@ -321,7 +321,6 @@ read_ipums_ddi <- function(ddi_file,
   )
 }
 
-
 #' Read metadata from an IHGIS extract's codebook files
 #'
 #' @description
@@ -459,15 +458,21 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
   }
 
   txt_file <- find_ihgis_txt_cb(cb_file)
+  geog_file <- find_ihgis_geog_cb(cb_file)
 
   if (is_zip) {
     dd_file <- unz(cb_file, dd_file)
     tbls_file <- unz(cb_file, tbls_file)
     txt_file <- tryCatch(unz(cb_file, txt_file), error = function(cnd) NULL)
+    geog_file <- tryCatch(unz(cb_file, geog_file), error = function(cnd) NULL)
   }
 
   dd <- readr::read_csv(dd_file, progress = FALSE, show_col_types = FALSE)
   tb <- readr::read_csv(tbls_file, progress = FALSE, show_col_types = FALSE)
+  geog <- tryCatch(
+    readr::read_csv(geog_file, progress = FALSE, show_col_types = FALSE),
+    error = function(cnd) NULL
+  )
 
   dd <- dplyr::left_join(dd, tb, by = c("dataset", "table"))
 
@@ -479,13 +484,28 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
     var_label = dd$label,
     var_desc = ifelse(
       dd$table_var == "GISJOIN",
-      "",
+      NA,
       paste0(
         "Table ", dd$table, ": ", dd$title,
         " (Universe: ", dd$table_universe, ")"
       )
     )
   )
+
+  # Add geog info
+  if (!rlang::is_empty(geog)) {
+    var_info <- dplyr::add_row(
+      var_info,
+      var_name = geog$tabulation_geog,
+      var_label = geog$tabulation_geog_label,
+      .after = min(which(var_info$var_name == "GISJOIN"))
+    )
+  } else {
+    rlang::warn("Unable to load tabulation geography metadata for this file.")
+  }
+
+  # Deduplicate GISJOIN rows
+  var_info <- dplyr::distinct(var_info)
 
   conditions_text <- tryCatch(
     {
@@ -1074,15 +1094,23 @@ find_ihgis_tbls_cb <- function(cb_file) {
 }
 
 find_ihgis_txt_cb <- function(cb_file) {
-  txt_file <- find_ihgis_metadata_files(
+  find_ihgis_metadata_files(
     cb_file,
     name_ext = "txt",
     file_select = quo(tidyselect::matches("_codebook")),
     multiple_ok = FALSE,
     none_ok = FALSE
   )
+}
 
-  txt_file
+find_ihgis_geog_cb <- function(cb_file) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_geog")),
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
 }
 
 new_ipums_ddi <- function(file_name = NULL,
