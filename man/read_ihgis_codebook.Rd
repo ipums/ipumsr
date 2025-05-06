@@ -50,18 +50,20 @@ about the variables included across all files in the extract.
 tables included in the extract.
 \item \verb{_geog.csv} contains metadata about the tabulation geographies included
 for any tables in the extract.
+\item \verb{_codebook.txt} contains table and variable metadata in human readable
+form and contains citation information for IHGIS data.
 }
 
-\code{read_ihgis_codebook()} uses information from both the \verb{_datadict.csv} and
-\verb{_tables.csv} file and assumes both exist in the provided extract (.zip)
-file or directory. If you have unzipped your IHGIS extract and moved the
-\verb{_tables.csv} file, you will need to provide the path to that file in the
-\code{tbls_file} argument.
+By default, \code{read_ihgis_codebook()} uses information from all these files and
+assumes they exist in the provided extract (.zip) file or directory.
+If you have unzipped your IHGIS extract and moved the \verb{_tables.csv} file,
+you will need to provide the path to that file in the \code{tbls_file} argument.
+Certain variable metadata can still be loaded without the \verb{_geog.csv} or
+\verb{_codebook.txt} files. However, if \code{raw = TRUE}, the \verb{_codebook.txt} file
+must be present in the .zip archive or provided to \code{cb_file}.
 
-IHGIS extracts also include a \verb{_codebook.txt} file, which contains
-table and variable metadata in a human readable form as well as
-citation information for IHGIS data. You can view this
-file in the R console by setting \code{raw = TRUE}.
+If you no longer have access to these files, consider resubmitting the
+extract request that produced the data.
 }
 \examples{
 ihgis_file <- ipums_example("ihgis0014.zip")
@@ -92,5 +94,5 @@ ipums_var_label(ihgis_data$AAA001)
 ihgis_cb_raw <- read_ihgis_codebook(ihgis_file, raw = TRUE)
 
 # Use `cat()` to display in the R console in human readable format
-cat(ihgis_cb_raw[1:20], sep = "\n")
+cat(ihgis_cb_raw[1:21], sep = "\n")
 }

@@ -121,12 +121,17 @@ For more about resubmitting an existing extract via the IPUMS API, see
 \examples{
 # Example files
 csv_file <- ipums_example("nhgis0972_csv.zip")
+fw_file <- ipums_example("nhgis0730_fixed.zip")
 
 # Previously:
 read_nhgis(csv_file)
 
-# Now:
+# For CSV files, please update to use the following:
 read_ipums_agg(csv_file)
+
+# Fixed-width files are parsed with the correct column positions
+# and column types automatically:
+read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
 }
 \seealso{
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.

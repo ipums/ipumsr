@@ -346,17 +346,19 @@ read_ipums_ddi <- function(ddi_file,
 #'   tables included in the extract.
 #'   * `_geog.csv` contains metadata about the tabulation geographies included
 #'   for any tables in the extract.
+#'   * `_codebook.txt` contains table and variable metadata in human readable
+#'   form and contains citation information for IHGIS data.
 #'
-#' `read_ihgis_codebook()` uses information from both the `_datadict.csv` and
-#' `_tables.csv` file and assumes both exist in the provided extract (.zip)
-#' file or directory. If you have unzipped your IHGIS extract and moved the
-#' `_tables.csv` file, you will need to provide the path to that file in the
-#' `tbls_file` argument.
+#' By default, `read_ihgis_codebook()` uses information from all these files and
+#' assumes they exist in the provided extract (.zip) file or directory.
+#' If you have unzipped your IHGIS extract and moved the `_tables.csv` file,
+#' you will need to provide the path to that file in the `tbls_file` argument.
+#' Certain variable metadata can still be loaded without the `_geog.csv` or
+#' `_codebook.txt` files. However, if `raw = TRUE`, the `_codebook.txt` file
+#' must be present in the .zip archive or provided to `cb_file`.
 #'
-#' IHGIS extracts also include a `_codebook.txt` file, which contains
-#' table and variable metadata in a human readable form as well as
-#' citation information for IHGIS data. You can view this
-#' file in the R console by setting `raw = TRUE`.
+#' If you no longer have access to these files, consider resubmitting the
+#' extract request that produced the data.
 #'
 #' @param cb_file Path to a .zip archive containing an IHGIS extract, an IHGIS
 #'   data dictionary (`_datadict.csv`) file, or an IHGIS codebook (.txt) file.
@@ -407,7 +409,7 @@ read_ipums_ddi <- function(ddi_file,
 #' ihgis_cb_raw <- read_ihgis_codebook(ihgis_file, raw = TRUE)
 #'
 #' # Use `cat()` to display in the R console in human readable format
-#' cat(ihgis_cb_raw[1:20], sep = "\n")
+#' cat(ihgis_cb_raw[1:21], sep = "\n")
 read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
   custom_check_file_exists(cb_file)
 

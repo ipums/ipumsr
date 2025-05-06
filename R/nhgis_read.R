@@ -243,12 +243,17 @@ read_ipums_agg <- function(data_file,
 #' @examples
 #' # Example files
 #' csv_file <- ipums_example("nhgis0972_csv.zip")
+#' fw_file <- ipums_example("nhgis0730_fixed.zip")
 #'
 #' # Previously:
 #' read_nhgis(csv_file)
 #'
-#' # Now:
+#' # For CSV files, please update to use the following:
 #' read_ipums_agg(csv_file)
+#'
+#' # Fixed-width files are parsed with the correct column positions
+#' # and column types automatically:
+#' read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
 read_nhgis <- function(data_file,
                        file_select = NULL,
                        vars = NULL,
