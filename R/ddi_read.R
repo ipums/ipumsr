@@ -416,72 +416,27 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
   is_dir <- file_is_dir(cb_file)
 
   if (raw) {
-    return(load_ihgis_txt_cb(cb_file))
-  }
-
-  if (is_zip || is_dir) {
-    dd_file <- find_files_in(
-      cb_file,
-      name_ext = "csv",
-      file_select = quo(tidyselect::matches("_datadict")),
-      multiple_ok = FALSE,
-      none_ok = FALSE
-    )
-
-    tryCatch(
-      {
-        tbls_file <- find_files_in(
-          cb_file,
-          name_ext = "csv",
-          file_select = quo(tidyselect::matches("_tables")),
-          multiple_ok = FALSE,
-          none_ok = FALSE
-        )
-      },
-      error = function(cnd) {
-        tbls_file <- NULL
-      }
-    )
-
-    if (length(tbls_file) == 0) {
+    if (!(is_zip || fostr_detect(cb_file, "\\.txt$"))) {
       rlang::abort(
         c(
-          paste0("Could not find `_tables.csv` codebook file in ",  cb_file),
-          "i" = "Use `tbls_file` to provide the path to this file."
+          "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
+          "i" = "Set `raw = FALSE` to load a csv codebook files."
         )
       )
     }
 
-    txt_file <- try(
-      find_files_in(
-        cb_file,
-        name_ext = "txt",
-        multiple_ok = FALSE,
-        none_ok = FALSE
-      ),
-      silent = TRUE
-    )
+    txt_file <- find_ihgis_txt_cb(cb_file)
 
     if (is_zip) {
-      dd_file <- unz(cb_file, dd_file)
-      tbls_file <- unz(cb_file, tbls_file)
-
-      if (!inherits(txt_file, "try-error")) {
-        txt_file <- unz(cb_file, txt_file)
-      } else {
-        txt_file <- NULL
-      }
+      cb <- readr::read_lines(unz(cb_file, txt_file), progress = FALSE)
     } else {
-      dd_file <- file.path(cb_file, dd_file)
-      tbls_file <- file.path(cb_file, tbls_file)
-
-      if (!inherits(txt_file, "try-error")) {
-        txt_file <- file.path(cb_file, txt_file)
-      } else {
-        txt_file <- NULL
-      }
+      cb <- readr::read_lines(cb_file, progress = FALSE)
     }
-  } else {
+
+    return(cb)
+  }
+
+  if (!is_zip && !is_dir) {
     if (!fostr_detect(cb_file, "_datadict\\.csv$")) {
       rlang::abort(
         c(
@@ -491,66 +446,39 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
       )
     }
 
-    dd_file <- cb_file
+    cb_file <- dirname(cb_file)
+  }
 
-    # Look for _tables.csv file in same dir
-    tryCatch(
-      {
-        tbls_file <- find_files_in(
-          dirname(cb_file),
-          name_ext = "csv",
-          file_select = quo(tidyselect::matches("_tables")),
-          multiple_ok = FALSE,
-          none_ok = FALSE
-        )
+  dd_file <- find_ihgis_datadict_cb(cb_file)
 
-        tbls_file <- file.path(dirname(cb_file), tbls_file)
-      },
-      error = function(cnd) {
-        tbls_file <- NULL
-      }
-    )
+  # If not a zip file and user has supplied `tbls_file`, use that instead
+  if (is.null(tbls_file) || is_zip) {
+    tbls_file <- find_ihgis_tbls_cb(cb_file)
+  } else {
+    custom_check_file_exists(tbls_file)
+  }
 
-    if (length(tbls_file) == 0) {
-      rlang::abort(
-        c(
-          paste0("Could not find `_tables.csv` codebook file in ",  dirname(cb_file)),
-          "i" = "Use `tbls_file` to provide the path to this file."
-        )
-      )
-    } else {
-      custom_check_file_exists(tbls_file)
-    }
+  txt_file <- find_ihgis_txt_cb(cb_file)
 
-    tryCatch(
-      {
-        txt_file <- find_files_in(
-          dirname(cb_file),
-          name_ext = "txt$",
-          file_select = quo(matches("_codebook")),
-          multiple_ok = FALSE,
-          none_ok = FALSE
-        )
-
-        txt_file <- file.path(dirname(cb_file), txt_file)
-      },
-      error = function(cnd) {
-        txt_file <- NULL
-      }
-    )
+  if (is_zip) {
+    dd_file <- unz(cb_file, dd_file)
+    tbls_file <- unz(cb_file, tbls_file)
+    txt_file <- tryCatch(unz(cb_file, txt_file), error = function(cnd) NULL)
   }
 
   dd <- readr::read_csv(dd_file, progress = FALSE, show_col_types = FALSE)
   tb <- readr::read_csv(tbls_file, progress = FALSE, show_col_types = FALSE)
-  cb <- try(readr::read_lines(txt_file, progress = FALSE), silent = TRUE)
 
   dd <- dplyr::left_join(dd, tb, by = c("dataset", "table"))
 
+  # IHGIS will have duplicate GISJOINs in var_info. Don't want to attach
+  # table information as we cannot guarantee correct table will be included
+  # after linking to data.
   var_info <- make_var_info_from_scratch(
     var_name = dd$table_var,
     var_label = dd$label,
     var_desc = ifelse(
-      dd$table_var == "GISJOIN", # Don't attach table info for GISJOIN as we cannot ensure that set_ipums_var_attributes() will link correct one.
+      dd$table_var == "GISJOIN",
       "",
       paste0(
         "Table ", dd$table, ": ", dd$title,
@@ -559,23 +487,27 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
     )
   )
 
-  if (!inherits(cb, "try-error")) {
-    # Get License and Condition section
-    conditions_text <- find_cb_section(
-      cb,
-      "^Citation and Use of .+ Data",
-      section_markers = which(fostr_detect(cb, "^[-]{5,}$"))
-    )
+  conditions_text <- tryCatch(
+    {
+      cb <- readr::read_lines(txt_file, progress = FALSE)
 
-    conditions_text <- paste(conditions_text, collapse = "\n")
-  } else {
-    rlang::warn(c(
-      "Unable to load IPUMS conditions for this extract.",
-      "See https://www.ipums.org/about/citation for citation information."
-    ))
+      conditions_text <- find_cb_section(
+        cb,
+        "^Citation and Use of .+ Data",
+        section_markers = which(fostr_detect(cb, "^[-]{5,}$"))
+      )
 
-    conditions_text <- NULL
-  }
+      paste(conditions_text, collapse = "\n")
+    },
+    error = function(cnd) {
+      rlang::warn(c(
+        "Unable to load IPUMS conditions for this extract.",
+        "See https://www.ipums.org/about/citation for citation information."
+      ))
+
+      NULL
+    }
+  )
 
   new_ipums_ddi(
     file_name = basename(cb_file),
@@ -939,35 +871,6 @@ get_var_info_from_ddi <- function(ddi_xml,
   )
 }
 
-load_ihgis_txt_cb <- function(cb_file) {
-  is_zip <- file_is_zip(cb_file)
-  is_txt <- !is_zip && fostr_detect(cb_file, "\\.txt$")
-
-  if (!(is_zip || is_txt)) {
-    rlang::abort(
-      c(
-        "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
-        "i" = "Set `raw = FALSE` to load a csv codebook files."
-      )
-    )
-  }
-
-  if (is_zip) {
-    cb_name <- find_files_in(
-      cb_file,
-      "txt",
-      multiple_ok = FALSE,
-      none_ok = FALSE
-    )
-
-    cb <- readr::read_lines(unz(cb_file, cb_name), progress = FALSE)
-  } else {
-    cb <- readr::read_lines(cb_file, progress = FALSE)
-  }
-
-  cb
-}
-
 #' Parse NHGIS codebook lines with data type or breakdown info
 #'
 #' @description
@@ -1115,6 +1018,71 @@ find_cb_section <- function(cb_text, section, section_markers) {
 
   end <- min(c(length(cb_text), section_markers[section_markers > start])) - 1
   cb_text[seq(start, end)]
+}
+
+# Helpers to simplify the search process for the various metadata files
+# needed to load IHGIS codebooks. Datadict and Tables CSV files are required.
+# txt codebooks provide IPUMS conditions but are not required to load an
+# IHGIS cb into an ipums_ddi.
+#
+# This function searches for a file with find_files_in, adjusts path based on
+# whether input cb_file is a zip or directory, and adds file-specific
+# error handling if desired.
+find_ihgis_metadata_files <- function(cb_file,
+                                      ...,
+                                      on_error = function(cnd) NULL) {
+  file <- tryCatch(find_files_in(cb_file, ...), error = on_error)
+
+  if (file_is_dir(cb_file)) {
+    file <- file.path(cb_file, file)
+  }
+
+  file
+}
+
+find_ihgis_datadict_cb <- function(cb_file) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_datadict")),
+    multiple_ok = FALSE,
+    none_ok = FALSE,
+    on_error = function(cnd) {
+      rlang::abort(
+        paste0("Could not find `_datadict.csv` codebook file in ",  cb_file),
+        call = caller_env(4)
+      )
+    }
+  )
+}
+
+find_ihgis_tbls_cb <- function(cb_file) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_tables")),
+    multiple_ok = FALSE,
+    none_ok = FALSE,
+    on_error = function(cnd) {
+      rlang::abort(c(
+        paste0("Could not find `_tables.csv` codebook file in ",  cb_file),
+        "i" = "Use `tbls_file` to provide the path to this file."),
+        call = caller_env(4)
+      )
+    }
+  )
+}
+
+find_ihgis_txt_cb <- function(cb_file) {
+  txt_file <- find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "txt",
+    file_select = quo(tidyselect::matches("_codebook")),
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
+
+  txt_file
 }
 
 new_ipums_ddi <- function(file_name = NULL,
