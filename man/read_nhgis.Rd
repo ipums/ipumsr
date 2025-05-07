@@ -95,12 +95,20 @@ A \code{\link[tibble:tbl_df-class]{tibble}} containing the data found in
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Read a csv or fixed-width (.dat) file downloaded from the NHGIS extract
+Read a .csv or fixed-width (.dat) file downloaded from the NHGIS extract
 system.
 
-This function has been deprecated in favor of \code{read_ipums_agg()}, which
-can read both IPUMS NHGIS and IPUMS IHGIS files. Please use that function
-instead.
+This function has been deprecated in favor of \code{\link[=read_ipums_agg]{read_ipums_agg()}}, which
+can read .csv files from both IPUMS aggregate data collections
+(IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
+
+Note that fixed-width file reading is not supported in \code{read_ipums_agg()} and
+will likely be retired with \code{read_nhgis()}. We therefore encourage you to
+create NHGIS extracts in .csv format going forward. For previously-submitted
+fixed-width extracts, we suggest
+regenerating them in .csv format and loading them with \code{read_ipums_agg()}.
+Use the \code{data_format} argument of \code{\link[=define_extract_agg]{define_extract_agg()}} to create a
+.csv extract for submission via the IPUMS API.
 
 To read spatial data from an NHGIS extract, use \code{\link[=read_ipums_sf]{read_ipums_sf()}}.
 }

@@ -81,7 +81,7 @@ A \code{\link[tibble:tbl_df-class]{tibble}} containing the data found in
 \code{data_file}
 }
 \description{
-Read a csv file from an extract downloaded from an IPUMS aggregate
+Read a .csv file from an extract downloaded from an IPUMS aggregate
 data collection (IPUMS NHGIS or IPUMS IHGIS).
 
 To read spatial data from an NHGIS extract, use \code{\link[=read_ipums_sf]{read_ipums_sf()}}.

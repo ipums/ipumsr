@@ -6,7 +6,7 @@
 #' Read data from an IPUMS aggregate data extract
 #'
 #' @description
-#' Read a csv file from an extract downloaded from an IPUMS aggregate
+#' Read a .csv file from an extract downloaded from an IPUMS aggregate
 #' data collection (IPUMS NHGIS or IPUMS IHGIS).
 #'
 #' To read spatial data from an NHGIS extract, use [read_ipums_sf()].
@@ -193,12 +193,20 @@ read_ipums_agg <- function(data_file,
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Read a csv or fixed-width (.dat) file downloaded from the NHGIS extract
+#' Read a .csv or fixed-width (.dat) file downloaded from the NHGIS extract
 #' system.
 #'
-#' This function has been deprecated in favor of `read_ipums_agg()`, which
-#' can read both IPUMS NHGIS and IPUMS IHGIS files. Please use that function
-#' instead.
+#' This function has been deprecated in favor of [read_ipums_agg()], which
+#' can read .csv files from both IPUMS aggregate data collections
+#' (IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
+#'
+#' Note that fixed-width file reading is not supported in `read_ipums_agg()` and
+#' will likely be retired with `read_nhgis()`. We therefore encourage you to
+#' create NHGIS extracts in .csv format going forward. For previously-submitted
+#' fixed-width extracts, we suggest
+#' regenerating them in .csv format and loading them with `read_ipums_agg()`.
+#' Use the `data_format` argument of [define_extract_agg()] to create a
+#' .csv extract for submission via the IPUMS API.
 #'
 #' To read spatial data from an NHGIS extract, use [read_ipums_sf()].
 #'
