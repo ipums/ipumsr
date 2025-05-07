@@ -64,6 +64,10 @@ must be present in the .zip archive or provided to \code{cb_file}.
 
 If you no longer have access to these files, consider resubmitting the
 extract request that produced the data.
+
+Note that IHGIS codebooks contain metadata for all the datasets contained
+in a given extract. Individual data files from the extract may not contain
+all of the variables shown in the output of \code{read_ihgis_codebook()}.
 }
 \examples{
 ihgis_file <- ipums_example("ihgis0014.zip")

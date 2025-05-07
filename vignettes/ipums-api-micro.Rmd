@@ -70,9 +70,9 @@ API support will continue to be added for more collections in the future.
 See the [API documentation](https://developer.ipums.org/docs/apiprogram/)
 for more information on upcoming additions to the API.
 
-In addition to microdata projects, the IPUMS API also supports IPUMS NHGIS
-data. For details about obtaining IPUMS NHGIS data using ipumsr, see
-the [NHGIS-specific vignette](ipums-api-nhgis.html).
+In addition to microdata projects, the IPUMS API also supports IPUMS aggregate
+data projects. For details about obtaining IPUMS aggregate data using ipumsr, 
+see the [aggregate data vignette](ipums-api-agg.html).
 
 Before getting started, we'll load ipumsr and `{dplyr}`, which will be 
 helpful for this demo:
@@ -106,7 +106,7 @@ subset of individuals from a population. Many IPUMS samples are samples in
 the statistical sense, but some are "full-count" samples, meaning they contain 
 all individuals in a population.
 
-## IPUMS microdata metadata (forthcoming)
+## IPUMS microdata metadata
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
 insert_cassette("micro-sample-ids")

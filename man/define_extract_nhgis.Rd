@@ -100,7 +100,7 @@ All NHGIS extract request parameters supported by \code{define_extract_nhgis()}
 are supported by \code{define_extract_agg()}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
-NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
+NHGIS extract definitions in \code{vignette("ipums-api-agg")}.
 }
 \examples{
 # Previously, you could create an NHGIS extract definition like so:

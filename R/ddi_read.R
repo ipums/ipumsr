@@ -319,6 +319,10 @@ read_ipums_ddi <- function(ddi_file, lower_vars = FALSE) {
 #' If you no longer have access to these files, consider resubmitting the
 #' extract request that produced the data.
 #'
+#' Note that IHGIS codebooks contain metadata for all the datasets contained
+#' in a given extract. Individual data files from the extract may not contain
+#' all of the variables shown in the output of `read_ihgis_codebook()`.
+#'
 #' @param cb_file Path to a .zip archive containing an IHGIS extract, an IHGIS
 #'   data dictionary (`_datadict.csv`) file, or an IHGIS codebook (.txt) file.
 #' @param tbls_file If `cb_file` is the path to an IHGIS data dictionary .csv

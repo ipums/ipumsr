@@ -111,7 +111,7 @@ Use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}} and \code{\link[
 data sources for use in an extract definition.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
-aggregate data extract definitions in \code{vignette("ipums-api-nhgis")}.
+aggregate data extract definitions in \code{vignette("ipums-api-agg")}.
 }
 \details{
 \subsection{IPUMS NHGIS}{
@@ -137,7 +137,7 @@ specifications.
 Create a dataset specification with \code{\link[=ds_spec]{ds_spec()}}. Each dataset must be
 associated with a selection of \code{data_tables} and \code{tabulation_geographies}.
 
-See examples or \code{vignette("ipums-api-nhgis")} for more details about
+See examples or \code{vignette("ipums-api-agg")} for more details about
 specifying datasets and time series tables in an aggregate data extract
 definition.
 }

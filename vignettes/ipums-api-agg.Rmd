@@ -1,8 +1,8 @@
 ---
-title: "NHGIS API Requests"
+title: "Aggregate Data API Requests"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{NHGIS API Requests}
+  %\VignetteIndexEntry{Aggregate Data API Requests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -81,16 +81,20 @@ get_truncated_metadata <- function(collection,
 }
 ```
 
-This vignette details the options available for requesting IPUMS NHGIS
-data and metadata via the IPUMS API.
+This vignette details the options available for requesting data and metadata
+for IPUMS aggregate data projects via the IPUMS API. Supported aggregate
+data projects include:
+
+-   IPUMS NHGIS
+-   IPUMS IHGIS
 
 If you haven't yet learned the basics of the IPUMS API workflow, you may
 want to start with the [IPUMS API introduction](ipums-api.html). The
 code below assumes you have registered and set up your API key as
 described there.
 
-In addition to NHGIS, the IPUMS API also supports several microdata
-projects. For details about obtaining IPUMS microdata using ipumsr, see
+The IPUMS API also supports several microdata projects. For details about 
+obtaining IPUMS microdata using ipumsr, see
 the [microdata-specific vignette](ipums-api-micro.html).
 
 Before getting started, we'll load ipumsr and some helpful packages for
@@ -102,10 +106,10 @@ library(dplyr)
 library(purrr)
 ```
 
-## Basic IPUMS NHGIS concepts
+## Basic IPUMS aggregate data concepts
 
-IPUMS NHGIS supports 3 main types of data products: datasets, time
-series tables, and shapefiles.
+IPUMS aggregate data collections support several different types of 
+data products:
 
 -   A *dataset* contains a collection of *data tables* that each
     correspond to a particular tabulated summary statistic. A dataset is
@@ -113,28 +117,35 @@ series tables, and shapefiles.
     covers. For instance, 2021 1-year data from the American Community
     Survey (ACS) is encapsulated in a single dataset. In other cases, a
     single census product will be split into multiple datasets.
+    
+    Datasets are available for both NHGIS and IHGIS.
 
 -   A *time series table* is a longitudinal data source that links
     comparable statistics from multiple U.S. censuses in a single
     bundle. A table is comprised of one or more related time series,
     each of which describes a single summary statistic measured at
     multiple times for a given geographic level.
+    
+    Time series tables are available for NHGIS.
 
 -   A *shapefile* (or *GIS file*) contains geographic data for a given
     geographic level and year. Typically, these files are composed of
     polygon geometries containing the boundaries of census reporting
     areas.
+    
+    Shapefiles are available via API for NHGIS. Shapefiles from IHGIS can be 
+    downloaded directly from the 
+    [IHGIS website](https://ihgis.ipums.org/geography-gis).
 
-## IPUMS NHGIS metadata
+## Metadata for aggregate data projects
 
 Of course, to make a request for any of these data sources, we have to
 know the codes that the API uses to refer to them. Fortunately, we can
-browse the metadata for all available IPUMS NHGIS data sources with
+browse the metadata for available IPUMS aggregate data sources with
 `get_metadata_catalog()` and `get_metadata()`.
 
-Users can view summary metadata for all available data sources of a
-given data type, or detailed metadata for a specific data source by
-name.
+Users can view a catalog of all available data sources of a given data 
+type or detailed metadata for a specific data source indicated by name.
 
 ### Summary metadata
 
@@ -142,9 +153,14 @@ name.
 insert_cassette("nhgis-metadata-summary")
 ```
 
-To see a summary of all available sources for a given data product type,
-use the `type` argument. This returns a data frame containing the
-available datasets, data tables, time series tables, or shapefiles.
+To see a catalog of all available sources for a given data product type,
+use `get_metadata_catalog()`. This returns a data frame containing the 
+available datasets, data tables, time series tables, or shapefiles, 
+depending on the provided `metadata_type`.
+
+Note that `metadata_type` supports different options for different collections. 
+Use `catalog_types()` to determine the supported metadata types for a given 
+collection.
 
 ```{r}
 ds <- get_metadata_catalog("nhgis", metadata_type = "datasets")
@@ -250,9 +266,9 @@ get_metadata("nhgis", dataset = "1900_cAg", data_table = "NT2")
 ```
 
 Note that the `name` element is the one that contains the codes used for
-interacting with the IPUMS API. The `nhgis_code` element refers to the
+interacting with the IPUMS API. (The `nhgis_code` element refers to the
 prefix attached to individual variables in the output data, and the API
-will throw an error if you use it in an extract definition. For more
+will throw an error if you use it in an extract definition.) For more
 details on interpreting each of the provided metadata elements, see the 
 [IPUMS developer documentation](https://developer.ipums.org/docs/v2/workflows/explore_metadata/).
 
@@ -263,13 +279,12 @@ define an extract request to submit to the IPUMS API.
 eject_cassette("nhgis-metadata-detailed")
 ```
 
-## Defining an IPUMS NHGIS extract request
+## Defining an IPUMS aggregate data extract request
 
-To create an extract definition containing the specifications for a
-specific set of IPUMS NHGIS data, use `define_extract_agg()`.
-
-When you define an extract request, you can specify the data to be
-included in the extract and indicate the desired format and layout.
+To create an extract definition for an IPUMS aggregate data project, 
+use `define_extract_agg()`. When you define an extract request, you can 
+specify the data to be included in the extract and indicate the desired 
+format and layout.
 
 ### Basic extract definitions
 
@@ -285,11 +300,15 @@ cAg_meta$data_tables
 #### Dataset specifications
 
 To request these data, we need to make an explicit *dataset
-specification*. All datasets must be associated with a selection of data
-tables and geographic levels. We can use the `ds_spec()` helper function
-to specify our selections for these parameters. `ds_spec()` bundles all
-the selections for a given dataset together into a single object (in
-this case, a `ds_spec` object):
+specification*.
+
+For IPUMS NHGIS, all datasets must be associated with a selection of data 
+tables and geographic levels. For IHGIS, all datasets must be associated with 
+a selection of data tables and tabulation geographies.
+
+We can use the `ds_spec()` helper function to specify our selections for these 
+parameters. `ds_spec()` bundles all the selections for a given dataset 
+together into a single object (in this case, a `ds_spec` object):
 
 ```{r}
 dataset <- ds_spec(
@@ -314,8 +333,22 @@ nhgis_ext <- define_extract_agg(
 nhgis_ext
 ```
 
-Dataset specifications can also include selections for `years` and
+For NHGIS, dataset specifications can also include selections for `years` and 
 `breakdown_values`, but these are not available for all datasets.
+
+For IHGIS, datasets must include a selection of `tabulation_geographies`:
+
+```{r}
+define_extract_agg(
+  "ihgis",
+  description = "Example IHGIS extract",
+  datasets = ds_spec(
+    "KZ2009pop", 
+    data_tables = "KZ2009pop.AAA",
+    tabulation_geographies = "KZ2009pop.g0"
+  )
+)
+```
 
 #### Time series table specifications
 
@@ -351,17 +384,20 @@ define_extract_agg(
 )
 ```
 
+IHGIS shapefiles are not available via API, but can be downloaded from
+the [IHGIS website](https://ihgis.ipums.org/geography-gis).
+
 #### Invalid specifications
 
-An attempt to define an extract that does not have all the required
-specifications for a given dataset or time series table will throw an
-error:
+An attempt to define an extract that includes unexpected specifications or does 
+not have all the required specifications for the given collection will throw 
+an error:
 
 ```{r, error=TRUE, purl=FALSE}
 define_extract_agg(
   "nhgis",
   description = "Invalid extract",
-  datasets = ds_spec("1900_STF1", data_tables = "NP1")
+  datasets = ds_spec("1900_STF1", "NP1", tabulation_geographies = "g0")
 )
 ```
 
@@ -435,9 +471,6 @@ For extracts that contain datasets with multiple breakdowns or data
 types, use the `breakdown_and_data_type_layout` argument to specify a
 layout . This is most common for data sources that contain both
 estimates and margins of error, like the ACS.
-
-File formats can be specified with the `data_format` argument. IPUMS
-NHGIS currently distributes files in csv and fixed-width format.
 
 See the documentation for `define_extract_agg()` for more details on
 these options.

@@ -488,7 +488,6 @@ download_extract <- function(extract,
 #'
 #' @return The path to the downloaded supplemental data file
 #'
-#'
 #' @export
 #'
 #' @examples

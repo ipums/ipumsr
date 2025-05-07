@@ -308,7 +308,7 @@ catalog_types <- function(collection) {
 #' [get_metadata()].
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
-#' aggregate data extract definitions in `vignette("ipums-api-nhgis")`.
+#' aggregate data extract definitions in `vignette("ipums-api-agg")`.
 #'
 #' @section Metadata availability:
 #' The following sections summarize the metadata fields provided for each data

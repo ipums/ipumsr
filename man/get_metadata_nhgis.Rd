@@ -56,7 +56,7 @@ please use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}}. To obtai
 \code{\link[=get_metadata]{get_metadata()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
-aggregate data extract definitions in \code{vignette("ipums-api-nhgis")}.
+aggregate data extract definitions in \code{vignette("ipums-api-agg")}.
 }
 \section{Metadata availability}{
 

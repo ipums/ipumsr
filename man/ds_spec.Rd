@@ -61,7 +61,7 @@ Use \code{\link[=get_metadata]{get_metadata()}} to identify available values for
 time series table specification parameters.
 
 Learn more about aggregate data extract definitions in
-\code{vignette("ipums-api-nhgis")}.
+\code{vignette("ipums-api-agg")}.
 }
 \details{
 For IPUMS NHGIS extract definitions, \code{data_tables} and \code{geog_levels} are

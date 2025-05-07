@@ -40,7 +40,7 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: "IPUMS Data"
+      - text: "IPUMS data"
       - text: "Read IPUMS data"
         href: "articles/ipums-read.html"
       - text: "Value labels"
@@ -53,8 +53,8 @@ navbar:
         href: "articles/ipums-api.html"
       - text: "Microdata API requests"
         href: "articles/ipums-api-micro.html"
-      - text: "NHGIS API requests"
-        href: "articles/ipums-api-nhgis.html"
+      - text: "Aggregate data API requests"
+        href: "articles/ipums-api-agg.html"
       - text: "------------------"
       - text: "Project-specific exercises"
         href: "https://ipums.org/exercises.shtml"
@@ -95,8 +95,10 @@ reference:
       - read_ipums_micro_list_yield
   - subtitle: "Aggregate data projects"
   - contents:
-      - read_nhgis
+      - read_ipums_agg
       - read_nhgis_codebook
+      - read_ihgis_codebook
+      - read_nhgis
   - subtitle: "General use"
   - contents:
       - read_ipums_sf

@@ -324,7 +324,7 @@ define_extract_micro <- function(collection,
 #' data sources for use in an extract definition.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
-#' aggregate data extract definitions in `vignette("ipums-api-nhgis")`.
+#' aggregate data extract definitions in `vignette("ipums-api-agg")`.
 #'
 #' @details
 #' ## IPUMS NHGIS
@@ -349,7 +349,7 @@ define_extract_micro <- function(collection,
 #' Create a dataset specification with [ds_spec()]. Each dataset must be
 #' associated with a selection of `data_tables` and `tabulation_geographies`.
 #'
-#' See examples or `vignette("ipums-api-nhgis")` for more details about
+#' See examples or `vignette("ipums-api-agg")` for more details about
 #' specifying datasets and time series tables in an aggregate data extract
 #' definition.
 #'
@@ -674,7 +674,7 @@ define_extract_ipumsi <- function(description,
 #' are supported by `define_extract_agg()`.
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")` and
-#' NHGIS extract definitions in `vignette("ipums-api-nhgis")`.
+#' NHGIS extract definitions in `vignette("ipums-api-agg")`.
 #'
 #' @param description Description of the extract.
 #' @param datasets List of dataset specifications for any
@@ -945,7 +945,7 @@ samp_spec <- function(name) {
 #' time series table specification parameters.
 #'
 #' Learn more about aggregate data extract definitions in
-#' `vignette("ipums-api-nhgis")`.
+#' `vignette("ipums-api-agg")`.
 #'
 #' @details
 #' For IPUMS NHGIS extract definitions, `data_tables` and `geog_levels` are

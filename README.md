@@ -324,7 +324,7 @@ offer:
 
 - For additional details about microdata and aggregate data extract
   requests, see `vignette("ipums-api-micro")` and
-  `vignette("ipums-api-nhgis")`.
+  `vignette("ipums-api-agg")`.
 
 - To work with labelled values in IPUMS data, see
   `vignette("value-labels")`.
