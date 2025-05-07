@@ -233,8 +233,6 @@ read_ipums_agg <- function(data_file,
 #'
 #'   By default, looks in the same path as `data_file` for
 #'   a .do file with the same name. See Details section below.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please
-#'   use `file_select` instead.
 #'
 #' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
 #'   `data_file`
@@ -271,8 +269,7 @@ read_nhgis <- function(data_file,
                        do_file = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        remove_extra_header = TRUE,
-                       verbose = TRUE,
-                       data_layer = deprecated()) {
+                       verbose = TRUE) {
   lifecycle::deprecate_warn("0.9.0", "read_nhgis()", "read_ipums_agg()")
 
   if (length(data_file) != 1) {
@@ -281,16 +278,7 @@ read_nhgis <- function(data_file,
 
   dir_read_deprecated(data_file)
 
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis(data_layer = )",
-      "read_nhgis(file_select = )",
-    )
-    file_select <- enquo(data_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
+  file_select <- enquo(file_select)
 
   custom_check_file_exists(data_file)
 

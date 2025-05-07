@@ -14,8 +14,7 @@ read_nhgis(
   do_file = NULL,
   var_attrs = c("val_labels", "var_label", "var_desc"),
   remove_extra_header = TRUE,
-  verbose = TRUE,
-  data_layer = deprecated()
+  verbose = TRUE
 )
 }
 \arguments{
@@ -84,9 +83,6 @@ column types. Otherwise, all are suppressed.
 
 Will be overridden by \code{readr.show_progress} and \code{readr.show_col_types}
 options, if they are set.}
-
-\item{data_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please
-use \code{file_select} instead.}
 }
 \value{
 A \code{\link[tibble:tbl_df-class]{tibble}} containing the data found in

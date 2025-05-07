@@ -1,16 +1,6 @@
 test_that("Reading through directory is deprecated", {
   test_path <- vcr::vcr_test_path("fixtures")
 
-  lifecycle::expect_deprecated(
-    lifecycle::expect_deprecated(
-      x <- read_ipums_ddi(test_path, file_select = 1),
-      "Reading files through a directory"
-    ),
-    "`file_select` argument"
-  )
-
-  # Confirm that we can still read using `file_select` for now
-  expect_s3_class(x, "ipums_ddi")
   expect_s3_class(
     suppressWarnings(
       read_nhgis(
@@ -23,10 +13,6 @@ test_that("Reading through directory is deprecated", {
   )
 
   # Still should get correct errors
-  expect_error(
-    suppressWarnings(read_ipums_ddi(test_path)),
-    "Multiple files found"
-  )
   expect_error(
     suppressWarnings(read_nhgis(test_path, verbose = FALSE)),
     "No .csv or .dat files found"
@@ -46,16 +32,4 @@ test_that("Reading through directory is deprecated", {
     try(read_ipums_sf(test_path), silent = TRUE),
     "Reading files through a directory"
   )
-})
-
-test_that("Get correct file path when loading from directory", {
-  test_path <- vcr::vcr_test_path("fixtures")
-
-  lifecycle::expect_deprecated(
-    lifecycle::expect_deprecated(
-      x <- read_ipums_ddi(test_path, file_select = 1)
-    )
-  )
-
-  expect_equal(x$file_path, test_path)
 })

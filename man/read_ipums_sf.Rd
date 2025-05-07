@@ -11,8 +11,7 @@ read_ipums_sf(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
-  verbose = FALSE,
-  shape_layer = deprecated()
+  verbose = FALSE
 )
 }
 \arguments{
@@ -49,9 +48,6 @@ adjusted to avoid name conflicts if another column named \code{"layer"} already
 exists in the data.}
 
 \item{verbose}{If \code{TRUE} report additional progress information on load.}
-
-\item{shape_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{file_select} instead.}
 }
 \value{
 An \link[sf:sf]{sf} object

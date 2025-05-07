@@ -92,9 +92,6 @@ NULL
 #'   [IPUMS](https://www.ipums.org/). See *Downloading IPUMS files* below.
 #' @param lower_vars Logical indicating whether to convert variable names to
 #'   lowercase. Defaults to `FALSE` for consistency with IPUMS conventions.
-#' @param data_layer,file_select `r lifecycle::badge("deprecated")` Reading
-#'   DDI files contained in a .zip archive has been deprecated. Please provide
-#'   the full path to the .xml file to be loaded in `ddi_file`.
 #'
 #' @return An [ipums_ddi] object with metadata information.
 #'
@@ -134,51 +131,21 @@ NULL
 #' cps <- set_ipums_var_attributes(cps, ddi$var_info)
 #'
 #' ipums_var_label(cps$STATEFIP)
-read_ipums_ddi <- function(ddi_file,
-                           lower_vars = FALSE,
-                           file_select = deprecated(),
-                           data_layer = deprecated()) {
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_ipums_ddi(data_layer = )"
-    )
-    file_select <- enquo(data_layer)
-  } else if (!missing(file_select)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      "read_ipums_ddi(file_select = )"
-    )
-    file_select <- enquo(file_select)
-  } else {
-    file_select <- NULL
-    file_select <- enquo(file_select)
-  }
-
-  if (file_is_zip(ddi_file)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      I("Reading DDI files through a zip archive "),
-      details = "Please provide the full path to the DDI file to be loaded."
-    )
-  } else {
-    dir_read_deprecated(ddi_file)
-  }
+read_ipums_ddi <- function(ddi_file, lower_vars = FALSE) {
+  dir_read_deprecated(ddi_file)
 
   custom_check_file_exists(ddi_file)
 
-  ddi_file_load <- find_files_in(
-    ddi_file,
-    "xml",
-    file_select,
-    none_ok = FALSE,
-    multiple_ok = FALSE
-  )
+  if (tools::file_ext(ddi_file) != "xml") {
+    rlang::abort("Expected `ddi_file` to be the path to an .xml file.")
+  }
 
-  if (file_is_zip(ddi_file)) {
-    ddi_file_load <- unz(ddi_file, ddi_file_load)
-  } else if (file_is_dir(ddi_file)) {
+  if (file_is_dir(ddi_file)) {
     ddi_file_load <- file.path(ddi_file, ddi_file_load)
+    file_path <- ddi_file
+  } else {
+    ddi_file_load <- ddi_file
+    file_path <- dirname(ddi_file)
   }
 
   ddi_xml <- xml2::read_xml(ddi_file_load, file_select = NULL)
@@ -296,12 +263,6 @@ read_ipums_ddi <- function(ddi_file,
     if (!is.null(rectypes_keyvars)) {
       rectypes_keyvars$keyvars <- purrr::map(rectypes_keyvars$keyvars, tolower)
     }
-  }
-
-  if (file_is_dir(ddi_file)) {
-    file_path <- ddi_file
-  } else {
-    file_path <- dirname(ddi_file)
   }
 
   new_ipums_ddi(

@@ -49,8 +49,6 @@
 #'   adjusted to avoid name conflicts if another column named `"layer"` already
 #'   exists in the data.
 #' @param verbose If `TRUE` report additional progress information on load.
-#' @param shape_layer `r lifecycle::badge("deprecated")` Please use
-#'   `file_select` instead.
 #'
 #' @return An [sf][sf::sf()] object
 #'
@@ -93,20 +91,10 @@ read_ipums_sf <- function(shape_file,
                           encoding = NULL,
                           bind_multiple = FALSE,
                           add_layer_var = NULL,
-                          verbose = FALSE,
-                          shape_layer = deprecated()) {
+                          verbose = FALSE) {
   custom_check_file_exists(shape_file)
 
-  if (!missing(shape_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_ipums_sf(shape_layer = )",
-      "read_ipums_sf(file_select = )",
-    )
-    file_select <- enquo(shape_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
+  file_select <- enquo(file_select)
 
   dir_read_deprecated(shape_file)
 
