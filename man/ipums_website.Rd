@@ -9,9 +9,7 @@ ipums_website(
   var = NULL,
   launch = TRUE,
   verbose = TRUE,
-  homepage_if_missing = FALSE,
-  project = deprecated(),
-  var_label = deprecated()
+  homepage_if_missing = FALSE
 )
 }
 \arguments{
@@ -29,12 +27,6 @@ are detected.}
 
 \item{homepage_if_missing}{If \code{TRUE}, return the IPUMS homepage if the
 IPUMS project in \code{x} is not recognized.}
-
-\item{project}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use \code{x} instead.}
-
-\item{var_label}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Variable label for the
-provided \code{var}. This is typically obtained from the input \code{ipums_ddi}
-object and is unlikely to be needed.}
 }
 \value{
 The URL to the IPUMS webpage for the indicated project and variable

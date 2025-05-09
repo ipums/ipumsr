@@ -37,10 +37,6 @@
 #'   are detected.
 #' @param homepage_if_missing If `TRUE`, return the IPUMS homepage if the
 #'   IPUMS project in `x` is not recognized.
-#' @param var_label `r lifecycle::badge("deprecated")` Variable label for the
-#'   provided `var`. This is typically obtained from the input `ipums_ddi`
-#'   object and is unlikely to be needed.
-#' @param project `r lifecycle::badge("deprecated")` Please use `x` instead.
 #'
 #' @return The URL to the IPUMS webpage for the indicated project and variable
 #'   (invisibly if `launch = TRUE`)
@@ -64,9 +60,7 @@ ipums_website <- function(x,
                           var = NULL,
                           launch = TRUE,
                           verbose = TRUE,
-                          homepage_if_missing = FALSE,
-                          project = deprecated(),
-                          var_label = deprecated()) {
+                          homepage_if_missing = FALSE) {
   UseMethod("ipums_website")
 }
 
@@ -75,25 +69,7 @@ ipums_website.ipums_ddi <- function(x,
                                     var = NULL,
                                     launch = TRUE,
                                     verbose = TRUE,
-                                    homepage_if_missing = FALSE,
-                                    project = deprecated(),
-                                    var_label = deprecated()) {
-  if (!missing(project)) {
-    lifecycle::deprecate_warn(
-      "0.7.0",
-      "ipums_website(project = )",
-      "ipums_website(x = )"
-    )
-  }
-
-  if (!missing(var_label)) {
-    lifecycle::deprecate_warn(
-      "0.7.0",
-      "ipums_website(var_label = )"
-    )
-    var_label <- NULL
-  }
-
+                                    homepage_if_missing = FALSE) {
   if (length(var) > 1) {
     var <- var[length(var)]
 
@@ -104,7 +80,7 @@ ipums_website.ipums_ddi <- function(x,
     }
   }
 
-  var <- fix_for_detailed_var(x, var = var, var_label = var_label)
+  var <- fix_for_detailed_var(x, var = var)
 
   if (!rlang::is_null(var) && !var %in% x$var_info$var_name && verbose) {
     rlang::warn(
@@ -134,32 +110,7 @@ ipums_website.character <- function(x,
                                     var = NULL,
                                     launch = TRUE,
                                     verbose = TRUE,
-                                    homepage_if_missing = FALSE,
-                                    project = deprecated(),
-                                    var_label = deprecated()) {
-  # This is included only for consistency with previous behavior of
-  # `ipums_website()`, where `project` was allowed instead of `x`.
-  # Remove when removing `project` arg.
-  if (missing(x)) {
-    x <- project
-  }
-
-  if (!missing(project)) {
-    lifecycle::deprecate_warn(
-      "0.7.0",
-      "ipums_website(project = )",
-      "ipums_website(x = )"
-    )
-  }
-
-  if (!missing(var_label)) {
-    lifecycle::deprecate_warn(
-      "0.7.0",
-      "ipums_website(var_label = )"
-    )
-    var_label <- NULL
-  }
-
+                                    homepage_if_missing = FALSE) {
   if (length(var) > 1) {
     var <- var[length(var)]
 
@@ -170,7 +121,7 @@ ipums_website.character <- function(x,
     }
   }
 
-  var <- fix_for_detailed_var(x, var = var, var_label = var_label)
+  var <- fix_for_detailed_var(x, var = var)
 
   url <- get_ipums_url(
     x,

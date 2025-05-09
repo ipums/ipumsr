@@ -115,12 +115,3 @@ test_that("Can get URL for website even if variable is not in DDI", {
   )
   expect_equal(url, "https://cps.ipums.org/cps-action/variables/RELATE")
 })
-
-test_that("Can still use deprecated `project` arg (until it is removed)", {
-  lifecycle::expect_deprecated(
-    x <- ipums_website(project = "atus", var = "AGE", launch = FALSE)
-  )
-
-  expect_equal(x, "https://atusdata.org/atus-action/variables/AGE")
-  expect_equal(x, ipums_website(x = "atus", var = "AGE", launch = FALSE))
-})
