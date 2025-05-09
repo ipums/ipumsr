@@ -119,8 +119,6 @@ read_ipums_agg <- function(data_file,
 
   file_select <- enquo(file_select)
 
-  dir_read_deprecated(data_file)
-
   custom_check_file_exists(data_file)
 
   file <- find_files_in(
@@ -275,8 +273,6 @@ read_nhgis <- function(data_file,
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
   }
-
-  dir_read_deprecated(data_file)
 
   file_select <- enquo(file_select)
 

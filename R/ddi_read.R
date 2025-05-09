@@ -132,8 +132,6 @@ NULL
 #'
 #' ipums_var_label(cps$STATEFIP)
 read_ipums_ddi <- function(ddi_file, lower_vars = FALSE) {
-  dir_read_deprecated(ddi_file)
-
   custom_check_file_exists(ddi_file)
 
   if (tools::file_ext(ddi_file) != "xml") {
@@ -573,8 +571,6 @@ read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE) {
-  dir_read_deprecated(cb_file)
-
   file_select <- enquo(file_select)
 
   custom_check_file_exists(cb_file)

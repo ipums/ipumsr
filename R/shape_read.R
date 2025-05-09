@@ -96,8 +96,6 @@ read_ipums_sf <- function(shape_file,
 
   file_select <- enquo(file_select)
 
-  dir_read_deprecated(shape_file)
-
   vars <- enquo(vars)
   load_sf_namespace()
 

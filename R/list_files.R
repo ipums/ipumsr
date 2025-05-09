@@ -40,14 +40,7 @@
 #' # Look for files that match a particular pattern:
 #' ipums_list_files(nhgis_file, file_select = matches("ds136"))
 ipums_list_files <- function(file, file_select = NULL, types = NULL) {
-  if (file_is_dir(file)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      I("Reading files through a directory "),
-      details = "Use `dir()` to list files in a directory.",
-      id = "dir_read"
-    )
-  }
+  custom_check_file_exists(file)
 
   cb_files <- NULL
   data_files <- NULL

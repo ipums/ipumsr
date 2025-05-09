@@ -502,7 +502,10 @@ test_that("Can read IHGIS metadata from extract", {
 })
 
 test_that("Can read IHGIS metadata if no txt codebook", {
-  fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
+  fp <- file.path(
+    vcr::vcr_test_path("fixtures", "ihgis0014"),
+    "ihgis0014_datadict.csv"
+  )
 
   expect_warning(
     cb <- read_ihgis_codebook(fp),
@@ -516,9 +519,11 @@ test_that("Can read IHGIS metadata if no txt codebook", {
 })
 
 test_that("Correctly handle missing files when loading IHGIS metadata", {
-  fp1 <- vcr::vcr_test_path("fixtures", "ihgis0014")
-  fp2 <- vcr::vcr_test_path("fixtures", "ihgis0014_incomplete")
-  fp3 <- file.path(fp2, "ihgis0014_datadict.csv")
+  fixtures <- vcr::vcr_test_path("fixtures")
+
+  fp1 <- file.path(fixtures, "ihgis0014/ihgis0014_datadict.csv")
+  fp2 <- file.path(fixtures, "ihgis0014_incomplete/ihgis0014_datadict.csv")
+  fp3 <- file.path(fixtures, "ihgis0014_incomplete/KZ2009popAAA_g0.csv")
 
   expect_error(
     read_ihgis_codebook(ipums_example("nhgis0972_csv.zip")),
@@ -533,19 +538,17 @@ test_that("Correctly handle missing files when loading IHGIS metadata", {
     "Could not find `_tables.csv`"
   )
   expect_warning(
-    lifecycle::expect_deprecated(read_ipums_agg(fp2, verbose = FALSE)),
+    read_ipums_agg(fp3, verbose = FALSE),
     "Unable to read codebook"
   )
-  expect_error(read_ihgis_codebook(fp3), "Could not find `_tables\\.csv`")
   expect_error(
     read_ihgis_codebook(fp2, tbls_file = "foobar/ihgis0014_tables.csv"),
     "Could not find file `foobar/ihgis0014_tables.csv`"
   )
-
   expect_warning(
     d2 <- read_ihgis_codebook(
       fp2,
-      tbls_file = file.path(fp1, "ihgis0014_tables.csv")
+      tbls_file = file.path(fixtures, "ihgis0014/ihgis0014_tables.csv")
     ),
     "Unable to load tabulation geography metadata for this file"
   )
@@ -559,7 +562,7 @@ test_that("Correctly handle missing files when loading IHGIS metadata", {
   expect_true(!is.null(d2$conditions))
 })
 
-test_that("Error when providing cb or data file to wrong IHGIS reader", {
+test_that("Error on bad file arguments for cb vs. data readers", {
   fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
 
   expect_error(
@@ -569,6 +572,10 @@ test_that("Error when providing cb or data file to wrong IHGIS reader", {
   expect_error(
     read_ipums_agg(file.path(fp, "ihgis0014_datadict.csv")),
     "Unexpected data file"
+  )
+  expect_error(
+    read_ipums_agg(vcr::vcr_test_path("fixtures", "ihgis0014")),
+    "Expected file `.+` to be a file path, but got a directory"
   )
 })
 
@@ -610,29 +617,12 @@ test_that("We get relevant subset of IHGIS metadata after attaching to data", {
   )
 })
 
-test_that("Can read unzipped NHGIS files", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
-
-  test_path <- vcr::vcr_test_path("fixtures", "nhgis_unzipped")
-
-  x1 <- suppressWarnings(read_nhgis(test_path, file_select = 1, verbose = FALSE))
-  x2 <- read_nhgis(
-    file.path(test_path, "test1.csv"),
-    var_attrs = NULL,
-    verbose = FALSE
-  )
-
-  expect_equal(x1$a, "b")
-  expect_equal(x1, x2)
-})
-
-test_that("Can read unzipped IHGIS files", {
+test_that("Can read and find metadata for unzipped IHGIS files", {
   fp <- vcr::vcr_test_path("fixtures", "ihgis0014")
 
-  # This is because this test case uses a file path with no txt codebook
-  expect_warning(
-    d <- read_ipums_agg(file.path(fp, "KZ2009popAAB_g1.csv"), verbose = FALSE),
-    "Unable to load IPUMS conditions"
+  # Warning suppression b/c this test case uses a file path with no txt codebook
+  suppressWarnings(
+    d <- read_ipums_agg(file.path(fp, "KZ2009popAAB_g1.csv"), verbose = FALSE)
   )
 
   expect_identical(
@@ -643,15 +633,4 @@ test_that("Can read unzipped IHGIS files", {
       verbose = FALSE
     )
   )
-  expect_error(
-    read_ipums_agg(file.path(fp, "foobar.csv"), verbose = FALSE),
-    "Could not find file"
-  )
-
-  # Dir reading is currently deprecated but for now it should still work
-  suppressWarnings(
-    d2 <- read_ipums_agg(fp, file_select = matches("AAB_g1"), verbose = FALSE)
-  )
-
-  expect_identical(d, d2)
 })

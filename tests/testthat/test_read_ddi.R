@@ -18,9 +18,7 @@ test_that("Error on unexpected DDI file", {
     "Expected `ddi_file` to be the path to an .xml file."
   )
   expect_error(
-    lifecycle::expect_deprecated(
-      read_ipums_ddi(vcr::vcr_test_path("fixtures"))
-    ),
-    "Expected `ddi_file` to be the path to an .xml file."
+    read_ipums_ddi(vcr::vcr_test_path("fixtures")),
+    "Expected file `.+` to be a file path, but got a directory"
   )
 })

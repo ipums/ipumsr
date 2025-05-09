@@ -167,15 +167,8 @@ read_ipums_micro <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
-
-  if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-    rlang::warn(lower_vars_ignored_warning())
-  }
+  check_valid_ddi(ddi)
+  warn_if_lower_vars_ignored(ddi, lower_vars)
 
   if (is.character(ddi)) {
     ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
@@ -264,15 +257,8 @@ read_ipums_micro_list <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
-
-  if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-    rlang::warn(lower_vars_ignored_warning())
-  }
+  check_valid_ddi(ddi)
+  warn_if_lower_vars_ignored(ddi, lower_vars)
 
   if (is.character(ddi)) {
     ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
@@ -350,22 +336,34 @@ read_ipums_micro_list <- function(
   out
 }
 
-
 #' Warns the user that lower_vars has been ignored when they supply an ipums_ddi
 #' to a data reading function
 #' @noRd
-check_if_lower_vars_ignored <- function(ddi, lower_vars) {
-  inherits(ddi, "ipums_ddi") & lower_vars
+warn_if_lower_vars_ignored <- function(ddi, lower_vars, call = caller_env()) {
+  # TODO: Why is this? Should we add a way to alter the ipums_ddi object
+  # to be consistent with lower_vars = TRUE on load?
+  if (inherits(ddi, "ipums_ddi") && lower_vars) {
+    rlang::warn(
+      c(
+        "Setting `lower_vars = FALSE` because `ddi` is an `ipums_ddi` object.",
+        "i" = paste0(
+          "To obtain an `ipums_ddi` with lowercase variables, set ",
+          "`lower_vars = TRUE` in `read_ipums_ddi()`."
+        )
+      ),
+      call = call
+    )
+  }
 }
 
-# TODO: Why is this? Should we add a way to alter the ipums_ddi object
-# to be consistent with lower_vars = TRUE on load?
-lower_vars_ignored_warning <- function() {
-  c(
-    "Setting `lower_vars = FALSE` because `ddi` is an `ipums_ddi` object.",
-    "i" = paste0(
-      "To obtain an `ipums_ddi` with lowercase variables, set ",
-      "`lower_vars = TRUE` in `read_ipums_ddi()`."
+check_valid_ddi <- function(ddi, call = caller_env()) {
+  is_ipums_ddi <- inherits(ddi, "ipums_ddi")
+  is_xml <- tools::file_ext(ddi) == "xml"
+
+  if (!is_ipums_ddi && !is_xml) {
+    rlang::abort(
+      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file.",
+      call = call
     )
-  )
+  }
 }

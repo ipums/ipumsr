@@ -32,7 +32,6 @@ select_var_rows <- function(df, vars, filter_var = "var_name") {
   df
 }
 
-
 find_files_in <- function(file,
                           name_ext = NULL,
                           file_select = quo(NULL),
@@ -447,12 +446,22 @@ custom_cat <- function(..., indent = 0, exdent = 0) {
   cat(custom_format_text(..., indent = indent, exdent = exdent))
 }
 
-custom_check_file_exists <- function(file, extra_ext = NULL) {
+custom_check_file_exists <- function(file,
+                                     extra_ext = NULL,
+                                     allow_dir = FALSE) {
   if (length(file) == 0) {
     rlang::abort("Expected a file path but got an empty value.")
   }
   if (length(file) != 1 && !is.null(extra_ext)) {
     rlang::abort("Bad file path argument.")
+  }
+  if (file_is_dir(file) && !allow_dir) {
+    rlang::abort(
+      paste0(
+        "Expected file `", file,
+        "` to be a file path, but got a directory."
+      )
+    )
   }
 
   # If a path is passed with a trailing "/", file.exists returns FALSE, so
@@ -716,18 +725,5 @@ empty_to_null <- function(x) {
     NULL
   } else {
     x
-  }
-}
-
-dir_read_deprecated <- function(file) {
-  if (is.character(file) && file_is_dir(file)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      I("Reading files through a directory "),
-      details = "Please provide the full path to file to be loaded.",
-      id = "dir_read",
-      env = caller_env(),
-      user_env = caller_env(2)
-    )
   }
 }
