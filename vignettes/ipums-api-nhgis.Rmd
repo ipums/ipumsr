@@ -39,8 +39,6 @@ vcr_configure(
   dir = vcr_dir
 )
 
-check_cassette_names()
-
 # We do not expose detailed pagination options to users, but we do not want
 # to save a full record of summary metadata in a .yml fixture for this
 # vignette. This helper allows us to request just a few records, which
@@ -215,7 +213,7 @@ For more details on working with nested data frames, see this
 [tidyr article](https://tidyr.tidyverse.org/articles/nest.html).
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("nhgis-metadata-summary")
+eject_cassette()
 ```
 
 ### Detailed metadata
@@ -260,7 +258,7 @@ Now that we have identified some of our options, we can go ahead and
 define an extract request to submit to the IPUMS API.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("nhgis-metadata-detailed")
+eject_cassette()
 ```
 
 ## Defining an IPUMS NHGIS extract request

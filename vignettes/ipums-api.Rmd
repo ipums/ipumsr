@@ -39,8 +39,6 @@ vcr_configure(
   dir = vcr_dir
 )
 
-check_cassette_names()
-
 modify_ready_extract_cassette_file <- function(cassette_file_name,
                                                fixture_path = NULL,
                                                n_requests = 1) {
@@ -261,7 +259,7 @@ submit_extract(
   )
 )
 
-eject_cassette("submit-placeholder-extract-usa")
+eject_cassette()
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -307,7 +305,7 @@ usa_extract_submitted$number
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("submit-extract")
+eject_cassette()
 ```
 
 ## Wait for an extract request to complete {#wait}
@@ -324,7 +322,7 @@ insert_cassette("wait-for-extract")
 
 usa_extract_complete <- wait_for_extract(usa_extract_submitted)
 
-eject_cassette("wait-for-extract")
+eject_cassette()
 
 # Leave an extract request to simulate wait_for_extract() output for USA
 modify_ready_extract_cassette_file(
@@ -352,7 +350,7 @@ names(usa_extract_complete$download_links)
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("wait-for-extract")
+eject_cassette()
 ```
 
 Note that `wait_for_extract()` will tie up your R session until your
@@ -373,7 +371,7 @@ is_extract_ready(usa_extract_submitted)
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("extract-ready")
+eject_cassette()
 ```
 
 For a more detailed status check, provide the extract's collection and
@@ -393,7 +391,7 @@ usa_extract_submitted$status
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("check-extract-info")
+eject_cassette()
 ```
 
 Note that extracts are removed from the IPUMS servers after a set period
@@ -531,7 +529,7 @@ cps_extract_10 <- get_extract_info("cps:10")
 
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("check-extract-history")
+eject_cassette()
 ```
 
 ## Share an extract definition {#share}
