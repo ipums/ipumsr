@@ -427,7 +427,8 @@ define_extract_agg(
 For extracts with multiple datasets or time series tables, it may be
 easier to generate the specifications independently before creating your
 extract request object. You can quickly create multiple `ds_spec`
-objects by iterating across the specifications you want to include.
+objects by iterating across the specifications you want to include. (This workflow works particularly well for ACS datasets, which often have the 
+same data table names across datasets.)
 Here, we use `{purrr}` to do so, but you could also use a `for` loop:
 
 ```{r}
@@ -455,9 +456,7 @@ This workflow also makes it easy to quickly update the specifications in
 the future. For instance, to add the 2017 ACS 1-year data to the extract
 definition above, you'd only need to add `"2017_ACS1"` to the `ds_names`
 variable. The iteration would automatically add the selected tables and
-geog levels for the new dataset. (This workflow works particularly well
-for ACS datasets, which often have the same data table names across
-datasets.)
+geog levels for the new dataset.
 
 ### Data layout and file format
 
