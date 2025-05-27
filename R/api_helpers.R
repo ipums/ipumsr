@@ -769,17 +769,17 @@ validate_api_request <- function(res, call = caller_env()) {
       # if any error details exist.
       if (length(error_details) > 0) {
         error_details <- c("x" = "Invalid IPUMS registration", error_details)
+      } else {
+        # Otherwise we should be dealing with a valid registration but invalid key
+        error_details <- c(
+          "x" = "The provided API key is either missing or invalid.",
+          "i" = paste0(
+            "Please provide your API key to the `api_key` argument ",
+            "or request a key at https://account.ipums.org/api_keys"
+          ),
+          "i" = "Use `set_ipums_api_key()` to save your key for future use."
+        )
       }
-
-      # Otherwise we should be dealing with a valid registration but invalid key
-      error_details <- c(
-        "x" = "The provided API key is either missing or invalid.",
-        "i" = paste0(
-          "Please provide your API key to the `api_key` argument ",
-          "or request a key at https://account.ipums.org/api_keys"
-        ),
-        "i" = "Use `set_ipums_api_key()` to save your key for future use."
-      )
     }
 
     # If a downloads request, add hint to inform of possible issue
