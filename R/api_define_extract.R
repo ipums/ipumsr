@@ -840,6 +840,9 @@ define_extract_nhgis <- function(description = "",
 #' @param data_quality_flags Logical indicating whether to include data quality
 #'   flags for the given variable. By default, data quality flags are not
 #'   included.
+#' @param adjust_monetary_values Logical indicating whether to include the
+#'   variable's inflation-adjusted equivalent. This is only available for
+#'   variables that represent dollar amounts.
 #' @param preselected Logical indicating whether the variable is preselected.
 #'   This is not needed for external use.
 #'
@@ -900,6 +903,7 @@ var_spec <- function(name,
                      case_selection_type = NULL,
                      attached_characteristics = NULL,
                      data_quality_flags = NULL,
+                     adjust_monetary_values = NULL,
                      preselected = NULL) {
   if (!is_null(case_selections) && !is_empty(case_selections)) {
     case_selection_type <- case_selection_type %||% "general"
@@ -911,6 +915,7 @@ var_spec <- function(name,
     attached_characteristics = attached_characteristics,
     data_quality_flags = data_quality_flags,
     case_selection_type = case_selection_type,
+    adjust_monetary_values = adjust_monetary_values,
     preselected = preselected,
     class = "var_spec"
   )
@@ -2804,6 +2809,7 @@ validate_ipums_spec.var_spec <- function(x,
     "attached_characteristics",
     "data_quality_flags",
     "case_selection_type",
+    "adjust_monetary_values",
     "preselected"
   )]
 
@@ -2850,6 +2856,12 @@ validate_ipums_spec.var_spec <- function(x,
       must_be_missing_msg = " when `case_selections` is not provided",
       type = "character",
       choices = c("general", "detailed")
+    ),
+    list(
+      field = "adjust_monetary_values",
+      required = FALSE,
+      length = 1,
+      type = "logical"
     )
   )
 
@@ -3422,6 +3434,7 @@ extract_list_from_json.micro_json <- function(extract_json, validate = FALSE) {
             case_selection_type = names(def$variables[[.x]]$caseSelections),
             attached_characteristics = unlist(def$variables[[.x]]$attachedCharacteristics),
             data_quality_flags = def$variables[[.x]]$dataQualityFlags,
+            adjust_monetary_values = def$variables[[.x]]$adjustMonetaryValues,
             preselected = def$variables[[.x]]$preselected
           )
         )

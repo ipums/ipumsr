@@ -413,6 +413,33 @@ Each data quality flag corresponds to one or more variables, and the codes for
 each flag vary based on the sample. See the documentation for the IPUMS
 collection of interest for more information about data quality flag codes.
 
+### Monetary value adjustment
+
+IPUMS CPS and IPUMS USA offer the option to standardize income or other 
+dollar values to 2010 dollars. This option both retains the original IPUMS 
+variable in your extract and adds a new, adjusted variable called 
+`{VARIABLE NAME}_cpiu_2010` that contains the inflation-adjusted values. 
+Inflation adjusted values are only available for continuous variables that 
+represent dollar amounts.
+
+To request an adjusted variable in an extract, use the `adjust_monetary_values`
+argument:
+
+```{r}
+#| eval: false
+define_extract_micro(
+  "cps",
+  description = "monetary value adjustment example",
+  samples = "cps2012_03s",
+  variables = var_spec("HOURWAGE", adjust_monetary_values = TRUE)
+)
+```
+
+Further information on monetary value adjustment can be found on 
+the [IPUMS CPS](https://cps.ipums.org/cps/adjusted_monetary_values.shtml) 
+and [IPUMS USA](https://usa.ipums.org/usa/adjusted_monetary_values.shtml) 
+websites.
+
 ## Time use variables
 
 For IPUMS Time Use collections (ATUS, AHTUS, and MTUS), users can request

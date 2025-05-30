@@ -1,0 +1,82 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts?collection=atus&version=2
+    body:
+      encoding: ''
+      string: '{"description":"","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":false},"samples":{"at2004":{}},"variables":{"AGE":{"adjustMonetaryValues":true}},"caseSelectWho":"individuals","collection":"atus","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Fri, 30 May 2025 12:35:20 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 7ace3d95-de09-4080-9921-84e546bab908
+      x-runtime: '0.486823'
+      x-xss-protection: '0'
+      content-length: '148'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
+        Request"},"detail":["Monetary value adjustment is not supported for IPUMS
+        ATUS"]}'
+  recorded_at: 2025-05-30 12:35:21 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts?collection=cps&version=2
+    body:
+      encoding: ''
+      string: '{"description":"","dataStructure":{"rectangular":{"on":"P"}},"dataFormat":"fixed_width","sampleMembers":{"includeNonRespondents":false,"includeHouseholdMembers":false},"samples":{"cps2012_03s":{}},"variables":{"AGE":{"adjustMonetaryValues":true}},"caseSelectWho":"individuals","collection":"cps","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Fri, 30 May 2025 12:35:20 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: c0ed18c1-416c-4370-8d7b-a47a085e1ff0
+      x-runtime: '0.411693'
+      x-xss-protection: '0'
+      content-length: '142'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"SemanticValidationError","status":{"code":400,"name":"Bad
+        Request"},"detail":["Monetary value adjustment is not supported for AGE."]}'
+  recorded_at: 2025-05-30 12:35:21 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0

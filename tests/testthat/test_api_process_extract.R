@@ -213,6 +213,54 @@ test_that("Can submit an ATUS extract", {
   )
 })
 
+test_that("Can submit extract with monetary value adjustment", {
+  x <- define_extract_micro(
+    "cps",
+    "amv testing",
+    samples = "cps2022_03s",
+    variables = list("AGE", var_spec("HOURWAGE", adjust_monetary_values = TRUE))
+  )
+
+  expect_true(x$variables$HOURWAGE$adjust_monetary_values)
+  expect_null(x$variables$AGE$adjust_monetary_values)
+
+  vcr::use_cassette("amv-extract", {
+    suppressMessages(
+      submitted <- submit_extract(x)
+    )
+  })
+
+  expect_true(submitted$variables$HOURWAGE$adjust_monetary_values)
+  expect_null(submitted$variables$AGE$adjust_monetary_values)
+})
+
+test_that("Error on unsupported monetary value adjustment requests", {
+  vcr::use_cassette("amv-errors", {
+    expect_error(
+      submit_extract(
+        define_extract_micro(
+          "atus",
+          "",
+          samples = "at2004",
+          variables = var_spec("AGE", adjust_monetary_values = TRUE)
+        )
+      ),
+      "Monetary value adjustment is not supported for IPUMS ATUS"
+    )
+    expect_error(
+      submit_extract(
+        define_extract_micro(
+          "cps",
+          "",
+          samples = "cps2012_03s",
+          variables = var_spec("AGE", adjust_monetary_values = TRUE)
+        )
+      ),
+      "Monetary value adjustment is not supported for AGE"
+    )
+  })
+})
+
 test_that("Submission of time-use variable with wrong owner throws error", {
   skip_if_no_api_access()
 
