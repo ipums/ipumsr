@@ -38,8 +38,6 @@ vcr_configure(
   write_disk_path = vcr_dir,
   dir = vcr_dir
 )
-
-check_cassette_names()
 ```
 
 This vignette details the options available for requesting data from IPUMS
@@ -157,7 +155,7 @@ includes. See the [IPUMS API introduction](ipums-api.html) for more
 details.
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
-eject_cassette("micro-sample-ids")
+eject_cassette()
 ```
 
 ## Defining an IPUMS microdata extract request
