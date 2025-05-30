@@ -24,6 +24,10 @@
 -   Adds `read_ihgis_codebook()` to load codebook files containing
     file-level metadata for downloaded IHGIS extracts. This function is
     currently experimental.
+    
+-   Enables monetary value adjustment for supported IPUMS USA and IPUMS
+    CPS variables. Use the `adjust_monetary_values` argument to `var_spec()`
+    to include an additional adjusted variable in your extract.
 
 ## Function + argument retirements
     
