@@ -1,0 +1,53 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/data_tables/AL2001pop.ABK?collection=ihgis&version=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Fri, 30 May 2025 13:12:38 GMT
+      etag: W/"0b34d8164bc3ce0d2cb1cb8a21514e66"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: ab5c2e1d-5411-4d93-b05f-e6178a278dd2
+      x-runtime: '0.052813'
+      x-xss-protection: '0'
+      content-length: '1810'
+    body:
+      encoding: ''
+      file: no
+      string: '{"name":"AL2001pop.ABK","datasetName":"AL2001pop","label":"Resident
+        Population by Sex and Marital Status (Urban and Rural Zones)","universe":"Resident
+        population","tableNum":"3.1","sequence":37,"tabulationGeographies":["AL2001pop.g0","AL2001pop.g1"],"footnotes":[],"variables":[{"name":"AL2001pop.ABK.001","label":"Males
+        : Single","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":1},{"name":"AL2001pop.ABK.002","label":"Males
+        : Married","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":2},{"name":"AL2001pop.ABK.003","label":"Males
+        : Widowed","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":3},{"name":"AL2001pop.ABK.004","label":"Males
+        : Divorced","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":4},{"name":"AL2001pop.ABK.005","label":"Males","dataYear":"2001","universe":"Resident
+        population","aggMethod":"Count","aggDetail":"","sequence":5},{"name":"AL2001pop.ABK.006","label":"Females
+        : Single","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":6},{"name":"AL2001pop.ABK.007","label":"Females
+        : Married","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":7},{"name":"AL2001pop.ABK.008","label":"Females
+        : Widowed","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":8},{"name":"AL2001pop.ABK.009","label":"Females
+        : Divorced","dataYear":"2001","universe":"Resident population","aggMethod":"Count","aggDetail":"","sequence":9},{"name":"AL2001pop.ABK.010","label":"Females","dataYear":"2001","universe":"Resident
+        population","aggMethod":"Count","aggDetail":"","sequence":10}]}'
+  recorded_at: 2025-05-30 13:12:38 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0

@@ -4,6 +4,9 @@ test_that("We can get summary metadata", {
   vcr::use_cassette("nhgis-metadata-summary", {
     shp_meta <- get_metadata_catalog("nhgis", "shapefiles")
   })
+  vcr::use_cassette("ihgis-metadata-summary", {
+    ihgis_meta <- get_metadata_catalog("ihgis", "tabulation_geographies")
+  })
   vcr::use_cassette("micro-metadata-summary", {
     cps_meta <- get_sample_info("cps")
   })
@@ -11,6 +14,16 @@ test_that("We can get summary metadata", {
   expect_true(tibble::is_tibble(shp_meta))
   expect_true(!is_empty(shp_meta))
   expect_equal(shp_meta$name[[1]], "us_state_1790_tl2000")
+
+  expect_true(tibble::is_tibble(ihgis_meta))
+  expect_true(!is_empty(ihgis_meta))
+  expect_equal(
+    colnames(ihgis_meta),
+    c(
+      "name", "label", "hierarchical_level", "mean_population",
+      "mean_area", "sequence", "unit_count"
+    )
+  )
 
   expect_true(tibble::is_tibble(cps_meta))
   expect_true(!is_empty(cps_meta))
@@ -136,13 +149,11 @@ test_that("We can get metadata for single data table", {
   expect_true(tibble::is_tibble(single_dt_meta$variables))
 })
 
-test_that("We can get metadata for a single IHGIS data table", {
-  # Only run on demo until features are released to live
-  skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
+test_that("We can get metadata for a single IHGIS data table w/o dataset", {
   skip_if_no_api_access()
 
   vcr::use_cassette("ihgis-metadata-data-table", {
-    ihgis_dt_meta <- get_metadata("ihgis", data_table = "AL2001pop.AAA")
+    ihgis_dt_meta <- get_metadata("ihgis", data_table = "AL2001pop.ABK")
   })
 
   expect_length(ihgis_dt_meta, 9)
@@ -150,9 +161,11 @@ test_that("We can get metadata for a single IHGIS data table", {
     names(ihgis_dt_meta),
     c(
       "name", "dataset_name", "label", "universe", "table_num",
-      "sequence", "tabulation_geography_names", "footnotes", "agg_data_vars"
+      "sequence", "tabulation_geographies", "footnotes", "variables"
     )
   )
+  expect_true(tibble::is_tibble(ihgis_dt_meta$variables))
+  expect_true(!is_empty(ihgis_dt_meta$variables))
 })
 
 test_that("We throw errors on bad metadata specs prior to making request", {

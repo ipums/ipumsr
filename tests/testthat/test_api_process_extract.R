@@ -278,7 +278,6 @@ test_that("Can submit an NHGIS extract of a single type", {
 
 test_that("Can submit an IHGIS extract", {
   skip_if_no_api_access()
-  skip_if_not(Sys.getenv("IPUMS_API_INSTANCE") == "demo")
 
   ihgis_extract <- test_ihgis_extract()
 
