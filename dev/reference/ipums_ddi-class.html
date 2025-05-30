@@ -7,6 +7,7 @@ For microdata projects, this information is provided in
 DDI codebook
 (.xml) files.
 For NHGIS, this information is provided in .txt codebook files.
+For IHGIS, this information is provided in a collection of .csv files.
 
 
 The codebook file contains metadata about the extract files themselves,
@@ -15,18 +16,20 @@ variables present in the data, including variable names, descriptions, data
 types, implied decimals, and positions in the fixed-width files.
 This information is used to correctly parse IPUMS
 fixed-width files and attach additional variable metadata to data upon load.
-Note that codebook metadata for NHGIS extracts can also be stored in
-an ipums_ddi object, even though these codebooks are distributed as .txt
-files, not .xml files. These files do not adhere to the same standards as
+Note that codebook metadata for aggregate data extracts can also be stored in
+an ipums_ddi object, even though these codebooks are not distributed as
+.xml files. These files do not adhere to the same standards as
 the DDI codebook files, so some ipums_ddi fields will be left blank when
-reading NHGIS codebooks.
+reading aggregate data codebooks.
 Creating an ipums_ddi object
 
 
 To create an ipums_ddi object from an IPUMS microdata extract, use
 read_ipums_ddi().
 To create an ipums_ddi object from an IPUMS NHGIS extract, use
-read_nhgis_codebook()
+read_nhgis_codebook().
+To create an ipums_ddi object from an IPUMS IHGIS extract, use
+read_ihgis_codebook().
 
 
 
@@ -60,6 +63,7 @@ For microdata projects, this information is provided in
 DDI codebook
 (.xml) files.
 For NHGIS, this information is provided in .txt codebook files.
+For IHGIS, this information is provided in a collection of .csv files.
 
 
 The codebook file contains metadata about the extract files themselves,
@@ -68,18 +72,20 @@ variables present in the data, including variable names, descriptions, data
 types, implied decimals, and positions in the fixed-width files.
 This information is used to correctly parse IPUMS
 fixed-width files and attach additional variable metadata to data upon load.
-Note that codebook metadata for NHGIS extracts can also be stored in
-an ipums_ddi object, even though these codebooks are distributed as .txt
-files, not .xml files. These files do not adhere to the same standards as
+Note that codebook metadata for aggregate data extracts can also be stored in
+an ipums_ddi object, even though these codebooks are not distributed as
+.xml files. These files do not adhere to the same standards as
 the DDI codebook files, so some ipums_ddi fields will be left blank when
-reading NHGIS codebooks.
+reading aggregate data codebooks.
 Creating an ipums_ddi object
 
 
 To create an ipums_ddi object from an IPUMS microdata extract, use
 read_ipums_ddi().
 To create an ipums_ddi object from an IPUMS NHGIS extract, use
-read_nhgis_codebook()
+read_nhgis_codebook().
+To create an ipums_ddi object from an IPUMS IHGIS extract, use
+read_ihgis_codebook().
 
 
 
@@ -125,7 +131,7 @@ Use ipums_file_info() to explore file-level metadata for an extract.
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -133,7 +139,7 @@ Use ipums_file_info() to explore file-level metadata for an extract.
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -163,23 +169,26 @@ used to explore metadata for an IPUMS extract.</p><ul><li><p>For microdata proje
 <a href="https://ddialliance.org/introduction-to-ddi" class="external-link">DDI codebook</a>
 (.xml) files.</p></li>
 <li><p>For NHGIS, this information is provided in .txt codebook files.</p></li>
+<li><p>For IHGIS, this information is provided in a collection of .csv files.</p></li>
 </ul><p>The codebook file contains metadata about the extract files themselves,
 including file name, file path, and extract date as well as information about
 variables present in the data, including variable names, descriptions, data
 types, implied decimals, and positions in the fixed-width files.</p>
 <p>This information is used to correctly parse IPUMS
 fixed-width files and attach additional variable metadata to data upon load.</p>
-<p>Note that codebook metadata for NHGIS extracts can also be stored in
-an <code>ipums_ddi</code> object, even though these codebooks are distributed as .txt
-files, not .xml files. These files do not adhere to the same standards as
+<p>Note that codebook metadata for aggregate data extracts can also be stored in
+an <code>ipums_ddi</code> object, even though these codebooks are not distributed as
+.xml files. These files do not adhere to the same standards as
 the DDI codebook files, so some <code>ipums_ddi</code> fields will be left blank when
-reading NHGIS codebooks.</p><div class="section">
+reading aggregate data codebooks.</p><div class="section">
 <h3 id="creating-an-ipums-ddi-object">Creating an <code>ipums_ddi</code> object<a class="anchor" aria-label="anchor" href="#creating-an-ipums-ddi-object"></a></h3>
 
 <ul><li><p>To create an <code>ipums_ddi</code> object from an IPUMS microdata extract, use
 <code><a href="read_ipums_ddi.html">read_ipums_ddi()</a></code>.</p></li>
 <li><p>To create an <code>ipums_ddi</code> object from an IPUMS NHGIS extract, use
-<code><a href="read_nhgis_codebook.html">read_nhgis_codebook()</a></code></p></li>
+<code><a href="read_nhgis_codebook.html">read_nhgis_codebook()</a></code>.</p></li>
+<li><p>To create an <code>ipums_ddi</code> object from an IPUMS IHGIS extract, use
+<code><a href="read_ihgis_codebook.html">read_ihgis_codebook()</a></code>.</p></li>
 </ul></div>
 
 <div class="section">

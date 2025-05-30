@@ -41,7 +41,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +49,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul>
@@ -113,7 +113,7 @@ them in your data processing pipeline. See the <a href="value-labels.html">value
 on working with these labels.</p>
 </div>
 <div class="section level2">
-<h2 id="reading-microdata-extracts">Reading microdata extracts<a class="anchor" aria-label="anchor" href="#reading-microdata-extracts"></a>
+<h2 id="reading-ipums-microdata-extracts">Reading IPUMS microdata extracts<a class="anchor" aria-label="anchor" href="#reading-ipums-microdata-extracts"></a>
 </h2>
 <p>Microdata extracts typically provide their metadata in a DDI (.xml)
 file separate from the compressed data (.dat.gz) files.</p>
@@ -337,18 +337,18 @@ documentation for more details about other options.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="reading-ipums-nhgis-extracts">Reading IPUMS NHGIS extracts<a class="anchor" aria-label="anchor" href="#reading-ipums-nhgis-extracts"></a>
+<h2 id="reading-ipums-aggregate-data-extracts">Reading IPUMS aggregate data extracts<a class="anchor" aria-label="anchor" href="#reading-ipums-aggregate-data-extracts"></a>
 </h2>
-<p>Unlike microdata projects, NHGIS extracts provide their data and
-metadata files bundled into a single .zip archive.
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> anticipates this structure and can read data
-files directly from this file without the need to manually extract the
-files:</p>
+<p>Unlike microdata projects, NHGIS and IHGIS extracts provide their
+data and metadata files bundled into a single .zip archive.
+<code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> anticipates this structure and can read
+data files directly from this file without the need to manually extract
+the files:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
+<span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Use of data from IPUMS NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">71</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">25</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
@@ -358,6 +358,7 @@ files:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span></span>
 <span><span class="va">nhgis_data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 71 × 25</span></span></span>
 <span><span class="co">#&gt;    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span></span>
@@ -377,23 +378,60 @@ files:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>Within a zipped extract archive, tabular data from aggregate data
+projects are typically provided in .csv format.
+<code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> passes several arguments on to
+<code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code> to allow you to fine-tune the import of
+these files. For instance, if the guessed column types are incorrect,
+use the <code>col_types</code> argument to adjust. This is most likely
+to occur for columns that contain geographic codes that end up stored as
+numeric values:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Convert MSA codes to character format</span></span>
+<span><span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span></span>
+<span>  <span class="va">nhgis_ex1</span>,</span>
+<span>  col_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>MSA_CMSAA <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 71 × 25</span></span></span>
+<span><span class="co">#&gt;    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>        1692      Akron, O… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> G0360    <span style="text-decoration: underline;">1</span>990 CA     49    <span style="color: #BB0000;">NA</span>        4472      Anaheim-… 0360  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> G0440    <span style="text-decoration: underline;">1</span>990 MI     35    <span style="color: #BB0000;">NA</span>        2162      Ann Arbo… 0440  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> G0620    <span style="text-decoration: underline;">1</span>990 IL     14    <span style="color: #BB0000;">NA</span>        1602      Aurora--… 0620  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> G0845    <span style="text-decoration: underline;">1</span>990 PA     78    <span style="color: #BB0000;">NA</span>        6282      Beaver C… 0845  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> G0875    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>        5602      Bergen--… 0875  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> G1120    <span style="text-decoration: underline;">1</span>990 MA     07    <span style="color: #BB0000;">NA</span>        1122      Boston, … 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> G1125    <span style="text-decoration: underline;">1</span>990 CO     34    <span style="color: #BB0000;">NA</span>        2082      Boulder-… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> G1145    <span style="text-decoration: underline;">1</span>990 TX     42    <span style="color: #BB0000;">NA</span>        3362      Brazoria… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> G1160    <span style="text-decoration: underline;">1</span>990 CT     70    <span style="color: #BB0000;">NA</span>        5602      Bridgepo… 1160  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 61 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more variables: AREALAND &lt;chr&gt;, AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
+<div class="section level3">
+<h3 id="variable-metadata">Variable metadata<a class="anchor" aria-label="anchor" href="#variable-metadata"></a>
+</h3>
 <p>Like microdata extracts, the data include variable-level metadata,
 where available:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">D6Z001</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "Total area: 1989 to March 1990"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
 <span><span class="co">#&gt; [1] "Table D6Z: Year Structure Built (Universe: Housing Units)"</span></span></code></pre></div>
-<p>However, variable metadata for NHGIS data are slightly different than
-those provided by microdata products. First, they come from a .txt
-codebook file rather than an .xml DDI file. Codebooks can still be
+<p>However, variable metadata for aggregate data files are slightly
+different than those provided by microdata products. First, they come
+from a .txt codebook file (for NHGIS) or a collection of metadata .csv
+files (for IHGIS) rather than an .xml DDI file. Codebooks can still be
 loaded into an <code>ipums_ddi</code> object, but fields that do not
-apply to aggregate data will be empty. In general, NHGIS codebooks
-provide only variable labels and descriptions, along with citation
-information.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+apply to aggregate data will be empty. In general, aggregate data
+codebooks provide only variable labels and descriptions, along with
+citation information.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Most useful metadata for NHGIS is for variable labels:</span></span>
@@ -413,11 +451,40 @@ information.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> REGIONA   Region Code                                                <span style="color: #949494;">""</span>      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> STATEA    State Code                                                 <span style="color: #949494;">""</span>      </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more rows</span></span></span></code></pre></div>
-<p>By design, NHGIS codebooks are human-readable, and it may be easier
-to interpret their contents in raw format. To view the codebook itself
-without converting to an <code>ipums_ddi</code> object, set
+<p>IHGIS codebooks are structured differently than NHGIS codebooks, so
+each collection has its own codebook reader. Both produce an
+<code>ipums_ddi</code> object.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ihgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ihgis_codebook.html">read_ihgis_codebook</a></span><span class="op">(</span><span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"ihgis0014.zip"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">ihgis_cb</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 18 × 10</span></span></span>
+<span><span class="co">#&gt;    var_name var_label       var_desc val_labels code_instr start end   imp_decim</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> GISJOIN  GIS join match… <span style="color: #BB0000;">NA</span>       <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> g0       Nation          <span style="color: #BB0000;">NA</span>       <span style="color: #949494;">&lt;NULL&gt;</span>     <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> g1       Regions/Oblasts <span style="color: #BB0000;">NA</span>       <span style="color: #949494;">&lt;NULL&gt;</span>     <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> AAA001   Total populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> AAA002   Total populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> AAA003   Total populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> AAA004   Urban populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> AAA005   Urban populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> AAA006   Urban populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> AAA007   Rural populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> AAA008   Rural populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> AAA009   Rural populati… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> AAB001   1999 : Below a… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> AAB002   2009 : Below a… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> AAB003   1999 : Below w… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> AAB004   2009 : Below w… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> AAB005   1999 : Above w… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> AAB006   2009 : Above w… Table A… <span style="color: #949494;">&lt;tibble&gt;</span>   <span style="color: #949494;">""</span>         <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: var_type &lt;chr&gt;, rectypes &lt;lgl&gt;</span></span></span></code></pre></div>
+<p>By design, aggregate data codebooks are human-readable, and it may be
+easier to interpret their contents in raw format. To view the codebook
+itself without converting to an <code>ipums_ddi</code> object, set
 <code>raw = TRUE</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_ex1</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">nhgis_cb</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
@@ -441,15 +508,16 @@ without converting to an <code>ipums_ddi</code> object, set
 <span><span class="co">#&gt; Geographic level: Consolidated Metropolitan Statistical Area--Primary Metropolitan Statistical Area</span></span>
 <span><span class="co">#&gt; Dataset:          1990 Census: SSTF 9 - Housing Characteristics of New Units</span></span>
 <span><span class="co">#&gt;    NHGIS code:    1990_SSTF09</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="handling-multiple-files">Handling multiple files<a class="anchor" aria-label="anchor" href="#handling-multiple-files"></a>
 </h3>
-<p>For more complicated NHGIS extracts that include data from multiple
-data sources, the provided .zip archive will contain multiple codebook
-and data files.</p>
+<p>For more complicated extracts that include data from multiple data
+sources, the provided .zip archive will contain multiple codebook and
+data files.</p>
 <p>You can view the files contained in an extract to determine if this
 is the case:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0731_csv.zip"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ipums_list_files.html">ipums_list_files</a></span><span class="op">(</span><span class="va">nhgis_ex2</span><span class="op">)</span></span>
@@ -465,129 +533,46 @@ indicate which file to load. <code>file_select</code> supports most
 features of the <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect
 selection language</a>. (See <code><a href="../reference/selection_language.html">?selection_language</a></code> for
 documentation of the features supported in ipumsr.)</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nhgis_data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"nation"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">nhgis_data3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"ts_nominal_state"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nhgis_data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span></span>
+<span>  <span class="va">nhgis_ex2</span>, </span>
+<span>  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"nation"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nhgis_data3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span></span>
+<span>  <span class="va">nhgis_ex2</span>, </span>
+<span>  file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"ts_nominal_state"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The matching codebook should automatically be loaded and attached to
 the data:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data2</span><span class="op">$</span><span class="va">AJWBE001</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "Estimates: Total"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
 <span><span class="co">#&gt; [1] "Table AJWB: Sex by Age (Universe: Total population)"</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nhgis_data3</span><span class="op">$</span><span class="va">A00AA1790</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $label</span></span>
 <span><span class="co">#&gt; [1] "1790: Persons: Total"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
 <span><span class="co">#&gt; [1] "Table A00: Total Population"</span></span></code></pre></div>
-<p>(If for some reason the codebook is not loaded correctly, you can
-load it separately with <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code>, which also
-accepts a <code>file_select</code> specification.)</p>
+<p>(If for some reason the metadata are not loaded successfully, you can
+load it separately with either <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> or
+<code><a href="../reference/read_ihgis_codebook.html">read_ihgis_codebook()</a></code>.)</p>
 <p><code>file_select</code> also accepts the full path or the index of
 the file to load:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Match by file name</span></span>
-<span><span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="st">"nhgis0731_csv/nhgis0731_ds239_20185_nation.csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span></span>
+<span>  <span class="va">nhgis_ex2</span>, </span>
+<span>  file_select <span class="op">=</span> <span class="st">"nhgis0731_csv/nhgis0731_ds239_20185_nation.csv"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Match first file in extract</span></span>
-<span><span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="nhgis-data-formats">NHGIS data formats<a class="anchor" aria-label="anchor" href="#nhgis-data-formats"></a>
-</h3>
-<div class="section level4">
-<h4 id="csv-data">CSV data<a class="anchor" aria-label="anchor" href="#csv-data"></a>
-</h4>
-<p>NHGIS data are most easily handled in .csv format.
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> uses <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code> to handle
-the generation of column type specifications. If the guessed
-specifications are incorrect, you can use the <code>col_types</code>
-argument to adjust. This is most likely to occur for columns that
-contain geographic codes that are stored as numeric values:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert MSA codes to character format</span></span>
-<span><span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span></span>
-<span>  <span class="va">nhgis_ex1</span>,</span>
-<span>  col_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>MSA_CMSAA <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 71 × 25</span></span></span>
-<span><span class="co">#&gt;    GISJOIN  YEAR STUSAB CMSA  DIVISIONA MSA_CMSAA PMSA      PMSAA REGIONA STATEA</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> G0080    <span style="text-decoration: underline;">1</span>990 OH     28    <span style="color: #BB0000;">NA</span>        1692      Akron, O… 0080  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> G0360    <span style="text-decoration: underline;">1</span>990 CA     49    <span style="color: #BB0000;">NA</span>        4472      Anaheim-… 0360  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> G0440    <span style="text-decoration: underline;">1</span>990 MI     35    <span style="color: #BB0000;">NA</span>        2162      Ann Arbo… 0440  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> G0620    <span style="text-decoration: underline;">1</span>990 IL     14    <span style="color: #BB0000;">NA</span>        1602      Aurora--… 0620  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> G0845    <span style="text-decoration: underline;">1</span>990 PA     78    <span style="color: #BB0000;">NA</span>        6282      Beaver C… 0845  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> G0875    <span style="text-decoration: underline;">1</span>990 NJ     70    <span style="color: #BB0000;">NA</span>        5602      Bergen--… 0875  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> G1120    <span style="text-decoration: underline;">1</span>990 MA     07    <span style="color: #BB0000;">NA</span>        1122      Boston, … 1120  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> G1125    <span style="text-decoration: underline;">1</span>990 CO     34    <span style="color: #BB0000;">NA</span>        2082      Boulder-… 1125  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> G1145    <span style="text-decoration: underline;">1</span>990 TX     42    <span style="color: #BB0000;">NA</span>        3362      Brazoria… 1145  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> G1160    <span style="text-decoration: underline;">1</span>990 CT     70    <span style="color: #BB0000;">NA</span>        5602      Bridgepo… 1160  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 61 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more variables: AREALAND &lt;chr&gt;, AREAWAT &lt;chr&gt;, ANPSADPI &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   FUNCSTAT &lt;chr&gt;, INTPTLAT &lt;dbl&gt;, INTPTLNG &lt;dbl&gt;, PSADC &lt;dbl&gt;, D6Z001 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   D6Z002 &lt;dbl&gt;, D6Z003 &lt;dbl&gt;, D6Z004 &lt;dbl&gt;, D6Z005 &lt;dbl&gt;, D6Z006 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   D6Z007 &lt;dbl&gt;, D6Z008 &lt;dbl&gt;</span></span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="fixed-width-data">Fixed-width data<a class="anchor" aria-label="anchor" href="#fixed-width-data"></a>
-</h4>
-<p><code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> also handles NHGIS files provided in
-fixed-width format:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nhgis_fwf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0730_fixed.zip"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">nhgis_fwf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_fwf</span>, file_select <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"ts_nominal"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">84</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">28</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (4): GISJOIN, STATE, STATEFP, STATENH</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (24): A00AA1790, A00AA1800, A00AA1810, A00AA1820, A00AA1830, A00AA1840, ...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="va">nhgis_fwf_data</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 84 × 28</span></span></span>
-<span><span class="co">#&gt;    GISJOIN STATE         STATEFP STATENH A00AA1790 A00AA1800 A00AA1810 A00AA1820</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> G010    Alabama       01      010            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>    <span style="text-decoration: underline;">127</span>901</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> G020    Alaska        02      020            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> G025    Alaska Terri… <span style="color: #BB0000;">NA</span>      025            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> G040    Arizona       04      040            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> G045    Arizona Terr… <span style="color: #BB0000;">NA</span>      045            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> G050    Arkansas      05      050            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> G055    Arkansas Ter… <span style="color: #BB0000;">NA</span>      055            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>     <span style="text-decoration: underline;">14</span>273</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> G060    California    06      060            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> G080    Colorado      08      080            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> G085    Colorado Ter… <span style="color: #BB0000;">NA</span>      085            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 74 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more variables: A00AA1830 &lt;dbl&gt;, A00AA1840 &lt;dbl&gt;, A00AA1850 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A00AA1860 &lt;dbl&gt;, A00AA1870 &lt;dbl&gt;, A00AA1880 &lt;dbl&gt;, A00AA1890 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A00AA1900 &lt;dbl&gt;, A00AA1910 &lt;dbl&gt;, A00AA1920 &lt;dbl&gt;, A00AA1930 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A00AA1940 &lt;dbl&gt;, A00AA1950 &lt;dbl&gt;, A00AA1960 &lt;dbl&gt;, A00AA1970 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A00AA1980 &lt;dbl&gt;, A00AA1990 &lt;dbl&gt;, A00AA2000 &lt;dbl&gt;, A00AA2010 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A00AA2020 &lt;dbl&gt;</span></span></span></code></pre></div>
-<p>The correct parsing of NHGIS fixed-width files is driven by the
-column parsing information contained in the .do file provided in the
-.zip archive. This contains information not only about column positions
-and data types, but also implicit decimals in the data.</p>
-<p>If you no longer have access to the .do file, it is best to resubmit
-and/or re-download the extract (you may also consider converting to .csv
-format in the process). If you have moved the .do file, provide its file
-path to the <code>do_file</code> argument to use its column parsing
-information.</p>
-<p>Note that unlike <code><a href="../reference/read_ipums_micro.html">read_ipums_micro()</a></code>, fixed-width files
-for NHGIS are still handled by providing the path to the <em>data
-file</em>, not the <em>metadata file</em> (i.e. you cannot provide an
-<code>ipums_ddi</code> object to the <code>data_file</code> argument of
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>). This is for syntactical consistency with the
-loading of NHGIS .csv files.</p>
-</div>
+<span><span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span><span class="va">nhgis_ex2</span>, file_select <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -595,11 +580,11 @@ loading of NHGIS .csv files.</p>
 </h2>
 <p>IPUMS distributes spatial data for several projects.</p>
 <ul>
-<li>For microdata projects, spatial data are distributed in shapefiles
-on dedicated geography pages separate from the standard extract system.
-Look for a <strong>Geography and GIS</strong> link in the
-<strong>Supplemental Data</strong> section of the project’s website to
-find spatial data files and information.</li>
+<li>For microdata projects and IPUMS IHGIS, spatial data are distributed
+in shapefiles on dedicated geography pages separate from the standard
+extract system. Look for a <strong>Geography and GIS</strong> link in
+the <strong>Supplemental Data</strong> section of the project’s website
+to find spatial data files and information.</li>
 <li>For NHGIS, spatial data can be obtained within the extract system.
 Shapefiles will be distributed in their own .zip archive alongside the
 .zip archive containing the extract’s tabular data (if any tabular data
@@ -647,12 +632,13 @@ IPUMS attributes from the tabular data used in the join, use an
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $var_desc</span></span>
 <span><span class="co">#&gt; [1] ""</span></span></code></pre></div>
-<p>For NHGIS data, the join code typically corresponds to the
-<code>GISJOIN</code> variable. However, for microdata projects, the
-variable name used for a geographic level in the tabular data may differ
-from that in the spatial data. Consult the documentation and metadata
-for these files to identify the correct join columns and use the
-<code>by</code> argument to join on these columns.</p>
+<p>For aggregate data collections, the join code typically corresponds
+to the <code>GISJOIN</code> variable. However, for microdata
+collections, the variable name used for a geographic level in the
+tabular data may differ from that in the spatial data. Consult the
+documentation and metadata for these files to identify the correct join
+columns and use the <code>by</code> argument to join on these
+columns.</p>
 <p>Once joined, data include both statistical and spatial information
 along with the variable metadata.</p>
 <div class="section level3">

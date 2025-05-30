@@ -5,17 +5,17 @@ NHGIS extracts into an ipums_ddi object.
 Because NHGIS variable metadata do not
 adhere to all the standards of microdata DDI files, some of the ipums_ddi
 fields will not be populated.
-This function is marked as experimental while we determine whether
-there may be a more robust way to standardize codebook and DDI reading across
-IPUMS collections."><meta property="og:description" content="
+This function is marked as experimental while we determine whether there
+may be a more robust way to standardize codebook reading across IPUMS
+aggregate data collections."><meta property="og:description" content="
 Read the variable metadata contained in the .txt codebook file included with
 NHGIS extracts into an ipums_ddi object.
 Because NHGIS variable metadata do not
 adhere to all the standards of microdata DDI files, some of the ipums_ddi
 fields will not be populated.
-This function is marked as experimental while we determine whether
-there may be a more robust way to standardize codebook and DDI reading across
-IPUMS collections."><meta property="og:image" content="https://tech.popdata.org/ipumsr/logo.png"><meta name="robots" content="noindex"></head><body>
+This function is marked as experimental while we determine whether there
+may be a more robust way to standardize codebook reading across IPUMS
+aggregate data collections."><meta property="og:image" content="https://tech.popdata.org/ipumsr/logo.png"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -35,7 +35,7 @@ IPUMS collections."><meta property="og:image" content="https://tech.popdata.org/
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -43,7 +43,7 @@ IPUMS collections."><meta property="og:image" content="https://tech.popdata.org/
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -68,13 +68,13 @@ IPUMS collections."><meta property="og:image" content="https://tech.popdata.org/
     <div class="ref-description section level2">
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
 <p>Read the variable metadata contained in the .txt codebook file included with
-NHGIS extracts into an <a href="ipums_ddi-class.html">ipums_ddi</a> object.</p>
+NHGIS extracts into an <code><a href="ipums_ddi-class.html">ipums_ddi</a></code> object.</p>
 <p>Because NHGIS variable metadata do not
 adhere to all the standards of microdata DDI files, some of the <code>ipums_ddi</code>
 fields will not be populated.</p>
-<p>This function is marked as experimental while we determine whether
-there may be a more robust way to standardize codebook and DDI reading across
-IPUMS collections.</p>
+<p>This function is marked as experimental while we determine whether there
+may be a more robust way to standardize codebook reading across IPUMS
+aggregate data collections.</p>
     </div>
 
     <div class="section level2">
@@ -107,7 +107,7 @@ of <code>cb_file</code> rather than an <code>ipums_ddi</code> object. Defaults t
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If <code>raw = FALSE</code>, an <code>ipums_ddi</code> object with information on the
+    <p>If <code>raw = FALSE</code>, an <code>ipums_ddi</code> object with metadata about the
 variables contained in the data for the extract associated with the given
 <code>cb_file</code>.</p>
 <p>If <code>raw = TRUE</code>, a character vector with one element for each
@@ -115,7 +115,7 @@ line of the given <code>cb_file</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="read_nhgis.html">read_nhgis()</a></code> to read tabular data from an IPUMS NHGIS extract.</p>
+    <div class="dont-index"><p><code><a href="read_ipums_agg.html">read_ipums_agg()</a></code> to read tabular data from an IPUMS NHGIS extract.</p>
 <p><code><a href="read_ipums_sf.html">read_ipums_sf()</a></code> to read spatial data from an IPUMS extract.</p>
 <p><code><a href="ipums_list_files.html">ipums_list_files()</a></code> to list files in an IPUMS extract.</p></div>
     </div>
@@ -151,13 +151,13 @@ line of the given <code>cb_file</code>.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If variable metadata have been lost from a data source, reattach from</span></span></span>
 <span class="r-in"><span><span class="co"># the corresponding `ipums_ddi` object:</span></span></span>
-<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="zap_ipums_attributes.html">zap_ipums_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span>, <span class="va">codebook</span><span class="op">$</span><span class="va">var_info</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_ipums_var_attributes.html">set_ipums_var_attributes</a></span><span class="op">(</span><span class="va">nhgis_data</span>, <span class="va">codebook</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ipums_var_info.html">ipums_var_label</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">$</span><span class="va">PMSA</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Primary Metropolitan Statistical Area Name"</span>
 <span class="r-in"><span></span></span>

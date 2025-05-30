@@ -8,6 +8,7 @@ IPUMS International ("ipumsi")
 IPUMS Time Use ("atus", "ahtus", "mtus")
 IPUMS Health Surveys ("nhis", "meps")
 IPUMS NHGIS ("nhgis")
+IPUMS IHGIS ("ihgis")
 
 
 Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:description" content='List IPUMS data collections with their corresponding codes used by the
@@ -19,6 +20,7 @@ IPUMS International ("ipumsi")
 IPUMS Time Use ("atus", "ahtus", "mtus")
 IPUMS Health Surveys ("nhis", "meps")
 IPUMS NHGIS ("nhgis")
+IPUMS IHGIS ("ihgis")
 
 
 Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:image" content="https://tech.popdata.org/ipumsr/logo.png"><meta name="robots" content="noindex"></head><body>
@@ -41,7 +43,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +51,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -80,6 +82,7 @@ IPUMS API. Note that some data collections do not yet have API support.</p>
 <li><p>IPUMS Time Use (<code>"atus"</code>, <code>"ahtus"</code>, <code>"mtus"</code>)</p></li>
 <li><p>IPUMS Health Surveys (<code>"nhis"</code>, <code>"meps"</code>)</p></li>
 <li><p>IPUMS NHGIS (<code>"nhgis"</code>)</p></li>
+<li><p>IPUMS IHGIS (<code>"ihgis"</code>)</p></li>
 </ul><p>Learn more about the IPUMS API in <code><a href="../articles/ipums-api.html">vignette("ipums-api")</a></code>.</p>
     </div>
 
@@ -106,7 +109,7 @@ status of API support for the collection.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> IPUMS CPS           microdata       cps          TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> IPUMS International microdata       ipumsi       TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> IPUMS NHGIS         aggregate data  nhgis        TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> IPUMS IHGIS         aggregate data  ihgis        FALSE      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> IPUMS IHGIS         aggregate data  ihgis        TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> IPUMS ATUS          microdata       atus         TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> IPUMS AHTUS         microdata       ahtus        TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> IPUMS MTUS          microdata       mtus         TRUE       </span>

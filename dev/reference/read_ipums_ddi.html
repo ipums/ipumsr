@@ -33,7 +33,7 @@ IPUMS DDI codebook files."><meta property="og:image" content="https://tech.popda
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -41,7 +41,7 @@ IPUMS DDI codebook files."><meta property="og:image" content="https://tech.popda
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -76,12 +76,7 @@ IPUMS DDI codebook files.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_ddi</span><span class="op">(</span></span>
-<span>  <span class="va">ddi_file</span>,</span>
-<span>  lower_vars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  file_select <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  data_layer <span class="op">=</span> <span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ipums_ddi</span><span class="op">(</span><span class="va">ddi_file</span>, lower_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -96,12 +91,6 @@ IPUMS DDI codebook files.</p>
 <dt id="arg-lower-vars">lower_vars<a class="anchor" aria-label="anchor" href="#arg-lower-vars"></a></dt>
 <dd><p>Logical indicating whether to convert variable names to
 lowercase. Defaults to <code>FALSE</code> for consistency with IPUMS conventions.</p></dd>
-
-
-<dt id="arg-data-layer-file-select">data_layer, file_select<a class="anchor" aria-label="anchor" href="#arg-data-layer-file-select"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reading
-DDI files contained in a .zip archive has been deprecated. Please provide
-the full path to the .xml file to be loaded in <code>ddi_file</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

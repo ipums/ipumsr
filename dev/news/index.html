@@ -19,7 +19,7 @@
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -27,7 +27,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -50,6 +50,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
+<ul><li>
+<p>This release adds comprehensive support for IPUMS IHGIS extract submission, metadata retrieval, and data loading!</p>
+<p>As IPUMS IHGIS is an aggregate data project alongside IPUMS NHGIS, many functions that previously were NHGIS-specific have been generalized to accommodate both collections. This includes the following new functions:</p>
+<ul><li><p><code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> loads downloaded extracts for both NHGIS and IHGIS. This replaces <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>, which is now deprecated.</p></li>
+<li><p><code><a href="../reference/define_extract_agg.html">define_extract_agg()</a></code> defines extract requests for both NHGIS and IHGIS. Use the <code>collection</code> argument to specify the data collection for a given extract. This replaces <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>, which is now deprecated.</p></li>
+<li><p><code><a href="../reference/get_metadata_catalog.html">get_metadata_catalog()</a></code> retrieves summary metadata about NHGIS and IHGIS data sources. <code><a href="../reference/get_metadata.html">get_metadata()</a></code> retrieves detailed metadata about a particular NHGIS or IHGIS data source. These functions replace <code><a href="../reference/get_metadata_nhgis.html">get_metadata_nhgis()</a></code>, which is now deprecated.</p></li>
+</ul></li>
+<li><p>Adds <code><a href="../reference/read_ihgis_codebook.html">read_ihgis_codebook()</a></code> to load codebook files containing file-level metadata for downloaded IHGIS extracts. This function is currently experimental.</p></li>
+</ul><div class="section level3">
+<h3 id="function--argument-retirements-development-version">Function + argument retirements<a class="anchor" aria-label="anchor" href="#function--argument-retirements-development-version"></a></h3>
+<ul><li><p><code>data_layer</code> and <code>shape_layer</code> arguments are now defunct. In cases where this functionality is still supported, please use the <code>file_select</code> argument instead.</p></li>
+<li><p><code>get_recent_extracts_info_list()</code>, <code>get_recent_extracts_info_tbl()</code>, and <code>extract_tbl_to_list()</code> are now defunct. Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to obtain a list of previously-submitted extracts.</p></li>
+<li><p>The ability to read files through directories is now defunct. This affects most reader functions. If you have unzipped an IPUMS extract archive, please provide the path to the individual file you wish to load, not its containing directory.</p></li>
+<li><p><code>project</code> and <code>var_label</code> arguments in <code><a href="../reference/ipums_website.html">ipums_website()</a></code> are now defunct.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+</div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.2" id="ipumsr-082">ipumsr 0.8.2<a class="anchor" aria-label="anchor" href="#ipumsr-082"></a></h2><p class="text-muted">CRAN release: 2025-02-24</p>
@@ -188,7 +206,7 @@
 </li>
 <li><p>The <code>ipums_extract</code> object structure has been updated. For IPUMS microdata projects, <code>variables</code> and <code>samples</code> are no longer stored as character vectors, but as lists. This accommodates new API version 2 features (see below). Use <code>names(x$variables)</code> instead of <code>x$variables</code> to access variable (and sample) names as a character vector.</p></li>
 <li>
-<p><code>get_recent_extracts_info_*()</code> functions have been deprecated. Additionally, tabular-formatted extract history is no longer supported, and conversion functions <code><a href="../reference/extract_tbl_to_list.html">extract_tbl_to_list()</a></code> and <code><a href="../reference/extract_tbl_to_list.html">extract_list_to_tbl()</a></code> have therefore been deprecated as well.</p>
+<p><code>get_recent_extracts_info_*()</code> functions have been deprecated. Additionally, tabular-formatted extract history is no longer supported, and conversion functions <code>extract_tbl_to_list()</code> and <code>extract_list_to_tbl()</code> have therefore been deprecated as well.</p>
 <p>Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to browse previous extract definitions in list format.</p>
 </li>
 </ul></div>

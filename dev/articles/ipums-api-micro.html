@@ -41,7 +41,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +49,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul>
@@ -120,8 +120,9 @@ future. See the <a href="https://developer.ipums.org/docs/apiprogram/" class="ex
 documentation</a> for more information on upcoming additions to the
 API.</p>
 <p>In addition to microdata projects, the IPUMS API also supports IPUMS
-NHGIS data. For details about obtaining IPUMS NHGIS data using ipumsr,
-see the <a href="ipums-api-nhgis.html">NHGIS-specific vignette</a>.</p>
+aggregate data projects. For details about obtaining IPUMS aggregate
+data using ipumsr, see the <a href="ipums-api-agg.html">aggregate data
+vignette</a>.</p>
 <p>Before getting started, we’ll load ipumsr and <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a>,
 which will be helpful for this demo:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -151,7 +152,7 @@ some are “full-count” samples, meaning they contain all individuals in a
 population.</p>
 </div>
 <div class="section level2">
-<h2 id="ipums-microdata-metadata-forthcoming">IPUMS microdata metadata (forthcoming)<a class="anchor" aria-label="anchor" href="#ipums-microdata-metadata-forthcoming"></a>
+<h2 id="ipums-microdata-metadata">IPUMS microdata metadata<a class="anchor" aria-label="anchor" href="#ipums-microdata-metadata"></a>
 </h2>
 <p>Of course, to request samples and variables, we have to know the
 codes that the API uses to refer to them. For samples, the IPUMS API

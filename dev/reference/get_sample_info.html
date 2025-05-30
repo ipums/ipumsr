@@ -37,7 +37,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -45,7 +45,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -91,11 +91,8 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 
 
 <dl><dt id="arg-collection">collection<a class="anchor" aria-label="anchor" href="#arg-collection"></a></dt>
-<dd><p>Character string of the IPUMS collection for which to
-retrieve sample IDs. Defaults to the current default collection,
-if it exists. See <code><a href="set_ipums_default_collection.html">set_ipums_default_collection()</a></code>.</p>
-<p>For a list of codes used to refer to each collection, see
-<code><a href="ipums_data_collections.html">ipums_data_collections()</a></code>.</p></dd>
+<dd><p>Character string indicating the IPUMS microdata collection
+for which to retrieve sample information.</p></dd>
 
 
 <dt id="arg-delay">delay<a class="anchor" aria-label="anchor" href="#arg-delay"></a></dt>
@@ -103,7 +100,7 @@ if it exists. See <code><a href="set_ipums_default_collection.html">set_ipums_de
 successive API requests, if multiple requests are needed to retrieve all
 records.</p>
 <p>A delay is highly unlikely to be necessary and is intended only as a
-fallback in the event that you cannot retrieve all sample IDs without
+fallback in the event that you cannot retrieve all metadata records without
 exceeding the API rate limit.</p></dd>
 
 

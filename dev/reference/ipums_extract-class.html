@@ -17,6 +17,7 @@ IPUMS Health Surveys (NHIS, MEPS)
 
 IPUMS aggregate data
 IPUMS NHGIS
+IPUMS IHGIS
 
 
 
@@ -38,6 +39,7 @@ IPUMS Health Surveys (NHIS, MEPS)
 
 IPUMS aggregate data
 IPUMS NHGIS
+IPUMS IHGIS
 
 
 
@@ -61,7 +63,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -69,7 +71,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -100,13 +102,14 @@ objects.</p>
 and aggregate data classes, and will also include
 a collection-specific extract subclass to accommodate differences in
 extract options and content across collections.</p>
-<p>Currently supported collections are:</p><ul><li><p>IPUMS microdata</p><ul><li><p>IPUMS USA</p></li>
-<li><p>IPUMS CPS</p></li>
-<li><p>IPUMS International</p></li>
-<li><p>IPUMS Time Use (ATUS, AHTUS, MTUS)</p></li>
-<li><p>IPUMS Health Surveys (NHIS, MEPS)</p></li>
+<p>Currently supported collections are:</p><ul><li><p>IPUMS microdata</p><ul><li><p><a href="https://usa.ipums.org/" class="external-link">IPUMS USA</a></p></li>
+<li><p><a href="https://cps.ipums.org/" class="external-link">IPUMS CPS</a></p></li>
+<li><p><a href="https://international.ipums.org/" class="external-link">IPUMS International</a></p></li>
+<li><p>IPUMS Time Use (<a href="https://www.atusdata.org/atus/" class="external-link">ATUS</a>, <a href="https://www.ahtusdata.org/ahtus/" class="external-link">AHTUS</a>, <a href="https://www.mtusdata.org/mtus/" class="external-link">MTUS</a>)</p></li>
+<li><p>IPUMS Health Surveys (<a href="https://nhis.ipums.org/" class="external-link">NHIS</a>, <a href="https://meps.ipums.org/" class="external-link">MEPS</a>)</p></li>
 </ul></li>
-<li><p>IPUMS aggregate data</p><ul><li><p>IPUMS NHGIS</p></li>
+<li><p>IPUMS aggregate data</p><ul><li><p><a href="https://nhgis.org/" class="external-link">IPUMS NHGIS</a></p></li>
+<li><p><a href="https://ihgis.ipums.org/" class="external-link">IPUMS IHGIS</a></p></li>
 </ul></li>
 </ul><p>Learn more about the IPUMS API in <code><a href="../articles/ipums-api.html">vignette("ipums-api")</a></code>.</p>
     </div>
@@ -141,7 +144,7 @@ One of <code>"unsubmitted"</code>, <code>"queued"</code>, <code>"started"</code>
 
 <ul><li><p>Create an <code>ipums_extract</code> object from scratch with the appropriate
 <code>define_extract_*()</code> function.</p><ul><li><p>For microdata extracts, use <code><a href="define_extract_micro.html">define_extract_micro()</a></code></p></li>
-<li><p>For NHGIS extracts, use <code><a href="define_extract_nhgis.html">define_extract_nhgis()</a></code></p></li>
+<li><p>For aggregate data extracts, use <code><a href="define_extract_agg.html">define_extract_agg()</a></code></p></li>
 </ul></li>
 <li><p>Use <code><a href="get_extract_info.html">get_extract_info()</a></code> to get the definition and latest status of a
 previously-submitted extract request.</p></li>

@@ -29,7 +29,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -37,7 +37,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul></li>
@@ -124,7 +124,7 @@ all JSON fields written in <code>snake_case</code> to <code>camelCase</code>. Fo
 field to <code>"version"</code> and set it equal to <code>2</code>. If you are unable to create
 a valid extract by modifying the file, you may have to recreate the
 definition manually using the <code><a href="define_extract_micro.html">define_extract_micro()</a></code> or
-<code><a href="define_extract_nhgis.html">define_extract_nhgis()</a></code>.</p>
+<code><a href="define_extract_agg.html">define_extract_agg()</a></code>.</p>
 <p>See the IPUMS developer documentation for more details on
 <a href="https://developer.ipums.org/docs/apiprogram/versioning/" class="external-link">API versioning</a> and
 <a href="https://developer.ipums.org/docs/apiprogram/changelog/" class="external-link">breaking changes</a>
@@ -132,7 +132,7 @@ introduced in version 2.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="define_extract_micro.html">define_extract_micro()</a></code> or <code><a href="define_extract_nhgis.html">define_extract_nhgis()</a></code> to define an
+    <div class="dont-index"><p><code><a href="define_extract_micro.html">define_extract_micro()</a></code> or <code><a href="define_extract_agg.html">define_extract_agg()</a></code> to define an
 extract request manually</p>
 <p><code><a href="get_extract_info.html">get_extract_info()</a></code> to obtain a past extract to save.</p>
 <p><code><a href="submit_extract.html">submit_extract()</a></code> to submit an extract request for processing.</p>
