@@ -30,8 +30,8 @@ to include in the extract request. See examples.
 If a dataset already exists in the extract, its new specifications
 will be added to those that already exist for that dataset.}
 
-\item{time_series_tables}{List of \code{tst_spec} objects created by \code{\link[=tst_spec]{tst_spec()}}
-containing the specifications for the
+\item{time_series_tables}{For NHGIS extracts, list of \code{tst_spec} objects
+created by \code{\link[=tst_spec]{tst_spec()}} containing the specifications for the
 \href{https://www.nhgis.org/time-series-tables}{time series tables}
 to include in the extract request.
 
@@ -39,7 +39,7 @@ If a time series table already exists in the extract, its new
 specifications will be added to those that already exist for that time
 series table.}
 
-\item{geographic_extents}{If \code{collection = "nhgis"}, vector of geographic
+\item{geographic_extents}{For NHGIS extracts, vector of geographic
 extents to use for all of the \code{datasets} and \code{time_series_tables} in the
 extract definition (for instance, to obtain data within a specified state).
 By default, selects all available extents.
@@ -47,11 +47,11 @@ By default, selects all available extents.
 Use \code{\link[=get_metadata]{get_metadata()}} to identify the available extents for a given
 dataset or time series table, if any.}
 
-\item{shapefiles}{If \code{collection = "nhgis"}, names of any
+\item{shapefiles}{For NHGIS extracts, names of any
 \href{https://www.nhgis.org/gis-files}{shapefiles} to include in the extract
 request.}
 
-\item{breakdown_and_data_type_layout}{If \code{collection = "nhgis"}, the desired
+\item{breakdown_and_data_type_layout}{For NHGIS extracts, the desired
 layout of any \code{datasets} that have multiple data types or breakdown values.
 \itemize{
 \item \code{"single_file"} (default) keeps all data types and breakdown values in
@@ -65,7 +65,7 @@ multiple data types (for instance, estimates and margins of error) or have
 multiple breakdown values specified. See \code{\link[=get_metadata]{get_metadata()}} to
 determine whether a requested dataset has multiple data types.}
 
-\item{tst_layout}{If \code{collection = "nhgis"}, the desired layout of all
+\item{tst_layout}{For NHGIS extracts, the desired layout of all
 \code{time_series_tables} included in the extract definition.
 \itemize{
 \item \code{"time_by_column_layout"} (wide format, default): rows correspond to
@@ -79,7 +79,7 @@ separate files
 
 Required when an extract definition includes any \code{time_series_tables}.}
 
-\item{data_format}{If \code{collection = "nhgis"}, the desired format of the
+\item{data_format}{For NHGIS extracts, the desired format of the
 extract data file.
 \itemize{
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
@@ -97,12 +97,12 @@ Required when an extract definition includes any \code{datasets} or
 \item{...}{Ignored}
 }
 \value{
-A modified \code{nhgis_extract} object
+A modified \code{agg_extract} object
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Add new values to an IPUMS NHGIS extract definition.
+Add new values to an IPUMS aggregate data extract definition.
 All fields are optional, and if omitted, will be unchanged.
 Supplying a value for fields that take a single value, such as
 \code{description} and \code{data_format}, will replace the existing value with

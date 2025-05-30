@@ -32,8 +32,12 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS Time Use (ATUS, AHTUS, MTUS)
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
-\item To remove from an \strong{IPUMS NHGIS} extract definition, click
-\link[=remove_from_extract.agg_extract]{here}
+\item To remove from an \strong{IPUMS aggregate data} extract definition, click
+\link[=remove_from_extract.agg_extract]{here}. This includes:
+\itemize{
+\item IPUMS NHGIS
+\item IPUMS IHGIS
+}
 }
 
 This function is marked as experimental because it is typically not the best

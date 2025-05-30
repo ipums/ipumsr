@@ -155,8 +155,7 @@ insert_cassette("nhgis-metadata-summary")
 
 To see a catalog of all available sources for a given data product type,
 use `get_metadata_catalog()`. This returns a data frame containing the 
-available datasets, data tables, time series tables, or shapefiles, 
-depending on the provided `metadata_type`.
+available data sources of the indicated `metadata_type`.
 
 Note that `metadata_type` supports different options for different collections. 
 Use `catalog_types()` to determine the supported metadata types for a given 
@@ -213,6 +212,7 @@ list columns, where each entry is itself a data frame:
 
 ```{r}
 tst$years[[1]]
+
 tst$geog_levels[[1]]
 ```
 
@@ -254,6 +254,7 @@ the input data source. For instance, for the `1900_cAg` dataset, we have
 
 ```{r}
 cAg_meta$data_tables
+
 cAg_meta$geog_levels
 ```
 

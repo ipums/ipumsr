@@ -209,6 +209,7 @@ metadata file for your extract:
 ```{r}
 cps_file <- ipums_example("cps_00157.xml")
 cps_data <- read_ipums_micro(cps_file)
+
 head(cps_data)
 ```
 

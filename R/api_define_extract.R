@@ -359,23 +359,23 @@ define_extract_micro <- function(collection,
 #' @param datasets List of dataset specifications for any
 #'   datasets to include in the extract request. Use [ds_spec()] to create a
 #'   `ds_spec` object containing a dataset specification. See examples.
-#' @param time_series_tables If `collection = "nhgis"`, list of time series
+#' @param time_series_tables For NHGIS extracts, list of time series
 #'   table specifications for any
 #'   [time series tables](https://www.nhgis.org/time-series-tables)
 #'   to include in the extract request. Use [tst_spec()] to create a
 #'   `tst_spec` object containing a time series table specification. See
 #'   examples.
-#' @param shapefiles If `collection = "nhgis"`, names of any
+#' @param shapefiles For NHGIS extracts, names of any
 #'   [shapefiles](https://www.nhgis.org/gis-files) to include in the extract
 #'   request.
-#' @param geographic_extents  If `collection = "nhgis"`, vector of geographic
+#' @param geographic_extents  For NHGIS extracts, vector of geographic
 #'   extents to use for all of the `datasets` and `time_series_tables` in the
 #'   extract definition (for instance, to obtain data within a specified state).
 #'   By default, selects all available extents.
 #'
 #'   Use [get_metadata()] to identify the available extents for a given
 #'   dataset or time series table, if any.
-#' @param breakdown_and_data_type_layout  If `collection = "nhgis"`, the desired
+#' @param breakdown_and_data_type_layout  For NHGIS extracts, the desired
 #'   layout of any `datasets` that have multiple data types or breakdown values.
 #'
 #'   - `"single_file"` (default) keeps all data types and breakdown values in
@@ -387,7 +387,7 @@ define_extract_micro <- function(collection,
 #'   multiple data types (for instance, estimates and margins of error) or have
 #'   multiple breakdown values specified. See [get_metadata()] to
 #'   determine whether a requested dataset has multiple data types.
-#' @param tst_layout If `collection = "nhgis"`, the desired layout of all
+#' @param tst_layout For NHGIS extracts, the desired layout of all
 #'   `time_series_tables` included in the extract definition.
 #'
 #'   - `"time_by_column_layout"` (wide format, default): rows correspond to
@@ -399,7 +399,7 @@ define_extract_micro <- function(collection,
 #'     separate files
 #'
 #'   Required when an extract definition includes any `time_series_tables`.
-#' @param data_format If `collection = "nhgis"`, the desired format of the
+#' @param data_format For NHGIS extracts, the desired format of the
 #'   extract data file.
 #'
 #'   - `"csv_no_header"` (default) includes only a minimal header in the first
@@ -1227,7 +1227,9 @@ define_extract_from_json <- function(extract_json) {
 #'     + IPUMS Time Use (ATUS, AHTUS, MTUS)
 #'     + IPUMS Health Surveys (NHIS, MEPS)
 #' - To add to an **IPUMS aggregate data** extract definition, click
-#'   [here][add_to_extract.agg_extract]
+#'   [here][add_to_extract.agg_extract]. This includes:
+#'     + IPUMS NHGIS
+#'     + IPUMS IHGIS
 #'
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
@@ -1345,7 +1347,7 @@ add_to_extract <- function(extract, ...) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Add new values to an IPUMS NHGIS extract definition.
+#' Add new values to an IPUMS aggregate data extract definition.
 #' All fields are optional, and if omitted, will be unchanged.
 #' Supplying a value for fields that take a single value, such as
 #' `description` and `data_format`, will replace the existing value with
@@ -1386,8 +1388,8 @@ add_to_extract <- function(extract, ...) {
 #'
 #'   If a dataset already exists in the extract, its new specifications
 #'   will be added to those that already exist for that dataset.
-#' @param time_series_tables List of `tst_spec` objects created by [tst_spec()]
-#'   containing the specifications for the
+#' @param time_series_tables For NHGIS extracts, list of `tst_spec` objects
+#'   created by [tst_spec()] containing the specifications for the
 #'   [time series tables](https://www.nhgis.org/time-series-tables)
 #'   to include in the extract request.
 #'
@@ -1396,7 +1398,7 @@ add_to_extract <- function(extract, ...) {
 #'   series table.
 #' @param ... Ignored
 #'
-#' @return A modified `nhgis_extract` object
+#' @return A modified `agg_extract` object
 #'
 #' @keywords internal
 #'
@@ -1479,14 +1481,14 @@ add_to_extract.agg_extract <- function(extract,
 
   if (anyDuplicated(ds_names) != 0) {
     ipums_extract_error(
-      "Invalid `nhgis_extract` object:",
+      "Invalid `agg_extract` object:",
       "Extract definition cannot contain multiple `datasets` of same name."
     )
   }
 
   if (anyDuplicated(tst_names) != 0) {
     ipums_extract_error(
-      "Invalid `nhgis_extract` object:",
+      "Invalid `agg_extract` object:",
       paste0(
         "Extract definition cannot contain multiple `time_series_tables` of ",
         "same name."
@@ -1767,8 +1769,10 @@ add_to_extract.micro_extract <- function(extract,
 #'     + IPUMS International
 #'     + IPUMS Time Use (ATUS, AHTUS, MTUS)
 #'     + IPUMS Health Surveys (NHIS, MEPS)
-#' - To remove from an **IPUMS NHGIS** extract definition, click
-#'   [here][remove_from_extract.agg_extract]
+#' - To remove from an **IPUMS aggregate data** extract definition, click
+#'   [here][remove_from_extract.agg_extract]. This includes:
+#'     + IPUMS NHGIS
+#'     + IPUMS IHGIS
 #'
 #' This function is marked as experimental because it is typically not the best
 #' option for maintaining reproducible extract definitions and may be retired
@@ -1859,7 +1863,7 @@ remove_from_extract <- function(extract, ...) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Remove existing values from an IPUMS NHGIS extract definition. All
+#' Remove existing values from an IPUMS aggregate data extract definition. All
 #' fields are optional, and if omitted, will be unchanged.
 #'
 #' This function is marked as experimental because it is typically not the best
@@ -1901,7 +1905,7 @@ remove_from_extract <- function(extract, ...) {
 #' @param shapefiles Shapefiles to remove from the extract definition.
 #' @param ... Ignored
 #'
-#' @return A modified `nhgis_extract` object
+#' @return A modified `agg_extract` object
 #'
 #' @keywords internal
 #'

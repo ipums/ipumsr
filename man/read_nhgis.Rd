@@ -144,3 +144,4 @@ read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
 
 \code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.
 }
+\keyword{internal}

@@ -15,6 +15,7 @@
 #' [DDI codebook](https://ddialliance.org/introduction-to-ddi)
 #' (.xml) files.
 #' - For NHGIS, this information is provided in .txt codebook files.
+#' - For IHGIS, this information is provided in a collection of .csv files.
 #'
 #' The codebook file contains metadata about the extract files themselves,
 #' including file name, file path, and extract date as well as information about
@@ -24,18 +25,20 @@
 #' This information is used to correctly parse IPUMS
 #' fixed-width files and attach additional variable metadata to data upon load.
 #'
-#' Note that codebook metadata for NHGIS extracts can also be stored in
-#' an `ipums_ddi` object, even though these codebooks are distributed as .txt
-#' files, not .xml files. These files do not adhere to the same standards as
+#' Note that codebook metadata for aggregate data extracts can also be stored in
+#' an `ipums_ddi` object, even though these codebooks are not distributed as
+#' .xml files. These files do not adhere to the same standards as
 #' the DDI codebook files, so some `ipums_ddi` fields will be left blank when
-#' reading NHGIS codebooks.
+#' reading aggregate data codebooks.
 #'
 #' ## Creating an `ipums_ddi` object
 #'
 #' - To create an `ipums_ddi` object from an IPUMS microdata extract, use
 #' [read_ipums_ddi()].
 #' - To create an `ipums_ddi` object from an IPUMS NHGIS extract, use
-#' [read_nhgis_codebook()]
+#' [read_nhgis_codebook()].
+#' - To create an `ipums_ddi` object from an IPUMS IHGIS extract, use
+#' [read_ihgis_codebook()].
 #'
 #' ## Loading data
 #'

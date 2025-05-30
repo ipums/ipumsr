@@ -98,7 +98,6 @@ reference:
       - read_ipums_agg
       - read_nhgis_codebook
       - read_ihgis_codebook
-      - read_nhgis
   - subtitle: "General use"
   - contents:
       - read_ipums_sf

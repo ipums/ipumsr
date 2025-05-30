@@ -244,6 +244,8 @@ read_ipums_agg <- function(data_file,
 #'
 #' @export
 #'
+#' @keywords internal
+#'
 #' @examples
 #' # Example files
 #' csv_file <- ipums_example("nhgis0972_csv.zip")

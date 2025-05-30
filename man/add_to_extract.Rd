@@ -37,7 +37,11 @@ subclass (i.e. collection) of the extract being modified.
 \item IPUMS Health Surveys (NHIS, MEPS)
 }
 \item To add to an \strong{IPUMS aggregate data} extract definition, click
-\link[=add_to_extract.agg_extract]{here}
+\link[=add_to_extract.agg_extract]{here}. This includes:
+\itemize{
+\item IPUMS NHGIS
+\item IPUMS IHGIS
+}
 }
 
 This function is marked as experimental because it is typically not the best

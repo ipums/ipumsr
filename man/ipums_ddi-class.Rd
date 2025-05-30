@@ -14,6 +14,7 @@ used to explore metadata for an IPUMS extract.
 \href{https://ddialliance.org/introduction-to-ddi}{DDI codebook}
 (.xml) files.
 \item For NHGIS, this information is provided in .txt codebook files.
+\item For IHGIS, this information is provided in a collection of .csv files.
 }
 
 The codebook file contains metadata about the extract files themselves,
@@ -24,17 +25,19 @@ types, implied decimals, and positions in the fixed-width files.
 This information is used to correctly parse IPUMS
 fixed-width files and attach additional variable metadata to data upon load.
 
-Note that codebook metadata for NHGIS extracts can also be stored in
-an \code{ipums_ddi} object, even though these codebooks are distributed as .txt
-files, not .xml files. These files do not adhere to the same standards as
+Note that codebook metadata for aggregate data extracts can also be stored in
+an \code{ipums_ddi} object, even though these codebooks are not distributed as
+.xml files. These files do not adhere to the same standards as
 the DDI codebook files, so some \code{ipums_ddi} fields will be left blank when
-reading NHGIS codebooks.
+reading aggregate data codebooks.
 \subsection{Creating an \code{ipums_ddi} object}{
 \itemize{
 \item To create an \code{ipums_ddi} object from an IPUMS microdata extract, use
 \code{\link[=read_ipums_ddi]{read_ipums_ddi()}}.
 \item To create an \code{ipums_ddi} object from an IPUMS NHGIS extract, use
-\code{\link[=read_nhgis_codebook]{read_nhgis_codebook()}}
+\code{\link[=read_nhgis_codebook]{read_nhgis_codebook()}}.
+\item To create an \code{ipums_ddi} object from an IPUMS IHGIS extract, use
+\code{\link[=read_ihgis_codebook]{read_ihgis_codebook()}}.
 }
 }
 

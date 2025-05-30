@@ -33,12 +33,12 @@ definition.}
 \item{...}{Ignored}
 }
 \value{
-A modified \code{nhgis_extract} object
+A modified \code{agg_extract} object
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Remove existing values from an IPUMS NHGIS extract definition. All
+Remove existing values from an IPUMS aggregate data extract definition. All
 fields are optional, and if omitted, will be unchanged.
 
 This function is marked as experimental because it is typically not the best
