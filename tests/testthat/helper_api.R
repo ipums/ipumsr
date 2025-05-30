@@ -161,7 +161,8 @@ test_meps_extract <- function() {
 }
 
 test_nhgis_extract <- function() {
-  define_extract_nhgis(
+  define_extract_agg(
+    "nhgis",
     description = "Extract for R client testing",
     datasets = list(
       ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
@@ -176,8 +177,18 @@ test_nhgis_extract <- function() {
 }
 
 test_nhgis_extract_shp <- function() {
-  define_extract_nhgis(
-    shapefiles = "110_blck_grp_2019_tl2019"
+  define_extract_agg("nhgis", shapefiles = "110_blck_grp_2019_tl2019")
+}
+
+test_ihgis_extract <- function() {
+  define_extract_agg(
+    "ihgis",
+    "Extract for R client testing",
+    datasets = ds_spec(
+      "AL2001pop",
+      c("AL2001pop.ADF", "AL2001pop.ADG"),
+      tabulation_geographies = c("AL2001pop.g0", "AL2001pop.g1")
+    )
   )
 }
 
@@ -298,8 +309,22 @@ convert_to_relative_path <- function(path) {
   )
 }
 
-skip_if_no_api_access <- function(have_api_access) {
-  if (!have_api_access) {
+have_api_access <- function() {
+  api_access <- TRUE
+  vcr_dir <- vcr::vcr_test_path("fixtures")
+
+  if (!nzchar(Sys.getenv("IPUMS_API_KEY"))) {
+    if (!dir.exists(vcr_dir) || length(dir(vcr_dir)) == 0) {
+      # If there are no mock files nor API token, can't run API tests
+      api_access <- FALSE
+    }
+  }
+
+  api_access
+}
+
+skip_if_no_api_access <- function() {
+  if (!have_api_access()) {
     return(testthat::skip("no API access and no saved API responses"))
   }
 }

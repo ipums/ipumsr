@@ -118,8 +118,7 @@ test_that("Can define an NHGIS extract", {
   nhgis_extract <- test_nhgis_extract()
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
-  expect_s3_class(nhgis_extract, "nhgis_extract")
-  expect_s3_class(nhgis_extract, "ipums_extract")
+  expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
 
   expect_identical(
     nhgis_extract$datasets,
@@ -173,6 +172,53 @@ test_that("Can define an ATUS extract with ATUS-specific features", {
   )
 })
 
+test_that("Can define an IHGIS extract", {
+  ihgis_extract <- test_ihgis_extract()
+
+  expect_s3_class(ihgis_extract, c("ihgis_extract", "ipums_extract"))
+
+  expect_identical(
+    ihgis_extract$datasets,
+    set_nested_names(
+      list(
+        ds_spec(
+          "AL2001pop",
+          c("AL2001pop.ADF", "AL2001pop.ADG"),
+          tabulation_geographies = c("AL2001pop.g0", "AL2001pop.g1")
+        )
+      )
+    )
+  )
+
+  expect_identical(ihgis_extract$download_links, EMPTY_NAMED_LIST)
+  expect_false(ihgis_extract$submitted)
+  expect_equal(ihgis_extract$number, NA_integer_)
+  expect_equal(ihgis_extract$status, "unsubmitted")
+})
+
+test_that("define_extract_nhgis() is deprecated", {
+  lifecycle::expect_deprecated(
+    define_extract_nhgis("A", ds_spec("A", "B", "C"))
+  )
+
+  expect_identical(
+    define_extract_agg(
+      "nhgis",
+      description = "Extract for R client testing",
+      datasets = list(
+        ds_spec("2014_2018_ACS5a", c("B01001", "B01002"), "nation"),
+        ds_spec("2015_2019_ACS5a", c("B01001", "B01002"), "blck_grp")
+      ),
+      time_series_tables = tst_spec("CW3", "state", "1990"),
+      geographic_extents = c("110", "100"),
+      tst_layout = "time_by_row_layout",
+      shapefiles = "110_blck_grp_2019_tl2019",
+      data_format = "csv_no_header"
+    ),
+    test_nhgis_extract()
+  )
+})
+
 test_that("Can define an ATUS extract with no variables", {
   atus_no_vars <- define_extract_micro(
     "atus",
@@ -189,11 +235,17 @@ test_that("NHGIS extract fields get correct default values", {
 
   expect_equal(nhgis_extract$breakdown_and_data_type_layout, "single_file")
   expect_equal(
-    define_extract_nhgis(time_series_tables = tst_spec("A00", "A1"))$tst_layout,
+    define_extract_agg(
+      "nhgis",
+      time_series_tables = tst_spec("A00", "A1")
+    )$tst_layout,
     "time_by_column_layout"
   )
   expect_equal(
-    define_extract_nhgis(time_series_tables = tst_spec("A00", "A1"))$data_format,
+    define_extract_agg(
+      "nhgis",
+      time_series_tables = tst_spec("A00", "A1")
+    )$data_format,
     "csv_no_header"
   )
 
@@ -404,15 +456,23 @@ test_that("Can validate core microdata extract fields", {
     ),
     "`rectangular_on` must be one of"
   )
+  expect_error(
+    define_extract_micro("nhgis"),
+    paste0(
+      "Unrecognized microdata collection: \"nhgis\".+",
+      "The IPUMS API supports the following microdata collections:"
+    )
+  )
 })
 
-test_that("Can validate core NHGIS extract fields", {
+test_that("Can validate core aggregate data extract fields", {
   expect_error(
     validate_ipums_extract(new_ipums_extract("nhgis")),
     "`description` must not contain missing values"
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       description = "",
       datasets = ds_spec("a", "b", "c"),
       data_format = "Test"
@@ -449,11 +509,33 @@ test_that("Can validate core NHGIS extract fields", {
     "`data_format` must be missing when no `datasets` or `time_series_tables`",
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       time_series_tables = tst_spec("A", "B"),
       tst_layout = c("time_by_row_layout", "time_by_row_layout")
     ),
     "`tst_layout` must be length 1."
+  )
+  expect_error(
+    define_extract_agg(
+      "ihgis",
+      datasets = ds_spec("A", "B", tabulation_geographies = "C"),
+      time_series_tables = tst_spec("A", "B"),
+      shapefiles = "B"
+    ),
+    paste0(
+      "`time_series_tables` must be missing.+",
+      "`shapefiles` must be missing.+",
+      "`tst_layout` must be missing.+",
+      "`data_format` must be missing"
+    )
+  )
+  expect_error(
+    define_extract_agg("usa"),
+    paste0(
+      "Unrecognized aggregate data collection: \"usa\".+",
+      "The IPUMS API supports the following aggregate data collections: \"nhgis\".+"
+    )
   )
 })
 
@@ -522,7 +604,8 @@ test_that("We require `*_spec` objects in appropriate extract fields", {
     "Expected `datasets` to be a `ds_spec` object or a list of"
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       description = "",
       time_series_tables = c("a", "b", "c")
     ),
@@ -606,7 +689,8 @@ test_that("Can validate `*_spec` objects within extracts", {
     "Invalid `tu_var_spec` specification:.+Unrecognized fields: `foo`"
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       datasets = ds_spec(
         "A00",
         data_tables = NA,
@@ -622,7 +706,40 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "ihgis",
+      datasets = ds_spec(
+        "A00",
+        data_tables = NA,
+        geog_levels = list("A", "b")
+      )
+    ),
+    paste0(
+      "Invalid `ds_spec` specification:.+",
+      "`data_tables` must not contain missing values.+",
+      "`geog_levels` must be missing.+",
+      "`tabulation_geographies` must not contain missing values"
+    )
+  )
+  expect_error(
+    define_extract_agg(
+      "ihgis",
+      datasets = ds_spec(
+        "A00",
+        data_tables = NA,
+        geog_levels = list("A", "b")
+      )
+    ),
+    paste0(
+      "Invalid `ds_spec` specification:.+",
+      "`data_tables` must not contain missing values.+",
+      "`geog_levels` must be missing.+",
+      "`tabulation_geographies` must not contain missing values"
+    )
+  )
+  expect_error(
+    define_extract_agg(
+      "nhgis",
       time_series_tables = tst_spec(
         NULL,
         geog_levels = list(NULL, "b")
@@ -635,7 +752,8 @@ test_that("Can validate `*_spec` objects within extracts", {
     )
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       time_series_tables = tst_spec(
         c("A", "B"),
         geog_levels = c("A", "B")
@@ -677,13 +795,15 @@ test_that("We avoid adding multiple `*_spec` objects of same name", {
     "cannot contain multiple `samples` of same name"
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       datasets = list(ds_spec("A", "A", "A"), ds_spec("A", "B", "C"))
     ),
     "cannot contain multiple `datasets` of same name"
   )
   expect_error(
-    define_extract_nhgis(
+    define_extract_agg(
+      "nhgis",
       time_series_tables = list(tst_spec("A", "A", "A"), tst_spec("A", "B"))
     ),
     "cannot contain multiple `time_series_tables` of same name"
@@ -1042,7 +1162,7 @@ test_that("Unused revisions do not alter unsubmitted extracts", {
 
   # Test on an NHGIS extract of a single type
   # to ensure we do not alter missing datasets/tsts on revision of other fields
-  nhgis_extract1 <- define_extract_nhgis(shapefiles = "Test")
+  nhgis_extract1 <- define_extract_agg("nhgis", shapefiles = "Test")
 
   expect_identical(nhgis_extract1, add_to_extract(nhgis_extract1))
   expect_identical(nhgis_extract1, remove_from_extract(nhgis_extract1))
@@ -1215,10 +1335,12 @@ test_that("Can reproduce extract specs from JSON definition", {
   usa_extract <- test_usa_extract()
   cps_extract <- test_cps_extract()
   nhgis_extract <- test_nhgis_extract()
+  ihgis_extract <- test_ihgis_extract()
   atus_extract <- test_atus_extract()
 
   usa_json <- new_ipums_json(extract_to_request_json(usa_extract), "usa")
   nhgis_json <- new_ipums_json(extract_to_request_json(nhgis_extract), "nhgis")
+  ihgis_json <- new_ipums_json(extract_to_request_json(ihgis_extract), "ihgis")
 
   # .json method should handle appropriately if there is a collection field
   # available
@@ -1241,6 +1363,10 @@ test_that("Can reproduce extract specs from JSON definition", {
   expect_identical(
     extract_list_from_json(nhgis_json)[[1]],
     nhgis_extract
+  )
+  expect_identical(
+    extract_list_from_json(ihgis_json)[[1]],
+    ihgis_extract
   )
   expect_identical(
     extract_list_from_json(atus_json)[[1]],

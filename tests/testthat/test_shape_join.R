@@ -1,4 +1,4 @@
-data <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
+data <- read_ipums_agg(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 test_that("Basic join works", {
   skip_if_not_installed("sf")

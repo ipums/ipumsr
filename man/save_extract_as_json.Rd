@@ -56,7 +56,7 @@ all JSON fields written in \code{snake_case} to \code{camelCase}. For instance,
 field to \code{"version"} and set it equal to \code{2}. If you are unable to create
 a valid extract by modifying the file, you may have to recreate the
 definition manually using the \code{\link[=define_extract_micro]{define_extract_micro()}} or
-\code{\link[=define_extract_nhgis]{define_extract_nhgis()}}.
+\code{\link[=define_extract_agg]{define_extract_agg()}}.
 
 See the IPUMS developer documentation for more details on
 \href{https://developer.ipums.org/docs/apiprogram/versioning/}{API versioning} and
@@ -82,7 +82,7 @@ identical(my_extract, copy_of_my_extract)
 file.remove(extract_json_path)
 }
 \seealso{
-\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to define an
+\code{\link[=define_extract_micro]{define_extract_micro()}} or \code{\link[=define_extract_agg]{define_extract_agg()}} to define an
 extract request manually
 
 \code{\link[=get_extract_info]{get_extract_info()}} to obtain a past extract to save.

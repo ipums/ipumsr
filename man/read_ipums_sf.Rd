@@ -11,8 +11,7 @@ read_ipums_sf(
   encoding = NULL,
   bind_multiple = FALSE,
   add_layer_var = NULL,
-  verbose = FALSE,
-  shape_layer = deprecated()
+  verbose = FALSE
 )
 }
 \arguments{
@@ -49,9 +48,6 @@ adjusted to avoid name conflicts if another column named \code{"layer"} already
 exists in the data.}
 
 \item{verbose}{If \code{TRUE} report additional progress information on load.}
-
-\item{shape_layer}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Please use
-\code{file_select} instead.}
 }
 \value{
 An \link[sf:sf]{sf} object
@@ -77,7 +73,7 @@ need to manually unzip the downloaded file before loading it into R.
 \dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
-data_ex1 <- read_nhgis(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
+data_ex1 <- read_ipums_agg(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)
 
 sf_data <- read_ipums_sf(shape_ex1)
 
@@ -103,7 +99,7 @@ read_ipums_sf(
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular data from
 an IPUMS extract.
 
 \code{\link[=ipums_list_files]{ipums_list_files()}} to list files in an IPUMS extract.

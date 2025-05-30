@@ -15,6 +15,7 @@
 #' [DDI codebook](https://ddialliance.org/introduction-to-ddi)
 #' (.xml) files.
 #' - For NHGIS, this information is provided in .txt codebook files.
+#' - For IHGIS, this information is provided in a collection of .csv files.
 #'
 #' The codebook file contains metadata about the extract files themselves,
 #' including file name, file path, and extract date as well as information about
@@ -24,18 +25,20 @@
 #' This information is used to correctly parse IPUMS
 #' fixed-width files and attach additional variable metadata to data upon load.
 #'
-#' Note that codebook metadata for NHGIS extracts can also be stored in
-#' an `ipums_ddi` object, even though these codebooks are distributed as .txt
-#' files, not .xml files. These files do not adhere to the same standards as
+#' Note that codebook metadata for aggregate data extracts can also be stored in
+#' an `ipums_ddi` object, even though these codebooks are not distributed as
+#' .xml files. These files do not adhere to the same standards as
 #' the DDI codebook files, so some `ipums_ddi` fields will be left blank when
-#' reading NHGIS codebooks.
+#' reading aggregate data codebooks.
 #'
 #' ## Creating an `ipums_ddi` object
 #'
 #' - To create an `ipums_ddi` object from an IPUMS microdata extract, use
 #' [read_ipums_ddi()].
 #' - To create an `ipums_ddi` object from an IPUMS NHGIS extract, use
-#' [read_nhgis_codebook()]
+#' [read_nhgis_codebook()].
+#' - To create an `ipums_ddi` object from an IPUMS IHGIS extract, use
+#' [read_ihgis_codebook()].
 #'
 #' ## Loading data
 #'
@@ -92,9 +95,6 @@ NULL
 #'   [IPUMS](https://www.ipums.org/). See *Downloading IPUMS files* below.
 #' @param lower_vars Logical indicating whether to convert variable names to
 #'   lowercase. Defaults to `FALSE` for consistency with IPUMS conventions.
-#' @param data_layer,file_select `r lifecycle::badge("deprecated")` Reading
-#'   DDI files contained in a .zip archive has been deprecated. Please provide
-#'   the full path to the .xml file to be loaded in `ddi_file`.
 #'
 #' @return An [ipums_ddi] object with metadata information.
 #'
@@ -134,51 +134,19 @@ NULL
 #' cps <- set_ipums_var_attributes(cps, ddi$var_info)
 #'
 #' ipums_var_label(cps$STATEFIP)
-read_ipums_ddi <- function(ddi_file,
-                           lower_vars = FALSE,
-                           file_select = deprecated(),
-                           data_layer = deprecated()) {
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_ipums_ddi(data_layer = )"
-    )
-    file_select <- enquo(data_layer)
-  } else if (!missing(file_select)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      "read_ipums_ddi(file_select = )"
-    )
-    file_select <- enquo(file_select)
-  } else {
-    file_select <- NULL
-    file_select <- enquo(file_select)
-  }
-
-  if (file_is_zip(ddi_file)) {
-    lifecycle::deprecate_warn(
-      "0.6.3",
-      I("Reading DDI files through a zip archive "),
-      details = "Please provide the full path to the DDI file to be loaded."
-    )
-  } else {
-    dir_read_deprecated(ddi_file)
-  }
-
+read_ipums_ddi <- function(ddi_file, lower_vars = FALSE) {
   custom_check_file_exists(ddi_file)
 
-  ddi_file_load <- find_files_in(
-    ddi_file,
-    "xml",
-    file_select,
-    none_ok = FALSE,
-    multiple_ok = FALSE
-  )
+  if (tools::file_ext(ddi_file) != "xml") {
+    rlang::abort("Expected `ddi_file` to be the path to an .xml file.")
+  }
 
-  if (file_is_zip(ddi_file)) {
-    ddi_file_load <- unz(ddi_file, ddi_file_load)
-  } else if (file_is_dir(ddi_file)) {
+  if (file_is_dir(ddi_file)) {
     ddi_file_load <- file.path(ddi_file, ddi_file_load)
+    file_path <- ddi_file
+  } else {
+    ddi_file_load <- ddi_file
+    file_path <- dirname(ddi_file)
   }
 
   ddi_xml <- xml2::read_xml(ddi_file_load, file_select = NULL)
@@ -298,12 +266,6 @@ read_ipums_ddi <- function(ddi_file,
     }
   }
 
-  if (file_is_dir(ddi_file)) {
-    file_path <- ddi_file
-  } else {
-    file_path <- dirname(ddi_file)
-  }
-
   new_ipums_ddi(
     file_name = file_name,
     file_path = file_path,
@@ -321,129 +283,226 @@ read_ipums_ddi <- function(ddi_file,
   )
 }
 
-xml_text_from_path_first <- function(xml, path) {
-  xml2::xml_text(xml2::xml_find_first(xml, path))
-}
+#' Read metadata from an IHGIS extract's codebook files
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Read the variable metadata contained in an IHGIS extract into an
+#' [`ipums_ddi`] object.
+#'
+#' Because IHGIS variable metadata do not adhere to all the standards of
+#' microdata DDI files, some of the `ipums_ddi` fields will not be populated.
+#'
+#' This function is marked as experimental while we determine whether there
+#' may be a more robust way to standardize codebook reading across IPUMS
+#' aggregate data collections.
+#'
+#' @details
+#' IHGIS extracts store variable and geographic metadata in multiple
+#' files:
+#'
+#'   * `_datadict.csv` contains the data dictionary with metadata
+#'   about the variables included across all files in the extract.
+#'   * `_tables.csv` contains metadata about all IHGIS
+#'   tables included in the extract.
+#'   * `_geog.csv` contains metadata about the tabulation geographies included
+#'   for any tables in the extract.
+#'   * `_codebook.txt` contains table and variable metadata in human readable
+#'   form and contains citation information for IHGIS data.
+#'
+#' By default, `read_ihgis_codebook()` uses information from all these files and
+#' assumes they exist in the provided extract (.zip) file or directory.
+#' If you have unzipped your IHGIS extract and moved the `_tables.csv` file,
+#' you will need to provide the path to that file in the `tbls_file` argument.
+#' Certain variable metadata can still be loaded without the `_geog.csv` or
+#' `_codebook.txt` files. However, if `raw = TRUE`, the `_codebook.txt` file
+#' must be present in the .zip archive or provided to `cb_file`.
+#'
+#' If you no longer have access to these files, consider resubmitting the
+#' extract request that produced the data.
+#'
+#' Note that IHGIS codebooks contain metadata for all the datasets contained
+#' in a given extract. Individual data files from the extract may not contain
+#' all of the variables shown in the output of `read_ihgis_codebook()`.
+#'
+#' @param cb_file Path to a .zip archive containing an IHGIS extract, an IHGIS
+#'   data dictionary (`_datadict.csv`) file, or an IHGIS codebook (.txt) file.
+#' @param tbls_file If `cb_file` is the path to an IHGIS data dictionary .csv
+#'   file, path to the `_tables.csv` metadata file from the same IHGIS extract.
+#'   If these files are in the same directory, this file will be automatically
+#'   loaded. If you have moved this file, provide the path to it here.
+#' @param raw If `TRUE` return a character vector containing the lines of
+#'   `cb_file` rather than an `ipums_ddi` object. Defaults to `FALSE`.
+#'
+#'    If `TRUE`, `cb_file` must be a .zip archive or a .txt codebook file.
+#'
+#' @returns
+#' If `raw = FALSE`, an `ipums_ddi` object with metadata about the variables
+#' contained in the data for the extract associated with the given `cb_file`.
+#'
+#' If `raw = TRUE`, a character vector with one element for each line of the
+#' given `cb_file`.
+#'
+#' @export
+#'
+#' @examples
+#' ihgis_file <- ipums_example("ihgis0014.zip")
+#'
+#' ihgis_cb <- read_ihgis_codebook(ihgis_file)
+#'
+#' # Variable labels and descriptions
+#' ihgis_cb$var_info
+#'
+#' # Citation information
+#' ihgis_cb$conditions
+#'
+#' # If variable metadata have been lost from a data source, reattach from
+#' # the corresponding `ipums_ddi` object:
+#' ihgis_data <- read_ipums_agg(
+#'   ihgis_file,
+#'   file_select = matches("AAA_g0"),
+#'   verbose = FALSE
+#' )
+#'
+#' ihgis_data <- zap_ipums_attributes(ihgis_data)
+#' ipums_var_label(ihgis_data$AAA001)
+#'
+#' ihgis_data <- set_ipums_var_attributes(ihgis_data, ihgis_cb)
+#' ipums_var_label(ihgis_data$AAA001)
+#'
+#' # Load in raw format
+#' ihgis_cb_raw <- read_ihgis_codebook(ihgis_file, raw = TRUE)
+#'
+#' # Use `cat()` to display in the R console in human readable format
+#' cat(ihgis_cb_raw[1:21], sep = "\n")
+read_ihgis_codebook <- function(cb_file, tbls_file = NULL, raw = FALSE) {
+  custom_check_file_exists(cb_file)
 
-xml_text_from_path_collapsed <- function(xml, path, collapse = "\n\n") {
-  out <- xml2::xml_text(xml2::xml_find_all(xml, path))
-  paste(out, collapse = collapse)
-}
+  is_zip <- file_is_zip(cb_file)
+  is_dir <- file_is_dir(cb_file)
 
-xml_text_from_path_all <- function(xml, path) {
-  xml2::xml_text(xml2::xml_find_all(xml, path))
-}
+  if (raw) {
+    if (!(is_zip || fostr_detect(cb_file, "\\.txt$"))) {
+      rlang::abort(
+        c(
+          "Expected `cb_file` to be a zipped IPUMS extract or a .txt codebook.",
+          "i" = "Set `raw = FALSE` to load a csv codebook files."
+        )
+      )
+    }
 
-get_var_info_from_ddi <- function(ddi_xml,
-                                  file_type,
-                                  rt_idvar,
-                                  rectype_labels) {
-  var_info_xml <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:dataDscr/d1:var")
+    txt_file <- find_ihgis_txt_cb(cb_file)
 
-  if (length(var_info_xml) == 0) {
-    return(NULL)
+    if (is_zip) {
+      cb <- readr::read_lines(unz(cb_file, txt_file), progress = FALSE)
+    } else {
+      cb <- readr::read_lines(cb_file, progress = FALSE)
+    }
+
+    return(cb)
   }
 
-  var_name <- xml2::xml_attr(var_info_xml, "name")
-  start <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@StartPos")
-  )
-  end <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@EndPos")
-  )
-  width <- as.numeric(
-    xml_text_from_path_first(var_info_xml, "d1:location/@width")
-  )
-  var_label <- xml_text_from_path_first(var_info_xml, "d1:labl")
-  var_desc <- xml_text_from_path_first(var_info_xml, "d1:txt")
-  imp_decim <- as.numeric(
-    xml2::xml_attr(var_info_xml, "dcml")
-  )
+  if (!is_zip && !is_dir) {
+    if (!fostr_detect(cb_file, "_datadict\\.csv$")) {
+      rlang::abort(
+        c(
+          "Expected `cb_file` to be a zipped IPUMS extract or a `_datadict.csv`.",
+          "i" = "Set `raw = TRUE` to load a .txt codebook file."
+        )
+      )
+    }
 
-  var_type <- xml_text_from_path_first(var_info_xml, "d1:varFormat/@type")
-  var_intrvl <- xml2::xml_attr(var_info_xml, "intrvl")
-  var_type <- dplyr::case_when(
-    var_type == "numeric" & var_intrvl == "discrete" & (width < 10) ~ "integer",
-    var_type == "numeric" ~ "numeric",
-    var_type == "character" ~ "character",
-    TRUE ~ "character" # Default to character if it's unexpected
-  )
+    cb_file <- dirname(cb_file)
+  }
 
-  code_instr <- fostr_replace(
-    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
-    "^Codes",
-    ""
-  )
+  dd_file <- find_ihgis_datadict_cb(cb_file)
 
-  if (file_type == "hierarchical") {
-    rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
+  # If not a zip file and user has supplied `tbls_file`, use that instead
+  if (is.null(tbls_file) || is_zip) {
+    tbls_file <- find_ihgis_tbls_cb(cb_file)
   } else {
-    rectype_by_var <- NA
+    custom_check_file_exists(tbls_file)
   }
 
-  # Value labels
-  # Some come from parsed code sections
-  lbls_from_code_instr <- parse_labels_from_code_instr(code_instr, var_type)
+  txt_file <- find_ihgis_txt_cb(cb_file)
+  geog_file <- find_ihgis_geog_cb(cb_file)
 
-  # For hierarchical, RECTYPE comes from elsewhere in the DDI
-  if (file_type == "hierarchical") {
-    # If var is numeric, need to convert
-    rt_type <- var_type[var_name == rt_idvar]
-
-    if (length(rt_type) == 1 && rt_type %in% c("numeric", "integer")) {
-      rectype_labels$val <- suppressWarnings(as.numeric(rectype_labels$val))
-    }
-
-    rectype_labels <- dplyr::filter(rectype_labels, !is.na(.data$val))
-    rectype_labels <- dplyr::arrange(rectype_labels, .data$val)
-
-    # Replace in the code_instructions
-    if (nrow(rectype_labels) > 0) {
-      lbls_from_code_instr[[which(var_name == rt_idvar)]] <- rectype_labels
-    }
+  if (is_zip) {
+    dd_file <- unz(cb_file, dd_file)
+    tbls_file <- unz(cb_file, tbls_file)
+    txt_file <- tryCatch(unz(cb_file, txt_file), error = function(cnd) NULL)
+    geog_file <- tryCatch(unz(cb_file, geog_file), error = function(cnd) NULL)
   }
 
-  val_labels <- purrr::pmap(
-    list(var_info_xml, var_type, lbls_from_code_instr),
-    function(vvv, vtype, extra_labels) {
-      lbls <- xml2::xml_find_all(vvv, "d1:catgry")
+  dd <- readr::read_csv(dd_file, progress = FALSE, show_col_types = FALSE)
+  tb <- readr::read_csv(tbls_file, progress = FALSE, show_col_types = FALSE)
+  geog <- tryCatch(
+    readr::read_csv(geog_file, progress = FALSE, show_col_types = FALSE),
+    error = function(cnd) NULL
+  )
 
-      if (length(lbls) == 0) {
-        return(extra_labels)
-      }
+  dd <- dplyr::left_join(dd, tb, by = c("dataset", "table"))
 
-      lbls <- tibble::tibble(
-        val = xml_text_from_path_all(lbls, "d1:catValu"),
-        lbl = xml_text_from_path_all(lbls, "d1:labl")
+  # IHGIS will have duplicate GISJOINs in var_info. Don't want to attach
+  # table information as we cannot guarantee correct table will be included
+  # after linking to data.
+  var_info <- make_var_info_from_scratch(
+    var_name = dd$table_var,
+    var_label = dd$label,
+    var_desc = ifelse(
+      dd$table_var == "GISJOIN",
+      NA,
+      paste0(
+        "Table ", dd$table, ": ", dd$title,
+        " (Universe: ", dd$table_universe, ")"
+      )
+    )
+  )
+
+  # Add geog info
+  if (!rlang::is_empty(geog)) {
+    var_info <- dplyr::add_row(
+      var_info,
+      var_name = geog$tabulation_geog,
+      var_label = geog$tabulation_geog_label,
+      .after = min(which(var_info$var_name == "GISJOIN"))
+    )
+  } else {
+    rlang::warn("Unable to load tabulation geography metadata for this file.")
+  }
+
+  # Deduplicate GISJOIN rows
+  var_info <- dplyr::distinct(var_info)
+
+  conditions_text <- tryCatch(
+    {
+      cb <- readr::read_lines(txt_file, progress = FALSE)
+
+      conditions_text <- find_cb_section(
+        cb,
+        "^Citation and Use of .+ Data",
+        section_markers = which(fostr_detect(cb, "^[-]{5,}$"))
       )
 
-      if (vtype %in% c("numeric", "integer")) lbls$val <- as.numeric(lbls$val)
+      paste(conditions_text, collapse = "\n")
+    },
+    error = function(cnd) {
+      rlang::warn(c(
+        "Unable to load IPUMS conditions for this extract.",
+        "See https://www.ipums.org/about/citation for citation information."
+      ))
 
-      # Drop labels that are the same as the value
-      # But leading 0's can be ignored if numeric
-      if (vtype %in% c("numeric", "integer")) {
-        lnum <- suppressWarnings(as.numeric(lbls$lbl))
-        lbls <- dplyr::filter(lbls, (is.na(lnum) | .data$val != lnum))
-      } else {
-        lbls <- dplyr::filter(lbls, .data$val != .data$lbl)
-      }
-
-      out <- dplyr::bind_rows(lbls, extra_labels)
-      dplyr::arrange(out, .data$val)
+      NULL
     }
   )
 
-  make_var_info_from_scratch(
-    var_name = var_name,
-    var_label = var_label,
-    var_desc = var_desc,
-    val_labels = val_labels,
-    code_instr = code_instr,
-    start = start,
-    end = end,
-    imp_decim = imp_decim,
-    var_type = var_type,
-    rectypes = rectype_by_var
+  new_ipums_ddi(
+    file_name = basename(cb_file),
+    file_type = "rectangular",
+    ipums_project = get_proj_name("ihgis"),
+    var_info = var_info,
+    conditions = conditions_text
   )
 }
 
@@ -453,15 +512,15 @@ get_var_info_from_ddi <- function(ddi_xml,
 #' `r lifecycle::badge("experimental")`
 #'
 #' Read the variable metadata contained in the .txt codebook file included with
-#' NHGIS extracts into an [ipums_ddi] object.
+#' NHGIS extracts into an [`ipums_ddi`] object.
 #'
 #' Because NHGIS variable metadata do not
 #' adhere to all the standards of microdata DDI files, some of the `ipums_ddi`
 #' fields will not be populated.
 #'
-#' This function is marked as experimental while we determine whether
-#' there may be a more robust way to standardize codebook and DDI reading across
-#' IPUMS collections.
+#' This function is marked as experimental while we determine whether there
+#' may be a more robust way to standardize codebook reading across IPUMS
+#' aggregate data collections.
 #'
 #' @param cb_file Path to a .zip archive containing an NHGIS extract or to an
 #'   NHGIS codebook (.txt) file.
@@ -474,7 +533,7 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'   of `cb_file` rather than an `ipums_ddi` object. Defaults to
 #'   `FALSE`.
 #'
-#' @return If `raw = FALSE`, an `ipums_ddi` object with information on the
+#' @return If `raw = FALSE`, an `ipums_ddi` object with metadata about the
 #'   variables contained in the data for the extract associated with the given
 #'   `cb_file`.
 #'
@@ -483,7 +542,7 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'
 #' @export
 #'
-#' @seealso [read_nhgis()] to read tabular data from an IPUMS NHGIS extract.
+#' @seealso [read_ipums_agg()] to read tabular data from an IPUMS NHGIS extract.
 #'
 #'   [read_ipums_sf()] to read spatial data from an IPUMS extract.
 #'
@@ -503,12 +562,12 @@ get_var_info_from_ddi <- function(ddi_xml,
 #'
 #' # If variable metadata have been lost from a data source, reattach from
 #' # the corresponding `ipums_ddi` object:
-#' nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
+#' nhgis_data <- read_ipums_agg(nhgis_file, verbose = FALSE)
 #'
 #' nhgis_data <- zap_ipums_attributes(nhgis_data)
 #' ipums_var_label(nhgis_data$PMSA)
 #'
-#' nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
+#' nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook)
 #' ipums_var_label(nhgis_data$PMSA)
 #'
 #' # You can also load the codebook in raw format to display in the console
@@ -519,8 +578,6 @@ get_var_info_from_ddi <- function(ddi_xml,
 read_nhgis_codebook <- function(cb_file,
                                 file_select = NULL,
                                 raw = FALSE) {
-  dir_read_deprecated(cb_file)
-
   file_select <- enquo(file_select)
 
   custom_check_file_exists(cb_file)
@@ -666,9 +723,137 @@ read_nhgis_codebook <- function(cb_file,
   new_ipums_ddi(
     file_name = cb_name,
     file_type = "rectangular",
-    ipums_project = "NHGIS",
+    ipums_project = get_proj_name("nhgis"),
     var_info = var_info,
     conditions = conditions_text
+  )
+}
+
+# Internal ---------------------------------------------------------------------
+
+xml_text_from_path_first <- function(xml, path) {
+  xml2::xml_text(xml2::xml_find_first(xml, path))
+}
+
+xml_text_from_path_collapsed <- function(xml, path, collapse = "\n\n") {
+  out <- xml2::xml_text(xml2::xml_find_all(xml, path))
+  paste(out, collapse = collapse)
+}
+
+xml_text_from_path_all <- function(xml, path) {
+  xml2::xml_text(xml2::xml_find_all(xml, path))
+}
+
+get_var_info_from_ddi <- function(ddi_xml,
+                                  file_type,
+                                  rt_idvar,
+                                  rectype_labels) {
+  var_info_xml <- xml2::xml_find_all(ddi_xml, "/d1:codeBook/d1:dataDscr/d1:var")
+
+  if (length(var_info_xml) == 0) {
+    return(NULL)
+  }
+
+  var_name <- xml2::xml_attr(var_info_xml, "name")
+  start <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@StartPos")
+  )
+  end <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@EndPos")
+  )
+  width <- as.numeric(
+    xml_text_from_path_first(var_info_xml, "d1:location/@width")
+  )
+  var_label <- xml_text_from_path_first(var_info_xml, "d1:labl")
+  var_desc <- xml_text_from_path_first(var_info_xml, "d1:txt")
+  imp_decim <- as.numeric(
+    xml2::xml_attr(var_info_xml, "dcml")
+  )
+
+  var_type <- xml_text_from_path_first(var_info_xml, "d1:varFormat/@type")
+  var_intrvl <- xml2::xml_attr(var_info_xml, "intrvl")
+  var_type <- dplyr::case_when(
+    var_type == "numeric" & var_intrvl == "discrete" & (width < 10) ~ "integer",
+    var_type == "numeric" ~ "numeric",
+    var_type == "character" ~ "character",
+    TRUE ~ "character" # Default to character if it's unexpected
+  )
+
+  code_instr <- fostr_replace(
+    xml_text_from_path_first(var_info_xml, "d1:codInstr"),
+    "^Codes",
+    ""
+  )
+
+  if (file_type == "hierarchical") {
+    rectype_by_var <- fostr_split(xml2::xml_attr(var_info_xml, "rectype"), " ")
+  } else {
+    rectype_by_var <- NA
+  }
+
+  # Value labels
+  # Some come from parsed code sections
+  lbls_from_code_instr <- parse_labels_from_code_instr(code_instr, var_type)
+
+  # For hierarchical, RECTYPE comes from elsewhere in the DDI
+  if (file_type == "hierarchical") {
+    # If var is numeric, need to convert
+    rt_type <- var_type[var_name == rt_idvar]
+
+    if (length(rt_type) == 1 && rt_type %in% c("numeric", "integer")) {
+      rectype_labels$val <- suppressWarnings(as.numeric(rectype_labels$val))
+    }
+
+    rectype_labels <- dplyr::filter(rectype_labels, !is.na(.data$val))
+    rectype_labels <- dplyr::arrange(rectype_labels, .data$val)
+
+    # Replace in the code_instructions
+    if (nrow(rectype_labels) > 0) {
+      lbls_from_code_instr[[which(var_name == rt_idvar)]] <- rectype_labels
+    }
+  }
+
+  val_labels <- purrr::pmap(
+    list(var_info_xml, var_type, lbls_from_code_instr),
+    function(vvv, vtype, extra_labels) {
+      lbls <- xml2::xml_find_all(vvv, "d1:catgry")
+
+      if (length(lbls) == 0) {
+        return(extra_labels)
+      }
+
+      lbls <- tibble::tibble(
+        val = xml_text_from_path_all(lbls, "d1:catValu"),
+        lbl = xml_text_from_path_all(lbls, "d1:labl")
+      )
+
+      if (vtype %in% c("numeric", "integer")) lbls$val <- as.numeric(lbls$val)
+
+      # Drop labels that are the same as the value
+      # But leading 0's can be ignored if numeric
+      if (vtype %in% c("numeric", "integer")) {
+        lnum <- suppressWarnings(as.numeric(lbls$lbl))
+        lbls <- dplyr::filter(lbls, (is.na(lnum) | .data$val != lnum))
+      } else {
+        lbls <- dplyr::filter(lbls, .data$val != .data$lbl)
+      }
+
+      out <- dplyr::bind_rows(lbls, extra_labels)
+      dplyr::arrange(out, .data$val)
+    }
+  )
+
+  make_var_info_from_scratch(
+    var_name = var_name,
+    var_label = var_label,
+    var_desc = var_desc,
+    val_labels = val_labels,
+    code_instr = code_instr,
+    start = start,
+    end = end,
+    imp_decim = imp_decim,
+    var_type = var_type,
+    rectypes = rectype_by_var
   )
 }
 
@@ -819,6 +1004,78 @@ find_cb_section <- function(cb_text, section, section_markers) {
 
   end <- min(c(length(cb_text), section_markers[section_markers > start])) - 1
   cb_text[seq(start, end)]
+}
+
+# Helpers to simplify the search process for the various metadata files
+# needed to load IHGIS codebooks. Datadict and Tables CSV files are required.
+# txt codebooks provide IPUMS conditions but are not required to load an
+# IHGIS cb into an ipums_ddi.
+#
+# This function searches for a file with find_files_in, adjusts path based on
+# whether input cb_file is a zip or directory, and adds file-specific
+# error handling if desired.
+find_ihgis_metadata_files <- function(cb_file,
+                                      ...,
+                                      on_error = function(cnd) NULL) {
+  file <- tryCatch(find_files_in(cb_file, ...), error = on_error)
+
+  if (file_is_dir(cb_file)) {
+    file <- file.path(cb_file, file)
+  }
+
+  file
+}
+
+find_ihgis_datadict_cb <- function(cb_file, call = caller_env()) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_datadict")),
+    multiple_ok = FALSE,
+    none_ok = FALSE,
+    on_error = function(cnd) {
+      rlang::abort(
+        paste0("Could not find `_datadict.csv` codebook file in ",  cb_file),
+        call = call
+      )
+    }
+  )
+}
+
+find_ihgis_tbls_cb <- function(cb_file, call = caller_env()) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_tables")),
+    multiple_ok = FALSE,
+    none_ok = FALSE,
+    on_error = function(cnd) {
+      rlang::abort(
+        paste0("Could not find `_tables.csv` codebook file in ",  cb_file),
+        call = call
+      )
+    }
+  )
+}
+
+find_ihgis_txt_cb <- function(cb_file) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "txt",
+    file_select = quo(tidyselect::matches("_codebook")),
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
+}
+
+find_ihgis_geog_cb <- function(cb_file) {
+  find_ihgis_metadata_files(
+    cb_file,
+    name_ext = "csv",
+    file_select = quo(tidyselect::matches("_geog")),
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
 }
 
 new_ipums_ddi <- function(file_name = NULL,

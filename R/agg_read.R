@@ -3,30 +3,16 @@
 # in this project's top-level directory, and also on-line at:
 #   https://github.com/ipums/ipumsr
 
-#' Read tabular data from an NHGIS extract
+#' Read data from an IPUMS aggregate data extract
 #'
 #' @description
-#' Read a csv or fixed-width (.dat) file downloaded from the NHGIS extract
-#' system.
+#' Read a .csv file from an extract downloaded from an IPUMS aggregate
+#' data collection (IPUMS NHGIS or IPUMS IHGIS).
 #'
 #' To read spatial data from an NHGIS extract, use [read_ipums_sf()].
 #'
-#' @details
-#' The .do file that is included when downloading an NHGIS fixed-width
-#' extract contains the necessary metadata (e.g. column positions and implicit
-#' decimals) to correctly parse the data file. `read_nhgis()` uses this
-#' information to parse and recode the fixed-width data appropriately.
-#'
-#' If you no longer have access to the .do file, consider resubmitting the
-#' extract that produced the data. You can also change the desired data
-#' format to produce a .csv file, which does not require additional metadata
-#' files to be loaded.
-#'
-#' For more about resubmitting an existing extract via the IPUMS API, see
-#' `vignette("ipums-api", package = "ipumsr")`.
-#'
-#' @param data_file Path to a .zip archive containing an NHGIS extract or
-#'   a single file from an NHGIS extract.
+#' @param data_file Path to a .zip archive containing an IPUMS NHGIS or
+#'   IPUMS IHGIS extract or a single .csv file from such an extract.
 #' @param file_select If `data_file` is a .zip archive that
 #'   contains multiple files, an expression identifying the file to load.
 #'   Accepts a character vector specifying the
@@ -57,12 +43,6 @@
 #' @param n_max Maximum number of lines to read.
 #' @param guess_max For .csv files, maximum number of lines to use for guessing
 #'   column types. Will never use more than the number of lines read.
-#' @param do_file For fixed-width files, path to the .do file associated with
-#'   the provided `data_file`. The .do file contains the parsing instructions
-#'   for the data file.
-#'
-#'   By default, looks in the same path as `data_file` for
-#'   a .do file with the same name. See Details section below.
 #' @param var_attrs Variable attributes to add from the codebook (.txt) file
 #'   included in the extract. Defaults to all available attributes.
 #'
@@ -80,8 +60,177 @@
 #'
 #'   Will be overridden by `readr.show_progress` and `readr.show_col_types`
 #'   options, if they are set.
-#' @param data_layer `r lifecycle::badge("deprecated")` Please
-#'   use `file_select` instead.
+#'
+#' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
+#'   `data_file`
+#'
+#' @export
+#'
+#' @seealso
+#' [read_ipums_sf()] to read spatial data from an IPUMS extract.
+#'
+#' [read_nhgis_codebook()] or [read_ihgis_codebook()] to read metadata about
+#' an IPUMS aggregate data extract.
+#'
+#' [ipums_list_files()] to list files in an IPUMS extract.
+#'
+#' @examples
+#' nhgis_file <- ipums_example("nhgis0972_csv.zip")
+#' ihgis_file <- ipums_example("ihgis0014.zip")
+#'
+#' # Provide the .zip archive directly to load the data inside:
+#' read_ipums_agg(nhgis_file)
+#'
+#' # For extracts that contain multiple files, use `file_select` to specify
+#' # a single file to load. This accepts a tidyselect expression:
+#' read_ipums_agg(ihgis_file, file_select = matches("AAA_g0"), verbose = FALSE)
+#'
+#' # Or an index position:
+#' read_ipums_agg(ihgis_file, file_select = 2, verbose = FALSE)
+#'
+#' # Variable metadata is automatically attached to data, if available
+#' ihgis_data <- read_ipums_agg(ihgis_file, file_select = 2, verbose = FALSE)
+#' ipums_var_info(ihgis_data)
+#'
+#' # Column types are inferred from the data. You can
+#' # manually specify column types with `col_types`. This may be useful for
+#' # geographic codes, which should typically be interpreted as character values
+#' read_ipums_agg(nhgis_file, col_types = list(MSA_CMSAA = "c"), verbose = FALSE)
+#'
+#' # You can also read in a subset of the data file:
+#' read_ipums_agg(
+#'   nhgis_file,
+#'   n_max = 15,
+#'   vars = c(GISJOIN, YEAR, D6Z002),
+#'   verbose = FALSE
+#' )
+read_ipums_agg <- function(data_file,
+                           file_select = NULL,
+                           vars = NULL,
+                           col_types = NULL,
+                           n_max = Inf,
+                           guess_max = min(n_max, 1000),
+                           var_attrs = c("val_labels", "var_label", "var_desc"),
+                           remove_extra_header = TRUE,
+                           verbose = TRUE) {
+  if (length(data_file) != 1) {
+    rlang::abort("`data_file` must be length 1")
+  }
+
+  file_select <- enquo(file_select)
+
+  custom_check_file_exists(data_file)
+
+  file <- find_files_in(
+    data_file,
+    name_ext = "csv",
+    file_select = file_select,
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
+    multiple_ok = FALSE,
+    none_ok = FALSE
+  )
+
+  # NHGIS files should have NHGIS in name. IHGIS that isn't guaranteed
+  # If not obviously NHGIS, we'll try loading IHGIS codebook.
+  # If both fail then we simply load the CSV data with no codebook
+  if (fostr_detect(basename(data_file), "^nhgis")) {
+    cb_ddi_info <- read_nhgis_codebook_safe(
+      data_file,
+      filename = file,
+      verbose = !is_null(var_attrs)
+    )
+  } else {
+    cb_ddi_info <- read_ihgis_codebook_safe(
+      data_file,
+      verbose = !is_null(var_attrs)
+    )
+  }
+
+  if (file_is_zip(data_file)) {
+    file <- unz(data_file, file)
+    # TODO probably need on.exit here...
+  } else if (file_is_dir(data_file)) {
+    file <- file.path(data_file, file)
+  }
+
+  header_info <- check_header_row(data_file, file_select = !!file_select)
+
+  # Skip to avoid loading extra header
+  # We will reattach correct column names when we load the data.
+  if (header_info$has_extra_header && remove_extra_header) {
+    skip <- 2
+  } else {
+    skip <- 1
+  }
+
+  if (verbose) {
+    message(short_conditions_text(cb_ddi_info))
+  }
+
+  data <- readr::read_csv(
+    file,
+    skip = skip,
+    col_select = !!enquo(vars),
+    col_names = header_info$col_names, # Reattach skipped colnames
+    locale = ipums_locale(cb_ddi_info$file_encoding),
+    progress = show_readr_progress(verbose),
+    show_col_types = show_readr_coltypes(verbose),
+    col_types = col_types,
+    n_max = n_max,
+    guess_max = guess_max,
+    na = c("", "NA")
+  )
+
+  data <- set_ipums_var_attributes(data, cb_ddi_info$var_info, var_attrs)
+
+  data
+}
+
+#' Read tabular data from an NHGIS extract
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Read a .csv or fixed-width (.dat) file downloaded from the NHGIS extract
+#' system.
+#'
+#' This function has been deprecated in favor of [read_ipums_agg()], which
+#' can read .csv files from both IPUMS aggregate data collections
+#' (IPUMS NHGIS and IPUMS IHGIS). Please use that function instead.
+#'
+#' Note that fixed-width file reading is not supported in `read_ipums_agg()` and
+#' will likely be retired with `read_nhgis()`. We therefore encourage you to
+#' create NHGIS extracts in .csv format going forward. For previously-submitted
+#' fixed-width extracts, we suggest
+#' regenerating them in .csv format and loading them with `read_ipums_agg()`.
+#' Use the `data_format` argument of [define_extract_agg()] to create a
+#' .csv extract for submission via the IPUMS API.
+#'
+#' To read spatial data from an NHGIS extract, use [read_ipums_sf()].
+#'
+#' @details
+#' The .do file that is included when downloading an NHGIS fixed-width
+#' extract contains the necessary metadata (e.g. column positions and implicit
+#' decimals) to correctly parse the data file. `read_nhgis()` uses this
+#' information to parse and recode the fixed-width data appropriately.
+#'
+#' If you no longer have access to the .do file, consider resubmitting the
+#' extract that produced the data. You can also change the desired data
+#' format to produce a .csv file, which does not require additional metadata
+#' files to be loaded.
+#'
+#' For more about resubmitting an existing extract via the IPUMS API, see
+#' `vignette("ipums-api", package = "ipumsr")`.
+#'
+#' @inheritParams read_ipums_agg
+#' @param data_file Path to a .zip archive containing an NHGIS extract or
+#'   a single file from an NHGIS extract.
+#' @param do_file For fixed-width files, path to the .do file associated with
+#'   the provided `data_file`. The .do file contains the parsing instructions
+#'   for the data file.
+#'
+#'   By default, looks in the same path as `data_file` for
+#'   a .do file with the same name. See Details section below.
 #'
 #' @return A [`tibble`][tibble::tbl_df-class] containing the data found in
 #'   `data_file`
@@ -95,37 +244,22 @@
 #'
 #' @export
 #'
+#' @keywords internal
+#'
 #' @examples
 #' # Example files
 #' csv_file <- ipums_example("nhgis0972_csv.zip")
 #' fw_file <- ipums_example("nhgis0730_fixed.zip")
 #'
-#' # Provide the .zip archive directly to load the data inside:
+#' # Previously:
 #' read_nhgis(csv_file)
 #'
-#' # For extracts that contain multiple files, use `file_select` to specify
-#' # a single file to load. This accepts a tidyselect expression:
-#' read_nhgis(fw_file, file_select = matches("ds239"), verbose = FALSE)
-#'
-#' # Or an index position:
-#' read_nhgis(fw_file, file_select = 2, verbose = FALSE)
-#'
-#' # For CSV files, column types are inferred from the data. You can
-#' # manually specify column types with `col_types`. This may be useful for
-#' # geographic codes, which should typically be interpreted as character values
-#' read_nhgis(csv_file, col_types = list(MSA_CMSAA = "c"), verbose = FALSE)
+#' # For CSV files, please update to use the following:
+#' read_ipums_agg(csv_file)
 #'
 #' # Fixed-width files are parsed with the correct column positions
 #' # and column types automatically:
 #' read_nhgis(fw_file, file_select = contains("ts"), verbose = FALSE)
-#'
-#' # You can also read in a subset of the data file:
-#' read_nhgis(
-#'   csv_file,
-#'   n_max = 15,
-#'   vars = c(GISJOIN, YEAR, D6Z002),
-#'   verbose = FALSE
-#' )
 read_nhgis <- function(data_file,
                        file_select = NULL,
                        vars = NULL,
@@ -135,30 +269,21 @@ read_nhgis <- function(data_file,
                        do_file = NULL,
                        var_attrs = c("val_labels", "var_label", "var_desc"),
                        remove_extra_header = TRUE,
-                       verbose = TRUE,
-                       data_layer = deprecated()) {
+                       verbose = TRUE) {
+  lifecycle::deprecate_warn("0.9.0", "read_nhgis()", "read_ipums_agg()")
+
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
   }
 
-  dir_read_deprecated(data_file)
-
-  if (!missing(data_layer)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "read_nhgis(data_layer = )",
-      "read_nhgis(file_select = )",
-    )
-    file_select <- enquo(data_layer)
-  } else {
-    file_select <- enquo(file_select)
-  }
+  file_select <- enquo(file_select)
 
   custom_check_file_exists(data_file)
 
   data_files <- find_files_in(
     data_file,
     name_ext = "csv|dat",
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = TRUE,
     none_ok = TRUE
   )
@@ -178,15 +303,15 @@ read_nhgis <- function(data_file,
   }
 
   if (has_csv) {
-    data <- read_nhgis_csv(
+    data <- read_ipums_agg(
       data_file,
       file_select = !!file_select,
+      vars = !!enquo(vars),
       col_types = col_types,
-      col_select = !!enquo(vars),
       n_max = n_max,
+      guess_max = guess_max,
       var_attrs = var_attrs,
       remove_extra_header = remove_extra_header,
-      na = c("", "NA"),
       verbose = verbose
     )
   } else {
@@ -287,7 +412,7 @@ read_nhgis_fwf <- function(data_file,
     )
   }
 
-  cb_ddi_info <- load_codebook(
+  cb_ddi_info <- read_nhgis_codebook_safe(
     data_file,
     filename = file,
     verbose = !is_null(var_attrs)
@@ -339,11 +464,12 @@ read_nhgis_csv <- function(data_file,
     data_file,
     name_ext = "csv",
     file_select = file_select,
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = FALSE,
     none_ok = FALSE
   )
 
-  cb_ddi_info <- load_codebook(
+  cb_ddi_info <- read_nhgis_codebook_safe(
     data_file,
     filename = file,
     verbose = !is_null(var_attrs)
@@ -413,7 +539,7 @@ read_nhgis_csv <- function(data_file,
 #' @return An `ipums_ddi` object
 #'
 #' @noRd
-load_codebook <- function(data_file, filename, verbose = FALSE) {
+read_nhgis_codebook_safe <- function(data_file, filename, verbose = FALSE) {
   cb_files <- find_files_in(
     data_file,
     name_ext = "txt",
@@ -456,13 +582,63 @@ load_codebook <- function(data_file, filename, verbose = FALSE) {
 
   # If still no codebook info, return empty DDI
   if (cb_error) {
-    cb_ddi_info <- NHGIS_EMPTY_DDI
+    cb_ddi_info <- ipums_agg_empty_ddi("nhgis")
 
     if (verbose) {
       rlang::warn(
         c(
           "Unable to read codebook associated with this file.",
           "i" = "To load a codebook manually, use `read_nhgis_codebook()`.",
+          "i" = paste0(
+            "To attach codebook information to loaded data, ",
+            "use `set_ipums_var_attributes()`."
+          )
+        )
+      )
+    }
+  }
+
+  # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
+  # because an extract with county names has n with tildes and so is can
+  # be verified as ISO-8859-1)
+  cb_ddi_info$file_encoding <- "ISO-8859-1"
+
+  cb_ddi_info
+}
+
+read_ihgis_codebook_safe <- function(data_file, verbose = FALSE) {
+  # If data_file is an extract, we can just load the cb
+  cb_ddi_info <- try(read_ihgis_codebook(data_file), silent = TRUE)
+  cb_error <- inherits(cb_ddi_info, "try-error")
+
+  # if this failed, then `data_file` is probably path to a CSV data file,
+  # which cannot be passed to read_ihgis_codebook() directly.
+  # We need to find associated datadict file
+  if (cb_error) {
+    dd_file <- find_files_in(
+      dirname(data_file),
+      name_ext = "csv$",
+      file_select = quo(tidyselect::matches("_datadict")),
+      multiple_ok = TRUE,
+      none_ok = TRUE
+    )
+
+    dd_file <- file.path(dirname(data_file), dd_file)
+
+    cb_ddi_info <- try(read_ihgis_codebook(dd_file), silent = TRUE)
+    cb_error <- inherits(cb_ddi_info, "try-error")
+  }
+
+  # If still no codebook info, we're probably missing the necessary files.
+  # Return empty DDI
+  if (cb_error) {
+    cb_ddi_info <- ipums_agg_empty_ddi("ihgis")
+
+    if (verbose) {
+      rlang::warn(
+        c(
+          "Unable to read codebook associated with this file.",
+          "i" = "To load a codebook manually, use `read_ihgis_codebook()`.",
           "i" = paste0(
             "To attach codebook information to loaded data, ",
             "use `set_ipums_var_attributes()`."
@@ -487,6 +663,7 @@ check_header_row <- function(data_file, file_select = NULL) {
     data_file,
     name_ext = "csv",
     file_select = file_select,
+    pattern_exclude = "(_datadict|_geog|_tables)\\.csv$",
     multiple_ok = FALSE,
     none_ok = FALSE
   )
@@ -604,13 +781,16 @@ warn_default_fwf_parsing <- function() {
   )
 }
 
-# Fills in a default condition if we can't find codebook for nhgis
-NHGIS_EMPTY_DDI <- new_ipums_ddi(
-  ipums_project = "NHGIS",
-  file_type = "rectangular",
-  conditions = paste0(
-    "Use of data from NHGIS is subject to conditions including that users ",
-    "should cite the data appropriately. ",
-    "Please see www.nhgis.org for more information."
+ipums_agg_empty_ddi <- function(collection) {
+  new_ipums_ddi(
+    ipums_project = get_proj_name(collection),
+    file_type = "rectangular",
+    conditions = paste0(
+      "Use of data from ", get_proj_name(collection),
+      " is subject to conditions including that users ",
+      "should cite the data appropriately. ",
+      "Please see ", get_proj_config(collection)$home_url,
+      " for more information."
+    )
   )
-)
+}

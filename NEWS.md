@@ -1,5 +1,50 @@
 # ipumsr (development version)
 
+-   This release adds comprehensive support for IPUMS IHGIS extract submission, 
+    metadata retrieval, and data loading! 
+    
+    As IPUMS IHGIS is an aggregate data 
+    project alongside IPUMS NHGIS, many functions that previously were 
+    NHGIS-specific have been generalized to accommodate both collections. This 
+    includes the following new functions:
+    
+    -   `read_ipums_agg()` loads downloaded extracts for both NHGIS and IHGIS.
+        This replaces `read_nhgis()`, which is now deprecated.
+        
+    -   `define_extract_agg()` defines extract requests for both NHGIS and
+        IHGIS. Use the `collection` argument to specify the data collection for
+        a given extract. This replaces `define_extract_nhgis()`, which is now
+        deprecated.
+        
+    -   `get_metadata_catalog()` retrieves summary metadata about NHGIS and 
+        IHGIS data sources. `get_metadata()` retrieves
+        detailed metadata about a particular NHGIS or IHGIS data source. These
+        functions replace `get_metadata_nhgis()`, which is now deprecated.
+        
+-   Adds `read_ihgis_codebook()` to load codebook files containing
+    file-level metadata for downloaded IHGIS extracts. This function is
+    currently experimental.
+
+## Function + argument retirements
+    
+-   `data_layer` and `shape_layer` arguments are now defunct. In cases
+    where this functionality is still supported, please use the
+    `file_select` argument instead.
+    
+-   `get_recent_extracts_info_list()`, `get_recent_extracts_info_tbl()`,
+    and `extract_tbl_to_list()` are now defunct. Use `get_extract_history()`
+    to obtain a list of previously-submitted extracts.
+    
+-   The ability to read files through directories is now defunct. This
+    affects most reader functions. If you have unzipped an IPUMS extract
+    archive, please provide the path to the individual file you wish
+    to load, not its containing directory.
+    
+-   `project` and `var_label` arguments in `ipums_website()` are now 
+    defunct.
+
+## New features
+
 # ipumsr 0.8.2
     
 -   Adds codebook files to output of `ipums_list_files()` (#85).

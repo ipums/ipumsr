@@ -24,6 +24,7 @@ Currently, ipumsr supports extract definitions for the following collections:
 \item IPUMS Time Use (\code{"atus"}, \code{"ahtus"}, \code{"mtus"})
 \item IPUMS Health Surveys (\code{"nhis"}, \code{"meps"})
 \item IPUMS NHGIS (\code{"nhgis"})
+\item IPUMS IHGIS (\code{"ihgis"})
 }
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.

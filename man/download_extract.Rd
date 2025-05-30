@@ -86,14 +86,14 @@ nhgis_files <- download_extract("nhgis:1")
 
 # NHGIS extracts return a path to both the tabular and spatial data files,
 # as applicable.
-nhgis_data <- read_nhgis(data = nhgis_files["data"])
+nhgis_data <- read_ipums_agg(data = nhgis_files["data"])
 
 # Load NHGIS spatial data
 nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
 }
 }
 \seealso{
-\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_nhgis]{read_nhgis()}} to read tabular
+\code{\link[=read_ipums_micro]{read_ipums_micro()}} or \code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular
 data from an IPUMS extract.
 
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.

@@ -107,18 +107,21 @@ access to the extract system for [certain IPUMS collections](https://developer.i
 ipumsr provides an interface to the IPUMS extract system via the IPUMS API 
 for the following collections:
 
--   IPUMS USA
--   IPUMS CPS
--   IPUMS International
--   IPUMS Time Use (ATUS, AHTUS, MTUS)
--   IPUMS Health Surveys (NHIS, MEPS)
--   IPUMS NHGIS
+-   IPUMS microdata collections
+    *   IPUMS USA
+    *   IPUMS CPS
+    *   IPUMS International
+    *   IPUMS Time Use (ATUS, AHTUS, MTUS)
+    *   IPUMS Health Surveys (NHIS, MEPS)
+-   IPUMS aggregate data collections
+    *   IPUMS NHGIS
+    *   IPUMS IHGIS
 
 #### Metadata support
 
-For IPUMS NHGIS, ipumsr provides access to comprehensive metadata via the IPUMS
-API. Users can query NHGIS metadata to explore available data when specifying 
-NHGIS extract requests.
+For aggregate data collections, ipumsr provides access to comprehensive 
+metadata via the IPUMS API. Users can query metadata to explore available 
+data when specifying aggregate data extract requests.
 
 Increased access to metadata for microdata projects is in 
 progress. Currently, the IPUMS API only provides a listing of available
@@ -135,8 +138,8 @@ and download the associated data.
 
 First, define the parameters of your extract. The available extract
 definition options will differ by IPUMS data collection. See the
-[microdata API request](ipums-api-micro.html) and [NHGIS API
-request](ipums-api-nhgis.html) vignettes for more details on defining an
+[microdata API request](ipums-api-micro.html) and [aggregate data API
+request](ipums-api-agg.html) vignettes for more details on defining an
 extract.
 
 ```{r}
@@ -149,7 +152,8 @@ cps_extract_request <- define_extract_micro(
 )
 
 # Define an NHGIS extract request
-nhgis_extract_request <- define_extract_nhgis(
+nhgis_extract_request <- define_extract_agg(
+  collection = "nhgis",
   description = "NHGIS Data via IPUMS API",
   datasets = ds_spec(
     "1990_STF1",
@@ -183,8 +187,7 @@ more details about how to use ipumsr to interact with the IPUMS API.
 
 Once you have downloaded an extract, you can load the data into R with
 the family of `read_*()` functions in ipumsr. These functions expand on
-those provided in `{readr}` in two
-ways:
+those provided in `{readr}` in two ways:
 
 -   ipumsr anticipates standard IPUMS file structures, limiting the need
     for users to manually extract and organize their downloaded files
@@ -206,16 +209,17 @@ metadata file for your extract:
 ```{r}
 cps_file <- ipums_example("cps_00157.xml")
 cps_data <- read_ipums_micro(cps_file)
+
 head(cps_data)
 ```
 
 #### NHGIS files
 
-For NHGIS files, use `read_nhgis()`:
+For aggregate data files, use `read_ipums_agg()`:
 
 ```{r}
 nhgis_file <- ipums_example("nhgis0972_csv.zip")
-nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
+nhgis_data <- read_ipums_agg(nhgis_file, verbose = FALSE)
 
 head(nhgis_data)
 ```
@@ -244,26 +248,27 @@ or SAS files).
 
 ### Exploring file metadata
 
-Load a file's metadata with `read_ipums_ddi()` (for microdata projects)
-and `read_nhgis_codebook()` (for NHGIS). These provide file- and
-variable-level metadata for a given data source, which can be used to
-interpret the data contents.
+Load a file's metadata with `read_ipums_ddi()` (for microdata projects),
+`read_nhgis_codebook()` (for NHGIS), or `read_ihgis_codebook()` (for IHGIS). 
+These provide file- and variable-level metadata for a given data source, which
+can be used to interpret the data contents.
 
 ```{r}
-cps_meta <- read_ipums_ddi(cps_file)
-nhgis_meta <- read_nhgis_codebook(nhgis_file)
+cps_metadata <- read_ipums_ddi(cps_file)
+nhgis_metadata <- read_nhgis_codebook(nhgis_file)
 ```
 
 Summarize the variable metadata for a dataset using `ipums_var_info()`:
 
 ```{r}
-ipums_var_info(cps_meta)
+ipums_var_info(cps_metadata)
 ```
 
 You can also get contextual details for specific variables:
 
 ```{r}
 ipums_var_desc(cps_data$INCTOT)
+
 ipums_val_labels(cps_data$STATEFIP)
 ```
 

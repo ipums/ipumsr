@@ -1,0 +1,70 @@
+---------------------------------------------------------------
+Codebook for IHGIS extract 0014 
+---------------------------------------------------------------
+
+Contents
+    - Citation and Use
+    - Datasets
+    - Tables
+    - Variables
+
+Additional documentation on IHGIS data sources is available at:
+    https://ihgis.ipums.org
+
+---------------------------------------------------------------
+Citation and Use of IHGIS Data
+---------------------------------------------------------------
+
+Steven Manson, Tracy A. Kugler, Kathryn Grace, Jonathan Schroeder, David Van Riper, Steven Ruggles. IPUMS International Historical Geographic Information System: Version 3 [dataset]. Minneapolis, MN: IPUMS. 2025. http://doi.org/10.18128/D120.V3
+Works based on data tabulated from IPUMS International must also cite IPUMS International:
+Minnesota Population Center. Integrated Public Use Microdata Series, International: Version 7.1 [dataset]. Minneapolis, MN: IPUMS, 2018. https://doi.org/10.18128/D020.V7.1
+
+---------------------------------------------------------------
+Datasets (see also ihgis0014_tables.csv)
+---------------------------------------------------------------
+
+Dataset:                  KZ2009pop
+Country:                  Kazakhstan
+Dataset Year:             2009
+Dataset Type:             Population Census
+Source Publication Title: Results of the 2009 National Population Census of the Republic of Kazakhstan
+Producer Agency:          The Agency on Statistics of the Republic of Kazakhstan
+
+---------------------------------------------------------------
+Tables (see also ihgis0014_tables.csv and ihgis0014_geog.csv)
+---------------------------------------------------------------
+
+Urban and rural population
+    IHGIS code:  KZ2009pop.AAA
+    Tabulation geographies: Nation, Regions/Oblasts
+    Universe:    Total population
+
+Demographic burden on working-age population
+    IHGIS code:  KZ2009pop.AAB
+    Tabulation geographies: Nation, Regions/Oblasts
+    Universe:    Persons 0-14 and 65 years and above
+
+---------------------------------------------------------------
+Variables (see also ihgis0014_datadict.csv)
+---------------------------------------------------------------
+
+KZ2009popAAA: Urban and rural population
+    GISJOIN: GIS join match code
+    AAA001: Total population : 1999
+    AAA002: Total population : 2009
+    AAA003: Total population in 2009 as % of 1999
+    AAA004: Urban population : 1999
+    AAA005: Urban population : 2009
+    AAA006: Urban population in 2009 as % of 1999
+    AAA007: Rural population : 1999
+    AAA008: Rural population : 2009
+    AAA009: Rural population in 2009 as % of 1999
+
+KZ2009popAAB: Demographic burden on working-age population
+    GISJOIN: GIS join match code
+    AAB001: 1999 : Below and above working age (0-14, 65 years and above)
+    AAB002: 2009 : Below and above working age (0-14, 65 years and above)
+    AAB003: 1999 : Below working age (0-14 years)
+    AAB004: 2009 : Below working age (0-14 years)
+    AAB005: 1999 : Above working age (65 years and above)
+    AAB006: 2009 : Above working age (65 years and above)

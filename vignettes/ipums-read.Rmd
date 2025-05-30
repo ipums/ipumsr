@@ -43,7 +43,7 @@ easier to interpret the values in the data variables and effectively use
 them in your data processing pipeline. See the [value labels](value-labels.html)
 vignette for more information on working with these labels.
 
-## Reading microdata extracts
+## Reading IPUMS microdata extracts
 
 Microdata extracts typically provide their metadata in a DDI (.xml) file
 separate from the compressed data (.dat.gz) files.
@@ -164,19 +164,38 @@ read_ipums_micro_list(cps_hier_ddi)
 loading by selecting only a subset of columns or a limited number of
 rows. See the documentation for more details about other options.
 
-## Reading IPUMS NHGIS extracts
+## Reading IPUMS aggregate data extracts
 
-Unlike microdata projects, NHGIS extracts provide their data and
-metadata files bundled into a single .zip archive. `read_nhgis()`
+Unlike microdata projects, NHGIS and IHGIS extracts provide their data and
+metadata files bundled into a single .zip archive. `read_ipums_agg()`
 anticipates this structure and can read data files directly from this
 file without the need to manually extract the files:
 
 ```{r}
 nhgis_ex1 <- ipums_example("nhgis0972_csv.zip")
 
-nhgis_data <- read_nhgis(nhgis_ex1)
+nhgis_data <- read_ipums_agg(nhgis_ex1)
+
 nhgis_data
 ```
+
+Within a zipped extract archive, tabular data from aggregate data projects
+are typically provided in .csv format. `read_ipums_agg()` passes several
+arguments on to `readr::read_csv()` to allow you to fine-tune the import of
+these files. For instance, if the guessed column types are incorrect, use the 
+`col_types` argument to adjust. This is most likely to occur for 
+columns that contain geographic codes that end up stored as numeric values:
+
+```{r}
+# Convert MSA codes to character format
+read_ipums_agg(
+  nhgis_ex1,
+  col_types = c(MSA_CMSAA = "c"),
+  verbose = FALSE
+)
+```
+
+### Variable metadata
 
 Like microdata extracts, the data include variable-level metadata, where
 available:
@@ -185,12 +204,13 @@ available:
 attributes(nhgis_data$D6Z001)
 ```
 
-However, variable metadata for NHGIS data are slightly different than those
-provided by microdata products. First, they come from a .txt codebook
-file rather than an .xml DDI file. Codebooks can still be loaded into an
-`ipums_ddi` object, but fields that do not apply to aggregate data
-will be empty. In general, NHGIS codebooks provide only variable labels
-and descriptions, along with citation information.
+However, variable metadata for aggregate data files are slightly different
+than those provided by microdata products. First,
+they come from a .txt codebook file (for NHGIS) or a collection of metadata 
+.csv files (for IHGIS) rather than an .xml DDI file. Codebooks can still be 
+loaded into an `ipums_ddi` object, but fields that do not apply to aggregate 
+data will be empty. In general, aggregate data codebooks provide only variable 
+labels and descriptions, along with citation information.
 
 ```{r}
 nhgis_cb <- read_nhgis_codebook(nhgis_ex1)
@@ -200,9 +220,18 @@ ipums_var_info(nhgis_cb) %>%
   select(var_name, var_label, var_desc)
 ```
 
-By design, NHGIS codebooks are human-readable, and it may be easier to interpret
-their contents in raw format. To view the codebook itself without converting 
-to an `ipums_ddi` object, set `raw = TRUE`.
+IHGIS codebooks are structured differently than NHGIS codebooks, so each
+collection has its own codebook reader. Both produce an `ipums_ddi` object.
+
+```{r}
+ihgis_cb <- read_ihgis_codebook(ipums_example("ihgis0014.zip"))
+
+ipums_var_info(ihgis_cb)
+```
+
+By design, aggregate data codebooks are human-readable, and it may be easier 
+to interpret their contents in raw format. To view the codebook itself without
+converting  to an `ipums_ddi` object, set `raw = TRUE`.
 
 ```{r}
 nhgis_cb <- read_nhgis_codebook(nhgis_ex1, raw = TRUE)
@@ -212,7 +241,7 @@ cat(nhgis_cb[1:20], sep = "\n")
 
 ### Handling multiple files
 
-For more complicated NHGIS extracts that include data from multiple data 
+For more complicated extracts that include data from multiple data 
 sources, the provided .zip archive will contain multiple codebook and data 
 files.
 
@@ -232,8 +261,15 @@ file to load. `file_select` supports most features of the
 ipumsr.)
 
 ```{r, error=TRUE, message=FALSE}
-nhgis_data2 <- read_nhgis(nhgis_ex2, file_select = contains("nation"))
-nhgis_data3 <- read_nhgis(nhgis_ex2, file_select = contains("ts_nominal_state"))
+nhgis_data2 <- read_ipums_agg(
+  nhgis_ex2, 
+  file_select = contains("nation")
+)
+
+nhgis_data3 <- read_ipums_agg(
+  nhgis_ex2, 
+  file_select = contains("ts_nominal_state")
+)
 ```
 
 The matching codebook should automatically be loaded and attached to the
@@ -241,78 +277,34 @@ data:
 
 ```{r}
 attributes(nhgis_data2$AJWBE001)
+
 attributes(nhgis_data3$A00AA1790)
 ```
 
-(If for some reason the codebook is not loaded correctly, you can load
-it separately with `read_nhgis_codebook()`, which also accepts a
-`file_select` specification.)
+(If for some reason the metadata are not loaded successfully, you can load
+it separately with either `read_nhgis_codebook()` or `read_ihgis_codebook()`.)
 
 `file_select` also accepts the full path or the index of the file to
 load:
 
 ```{r, eval=FALSE}
 # Match by file name
-read_nhgis(nhgis_ex2, file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv")
+read_ipums_agg(
+  nhgis_ex2, 
+  file_select = "nhgis0731_csv/nhgis0731_ds239_20185_nation.csv"
+)
 
 # Match first file in extract
-read_nhgis(nhgis_ex2, file_select = 1)
+read_ipums_agg(nhgis_ex2, file_select = 1)
 ```
-
-### NHGIS data formats
-
-#### CSV data
-
-NHGIS data are most easily handled in .csv format. `read_nhgis()`
-uses `readr::read_csv()` to handle the generation of column type
-specifications. If the guessed specifications are incorrect, you can use the
-`col_types` argument to adjust. This is most likely to occur for
-columns that contain geographic codes that are stored as numeric values:
-
-```{r}
-# Convert MSA codes to character format
-read_nhgis(
-  nhgis_ex1,
-  col_types = c(MSA_CMSAA = "c"),
-  verbose = FALSE
-)
-```
-
-#### Fixed-width data
-
-`read_nhgis()` also handles NHGIS files provided in fixed-width format:
-
-```{r}
-nhgis_fwf <- ipums_example("nhgis0730_fixed.zip")
-
-nhgis_fwf_data <- read_nhgis(nhgis_fwf, file_select = matches("ts_nominal"))
-nhgis_fwf_data
-```
-
-The correct parsing of NHGIS fixed-width files is
-driven by the column parsing information contained in the .do file
-provided in the .zip archive. This contains information not only about
-column positions and data types, but also implicit decimals in the data.
-
-If you no longer have access to the .do file, it is best to
-resubmit and/or re-download the extract (you may also consider
-converting to .csv format in the process). If you have moved the .do
-file, provide its file path to the `do_file` argument to use its column
-parsing information.
-
-Note that unlike `read_ipums_micro()`, fixed-width files for NHGIS are
-still handled by providing the path to the *data file*, not the
-*metadata file* (i.e. you cannot provide an `ipums_ddi` object to the
-`data_file` argument of `read_nhgis()`). This is for syntactical
-consistency with the loading of NHGIS .csv files.
 
 ## Reading spatial data
 
 IPUMS distributes spatial data for several projects.
 
--   For microdata projects, spatial data are distributed in shapefiles
-    on dedicated geography pages separate from the standard extract
-    system. Look for a **Geography and GIS** link in the **Supplemental
+-   For microdata projects and IPUMS IHGIS, spatial data are distributed 
+    in shapefiles on dedicated geography pages separate from the standard 
+    extract system. Look for a **Geography and GIS** link in the **Supplemental
     Data** section of the project's website to find spatial data files
     and information.
 -   For NHGIS, spatial data can be obtained within the extract system.
@@ -349,9 +341,9 @@ joined_data <- ipums_shape_left_join(
 attributes(joined_data$MSA_CMSAA)
 ```
 
-For NHGIS data, the join code typically corresponds to the `GISJOIN`
-variable. However, for microdata projects, the variable name used for a
-geographic level in the tabular data may differ from that in the spatial
+For aggregate data collections, the join code typically corresponds to the 
+`GISJOIN` variable. However, for microdata collections, the variable name used
+for a geographic level in the tabular data may differ from that in the spatial
 data. Consult the documentation and metadata for these files to identify
 the correct join columns and use the `by` argument to join on these
 columns.

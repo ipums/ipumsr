@@ -48,24 +48,15 @@ Otherwise, a named list of metadata for the specified \code{dataset},
 \code{data_table}, or \code{time_series_table}.
 }
 \description{
-Retrieve information about available NHGIS data sources, including
-\href{https://www.nhgis.org/overview-nhgis-datasets}{datasets},
-data tables (summary tables),
-\href{https://www.nhgis.org/time-series-tables}{time series tables},
-and \href{https://www.nhgis.org/gis-files}{shapefiles} (GIS files).
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-To retrieve summary metadata for all available data sources of a particular
-type, use the \code{type} argument. To retrieve detailed metadata for a
-single data source, use the \code{dataset}, \code{data_table}, or \code{time_series_table}
-argument. See the \emph{metadata availability} section below for information on
-the metadata provided for each data type.
-
-For general information, see the NHGIS
-\href{https://www.nhgis.org/data-availability}{data source overview} and the
-\href{https://www.nhgis.org/frequently-asked-questions-faq}{FAQ}.
+This function has been deprecated because the IPUMS API now supports
+metadata endpoints for multiple data collections. To obtain summary metadata,
+please use \code{\link[=get_metadata_catalog]{get_metadata_catalog()}}. To obtain detailed metadata, please use
+\code{\link[=get_metadata]{get_metadata()}}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")} and
-NHGIS extract definitions in \code{vignette("ipums-api-nhgis")}.
+aggregate data extract definitions in \code{vignette("ipums-api-agg")}.
 }
 \section{Metadata availability}{
 
@@ -182,50 +173,30 @@ metadata API and extracts.
 library(dplyr)
 
 # Get summary metadata for all available sources of a given data type
+# Previously:
 get_metadata_nhgis("datasets")
 
-# Filter to identify data sources of interest by their metadata values
-all_tsts <- get_metadata_nhgis("time_series_tables")
+# Now:
+get_metadata_catalog("nhgis", "datasets")
 
-tsts <- all_tsts \%>\%
-  filter(
-    grepl("Children", description),
-    grepl("Families", description),
-    geographic_integration == "Standardized to 2010"
-  )
-
-tsts$name
-
-# Get detailed metadata for a single source with its associated argument:
+# Get detailed metadata for a single source with its associated argument
+# Previously:
 cs5_meta <- get_metadata_nhgis(time_series_table = "CS5")
+
+# Now:
+cs5_meta <- get_metadata("nhgis", time_series_table = "CS5")
+
 cs5_meta$geog_levels
 
 # Use the available values when defining an NHGIS extract request
-define_extract_nhgis(
+define_extract_agg(
+  "nhgis",
   time_series_tables = tst_spec("CS5", geog_levels = "state")
-)
-
-# Detailed metadata is also provided for datasets and data tables
-get_metadata_nhgis(dataset = "1990_STF1")
-get_metadata_nhgis(data_table = "NP1", dataset = "1990_STF1")
-
-# Iterate over data sources to retrieve detailed metadata for several
-# records. For instance, to get variable metadata for a set of data tables:
-tables <- c("NP1", "NP2", "NP10")
-
-var_meta <- purrr::map(
-  tables,
-  function(dt) {
-    dt_meta <- get_metadata_nhgis(dataset = "1990_STF1", data_table = dt)
-
-    # This ensures you avoid hitting rate limit for large numbers of tables
-    Sys.sleep(1)
-
-    dt_meta$variables
-  }
 )
 }
 }
 \seealso{
-\code{\link[=define_extract_nhgis]{define_extract_nhgis()}} to create an IPUMS NHGIS extract definition.
+\code{\link[=define_extract_agg]{define_extract_agg()}} to create an IPUMS aggregate data extract
+definition.
 }
+\keyword{internal}

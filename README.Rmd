@@ -126,9 +126,9 @@ tbl_config <- list(
     proj = "<a href='https://ihgis.ipums.org/'>IPUMS IHGIS</a>",
     type = "Aggregate Data",
     desc = "Tabular and GIS data from population, housing, and agricultural censuses around the world",
-    read = "",
-    request = "",
-    metadata = ""
+    read = checkmark(),
+    request = checkmark(),
+    metadata = checkmark()
   ),
   list(
     img = "<a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png' alt='IPUMS Time Use logo'></a>",
@@ -213,8 +213,8 @@ The package vignettes are the best place to explore what ipumsr has to offer:
 -   To interact with the IPUMS extract and metadata system via the IPUMS API, 
     see `vignette("ipums-api")`.
     
--   For additional details about microdata and NHGIS extract requests, see 
-    `vignette("ipums-api-micro")` and `vignette("ipums-api-nhgis")`.
+-   For additional details about microdata and aggregate data extract requests, 
+    see `vignette("ipums-api-micro")` and `vignette("ipums-api-agg")`.
     
 -   To work with labelled values in IPUMS data, see `vignette("value-labels")`.
 

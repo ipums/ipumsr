@@ -20,9 +20,10 @@ test_that("Printing excludes Variables field if empty", {
   )
 })
 
-test_that("Can print NHGIS extracts", {
+test_that("Can print aggregate data extracts", {
   expect_snapshot(print(test_nhgis_extract()))
   expect_snapshot(print(test_nhgis_extract_shp()))
+  expect_snapshot(print(test_ihgis_extract()))
 })
 
 test_that("NHGIS extract print coloring works", {
@@ -210,12 +211,12 @@ test_that("set_ipums_envvar works with existing .Renviron file", {
 # API Request Errors ----------------------------------------
 
 test_that("We handle API auth errors for extract and metadata endpoints", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-authorization", {
     expect_error(
       withr::with_envvar(new = c("IPUMS_API_KEY" = NA), {
-        get_metadata_nhgis("datasets")
+        get_metadata_catalog("nhgis", "datasets")
       }),
       "API key is either missing or invalid"
     )
@@ -227,7 +228,7 @@ test_that("We handle API auth errors for extract and metadata endpoints", {
 })
 
 test_that("Can parse API request error details in basic requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-invalid-extract", {
     expect_error(
@@ -287,26 +288,26 @@ test_that("Can parse API request error details in basic requests", {
 
   vcr::use_cassette("api-errors-invalid-metadata", {
     expect_error(
-      get_summary_metadata("nhgis", type = "foo"),
+      get_summary_metadata("nhgis", metadata_type = "foo"),
       "API request failed with status 404.$"
     )
     expect_error(
-      get_metadata_nhgis(dataset = "foo"),
+      get_metadata("nhgis", dataset = "foo"),
       "API request failed.+Couldn\'t find Dataset"
     )
     expect_error(
-      get_metadata_nhgis(data_table = "foo", dataset = "1980_STF1"),
+      get_metadata("nhgis", data_table = "foo", dataset = "1980_STF1"),
       "API request failed.+Couldn\'t find DataTable"
     )
     expect_error(
-      get_metadata_nhgis(time_series_table = "foo"),
+      get_metadata("nhgis", time_series_table = "foo"),
       "API request failed.+Couldn\'t find TimeSeriesTable"
     )
   })
 })
 
 test_that("Can parse API request error details in paged requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("api-errors-paged-extract", {
     expect_error(
@@ -323,7 +324,7 @@ test_that("Can parse API request error details in paged requests", {
 })
 
 test_that("We inform user about invalid extract number request", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # API itself returns empty-bodied response for an invalid extract number
   # for a given collection, but we want to inform user that the error
@@ -342,7 +343,7 @@ test_that("We inform user about invalid extract number request", {
 })
 
 test_that("We catch invalid collection specifications during requests", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   # Ideally we'd catch before request, as API message suggests all ipums
   # collections are available.
@@ -366,7 +367,7 @@ test_that("We catch invalid collection specifications during requests", {
 })
 
 test_that("We warn users about unsupported features detected in an extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-cps-extract", {
     expect_message(
@@ -431,7 +432,10 @@ test_that("We can get correct API version info for each collection", {
 
   expect_setequal(
     has_support$code_for_api,
-    c("usa", "cps", "ipumsi", "nhgis", "atus", "ahtus", "mtus", "nhis", "meps")
+    c(
+      "usa", "cps", "ipumsi", "nhgis", "ihgis",
+      "atus", "ahtus", "mtus", "nhis", "meps"
+    )
   )
   expect_equal(ipums_api_version(), 2)
   expect_equal(check_api_support("nhgis"), "nhgis")

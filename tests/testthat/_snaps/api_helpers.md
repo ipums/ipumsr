@@ -43,7 +43,7 @@
       Variables: (5 total) STATEFIP, AGE, SEX, DIFFANY, RELATER
       Time Use Variables: (2 total) ACT_PCARE, my_time_use_var
 
-# Can print NHGIS extracts
+# Can print aggregate data extracts
 
     Code
       print(test_nhgis_extract())
@@ -76,4 +76,16 @@
       Description: 
       
       Shapefiles: 110_blck_grp_2019_tl2019
+
+---
+
+    Code
+      print(test_ihgis_extract())
+    Output
+      Unsubmitted IPUMS IHGIS extract 
+      Description: Extract for R client testing
+      
+      Dataset: AL2001pop
+        Tables: AL2001pop.ADF, AL2001pop.ADG
+        Tabulation Geogs: AL2001pop.g0, AL2001pop.g1
 

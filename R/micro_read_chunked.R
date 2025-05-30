@@ -197,15 +197,8 @@ read_ipums_micro_chunked <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
-
-  if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-    rlang::warn(lower_vars_ignored_warning())
-  }
+  check_valid_ddi(ddi)
+  warn_if_lower_vars_ignored(ddi, lower_vars)
 
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
@@ -292,15 +285,9 @@ read_ipums_micro_list_chunked <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
+  check_valid_ddi(ddi)
+  warn_if_lower_vars_ignored(ddi, lower_vars)
 
-  if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-    rlang::warn(lower_vars_ignored_warning())
-  }
   if (is.character(ddi)) ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
   if (is.null(data_file)) data_file <- file.path(ddi$file_path, ddi$file_name)
 

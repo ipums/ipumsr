@@ -133,11 +133,7 @@ read_ipums_micro_yield <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
+  check_valid_ddi(ddi)
 
   vars <- enquo(vars)
 
@@ -164,11 +160,7 @@ read_ipums_micro_list_yield <- function(
     verbose = TRUE,
     var_attrs = c("val_labels", "var_label", "var_desc"),
     lower_vars = FALSE) {
-  if (!inherits(ddi, "ipums_ddi") && (file_is_zip(ddi) || file_is_dir(ddi))) {
-    rlang::abort(
-      "Expected `ddi` to be an `ipums_ddi` object or the path to an .xml file."
-    )
-  }
+  check_valid_ddi(ddi)
 
   vars <- enquo(vars)
 
@@ -201,9 +193,7 @@ IpumsLongYield <- R6::R6Class(
                           verbose = TRUE,
                           var_attrs = c("val_labels", "var_label", "var_desc"),
                           lower_vars = FALSE) {
-      if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-        rlang::warn(lower_vars_ignored_warning())
-      }
+      warn_if_lower_vars_ignored(ddi, lower_vars)
 
       if (is.character(ddi)) {
         ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)
@@ -275,9 +265,7 @@ IpumsListYield <- R6::R6Class(
                           verbose = TRUE,
                           var_attrs = c("val_labels", "var_label", "var_desc"),
                           lower_vars = FALSE) {
-      if (check_if_lower_vars_ignored(ddi, lower_vars)) {
-        rlang::warn(lower_vars_ignored_warning())
-      }
+      warn_if_lower_vars_ignored(ddi, lower_vars)
 
       if (is.character(ddi)) {
         ddi <- read_ipums_ddi(ddi, lower_vars = lower_vars)

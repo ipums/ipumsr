@@ -21,7 +21,7 @@ of \code{cb_file} rather than an \code{ipums_ddi} object. Defaults to
 \code{FALSE}.}
 }
 \value{
-If \code{raw = FALSE}, an \code{ipums_ddi} object with information on the
+If \code{raw = FALSE}, an \code{ipums_ddi} object with metadata about the
 variables contained in the data for the extract associated with the given
 \code{cb_file}.
 
@@ -32,15 +32,15 @@ line of the given \code{cb_file}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 Read the variable metadata contained in the .txt codebook file included with
-NHGIS extracts into an \link{ipums_ddi} object.
+NHGIS extracts into an \code{\link{ipums_ddi}} object.
 
 Because NHGIS variable metadata do not
 adhere to all the standards of microdata DDI files, some of the \code{ipums_ddi}
 fields will not be populated.
 
-This function is marked as experimental while we determine whether
-there may be a more robust way to standardize codebook and DDI reading across
-IPUMS collections.
+This function is marked as experimental while we determine whether there
+may be a more robust way to standardize codebook reading across IPUMS
+aggregate data collections.
 }
 \examples{
 # Example file
@@ -56,12 +56,12 @@ ipums_var_label(codebook, "PMSA")
 
 # If variable metadata have been lost from a data source, reattach from
 # the corresponding `ipums_ddi` object:
-nhgis_data <- read_nhgis(nhgis_file, verbose = FALSE)
+nhgis_data <- read_ipums_agg(nhgis_file, verbose = FALSE)
 
 nhgis_data <- zap_ipums_attributes(nhgis_data)
 ipums_var_label(nhgis_data$PMSA)
 
-nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook$var_info)
+nhgis_data <- set_ipums_var_attributes(nhgis_data, codebook)
 ipums_var_label(nhgis_data$PMSA)
 
 # You can also load the codebook in raw format to display in the console
@@ -71,7 +71,7 @@ codebook_raw <- read_nhgis_codebook(nhgis_file, raw = TRUE)
 cat(codebook_raw[1:20], sep = "\n")
 }
 \seealso{
-\code{\link[=read_nhgis]{read_nhgis()}} to read tabular data from an IPUMS NHGIS extract.
+\code{\link[=read_ipums_agg]{read_ipums_agg()}} to read tabular data from an IPUMS NHGIS extract.
 
 \code{\link[=read_ipums_sf]{read_ipums_sf()}} to read spatial data from an IPUMS extract.
 

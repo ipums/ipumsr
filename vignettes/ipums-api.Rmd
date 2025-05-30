@@ -104,21 +104,24 @@ library(purrr)
 IPUMS **extract** support is currently available via API for the
 following collections:
 
--   IPUMS USA
--   IPUMS CPS
--   IPUMS International
--   IPUMS Time Use (ATUS, AHTUS, MTUS)
--   IPUMS Health Surveys (NHIS, MEPS)
--   IPUMS NHGIS
+-   IPUMS microdata collections
+    *   IPUMS USA
+    *   IPUMS CPS
+    *   IPUMS International
+    *   IPUMS Time Use (ATUS, AHTUS, MTUS)
+    *   IPUMS Health Surveys (NHIS, MEPS)
+
+-   IPUMS aggregate data collections
+    *   IPUMS NHGIS
+    *   IPUMS IHGIS
 
 Note that this support only includes data available via a collection's
-extract engine. Many collections provide additional data via direct
-download, but these products are not supported by the IPUMS API.
+extract engine. Many collections provide supplemental data files via direct
+download. Currently, API support for downloading these files is limited to
+IPUMS NHGIS. See `download_supplemental_data()` for more information.
 
-IPUMS **metadata** support is currently available via API for the
-following collections:
-
--   IPUMS NHGIS
+IPUMS **metadata** support is currently available via API for the IPUMS
+aggregate data collections (NHGIS and IHGIS).
 
 API support will continue to be added for more collections in the
 future. You can check general API availability for all IPUMS collections
@@ -167,9 +170,8 @@ stored it in the `IPUMS_API_KEY` environment variable.
 ipumsr contains two extract definition functions used to specify the parameters
 of a new extract request from scratch.
 
-  -   For microdata projects (USA, CPS, International, Time Use, 
-      and Health Surveys), use `define_extract_micro()`.
-  -   For NHGIS, use `define_extract_nhgis()`.
+  -   For microdata projects, use `define_extract_micro()`.
+  -   For aggregate data projects, use `define_extract_agg()`.
 
 When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.
@@ -192,7 +194,7 @@ usa_extract_definition
 The exact extract definition options vary across collections, but all
 collections can be used with the same general workflow. For more details
 on the available extract definition options, see the associated
-[microdata](ipums-api-micro.html) and [NHGIS](ipums-api-nhgis.html)
+[microdata](ipums-api-micro.html) and [aggregate data](ipums-api-agg.html)
 vignettes.
 
 For the purposes of demonstrating the overall workflow, we will continue
@@ -200,7 +202,7 @@ to work with the sample IPUMS USA extract definition created above.
 
 ### Extract request objects
 
-`define_extract_micro()` and `define_extract_nhgis()` always produce an 
+`define_extract_micro()` and `define_extract_agg()` always produce an 
 `ipums_extract` object, which can be handled by other API functions 
 (see `?ipums_extract`). Furthermore, these objects will have a subclass for 
 the particular collection with which they are associated.
@@ -214,7 +216,9 @@ accessed by indexing the object:
 
 ```{r}
 names(usa_extract_definition$samples)
+
 names(usa_extract_definition$variables)
+
 usa_extract_definition$data_format
 ```
 
@@ -225,6 +229,7 @@ request is still unsubmitted, it has no request number:
 
 ```{r}
 usa_extract_definition$status
+
 usa_extract_definition$number
 ```
 
@@ -432,8 +437,9 @@ ddi <- read_ipums_ddi(filepath)
 micro_data <- read_ipums_micro(ddi)
 ```
 
-If instead you're working with an NHGIS extract, use `read_nhgis()` or
-`read_ipums_sf()`.
+If instead you're working with an aggregate data extract, use 
+`read_ipums_agg()` (or `read_ipums_sf()` for spatial data from IPUMS NHGIS
+extracts).
 
 See the [associated vignette](ipums-read.html) for more information
 about loading IPUMS data into R.
@@ -487,6 +493,7 @@ download:
 
 ```{r}
 purrr::keep(usa_extracts, ~ "MARST" %in% names(.x$variables))
+
 purrr::keep(usa_extracts, is_extract_ready)
 ```
 
@@ -504,7 +511,8 @@ have a default collection set, API functions will use that collection in
 all requests, assuming no other collection is specified.
 
 ```{r, eval=FALSE}
-set_ipums_default_collection("usa") # Set `save = TRUE` to store across sessions
+# Set `save = TRUE` to store across sessions
+set_ipums_default_collection("usa")
 ```
 
 ```{r, echo=FALSE, results="hide", message=FALSE}
@@ -616,7 +624,7 @@ spatial data:
 ```{r, eval=FALSE}
 nhgis_data <- download_extract(nhgis_extract) %>%
   purrr::pluck("data") %>% # Select only the tabular data file to read
-  read_nhgis()
+  read_ipums_agg()
 ```
 
 Not only does this API workflow allow you to obtain IPUMS data without

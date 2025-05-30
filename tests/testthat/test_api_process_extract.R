@@ -44,7 +44,7 @@ on.exit(
 # Submit extract ----------------------
 
 test_that("Can submit a USA extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   usa_extract <- test_usa_extract()
 
@@ -106,7 +106,7 @@ test_that("Can submit a USA extract", {
 })
 
 test_that("Can submit a household only USA extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   usa_extract <- test_usa_extract_household_only()
 
@@ -123,7 +123,7 @@ test_that("Can submit a household only USA extract", {
 })
 
 test_that("Can submit a CPS extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   cps_extract <- test_cps_extract()
 
@@ -185,7 +185,7 @@ test_that("Can submit a CPS extract", {
 })
 
 test_that("Can submit an ATUS extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   atus_extract <- test_atus_extract_submittable()
 
@@ -214,7 +214,7 @@ test_that("Can submit an ATUS extract", {
 })
 
 test_that("Submission of time-use variable with wrong owner throws error", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   atus_extract <- test_atus_extract()
 
@@ -227,7 +227,7 @@ test_that("Submission of time-use variable with wrong owner throws error", {
 })
 
 test_that("Can submit an NHGIS extract of multiple types", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   nhgis_extract <- test_nhgis_extract()
 
@@ -249,7 +249,7 @@ test_that("Can submit an NHGIS extract of multiple types", {
 })
 
 test_that("Can submit an NHGIS extract of a single type", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   nhgis_extract_shp <- test_nhgis_extract_shp()
 
@@ -275,8 +275,38 @@ test_that("Can submit an NHGIS extract of a single type", {
   expect_identical(submitted_nhgis_extract_shp$download_links, EMPTY_NAMED_LIST)
 })
 
+
+test_that("Can submit an IHGIS extract", {
+  skip_if_no_api_access()
+
+  ihgis_extract <- test_ihgis_extract()
+
+  vcr::use_cassette("submitted-ihgis-extract", {
+    suppressMessages(
+      submitted_ihgis_extract <- submit_extract(ihgis_extract)
+    )
+  })
+
+  expect_s3_class(
+    submitted_ihgis_extract,
+    c("ihgis_extract", "ipums_extract")
+  )
+  expect_equal(submitted_ihgis_extract$collection, "ihgis")
+  expect_equal(
+    submitted_ihgis_extract$datasets,
+    ihgis_extract$datasets
+  )
+  expect_null(submitted_ihgis_extract$time_series_tables)
+  expect_null(submitted_ihgis_extract$tst_layout)
+  expect_null(submitted_ihgis_extract$data_format)
+  expect_null(submitted_ihgis_extract$shapefiles)
+  expect_true(submitted_ihgis_extract$submitted)
+  expect_equal(submitted_ihgis_extract$status, "queued")
+  expect_identical(submitted_ihgis_extract$download_links, EMPTY_NAMED_LIST)
+})
+
 test_that("Can resubmit an extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-nhgis-extract", {
     suppressMessages(
@@ -312,7 +342,7 @@ test_that("Can resubmit an extract", {
 })
 
 test_that("Revisions update status of submitted extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("recent-usa-extracts-list", {
     usa_extracts <- get_extract_history("usa")
@@ -337,7 +367,7 @@ test_that("Revisions update status of submitted extract", {
 # Download extract ---------------------
 
 test_that("Can download microdata extract with extract object", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
 
@@ -395,7 +425,7 @@ test_that("Can download microdata extract with extract object", {
 })
 
 test_that("Can download NHGIS extract with extract object", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
 
@@ -467,7 +497,7 @@ test_that("Can download NHGIS extract with extract object", {
 })
 
 test_that("Can download extract with extract id", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
 
@@ -528,7 +558,7 @@ test_that("Can download extract with extract id", {
 # TODO: may want to update this fixture to use smaller data to test
 # that an extract with a single download file type still works...
 test_that("Can download shapefile-only extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   download_dir <- file.path(tempdir(), "ipums-api-downloads")
 
@@ -589,7 +619,7 @@ test_that("Download extract errors on incomplete extract", {
 })
 
 test_that("Can download supplemental data files", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("download-supplemental-data", {
     file <- download_supplemental_data(
@@ -601,7 +631,7 @@ test_that("Can download supplemental data files", {
   })
 
   d <- suppressWarnings(
-    read_nhgis(file, verbose = FALSE)
+    read_ipums_agg(file, verbose = FALSE)
   )
 
   expect_true(file.exists(file))
@@ -611,7 +641,7 @@ test_that("Can download supplemental data files", {
 # Read downloaded files ------------------
 
 test_that("Can read downloaded files with ipumsr readers", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
   skip_if_not_installed("sf")
 
   vcr::use_cassette("submitted-nhgis-extract", {
@@ -638,7 +668,7 @@ test_that("Can read downloaded files with ipumsr readers", {
     full.names = TRUE
   )
 
-  data <- read_nhgis(
+  data <- read_ipums_agg(
     table_data_file_path,
     file_select = contains("blck_grp"),
     verbose = FALSE
@@ -674,7 +704,7 @@ test_that("We validate extract before submission", {
 # Revise a submitted extract -------------
 
 test_that("Can add to a submitted extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-usa-extract", {
     suppressMessages(
@@ -702,7 +732,7 @@ test_that("Can add to a submitted extract", {
 # Save a submitted extract as JSON -------
 
 test_that("We can export to and import from JSON, submitted extract", {
-  skip_if_no_api_access(have_api_access)
+  skip_if_no_api_access()
 
   vcr::use_cassette("submitted-usa-extract", {
     suppressMessages(

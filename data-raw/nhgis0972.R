@@ -30,7 +30,8 @@
 
 # Used in ipumsr example data
 
-files <- define_extract_nhgis(
+files <- define_extract_agg(
+  "nhgis",
   description = "Reproducing nhgis0972 example data",
   datasets = ds_spec("1990_SSTF09", "NH004", "pmsa"),
   shapefiles = "us_pmsa_1990_tl2000",

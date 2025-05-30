@@ -1,0 +1,43 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://api.ipums.org/extracts?collection=ihgis&version=2
+    body:
+      encoding: ''
+      string: '{"datasets":{"AL2001pop":{"dataTables":["AL2001pop.ADF","AL2001pop.ADG"],"tabulationGeographies":["AL2001pop.g0","AL2001pop.g1"]}},"description":"Extract
+        for R client testing","collection":"ihgis","version":2}'
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+      Content-Type: application/json
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Fri, 30 May 2025 13:06:51 GMT
+      etag: W/"8c0eb569de580ff15af3b07b4d8dca15"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx/1.22.1
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: 8dfb8aea-fbd4-4359-badf-a15b443930a1
+      x-runtime: '0.550019'
+      x-xss-protection: '0'
+      content-length: '306'
+    body:
+      encoding: ''
+      file: no
+      string: '{"number":5,"status":"queued","email":"robe2037@umn.edu","downloadLinks":{},"extractDefinition":{"description":"Extract
+        for R client testing","datasets":{"AL2001pop":{"dataTables":["AL2001pop.ADF","AL2001pop.ADG"],"tabulationGeographies":["AL2001pop.g0","AL2001pop.g1"]}},"version":2,"collection":"ihgis"}}'
+  recorded_at: 2025-05-30 13:06:51 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0

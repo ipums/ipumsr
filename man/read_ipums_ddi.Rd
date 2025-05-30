@@ -5,12 +5,7 @@
 \title{Read metadata about an IPUMS microdata extract from a DDI codebook (.xml)
 file}
 \usage{
-read_ipums_ddi(
-  ddi_file,
-  lower_vars = FALSE,
-  file_select = deprecated(),
-  data_layer = deprecated()
-)
+read_ipums_ddi(ddi_file, lower_vars = FALSE)
 }
 \arguments{
 \item{ddi_file}{Path to a DDI .xml file downloaded from
@@ -18,10 +13,6 @@ read_ipums_ddi(
 
 \item{lower_vars}{Logical indicating whether to convert variable names to
 lowercase. Defaults to \code{FALSE} for consistency with IPUMS conventions.}
-
-\item{data_layer, file_select}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reading
-DDI files contained in a .zip archive has been deprecated. Please provide
-the full path to the .xml file to be loaded in \code{ddi_file}.}
 }
 \value{
 An \link{ipums_ddi} object with metadata information.

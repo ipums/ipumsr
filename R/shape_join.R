@@ -35,7 +35,7 @@
 #' @name ipums_shape_join
 #'
 #' @examplesIf requireNamespace("sf")
-#' data <- read_nhgis(
+#' data <- read_ipums_agg(
 #'   ipums_example("nhgis0972_csv.zip"),
 #'   verbose = FALSE
 #' )

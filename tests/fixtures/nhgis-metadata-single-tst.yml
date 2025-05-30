@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 09 Dec 2024 22:06:29 GMT
-      etag: W/"2345fa0eb3c427fbfe568bf1052912b8"
+      date: Fri, 30 May 2025 16:16:23 GMT
+      etag: W/"a85ec3ea34509669a20218db24e278f3"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
@@ -29,22 +29,29 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 01f125e8-a7c2-4448-a304-77e8a9617cb4
-      x-runtime: '0.010102'
+      x-request-id: 5b86f96d-1f53-4b29-aaad-d73b10162602
+      x-runtime: '0.008205'
       x-xss-protection: '0'
-      content-length: '1214'
+      content-length: '3615'
     body:
       encoding: ''
       file: no
       string: '{"name":"CM0","description":"Persons by Sex [2]","geographicIntegration":"Standardized
         to 2010","sequence":102.03,"timeSeries":[{"name":"AA","description":"Persons:
-        Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","sequence":4},{"name":"county","description":"State--County","sequence":25},{"name":"tract","description":"State--County--Census
-        Tract","sequence":66},{"name":"blck_grp","description":"State--County--Census
-        Tract--Block Group","sequence":85},{"name":"cty_sub","description":"State--County--County
-        Subdivision","sequence":102},{"name":"place","description":"State--Place","sequence":148},{"name":"cd111th","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)","sequence":217},{"name":"cbsa","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area","sequence":338},{"name":"urb_area","description":"Urban
-        Area","sequence":372},{"name":"zcta","description":"5-Digit ZIP Code Tabulation
-        Area","sequence":382}]}'
-  recorded_at: 2024-12-09 22:06:29 GMT
-  recorded_with: vcr/1.2.2, webmockr/0.9.0
+        Male","sequence":1},{"name":"AB","description":"Persons: Female","sequence":2}],"years":[{"name":"1990","description":"1990","sequence":108},{"name":"2000","description":"2000","sequence":118},{"name":"2010","description":"2010","sequence":131}],"geogLevels":[{"name":"state","description":"State","hasGeogExtentSelection":true,"sequence":4},{"name":"county","description":"State--County","hasGeogExtentSelection":true,"sequence":25},{"name":"tract","description":"State--County--Census
+        Tract","hasGeogExtentSelection":true,"sequence":66},{"name":"blck_grp","description":"State--County--Census
+        Tract--Block Group","hasGeogExtentSelection":true,"sequence":85},{"name":"cty_sub","description":"State--County--County
+        Subdivision","hasGeogExtentSelection":true,"sequence":102},{"name":"place","description":"State--Place","hasGeogExtentSelection":true,"sequence":148},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","hasGeogExtentSelection":true,"sequence":217},{"name":"cbsa","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":338},{"name":"urb_area","description":"Urban
+        Area","hasGeogExtentSelection":false,"sequence":372},{"name":"zcta","description":"5-Digit
+        ZIP Code Tabulation Area","hasGeogExtentSelection":false,"sequence":382}],"geographicInstances":[{"name":"010","description":"Alabama"},{"name":"020","description":"Alaska"},{"name":"040","description":"Arizona"},{"name":"050","description":"Arkansas"},{"name":"060","description":"California"},{"name":"080","description":"Colorado"},{"name":"090","description":"Connecticut"},{"name":"100","description":"Delaware"},{"name":"110","description":"District
+        of Columbia"},{"name":"120","description":"Florida"},{"name":"130","description":"Georgia"},{"name":"150","description":"Hawaii"},{"name":"160","description":"Idaho"},{"name":"170","description":"Illinois"},{"name":"180","description":"Indiana"},{"name":"190","description":"Iowa"},{"name":"200","description":"Kansas"},{"name":"210","description":"Kentucky"},{"name":"220","description":"Louisiana"},{"name":"230","description":"Maine"},{"name":"240","description":"Maryland"},{"name":"250","description":"Massachusetts"},{"name":"260","description":"Michigan"},{"name":"270","description":"Minnesota"},{"name":"280","description":"Mississippi"},{"name":"290","description":"Missouri"},{"name":"300","description":"Montana"},{"name":"310","description":"Nebraska"},{"name":"320","description":"Nevada"},{"name":"330","description":"New
+        Hampshire"},{"name":"340","description":"New Jersey"},{"name":"350","description":"New
+        Mexico"},{"name":"360","description":"New York"},{"name":"370","description":"North
+        Carolina"},{"name":"380","description":"North Dakota"},{"name":"390","description":"Ohio"},{"name":"400","description":"Oklahoma"},{"name":"410","description":"Oregon"},{"name":"420","description":"Pennsylvania"},{"name":"440","description":"Rhode
+        Island"},{"name":"450","description":"South Carolina"},{"name":"460","description":"South
+        Dakota"},{"name":"470","description":"Tennessee"},{"name":"480","description":"Texas"},{"name":"490","description":"Utah"},{"name":"500","description":"Vermont"},{"name":"510","description":"Virginia"},{"name":"530","description":"Washington"},{"name":"540","description":"West
+        Virginia"},{"name":"550","description":"Wisconsin"},{"name":"560","description":"Wyoming"}]}'
+  recorded_at: 2025-05-30 16:16:23 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0

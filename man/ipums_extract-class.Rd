@@ -19,15 +19,16 @@ Currently supported collections are:
 \itemize{
 \item IPUMS microdata
 \itemize{
-\item IPUMS USA
-\item IPUMS CPS
-\item IPUMS International
-\item IPUMS Time Use (ATUS, AHTUS, MTUS)
-\item IPUMS Health Surveys (NHIS, MEPS)
+\item \href{https://usa.ipums.org/}{IPUMS USA}
+\item \href{https://cps.ipums.org/}{IPUMS CPS}
+\item \href{https://international.ipums.org/}{IPUMS International}
+\item IPUMS Time Use (\href{https://www.atusdata.org/atus/}{ATUS}, \href{https://www.ahtusdata.org/ahtus/}{AHTUS}, \href{https://www.mtusdata.org/mtus/}{MTUS})
+\item IPUMS Health Surveys (\href{https://nhis.ipums.org/}{NHIS}, \href{https://meps.ipums.org/}{MEPS})
 }
 \item IPUMS aggregate data
 \itemize{
-\item IPUMS NHGIS
+\item \href{https://nhgis.org/}{IPUMS NHGIS}
+\item \href{https://ihgis.ipums.org/}{IPUMS IHGIS}
 }
 }
 
@@ -69,7 +70,7 @@ One of \code{"unsubmitted"}, \code{"queued"}, \code{"started"}, \code{"produced"
 \verb{define_extract_*()} function.
 \itemize{
 \item For microdata extracts, use \code{\link[=define_extract_micro]{define_extract_micro()}}
-\item For NHGIS extracts, use \code{\link[=define_extract_nhgis]{define_extract_nhgis()}}
+\item For aggregate data extracts, use \code{\link[=define_extract_agg]{define_extract_agg()}}
 }
 \item Use \code{\link[=get_extract_info]{get_extract_info()}} to get the definition and latest status of a
 previously-submitted extract request.

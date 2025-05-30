@@ -3,7 +3,7 @@
     Code
       nhgis_csv <- read_nhgis(nhgis_single_csv)
     Message
-      Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.
+      Use of data from IPUMS NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.
       Rows: 71 Columns: 25
       -- Column specification --------------------------------------------------------
       Delimiter: ","

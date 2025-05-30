@@ -193,6 +193,10 @@ test_that("Informative errors when improper ddi file", {
     "Expected `ddi` to be an `ipums_ddi` object or the path"
   )
   expect_error(
+    read_ipums_ddi(vcr_dir),
+    "Expected file .+ to be a file path, but got a directory"
+  )
+  expect_error(
     read_ipums_micro_list(vcr_dir),
     "Expected `ddi` to be an `ipums_ddi` object or the path"
   )
@@ -203,6 +207,10 @@ test_that("Informative errors when improper ddi file", {
   expect_error(
     read_ipums_micro_chunked(file.path(vcr_dir, "zipped_ddi.zip")),
     "Expected `ddi` to be an `ipums_ddi` object or the path"
+  )
+  expect_error(
+    read_ipums_micro(ipums_example("cps_00157.xml"), data_file = "foobar"),
+    "Expected file `foobar` to be a file path, but got a directory"
   )
 })
 

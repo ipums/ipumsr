@@ -57,20 +57,11 @@ test_that("Can read extract at multiple file levels", {
 
   expect_identical(shp, shp_unzip)
 
-  # Read dir of zip of shp ------------
+  # Cannot read dir of zip of shp ------------
 
-  lifecycle::expect_deprecated(
-    shp_unzip_dir <- read_ipums_sf(file.path(temp_dir, "nhgis0972_shape"))
-  )
-
-  expect_identical(shp_unzip, shp_unzip_dir)
-
-  # Informative error when reading a directory with no shapefiles
   expect_error(
-    lifecycle::expect_deprecated(
-      read_ipums_sf(temp_dir)
-    ),
-    "No .shp or .zip files found in the provided `shape_file`"
+    read_ipums_sf(file.path(temp_dir, "nhgis0972_shape")),
+    "Expected file `.+` to be a file path, but got a directory"
   )
 
   # Read shp directly ------------
@@ -84,12 +75,7 @@ test_that("Can read extract at multiple file levels", {
 
   shp_direct <- read_ipums_sf(unzipped_shp)
 
-  lifecycle::expect_deprecated(
-    dir_of_shp <- read_ipums_sf(dirname(unzipped_shp))
-  )
-
-  expect_identical(shp_unzip_dir, shp_direct)
-  expect_identical(shp_direct, dir_of_shp)
+  expect_identical(shp_unzip, shp_direct)
 })
 
 test_that("We get informative errors when reading shapefiles", {

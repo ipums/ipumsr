@@ -207,7 +207,7 @@ wait_for_extract <- function(extract,
   stopifnot(is.numeric(initial_delay_seconds) && initial_delay_seconds >= 0)
   stopifnot(is.numeric(max_delay_seconds) && max_delay_seconds > 0)
   stopifnot(is.null(timeout_seconds) || is.numeric(timeout_seconds) &&
-    timeout_seconds > 0)
+              timeout_seconds > 0)
 
   extract <- standardize_extract_identifier(extract)
 
@@ -359,7 +359,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'   indicate the type of data the file contains.
 #'
 #' @seealso
-#' [read_ipums_micro()] or [read_nhgis()] to read tabular
+#' [read_ipums_micro()] or [read_ipums_agg()] to read tabular
 #'   data from an IPUMS extract.
 #'
 #' [read_ipums_sf()] to read spatial data from an IPUMS extract.
@@ -392,7 +392,7 @@ is_extract_ready <- function(extract, api_key = Sys.getenv("IPUMS_API_KEY")) {
 #'
 #' # NHGIS extracts return a path to both the tabular and spatial data files,
 #' # as applicable.
-#' nhgis_data <- read_nhgis(data = nhgis_files["data"])
+#' nhgis_data <- read_ipums_agg(data = nhgis_files["data"])
 #'
 #' # Load NHGIS spatial data
 #' nhgis_geog <- read_ipums_sf(data = nhgis_files["shape"])
@@ -488,7 +488,6 @@ download_extract <- function(extract,
 #'
 #' @return The path to the downloaded supplemental data file
 #'
-#'
 #' @export
 #'
 #' @examples
@@ -499,7 +498,7 @@ download_extract <- function(extract,
 #'   "crosswalks/nhgis_tr1990_co2010_state/nhgis_tr1990_co2010_10.zip"
 #' )
 #'
-#' read_nhgis(file)
+#' read_ipums_agg(file)
 #'
 #' # Download 1980 Minnesota block boundary file
 #' file <- download_supplemental_data(
@@ -551,7 +550,7 @@ extract_to_request_json <- function(extract) {
 }
 
 #' @export
-extract_to_request_json.nhgis_extract <- function(extract) {
+extract_to_request_json.agg_extract <- function(extract) {
   if (!is.null(extract$geographic_extents)) {
     extract$geographic_extents <- as.character(extract$geographic_extents)
   }
@@ -759,11 +758,11 @@ ipums_extract_specific_download.micro_extract <- function(extract,
 }
 
 #' @export
-ipums_extract_specific_download.nhgis_extract <- function(extract,
-                                                          download_dir,
-                                                          overwrite,
-                                                          progress,
-                                                          api_key) {
+ipums_extract_specific_download.agg_extract <- function(extract,
+                                                        download_dir,
+                                                        overwrite,
+                                                        progress,
+                                                        api_key) {
   table_url <- extract$download_links$table_data$url
   gis_url <- extract$download_links$gis_data$url
 
@@ -856,7 +855,7 @@ extract_is_completed_and_has_links.micro_extract <- function(extract) {
 }
 
 #' @export
-extract_is_completed_and_has_links.nhgis_extract <- function(extract) {
+extract_is_completed_and_has_links.agg_extract <- function(extract) {
   download_links <- extract$download_links
   is_complete <- extract$status == "completed"
 

@@ -23,7 +23,7 @@ test_that("Can get URL for projects that do not have variables", {
   )
   expect_warning(
     url <- ipums_website(ddi, var = "GISJOIN", launch = FALSE),
-    "Cannot give a variable-specific URL for project \"NHGIS\""
+    "Cannot give a variable-specific URL for project \"IPUMS NHGIS\""
   )
   expect_equal(url, "https://data2.nhgis.org/main/")
 })
@@ -114,13 +114,4 @@ test_that("Can get URL for website even if variable is not in DDI", {
     "`var` \"RELATE\" was not found in the provided `ipums_ddi`"
   )
   expect_equal(url, "https://cps.ipums.org/cps-action/variables/RELATE")
-})
-
-test_that("Can still use deprecated `project` arg (until it is removed)", {
-  lifecycle::expect_deprecated(
-    x <- ipums_website(project = "atus", var = "AGE", launch = FALSE)
-  )
-
-  expect_equal(x, "https://atusdata.org/atus-action/variables/AGE")
-  expect_equal(x, ipums_website(x = "atus", var = "AGE", launch = FALSE))
 })
