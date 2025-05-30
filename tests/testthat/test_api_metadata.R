@@ -109,12 +109,12 @@ test_that("We can get metadata for single time series table", {
   })
 
   expect_true(is_list(single_tst_meta))
-  expect_equal(length(single_tst_meta), 7)
+  expect_equal(length(single_tst_meta), 8)
   expect_equal(
     names(single_tst_meta),
     c(
       "name", "description", "geographic_integration", "sequence",
-      "time_series", "years", "geog_levels"
+      "time_series", "years", "geog_levels", "geographic_instances"
     )
   )
   expect_equal(single_tst_meta$name, tst)

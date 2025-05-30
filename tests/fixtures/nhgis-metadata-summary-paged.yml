@@ -17,8 +17,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 09 Dec 2024 22:06:28 GMT
-      etag: W/"f443311f592f04ff8d714f3e5a2219c4"
+      date: Fri, 30 May 2025 16:16:23 GMT
+      etag: W/"82694401647e063b5572ac32145023ee"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
@@ -28,8 +28,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: ecf9f218-a888-4f07-83b4-5378b6ab24e3
-      x-runtime: '0.010544'
+      x-request-id: 2b042958-dfa4-4f17-b254-508305f8da5e
+      x-runtime: '0.008007'
       x-xss-protection: '0'
       content-length: '13705'
     body:
@@ -172,9 +172,9 @@ http_interactions:
         \u0026 Counties]","sequence":3602},{"name":"1960_cPop","group":"1960 Census","description":"Population
         Data [US, States, Counties]","sequence":3603},{"name":"1960_tPH","group":"1960
         Census","description":"Population \u0026 Housing Data [Tracts: Major Cities
-        \u0026 Surrounds]","sequence":3604}],"pageNumber":1,"pageSize":100,"totalCount":262,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2024-12-09 22:06:28 GMT
-  recorded_with: vcr/1.2.2, webmockr/0.9.0
+        \u0026 Surrounds]","sequence":3604}],"pageNumber":1,"pageSize":100,"totalCount":266,"links":{"previousPage":null,"nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2"}}'
+  recorded_at: 2025-05-30 16:16:23 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&pageNumber=2&pageSize=100&version=2
@@ -193,8 +193,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 09 Dec 2024 22:06:28 GMT
-      etag: W/"81dc22772026e2eb992bdd6685dc5123"
+      date: Fri, 30 May 2025 16:16:23 GMT
+      etag: W/"03fd4a59da366e7829c7ef23fb612878"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
@@ -204,8 +204,8 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 04fb42d8-20d9-4637-b8a1-8708b6fa64c1
-      x-runtime: '0.009601'
+      x-request-id: 282d04ac-32da-437f-8791-40d5c067486e
+      x-runtime: '0.009789'
       x-xss-protection: '0'
       content-length: '13763'
     body:
@@ -350,9 +350,9 @@ http_interactions:
         American Community Survey","description":"5-Year Data [2007-2011, Tracts \u0026
         Larger Areas]","sequence":4904},{"name":"2007_2011_ACS5c","group":"2011 American
         Community Survey","description":"5-Year Data [2007-2011, Summary by Residence
-        1 Year Ago]","sequence":4905}],"pageNumber":2,"pageSize":100,"totalCount":262,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=1\u0026pageSize=100\u0026version=2","nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=3\u0026pageSize=100\u0026version=2"}}'
-  recorded_at: 2024-12-09 22:06:28 GMT
-  recorded_with: vcr/1.2.2, webmockr/0.9.0
+        1 Year Ago]","sequence":4905}],"pageNumber":2,"pageSize":100,"totalCount":266,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=1\u0026pageSize=100\u0026version=2","nextPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=3\u0026pageSize=100\u0026version=2"}}'
+  recorded_at: 2025-05-30 16:16:23 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0
 - request:
     method: get
     uri: https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis&pageNumber=3&pageSize=100&version=2
@@ -371,8 +371,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 09 Dec 2024 22:06:28 GMT
-      etag: W/"70a432833530bcec5a329cb82877d284"
+      date: Fri, 30 May 2025 16:16:23 GMT
+      etag: W/"2f56a67d14b44b0bd8febbe7c1f7f495"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
@@ -382,10 +382,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 9d7a9e92-a365-4ab7-b5f8-a011b9865043
-      x-runtime: '0.010138'
+      x-request-id: 63e2adee-fa73-46ab-9f01-9dfccf11caf1
+      x-runtime: '0.006429'
       x-xss-protection: '0'
-      content-length: '9101'
+      content-length: '9718'
     body:
       encoding: ''
       file: no
@@ -496,6 +496,14 @@ http_interactions:
         1 Year Ago]","sequence":6104},{"name":"2018_2022_ACS5d","group":"2022 American
         Community Survey","description":"5-Year Data [2018-2022, Summary by Place
         of Work]","sequence":6105},{"name":"2023_ACS1","group":"2023 American Community
-        Survey","description":"1-Year Data","sequence":6201}],"pageNumber":3,"pageSize":100,"totalCount":262,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2","nextPage":null}}'
-  recorded_at: 2024-12-09 22:06:29 GMT
-  recorded_with: vcr/1.2.2, webmockr/0.9.0
+        Survey","description":"1-Year Data","sequence":6201},{"name":"2019_2023_ACS5a","group":"2023
+        American Community Survey","description":"5-Year Data [2019-2023, Block Groups
+        \u0026 Larger Areas]","sequence":6202},{"name":"2019_2023_ACS5b","group":"2023
+        American Community Survey","description":"5-Year Data [2019-2023, Tracts \u0026
+        Larger Areas]","sequence":6203},{"name":"2019_2023_ACS5c","group":"2023 American
+        Community Survey","description":"5-Year Data [2019-2023, Summary by Residence
+        1 Year Ago]","sequence":6204},{"name":"2019_2023_ACS5d","group":"2023 American
+        Community Survey","description":"5-Year Data [2019-2023, Summary by Place
+        of Work]","sequence":6205}],"pageNumber":3,"pageSize":100,"totalCount":266,"links":{"previousPage":"https://api.ipums.org/metadata/nhgis/datasets?collection=nhgis\u0026pageNumber=2\u0026pageSize=100\u0026version=2","nextPage":null}}'
+  recorded_at: 2025-05-30 16:16:23 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0

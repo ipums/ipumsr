@@ -18,8 +18,8 @@ http_interactions:
     headers:
       cache-control: max-age=0, private, must-revalidate
       content-type: application/json; charset=utf-8
-      date: Mon, 09 Dec 2024 22:06:29 GMT
-      etag: W/"76a85ab5228ac40f486b631c02555a73"
+      date: Fri, 30 May 2025 16:16:23 GMT
+      etag: W/"4c8d0d25b5177af9e0c0575af02e6f84"
       referrer-policy: strict-origin-when-cross-origin
       server: nginx/1.22.1
       vary: Origin
@@ -29,10 +29,10 @@ http_interactions:
       x-ratelimit-limit: '-1'
       x-ratelimit-remaining: '0'
       x-ratelimit-reset: '0'
-      x-request-id: 180ab6cc-72bb-4307-9f00-77dd0c6e5f70
-      x-runtime: '0.010826'
+      x-request-id: 2e656970-2a87-4531-a4f1-3096f1ce740d
+      x-runtime: '0.008742'
       x-xss-protection: '0'
-      content-length: '97744'
+      content-length: '97613'
     body:
       encoding: ''
       file: no
@@ -478,164 +478,164 @@ http_interactions:
         by Age of Householder (Hispanic or Latino Householder)","universe":"Occupied
         housing units with a householder who is Hispanic or Latino","nhgisCode":"IGW","sequence":234,"datasetName":"2010_SF1a","nVariables":21},{"name":"H17I","description":"Tenure
         by Age of Householder (White Alone Householder, Not Hispanic or Latino)","universe":"Occupied
-        housing units with a householder who is White alone, not Hispanic or Latino","nhgisCode":"IGX","sequence":235,"datasetName":"2010_SF1a","nVariables":21}],"geogLevels":[{"name":"nation","description":"Nation","hasGeogExtentSelection":false,"sequence":1},{"name":"region","description":"Region","hasGeogExtentSelection":false,"sequence":2},{"name":"division","description":"Division","hasGeogExtentSelection":false,"sequence":3},{"name":"state","description":"State","hasGeogExtentSelection":false,"sequence":4},{"name":"state_260","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--State","hasGeogExtentSelection":false,"sequence":5},{"name":"state_290","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder--State","hasGeogExtentSelection":false,"sequence":6},{"name":"state_262","description":"American
-        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State","hasGeogExtentSelection":false,"sequence":7},{"name":"state_264","description":"American
-        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State","hasGeogExtentSelection":false,"sequence":8},{"name":"state_311","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":false,"sequence":9},{"name":"state_315","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State","hasGeogExtentSelection":false,"sequence":10},{"name":"state_331","description":"Combined
-        Statistical Area--State","hasGeogExtentSelection":false,"sequence":11},{"name":"state_333","description":"Combined
-        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":false,"sequence":12},{"name":"state_351","description":"New
-        England City and Town Area--State","hasGeogExtentSelection":false,"sequence":17},{"name":"state_356","description":"New
-        England City and Town Area--New England City and Town Area Division--State","hasGeogExtentSelection":false,"sequence":18},{"name":"state_336","description":"Combined
-        New England City and Town Area--State","hasGeogExtentSelection":false,"sequence":19},{"name":"state_338","description":"Combined
-        New England City and Town Area--New England City and Town Area--State","hasGeogExtentSelection":false,"sequence":20},{"name":"state_410","description":"Urban
-        Area--State","hasGeogExtentSelection":false,"sequence":22},{"name":"state_870","description":"5-Digit
-        ZIP Code Tabulation Area--State","hasGeogExtentSelection":false,"sequence":23},{"name":"county","description":"State--County","hasGeogExtentSelection":false,"sequence":25},{"name":"county_155","description":"State--Place--County","hasGeogExtentSelection":false,"sequence":27},{"name":"county_510_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--County","hasGeogExtentSelection":false,"sequence":32},{"name":"county_612","description":"State--State
-        Legislative District (Upper Chamber)--County","hasGeogExtentSelection":false,"sequence":38},{"name":"county_622","description":"State--State
-        Legislative District (Lower Chamber)--County","hasGeogExtentSelection":false,"sequence":39},{"name":"county_282","description":"State--American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--County","hasGeogExtentSelection":false,"sequence":40},{"name":"county_285","description":"State--American
-        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County","hasGeogExtentSelection":false,"sequence":41},{"name":"county_288","description":"State--American
-        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County","hasGeogExtentSelection":false,"sequence":42},{"name":"county_322","description":"State--Metropolitan
-        Statistical Area/Micropolitan Statistical Area--County","hasGeogExtentSelection":false,"sequence":43},{"name":"county_324","description":"State--Metropolitan
-        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--County","hasGeogExtentSelection":false,"sequence":44},{"name":"county_362","description":"State--New
-        England City and Town Area--County","hasGeogExtentSelection":false,"sequence":47},{"name":"county_365","description":"State--New
-        England City and Town Area--New England City and Town Area Division--County","hasGeogExtentSelection":false,"sequence":48},{"name":"county_431","description":"State--Urban
-        Area--County","hasGeogExtentSelection":false,"sequence":49},{"name":"county_881","description":"State--5-Digit
-        ZIP Code Tabulation Area--County","hasGeogExtentSelection":false,"sequence":51},{"name":"county_270","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County","hasGeogExtentSelection":false,"sequence":53},{"name":"county_272","description":"American
-        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County","hasGeogExtentSelection":false,"sequence":54},{"name":"county_274","description":"American
-        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County","hasGeogExtentSelection":false,"sequence":55},{"name":"county_313","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area--State--County","hasGeogExtentSelection":false,"sequence":56},{"name":"county_316","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State--County","hasGeogExtentSelection":false,"sequence":57},{"name":"county_353","description":"New
-        England City and Town Area--State--County","hasGeogExtentSelection":false,"sequence":60},{"name":"county_357","description":"New
-        England City and Town Area--New England City and Town Area Division--State--County","hasGeogExtentSelection":false,"sequence":61},{"name":"county_430","description":"Urban
-        Area--State--County","hasGeogExtentSelection":false,"sequence":63},{"name":"county_880","description":"5-Digit
-        ZIP Code Tabulation Area--State--County","hasGeogExtentSelection":false,"sequence":64},{"name":"tract","description":"State--County--Census
-        Tract","hasGeogExtentSelection":false,"sequence":66},{"name":"tract_080","description":"State--County--County
-        Subdivision--Place/Remainder--Census Tract","hasGeogExtentSelection":false,"sequence":67},{"name":"tract_158","description":"State--Place--County--Census
-        Tract","hasGeogExtentSelection":false,"sequence":73},{"name":"tract_511_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--County--Census Tract","hasGeogExtentSelection":false,"sequence":75},{"name":"tract_631","description":"State--State
-        Legislative District (Upper Chamber)--County--Census Tract","hasGeogExtentSelection":false,"sequence":79},{"name":"tract_636","description":"State--State
-        Legislative District (Lower Chamber)--County--Census Tract","hasGeogExtentSelection":false,"sequence":80},{"name":"blck_grp","description":"State--County--Census
+        housing units with a householder who is White alone, not Hispanic or Latino","nhgisCode":"IGX","sequence":235,"datasetName":"2010_SF1a","nVariables":21}],"geogLevels":[{"name":"nation","description":"Nation","hasGeogExtentSelection":false,"sequence":1},{"name":"region","description":"Region","hasGeogExtentSelection":false,"sequence":2},{"name":"division","description":"Division","hasGeogExtentSelection":false,"sequence":3},{"name":"state","description":"State","hasGeogExtentSelection":true,"sequence":4},{"name":"state_260","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State","hasGeogExtentSelection":true,"sequence":5},{"name":"state_290","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder--State","hasGeogExtentSelection":true,"sequence":6},{"name":"state_262","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State","hasGeogExtentSelection":true,"sequence":7},{"name":"state_264","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State","hasGeogExtentSelection":true,"sequence":8},{"name":"state_311","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":true,"sequence":9},{"name":"state_315","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State","hasGeogExtentSelection":true,"sequence":10},{"name":"state_331","description":"Combined
+        Statistical Area--State","hasGeogExtentSelection":true,"sequence":11},{"name":"state_333","description":"Combined
+        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area--State","hasGeogExtentSelection":true,"sequence":12},{"name":"state_351","description":"New
+        England City and Town Area--State","hasGeogExtentSelection":true,"sequence":17},{"name":"state_356","description":"New
+        England City and Town Area--New England City and Town Area Division--State","hasGeogExtentSelection":true,"sequence":18},{"name":"state_336","description":"Combined
+        New England City and Town Area--State","hasGeogExtentSelection":true,"sequence":19},{"name":"state_338","description":"Combined
+        New England City and Town Area--New England City and Town Area--State","hasGeogExtentSelection":true,"sequence":20},{"name":"state_410","description":"Urban
+        Area--State","hasGeogExtentSelection":true,"sequence":22},{"name":"state_870","description":"5-Digit
+        ZIP Code Tabulation Area--State","hasGeogExtentSelection":true,"sequence":23},{"name":"county","description":"State--County","hasGeogExtentSelection":true,"sequence":25},{"name":"county_155","description":"State--Place--County","hasGeogExtentSelection":true,"sequence":27},{"name":"county_510_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County","hasGeogExtentSelection":true,"sequence":32},{"name":"county_612","description":"State--State
+        Legislative District (Upper Chamber)--County","hasGeogExtentSelection":true,"sequence":38},{"name":"county_622","description":"State--State
+        Legislative District (Lower Chamber)--County","hasGeogExtentSelection":true,"sequence":39},{"name":"county_282","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County","hasGeogExtentSelection":true,"sequence":40},{"name":"county_285","description":"State--American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County","hasGeogExtentSelection":true,"sequence":41},{"name":"county_288","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County","hasGeogExtentSelection":true,"sequence":42},{"name":"county_322","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--County","hasGeogExtentSelection":true,"sequence":43},{"name":"county_324","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--County","hasGeogExtentSelection":true,"sequence":44},{"name":"county_362","description":"State--New
+        England City and Town Area--County","hasGeogExtentSelection":true,"sequence":47},{"name":"county_365","description":"State--New
+        England City and Town Area--New England City and Town Area Division--County","hasGeogExtentSelection":true,"sequence":48},{"name":"county_431","description":"State--Urban
+        Area--County","hasGeogExtentSelection":true,"sequence":49},{"name":"county_881","description":"State--5-Digit
+        ZIP Code Tabulation Area--County","hasGeogExtentSelection":true,"sequence":51},{"name":"county_270","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County","hasGeogExtentSelection":true,"sequence":53},{"name":"county_272","description":"American
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County","hasGeogExtentSelection":true,"sequence":54},{"name":"county_274","description":"American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County","hasGeogExtentSelection":true,"sequence":55},{"name":"county_313","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State--County","hasGeogExtentSelection":true,"sequence":56},{"name":"county_316","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division--State--County","hasGeogExtentSelection":true,"sequence":57},{"name":"county_353","description":"New
+        England City and Town Area--State--County","hasGeogExtentSelection":true,"sequence":60},{"name":"county_357","description":"New
+        England City and Town Area--New England City and Town Area Division--State--County","hasGeogExtentSelection":true,"sequence":61},{"name":"county_430","description":"Urban
+        Area--State--County","hasGeogExtentSelection":true,"sequence":63},{"name":"county_880","description":"5-Digit
+        ZIP Code Tabulation Area--State--County","hasGeogExtentSelection":true,"sequence":64},{"name":"tract","description":"State--County--Census
+        Tract","hasGeogExtentSelection":true,"sequence":66},{"name":"tract_080","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract","hasGeogExtentSelection":true,"sequence":67},{"name":"tract_158","description":"State--Place--County--Census
+        Tract","hasGeogExtentSelection":true,"sequence":73},{"name":"tract_511_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County--Census Tract","hasGeogExtentSelection":true,"sequence":75},{"name":"tract_631","description":"State--State
+        Legislative District (Upper Chamber)--County--Census Tract","hasGeogExtentSelection":true,"sequence":79},{"name":"tract_636","description":"State--State
+        Legislative District (Lower Chamber)--County--Census Tract","hasGeogExtentSelection":true,"sequence":80},{"name":"blck_grp","description":"State--County--Census
         Tract--Block Group","hasGeogExtentSelection":true,"sequence":85},{"name":"blck_grp_091","description":"State--County--County
         Subdivision--Place/Remainder--Census Tract--Block Group [2000-2020 partition,
         pre-Urban/Rural]","hasGeogExtentSelection":true,"sequence":86},{"name":"blck_grp_090","description":"State--County--County
         Subdivision--Place/Remainder--Census Tract--Urban/Rural--Block Group [2000-2020
         partition]","hasGeogExtentSelection":true,"sequence":91},{"name":"block","description":"State--County--Census
         Tract--Block","hasGeogExtentSelection":true,"sequence":95},{"name":"cty_sub","description":"State--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":102},{"name":"cty_sub_521_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":109},{"name":"cty_sub_613","description":"State--State
-        Legislative District (Upper Chamber)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":115},{"name":"cty_sub_623","description":"State--State
-        Legislative District (Lower Chamber)--County--County Subdivision","hasGeogExtentSelection":false,"sequence":116},{"name":"cty_sub_261","description":"State--American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision","hasGeogExtentSelection":false,"sequence":117},{"name":"cty_sub_265","description":"State--American
+        Subdivision","hasGeogExtentSelection":true,"sequence":102},{"name":"cty_sub_521_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--County--County Subdivision","hasGeogExtentSelection":true,"sequence":109},{"name":"cty_sub_613","description":"State--State
+        Legislative District (Upper Chamber)--County--County Subdivision","hasGeogExtentSelection":true,"sequence":115},{"name":"cty_sub_623","description":"State--State
+        Legislative District (Lower Chamber)--County--County Subdivision","hasGeogExtentSelection":true,"sequence":116},{"name":"cty_sub_261","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision","hasGeogExtentSelection":true,"sequence":117},{"name":"cty_sub_265","description":"State--American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":118},{"name":"cty_sub_267","description":"State--American
+        Subdivision","hasGeogExtentSelection":true,"sequence":118},{"name":"cty_sub_267","description":"State--American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":119},{"name":"cty_sub_363","description":"State--New
-        England City and Town Area--County--County Subdivision","hasGeogExtentSelection":false,"sequence":121},{"name":"cty_sub_366","description":"State--New
+        Subdivision","hasGeogExtentSelection":true,"sequence":119},{"name":"cty_sub_363","description":"State--New
+        England City and Town Area--County--County Subdivision","hasGeogExtentSelection":true,"sequence":121},{"name":"cty_sub_366","description":"State--New
         England City and Town Area--New England City and Town Area Division--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":122},{"name":"cty_sub_441","description":"State--Urban
-        Area--County--County Subdivision","hasGeogExtentSelection":false,"sequence":123},{"name":"cty_sub_271","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":124},{"name":"cty_sub_275","description":"American
+        Subdivision","hasGeogExtentSelection":true,"sequence":122},{"name":"cty_sub_441","description":"State--Urban
+        Area--County--County Subdivision","hasGeogExtentSelection":true,"sequence":123},{"name":"cty_sub_271","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision","hasGeogExtentSelection":true,"sequence":124},{"name":"cty_sub_275","description":"American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":125},{"name":"cty_sub_277","description":"American
+        Subdivision","hasGeogExtentSelection":true,"sequence":125},{"name":"cty_sub_277","description":"American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":126},{"name":"cty_sub_354","description":"New
-        England City and Town Area--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":129},{"name":"cty_sub_358","description":"New
+        Subdivision","hasGeogExtentSelection":true,"sequence":126},{"name":"cty_sub_354","description":"New
+        England City and Town Area--State--County--County Subdivision","hasGeogExtentSelection":true,"sequence":129},{"name":"cty_sub_358","description":"New
         England City and Town Area--New England City and Town Area Division--State--County--County
-        Subdivision","hasGeogExtentSelection":false,"sequence":130},{"name":"cty_sub_440","description":"Urban
-        Area--State--County--County Subdivision","hasGeogExtentSelection":false,"sequence":131},{"name":"submcd","description":"State--County--County
-        Subdivision--Subminor Civil Division","hasGeogExtentSelection":false,"sequence":132},{"name":"place","description":"State--Place","hasGeogExtentSelection":false,"sequence":148},{"name":"place_159","description":"State--County--Place","hasGeogExtentSelection":false,"sequence":152},{"name":"place_070","description":"State--County--County
-        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":155},{"name":"place_172","description":"State--Consolidated
-        City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":158},{"name":"place_531_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--Place/Remainder","hasGeogExtentSelection":false,"sequence":160},{"name":"place_542_111","description":"State--Congressional
+        Subdivision","hasGeogExtentSelection":true,"sequence":130},{"name":"cty_sub_440","description":"Urban
+        Area--State--County--County Subdivision","hasGeogExtentSelection":true,"sequence":131},{"name":"submcd","description":"State--County--County
+        Subdivision--Subminor Civil Division","hasGeogExtentSelection":true,"sequence":132},{"name":"place","description":"State--Place","hasGeogExtentSelection":true,"sequence":148},{"name":"place_159","description":"State--County--Place","hasGeogExtentSelection":true,"sequence":152},{"name":"place_070","description":"State--County--County
+        Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":155},{"name":"place_172","description":"State--Consolidated
+        City--Place within Consolidated City","hasGeogExtentSelection":true,"sequence":158},{"name":"place_531_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Place/Remainder","hasGeogExtentSelection":true,"sequence":160},{"name":"place_542_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--Consolidated City--Place within
-        Consolidated City","hasGeogExtentSelection":false,"sequence":167},{"name":"place_614","description":"State--State
-        Legislative District (Upper Chamber)--Place/Remainder","hasGeogExtentSelection":false,"sequence":171},{"name":"place_644","description":"State--State
+        Consolidated City","hasGeogExtentSelection":true,"sequence":167},{"name":"place_614","description":"State--State
+        Legislative District (Upper Chamber)--Place/Remainder","hasGeogExtentSelection":true,"sequence":171},{"name":"place_644","description":"State--State
         Legislative District (Upper Chamber)--Consolidated City--Place within Consolidated
-        City","hasGeogExtentSelection":false,"sequence":172},{"name":"place_624","description":"State--State
-        Legislative District (Lower Chamber)--Place/Remainder","hasGeogExtentSelection":false,"sequence":173},{"name":"place_645","description":"State--State
+        City","hasGeogExtentSelection":true,"sequence":172},{"name":"place_624","description":"State--State
+        Legislative District (Lower Chamber)--Place/Remainder","hasGeogExtentSelection":true,"sequence":173},{"name":"place_645","description":"State--State
         Legislative District (Lower Chamber)--Consolidated City--Place within Consolidated
-        City","hasGeogExtentSelection":false,"sequence":174},{"name":"place_263","description":"State--American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":175},{"name":"place_266","description":"State--American
+        City","hasGeogExtentSelection":true,"sequence":174},{"name":"place_263","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":175},{"name":"place_266","description":"State--American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--County--County
-        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":176},{"name":"place_268","description":"State--American
+        Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":176},{"name":"place_268","description":"State--American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--County--County
-        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":177},{"name":"place_321","description":"State--Metropolitan
-        Statistical Area/Micropolitan Statistical Area--Principal City","hasGeogExtentSelection":false,"sequence":178},{"name":"place_361","description":"State--New
-        England City and Town Area--Principal City","hasGeogExtentSelection":false,"sequence":184},{"name":"place_451","description":"State--Urban
-        Area--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":186},{"name":"place_465","description":"State--Urban
-        Area--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":187},{"name":"place_269","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--State--Place/Remainder","hasGeogExtentSelection":false,"sequence":188},{"name":"place_273","description":"American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":189},{"name":"place_276","description":"American
+        Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":177},{"name":"place_321","description":"State--Metropolitan
+        Statistical Area/Micropolitan Statistical Area--Principal City","hasGeogExtentSelection":true,"sequence":178},{"name":"place_361","description":"State--New
+        England City and Town Area--Principal City","hasGeogExtentSelection":true,"sequence":184},{"name":"place_451","description":"State--Urban
+        Area--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":186},{"name":"place_465","description":"State--Urban
+        Area--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":true,"sequence":187},{"name":"place_269","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--Place/Remainder","hasGeogExtentSelection":true,"sequence":188},{"name":"place_273","description":"American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":189},{"name":"place_276","description":"American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--State--County--County
-        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":190},{"name":"place_278","description":"American
+        Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":190},{"name":"place_278","description":"American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--State--County--County
-        Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":191},{"name":"place_312","description":"Metropolitan
-        Statistical Area/Micropolitan Statistical Area--State--Principal City","hasGeogExtentSelection":false,"sequence":192},{"name":"place_352","description":"New
-        England City and Town Area--State--Principal City","hasGeogExtentSelection":false,"sequence":195},{"name":"place_450","description":"Urban
-        Area--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":false,"sequence":198},{"name":"place_464","description":"Urban
-        Area--State--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":false,"sequence":199},{"name":"c_city","description":"State--Consolidated
-        City","hasGeogExtentSelection":false,"sequence":201},{"name":"c_city_541_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--Consolidated City","hasGeogExtentSelection":false,"sequence":204},{"name":"c_city_615","description":"State--State
-        Legislative District (Upper Chamber)--Consolidated City","hasGeogExtentSelection":false,"sequence":209},{"name":"c_city_625","description":"State--State
-        Legislative District (Lower Chamber)--Consolidated City","hasGeogExtentSelection":false,"sequence":210},{"name":"c_city_463","description":"State--Urban
-        Area--Consolidated City","hasGeogExtentSelection":false,"sequence":211},{"name":"c_city_462","description":"Urban
-        Area--State--Consolidated City","hasGeogExtentSelection":false,"sequence":212},{"name":"cd111th","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)","hasGeogExtentSelection":false,"sequence":217},{"name":"stleg_up","description":"State--State
-        Legislative District (Upper Chamber)","hasGeogExtentSelection":false,"sequence":232},{"name":"stleg_lo","description":"State--State
-        Legislative District (Lower Chamber)","hasGeogExtentSelection":false,"sequence":235},{"name":"sd_elm","description":"State--School
-        District (Elementary)/Remainder","hasGeogExtentSelection":false,"sequence":238},{"name":"sd_sec","description":"State--School
-        District (Secondary)/Remainder","hasGeogExtentSelection":false,"sequence":244},{"name":"sd_uni","description":"State--School
-        District (Unified)/Remainder","hasGeogExtentSelection":false,"sequence":250},{"name":"anrc","description":"Alaska
+        Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":191},{"name":"place_312","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area--State--Principal City","hasGeogExtentSelection":true,"sequence":192},{"name":"place_352","description":"New
+        England City and Town Area--State--Principal City","hasGeogExtentSelection":true,"sequence":195},{"name":"place_450","description":"Urban
+        Area--State--County--County Subdivision--Place/Remainder","hasGeogExtentSelection":true,"sequence":198},{"name":"place_464","description":"Urban
+        Area--State--Consolidated City--Place within Consolidated City","hasGeogExtentSelection":true,"sequence":199},{"name":"c_city","description":"State--Consolidated
+        City","hasGeogExtentSelection":true,"sequence":201},{"name":"c_city_541_111","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)--Consolidated City","hasGeogExtentSelection":true,"sequence":204},{"name":"c_city_615","description":"State--State
+        Legislative District (Upper Chamber)--Consolidated City","hasGeogExtentSelection":true,"sequence":209},{"name":"c_city_625","description":"State--State
+        Legislative District (Lower Chamber)--Consolidated City","hasGeogExtentSelection":true,"sequence":210},{"name":"c_city_463","description":"State--Urban
+        Area--Consolidated City","hasGeogExtentSelection":true,"sequence":211},{"name":"c_city_462","description":"Urban
+        Area--State--Consolidated City","hasGeogExtentSelection":true,"sequence":212},{"name":"cd111th","description":"State--Congressional
+        District (2007-2013, 110th-112th Congress)","hasGeogExtentSelection":true,"sequence":217},{"name":"stleg_up","description":"State--State
+        Legislative District (Upper Chamber)","hasGeogExtentSelection":true,"sequence":232},{"name":"stleg_lo","description":"State--State
+        Legislative District (Lower Chamber)","hasGeogExtentSelection":true,"sequence":235},{"name":"sd_elm","description":"State--School
+        District (Elementary)/Remainder","hasGeogExtentSelection":true,"sequence":238},{"name":"sd_sec","description":"State--School
+        District (Secondary)/Remainder","hasGeogExtentSelection":true,"sequence":244},{"name":"sd_uni","description":"State--School
+        District (Unified)/Remainder","hasGeogExtentSelection":true,"sequence":250},{"name":"anrc","description":"Alaska
         Native Regional Corporation","hasGeogExtentSelection":false,"sequence":257},{"name":"anrc_560_111","description":"State--Congressional
-        District (2007-2013, 110th-112th Congress)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":261},{"name":"anrc_634","description":"State--State
-        Legislative District (Upper Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":266},{"name":"anrc_639","description":"State--State
-        Legislative District (Lower Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":false,"sequence":267},{"name":"aianhh","description":"American
+        District (2007-2013, 110th-112th Congress)--Alaska Native Regional Corporation","hasGeogExtentSelection":true,"sequence":261},{"name":"anrc_634","description":"State--State
+        Legislative District (Upper Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":true,"sequence":266},{"name":"anrc_639","description":"State--State
+        Legislative District (Lower Chamber)--Alaska Native Regional Corporation","hasGeogExtentSelection":true,"sequence":267},{"name":"aianhh","description":"American
         Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":268},{"name":"aianhh_280","description":"State--American
-        Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":269},{"name":"aianhh_144","description":"State--County--Census
-        Tract--American Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":270},{"name":"aianhh_154","description":"State--County--Census
+        Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":269},{"name":"aianhh_144","description":"State--County--Census
+        Tract--American Indian Area/Alaska Native Area/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":270},{"name":"aianhh_154","description":"State--County--Census
         Tract--Block Group--American Indian Area/Alaska Native Area/Hawaiian Home
         Land","hasGeogExtentSelection":true,"sequence":271},{"name":"aianhh_550_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
-        Area/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":278},{"name":"aianhh_616","description":"State--State
+        Area/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":278},{"name":"aianhh_616","description":"State--State
         Legislative District (Upper Chamber)--American Indian Area/Alaska Native Area/Hawaiian
-        Home Land","hasGeogExtentSelection":false,"sequence":283},{"name":"aianhh_626","description":"State--State
+        Home Land","hasGeogExtentSelection":true,"sequence":283},{"name":"aianhh_626","description":"State--State
         Legislative District (Lower Chamber)--American Indian Area/Alaska Native Area/Hawaiian
-        Home Land","hasGeogExtentSelection":false,"sequence":284},{"name":"res_only","description":"American
+        Home Land","hasGeogExtentSelection":true,"sequence":284},{"name":"res_only","description":"American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":285},{"name":"res_only_283","description":"State--American
-        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":286},{"name":"res_only_551_111","description":"State--Congressional
+        Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":true,"sequence":286},{"name":"res_only_551_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
-        Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":288},{"name":"res_only_646","description":"State--State
+        Area (Reservation or Statistical Entity Only)","hasGeogExtentSelection":true,"sequence":288},{"name":"res_only_646","description":"State--State
         Legislative District (Upper Chamber)--American Indian Area/Alaska Native Area
-        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":293},{"name":"res_only_647","description":"State--State
+        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":true,"sequence":293},{"name":"res_only_647","description":"State--State
         Legislative District (Lower Chamber)--American Indian Area/Alaska Native Area
-        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":false,"sequence":294},{"name":"trust","description":"American
+        (Reservation or Statistical Entity Only)","hasGeogExtentSelection":true,"sequence":294},{"name":"trust","description":"American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":295},{"name":"trust_286","description":"State--American
-        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":296},{"name":"trust_552_111","description":"State--Congressional
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":296},{"name":"trust_552_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area (Off-Reservation
-        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":298},{"name":"trust_648","description":"State--State
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":298},{"name":"trust_648","description":"State--State
         Legislative District (Upper Chamber)--American Indian Area (Off-Reservation
-        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":303},{"name":"trust_649","description":"State--State
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":303},{"name":"trust_649","description":"State--State
         Legislative District (Lower Chamber)--American Indian Area (Off-Reservation
-        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":false,"sequence":304},{"name":"trbl_sub","description":"American
+        Trust Land Only)/Hawaiian Home Land","hasGeogExtentSelection":true,"sequence":304},{"name":"trbl_sub","description":"American
         Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":305},{"name":"trbl_sub_253","description":"American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
         Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":306},{"name":"trbl_sub_255","description":"American
         Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":307},{"name":"trbl_sub_553_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
-        Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":310},{"name":"trbl_sub_554_111","description":"State--Congressional
+        Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":310},{"name":"trbl_sub_554_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area/Alaska Native
-        Area (Reservation or Statistical Entity Only)--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":315},{"name":"trbl_sub_555_111","description":"State--Congressional
+        Area (Reservation or Statistical Entity Only)--Tribal Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":315},{"name":"trbl_sub_555_111","description":"State--Congressional
         District (2007-2013, 110th-112th Congress)--American Indian Area (Off-Reservation
-        Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":320},{"name":"trbl_sub_281","description":"State--American
-        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":326},{"name":"trbl_sub_284","description":"State--American
+        Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":320},{"name":"trbl_sub_281","description":"State--American
+        Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":326},{"name":"trbl_sub_284","description":"State--American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
-        Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":327},{"name":"trbl_sub_287","description":"State--American
-        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":false,"sequence":328},{"name":"trbl_ct","description":"American
+        Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":327},{"name":"trbl_sub_287","description":"State--American
+        Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land--Tribal Subdivision/Remainder","hasGeogExtentSelection":true,"sequence":328},{"name":"trbl_ct","description":"American
         Indian Area/Alaska Native Area/Hawaiian Home Land--Tribal Census Tract","hasGeogExtentSelection":false,"sequence":329},{"name":"trbl_ct_291","description":"American
         Indian Area/Alaska Native Area (Reservation or Statistical Entity Only)--Tribal
         Census Tract","hasGeogExtentSelection":false,"sequence":330},{"name":"trbl_ct_292","description":"American
@@ -653,25 +653,25 @@ http_interactions:
         Census Tract--Tribal Block Group","hasGeogExtentSelection":false,"sequence":336},{"name":"cbsa","description":"Metropolitan
         Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":338},{"name":"cbsa_332","description":"Combined
         Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":339},{"name":"cbsa_320","description":"State--Metropolitan
-        Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":340},{"name":"cbsa_34101","description":"State--Combined
-        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":false,"sequence":341},{"name":"metdiv","description":"Metropolitan
+        Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":true,"sequence":340},{"name":"cbsa_34101","description":"State--Combined
+        Statistical Area--Metropolitan Statistical Area/Micropolitan Statistical Area","hasGeogExtentSelection":true,"sequence":341},{"name":"metdiv","description":"Metropolitan
         Statistical Area/Micropolitan Statistical Area--Metropolitan Division","hasGeogExtentSelection":false,"sequence":342},{"name":"metdiv_323","description":"State--Metropolitan
-        Statistical Area/Micropolitan Statistical Area--Metropolitan Division","hasGeogExtentSelection":false,"sequence":343},{"name":"csa","description":"Combined
+        Statistical Area/Micropolitan Statistical Area--Metropolitan Division","hasGeogExtentSelection":true,"sequence":343},{"name":"csa","description":"Combined
         Statistical Area","hasGeogExtentSelection":false,"sequence":344},{"name":"csa_340","description":"State--Combined
-        Statistical Area","hasGeogExtentSelection":false,"sequence":345},{"name":"necta","description":"New
+        Statistical Area","hasGeogExtentSelection":true,"sequence":345},{"name":"necta","description":"New
         England City and Town Area","hasGeogExtentSelection":false,"sequence":363},{"name":"necta_337","description":"Combined
         New England City and Town Area--New England City and Town Area","hasGeogExtentSelection":false,"sequence":364},{"name":"necta_360","description":"State--New
-        England City and Town Area","hasGeogExtentSelection":false,"sequence":365},{"name":"necta_346","description":"State--Combined
-        New England City and Town Area--New England City and Town Area","hasGeogExtentSelection":false,"sequence":366},{"name":"nectadiv","description":"New
+        England City and Town Area","hasGeogExtentSelection":true,"sequence":365},{"name":"necta_346","description":"State--Combined
+        New England City and Town Area--New England City and Town Area","hasGeogExtentSelection":true,"sequence":366},{"name":"nectadiv","description":"New
         England City and Town Area--New England City and Town Area Division","hasGeogExtentSelection":false,"sequence":367},{"name":"nectadiv_364","description":"State--New
-        England City and Town Area--New England City and Town Area Division","hasGeogExtentSelection":false,"sequence":368},{"name":"c_necta","description":"Combined
+        England City and Town Area--New England City and Town Area Division","hasGeogExtentSelection":true,"sequence":368},{"name":"c_necta","description":"Combined
         New England City and Town Area","hasGeogExtentSelection":false,"sequence":369},{"name":"c_necta_345","description":"State--Combined
-        New England City and Town Area","hasGeogExtentSelection":false,"sequence":370},{"name":"urb_area","description":"Urban
+        New England City and Town Area","hasGeogExtentSelection":true,"sequence":370},{"name":"urb_area","description":"Urban
         Area","hasGeogExtentSelection":false,"sequence":372},{"name":"urb_area_420","description":"State--Urban
-        Area","hasGeogExtentSelection":false,"sequence":373},{"name":"urbrural_085","description":"State--County--County
-        Subdivision--Place/Remainder--Census Tract--Urban/Rural","hasGeogExtentSelection":false,"sequence":378},{"name":"zcta","description":"5-Digit
+        Area","hasGeogExtentSelection":true,"sequence":373},{"name":"urbrural_085","description":"State--County--County
+        Subdivision--Place/Remainder--Census Tract--Urban/Rural","hasGeogExtentSelection":true,"sequence":378},{"name":"zcta","description":"5-Digit
         ZIP Code Tabulation Area","hasGeogExtentSelection":false,"sequence":382},{"name":"zcta_871","description":"State--5-Digit
-        ZIP Code Tabulation Area","hasGeogExtentSelection":false,"sequence":383},{"name":"sab201112_12","description":"School
+        ZIP Code Tabulation Area","hasGeogExtentSelection":true,"sequence":383},{"name":"sab201112_12","description":"School
         Attendance Area for 2011-2012 Twelfth Grade","hasGeogExtentSelection":false,"sequence":387},{"name":"sab201112_11","description":"School
         Attendance Area for 2011-2012 Eleventh Grade","hasGeogExtentSelection":false,"sequence":388},{"name":"sab201112_10","description":"School
         Attendance Area for 2011-2012 Tenth Grade","hasGeogExtentSelection":false,"sequence":389},{"name":"sab201112_09","description":"School
@@ -822,5 +822,5 @@ http_interactions:
         New England city and town area--not in principal city"},{"name":"bs32.geM3","description":"In
         New England city and town area--urban"},{"name":"bs32.geM6","description":"In
         New England city and town area--rural"}]}]}'
-  recorded_at: 2024-12-09 22:06:29 GMT
-  recorded_with: vcr/1.2.2, webmockr/0.9.0
+  recorded_at: 2025-05-30 16:16:23 GMT
+  recorded_with: vcr/1.7.0, webmockr/2.0.0
