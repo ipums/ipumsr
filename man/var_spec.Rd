@@ -57,8 +57,7 @@ flags for the given variable. By default, data quality flags are not
 included.}
 
 \item{adjust_monetary_values}{Logical indicating whether to include the
-variable's inflation-adjusted equivalent. This is only available for
-variables that represent dollar amounts.}
+variable's inflation-adjusted equivalent, if available.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
 This is not needed for external use.}

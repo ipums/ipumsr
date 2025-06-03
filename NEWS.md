@@ -27,7 +27,10 @@
     
 -   Enables monetary value adjustment for supported IPUMS USA and IPUMS
     CPS variables. Use the `adjust_monetary_values` argument to `var_spec()`
-    to include an additional adjusted variable in your extract.
+    to include an additional adjusted variable in your extract. See the
+    [IPUMS CPS](https://cps.ipums.org/cps/adjusted_monetary_values.shtml) 
+    and [IPUMS USA](https://usa.ipums.org/usa/adjusted_monetary_values.shtml) 
+    documentation for more information on monetary adjustment.
 
 ## Function + argument retirements
     
