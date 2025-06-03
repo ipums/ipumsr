@@ -82,6 +82,7 @@ data collections. For a summary of supported features by collection, see the
 <span>  case_selection_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  attached_characteristics <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data_quality_flags <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  adjust_monetary_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  preselected <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -134,6 +135,11 @@ names of the form "AGE_MOM" and "AGE_MOM2".</p></dd>
 <dd><p>Logical indicating whether to include data quality
 flags for the given variable. By default, data quality flags are not
 included.</p></dd>
+
+
+<dt id="arg-adjust-monetary-values">adjust_monetary_values<a class="anchor" aria-label="anchor" href="#arg-adjust-monetary-values"></a></dt>
+<dd><p>Logical indicating whether to include the
+variable's inflation-adjusted equivalent, if available.</p></dd>
 
 
 <dt id="arg-preselected">preselected<a class="anchor" aria-label="anchor" href="#arg-preselected"></a></dt>

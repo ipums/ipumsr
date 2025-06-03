@@ -520,6 +520,29 @@ codes for each flag vary based on the sample. See the documentation for
 the IPUMS collection of interest for more information about data quality
 flag codes.</p>
 </div>
+<div class="section level3">
+<h3 id="monetary-value-adjustment">Monetary value adjustment<a class="anchor" aria-label="anchor" href="#monetary-value-adjustment"></a>
+</h3>
+<p>IPUMS CPS and IPUMS USA offer the option to standardize income or
+other dollar values to 2010 dollars. This option both retains the
+original IPUMS variable in your extract and adds a new, adjusted
+variable called <code>{VARIABLE NAME}_cpiu_2010</code> that contains the
+inflation-adjusted values. Inflation adjusted values are only available
+for continuous variables that represent dollar amounts.</p>
+<p>To request an adjusted variable in an extract, use the
+<code>adjust_monetary_values</code> argument:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
+<span>  <span class="st">"cps"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"monetary value adjustment example"</span>,</span>
+<span>  samples <span class="op">=</span> <span class="st">"cps2012_03s"</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="../reference/var_spec.html">var_spec</a></span><span class="op">(</span><span class="st">"HOURWAGE"</span>, adjust_monetary_values <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Further information on monetary value adjustment can be found on the
+<a href="https://cps.ipums.org/cps/adjusted_monetary_values.shtml" class="external-link">IPUMS
+CPS</a> and <a href="https://usa.ipums.org/usa/adjusted_monetary_values.shtml" class="external-link">IPUMS
+USA</a> websites.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="time-use-variables">Time use variables<a class="anchor" aria-label="anchor" href="#time-use-variables"></a>
@@ -528,7 +551,7 @@ flag codes.</p>
 request time use variables using the <code>time_use_variables</code>
 argument.</p>
 <p>For IPUMS-defined time use variables, simply provide the name:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"atus"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Time use variable demo"</span>,</span>
@@ -545,7 +568,7 @@ yourself using the online extract builder. In this case, use the
 <code><a href="../reference/var_spec.html">tu_var_spec()</a></code> helper to provide the time use variable name
 and your user email to identify the account the variable was created
 under:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"atus"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Time use variable demo"</span>,</span>
@@ -555,7 +578,7 @@ under:</p>
 <p>To request multiple user-defined time use variables or a combination
 of IPUMS-defined and user-defined time use variables, pass a
 <code>list</code> to the <code>time_use_variables</code> argument:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"atus"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Time use variable demo"</span>,</span>
@@ -579,7 +602,7 @@ onto all household members.</p>
 records for each record type present in the data, set
 <code>data_structure = "hierarchical"</code> in your extract
 definition.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"nhis"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"NHIS hierarchical"</span>,</span>
@@ -597,7 +620,7 @@ data in a different rectangular structure, set the
 <code>rectangular_on</code> argument in your extract definition to
 <code>"A"</code> (rectangular-on-activity), <code>"I"</code>
 (rectangular-on-injury), or <code>"R"</code> (rectangular-on-round).</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"meps"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"MEPS rectangular-on-round"</span>,</span>
@@ -613,7 +636,7 @@ IPUMS USA can provide data containing only household records. To request
 a household-only data file, set
 <code>data_structure = "household_only"</code> in your IPUMS USA extract
 definition.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
 <span>  <span class="st">"usa"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"USA household only"</span>,</span>
@@ -639,7 +662,7 @@ csv files.</p>
 </h2>
 <p>Once you have defined an extract request, you can submit the extract
 for processing:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_extract_submitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/submit_extract.html">submit_extract</a></span><span class="op">(</span><span class="va">usa_extract</span><span class="op">)</span></span></code></pre></div>
 <p>The workflow for submitting and monitoring an extract request and
 downloading its files when complete is described in the <a href="ipums-api.html">IPUMS API introduction</a>.</p>
