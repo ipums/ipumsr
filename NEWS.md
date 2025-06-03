@@ -1,5 +1,7 @@
 # ipumsr (development version)
 
+## New features
+
 -   This release adds comprehensive support for IPUMS IHGIS extract submission, 
     metadata retrieval, and data loading! 
     
@@ -49,8 +51,6 @@
     
 -   `project` and `var_label` arguments in `ipums_website()` are now 
     defunct.
-
-## New features
 
 # ipumsr 0.8.2
     

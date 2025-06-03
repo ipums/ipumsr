@@ -27,7 +27,7 @@
 #'     + IPUMS Time Use ([ATUS](https://www.atusdata.org/atus/), [AHTUS](https://www.ahtusdata.org/ahtus/), [MTUS](https://www.mtusdata.org/mtus/))
 #'     + IPUMS Health Surveys ([NHIS](https://nhis.ipums.org/), [MEPS](https://meps.ipums.org/))
 #' - IPUMS aggregate data
-#'     + [IPUMS NHGIS](https://nhgis.org/)
+#'     + [IPUMS NHGIS](https://www.nhgis.org/)
 #'     + [IPUMS IHGIS](https://ihgis.ipums.org/)
 #'
 #' Learn more about the IPUMS API in `vignette("ipums-api")`.

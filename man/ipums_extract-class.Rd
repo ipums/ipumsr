@@ -27,7 +27,7 @@ Currently supported collections are:
 }
 \item IPUMS aggregate data
 \itemize{
-\item \href{https://nhgis.org/}{IPUMS NHGIS}
+\item \href{https://www.nhgis.org/}{IPUMS NHGIS}
 \item \href{https://ihgis.ipums.org/}{IPUMS IHGIS}
 }
 }
