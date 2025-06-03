@@ -13,6 +13,7 @@ var_spec(
   case_selection_type = NULL,
   attached_characteristics = NULL,
   data_quality_flags = NULL,
+  adjust_monetary_values = NULL,
   preselected = NULL
 )
 
@@ -54,6 +55,9 @@ names of the form "AGE_MOM" and "AGE_MOM2".}
 \item{data_quality_flags}{Logical indicating whether to include data quality
 flags for the given variable. By default, data quality flags are not
 included.}
+
+\item{adjust_monetary_values}{Logical indicating whether to include the
+variable's inflation-adjusted equivalent, if available.}
 
 \item{preselected}{Logical indicating whether the variable is preselected.
 This is not needed for external use.}

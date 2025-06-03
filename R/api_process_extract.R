@@ -666,6 +666,7 @@ format_for_json.var_spec <- function(x) {
       dataQualityFlags = x$data_quality_flags,
       caseSelections = case_selections,
       attachedCharacteristics = as.list(x$attached_characteristics),
+      adjustMonetaryValues = x$adjust_monetary_values,
       preselected = x$preselected
     )
   )
