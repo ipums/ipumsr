@@ -55,7 +55,10 @@
 <ul><li>
 <p>This release adds comprehensive support for IPUMS IHGIS extract submission, metadata retrieval, and data loading!</p>
 <p>As IPUMS IHGIS is an aggregate data project alongside IPUMS NHGIS, many functions that previously were NHGIS-specific have been generalized to accommodate both collections. This includes the following new functions:</p>
-<ul><li><p><code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> loads downloaded extracts for both NHGIS and IHGIS. This replaces <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>, which is now deprecated.</p></li>
+<ul><li>
+<p><code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> loads downloaded extracts for both NHGIS and IHGIS. This replaces <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>, which is now deprecated.</p>
+<p><code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> also includes a new <code>file_encoding</code> argument, as IHGIS and NHGIS files often have different encoding. Typically, the default <code>file_encoding</code> should load an aggregate data extract file correctly. If not, you can adjust the encoding here.</p>
+</li>
 <li><p><code><a href="../reference/define_extract_agg.html">define_extract_agg()</a></code> defines extract requests for both NHGIS and IHGIS. Use the <code>collection</code> argument to specify the data collection for a given extract. This replaces <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>, which is now deprecated.</p></li>
 <li><p><code><a href="../reference/get_metadata_catalog.html">get_metadata_catalog()</a></code> retrieves summary metadata about NHGIS and IHGIS data sources. <code><a href="../reference/get_metadata.html">get_metadata()</a></code> retrieves detailed metadata about a particular NHGIS or IHGIS data source. These functions replace <code><a href="../reference/get_metadata_nhgis.html">get_metadata_nhgis()</a></code>, which is now deprecated.</p></li>
 </ul></li>
