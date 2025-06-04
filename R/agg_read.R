@@ -54,6 +54,9 @@
 #'   usually needed as it contains similar information to that
 #'   included in the `"label"` attribute of each data column (if `var_attrs`
 #'   includes `"var_label"`).
+#' @param file_encoding Encoding for the file to be loaded. For NHGIS extracts,
+#'   defaults to ISO-8859-1. For IHGIS extracts, defaults to UTF-8. If the
+#'   default encoding produces unexpected characters, adjust the encoding here.
 #' @param verbose Logical controlling whether to display output when loading
 #'   data. If `TRUE`, displays IPUMS conditions, a progress bar, and
 #'   column types. Otherwise, all are suppressed.
@@ -112,6 +115,7 @@ read_ipums_agg <- function(data_file,
                            guess_max = min(n_max, 1000),
                            var_attrs = c("val_labels", "var_label", "var_desc"),
                            remove_extra_header = TRUE,
+                           file_encoding = NULL,
                            verbose = TRUE) {
   if (length(data_file) != 1) {
     rlang::abort("`data_file` must be length 1")
@@ -137,12 +141,14 @@ read_ipums_agg <- function(data_file,
     cb_ddi_info <- read_nhgis_codebook_safe(
       data_file,
       filename = file,
-      verbose = !is_null(var_attrs)
+      verbose = !is_null(var_attrs),
+      file_encoding = file_encoding
     )
   } else {
     cb_ddi_info <- read_ihgis_codebook_safe(
       data_file,
-      verbose = !is_null(var_attrs)
+      verbose = !is_null(var_attrs),
+      file_encoding = file_encoding
     )
   }
 
@@ -539,7 +545,10 @@ read_nhgis_csv <- function(data_file,
 #' @return An `ipums_ddi` object
 #'
 #' @noRd
-read_nhgis_codebook_safe <- function(data_file, filename, verbose = FALSE) {
+read_nhgis_codebook_safe <- function(data_file,
+                                     filename,
+                                     file_encoding = NULL,
+                                     verbose = FALSE) {
   cb_files <- find_files_in(
     data_file,
     name_ext = "txt",
@@ -601,12 +610,14 @@ read_nhgis_codebook_safe <- function(data_file, filename, verbose = FALSE) {
   # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
   # because an extract with county names has n with tildes and so is can
   # be verified as ISO-8859-1)
-  cb_ddi_info$file_encoding <- "ISO-8859-1"
+  cb_ddi_info$file_encoding <- file_encoding %||% "ISO-8859-1"
 
   cb_ddi_info
 }
 
-read_ihgis_codebook_safe <- function(data_file, verbose = FALSE) {
+read_ihgis_codebook_safe <- function(data_file,
+                                     file_encoding = NULL,
+                                     verbose = FALSE) {
   # If data_file is an extract, we can just load the cb
   cb_ddi_info <- try(read_ihgis_codebook(data_file), silent = TRUE)
   cb_error <- inherits(cb_ddi_info, "try-error")
@@ -648,10 +659,7 @@ read_ihgis_codebook_safe <- function(data_file, verbose = FALSE) {
     }
   }
 
-  # Specify encoding (assuming all nhgis extracts are ISO-8859-1 eg latin1
-  # because an extract with county names has n with tildes and so is can
-  # be verified as ISO-8859-1)
-  cb_ddi_info$file_encoding <- "ISO-8859-1"
+  cb_ddi_info$file_encoding <- file_encoding %||% "UTF-8"
 
   cb_ddi_info
 }
