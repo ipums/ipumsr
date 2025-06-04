@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Big IPUMS Data • ipumsr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -27,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +40,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +48,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul>
@@ -78,7 +77,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Big IPUMS Data</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/pkgdown-v0.8.2/vignettes/ipums-bigdata.Rmd" class="external-link"><code>vignettes/ipums-bigdata.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/main/vignettes/ipums-bigdata.Rmd" class="external-link"><code>vignettes/ipums-bigdata.Rmd</code></a></small>
       <div class="d-none name"><code>ipums-bigdata.Rmd</code></div>
     </div>
 
@@ -747,7 +746,7 @@ syntax we would use with dplyr:</p>
 <span><span class="va">example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="st">"AGE"</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Source:   SQL [?? x 14]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.47.1 []</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Database: sqlite 3.50.0 []</span></span></span>
 <span><span class="co">#&gt;     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>011     33     3 2.01<span style="color: #949494;">e</span>13        1    308.        1      1 2.01<span style="color: #949494;">e</span>13   308.</span></span>
@@ -845,7 +844,7 @@ grant to improve database support in R</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

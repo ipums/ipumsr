@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to the IPUMS API for R Users • ipumsr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -27,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +40,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +48,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul>
@@ -78,7 +77,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Introduction to the IPUMS API for R Users</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/pkgdown-v0.8.2/vignettes/ipums-api.Rmd" class="external-link"><code>vignettes/ipums-api.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/main/vignettes/ipums-api.Rmd" class="external-link"><code>vignettes/ipums-api.Rmd</code></a></small>
       <div class="d-none name"><code>ipums-api.Rmd</code></div>
     </div>
 
@@ -133,22 +132,29 @@ examples in this vignette:</p>
 <p>IPUMS <strong>extract</strong> support is currently available via API
 for the following collections:</p>
 <ul>
+<li>IPUMS microdata collections
+<ul>
 <li>IPUMS USA</li>
 <li>IPUMS CPS</li>
 <li>IPUMS International</li>
 <li>IPUMS Time Use (ATUS, AHTUS, MTUS)</li>
 <li>IPUMS Health Surveys (NHIS, MEPS)</li>
-<li>IPUMS NHGIS</li>
 </ul>
-<p>Note that this support only includes data available via a
-collection’s extract engine. Many collections provide additional data
-via direct download, but these products are not supported by the IPUMS
-API.</p>
-<p>IPUMS <strong>metadata</strong> support is currently available via
-API for the following collections:</p>
+</li>
+<li>IPUMS aggregate data collections
 <ul>
 <li>IPUMS NHGIS</li>
+<li>IPUMS IHGIS</li>
 </ul>
+</li>
+</ul>
+<p>Note that this support only includes data available via a
+collection’s extract engine. Many collections provide supplemental data
+files via direct download. Currently, API support for downloading these
+files is limited to IPUMS NHGIS. See
+<code><a href="../reference/download_supplemental_data.html">download_supplemental_data()</a></code> for more information.</p>
+<p>IPUMS <strong>metadata</strong> support is currently available via
+API for the IPUMS aggregate data collections (NHGIS and IHGIS).</p>
 <p>API support will continue to be added for more collections in the
 future. You can check general API availability for all IPUMS collections
 with <code><a href="../reference/ipums_data_collections.html">ipums_data_collections()</a></code>.</p>
@@ -161,7 +167,7 @@ with <code><a href="../reference/ipums_data_collections.html">ipums_data_collect
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> IPUMS CPS           microdata       cps          TRUE       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> IPUMS International microdata       ipumsi       TRUE       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> IPUMS NHGIS         aggregate data  nhgis        TRUE       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> IPUMS IHGIS         aggregate data  ihgis        FALSE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> IPUMS IHGIS         aggregate data  ihgis        TRUE       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> IPUMS ATUS          microdata       atus         TRUE       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> IPUMS AHTUS         microdata       ahtus        TRUE       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> IPUMS MTUS          microdata       mtus         TRUE       </span></span>
@@ -206,9 +212,10 @@ stored it in the <code>IPUMS_API_KEY</code> environment variable.</p>
 <p>ipumsr contains two extract definition functions used to specify the
 parameters of a new extract request from scratch.</p>
 <ul>
-<li>For microdata projects (USA, CPS, International, Time Use, and
-Health Surveys), use <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code>.</li>
-<li>For NHGIS, use <code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code>.</li>
+<li>For microdata projects, use
+<code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code>.</li>
+<li>For aggregate data projects, use
+<code><a href="../reference/define_extract_agg.html">define_extract_agg()</a></code>.</li>
 </ul>
 <p>When you define an extract request, you can specify the data to be
 included in the extract and indicate the desired format and layout.</p>
@@ -232,7 +239,7 @@ and 2019 American Community Survey (ACS):</p>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(5 total) AGE, SEX, RACE, STATEFIP, MARST</span></span></code></pre></div>
 <p>The exact extract definition options vary across collections, but all
 collections can be used with the same general workflow. For more details
-on the available extract definition options, see the associated <a href="ipums-api-micro.html">microdata</a> and <a href="ipums-api-nhgis.html">NHGIS</a> vignettes.</p>
+on the available extract definition options, see the associated <a href="ipums-api-micro.html">microdata</a> and <a href="ipums-api-agg.html">aggregate data</a> vignettes.</p>
 <p>For the purposes of demonstrating the overall workflow, we will
 continue to work with the sample IPUMS USA extract definition created
 above.</p>
@@ -240,7 +247,7 @@ above.</p>
 <h3 id="extract-request-objects">Extract request objects<a class="anchor" aria-label="anchor" href="#extract-request-objects"></a>
 </h3>
 <p><code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code> and
-<code><a href="../reference/define_extract_nhgis.html">define_extract_nhgis()</a></code> always produce an
+<code><a href="../reference/define_extract_agg.html">define_extract_agg()</a></code> always produce an
 <code>ipums_extract</code> object, which can be handled by other API
 functions (see <code><a href="../reference/ipums_extract-class.html">?ipums_extract</a></code>). Furthermore, these objects
 will have a subclass for the particular collection with which they are
@@ -253,8 +260,10 @@ accessed by indexing the object:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">samples</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "us2018a" "us2019a"</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">variables</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "AGE"      "SEX"      "RACE"     "STATEFIP" "MARST"</span></span>
+<span></span>
 <span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">data_format</span></span>
 <span><span class="co">#&gt; [1] "fixed_width"</span></span></code></pre></div>
 <p><code>ipums_extract</code> objects also contain information about the
@@ -264,6 +273,7 @@ extract request is still unsubmitted, it has no request number:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">status</span></span>
 <span><span class="co">#&gt; [1] "unsubmitted"</span></span>
+<span></span>
 <span><span class="va">usa_extract_definition</span><span class="op">$</span><span class="va">number</span></span>
 <span><span class="co">#&gt; [1] NA</span></span></code></pre></div>
 <p>To obtain the data requested in the extract definition, we must first
@@ -388,8 +398,9 @@ microdata projects:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ddi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span>
 <span><span class="va">micro_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">ddi</span><span class="op">)</span></span></code></pre></div>
-<p>If instead you’re working with an NHGIS extract, use
-<code><a href="../reference/read_nhgis.html">read_nhgis()</a></code> or <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code>.</p>
+<p>If instead you’re working with an aggregate data extract, use
+<code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code> (or <code><a href="../reference/read_ipums_sf.html">read_ipums_sf()</a></code> for
+spatial data from IPUMS NHGIS extracts).</p>
 <p>See the <a href="ipums-read.html">associated vignette</a> for more
 information about loading IPUMS data into R.</p>
 </div>
@@ -463,6 +474,7 @@ variable or are ready for download:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Samples: </span>(2 total) us2018a, us2019a</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Variables: </span>(15 total) YEAR, SAMPLE, SERIAL, CBSERIAL, HHWT, CLUSTER,...</span></span>
+<span></span>
 <span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">keep</a></span><span class="op">(</span><span class="va">usa_extracts</span>, <span class="va">is_extract_ready</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; Submitted IPUMS USA extract number 456</span></span>
@@ -498,7 +510,8 @@ environment variable. If you have a default collection set, API
 functions will use that collection in all requests, assuming no other
 collection is specified.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span> <span class="co"># Set `save = TRUE` to store across sessions</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Set `save = TRUE` to store across sessions</span></span>
+<span><span class="fu"><a href="../reference/set_ipums_default_collection.html">set_ipums_default_collection</a></span><span class="op">(</span><span class="st">"usa"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check the default collection:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"IPUMS_DEFAULT_COLLECTION"</span><span class="op">)</span></span>
@@ -593,7 +606,7 @@ both tabular and spatial data:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_extract.html">download_extract</a></span><span class="op">(</span><span class="va">nhgis_extract</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># Select only the tabular data file to read</span></span>
-<span>  <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Not only does this API workflow allow you to obtain IPUMS data
 without ever leaving your R environment, but it also allows you to
 retain a reproducible record of your process. This makes it much easier
@@ -611,7 +624,7 @@ update your analysis in the future.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

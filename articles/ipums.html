@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>IPUMS Data and R • ipumsr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -27,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +40,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><h6 class="dropdown-header" data-toc-skip>IPUMS Data</h6></li>
+<li><h6 class="dropdown-header" data-toc-skip>IPUMS data</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-read.html">Read IPUMS data</a></li>
     <li><a class="dropdown-item" href="../articles/value-labels.html">Value labels</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-bigdata.html">Big IPUMS data</a></li>
@@ -49,7 +48,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>IPUMS API</h6></li>
     <li><a class="dropdown-item" href="../articles/ipums-api.html">Introduction to the API</a></li>
     <li><a class="dropdown-item" href="../articles/ipums-api-micro.html">Microdata API requests</a></li>
-    <li><a class="dropdown-item" href="../articles/ipums-api-nhgis.html">NHGIS API requests</a></li>
+    <li><a class="dropdown-item" href="../articles/ipums-api-agg.html">Aggregate data API requests</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://ipums.org/exercises.shtml">Project-specific exercises</a></li>
   </ul>
@@ -78,7 +77,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>IPUMS Data and R</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/pkgdown-v0.8.2/vignettes/ipums.Rmd" class="external-link"><code>vignettes/ipums.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/main/vignettes/ipums.Rmd" class="external-link"><code>vignettes/ipums.Rmd</code></a></small>
       <div class="d-none name"><code>ipums.Rmd</code></div>
     </div>
 
@@ -165,20 +164,30 @@ IPUMS collections</a>.</p>
 <p>ipumsr provides an interface to the IPUMS extract system via the
 IPUMS API for the following collections:</p>
 <ul>
+<li>IPUMS microdata collections
+<ul>
 <li>IPUMS USA</li>
 <li>IPUMS CPS</li>
 <li>IPUMS International</li>
 <li>IPUMS Time Use (ATUS, AHTUS, MTUS)</li>
 <li>IPUMS Health Surveys (NHIS, MEPS)</li>
+</ul>
+</li>
+<li>IPUMS aggregate data collections
+<ul>
 <li>IPUMS NHGIS</li>
+<li>IPUMS IHGIS</li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="metadata-support">Metadata support<a class="anchor" aria-label="anchor" href="#metadata-support"></a>
 </h4>
-<p>For IPUMS NHGIS, ipumsr provides access to comprehensive metadata via
-the IPUMS API. Users can query NHGIS metadata to explore available data
-when specifying NHGIS extract requests.</p>
+<p>For aggregate data collections, ipumsr provides access to
+comprehensive metadata via the IPUMS API. Users can query metadata to
+explore available data when specifying aggregate data extract
+requests.</p>
 <p>Increased access to metadata for microdata projects is in progress.
 Currently, the IPUMS API only provides a listing of available samples
 for each microdata collection. At this time, creating extract requests
@@ -193,8 +202,8 @@ for use in R extract definitions.</p>
 use ipumsr functions to define your extract request, submit it, wait for
 it to process, and download the associated data.</p>
 <p>First, define the parameters of your extract. The available extract
-definition options will differ by IPUMS data collection. See the <a href="ipums-api-micro.html">microdata API request</a> and <a href="ipums-api-nhgis.html">NHGIS API request</a> vignettes for more
-details on defining an extract.</p>
+definition options will differ by IPUMS data collection. See the <a href="ipums-api-micro.html">microdata API request</a> and <a href="ipums-api-agg.html">aggregate data API request</a> vignettes for
+more details on defining an extract.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define a microdata extract request, e.g. for IPUMS CPS</span></span>
 <span><span class="va">cps_extract_request</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_micro.html">define_extract_micro</a></span><span class="op">(</span></span>
@@ -205,7 +214,8 @@ details on defining an extract.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define an NHGIS extract request</span></span>
-<span><span class="va">nhgis_extract_request</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_nhgis.html">define_extract_nhgis</a></span><span class="op">(</span></span>
+<span><span class="va">nhgis_extract_request</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/define_extract_agg.html">define_extract_agg</a></span><span class="op">(</span></span>
+<span>  collection <span class="op">=</span> <span class="st">"nhgis"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"NHGIS Data via IPUMS API"</span>,</span>
 <span>  datasets <span class="op">=</span> <span class="fu"><a href="../reference/ds_spec.html">ds_spec</a></span><span class="op">(</span></span>
 <span>    <span class="st">"1990_STF1"</span>,</span>
@@ -256,6 +266,7 @@ with the DDI (.xml) metadata file for your extract:</p>
 <code class="sourceCode R"><span><span class="va">cps_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"cps_00157.xml"</span><span class="op">)</span></span>
 <span><span class="va">cps_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_micro.html">read_ipums_micro</a></span><span class="op">(</span><span class="va">cps_file</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Use of data from IPUMS CPS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;    YEAR SERIAL MONTH     ASECWTH STATEFIP       PERNUM ASECWT INCTOT            </span></span>
@@ -270,10 +281,10 @@ with the DDI (.xml) metadata file for your extract:</p>
 <div class="section level4">
 <h4 id="nhgis-files">NHGIS files<a class="anchor" aria-label="anchor" href="#nhgis-files"></a>
 </h4>
-<p>For NHGIS files, use <code><a href="../reference/read_nhgis.html">read_nhgis()</a></code>:</p>
+<p>For aggregate data files, use <code><a href="../reference/read_ipums_agg.html">read_ipums_agg()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nhgis_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ipums_example.html">ipums_example</a></span><span class="op">(</span><span class="st">"nhgis0972_csv.zip"</span><span class="op">)</span></span>
-<span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis.html">read_nhgis</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">nhgis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_agg.html">read_ipums_agg</a></span><span class="op">(</span><span class="va">nhgis_file</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nhgis_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 25</span></span></span>
@@ -331,16 +342,17 @@ reading packages like <a href="https://readr.tidyverse.org" class="external-link
 <h3 id="exploring-file-metadata">Exploring file metadata<a class="anchor" aria-label="anchor" href="#exploring-file-metadata"></a>
 </h3>
 <p>Load a file’s metadata with <code><a href="../reference/read_ipums_ddi.html">read_ipums_ddi()</a></code> (for
-microdata projects) and <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> (for NHGIS).
-These provide file- and variable-level metadata for a given data source,
-which can be used to interpret the data contents.</p>
+microdata projects), <code><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook()</a></code> (for NHGIS), or
+<code><a href="../reference/read_ihgis_codebook.html">read_ihgis_codebook()</a></code> (for IHGIS). These provide file- and
+variable-level metadata for a given data source, which can be used to
+interpret the data contents.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cps_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_file</span><span class="op">)</span></span>
-<span><span class="va">nhgis_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_file</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cps_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ipums_ddi.html">read_ipums_ddi</a></span><span class="op">(</span><span class="va">cps_file</span><span class="op">)</span></span>
+<span><span class="va">nhgis_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nhgis_codebook.html">read_nhgis_codebook</a></span><span class="op">(</span><span class="va">nhgis_file</span><span class="op">)</span></span></code></pre></div>
 <p>Summarize the variable metadata for a dataset using
 <code><a href="../reference/ipums_var_info.html">ipums_var_info()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">cps_meta</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_info</a></span><span class="op">(</span><span class="va">cps_metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 10</span></span></span>
 <span><span class="co">#&gt;   var_name var_label        var_desc val_labels code_instr start   end imp_decim</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -357,6 +369,7 @@ which can be used to interpret the data contents.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_var_desc</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">INCTOT</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "INCTOT indicates each respondent's total pre-tax personal income or losses from all sources for the previous calendar year.  Amounts are expressed as they were reported to the interviewer; users must adjust for inflation using Consumer Price Index adjustment factors."</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/ipums_var_info.html">ipums_val_labels</a></span><span class="op">(</span><span class="va">cps_data</span><span class="op">$</span><span class="va">STATEFIP</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 2</span></span></span>
 <span><span class="co">#&gt;      val lbl                 </span></span>
@@ -423,7 +436,7 @@ more details.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
