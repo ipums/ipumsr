@@ -13,6 +13,7 @@ read_ipums_agg(
   guess_max = min(n_max, 1000),
   var_attrs = c("val_labels", "var_label", "var_desc"),
   remove_extra_header = TRUE,
+  file_encoding = NULL,
   verbose = TRUE
 )
 }
@@ -68,6 +69,10 @@ This header row is not
 usually needed as it contains similar information to that
 included in the \code{"label"} attribute of each data column (if \code{var_attrs}
 includes \code{"var_label"}).}
+
+\item{file_encoding}{Encoding for the file to be loaded. For NHGIS extracts,
+defaults to ISO-8859-1. For IHGIS extracts, defaults to UTF-8. If the
+default encoding produces unexpected characters, adjust the encoding here.}
 
 \item{verbose}{Logical controlling whether to display output when loading
 data. If \code{TRUE}, displays IPUMS conditions, a progress bar, and
