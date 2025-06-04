@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.8.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.9.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,8 +50,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ipumsr-development-version">ipumsr (development version)<a class="anchor" aria-label="anchor" href="#ipumsr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.0" id="ipumsr-090">ipumsr 0.9.0<a class="anchor" aria-label="anchor" href="#ipumsr-090"></a></h2><p class="text-muted">CRAN release: 2025-06-04</p>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-9-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-9-0"></a></h3>
 <ul><li>
 <p>This release adds comprehensive support for IPUMS IHGIS extract submission, metadata retrieval, and data loading!</p>
 <p>As IPUMS IHGIS is an aggregate data project alongside IPUMS NHGIS, many functions that previously were NHGIS-specific have been generalized to accommodate both collections. This includes the following new functions:</p>
@@ -66,7 +69,7 @@
 <li><p>Enables monetary value adjustment for supported IPUMS USA and IPUMS CPS variables. Use the <code>adjust_monetary_values</code> argument to <code><a href="../reference/var_spec.html">var_spec()</a></code> to include an additional adjusted variable in your extract. See the <a href="https://cps.ipums.org/cps/adjusted_monetary_values.shtml" class="external-link">IPUMS CPS</a> and <a href="https://usa.ipums.org/usa/adjusted_monetary_values.shtml" class="external-link">IPUMS USA</a> documentation for more information on monetary adjustment.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="function--argument-retirements-development-version">Function + argument retirements<a class="anchor" aria-label="anchor" href="#function--argument-retirements-development-version"></a></h3>
+<h3 id="function--argument-retirements-0-9-0">Function + argument retirements<a class="anchor" aria-label="anchor" href="#function--argument-retirements-0-9-0"></a></h3>
 <ul><li><p><code>data_layer</code> and <code>shape_layer</code> arguments are now defunct. In cases where this functionality is still supported, please use the <code>file_select</code> argument instead.</p></li>
 <li><p><code>get_recent_extracts_info_list()</code>, <code>get_recent_extracts_info_tbl()</code>, and <code>extract_tbl_to_list()</code> are now defunct. Use <code><a href="../reference/get_extract_history.html">get_extract_history()</a></code> to obtain a list of previously-submitted extracts.</p></li>
 <li><p>The ability to read files through directories is now defunct. This affects most reader functions. If you have unzipped an IPUMS extract archive, please provide the path to the individual file you wish to load, not its containing directory.</p></li>
