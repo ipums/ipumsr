@@ -13,6 +13,11 @@
     -   `read_ipums_agg()` loads downloaded extracts for both NHGIS and IHGIS.
         This replaces `read_nhgis()`, which is now deprecated.
         
+        `read_ipums_agg()` also includes a new `file_encoding` argument, as
+        IHGIS and NHGIS files often have different encoding. Typically,
+        the default `file_encoding` should load an aggregate data extract
+        file correctly. If not, you can adjust the encoding here.
+        
     -   `define_extract_agg()` defines extract requests for both NHGIS and
         IHGIS. Use the `collection` argument to specify the data collection for
         a given extract. This replaces `define_extract_nhgis()`, which is now
