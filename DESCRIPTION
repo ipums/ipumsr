@@ -1,6 +1,6 @@
 Package: ipumsr
 Title: An R Interface for Downloading, Reading, and Handling IPUMS Data
-Version: 0.8.2.9000
+Version: 0.9.0
 Authors@R: c(
     person("Greg Freedman Ellis", role = "aut"),
     person("Derek Burk", , , "ipums+cran@umn.edu", role = c("aut", "cre")),
