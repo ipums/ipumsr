@@ -22,3 +22,28 @@ test_that("Error on unexpected DDI file", {
     "Expected file `.+` to be a file path, but got a directory"
   )
 })
+
+test_that("can read labeled values from codInstr tags", {
+  ddi1 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "cps_00111.xml")
+  )
+  ddi2 <- read_ipums_ddi(
+    file.path(vcr::vcr_test_path("fixtures"), "ipumsi_00987.xml")
+  )
+  county_labels <- ipums_val_labels(ddi1, "COUNTY")
+  oincfarm_labels <- ipums_val_labels(ddi1, "OINCFARM")
+  popdensgeo1_labels <- ipums_val_labels(ddi2, "POPDENSGEO1")
+
+  expect_equal(nrow(county_labels), 1)
+  expect_equal(nrow(oincfarm_labels), 1)
+  expect_equal(nrow(popdensgeo1_labels), 1)
+
+  expect_equal(county_labels$val, 0)
+  expect_equal(county_labels$lbl, "Not identified")
+
+  expect_equal(oincfarm_labels$val, 99999999)
+  expect_equal(oincfarm_labels$lbl, "N.I.U. (Not in Universe).")
+
+  expect_equal(popdensgeo1_labels$val, 0)
+  expect_equal(popdensgeo1_labels$lbl, "Unknown.")
+})

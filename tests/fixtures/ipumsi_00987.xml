@@ -1,0 +1,4626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ipums-ddi-xslt.xsl"?>
+<codeBook ID="ddi2-27c79f70-8e14-11e5-8c97-b82a72e0b782-ipumsi_00987.dat-international.ipums.org" version="2.5" xmlns="ddi:codebook:2_5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ddi:codebook:2_5 http://www.ddialliance.org/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd">
+  <docDscr>
+    <citation>
+      <titlStmt>
+        <titl>Codebook for an IPUMS International Data Extract</titl>
+        <subTitl>DDI 2.5 metadata describing the extract file  'ipumsi_00987.dat'</subTitl>
+        <IDNo>ddi2-27c79f70-8e14-11e5-8c97-b82a72e0b782-ipumsi_00987.dat-international.ipums.org</IDNo>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty affiliation="University of Minnesota">IPUMS</AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="IPUMS" affiliation="University of Minnesota" role="Documentation">IPUMS</producer>
+        <prodDate date="2025-06-16">June 16, 2025</prodDate>
+        <prodPlac>IPUMS, 50 Willey Hall, 225 - 19th Avenue South, Minneapolis, MN 55455</prodPlac>
+      </prodStmt>
+      <distStmt>
+        <contact URI="https://ipums.org" affiliation="University of Minnesota">IPUMS</contact>
+      </distStmt>
+    </citation>
+  </docDscr>
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl>User Extract ipumsi_00987.dat</titl>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty affiliation="University of Minnesota">IPUMS</AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="IPUMS" affiliation="University of Minnesota" role="Documentation">IPUMS</producer>
+        <prodDate date="2025-06-16">June 16, 2025</prodDate>
+        <prodPlac>IPUMS, 50 Willey Hall, 225 - 19th Avenue South, Minneapolis, MN 55455</prodPlac>
+      </prodStmt>
+      <distStmt>
+        <contact URI="https://ipums.org" affiliation="University of Minnesota">IPUMS</contact>
+      </distStmt>
+      <serStmt>
+        <serName abbr="ipumsi">IPUMS International</serName>
+        <serInfo>DOI:10.18128/D020.V7.6</serInfo>
+      </serStmt>
+      <verStmt>
+        <version date="2025-06-16"/>
+      </verStmt>
+    </citation>
+    <stdyInfo>
+      <subject>
+        <topcClas vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</topcClas>
+        <topcClas vocab="IPUMS">Geography: Global Variables -- HOUSEHOLD</topcClas>
+        <topcClas vocab="IPUMS">Technical Person Variables -- PERSON</topcClas>
+        <topcClas vocab="IPUMS">Demographic Variables -- PERSON</topcClas>
+        <topcClas vocab="IPUMS">Income Variables -- PERSON</topcClas>
+      </subject>
+      <sumDscr ID="sdatref-2487">
+        <timePrd date="1980" event="single">1980</timePrd>
+        <nation abbr="pa">Panama</nation>
+      </sumDscr>
+      <notes><![CDATA[Additional notes on a sample that is part of this study:  Panama 1980
+]]></notes>
+    </stdyInfo>
+    <dataAccs>
+      <useStmt>
+        <confDec required="yes"><![CDATA[IPUMS International distributes integrated microdata of individuals and households only by agreement of collaborating national statistical offices and under the strictest of confidence. Before data may be distributed to an individual researcher, an electronic license agreement must be signed and approved.
+
+To gain access to the data, a researcher must agree to the following:
+
+(1) Implement security measures to prevent unauthorized access to census microdata. Under IPUMS International agreements with collaborating agencies, redistribution of the data to third parties is prohibited.
+
+(2) Use the microdata for the exclusive purposes of scholarly research and education. Researchers must explicitly agree to not use microdata acquired for any commercial or income-generating venture.
+
+(3) Maintain the confidentiality of persons, households, and other entities. Any attempt to ascertain the identity of persons or households from the microdata is prohibited. Alleging that a person or household has been identified is also prohibited.
+
+(4) Report all publications based on these data to IPUMS International, which will in turn pass the information on to the relevant national statistical agencies.
+
+Once a project is approved, a password is issued and data may be acquired through the Internet. Penalties for violating the license include: revocation of the license, recall of all microdata acquired, filing of a motion of censure to the appropriate professional organizations, and civil prosecution under the relevant national or international statutes.
+
+These safeguards mirror the principles from the Joint ECE/Eurostat Work Session on Statistical Data Confidentiality. Employees of the Minnesota Population Center who work with the census microdata to produce the harmonized database also sign agreements to respect the confidentiality of the data.
+
+IPUMS International works with each country's statistical office to minimize the risk of disclosure of respondent information. The details of the confidentiality protections vary across countries, but in all cases, names and detailed geographic information are suppressed and top-codes are imposed on variables such as income that might identify specific persons. In addition, IPUMS International uses a variety of technical procedures to enhance confidentiality protection. These include the following:
+
+  
+(1) Swapping an undisclosed fraction of records from one administrative district to another to make positive identification of individuals impossible.
+
+(2) Randomizing the placement of households within districts to disguise the order in which individuals were enumerated or the data processed.
+
+(3) Aggregating codes of sensitive characteristics (e.g., grouping together very small ethnic categories)
+
+(4) Top- and bottom-coding continuous variables to prevent identification of extreme cases.
+
+The safety record for public-use census microdata is apparently perfect. In almost four decades of use, there has not been a single verified breach of statistical confidentiality. The measures implemented by the IPUMS International are designed to extend this record.]]></confDec>
+        <contact URI="http://international.ipums.org" affiliation="IPUMS">IPUMS International</contact>
+        <citReq><![CDATA[Steven Ruggles, Lara Cleveland, Rodrigo Lovaton, Sula Sarkar, Matthew Sobek, Derek Burk, Dan Ehrlich, Quinn Heimann, Jane Lee, and Nate Merrill. Integrated Public Use Microdata Series, International: Version 7.6 [dataset]. Minneapolis, MN: IPUMS, 2025. https://doi.org/10.18128/D020.V7.6
+
+Researchers should also acknowledge the statistical agency that originally produced the data.
+
+
+The licensing agreement for use of IPUMS International data requires that users supply IPUMS International with the title and full citation for any publications, research reports, or educational materials making use of the data or documentation.
+
+Copies of such materials are also gratefully received at ipums@umn.edu.
+
+Printed matter should be sent to:
+IPUMS International
+Minnesota Population Center
+University of Minnesota
+50 Willey Hall
+225 19th Avenue South
+Minneapolis, MN 55455
+]]></citReq>
+        <conditions><![CDATA[An adapted version of the dataset, harmonized for international comparability, is available from IPUMS International (https://international.ipums.org/international/) under the following conditions:
+
+  
+IPUMS International distributes integrated microdata of individuals and households only by agreement of collaborating national statistical offices and under the strictest of confidence. Before data may be distributed to an individual researcher, an electronic license agreement must be signed and approved.  To gain access to the data, a researcher must agree to the following:
+
+(1) Implement security measures to prevent unauthorized access to census microdata. Under IPUMS International agreements with collaborating agencies, redistribution of the data to third parties is prohibited.
+
+(2) Use the microdata for the exclusive purposes of scholarly research and education. Researchers must explicitly agree to not use microdata acquired for any commercial or income-generating venture.
+
+(3) Maintain the confidentiality of persons, households, and other entities. Any attempt to ascertain the identity of persons or households from the microdata is prohibited. Alleging that a person or household has been identified is also prohibited.
+
+(4) Report all publications based on these data to IPUMS International, which will in turn pass the information on to the relevant national statistical agencies.
+
+Once a project is approved, a password is issued and data may be acquired through the Internet. Penalties for violating the license include: revocation of the license, recall of all microdata acquired, filing of a motion of censure to the appropriate professional organizations, and civil prosecution under the relevant national or international statutes.
+
+These safeguards mirror the principles from the Joint ECE/Eurostat Work Session on Statistical Data Confidentiality. Employees of the Minnesota Population Center who work with the census microdata to produce the harmonized database also sign agreements to respect the confidentiality of the data.
+]]></conditions>
+        <disclaimer>The user of the data acknowledges that the original collector of the data, the authorized distributor of the data, and the relevant funding agency bear no responsibility for use of the data or for interpretations or inferences based upon such uses.</disclaimer>
+      </useStmt>
+    </dataAccs>
+    <notes><![CDATA[User-provided description:  Panama income]]></notes>
+  </stdyDscr>
+  <fileDscr ID="ExtractData">
+    <fileTxt>
+      <fileName>ipumsi_00987.dat</fileName>
+      <fileCont>Microdata records</fileCont>
+      <fileStrc type="rectangular"/>
+      <fileType charset="ISO-8859-1">ISO-8859-1 data file</fileType>
+      <format>fixed length fields</format>
+      <filePlac>IPUMS, 50 Willey Hall, 225 - 19th Avenue South, Minneapolis, MN 55455</filePlac>
+    </fileTxt>
+  </fileDscr>
+  <dataDscr><var ID="COUNTRY" dcml="0" files="ExtractData" intrvl="discrete" name="COUNTRY">
+  <location EndPos="3" StartPos="1" width="3"/>
+  <labl>Country</labl>
+  <txt><![CDATA[COUNTRY gives the country from which the sample was drawn.  The codes assigned to each country are those used by the UN Statistics Division and the ISO (International Organization for Standardization).]]></txt>
+  <catgry>
+    <catValu>032</catValu>
+    <labl>Argentina</labl>
+  </catgry>
+  <catgry>
+    <catValu>051</catValu>
+    <labl>Armenia</labl>
+  </catgry>
+  <catgry>
+    <catValu>040</catValu>
+    <labl>Austria</labl>
+  </catgry>
+  <catgry>
+    <catValu>050</catValu>
+    <labl>Bangladesh</labl>
+  </catgry>
+  <catgry>
+    <catValu>112</catValu>
+    <labl>Belarus</labl>
+  </catgry>
+  <catgry>
+    <catValu>204</catValu>
+    <labl>Benin</labl>
+  </catgry>
+  <catgry>
+    <catValu>068</catValu>
+    <labl>Bolivia</labl>
+  </catgry>
+  <catgry>
+    <catValu>072</catValu>
+    <labl>Botswana</labl>
+  </catgry>
+  <catgry>
+    <catValu>076</catValu>
+    <labl>Brazil</labl>
+  </catgry>
+  <catgry>
+    <catValu>854</catValu>
+    <labl>Burkina Faso</labl>
+  </catgry>
+  <catgry>
+    <catValu>116</catValu>
+    <labl>Cambodia</labl>
+  </catgry>
+  <catgry>
+    <catValu>120</catValu>
+    <labl>Cameroon</labl>
+  </catgry>
+  <catgry>
+    <catValu>124</catValu>
+    <labl>Canada</labl>
+  </catgry>
+  <catgry>
+    <catValu>152</catValu>
+    <labl>Chile</labl>
+  </catgry>
+  <catgry>
+    <catValu>156</catValu>
+    <labl>China</labl>
+  </catgry>
+  <catgry>
+    <catValu>170</catValu>
+    <labl>Colombia</labl>
+  </catgry>
+  <catgry>
+    <catValu>188</catValu>
+    <labl>Costa Rica</labl>
+  </catgry>
+  <catgry>
+    <catValu>192</catValu>
+    <labl>Cuba</labl>
+  </catgry>
+  <catgry>
+    <catValu>208</catValu>
+    <labl>Denmark</labl>
+  </catgry>
+  <catgry>
+    <catValu>214</catValu>
+    <labl>Dominican Republic</labl>
+  </catgry>
+  <catgry>
+    <catValu>218</catValu>
+    <labl>Ecuador</labl>
+  </catgry>
+  <catgry>
+    <catValu>818</catValu>
+    <labl>Egypt</labl>
+  </catgry>
+  <catgry>
+    <catValu>222</catValu>
+    <labl>El Salvador</labl>
+  </catgry>
+  <catgry>
+    <catValu>231</catValu>
+    <labl>Ethiopia</labl>
+  </catgry>
+  <catgry>
+    <catValu>242</catValu>
+    <labl>Fiji</labl>
+  </catgry>
+  <catgry>
+    <catValu>246</catValu>
+    <labl>Finland</labl>
+  </catgry>
+  <catgry>
+    <catValu>250</catValu>
+    <labl>France</labl>
+  </catgry>
+  <catgry>
+    <catValu>276</catValu>
+    <labl>Germany</labl>
+  </catgry>
+  <catgry>
+    <catValu>288</catValu>
+    <labl>Ghana</labl>
+  </catgry>
+  <catgry>
+    <catValu>300</catValu>
+    <labl>Greece</labl>
+  </catgry>
+  <catgry>
+    <catValu>320</catValu>
+    <labl>Guatemala</labl>
+  </catgry>
+  <catgry>
+    <catValu>324</catValu>
+    <labl>Guinea</labl>
+  </catgry>
+  <catgry>
+    <catValu>332</catValu>
+    <labl>Haiti</labl>
+  </catgry>
+  <catgry>
+    <catValu>340</catValu>
+    <labl>Honduras</labl>
+  </catgry>
+  <catgry>
+    <catValu>348</catValu>
+    <labl>Hungary</labl>
+  </catgry>
+  <catgry>
+    <catValu>352</catValu>
+    <labl>Iceland</labl>
+  </catgry>
+  <catgry>
+    <catValu>356</catValu>
+    <labl>India</labl>
+  </catgry>
+  <catgry>
+    <catValu>360</catValu>
+    <labl>Indonesia</labl>
+  </catgry>
+  <catgry>
+    <catValu>364</catValu>
+    <labl>Iran</labl>
+  </catgry>
+  <catgry>
+    <catValu>368</catValu>
+    <labl>Iraq</labl>
+  </catgry>
+  <catgry>
+    <catValu>372</catValu>
+    <labl>Ireland</labl>
+  </catgry>
+  <catgry>
+    <catValu>376</catValu>
+    <labl>Israel</labl>
+  </catgry>
+  <catgry>
+    <catValu>380</catValu>
+    <labl>Italy</labl>
+  </catgry>
+  <catgry>
+    <catValu>384</catValu>
+    <labl>Côte d'Ivoire</labl>
+  </catgry>
+  <catgry>
+    <catValu>388</catValu>
+    <labl>Jamaica</labl>
+  </catgry>
+  <catgry>
+    <catValu>400</catValu>
+    <labl>Jordan</labl>
+  </catgry>
+  <catgry>
+    <catValu>404</catValu>
+    <labl>Kenya</labl>
+  </catgry>
+  <catgry>
+    <catValu>417</catValu>
+    <labl>Kyrgyz Republic</labl>
+  </catgry>
+  <catgry>
+    <catValu>418</catValu>
+    <labl>Laos</labl>
+  </catgry>
+  <catgry>
+    <catValu>426</catValu>
+    <labl>Lesotho</labl>
+  </catgry>
+  <catgry>
+    <catValu>430</catValu>
+    <labl>Liberia</labl>
+  </catgry>
+  <catgry>
+    <catValu>454</catValu>
+    <labl>Malawi</labl>
+  </catgry>
+  <catgry>
+    <catValu>458</catValu>
+    <labl>Malaysia</labl>
+  </catgry>
+  <catgry>
+    <catValu>466</catValu>
+    <labl>Mali</labl>
+  </catgry>
+  <catgry>
+    <catValu>480</catValu>
+    <labl>Mauritius</labl>
+  </catgry>
+  <catgry>
+    <catValu>484</catValu>
+    <labl>Mexico</labl>
+  </catgry>
+  <catgry>
+    <catValu>496</catValu>
+    <labl>Mongolia</labl>
+  </catgry>
+  <catgry>
+    <catValu>504</catValu>
+    <labl>Morocco</labl>
+  </catgry>
+  <catgry>
+    <catValu>508</catValu>
+    <labl>Mozambique</labl>
+  </catgry>
+  <catgry>
+    <catValu>104</catValu>
+    <labl>Myanmar</labl>
+  </catgry>
+  <catgry>
+    <catValu>524</catValu>
+    <labl>Nepal</labl>
+  </catgry>
+  <catgry>
+    <catValu>528</catValu>
+    <labl>Netherlands</labl>
+  </catgry>
+  <catgry>
+    <catValu>558</catValu>
+    <labl>Nicaragua</labl>
+  </catgry>
+  <catgry>
+    <catValu>566</catValu>
+    <labl>Nigeria</labl>
+  </catgry>
+  <catgry>
+    <catValu>578</catValu>
+    <labl>Norway</labl>
+  </catgry>
+  <catgry>
+    <catValu>586</catValu>
+    <labl>Pakistan</labl>
+  </catgry>
+  <catgry>
+    <catValu>275</catValu>
+    <labl>Palestine</labl>
+  </catgry>
+  <catgry>
+    <catValu>591</catValu>
+    <labl>Panama</labl>
+  </catgry>
+  <catgry>
+    <catValu>598</catValu>
+    <labl>Papua New Guinea</labl>
+  </catgry>
+  <catgry>
+    <catValu>600</catValu>
+    <labl>Paraguay</labl>
+  </catgry>
+  <catgry>
+    <catValu>604</catValu>
+    <labl>Peru</labl>
+  </catgry>
+  <catgry>
+    <catValu>608</catValu>
+    <labl>Philippines</labl>
+  </catgry>
+  <catgry>
+    <catValu>616</catValu>
+    <labl>Poland</labl>
+  </catgry>
+  <catgry>
+    <catValu>620</catValu>
+    <labl>Portugal</labl>
+  </catgry>
+  <catgry>
+    <catValu>630</catValu>
+    <labl>Puerto Rico</labl>
+  </catgry>
+  <catgry>
+    <catValu>642</catValu>
+    <labl>Romania</labl>
+  </catgry>
+  <catgry>
+    <catValu>643</catValu>
+    <labl>Russia</labl>
+  </catgry>
+  <catgry>
+    <catValu>646</catValu>
+    <labl>Rwanda</labl>
+  </catgry>
+  <catgry>
+    <catValu>662</catValu>
+    <labl>Saint Lucia</labl>
+  </catgry>
+  <catgry>
+    <catValu>686</catValu>
+    <labl>Senegal</labl>
+  </catgry>
+  <catgry>
+    <catValu>694</catValu>
+    <labl>Sierra Leone</labl>
+  </catgry>
+  <catgry>
+    <catValu>703</catValu>
+    <labl>Slovak Republic</labl>
+  </catgry>
+  <catgry>
+    <catValu>705</catValu>
+    <labl>Slovenia</labl>
+  </catgry>
+  <catgry>
+    <catValu>710</catValu>
+    <labl>South Africa</labl>
+  </catgry>
+  <catgry>
+    <catValu>728</catValu>
+    <labl>South Sudan</labl>
+  </catgry>
+  <catgry>
+    <catValu>724</catValu>
+    <labl>Spain</labl>
+  </catgry>
+  <catgry>
+    <catValu>729</catValu>
+    <labl>Sudan</labl>
+  </catgry>
+  <catgry>
+    <catValu>740</catValu>
+    <labl>Suriname</labl>
+  </catgry>
+  <catgry>
+    <catValu>752</catValu>
+    <labl>Sweden</labl>
+  </catgry>
+  <catgry>
+    <catValu>756</catValu>
+    <labl>Switzerland</labl>
+  </catgry>
+  <catgry>
+    <catValu>834</catValu>
+    <labl>Tanzania</labl>
+  </catgry>
+  <catgry>
+    <catValu>764</catValu>
+    <labl>Thailand</labl>
+  </catgry>
+  <catgry>
+    <catValu>768</catValu>
+    <labl>Togo</labl>
+  </catgry>
+  <catgry>
+    <catValu>780</catValu>
+    <labl>Trinidad and Tobago</labl>
+  </catgry>
+  <catgry>
+    <catValu>792</catValu>
+    <labl>Turkey</labl>
+  </catgry>
+  <catgry>
+    <catValu>800</catValu>
+    <labl>Uganda</labl>
+  </catgry>
+  <catgry>
+    <catValu>804</catValu>
+    <labl>Ukraine</labl>
+  </catgry>
+  <catgry>
+    <catValu>826</catValu>
+    <labl>United Kingdom</labl>
+  </catgry>
+  <catgry>
+    <catValu>840</catValu>
+    <labl>United States</labl>
+  </catgry>
+  <catgry>
+    <catValu>858</catValu>
+    <labl>Uruguay</labl>
+  </catgry>
+  <catgry>
+    <catValu>862</catValu>
+    <labl>Venezuela</labl>
+  </catgry>
+  <catgry>
+    <catValu>704</catValu>
+    <labl>Vietnam</labl>
+  </catgry>
+  <catgry>
+    <catValu>894</catValu>
+    <labl>Zambia</labl>
+  </catgry>
+  <catgry>
+    <catValu>716</catValu>
+    <labl>Zimbabwe</labl>
+  </catgry>
+  <concept vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="YEAR" dcml="0" files="ExtractData" intrvl="discrete" name="YEAR">
+  <location EndPos="7" StartPos="4" width="4"/>
+  <labl>Year</labl>
+  <txt><![CDATA[YEAR gives the year in which the census or survey was taken. For samples that span years, the midpoint or first year of the interval is reported.]]></txt>
+  <catgry>
+    <catValu>1703</catValu>
+    <labl>1703</labl>
+  </catgry>
+  <catgry>
+    <catValu>1729</catValu>
+    <labl>1729</labl>
+  </catgry>
+  <catgry>
+    <catValu>1787</catValu>
+    <labl>1787</labl>
+  </catgry>
+  <catgry>
+    <catValu>1801</catValu>
+    <labl>1801</labl>
+  </catgry>
+  <catgry>
+    <catValu>1819</catValu>
+    <labl>1819</labl>
+  </catgry>
+  <catgry>
+    <catValu>1845</catValu>
+    <labl>1845</labl>
+  </catgry>
+  <catgry>
+    <catValu>1848</catValu>
+    <labl>1848</labl>
+  </catgry>
+  <catgry>
+    <catValu>1850</catValu>
+    <labl>1850</labl>
+  </catgry>
+  <catgry>
+    <catValu>1851</catValu>
+    <labl>1851</labl>
+  </catgry>
+  <catgry>
+    <catValu>1852</catValu>
+    <labl>1852</labl>
+  </catgry>
+  <catgry>
+    <catValu>1860</catValu>
+    <labl>1860</labl>
+  </catgry>
+  <catgry>
+    <catValu>1861</catValu>
+    <labl>1861</labl>
+  </catgry>
+  <catgry>
+    <catValu>1865</catValu>
+    <labl>1865</labl>
+  </catgry>
+  <catgry>
+    <catValu>1868</catValu>
+    <labl>1868</labl>
+  </catgry>
+  <catgry>
+    <catValu>1870</catValu>
+    <labl>1870</labl>
+  </catgry>
+  <catgry>
+    <catValu>1871</catValu>
+    <labl>1871</labl>
+  </catgry>
+  <catgry>
+    <catValu>1875</catValu>
+    <labl>1875</labl>
+  </catgry>
+  <catgry>
+    <catValu>1880</catValu>
+    <labl>1880</labl>
+  </catgry>
+  <catgry>
+    <catValu>1881</catValu>
+    <labl>1881</labl>
+  </catgry>
+  <catgry>
+    <catValu>1885</catValu>
+    <labl>1885</labl>
+  </catgry>
+  <catgry>
+    <catValu>1890</catValu>
+    <labl>1890</labl>
+  </catgry>
+  <catgry>
+    <catValu>1891</catValu>
+    <labl>1891</labl>
+  </catgry>
+  <catgry>
+    <catValu>1900</catValu>
+    <labl>1900</labl>
+  </catgry>
+  <catgry>
+    <catValu>1901</catValu>
+    <labl>1901</labl>
+  </catgry>
+  <catgry>
+    <catValu>1910</catValu>
+    <labl>1910</labl>
+  </catgry>
+  <catgry>
+    <catValu>1911</catValu>
+    <labl>1911</labl>
+  </catgry>
+  <catgry>
+    <catValu>1960</catValu>
+    <labl>1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>1961</catValu>
+    <labl>1961</labl>
+  </catgry>
+  <catgry>
+    <catValu>1962</catValu>
+    <labl>1962</labl>
+  </catgry>
+  <catgry>
+    <catValu>1963</catValu>
+    <labl>1963</labl>
+  </catgry>
+  <catgry>
+    <catValu>1964</catValu>
+    <labl>1964</labl>
+  </catgry>
+  <catgry>
+    <catValu>1966</catValu>
+    <labl>1966</labl>
+  </catgry>
+  <catgry>
+    <catValu>1968</catValu>
+    <labl>1968</labl>
+  </catgry>
+  <catgry>
+    <catValu>1969</catValu>
+    <labl>1969</labl>
+  </catgry>
+  <catgry>
+    <catValu>1970</catValu>
+    <labl>1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>1971</catValu>
+    <labl>1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>1972</catValu>
+    <labl>1972</labl>
+  </catgry>
+  <catgry>
+    <catValu>1973</catValu>
+    <labl>1973</labl>
+  </catgry>
+  <catgry>
+    <catValu>1974</catValu>
+    <labl>1974</labl>
+  </catgry>
+  <catgry>
+    <catValu>1975</catValu>
+    <labl>1975</labl>
+  </catgry>
+  <catgry>
+    <catValu>1976</catValu>
+    <labl>1976</labl>
+  </catgry>
+  <catgry>
+    <catValu>1977</catValu>
+    <labl>1977</labl>
+  </catgry>
+  <catgry>
+    <catValu>1978</catValu>
+    <labl>1978</labl>
+  </catgry>
+  <catgry>
+    <catValu>1979</catValu>
+    <labl>1979</labl>
+  </catgry>
+  <catgry>
+    <catValu>1980</catValu>
+    <labl>1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>1981</catValu>
+    <labl>1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>1982</catValu>
+    <labl>1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>1983</catValu>
+    <labl>1983</labl>
+  </catgry>
+  <catgry>
+    <catValu>1984</catValu>
+    <labl>1984</labl>
+  </catgry>
+  <catgry>
+    <catValu>1985</catValu>
+    <labl>1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>1986</catValu>
+    <labl>1986</labl>
+  </catgry>
+  <catgry>
+    <catValu>1987</catValu>
+    <labl>1987</labl>
+  </catgry>
+  <catgry>
+    <catValu>1989</catValu>
+    <labl>1989</labl>
+  </catgry>
+  <catgry>
+    <catValu>1990</catValu>
+    <labl>1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>1991</catValu>
+    <labl>1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>1992</catValu>
+    <labl>1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>1993</catValu>
+    <labl>1993</labl>
+  </catgry>
+  <catgry>
+    <catValu>1994</catValu>
+    <labl>1994</labl>
+  </catgry>
+  <catgry>
+    <catValu>1995</catValu>
+    <labl>1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>1996</catValu>
+    <labl>1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>1997</catValu>
+    <labl>1997</labl>
+  </catgry>
+  <catgry>
+    <catValu>1998</catValu>
+    <labl>1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>1999</catValu>
+    <labl>1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>2000</catValu>
+    <labl>2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>2001</catValu>
+    <labl>2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>2002</catValu>
+    <labl>2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>2003</catValu>
+    <labl>2003</labl>
+  </catgry>
+  <catgry>
+    <catValu>2004</catValu>
+    <labl>2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>2005</catValu>
+    <labl>2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>2006</catValu>
+    <labl>2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>2007</catValu>
+    <labl>2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>2008</catValu>
+    <labl>2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>2009</catValu>
+    <labl>2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>2010</catValu>
+    <labl>2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>2011</catValu>
+    <labl>2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>2012</catValu>
+    <labl>2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>2013</catValu>
+    <labl>2013</labl>
+  </catgry>
+  <catgry>
+    <catValu>2014</catValu>
+    <labl>2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>2015</catValu>
+    <labl>2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>2016</catValu>
+    <labl>2016</labl>
+  </catgry>
+  <catgry>
+    <catValu>2017</catValu>
+    <labl>2017</labl>
+  </catgry>
+  <catgry>
+    <catValu>2018</catValu>
+    <labl>2018</labl>
+  </catgry>
+  <catgry>
+    <catValu>2019</catValu>
+    <labl>2019</labl>
+  </catgry>
+  <catgry>
+    <catValu>2020</catValu>
+    <labl>2020</labl>
+  </catgry>
+  <concept vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="SAMPLE" dcml="0" files="ExtractData" intrvl="discrete" name="SAMPLE">
+  <location EndPos="16" StartPos="8" width="9"/>
+  <labl>IPUMS sample identifier</labl>
+  <txt><![CDATA[SAMPLE identifies the IPUMS sample from which the case is drawn. Each sample receives a unique 9-digit code. The code is structured as follows:
+
+The first 3 digits are the ISO/UN codes used in COUNTRY
+
+The next 4 digits are the year of the census/survey
+
+The final 2 digits identify the sample within the year.  For the last two digits, censuses or large census-like surveys have a value "0" (e.g, 01) in the second-to-last digit, household surveys have a value of "2" (e.g., 21), and employment surveys have a value of "4" (e.g., 41).
+]]></txt>
+  <catgry>
+    <catValu>032197001</catValu>
+    <labl>Argentina 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>032198001</catValu>
+    <labl>Argentina 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>032199101</catValu>
+    <labl>Argentina 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>032200101</catValu>
+    <labl>Argentina 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>032201001</catValu>
+    <labl>Argentina 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>051200101</catValu>
+    <labl>Armenia 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>051201101</catValu>
+    <labl>Armenia 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>040197101</catValu>
+    <labl>Austria 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>040198101</catValu>
+    <labl>Austria 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>040199101</catValu>
+    <labl>Austria 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>040200101</catValu>
+    <labl>Austria 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>040201101</catValu>
+    <labl>Austria 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>050199101</catValu>
+    <labl>Bangladesh 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>050200101</catValu>
+    <labl>Bangladesh 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>050201101</catValu>
+    <labl>Bangladesh 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>112199901</catValu>
+    <labl>Belarus 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>112200901</catValu>
+    <labl>Belarus 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>204197901</catValu>
+    <labl>Benin 1979</labl>
+  </catgry>
+  <catgry>
+    <catValu>204199201</catValu>
+    <labl>Benin 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>204200201</catValu>
+    <labl>Benin 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>204201301</catValu>
+    <labl>Benin 2013</labl>
+  </catgry>
+  <catgry>
+    <catValu>068197601</catValu>
+    <labl>Bolivia 1976</labl>
+  </catgry>
+  <catgry>
+    <catValu>068199201</catValu>
+    <labl>Bolivia 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>068200101</catValu>
+    <labl>Bolivia 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>068201201</catValu>
+    <labl>Bolivia 2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>072198101</catValu>
+    <labl>Botswana 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>072199101</catValu>
+    <labl>Botswana 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>072200101</catValu>
+    <labl>Botswana 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>072201101</catValu>
+    <labl>Botswana 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>076196001</catValu>
+    <labl>Brazil 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>076197001</catValu>
+    <labl>Brazil 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>076198001</catValu>
+    <labl>Brazil 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>076199101</catValu>
+    <labl>Brazil 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>076200001</catValu>
+    <labl>Brazil 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>076201001</catValu>
+    <labl>Brazil 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>854198501</catValu>
+    <labl>Burkina Faso 1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>854199601</catValu>
+    <labl>Burkina Faso 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>854200601</catValu>
+    <labl>Burkina Faso 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>116199801</catValu>
+    <labl>Cambodia 1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>116200401</catValu>
+    <labl>Cambodia 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>116200801</catValu>
+    <labl>Cambodia 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>116201301</catValu>
+    <labl>Cambodia 2013</labl>
+  </catgry>
+  <catgry>
+    <catValu>116201901</catValu>
+    <labl>Cambodia 2019</labl>
+  </catgry>
+  <catgry>
+    <catValu>120197601</catValu>
+    <labl>Cameroon 1976</labl>
+  </catgry>
+  <catgry>
+    <catValu>120198701</catValu>
+    <labl>Cameroon 1987</labl>
+  </catgry>
+  <catgry>
+    <catValu>120200501</catValu>
+    <labl>Cameroon 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>124185201</catValu>
+    <labl>Canada 1852</labl>
+  </catgry>
+  <catgry>
+    <catValu>124187101</catValu>
+    <labl>Canada 1871</labl>
+  </catgry>
+  <catgry>
+    <catValu>124188101</catValu>
+    <labl>Canada 1881</labl>
+  </catgry>
+  <catgry>
+    <catValu>124189101</catValu>
+    <labl>Canada 1891</labl>
+  </catgry>
+  <catgry>
+    <catValu>124190101</catValu>
+    <labl>Canada 1901</labl>
+  </catgry>
+  <catgry>
+    <catValu>124191101</catValu>
+    <labl>Canada 1911</labl>
+  </catgry>
+  <catgry>
+    <catValu>124197101</catValu>
+    <labl>Canada 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>124198101</catValu>
+    <labl>Canada 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>124199101</catValu>
+    <labl>Canada 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>124200101</catValu>
+    <labl>Canada 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>124201101</catValu>
+    <labl>Canada 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>152196001</catValu>
+    <labl>Chile 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>152197001</catValu>
+    <labl>Chile 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>152198201</catValu>
+    <labl>Chile 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>152199201</catValu>
+    <labl>Chile 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>152200201</catValu>
+    <labl>Chile 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>152201701</catValu>
+    <labl>Chile 2017</labl>
+  </catgry>
+  <catgry>
+    <catValu>156198201</catValu>
+    <labl>China 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>156199001</catValu>
+    <labl>China 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>156200001</catValu>
+    <labl>China 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>170196401</catValu>
+    <labl>Colombia 1964</labl>
+  </catgry>
+  <catgry>
+    <catValu>170197301</catValu>
+    <labl>Colombia 1973</labl>
+  </catgry>
+  <catgry>
+    <catValu>170198501</catValu>
+    <labl>Colombia 1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>170199301</catValu>
+    <labl>Colombia 1993</labl>
+  </catgry>
+  <catgry>
+    <catValu>170200501</catValu>
+    <labl>Colombia 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>188196301</catValu>
+    <labl>Costa Rica 1963</labl>
+  </catgry>
+  <catgry>
+    <catValu>188197301</catValu>
+    <labl>Costa Rica 1973</labl>
+  </catgry>
+  <catgry>
+    <catValu>188198401</catValu>
+    <labl>Costa Rica 1984</labl>
+  </catgry>
+  <catgry>
+    <catValu>188200001</catValu>
+    <labl>Costa Rica 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>188201101</catValu>
+    <labl>Costa Rica 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>192200201</catValu>
+    <labl>Cuba 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>192201201</catValu>
+    <labl>Cuba 2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>208178701</catValu>
+    <labl>Denmark 1787</labl>
+  </catgry>
+  <catgry>
+    <catValu>208180101</catValu>
+    <labl>Denmark 1801</labl>
+  </catgry>
+  <catgry>
+    <catValu>208184501</catValu>
+    <labl>Denmark 1845</labl>
+  </catgry>
+  <catgry>
+    <catValu>208188001</catValu>
+    <labl>Denmark 1880</labl>
+  </catgry>
+  <catgry>
+    <catValu>208188501</catValu>
+    <labl>Denmark 1885</labl>
+  </catgry>
+  <catgry>
+    <catValu>214196001</catValu>
+    <labl>Dominican Republic 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>214197001</catValu>
+    <labl>Dominican Republic 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>214198101</catValu>
+    <labl>Dominican Republic 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>214200201</catValu>
+    <labl>Dominican Republic 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>214201001</catValu>
+    <labl>Dominican Republic 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>218196201</catValu>
+    <labl>Ecuador 1962</labl>
+  </catgry>
+  <catgry>
+    <catValu>218197401</catValu>
+    <labl>Ecuador 1974</labl>
+  </catgry>
+  <catgry>
+    <catValu>218198201</catValu>
+    <labl>Ecuador 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>218199001</catValu>
+    <labl>Ecuador 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>218200101</catValu>
+    <labl>Ecuador 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>218201001</catValu>
+    <labl>Ecuador 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>818184801</catValu>
+    <labl>Egypt 1848</labl>
+  </catgry>
+  <catgry>
+    <catValu>818186801</catValu>
+    <labl>Egypt 1868</labl>
+  </catgry>
+  <catgry>
+    <catValu>818198601</catValu>
+    <labl>Egypt 1986</labl>
+  </catgry>
+  <catgry>
+    <catValu>818199601</catValu>
+    <labl>Egypt 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>818200601</catValu>
+    <labl>Egypt 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>222199201</catValu>
+    <labl>El Salvador 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>222200701</catValu>
+    <labl>El Salvador 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>231198401</catValu>
+    <labl>Ethiopia 1984</labl>
+  </catgry>
+  <catgry>
+    <catValu>231199401</catValu>
+    <labl>Ethiopia 1994</labl>
+  </catgry>
+  <catgry>
+    <catValu>231200701</catValu>
+    <labl>Ethiopia 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>242196601</catValu>
+    <labl>Fiji 1966</labl>
+  </catgry>
+  <catgry>
+    <catValu>242197601</catValu>
+    <labl>Fiji 1976</labl>
+  </catgry>
+  <catgry>
+    <catValu>242198601</catValu>
+    <labl>Fiji 1986</labl>
+  </catgry>
+  <catgry>
+    <catValu>242199601</catValu>
+    <labl>Fiji 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>242200701</catValu>
+    <labl>Fiji 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>242201401</catValu>
+    <labl>Fiji 2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>246201001</catValu>
+    <labl>Finland 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>250196201</catValu>
+    <labl>France 1962</labl>
+  </catgry>
+  <catgry>
+    <catValu>250196801</catValu>
+    <labl>France 1968</labl>
+  </catgry>
+  <catgry>
+    <catValu>250197501</catValu>
+    <labl>France 1975</labl>
+  </catgry>
+  <catgry>
+    <catValu>250198201</catValu>
+    <labl>France 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>250199001</catValu>
+    <labl>France 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>250199901</catValu>
+    <labl>France 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>250200601</catValu>
+    <labl>France 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>250201101</catValu>
+    <labl>France 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>276181901</catValu>
+    <labl>Germany 1819 (Mecklenburg)</labl>
+  </catgry>
+  <catgry>
+    <catValu>276197001</catValu>
+    <labl>Germany 1970 (West)</labl>
+  </catgry>
+  <catgry>
+    <catValu>276197101</catValu>
+    <labl>Germany 1971 (East)</labl>
+  </catgry>
+  <catgry>
+    <catValu>276198101</catValu>
+    <labl>Germany 1981 (East)</labl>
+  </catgry>
+  <catgry>
+    <catValu>276198701</catValu>
+    <labl>Germany 1987 (West)</labl>
+  </catgry>
+  <catgry>
+    <catValu>288198401</catValu>
+    <labl>Ghana 1984</labl>
+  </catgry>
+  <catgry>
+    <catValu>288200001</catValu>
+    <labl>Ghana 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>288201001</catValu>
+    <labl>Ghana 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>300197101</catValu>
+    <labl>Greece 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>300198101</catValu>
+    <labl>Greece 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>300199101</catValu>
+    <labl>Greece 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>300200101</catValu>
+    <labl>Greece 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>300201101</catValu>
+    <labl>Greece 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>320196401</catValu>
+    <labl>Guatemala 1964</labl>
+  </catgry>
+  <catgry>
+    <catValu>320197301</catValu>
+    <labl>Guatemala 1973</labl>
+  </catgry>
+  <catgry>
+    <catValu>320198101</catValu>
+    <labl>Guatemala 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>320199401</catValu>
+    <labl>Guatemala 1994</labl>
+  </catgry>
+  <catgry>
+    <catValu>320200201</catValu>
+    <labl>Guatemala 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>324198301</catValu>
+    <labl>Guinea 1983</labl>
+  </catgry>
+  <catgry>
+    <catValu>324199601</catValu>
+    <labl>Guinea 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>324201401</catValu>
+    <labl>Guinea 2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>332197101</catValu>
+    <labl>Haiti 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>332198201</catValu>
+    <labl>Haiti 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>332200301</catValu>
+    <labl>Haiti 2003</labl>
+  </catgry>
+  <catgry>
+    <catValu>340196101</catValu>
+    <labl>Honduras 1961</labl>
+  </catgry>
+  <catgry>
+    <catValu>340197401</catValu>
+    <labl>Honduras 1974</labl>
+  </catgry>
+  <catgry>
+    <catValu>340198801</catValu>
+    <labl>Honduras 1988</labl>
+  </catgry>
+  <catgry>
+    <catValu>340200101</catValu>
+    <labl>Honduras 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>340201301</catValu>
+    <labl>Honduras 2013</labl>
+  </catgry>
+  <catgry>
+    <catValu>348197001</catValu>
+    <labl>Hungary 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>348198001</catValu>
+    <labl>Hungary 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>348199001</catValu>
+    <labl>Hungary 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>348200101</catValu>
+    <labl>Hungary 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>348201101</catValu>
+    <labl>Hungary 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>352170301</catValu>
+    <labl>Iceland 1703</labl>
+  </catgry>
+  <catgry>
+    <catValu>352172901</catValu>
+    <labl>Iceland 1729</labl>
+  </catgry>
+  <catgry>
+    <catValu>352180101</catValu>
+    <labl>Iceland 1801</labl>
+  </catgry>
+  <catgry>
+    <catValu>352190101</catValu>
+    <labl>Iceland 1901</labl>
+  </catgry>
+  <catgry>
+    <catValu>352191001</catValu>
+    <labl>Iceland 1910</labl>
+  </catgry>
+  <catgry>
+    <catValu>356198341</catValu>
+    <labl>India 1983</labl>
+  </catgry>
+  <catgry>
+    <catValu>356198741</catValu>
+    <labl>India 1987</labl>
+  </catgry>
+  <catgry>
+    <catValu>356199341</catValu>
+    <labl>India 1993</labl>
+  </catgry>
+  <catgry>
+    <catValu>356199941</catValu>
+    <labl>India 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>356200441</catValu>
+    <labl>India 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>356200941</catValu>
+    <labl>India 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>360197101</catValu>
+    <labl>Indonesia 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>360197601</catValu>
+    <labl>Indonesia 1976</labl>
+  </catgry>
+  <catgry>
+    <catValu>360198001</catValu>
+    <labl>Indonesia 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>360198501</catValu>
+    <labl>Indonesia 1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>360199001</catValu>
+    <labl>Indonesia 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>360199501</catValu>
+    <labl>Indonesia 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>360200001</catValu>
+    <labl>Indonesia 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>360200501</catValu>
+    <labl>Indonesia 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>360201001</catValu>
+    <labl>Indonesia 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>364200601</catValu>
+    <labl>Iran 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>364201101</catValu>
+    <labl>Iran 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>368199701</catValu>
+    <labl>Iraq 1997</labl>
+  </catgry>
+  <catgry>
+    <catValu>372190101</catValu>
+    <labl>Ireland 1901</labl>
+  </catgry>
+  <catgry>
+    <catValu>372191101</catValu>
+    <labl>Ireland 1911</labl>
+  </catgry>
+  <catgry>
+    <catValu>372197101</catValu>
+    <labl>Ireland 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>372197901</catValu>
+    <labl>Ireland 1979</labl>
+  </catgry>
+  <catgry>
+    <catValu>372198101</catValu>
+    <labl>Ireland 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>372198601</catValu>
+    <labl>Ireland 1986</labl>
+  </catgry>
+  <catgry>
+    <catValu>372199101</catValu>
+    <labl>Ireland 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>372199601</catValu>
+    <labl>Ireland 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>372200201</catValu>
+    <labl>Ireland 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>372200601</catValu>
+    <labl>Ireland 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>372201101</catValu>
+    <labl>Ireland 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>372201601</catValu>
+    <labl>Ireland 2016</labl>
+  </catgry>
+  <catgry>
+    <catValu>376197201</catValu>
+    <labl>Israel 1972</labl>
+  </catgry>
+  <catgry>
+    <catValu>376198301</catValu>
+    <labl>Israel 1983</labl>
+  </catgry>
+  <catgry>
+    <catValu>376199501</catValu>
+    <labl>Israel 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>376200801</catValu>
+    <labl>Israel 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>380200101</catValu>
+    <labl>Italy 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201101</catValu>
+    <labl>Italy 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201121</catValu>
+    <labl>Italy 2011 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201221</catValu>
+    <labl>Italy 2012 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201321</catValu>
+    <labl>Italy 2013 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201421</catValu>
+    <labl>Italy 2014 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201521</catValu>
+    <labl>Italy 2015 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201621</catValu>
+    <labl>Italy 2016 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201721</catValu>
+    <labl>Italy 2017 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201821</catValu>
+    <labl>Italy 2018 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380201921</catValu>
+    <labl>Italy 2019 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>380202021</catValu>
+    <labl>Italy 2020 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>384198801</catValu>
+    <labl>Côte d'Ivoire 1988</labl>
+  </catgry>
+  <catgry>
+    <catValu>384199801</catValu>
+    <labl>Côte d'Ivoire 1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>388198201</catValu>
+    <labl>Jamaica 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>388199101</catValu>
+    <labl>Jamaica 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>388200101</catValu>
+    <labl>Jamaica 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>400200401</catValu>
+    <labl>Jordan 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>404196901</catValu>
+    <labl>Kenya 1969</labl>
+  </catgry>
+  <catgry>
+    <catValu>404197901</catValu>
+    <labl>Kenya 1979</labl>
+  </catgry>
+  <catgry>
+    <catValu>404198901</catValu>
+    <labl>Kenya 1989</labl>
+  </catgry>
+  <catgry>
+    <catValu>404199901</catValu>
+    <labl>Kenya 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>404200901</catValu>
+    <labl>Kenya 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>404201901</catValu>
+    <labl>Kenya 2019</labl>
+  </catgry>
+  <catgry>
+    <catValu>417199901</catValu>
+    <labl>Kyrgyz Republic 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>417200901</catValu>
+    <labl>Kyrgyz Republic 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>418199501</catValu>
+    <labl>Laos 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>418200501</catValu>
+    <labl>Laos 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>418201501</catValu>
+    <labl>Laos 2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>426199601</catValu>
+    <labl>Lesotho 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>426200601</catValu>
+    <labl>Lesotho 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>430197401</catValu>
+    <labl>Liberia 1974</labl>
+  </catgry>
+  <catgry>
+    <catValu>430200801</catValu>
+    <labl>Liberia 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>454198701</catValu>
+    <labl>Malawi 1987</labl>
+  </catgry>
+  <catgry>
+    <catValu>454199801</catValu>
+    <labl>Malawi 1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>454200801</catValu>
+    <labl>Malawi 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>454201801</catValu>
+    <labl>Malawi 2018</labl>
+  </catgry>
+  <catgry>
+    <catValu>458197001</catValu>
+    <labl>Malaysia 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>458198001</catValu>
+    <labl>Malaysia 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>458199101</catValu>
+    <labl>Malaysia 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>458200001</catValu>
+    <labl>Malaysia 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>466198701</catValu>
+    <labl>Mali 1987</labl>
+  </catgry>
+  <catgry>
+    <catValu>466199801</catValu>
+    <labl>Mali 1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>466200901</catValu>
+    <labl>Mali 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>480199001</catValu>
+    <labl>Mauritius 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>480200001</catValu>
+    <labl>Mauritius 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>480201101</catValu>
+    <labl>Mauritius 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>484196001</catValu>
+    <labl>Mexico 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>484197001</catValu>
+    <labl>Mexico 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>484199001</catValu>
+    <labl>Mexico 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>484199501</catValu>
+    <labl>Mexico 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200001</catValu>
+    <labl>Mexico 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200501</catValu>
+    <labl>Mexico 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201001</catValu>
+    <labl>Mexico 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201501</catValu>
+    <labl>Mexico 2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>484202001</catValu>
+    <labl>Mexico 2020</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200521</catValu>
+    <labl>Mexico 2005 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200522</catValu>
+    <labl>Mexico 2005 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200523</catValu>
+    <labl>Mexico 2005 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200524</catValu>
+    <labl>Mexico 2005 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200621</catValu>
+    <labl>Mexico 2006 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200622</catValu>
+    <labl>Mexico 2006 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200623</catValu>
+    <labl>Mexico 2006 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200624</catValu>
+    <labl>Mexico 2006 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200721</catValu>
+    <labl>Mexico 2007 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200722</catValu>
+    <labl>Mexico 2007 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200723</catValu>
+    <labl>Mexico 2007 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200724</catValu>
+    <labl>Mexico 2007 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200821</catValu>
+    <labl>Mexico 2008 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200822</catValu>
+    <labl>Mexico 2008 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200823</catValu>
+    <labl>Mexico 2008 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200824</catValu>
+    <labl>Mexico 2008 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200921</catValu>
+    <labl>Mexico 2009 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200922</catValu>
+    <labl>Mexico 2009 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200923</catValu>
+    <labl>Mexico 2009 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484200924</catValu>
+    <labl>Mexico 2009 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201021</catValu>
+    <labl>Mexico 2010 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201022</catValu>
+    <labl>Mexico 2010 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201023</catValu>
+    <labl>Mexico 2010 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201024</catValu>
+    <labl>Mexico 2010 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201121</catValu>
+    <labl>Mexico 2011 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201122</catValu>
+    <labl>Mexico 2011 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201123</catValu>
+    <labl>Mexico 2011 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201124</catValu>
+    <labl>Mexico 2011 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201221</catValu>
+    <labl>Mexico 2012 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201222</catValu>
+    <labl>Mexico 2012 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201223</catValu>
+    <labl>Mexico 2012 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201224</catValu>
+    <labl>Mexico 2012 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201321</catValu>
+    <labl>Mexico 2013 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201322</catValu>
+    <labl>Mexico 2013 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201323</catValu>
+    <labl>Mexico 2013 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201324</catValu>
+    <labl>Mexico 2013 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201421</catValu>
+    <labl>Mexico 2014 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201422</catValu>
+    <labl>Mexico 2014 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201423</catValu>
+    <labl>Mexico 2014 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201424</catValu>
+    <labl>Mexico 2014 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201521</catValu>
+    <labl>Mexico 2015 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201522</catValu>
+    <labl>Mexico 2015 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201523</catValu>
+    <labl>Mexico 2015 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201524</catValu>
+    <labl>Mexico 2015 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201621</catValu>
+    <labl>Mexico 2016 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201622</catValu>
+    <labl>Mexico 2016 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201623</catValu>
+    <labl>Mexico 2016 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201624</catValu>
+    <labl>Mexico 2016 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201721</catValu>
+    <labl>Mexico 2017 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201722</catValu>
+    <labl>Mexico 2017 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201723</catValu>
+    <labl>Mexico 2017 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201724</catValu>
+    <labl>Mexico 2017 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201821</catValu>
+    <labl>Mexico 2018 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201822</catValu>
+    <labl>Mexico 2018 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201823</catValu>
+    <labl>Mexico 2018 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201824</catValu>
+    <labl>Mexico 2018 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201921</catValu>
+    <labl>Mexico 2019 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201922</catValu>
+    <labl>Mexico 2019 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201923</catValu>
+    <labl>Mexico 2019 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484201924</catValu>
+    <labl>Mexico 2019 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484202021</catValu>
+    <labl>Mexico 2020 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>484202023</catValu>
+    <labl>Mexico 2020 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>496198901</catValu>
+    <labl>Mongolia 1989</labl>
+  </catgry>
+  <catgry>
+    <catValu>496200001</catValu>
+    <labl>Mongolia 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>496201001</catValu>
+    <labl>Mongolia 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>496202001</catValu>
+    <labl>Mongolia 2020</labl>
+  </catgry>
+  <catgry>
+    <catValu>504198201</catValu>
+    <labl>Morocco 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>504199401</catValu>
+    <labl>Morocco 1994</labl>
+  </catgry>
+  <catgry>
+    <catValu>504200401</catValu>
+    <labl>Morocco 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>504201401</catValu>
+    <labl>Morocco 2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>508199701</catValu>
+    <labl>Mozambique 1997</labl>
+  </catgry>
+  <catgry>
+    <catValu>508200701</catValu>
+    <labl>Mozambique 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>508201701</catValu>
+    <labl>Mozambique 2017</labl>
+  </catgry>
+  <catgry>
+    <catValu>104201401</catValu>
+    <labl>Myanmar 2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>524200101</catValu>
+    <labl>Nepal 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>524201101</catValu>
+    <labl>Nepal 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>528196001</catValu>
+    <labl>Netherlands 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>528197101</catValu>
+    <labl>Netherlands 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>528200101</catValu>
+    <labl>Netherlands 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>528201101</catValu>
+    <labl>Netherlands 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>558197101</catValu>
+    <labl>Nicaragua 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>558199501</catValu>
+    <labl>Nicaragua 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>558200501</catValu>
+    <labl>Nicaragua 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>566200621</catValu>
+    <labl>Nigeria 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>566200721</catValu>
+    <labl>Nigeria 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>566200821</catValu>
+    <labl>Nigeria 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>566200921</catValu>
+    <labl>Nigeria 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>566201021</catValu>
+    <labl>Nigeria 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>578180101</catValu>
+    <labl>Norway 1801</labl>
+  </catgry>
+  <catgry>
+    <catValu>578186501</catValu>
+    <labl>Norway 1865</labl>
+  </catgry>
+  <catgry>
+    <catValu>578187501</catValu>
+    <labl>Norway 1875</labl>
+  </catgry>
+  <catgry>
+    <catValu>578190001</catValu>
+    <labl>Norway 1900</labl>
+  </catgry>
+  <catgry>
+    <catValu>578191001</catValu>
+    <labl>Norway 1910</labl>
+  </catgry>
+  <catgry>
+    <catValu>586197301</catValu>
+    <labl>Pakistan 1973</labl>
+  </catgry>
+  <catgry>
+    <catValu>586198101</catValu>
+    <labl>Pakistan 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>586199801</catValu>
+    <labl>Pakistan 1998</labl>
+  </catgry>
+  <catgry>
+    <catValu>275199701</catValu>
+    <labl>Palestine 1997</labl>
+  </catgry>
+  <catgry>
+    <catValu>275200701</catValu>
+    <labl>Palestine 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>275201701</catValu>
+    <labl>Palestine 2017</labl>
+  </catgry>
+  <catgry>
+    <catValu>591196001</catValu>
+    <labl>Panama 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>591197001</catValu>
+    <labl>Panama 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>591198001</catValu>
+    <labl>Panama 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>591199001</catValu>
+    <labl>Panama 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>591200001</catValu>
+    <labl>Panama 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>591201001</catValu>
+    <labl>Panama 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>598198001</catValu>
+    <labl>Papua New Guinea 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>598199001</catValu>
+    <labl>Papua New Guinea 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>598200001</catValu>
+    <labl>Papua New Guinea 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>600196201</catValu>
+    <labl>Paraguay 1962</labl>
+  </catgry>
+  <catgry>
+    <catValu>600197201</catValu>
+    <labl>Paraguay 1972</labl>
+  </catgry>
+  <catgry>
+    <catValu>600198201</catValu>
+    <labl>Paraguay 1982</labl>
+  </catgry>
+  <catgry>
+    <catValu>600199201</catValu>
+    <labl>Paraguay 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>600200201</catValu>
+    <labl>Paraguay 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>604199301</catValu>
+    <labl>Peru 1993</labl>
+  </catgry>
+  <catgry>
+    <catValu>604200701</catValu>
+    <labl>Peru 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>604201701</catValu>
+    <labl>Peru 2017</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199721</catValu>
+    <labl>Philippines 1997 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199722</catValu>
+    <labl>Philippines 1997 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199723</catValu>
+    <labl>Philippines 1997 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199724</catValu>
+    <labl>Philippines 1997 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199821</catValu>
+    <labl>Philippines 1998 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199822</catValu>
+    <labl>Philippines 1998 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199823</catValu>
+    <labl>Philippines 1998 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199824</catValu>
+    <labl>Philippines 1998 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199921</catValu>
+    <labl>Philippines 1999 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199922</catValu>
+    <labl>Philippines 1999 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199923</catValu>
+    <labl>Philippines 1999 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199924</catValu>
+    <labl>Philippines 1999 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200021</catValu>
+    <labl>Philippines 2000 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200022</catValu>
+    <labl>Philippines 2000 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200023</catValu>
+    <labl>Philippines 2000 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200024</catValu>
+    <labl>Philippines 2000 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200121</catValu>
+    <labl>Philippines 2001 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200122</catValu>
+    <labl>Philippines 2001 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200123</catValu>
+    <labl>Philippines 2001 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200124</catValu>
+    <labl>Philippines 2001 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200221</catValu>
+    <labl>Philippines 2002 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200222</catValu>
+    <labl>Philippines 2002 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200223</catValu>
+    <labl>Philippines 2002 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200224</catValu>
+    <labl>Philippines 2002 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200321</catValu>
+    <labl>Philippines 2003 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200322</catValu>
+    <labl>Philippines 2003 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200323</catValu>
+    <labl>Philippines 2003 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200324</catValu>
+    <labl>Philippines 2003 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200421</catValu>
+    <labl>Philippines 2004 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200422</catValu>
+    <labl>Philippines 2004 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200423</catValu>
+    <labl>Philippines 2004 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200424</catValu>
+    <labl>Philippines 2004 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200521</catValu>
+    <labl>Philippines 2005 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200522</catValu>
+    <labl>Philippines 2005 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200523</catValu>
+    <labl>Philippines 2005 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200524</catValu>
+    <labl>Philippines 2005 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200621</catValu>
+    <labl>Philippines 2006 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200622</catValu>
+    <labl>Philippines 2006 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200623</catValu>
+    <labl>Philippines 2006 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200624</catValu>
+    <labl>Philippines 2006 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200721</catValu>
+    <labl>Philippines 2007 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200722</catValu>
+    <labl>Philippines 2007 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200723</catValu>
+    <labl>Philippines 2007 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200724</catValu>
+    <labl>Philippines 2007 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200821</catValu>
+    <labl>Philippines 2008 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200822</catValu>
+    <labl>Philippines 2008 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200823</catValu>
+    <labl>Philippines 2008 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200824</catValu>
+    <labl>Philippines 2008 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200921</catValu>
+    <labl>Philippines 2009 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200922</catValu>
+    <labl>Philippines 2009 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200923</catValu>
+    <labl>Philippines 2009 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200924</catValu>
+    <labl>Philippines 2009 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201021</catValu>
+    <labl>Philippines 2010 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201022</catValu>
+    <labl>Philippines 2010 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201023</catValu>
+    <labl>Philippines 2010 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201024</catValu>
+    <labl>Philippines 2010 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201121</catValu>
+    <labl>Philippines 2011 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201122</catValu>
+    <labl>Philippines 2011 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201123</catValu>
+    <labl>Philippines 2011 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201124</catValu>
+    <labl>Philippines 2011 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201221</catValu>
+    <labl>Philippines 2012 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201222</catValu>
+    <labl>Philippines 2012 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201223</catValu>
+    <labl>Philippines 2012 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201224</catValu>
+    <labl>Philippines 2012 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201321</catValu>
+    <labl>Philippines 2013 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201322</catValu>
+    <labl>Philippines 2013 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201323</catValu>
+    <labl>Philippines 2013 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201324</catValu>
+    <labl>Philippines 2013 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201421</catValu>
+    <labl>Philippines 2014 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201422</catValu>
+    <labl>Philippines 2014 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201423</catValu>
+    <labl>Philippines 2014 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201424</catValu>
+    <labl>Philippines 2014 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201521</catValu>
+    <labl>Philippines 2015 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201522</catValu>
+    <labl>Philippines 2015 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201523</catValu>
+    <labl>Philippines 2015 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201524</catValu>
+    <labl>Philippines 2015 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201621</catValu>
+    <labl>Philippines 2016 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201622</catValu>
+    <labl>Philippines 2016 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201623</catValu>
+    <labl>Philippines 2016 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201624</catValu>
+    <labl>Philippines 2016 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201721</catValu>
+    <labl>Philippines 2017 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201722</catValu>
+    <labl>Philippines 2017 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201723</catValu>
+    <labl>Philippines 2017 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201724</catValu>
+    <labl>Philippines 2017 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201821</catValu>
+    <labl>Philippines 2018 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201822</catValu>
+    <labl>Philippines 2018 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201823</catValu>
+    <labl>Philippines 2018 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201824</catValu>
+    <labl>Philippines 2018 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201921</catValu>
+    <labl>Philippines 2019 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201922</catValu>
+    <labl>Philippines 2019 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201923</catValu>
+    <labl>Philippines 2019 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199001</catValu>
+    <labl>Philippines 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>608199501</catValu>
+    <labl>Philippines 1995</labl>
+  </catgry>
+  <catgry>
+    <catValu>608200001</catValu>
+    <labl>Philippines 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>608201001</catValu>
+    <labl>Philippines 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>616197801</catValu>
+    <labl>Poland 1978</labl>
+  </catgry>
+  <catgry>
+    <catValu>616198801</catValu>
+    <labl>Poland 1988</labl>
+  </catgry>
+  <catgry>
+    <catValu>616200201</catValu>
+    <labl>Poland 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>616201101</catValu>
+    <labl>Poland 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>620198101</catValu>
+    <labl>Portugal 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>620199101</catValu>
+    <labl>Portugal 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>620200101</catValu>
+    <labl>Portugal 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>620201101</catValu>
+    <labl>Portugal 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>630197001</catValu>
+    <labl>Puerto Rico 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>630198001</catValu>
+    <labl>Puerto Rico 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>630199001</catValu>
+    <labl>Puerto Rico 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>630200001</catValu>
+    <labl>Puerto Rico 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>630200501</catValu>
+    <labl>Puerto Rico 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>630201001</catValu>
+    <labl>Puerto Rico 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>630201501</catValu>
+    <labl>Puerto Rico 2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>630202001</catValu>
+    <labl>Puerto Rico 2020</labl>
+  </catgry>
+  <catgry>
+    <catValu>642197701</catValu>
+    <labl>Romania 1977</labl>
+  </catgry>
+  <catgry>
+    <catValu>642199201</catValu>
+    <labl>Romania 1992</labl>
+  </catgry>
+  <catgry>
+    <catValu>642200201</catValu>
+    <labl>Romania 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>642201101</catValu>
+    <labl>Romania 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>643200201</catValu>
+    <labl>Russia 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>643201001</catValu>
+    <labl>Russia 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>646199101</catValu>
+    <labl>Rwanda 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>646200201</catValu>
+    <labl>Rwanda 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>646201201</catValu>
+    <labl>Rwanda 2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>662198001</catValu>
+    <labl>Saint Lucia 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>662199101</catValu>
+    <labl>Saint Lucia 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>686198801</catValu>
+    <labl>Senegal 1988</labl>
+  </catgry>
+  <catgry>
+    <catValu>686200201</catValu>
+    <labl>Senegal 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>686201301</catValu>
+    <labl>Senegal 2013</labl>
+  </catgry>
+  <catgry>
+    <catValu>694200401</catValu>
+    <labl>Sierra Leone 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>694201501</catValu>
+    <labl>Sierra Leone 2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>703199101</catValu>
+    <labl>Slovak Republic 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>703200101</catValu>
+    <labl>Slovak Republic 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>703201101</catValu>
+    <labl>Slovak Republic 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>705200201</catValu>
+    <labl>Slovenia 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>710199601</catValu>
+    <labl>South Africa 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>710200101</catValu>
+    <labl>South Africa 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>710200701</catValu>
+    <labl>South Africa 2007</labl>
+  </catgry>
+  <catgry>
+    <catValu>710201101</catValu>
+    <labl>South Africa 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>710201601</catValu>
+    <labl>South Africa 2016</labl>
+  </catgry>
+  <catgry>
+    <catValu>728200801</catValu>
+    <labl>South Sudan 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>724198101</catValu>
+    <labl>Spain 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>724199101</catValu>
+    <labl>Spain 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200101</catValu>
+    <labl>Spain 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201101</catValu>
+    <labl>Spain 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200521</catValu>
+    <labl>Spain 2005 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200522</catValu>
+    <labl>Spain 2005 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200523</catValu>
+    <labl>Spain 2005 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200524</catValu>
+    <labl>Spain 2005 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200621</catValu>
+    <labl>Spain 2006 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200622</catValu>
+    <labl>Spain 2006 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200623</catValu>
+    <labl>Spain 2006 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200624</catValu>
+    <labl>Spain 2006 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200721</catValu>
+    <labl>Spain 2007 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200722</catValu>
+    <labl>Spain 2007 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200723</catValu>
+    <labl>Spain 2007 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200724</catValu>
+    <labl>Spain 2007 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200821</catValu>
+    <labl>Spain 2008 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200822</catValu>
+    <labl>Spain 2008 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200823</catValu>
+    <labl>Spain 2008 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200824</catValu>
+    <labl>Spain 2008 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200921</catValu>
+    <labl>Spain 2009 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200922</catValu>
+    <labl>Spain 2009 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200923</catValu>
+    <labl>Spain 2009 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724200924</catValu>
+    <labl>Spain 2009 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201021</catValu>
+    <labl>Spain 2010 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201022</catValu>
+    <labl>Spain 2010 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201023</catValu>
+    <labl>Spain 2010 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201024</catValu>
+    <labl>Spain 2010 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201121</catValu>
+    <labl>Spain 2011 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201122</catValu>
+    <labl>Spain 2011 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201123</catValu>
+    <labl>Spain 2011 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201124</catValu>
+    <labl>Spain 2011 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201221</catValu>
+    <labl>Spain 2012 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201222</catValu>
+    <labl>Spain 2012 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201223</catValu>
+    <labl>Spain 2012 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201224</catValu>
+    <labl>Spain 2012 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201321</catValu>
+    <labl>Spain 2013 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201322</catValu>
+    <labl>Spain 2013 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201323</catValu>
+    <labl>Spain 2013 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201324</catValu>
+    <labl>Spain 2013 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201421</catValu>
+    <labl>Spain 2014 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201422</catValu>
+    <labl>Spain 2014 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201423</catValu>
+    <labl>Spain 2014 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201424</catValu>
+    <labl>Spain 2014 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201521</catValu>
+    <labl>Spain 2015 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201522</catValu>
+    <labl>Spain 2015 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201523</catValu>
+    <labl>Spain 2015 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201524</catValu>
+    <labl>Spain 2015 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201621</catValu>
+    <labl>Spain 2016 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201622</catValu>
+    <labl>Spain 2016 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201623</catValu>
+    <labl>Spain 2016 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201624</catValu>
+    <labl>Spain 2016 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201721</catValu>
+    <labl>Spain 2017 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201722</catValu>
+    <labl>Spain 2017 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201723</catValu>
+    <labl>Spain 2017 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201724</catValu>
+    <labl>Spain 2017 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201821</catValu>
+    <labl>Spain 2018 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201822</catValu>
+    <labl>Spain 2018 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201823</catValu>
+    <labl>Spain 2018 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201824</catValu>
+    <labl>Spain 2018 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201921</catValu>
+    <labl>Spain 2019 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201922</catValu>
+    <labl>Spain 2019 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201923</catValu>
+    <labl>Spain 2019 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724201924</catValu>
+    <labl>Spain 2019 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724202021</catValu>
+    <labl>Spain 2020 Q1 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724202022</catValu>
+    <labl>Spain 2020 Q2 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724202023</catValu>
+    <labl>Spain 2020 Q3 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>724202024</catValu>
+    <labl>Spain 2020 Q4 LFS</labl>
+  </catgry>
+  <catgry>
+    <catValu>729200801</catValu>
+    <labl>Sudan 2008</labl>
+  </catgry>
+  <catgry>
+    <catValu>740200401</catValu>
+    <labl>Suriname 2004</labl>
+  </catgry>
+  <catgry>
+    <catValu>740201201</catValu>
+    <labl>Suriname 2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>752188001</catValu>
+    <labl>Sweden 1880</labl>
+  </catgry>
+  <catgry>
+    <catValu>752189001</catValu>
+    <labl>Sweden 1890</labl>
+  </catgry>
+  <catgry>
+    <catValu>752190001</catValu>
+    <labl>Sweden 1900</labl>
+  </catgry>
+  <catgry>
+    <catValu>752191001</catValu>
+    <labl>Sweden 1910</labl>
+  </catgry>
+  <catgry>
+    <catValu>756197001</catValu>
+    <labl>Switzerland 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>756198001</catValu>
+    <labl>Switzerland 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>756199001</catValu>
+    <labl>Switzerland 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>756200001</catValu>
+    <labl>Switzerland 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>756201101</catValu>
+    <labl>Switzerland 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>834198801</catValu>
+    <labl>Tanzania 1988</labl>
+  </catgry>
+  <catgry>
+    <catValu>834200201</catValu>
+    <labl>Tanzania 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>834201201</catValu>
+    <labl>Tanzania 2012</labl>
+  </catgry>
+  <catgry>
+    <catValu>764197001</catValu>
+    <labl>Thailand 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>764198001</catValu>
+    <labl>Thailand 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>764199001</catValu>
+    <labl>Thailand 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>764200001</catValu>
+    <labl>Thailand 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>768196001</catValu>
+    <labl>Togo 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>768197001</catValu>
+    <labl>Togo 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>768201001</catValu>
+    <labl>Togo 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>780197001</catValu>
+    <labl>Trinidad and Tobago 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>780198001</catValu>
+    <labl>Trinidad and Tobago 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>780199001</catValu>
+    <labl>Trinidad and Tobago 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>780200001</catValu>
+    <labl>Trinidad and Tobago 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>780201101</catValu>
+    <labl>Trinidad and Tobago 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>792198501</catValu>
+    <labl>Turkey 1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>792199001</catValu>
+    <labl>Turkey 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>792200001</catValu>
+    <labl>Turkey 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>800199101</catValu>
+    <labl>Uganda 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>800200201</catValu>
+    <labl>Uganda 2002</labl>
+  </catgry>
+  <catgry>
+    <catValu>800201401</catValu>
+    <labl>Uganda 2014</labl>
+  </catgry>
+  <catgry>
+    <catValu>804200101</catValu>
+    <labl>Ukraine 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>826185101</catValu>
+    <labl>United Kingdom 1851 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826185102</catValu>
+    <labl>United Kingdom 1851 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826185103</catValu>
+    <labl>United Kingdom 1851 (2% sample)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826186101</catValu>
+    <labl>United Kingdom 1861 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826186102</catValu>
+    <labl>United Kingdom 1861 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826187101</catValu>
+    <labl>United Kingdom 1871 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826188101</catValu>
+    <labl>United Kingdom 1881 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826188102</catValu>
+    <labl>United Kingdom 1881 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826189101</catValu>
+    <labl>United Kingdom 1891 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826189102</catValu>
+    <labl>United Kingdom 1891 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826190101</catValu>
+    <labl>United Kingdom 1901 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826190102</catValu>
+    <labl>United Kingdom 1901 (Scotland)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826191101</catValu>
+    <labl>United Kingdom 1911 (England and Wales)</labl>
+  </catgry>
+  <catgry>
+    <catValu>826196101</catValu>
+    <labl>United Kingdom 1961</labl>
+  </catgry>
+  <catgry>
+    <catValu>826197101</catValu>
+    <labl>United Kingdom 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>826199101</catValu>
+    <labl>United Kingdom 1991</labl>
+  </catgry>
+  <catgry>
+    <catValu>826200101</catValu>
+    <labl>United Kingdom 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>840185001</catValu>
+    <labl>United States 1850 (100%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840185002</catValu>
+    <labl>United States 1850 (1%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840186001</catValu>
+    <labl>United States 1860 (1%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840187001</catValu>
+    <labl>United States 1870 (1%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840188001</catValu>
+    <labl>United States 1880 (100%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840188002</catValu>
+    <labl>United States 1880 (10%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840190001</catValu>
+    <labl>United States 1900 (5%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840191001</catValu>
+    <labl>United States 1910 (1%)</labl>
+  </catgry>
+  <catgry>
+    <catValu>840196001</catValu>
+    <labl>United States 1960</labl>
+  </catgry>
+  <catgry>
+    <catValu>840197001</catValu>
+    <labl>United States 1970</labl>
+  </catgry>
+  <catgry>
+    <catValu>840198001</catValu>
+    <labl>United States 1980</labl>
+  </catgry>
+  <catgry>
+    <catValu>840199001</catValu>
+    <labl>United States 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>840200001</catValu>
+    <labl>United States 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>840200501</catValu>
+    <labl>United States 2005</labl>
+  </catgry>
+  <catgry>
+    <catValu>840201001</catValu>
+    <labl>United States 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>840201501</catValu>
+    <labl>United States 2015</labl>
+  </catgry>
+  <catgry>
+    <catValu>840202001</catValu>
+    <labl>United States 2020</labl>
+  </catgry>
+  <catgry>
+    <catValu>858196301</catValu>
+    <labl>Uruguay 1963</labl>
+  </catgry>
+  <catgry>
+    <catValu>858196302</catValu>
+    <labl>Uruguay 1963 (full count)</labl>
+  </catgry>
+  <catgry>
+    <catValu>858197501</catValu>
+    <labl>Uruguay 1975</labl>
+  </catgry>
+  <catgry>
+    <catValu>858197502</catValu>
+    <labl>Uruguay 1975 (full count)</labl>
+  </catgry>
+  <catgry>
+    <catValu>858198501</catValu>
+    <labl>Uruguay 1985</labl>
+  </catgry>
+  <catgry>
+    <catValu>858198502</catValu>
+    <labl>Uruguay 1985 (full count)</labl>
+  </catgry>
+  <catgry>
+    <catValu>858199601</catValu>
+    <labl>Uruguay 1996</labl>
+  </catgry>
+  <catgry>
+    <catValu>858199602</catValu>
+    <labl>Uruguay 1996 (full count)</labl>
+  </catgry>
+  <catgry>
+    <catValu>858200621</catValu>
+    <labl>Uruguay 2006</labl>
+  </catgry>
+  <catgry>
+    <catValu>858201101</catValu>
+    <labl>Uruguay 2011</labl>
+  </catgry>
+  <catgry>
+    <catValu>858201102</catValu>
+    <labl>Uruguay 2011 (full count)</labl>
+  </catgry>
+  <catgry>
+    <catValu>862197101</catValu>
+    <labl>Venezuela 1971</labl>
+  </catgry>
+  <catgry>
+    <catValu>862198101</catValu>
+    <labl>Venezuela 1981</labl>
+  </catgry>
+  <catgry>
+    <catValu>862199001</catValu>
+    <labl>Venezuela 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>862200101</catValu>
+    <labl>Venezuela 2001</labl>
+  </catgry>
+  <catgry>
+    <catValu>704198901</catValu>
+    <labl>Vietnam 1989</labl>
+  </catgry>
+  <catgry>
+    <catValu>704199901</catValu>
+    <labl>Vietnam 1999</labl>
+  </catgry>
+  <catgry>
+    <catValu>704200901</catValu>
+    <labl>Vietnam 2009</labl>
+  </catgry>
+  <catgry>
+    <catValu>704201901</catValu>
+    <labl>Vietnam 2019</labl>
+  </catgry>
+  <catgry>
+    <catValu>894199001</catValu>
+    <labl>Zambia 1990</labl>
+  </catgry>
+  <catgry>
+    <catValu>894200001</catValu>
+    <labl>Zambia 2000</labl>
+  </catgry>
+  <catgry>
+    <catValu>894201001</catValu>
+    <labl>Zambia 2010</labl>
+  </catgry>
+  <catgry>
+    <catValu>716201201</catValu>
+    <labl>Zimbabwe 2012</labl>
+  </catgry>
+  <concept vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="SERIAL" dcml="0" files="ExtractData" intrvl="contin" name="SERIAL">
+  <location EndPos="28" StartPos="17" width="12"/>
+  <labl>Household serial number</labl>
+  <txt><![CDATA[SERIAL is an identifying number unique to each household in a given sample. All person records are assigned the same serial number as the household record that they follow. (Person records also have their own unique identifiers -- see PERNUM.) The combination of SAMPLE and SERIAL provides a unique identifier for every household in the IPUMS-International database; SAMPLE, SERIAL and PERNUM uniquely identify every person in the database. 
+
+SERIAL can be used to identify dwellings in some samples.  In these samples, the first 7 digits of SERIAL provide the dwelling number common to all households that were sampled from the same structure. The last three digits give the sequence of the household within the dwelling. The following is a list of samples in which dwellings can be inferred:
+Chile 1970, 1992, 2002Colombia 1993, 2005Costa Rica 1984, 2000Cuba 2002Dominican Republic 1981, 2002, 2010Ecuador 1990, 2001Germany 1971Hungary 1980, 1990, 2001Jamaica 1982, 1991, 2001Malaysia 1970, 1991, 2000Mexico 1995, 1990, 2000, 2005Nigeria 2006Panama 2000Peru 1993, 2007Portugal 1981, 1991, 2001Spain 1991Uruguay 2011Venezuela 1990, 2001Vietnam 1989In all other samples, the last 3 digits are always zeroes.
+
+SERIAL was constructed for IPUMS-International, and has no relation to the serial number in the original datasets.
+
+The U.S. 1900 sample and 1880 10% sample have multi-household dwellings that can be identified using the last 3 digits of SERIAL.]]></txt>
+  <codInstr><![CDATA[SERIAL is a 10-digit numeric variable.
+
+The last 3 digits of SERIAL indicate household number within dwelling for selected samples noted in the variable description. In all other samples, the last 3 digits are always zeroes.]]></codInstr>
+  <concept vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="HHWT" dcml="2" files="ExtractData" intrvl="contin" name="HHWT">
+  <location EndPos="36" StartPos="29" width="8"/>
+  <labl>Household weight</labl>
+  <txt><![CDATA[HHWT indicates the number of households in the population represented by the household in the sample.
+
+For the samples that are truly weighted (see the comparability discussion), HHWT must be used to yield accurate household-level statistics.
+
+NOTE: HHWT has 2 implied decimal places. That is, the last two digits of the eight-digit variable are decimal digits, but there is no actual decimal in the data.]]></txt>
+  <codInstr><![CDATA[HHWT is an 8-digit numeric variable with 2 implied decimal places. See the variable description.]]></codInstr>
+  <concept vocab="IPUMS">Technical Household Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="POPDENSGEO1" dcml="0" files="ExtractData" intrvl="contin" name="POPDENSGEO1">
+  <location EndPos="44" StartPos="37" width="8"/>
+  <labl>Population density of GEOLEV1 unit, in persons per square kilometer</labl>
+  <txt><![CDATA[POPDENSGEO1 indicates the population density in persons per square kilometer of the major administrative unit in which the household was enumerated. The major administrative unit of the household is identified by the GEOLEV1 variable.
+
+The area of units in GEOLEV1 is calculated using Mollweide's equal area projection. For a full set of geography variables refer to IPUMS International Geography variables list. For cross-national geographic analysis on the first and second major administrative level refer to GEOLEV1 and GEOLEV2. More information on IPUMS-International geography can be found here.]]></txt>
+  <codInstr><![CDATA[POPDENSGEO1 is an 8-digit numeric variable listing the population density in persons per square kilometer.
+
+		
+Codes0 = Unknown.]]></codInstr>
+  <concept vocab="IPUMS">Geography: Global Variables -- HOUSEHOLD</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="PERNUM" dcml="0" files="ExtractData" intrvl="contin" name="PERNUM">
+  <location EndPos="48" StartPos="45" width="4"/>
+  <labl>Person number</labl>
+  <txt><![CDATA[PERNUM numbers all persons within each household consecutively (starting with "1" for the first person record of each household). When combined with SAMPLE and SERIAL, PERNUM uniquely identifies each person in the IPUMS-International database.]]></txt>
+  <codInstr><![CDATA[PERNUM is a 4-digit numeric variable.]]></codInstr>
+  <concept vocab="IPUMS">Technical Person Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="PERWT" dcml="2" files="ExtractData" intrvl="contin" name="PERWT">
+  <location EndPos="56" StartPos="49" width="8"/>
+  <labl>Person weight</labl>
+  <txt><![CDATA[PERWT indicates the number of persons in the actual population represented by the person in the sample.
+
+For the samples that are truly weighted (see the comparability discussion), PERWT must be used to yield accurate statistics for the population.
+
+NOTE: PERWT has 2 implied decimal places.  That is, the last two digits of the eight-digit variable are decimal digits, but there is no actual decimal in the data.]]></txt>
+  <codInstr><![CDATA[PERWT is an 8-digit numeric variable with 2 implied decimal places. See the variable description.]]></codInstr>
+  <concept vocab="IPUMS">Technical Person Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="RELATE" dcml="0" files="ExtractData" intrvl="discrete" name="RELATE">
+  <location EndPos="57" StartPos="57" width="1"/>
+  <labl>Relationship to household head [general version]</labl>
+  <txt><![CDATA[RELATE describes the relationship of the individual to the head of household (sometimes called the householder or reference person).]]></txt>
+  <catgry>
+    <catValu>1</catValu>
+    <labl>Head</labl>
+  </catgry>
+  <catgry>
+    <catValu>2</catValu>
+    <labl>Spouse/partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>3</catValu>
+    <labl>Child</labl>
+  </catgry>
+  <catgry>
+    <catValu>4</catValu>
+    <labl>Other relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>5</catValu>
+    <labl>Non-relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>6</catValu>
+    <labl>Other relative or non-relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>9</catValu>
+    <labl>Unknown</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="RELATED" dcml="0" files="ExtractData" intrvl="discrete" name="RELATED">
+  <location EndPos="61" StartPos="58" width="4"/>
+  <labl>Relationship to household head [detailed version]</labl>
+  <txt><![CDATA[RELATE describes the relationship of the individual to the head of household (sometimes called the householder or reference person).]]></txt>
+  <catgry>
+    <catValu>1000</catValu>
+    <labl>Head</labl>
+  </catgry>
+  <catgry>
+    <catValu>2000</catValu>
+    <labl>Spouse/partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>2100</catValu>
+    <labl>Spouse</labl>
+  </catgry>
+  <catgry>
+    <catValu>2200</catValu>
+    <labl>Unmarried partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>2210</catValu>
+    <labl>Civil union</labl>
+  </catgry>
+  <catgry>
+    <catValu>2300</catValu>
+    <labl>Same-sex spouse/partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>3000</catValu>
+    <labl>Child</labl>
+  </catgry>
+  <catgry>
+    <catValu>3100</catValu>
+    <labl>Biological child</labl>
+  </catgry>
+  <catgry>
+    <catValu>3200</catValu>
+    <labl>Adopted child</labl>
+  </catgry>
+  <catgry>
+    <catValu>3300</catValu>
+    <labl>Stepchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>3400</catValu>
+    <labl>Child/child-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>3500</catValu>
+    <labl>Child/child-in-law/grandchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>3600</catValu>
+    <labl>Child of unmarried partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>4000</catValu>
+    <labl>Other relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>4100</catValu>
+    <labl>Grandchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>4110</catValu>
+    <labl>Grandchild or great grandchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>4120</catValu>
+    <labl>Great grandchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>4130</catValu>
+    <labl>Great-great grandchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>4200</catValu>
+    <labl>Parent/parent-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4210</catValu>
+    <labl>Parent</labl>
+  </catgry>
+  <catgry>
+    <catValu>4211</catValu>
+    <labl>Stepparent</labl>
+  </catgry>
+  <catgry>
+    <catValu>4220</catValu>
+    <labl>Parent-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4300</catValu>
+    <labl>Child-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4301</catValu>
+    <labl>Daughter-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4302</catValu>
+    <labl>Spouse/partner of child</labl>
+  </catgry>
+  <catgry>
+    <catValu>4310</catValu>
+    <labl>Unmarried partner of child</labl>
+  </catgry>
+  <catgry>
+    <catValu>4400</catValu>
+    <labl>Sibling/sibling-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4410</catValu>
+    <labl>Sibling</labl>
+  </catgry>
+  <catgry>
+    <catValu>4420</catValu>
+    <labl>Stepsibling</labl>
+  </catgry>
+  <catgry>
+    <catValu>4430</catValu>
+    <labl>Sibling-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4431</catValu>
+    <labl>Sibling of spouse/partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>4432</catValu>
+    <labl>Spouse/partner of sibling</labl>
+  </catgry>
+  <catgry>
+    <catValu>4500</catValu>
+    <labl>Grandparent</labl>
+  </catgry>
+  <catgry>
+    <catValu>4510</catValu>
+    <labl>Great grandparent</labl>
+  </catgry>
+  <catgry>
+    <catValu>4600</catValu>
+    <labl>Parent/grandparent/ascendant</labl>
+  </catgry>
+  <catgry>
+    <catValu>4700</catValu>
+    <labl>Aunt/uncle</labl>
+  </catgry>
+  <catgry>
+    <catValu>4800</catValu>
+    <labl>Other specified relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>4810</catValu>
+    <labl>Nephew/niece</labl>
+  </catgry>
+  <catgry>
+    <catValu>4820</catValu>
+    <labl>Cousin</labl>
+  </catgry>
+  <catgry>
+    <catValu>4830</catValu>
+    <labl>Sibling's sibling-in-law</labl>
+  </catgry>
+  <catgry>
+    <catValu>4900</catValu>
+    <labl>Other relative, not elsewhere classified</labl>
+  </catgry>
+  <catgry>
+    <catValu>4910</catValu>
+    <labl>Other relative with same family name</labl>
+  </catgry>
+  <catgry>
+    <catValu>4920</catValu>
+    <labl>Other relative with different family name</labl>
+  </catgry>
+  <catgry>
+    <catValu>4930</catValu>
+    <labl>Other relative, not specified (secondary family)</labl>
+  </catgry>
+  <catgry>
+    <catValu>5000</catValu>
+    <labl>Non-relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>5100</catValu>
+    <labl>Friend/guest/visitor/partner</labl>
+  </catgry>
+  <catgry>
+    <catValu>5110</catValu>
+    <labl>Partner/friend</labl>
+  </catgry>
+  <catgry>
+    <catValu>5111</catValu>
+    <labl>Friend</labl>
+  </catgry>
+  <catgry>
+    <catValu>5112</catValu>
+    <labl>Partner/roommate</labl>
+  </catgry>
+  <catgry>
+    <catValu>5113</catValu>
+    <labl>Housemate/roommate</labl>
+  </catgry>
+  <catgry>
+    <catValu>5120</catValu>
+    <labl>Visitor</labl>
+  </catgry>
+  <catgry>
+    <catValu>5130</catValu>
+    <labl>Ex-spouse</labl>
+  </catgry>
+  <catgry>
+    <catValu>5140</catValu>
+    <labl>Godparent</labl>
+  </catgry>
+  <catgry>
+    <catValu>5150</catValu>
+    <labl>Godchild</labl>
+  </catgry>
+  <catgry>
+    <catValu>5200</catValu>
+    <labl>Employee</labl>
+  </catgry>
+  <catgry>
+    <catValu>5210</catValu>
+    <labl>Domestic employee</labl>
+  </catgry>
+  <catgry>
+    <catValu>5220</catValu>
+    <labl>Relative of employee, n.s.</labl>
+  </catgry>
+  <catgry>
+    <catValu>5221</catValu>
+    <labl>Spouse of servant</labl>
+  </catgry>
+  <catgry>
+    <catValu>5222</catValu>
+    <labl>Child of servant</labl>
+  </catgry>
+  <catgry>
+    <catValu>5223</catValu>
+    <labl>Other relative of servant</labl>
+  </catgry>
+  <catgry>
+    <catValu>5300</catValu>
+    <labl>Roomer/boarder/lodger/foster child</labl>
+  </catgry>
+  <catgry>
+    <catValu>5310</catValu>
+    <labl>Boarder</labl>
+  </catgry>
+  <catgry>
+    <catValu>5311</catValu>
+    <labl>Boarder or guest</labl>
+  </catgry>
+  <catgry>
+    <catValu>5320</catValu>
+    <labl>Lodger</labl>
+  </catgry>
+  <catgry>
+    <catValu>5330</catValu>
+    <labl>Foster child</labl>
+  </catgry>
+  <catgry>
+    <catValu>5340</catValu>
+    <labl>Tutored/foster child</labl>
+  </catgry>
+  <catgry>
+    <catValu>5350</catValu>
+    <labl>Tutored child</labl>
+  </catgry>
+  <catgry>
+    <catValu>5400</catValu>
+    <labl>Employee, boarder, or guest</labl>
+  </catgry>
+  <catgry>
+    <catValu>5500</catValu>
+    <labl>Other specified non-relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>5510</catValu>
+    <labl>Agregado</labl>
+  </catgry>
+  <catgry>
+    <catValu>5520</catValu>
+    <labl>Temporary resident, guest</labl>
+  </catgry>
+  <catgry>
+    <catValu>5600</catValu>
+    <labl>Group quarters</labl>
+  </catgry>
+  <catgry>
+    <catValu>5610</catValu>
+    <labl>Group quarters, non-inmates</labl>
+  </catgry>
+  <catgry>
+    <catValu>5620</catValu>
+    <labl>Institutional inmates</labl>
+  </catgry>
+  <catgry>
+    <catValu>5900</catValu>
+    <labl>Non-relative, n.e.c.</labl>
+  </catgry>
+  <catgry>
+    <catValu>6000</catValu>
+    <labl>Other relative or non-relative</labl>
+  </catgry>
+  <catgry>
+    <catValu>9999</catValu>
+    <labl>Unknown</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="AGE" dcml="0" files="ExtractData" intrvl="discrete" name="AGE">
+  <location EndPos="64" StartPos="62" width="3"/>
+  <labl>Age</labl>
+  <txt><![CDATA[AGE gives age in years as of the person's last birthday prior to or on the day of enumeration.]]></txt>
+  <catgry>
+    <catValu>000</catValu>
+    <labl>Less than 1 year</labl>
+  </catgry>
+  <catgry>
+    <catValu>001</catValu>
+    <labl>1 year</labl>
+  </catgry>
+  <catgry>
+    <catValu>002</catValu>
+    <labl>2 years</labl>
+  </catgry>
+  <catgry>
+    <catValu>003</catValu>
+    <labl>3</labl>
+  </catgry>
+  <catgry>
+    <catValu>004</catValu>
+    <labl>4</labl>
+  </catgry>
+  <catgry>
+    <catValu>005</catValu>
+    <labl>5</labl>
+  </catgry>
+  <catgry>
+    <catValu>006</catValu>
+    <labl>6</labl>
+  </catgry>
+  <catgry>
+    <catValu>007</catValu>
+    <labl>7</labl>
+  </catgry>
+  <catgry>
+    <catValu>008</catValu>
+    <labl>8</labl>
+  </catgry>
+  <catgry>
+    <catValu>009</catValu>
+    <labl>9</labl>
+  </catgry>
+  <catgry>
+    <catValu>010</catValu>
+    <labl>10</labl>
+  </catgry>
+  <catgry>
+    <catValu>011</catValu>
+    <labl>11</labl>
+  </catgry>
+  <catgry>
+    <catValu>012</catValu>
+    <labl>12</labl>
+  </catgry>
+  <catgry>
+    <catValu>013</catValu>
+    <labl>13</labl>
+  </catgry>
+  <catgry>
+    <catValu>014</catValu>
+    <labl>14</labl>
+  </catgry>
+  <catgry>
+    <catValu>015</catValu>
+    <labl>15</labl>
+  </catgry>
+  <catgry>
+    <catValu>016</catValu>
+    <labl>16</labl>
+  </catgry>
+  <catgry>
+    <catValu>017</catValu>
+    <labl>17</labl>
+  </catgry>
+  <catgry>
+    <catValu>018</catValu>
+    <labl>18</labl>
+  </catgry>
+  <catgry>
+    <catValu>019</catValu>
+    <labl>19</labl>
+  </catgry>
+  <catgry>
+    <catValu>020</catValu>
+    <labl>20</labl>
+  </catgry>
+  <catgry>
+    <catValu>021</catValu>
+    <labl>21</labl>
+  </catgry>
+  <catgry>
+    <catValu>022</catValu>
+    <labl>22</labl>
+  </catgry>
+  <catgry>
+    <catValu>023</catValu>
+    <labl>23</labl>
+  </catgry>
+  <catgry>
+    <catValu>024</catValu>
+    <labl>24</labl>
+  </catgry>
+  <catgry>
+    <catValu>025</catValu>
+    <labl>25</labl>
+  </catgry>
+  <catgry>
+    <catValu>026</catValu>
+    <labl>26</labl>
+  </catgry>
+  <catgry>
+    <catValu>027</catValu>
+    <labl>27</labl>
+  </catgry>
+  <catgry>
+    <catValu>028</catValu>
+    <labl>28</labl>
+  </catgry>
+  <catgry>
+    <catValu>029</catValu>
+    <labl>29</labl>
+  </catgry>
+  <catgry>
+    <catValu>030</catValu>
+    <labl>30</labl>
+  </catgry>
+  <catgry>
+    <catValu>031</catValu>
+    <labl>31</labl>
+  </catgry>
+  <catgry>
+    <catValu>032</catValu>
+    <labl>32</labl>
+  </catgry>
+  <catgry>
+    <catValu>033</catValu>
+    <labl>33</labl>
+  </catgry>
+  <catgry>
+    <catValu>034</catValu>
+    <labl>34</labl>
+  </catgry>
+  <catgry>
+    <catValu>035</catValu>
+    <labl>35</labl>
+  </catgry>
+  <catgry>
+    <catValu>036</catValu>
+    <labl>36</labl>
+  </catgry>
+  <catgry>
+    <catValu>037</catValu>
+    <labl>37</labl>
+  </catgry>
+  <catgry>
+    <catValu>038</catValu>
+    <labl>38</labl>
+  </catgry>
+  <catgry>
+    <catValu>039</catValu>
+    <labl>39</labl>
+  </catgry>
+  <catgry>
+    <catValu>040</catValu>
+    <labl>40</labl>
+  </catgry>
+  <catgry>
+    <catValu>041</catValu>
+    <labl>41</labl>
+  </catgry>
+  <catgry>
+    <catValu>042</catValu>
+    <labl>42</labl>
+  </catgry>
+  <catgry>
+    <catValu>043</catValu>
+    <labl>43</labl>
+  </catgry>
+  <catgry>
+    <catValu>044</catValu>
+    <labl>44</labl>
+  </catgry>
+  <catgry>
+    <catValu>045</catValu>
+    <labl>45</labl>
+  </catgry>
+  <catgry>
+    <catValu>046</catValu>
+    <labl>46</labl>
+  </catgry>
+  <catgry>
+    <catValu>047</catValu>
+    <labl>47</labl>
+  </catgry>
+  <catgry>
+    <catValu>048</catValu>
+    <labl>48</labl>
+  </catgry>
+  <catgry>
+    <catValu>049</catValu>
+    <labl>49</labl>
+  </catgry>
+  <catgry>
+    <catValu>050</catValu>
+    <labl>50</labl>
+  </catgry>
+  <catgry>
+    <catValu>051</catValu>
+    <labl>51</labl>
+  </catgry>
+  <catgry>
+    <catValu>052</catValu>
+    <labl>52</labl>
+  </catgry>
+  <catgry>
+    <catValu>053</catValu>
+    <labl>53</labl>
+  </catgry>
+  <catgry>
+    <catValu>054</catValu>
+    <labl>54</labl>
+  </catgry>
+  <catgry>
+    <catValu>055</catValu>
+    <labl>55</labl>
+  </catgry>
+  <catgry>
+    <catValu>056</catValu>
+    <labl>56</labl>
+  </catgry>
+  <catgry>
+    <catValu>057</catValu>
+    <labl>57</labl>
+  </catgry>
+  <catgry>
+    <catValu>058</catValu>
+    <labl>58</labl>
+  </catgry>
+  <catgry>
+    <catValu>059</catValu>
+    <labl>59</labl>
+  </catgry>
+  <catgry>
+    <catValu>060</catValu>
+    <labl>60</labl>
+  </catgry>
+  <catgry>
+    <catValu>061</catValu>
+    <labl>61</labl>
+  </catgry>
+  <catgry>
+    <catValu>062</catValu>
+    <labl>62</labl>
+  </catgry>
+  <catgry>
+    <catValu>063</catValu>
+    <labl>63</labl>
+  </catgry>
+  <catgry>
+    <catValu>064</catValu>
+    <labl>64</labl>
+  </catgry>
+  <catgry>
+    <catValu>065</catValu>
+    <labl>65</labl>
+  </catgry>
+  <catgry>
+    <catValu>066</catValu>
+    <labl>66</labl>
+  </catgry>
+  <catgry>
+    <catValu>067</catValu>
+    <labl>67</labl>
+  </catgry>
+  <catgry>
+    <catValu>068</catValu>
+    <labl>68</labl>
+  </catgry>
+  <catgry>
+    <catValu>069</catValu>
+    <labl>69</labl>
+  </catgry>
+  <catgry>
+    <catValu>070</catValu>
+    <labl>70</labl>
+  </catgry>
+  <catgry>
+    <catValu>071</catValu>
+    <labl>71</labl>
+  </catgry>
+  <catgry>
+    <catValu>072</catValu>
+    <labl>72</labl>
+  </catgry>
+  <catgry>
+    <catValu>073</catValu>
+    <labl>73</labl>
+  </catgry>
+  <catgry>
+    <catValu>074</catValu>
+    <labl>74</labl>
+  </catgry>
+  <catgry>
+    <catValu>075</catValu>
+    <labl>75</labl>
+  </catgry>
+  <catgry>
+    <catValu>076</catValu>
+    <labl>76</labl>
+  </catgry>
+  <catgry>
+    <catValu>077</catValu>
+    <labl>77</labl>
+  </catgry>
+  <catgry>
+    <catValu>078</catValu>
+    <labl>78</labl>
+  </catgry>
+  <catgry>
+    <catValu>079</catValu>
+    <labl>79</labl>
+  </catgry>
+  <catgry>
+    <catValu>080</catValu>
+    <labl>80</labl>
+  </catgry>
+  <catgry>
+    <catValu>081</catValu>
+    <labl>81</labl>
+  </catgry>
+  <catgry>
+    <catValu>082</catValu>
+    <labl>82</labl>
+  </catgry>
+  <catgry>
+    <catValu>083</catValu>
+    <labl>83</labl>
+  </catgry>
+  <catgry>
+    <catValu>084</catValu>
+    <labl>84</labl>
+  </catgry>
+  <catgry>
+    <catValu>085</catValu>
+    <labl>85</labl>
+  </catgry>
+  <catgry>
+    <catValu>086</catValu>
+    <labl>86</labl>
+  </catgry>
+  <catgry>
+    <catValu>087</catValu>
+    <labl>87</labl>
+  </catgry>
+  <catgry>
+    <catValu>088</catValu>
+    <labl>88</labl>
+  </catgry>
+  <catgry>
+    <catValu>089</catValu>
+    <labl>89</labl>
+  </catgry>
+  <catgry>
+    <catValu>090</catValu>
+    <labl>90</labl>
+  </catgry>
+  <catgry>
+    <catValu>091</catValu>
+    <labl>91</labl>
+  </catgry>
+  <catgry>
+    <catValu>092</catValu>
+    <labl>92</labl>
+  </catgry>
+  <catgry>
+    <catValu>093</catValu>
+    <labl>93</labl>
+  </catgry>
+  <catgry>
+    <catValu>094</catValu>
+    <labl>94</labl>
+  </catgry>
+  <catgry>
+    <catValu>095</catValu>
+    <labl>95</labl>
+  </catgry>
+  <catgry>
+    <catValu>096</catValu>
+    <labl>96</labl>
+  </catgry>
+  <catgry>
+    <catValu>097</catValu>
+    <labl>97</labl>
+  </catgry>
+  <catgry>
+    <catValu>098</catValu>
+    <labl>98</labl>
+  </catgry>
+  <catgry>
+    <catValu>099</catValu>
+    <labl>99</labl>
+  </catgry>
+  <catgry>
+    <catValu>100</catValu>
+    <labl>100+</labl>
+  </catgry>
+  <catgry>
+    <catValu>999</catValu>
+    <labl>Not reported/missing</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="SEX" dcml="0" files="ExtractData" intrvl="discrete" name="SEX">
+  <location EndPos="65" StartPos="65" width="1"/>
+  <labl>Sex</labl>
+  <txt><![CDATA[SEX reports the sex (gender) of the respondent.]]></txt>
+  <catgry>
+    <catValu>1</catValu>
+    <labl>Male</labl>
+  </catgry>
+  <catgry>
+    <catValu>2</catValu>
+    <labl>Female</labl>
+  </catgry>
+  <catgry>
+    <catValu>9</catValu>
+    <labl>Unknown</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="MARST" dcml="0" files="ExtractData" intrvl="discrete" name="MARST">
+  <location EndPos="66" StartPos="66" width="1"/>
+  <labl>Marital status [general version]</labl>
+  <txt><![CDATA[MARST describes the person's current marital status according to law or custom.  Individuals who remarried should report the status relevant to their most recent marriage.  Census instructions rarely explicitly limit marital status to strictly legal unions.
+
+Note regarding universe: The lowest age at which a person can be anything but "never married" varies among samples.]]></txt>
+  <catgry>
+    <catValu>0</catValu>
+    <labl>NIU (not in universe)</labl>
+  </catgry>
+  <catgry>
+    <catValu>1</catValu>
+    <labl>Single/never married</labl>
+  </catgry>
+  <catgry>
+    <catValu>2</catValu>
+    <labl>Married/in union</labl>
+  </catgry>
+  <catgry>
+    <catValu>3</catValu>
+    <labl>Separated/divorced/spouse absent</labl>
+  </catgry>
+  <catgry>
+    <catValu>4</catValu>
+    <labl>Widowed</labl>
+  </catgry>
+  <catgry>
+    <catValu>9</catValu>
+    <labl>Unknown/missing</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="MARSTD" dcml="0" files="ExtractData" intrvl="discrete" name="MARSTD">
+  <location EndPos="69" StartPos="67" width="3"/>
+  <labl>Marital status [detailed version]</labl>
+  <txt><![CDATA[MARST describes the person's current marital status according to law or custom.  Individuals who remarried should report the status relevant to their most recent marriage.  Census instructions rarely explicitly limit marital status to strictly legal unions.
+
+Note regarding universe: The lowest age at which a person can be anything but "never married" varies among samples.]]></txt>
+  <catgry>
+    <catValu>000</catValu>
+    <labl>NIU (not in universe)</labl>
+  </catgry>
+  <catgry>
+    <catValu>100</catValu>
+    <labl>Single/never married</labl>
+  </catgry>
+  <catgry>
+    <catValu>110</catValu>
+    <labl>Engaged</labl>
+  </catgry>
+  <catgry>
+    <catValu>111</catValu>
+    <labl>Never married and never cohabited</labl>
+  </catgry>
+  <catgry>
+    <catValu>200</catValu>
+    <labl>Married or consensual union</labl>
+  </catgry>
+  <catgry>
+    <catValu>210</catValu>
+    <labl>Married, formally</labl>
+  </catgry>
+  <catgry>
+    <catValu>211</catValu>
+    <labl>Married, civil</labl>
+  </catgry>
+  <catgry>
+    <catValu>212</catValu>
+    <labl>Married, religious</labl>
+  </catgry>
+  <catgry>
+    <catValu>213</catValu>
+    <labl>Married, civil and religious</labl>
+  </catgry>
+  <catgry>
+    <catValu>214</catValu>
+    <labl>Married, civil or religious</labl>
+  </catgry>
+  <catgry>
+    <catValu>215</catValu>
+    <labl>Married, traditional/customary</labl>
+  </catgry>
+  <catgry>
+    <catValu>216</catValu>
+    <labl>Married, monogamous</labl>
+  </catgry>
+  <catgry>
+    <catValu>217</catValu>
+    <labl>Married, polygamous</labl>
+  </catgry>
+  <catgry>
+    <catValu>219</catValu>
+    <labl>Married, spouse absent (historical samples)</labl>
+  </catgry>
+  <catgry>
+    <catValu>220</catValu>
+    <labl>Consensual union</labl>
+  </catgry>
+  <catgry>
+    <catValu>300</catValu>
+    <labl>Separated/divorced/spouse absent</labl>
+  </catgry>
+  <catgry>
+    <catValu>310</catValu>
+    <labl>Separated or divorced</labl>
+  </catgry>
+  <catgry>
+    <catValu>320</catValu>
+    <labl>Separated or annulled</labl>
+  </catgry>
+  <catgry>
+    <catValu>330</catValu>
+    <labl>Separated</labl>
+  </catgry>
+  <catgry>
+    <catValu>331</catValu>
+    <labl>Separated legally</labl>
+  </catgry>
+  <catgry>
+    <catValu>332</catValu>
+    <labl>Separated de facto</labl>
+  </catgry>
+  <catgry>
+    <catValu>333</catValu>
+    <labl>Separated from marriage</labl>
+  </catgry>
+  <catgry>
+    <catValu>334</catValu>
+    <labl>Separated from consensual union</labl>
+  </catgry>
+  <catgry>
+    <catValu>335</catValu>
+    <labl>Separated from consensual union or marriage</labl>
+  </catgry>
+  <catgry>
+    <catValu>340</catValu>
+    <labl>Annulled</labl>
+  </catgry>
+  <catgry>
+    <catValu>350</catValu>
+    <labl>Divorced</labl>
+  </catgry>
+  <catgry>
+    <catValu>400</catValu>
+    <labl>Widowed</labl>
+  </catgry>
+  <catgry>
+    <catValu>410</catValu>
+    <labl>Widowed or divorced</labl>
+  </catgry>
+  <catgry>
+    <catValu>411</catValu>
+    <labl>Widowed from consensual union or marriage</labl>
+  </catgry>
+  <catgry>
+    <catValu>412</catValu>
+    <labl>Widowed from marriage</labl>
+  </catgry>
+  <catgry>
+    <catValu>413</catValu>
+    <labl>Widowed from consensual union</labl>
+  </catgry>
+  <catgry>
+    <catValu>420</catValu>
+    <labl>Widowed, divorced, or separated</labl>
+  </catgry>
+  <catgry>
+    <catValu>999</catValu>
+    <labl>Unknown/missing</labl>
+  </catgry>
+  <concept vocab="IPUMS">Demographic Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+<var ID="INCTOT" dcml="0" files="ExtractData" intrvl="contin" name="INCTOT">
+  <location EndPos="76" StartPos="70" width="7"/>
+  <labl>Total income</labl>
+  <txt><![CDATA[INCTOT reports the person's total personal income from all sources in the previous month or year.]]></txt>
+  <codInstr><![CDATA[INCTOT is a 7-digit numeric variable.
+
+		
+Codes9999998 = Unknown/missing.
+9999999 = NIU (not in universe).
+
+		
+Top codes:Brazil 1991: 9,999,997+
+Canada 1971: 50,000+ females in Atlantic region; 75,000+ for others
+Canada 1981: 75,000+ all females, males in Atlantic region; 100,000+ males other regions
+Canada 1991-2001: 200,000+
+Dominican Republic 1981: 3,000+
+Dominican Republic 2002: 500,000+
+Indonesia 1976: 600,000+
+Mexico 1970: 5,500,000+
+Panama 2010: 10,000+
+Puerto Rico 1980: 50,000+
+South Africa 1996: 360,001+
+South Africa 2001-2011: 2,457,601+
+Trinidad and Tobago 1970: 1,200+
+Trinidad and Tobago 2000: 13,000+
+U.S.A. 1960: 25,000+
+U.S.A. 1970: 50,000+
+U.S.A. 1980: 75,000+
+U.S.A. 1990: State median of values over 400,000
+U.S.A. 2000: 999,998+
+
+		
+Bottom codes:Canada 1981-2001: -50,000
+Puerto Rico 2005-2020: -19,998
+U.S.A. 1960: -9,900
+U.S.A. 1970: -9,900
+U.S.A. 1980: -9,995 
+U.S.A. 1990, 2005-2020: -19,998
+U.S.A. 2000: -20,000]]></codInstr>
+  <concept vocab="IPUMS">Income Variables -- PERSON</concept>
+  <varFormat schema="other" type="numeric"/>
+</var>
+</dataDscr>
+</codeBook>

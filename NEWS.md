@@ -1,5 +1,8 @@
 # ipumsr (development version)
 
+* Improved parsing of labeled values included in "codInstr" tags in the DDI 
+  codebook for microdata extracts.
+
 # ipumsr 0.9.0
 
 ## New features

@@ -781,8 +781,8 @@ get_var_info_from_ddi <- function(ddi_xml,
 
   code_instr <- fostr_replace(
     xml_text_from_path_first(var_info_xml, "d1:codInstr"),
-    "^Codes",
-    ""
+    "^Codes|(\n)Codes([[:digit:]])",
+    "\\1\\2"
   )
 
   if (file_type == "hierarchical") {
