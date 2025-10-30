@@ -4,7 +4,7 @@
 \alias{set_ipums_api_key}
 \title{Set your IPUMS API key}
 \usage{
-set_ipums_api_key(api_key, save = overwrite, overwrite = FALSE, unset = FALSE)
+set_ipums_api_key(api_key, save = NULL, overwrite = FALSE, unset = FALSE)
 }
 \arguments{
 \item{api_key}{API key associated with your user account.}
@@ -36,6 +36,15 @@ This function is modeled after the \code{census_api_key()} function
 from \href{https://walker-data.com/tidycensus/}{tidycensus}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
+}
+\examples{
+# Set for single session
+set_ipums_api_key("your-api-key-here")
+
+\dontrun{
+# Save key to .Renviron for future sessions
+set_ipums_api_key("your-api-key-here", save = TRUE)
+}
 }
 \seealso{
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
