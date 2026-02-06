@@ -37,6 +37,21 @@ from \href{https://walker-data.com/tidycensus/}{tidycensus}.
 
 Learn more about the IPUMS API in \code{vignette("ipums-api")}.
 }
+\examples{
+# Set for single session
+set_ipums_api_key("your-api-key-here")
+
+\dontrun{
+# Save key to .Renviron for future sessions
+set_ipums_api_key("your-api-key-here", save = TRUE)
+
+# Overwrite existing key in .Renviron
+set_ipums_api_key("your-api-key-here", overwrite = TRUE)
+
+# Remove existing key from .Renviron
+set_ipums_api_key("your-api-key-here", unset = TRUE)
+}
+}
 \seealso{
 \code{\link[=set_ipums_default_collection]{set_ipums_default_collection()}} to set a default collection.
 }

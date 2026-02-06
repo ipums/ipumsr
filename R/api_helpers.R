@@ -75,6 +75,20 @@ ipums_data_collections <- function() {
 #' @seealso
 #' [set_ipums_default_collection()] to set a default collection.
 #'
+#' @examples
+#' # Set for single session
+#' set_ipums_api_key("your-api-key-here")
+#'
+#' \dontrun{
+#' # Save key to .Renviron for future sessions
+#' set_ipums_api_key("your-api-key-here", save = TRUE)
+#'
+#' # Overwrite existing key in .Renviron
+#' set_ipums_api_key("your-api-key-here", overwrite = TRUE)
+#'
+#' # Remove existing key from .Renviron
+#' set_ipums_api_key("your-api-key-here", unset = TRUE)
+#' }
 #' @export
 set_ipums_api_key <- function(api_key,
                               save = overwrite,
