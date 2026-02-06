@@ -1,0 +1,301 @@
+# ipumsr
+
+ipumsr provides an R interface for handling
+[IPUMS](https://www.ipums.org) data, allowing users to:
+
+- Easily read files downloaded from the IPUMS extract system
+
+- Request data, download files, and get metadata from certain IPUMS
+  collections
+
+- Interpret and process data using the contextual information that is
+  included with many IPUMS files
+
+## Installation
+
+To install the package from CRAN, use
+
+``` r
+install.packages("ipumsr")
+```
+
+To install the development version of the package, use
+
+``` r
+remotes::install_github("ipums/ipumsr")
+```
+
+## What is IPUMS?
+
+[IPUMS](https://www.ipums.org) is the world’s largest publicly available
+population database, providing census and survey data from around the
+world integrated across time and space. IPUMS integration and
+documentation make it easy to study change, conduct comparative
+research, merge information across data types, and analyze individuals
+within family and community context. Data and services are available
+free of charge.
+
+IPUMS consists of multiple projects, or *collections*, that provide
+different data products.
+
+- **Microdata** projects distribute data for individual survey units,
+  like people or households.
+- **Aggregate data** projects distribute summary tables of aggregate
+  statistics for particular geographic units along with corresponding
+  GIS mapping files.
+
+ipumsr supports different levels of functionality for each IPUMS
+project, as summarized in the table below.
+
+|                                                                                                                                      |                                                                       | Data Type      | Description                                                                                                                                                                                                                                             |                Read Data Extracts                |             Request & Download Data              |                 Browse Metadata                  |
+|:------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------|:---------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------:|:------------------------------------------------:|:------------------------------------------------:|
+|                     [![IPUMS USA logo](reference/figures/logo-square_usa_50x50.png)](https://usa.ipums.org/usa/)                     | [IPUMS USA](https://usa.ipums.org/usa/)                               | Microdata      | U.S. Census and American Community Survey microdata (1850-present)                                                                                                                                                                                      | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |                                                  |
+|                     [![IPUMS CPS logo](reference/figures/logo-square_cps_50x50.png)](https://cps.ipums.org/cps/)                     | [IPUMS CPS](https://cps.ipums.org/cps/)                               | Microdata      | Current Population Survey microdata including basic monthly surveys and supplements (1962-present)                                                                                                                                                      | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |                                                  |
+| [![IPUMS International logo](reference/figures/logo-square_international_50x50.png)](https://international.ipums.org/international/) | [IPUMS International](https://international.ipums.org/international/) | Microdata      | Census microdata covering over 100 countries, contemporary and historical                                                                                                                                                                               | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |                                                  |
+|                     [![IPUMS NHGIS logo](reference/figures/logo-square_nhgis50x50.png)](https://www.nhgis.org/)                      | [IPUMS NHGIS](https://www.nhgis.org/)                                 | Aggregate Data | Tabular U.S. Census data and GIS mapping files (1790-present)                                                                                                                                                                                           | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |
+|                    [![IPUMS IHGIS logo](reference/figures/logo-square_ihgis_50x50.png)](https://ihgis.ipums.org/)                    | [IPUMS IHGIS](https://ihgis.ipums.org/)                               | Aggregate Data | Tabular and GIS data from population, housing, and agricultural censuses around the world                                                                                                                                                               | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |
+|                [![IPUMS Time Use logo](reference/figures/logo-square_time-use_50x50.png)](https://timeuse.ipums.org/)                | [IPUMS Time Use](https://timeuse.ipums.org/)                          | Microdata      | Time use microdata from the U.S. (1930-present) and thirteen other countries (1965-present)                                                                                                                                                             | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |                                                  |
+|       [![IPUMS Health Surveys logo](reference/figures/logo-square_health-surveys_50x50.png)](https://healthsurveys.ipums.org/)       | [IPUMS Health Surveys](https://healthsurveys.ipums.org/)              | Microdata      | Microdata from the U.S. [National Health Interview Survey (NHIS)](https://nhis.ipums.org/nhis/) (1963-present) and [Medical Expenditure Panel Survey (MEPS)](https://meps.ipums.org/meps/) (1996-present)                                               | ![Check mark](reference/figures/check-solid.svg) | ![Check mark](reference/figures/check-solid.svg) |                                                  |
+|        [![IPUMS Global Health logo](reference/figures/logo-square_global-health_50x50.png)](https://globalhealth.ipums.org/)         | [IPUMS Global Health](https://globalhealth.ipums.org/)                | Microdata      | Health survey microdata for low- and middle-income countries, including harmonized data collections for [Demographic and Health Surveys (DHS)](https://www.idhsdata.org/) and [Performance Monitoring for Action (PMA)](https://pma.ipums.org/) surveys | ![Check mark](reference/figures/check-solid.svg) |                                                  |                                                  |
+|          [![IPUMS Higher Ed logo](reference/figures/logo-square_higher-ed_50x50.png)](https://highered.ipums.org/highered/)          | [IPUMS Higher Ed](https://highered.ipums.org/highered/)               | Microdata      | Survey microdata on the science and engineering workforce in the U.S. from 1993 to 2013                                                                                                                                                                 | ![Check mark](reference/figures/check-solid.svg) |                                                  |                                                  |
+
+ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data
+requests, download data extracts, and get metadata, so the scope of
+functionality generally corresponds to that [available via the
+API](https://developer.ipums.org/docs/v2/apiprogram/apis/). As the IPUMS
+team extends the API to support more functionality for more projects, we
+aim to extend ipumsr capabilities accordingly.
+
+## Getting started
+
+If you’re new to IPUMS data, learn more about what’s available through
+the [IPUMS Projects Overview](https://www.ipums.org/overview). Then, see
+[`vignette("ipums")`](https://tech.popdata.org/ipumsr/dev/articles/ipums.md)
+for an overview of how to obtain IPUMS data.
+
+The package vignettes are the best place to explore what ipumsr has to
+offer:
+
+- To read IPUMS data extracts into R, see
+  [`vignette("ipums-read")`](https://tech.popdata.org/ipumsr/dev/articles/ipums-read.md).
+
+- To interact with the IPUMS extract and metadata system via the IPUMS
+  API, see
+  [`vignette("ipums-api")`](https://tech.popdata.org/ipumsr/dev/articles/ipums-api.md).
+
+- For additional details about microdata and aggregate data extract
+  requests, see
+  [`vignette("ipums-api-micro")`](https://tech.popdata.org/ipumsr/dev/articles/ipums-api-micro.md)
+  and
+  [`vignette("ipums-api-agg")`](https://tech.popdata.org/ipumsr/dev/articles/ipums-api-agg.md).
+
+- To work with labelled values in IPUMS data, see
+  [`vignette("value-labels")`](https://tech.popdata.org/ipumsr/dev/articles/value-labels.md).
+
+- For techniques for working with large data extracts, see
+  [`vignette("ipums-bigdata")`](https://tech.popdata.org/ipumsr/dev/articles/ipums-bigdata.md).
+
+The [IPUMS support website](https://www.ipums.org/support) also houses
+many project-specific R-based [training
+exercises](https://www.ipums.org/support/exercises). However, note that
+some of these exercises may not be be up to date with ipumsr’s current
+functionality.
+
+## Related work
+
+- The [survey](http://r-survey.r-forge.r-project.org/survey/) and
+  [srvyr](https://github.com/gergness/srvyr/) packages can help you
+  incorporate IPUMS survey weights into your analysis for various survey
+  designs.
+
+- See [haven](https://haven.tidyverse.org/index.html) for more
+  information about value labels and labelled vectors
+
+- [hipread](https://github.com/ipums/hipread) underlies the hierarchical
+  file reading functions in ipumsr
+
+## Getting help + contributing
+
+We greatly appreciate feedback and development contributions. Please
+submit any bug reports, pull requests, or other suggestions on
+[GitHub](https://github.com/ipums/ipumsr/issues). Before contributing,
+please be sure to read the [Contributing
+Guidelines](https://tech.popdata.org/ipumsr/CONTRIBUTING.html) and the
+[Code of Conduct](https://tech.popdata.org/ipumsr/CODE_OF_CONDUCT.html).
+
+If you have general questions or concerns about IPUMS data, check out
+our [user forum](https://forum.ipums.org) or send an email to
+<ipums@umn.edu>.
+
+# Package index
+
+## Read IPUMS data
+
+Load IPUMS data and metadata files into R
+
+### Microdata projects
+
+- [`read_ipums_micro()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro.md)
+  [`read_ipums_micro_list()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro.md)
+  : Read data from an IPUMS microdata extract
+- [`read_ipums_ddi()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_ddi.md)
+  : Read metadata about an IPUMS microdata extract from a DDI codebook
+  (.xml) file
+- [`read_ipums_micro_chunked()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_chunked.md)
+  [`read_ipums_micro_list_chunked()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_chunked.md)
+  : Read data from an IPUMS microdata extract by chunk
+- [`read_ipums_micro_yield()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_yield.md)
+  [`read_ipums_micro_list_yield()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_micro_yield.md)
+  : Read data from an IPUMS microdata extract in yields
+
+### Aggregate data projects
+
+- [`read_ipums_agg()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_agg.md)
+  : Read data from an IPUMS aggregate data extract
+- [`read_nhgis_codebook()`](https://tech.popdata.org/ipumsr/dev/reference/read_nhgis_codebook.md)
+  **\[experimental\]** : Read metadata from an NHGIS codebook (.txt)
+  file
+- [`read_ihgis_codebook()`](https://tech.popdata.org/ipumsr/dev/reference/read_ihgis_codebook.md)
+  **\[experimental\]** : Read metadata from an IHGIS extract's codebook
+  files
+
+### General use
+
+- [`read_ipums_sf()`](https://tech.popdata.org/ipumsr/dev/reference/read_ipums_sf.md)
+  : Read spatial data from an IPUMS extract
+- [`ipums_list_files()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_list_files.md)
+  : List files contained within a zipped IPUMS extract
+
+## Interact with the IPUMS API
+
+Request and download IPUMS data within R
+
+- [`define_extract_micro()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md)
+  : Define an extract request for an IPUMS microdata collection
+
+- [`define_extract_agg()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_agg.md)
+  : Define an extract request for an IPUMS aggregate data collection
+
+- [`get_metadata_catalog()`](https://tech.popdata.org/ipumsr/dev/reference/get_metadata_catalog.md)
+  [`catalog_types()`](https://tech.popdata.org/ipumsr/dev/reference/get_metadata_catalog.md)
+  : Retrieve a catalog of available data sources for an IPUMS collection
+
+- [`get_metadata()`](https://tech.popdata.org/ipumsr/dev/reference/get_metadata.md)
+  : Retrieve detailed metadata about an IPUMS data source
+
+- [`get_sample_info()`](https://tech.popdata.org/ipumsr/dev/reference/get_sample_info.md)
+  : List available samples for IPUMS microdata collections
+
+- [`submit_extract()`](https://tech.popdata.org/ipumsr/dev/reference/submit_extract.md)
+  : Submit an extract request via the IPUMS API
+
+- [`wait_for_extract()`](https://tech.popdata.org/ipumsr/dev/reference/wait_for_extract.md)
+  [`is_extract_ready()`](https://tech.popdata.org/ipumsr/dev/reference/wait_for_extract.md)
+  : Wait for an extract request to finish processing
+
+- [`download_extract()`](https://tech.popdata.org/ipumsr/dev/reference/download_extract.md)
+  : Download a completed IPUMS data extract
+
+- [`get_extract_info()`](https://tech.popdata.org/ipumsr/dev/reference/get_extract_info.md)
+  [`get_last_extract_info()`](https://tech.popdata.org/ipumsr/dev/reference/get_extract_info.md)
+  : Retrieve the definition and latest status of an extract request
+
+- [`get_extract_history()`](https://tech.popdata.org/ipumsr/dev/reference/get_extract_history.md)
+  : Browse definitions of previously submitted extract requests
+
+- [`save_extract_as_json()`](https://tech.popdata.org/ipumsr/dev/reference/save_extract_as_json.md)
+  [`define_extract_from_json()`](https://tech.popdata.org/ipumsr/dev/reference/save_extract_as_json.md)
+  : Store an extract definition in JSON format
+
+- [`set_ipums_api_key()`](https://tech.popdata.org/ipumsr/dev/reference/set_ipums_api_key.md)
+  : Set your IPUMS API key
+
+- [`set_ipums_default_collection()`](https://tech.popdata.org/ipumsr/dev/reference/set_ipums_default_collection.md)
+  : Set your default IPUMS collection
+
+- [`ipums_data_collections()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_data_collections.md)
+  : List IPUMS data collections
+
+- [`ipums_extract-class`](https://tech.popdata.org/ipumsr/dev/reference/ipums_extract-class.md)
+  [`ipums_extract`](https://tech.popdata.org/ipumsr/dev/reference/ipums_extract-class.md)
+  :
+
+  `ipums_extract` class
+
+- [`download_supplemental_data()`](https://tech.popdata.org/ipumsr/dev/reference/download_supplemental_data.md)
+  : Download IPUMS supplemental data files
+
+## Explore IPUMS variable metadata
+
+Get additional information about IPUMS data contents
+
+- [`ipums_var_info()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.md)
+  [`ipums_var_label()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.md)
+  [`ipums_var_desc()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.md)
+  [`ipums_val_labels()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_var_info.md)
+  : Get contextual information about variables in an IPUMS data source
+- [`ipums_file_info()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_file_info.md)
+  [`ipums_conditions()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_file_info.md)
+  : Get file information for an IPUMS extract
+- [`ipums_view()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_view.md)
+  : View a static webpage with variable metadata from an IPUMS extract
+- [`ipums_website()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_website.md)
+  : Launch a browser window to an IPUMS metadata page
+
+## Work with value labels
+
+Translate IPUMS value labels to standard R data structures
+
+- [`lbl_na_if()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_na_if.md)
+  : Convert labelled data values to NA
+- [`lbl_relabel()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_relabel.md)
+  [`lbl_collapse()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_relabel.md)
+  : Modify value labels for a labelled vector
+- [`lbl_define()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_define.md)
+  : Define labels for an unlabelled vector
+- [`zap_ipums_attributes()`](https://tech.popdata.org/ipumsr/dev/reference/zap_ipums_attributes.md)
+  : Remove label attributes from a data frame or labelled vector
+- [`lbl_clean()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_clean.md)
+  : Clean unused labels
+- [`lbl_add()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_add.md)
+  [`lbl_add_vals()`](https://tech.popdata.org/ipumsr/dev/reference/lbl_add.md)
+  : Add labels for unlabelled values
+- [`lbl()`](https://tech.popdata.org/ipumsr/dev/reference/lbl.md) : Make
+  a label placeholder object
+
+## Other helpers
+
+Miscellaneous functions for working with IPUMS data
+
+- [`ipums_bind_rows()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_bind_rows.md)
+  : Bind multiple data frames by row, preserving labelled attributes
+- [`ipums_shape_left_join()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.md)
+  [`ipums_shape_right_join()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.md)
+  [`ipums_shape_inner_join()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.md)
+  [`ipums_shape_full_join()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_shape_join.md)
+  : Join tabular data to geographic boundaries
+- [`set_ipums_var_attributes()`](https://tech.popdata.org/ipumsr/dev/reference/set_ipums_var_attributes.md)
+  : Add IPUMS variable attributes to a data frame
+- [`ipums_collect()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_collect.md)
+  : Collect data into R session with IPUMS attributes
+- [`ipums_example()`](https://tech.popdata.org/ipumsr/dev/reference/ipums_example.md)
+  : Get path to IPUMS example datasets
+
+# Articles
+
+### All vignettes
+
+- [Aggregate Data API
+  Requests](https://tech.popdata.org/ipumsr/dev/articles/ipums-api-agg.md):
+- [Microdata API
+  Requests](https://tech.popdata.org/ipumsr/dev/articles/ipums-api-micro.md):
+- [Introduction to the IPUMS API for R
+  Users](https://tech.popdata.org/ipumsr/dev/articles/ipums-api.md):
+- [Big IPUMS
+  Data](https://tech.popdata.org/ipumsr/dev/articles/ipums-bigdata.md):
+- [Reading IPUMS
+  Data](https://tech.popdata.org/ipumsr/dev/articles/ipums-read.md):
+- [IPUMS Data and
+  R](https://tech.popdata.org/ipumsr/dev/articles/ipums.md):
+- [Value Labels in IPUMS
+  data](https://tech.popdata.org/ipumsr/dev/articles/value-labels.md):
