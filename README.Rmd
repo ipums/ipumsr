@@ -162,7 +162,7 @@ tbl_config <- list(
       "and <a href='https://pma.ipums.org/'>Performance Monitoring for Action (PMA)</a> surveys"
     ),
     read = checkmark(),
-    request = "",
+    request = "DHS only",
     metadata = ""
   ),
   list(

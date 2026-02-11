@@ -160,6 +160,19 @@ test_meps_extract <- function() {
   )
 }
 
+test_dhs_extract <- function() {
+  define_extract_micro(
+    collection = "dhs",
+    description = "Test DHS extract",
+    samples = c("gh2003ir", "mz2011ir"),
+    variables = list(
+      "AGE",
+      "SEX"
+    ),
+    data_format = "fixed_width"
+  )
+}
+
 test_nhgis_extract <- function() {
   define_extract_agg(
     "nhgis",

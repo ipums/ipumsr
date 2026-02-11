@@ -264,6 +264,7 @@ get_metadata <- function(collection,
 #' get_sample_info("ipumsi")
 #' get_sample_info("atus")
 #' get_sample_info("meps")
+#' get_sample_info("dhs")
 #' }
 get_sample_info <- function(collection = NULL,
                             delay = 0,
@@ -291,7 +292,8 @@ catalog_types <- function(collection) {
     "ahtus" = "samples",
     "mtus" = "samples",
     "nhis" = "samples",
-    "meps" = "samples"
+    "meps" = "samples",
+    "dhs" = "samples"
   )
 
   endpts[[collection]]
