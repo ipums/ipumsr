@@ -434,7 +434,7 @@ test_that("We can get correct API version info for each collection", {
     has_support$code_for_api,
     c(
       "usa", "cps", "ipumsi", "nhgis", "ihgis",
-      "atus", "ahtus", "mtus", "nhis", "meps"
+      "atus", "ahtus", "mtus", "nhis", "meps", "dhs"
     )
   )
   expect_equal(ipums_api_version(), 2)

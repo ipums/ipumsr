@@ -1,7 +1,15 @@
 # ipumsr (development version)
 
-* Improved parsing of labeled values included in "codInstr" tags in the DDI 
-  codebook for microdata extracts.
+## New features
+
+* Added API support for IPUMS DHS (`"dhs"`). DHS extracts can now be defined,
+  submitted, and downloaded via the IPUMS API using the same workflow as other
+  microdata collections.
+
+## Bug fixes
+
+* Improved parsing of labeled values included in "codInstr" tags in the DDI
+  codebook for microdata extracts (#94).
 
 # ipumsr 0.9.0
 

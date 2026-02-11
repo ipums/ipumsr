@@ -96,6 +96,7 @@ NULL
 #'   + [IPUMS USA](https://usa.ipums.org/)
 #'   + [IPUMS CPS](https://cps.ipums.org/)
 #'   + [IPUMS International](https://international.ipums.org/)
+#'   + [IPUMS DHS](https://www.idhsdata.org/idhs/)
 #'   + IPUMS Time Use ([ATUS](https://www.atusdata.org/atus/), [AHTUS](https://www.ahtusdata.org/ahtus/), [MTUS](https://www.mtusdata.org/mtus/))
 #'   + IPUMS Health Surveys ([NHIS](https://nhis.ipums.org/), [MEPS](https://meps.ipums.org/))
 #'

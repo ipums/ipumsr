@@ -63,242 +63,408 @@ ipumsr supports different levels of functionality for each IPUMS
 project, as summarized in the table below.
 
 <table class="table-hover table-proj-summary">
+
 <thead>
+
 <tr>
+
 <th style="text-align:center;">
+
 </th>
+
 <th style="text-align:left;">
+
 </th>
+
 <th style="text-align:left;">
+
 Data Type
 </th>
+
 <th style="text-align:left;">
+
 Description
 </th>
+
 <th style="text-align:center;">
+
 Read Data Extracts
 </th>
+
 <th style="text-align:center;">
+
 Request & Download Data
 </th>
+
 <th style="text-align:center;">
+
 Browse Metadata
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://usa.ipums.org/usa/'><img src='man/figures/logo-square_usa_50x50.png' alt='IPUMS USA logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://usa.ipums.org/usa/'>IPUMS USA</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 U.S. Census and American Community Survey microdata (1850-present)
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://cps.ipums.org/cps/'><img src='man/figures/logo-square_cps_50x50.png' alt='IPUMS CPS logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://cps.ipums.org/cps/'>IPUMS CPS</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Current Population Survey microdata including basic monthly surveys and
 supplements (1962-present)
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://international.ipums.org/international/'><img src='man/figures/logo-square_international_50x50.png' alt='IPUMS International logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://international.ipums.org/international/'>IPUMS
 International</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Census microdata covering over 100 countries, contemporary and
 historical
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://www.nhgis.org/'><img src='man/figures/logo-square_nhgis50x50.png' alt='IPUMS NHGIS logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://www.nhgis.org/'>IPUMS NHGIS</a>
 </td>
+
 <td style="text-align:left;">
+
 Aggregate Data
 </td>
+
 <td style="text-align:left;">
+
 Tabular U.S. Census data and GIS mapping files (1790-present)
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://ihgis.ipums.org/'><img src='man/figures/logo-square_ihgis_50x50.png' alt='IPUMS IHGIS logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://ihgis.ipums.org/'>IPUMS IHGIS</a>
 </td>
+
 <td style="text-align:left;">
+
 Aggregate Data
 </td>
+
 <td style="text-align:left;">
+
 Tabular and GIS data from population, housing, and agricultural censuses
 around the world
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://timeuse.ipums.org/'><img src='man/figures/logo-square_time-use_50x50.png' alt='IPUMS Time Use logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://timeuse.ipums.org/'>IPUMS Time Use</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Time use microdata from the U.S. (1930-present) and thirteen other
 countries (1965-present)
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://healthsurveys.ipums.org/'><img src='man/figures/logo-square_health-surveys_50x50.png' alt='IPUMS Health Surveys logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://healthsurveys.ipums.org/'>IPUMS Health Surveys</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Microdata from the U.S. <a href='https://nhis.ipums.org/nhis/'>National
 Health Interview Survey (NHIS)</a> (1963-present) and
 <a href='https://meps.ipums.org/meps/'>Medical Expenditure Panel Survey
 (MEPS)</a> (1996-present)
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://globalhealth.ipums.org/'><img src='man/figures/logo-square_global-health_50x50.png' alt='IPUMS Global Health logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://globalhealth.ipums.org/'>IPUMS Global Health</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Health survey microdata for low- and middle-income countries, including
 harmonized data collections for
 <a href='https://www.idhsdata.org/'>Demographic and Health Surveys
 (DHS)</a> and <a href='https://pma.ipums.org/'>Performance Monitoring
 for Action (PMA)</a> surveys
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
+DHS only
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:center;">
+
 <a href='https://highered.ipums.org/highered/'><img src='man/figures/logo-square_higher-ed_50x50.png' alt='IPUMS Higher Ed logo'></a>
 </td>
+
 <td style="text-align:left;">
+
 <a href='https://highered.ipums.org/highered/'>IPUMS Higher Ed</a>
 </td>
+
 <td style="text-align:left;">
+
 Microdata
 </td>
+
 <td style="text-align:left;">
+
 Survey microdata on the science and engineering workforce in the U.S.
 from 1993 to 2013
 </td>
+
 <td style="text-align:center;">
+
 <img src='man/figures/check-solid.svg' class='icon-check' alt='Check mark'>
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 <td style="text-align:center;">
+
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 ipumsr uses the [IPUMS API](https://developer.ipums.org/) to submit data

@@ -117,6 +117,7 @@ proj_config <- function() {
       url_name = "idhs",
       collection_type = "microdata",
       code_for_api = "dhs",
+      api_support = TRUE,
       home_url = "https://www.idhsdata.org/",
       var_url = function(var = "group") {
         get_var_url("idhsdata", "idhs", var = var, ipums_domain = FALSE)

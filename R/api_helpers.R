@@ -18,6 +18,7 @@
 #' * IPUMS International (`"ipumsi"`)
 #' * IPUMS Time Use (`"atus"`, `"ahtus"`, `"mtus"`)
 #' * IPUMS Health Surveys (`"nhis"`, `"meps"`)
+#' * IPUMS DHS (`"dhs"`)
 #' * IPUMS NHGIS (`"nhgis"`)
 #' * IPUMS IHGIS (`"ihgis"`)
 #'
