@@ -25,6 +25,8 @@ by the IPUMS API (shown with the codes used to refer to them in ipumsr):
 - IPUMS Health Surveys
   - IPUMS NHIS (`"nhis"`)
   - IPUMS MEPS (`"meps"`)
+- IPUMS Global Health
+  - IPUMS DHS (`"dhs"`)
 
 API support will continue to be added for more collections in the
 future. See the [API

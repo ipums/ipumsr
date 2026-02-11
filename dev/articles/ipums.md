@@ -95,6 +95,7 @@ API for the following collections:
   - IPUMS International
   - IPUMS Time Use (ATUS, AHTUS, MTUS)
   - IPUMS Health Surveys (NHIS, MEPS)
+  - IPUMS DHS
 - IPUMS aggregate data collections
   - IPUMS NHGIS
   - IPUMS IHGIS

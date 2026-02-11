@@ -47,6 +47,7 @@ following collections:
   - IPUMS International
   - IPUMS Time Use (ATUS, AHTUS, MTUS)
   - IPUMS Health Surveys (NHIS, MEPS)
+  - IPUMS DHS
 - IPUMS aggregate data collections
   - IPUMS NHGIS
   - IPUMS IHGIS
@@ -79,7 +80,7 @@ ipums_data_collections()
 #>  6 IPUMS ATUS          microdata       atus         TRUE       
 #>  7 IPUMS AHTUS         microdata       ahtus        TRUE       
 #>  8 IPUMS MTUS          microdata       mtus         TRUE       
-#>  9 IPUMS DHS           microdata       dhs          FALSE      
+#>  9 IPUMS DHS           microdata       dhs          TRUE       
 #> 10 IPUMS PMA           microdata       pma          FALSE      
 #> 11 IPUMS MICS          microdata       mics         FALSE      
 #> 12 IPUMS NHIS          microdata       nhis         TRUE       

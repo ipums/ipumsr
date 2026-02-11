@@ -730,7 +730,7 @@ example <- tbl(con, "cps")
 example %>%
   filter("AGE" > 25)
 #> # Source:   SQL [?? x 14]
-#> # Database: sqlite 3.51.1 []
+#> # Database: sqlite 3.51.2 []
 #>     YEAR SERIAL MONTH   CPSID ASECFLAG ASECWTH FOODSTMP PERNUM  CPSIDP ASECWT
 #>    <dbl>  <dbl> <int>   <dbl>    <int>   <dbl>    <int>  <dbl>   <dbl>  <dbl>
 #>  1  2011     33     3 2.01e13        1    308.        1      1 2.01e13   308.
