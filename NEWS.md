@@ -1,5 +1,7 @@
 # ipumsr (development version)
 
+Note: ipumsr now requires R version 4.1.0 or later.
+
 ## New features
 
 * Added API support for IPUMS DHS (`"dhs"`). DHS extracts can now be defined,
