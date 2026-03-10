@@ -358,7 +358,7 @@ warn_if_lower_vars_ignored <- function(ddi, lower_vars, call = caller_env()) {
 
 check_valid_ddi <- function(ddi, call = caller_env()) {
   is_ipums_ddi <- inherits(ddi, "ipums_ddi")
-  is_xml <- tools::file_ext(ddi) == "xml"
+  is_xml <- is.character(ddi) && tools::file_ext(ddi) == "xml"
 
   if (!is_ipums_ddi && !is_xml) {
     rlang::abort(
