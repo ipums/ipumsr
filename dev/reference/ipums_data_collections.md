@@ -16,6 +16,8 @@ collections:
 
 - IPUMS Health Surveys (`"nhis"`, `"meps"`)
 
+- IPUMS DHS (`"dhs"`)
+
 - IPUMS NHGIS (`"nhgis"`)
 
 - IPUMS IHGIS (`"ihgis"`)

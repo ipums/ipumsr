@@ -1,7 +1,7 @@
 # Read metadata about an IPUMS microdata extract from a DDI codebook (.xml) file
 
 Reads the metadata about an IPUMS extract from a [DDI
-codebook](https://ddialliance.org/introduction-to-ddi) into an
+codebook](https://ddialliance.org) into an
 [ipums_ddi](https://tech.popdata.org/ipumsr/dev/reference/ipums_ddi-class.md)
 object.
 

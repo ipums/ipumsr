@@ -6,7 +6,7 @@ primarily used when loading IPUMS data, but can also be used to explore
 metadata for an IPUMS extract.
 
 - For microdata projects, this information is provided in [DDI
-  codebook](https://ddialliance.org/introduction-to-ddi) (.xml) files.
+  codebook](https://ddialliance.org) (.xml) files.
 
 - For NHGIS, this information is provided in .txt codebook files.
 

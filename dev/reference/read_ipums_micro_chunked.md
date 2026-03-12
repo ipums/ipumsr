@@ -9,8 +9,8 @@ a provided callback function applied to each chunk.
 
 Two files are required to load IPUMS microdata extracts:
 
-- A [DDI codebook](https://ddialliance.org/introduction-to-ddi) file
-  (.xml) used to parse the extract's data file
+- A [DDI codebook](https://ddialliance.org) file (.xml) used to parse
+  the extract's data file
 
 - A data file (either .dat.gz or .csv.gz)
 

@@ -7,8 +7,25 @@ Note: ipumsr now requires R version 4.1.0 or later.
 ### New features
 
 - Added API support for IPUMS DHS (`"dhs"`). DHS extracts can now be
-  defined, submitted, and downloaded via the IPUMS API using the same
-  workflow as other microdata collections.
+  defined (with
+  [`define_extract_micro()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md)),
+  submitted (with
+  [`submit_extract()`](https://tech.popdata.org/ipumsr/dev/reference/submit_extract.md)),
+  and downloaded (with
+  [`download_extract()`](https://tech.popdata.org/ipumsr/dev/reference/download_extract.md))
+  via the IPUMS API using the same workflow as other microdata
+  collections.
+
+### Function retirements
+
+- Functions
+  [`define_extract_usa()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md),
+  [`define_extract_cps()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md),
+  and
+  [`define_extract_ipumsi()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md)
+  are now defunct. Please use
+  [`define_extract_micro()`](https://tech.popdata.org/ipumsr/dev/reference/define_extract_micro.md)
+  to define extracts for all microdata collections.
 
 ### Bug fixes
 

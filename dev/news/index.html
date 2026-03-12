@@ -53,7 +53,11 @@
 <p>Note: ipumsr now requires R version 4.1.0 or later.</p>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Added API support for IPUMS DHS (<code>"dhs"</code>). DHS extracts can now be defined, submitted, and downloaded via the IPUMS API using the same workflow as other microdata collections.</li>
+<ul><li>Added API support for IPUMS DHS (<code>"dhs"</code>). DHS extracts can now be defined (with <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code>), submitted (with <code><a href="../reference/submit_extract.html">submit_extract()</a></code>), and downloaded (with <code><a href="../reference/download_extract.html">download_extract()</a></code>) via the IPUMS API using the same workflow as other microdata collections.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="function-retirements-development-version">Function retirements<a class="anchor" aria-label="anchor" href="#function-retirements-development-version"></a></h3>
+<ul><li>Functions <code><a href="../reference/define_extract_micro.html">define_extract_usa()</a></code>, <code><a href="../reference/define_extract_micro.html">define_extract_cps()</a></code>, and <code><a href="../reference/define_extract_micro.html">define_extract_ipumsi()</a></code> are now defunct. Please use <code><a href="../reference/define_extract_micro.html">define_extract_micro()</a></code> to define extracts for all microdata collections.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
