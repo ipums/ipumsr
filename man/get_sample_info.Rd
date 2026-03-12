@@ -51,6 +51,7 @@ get_sample_info("cps")
 get_sample_info("ipumsi")
 get_sample_info("atus")
 get_sample_info("meps")
+get_sample_info("dhs")
 }
 }
 \seealso{

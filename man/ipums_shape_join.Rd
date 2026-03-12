@@ -74,7 +74,7 @@ tabular data that emerge in some IPUMS files
 }
 }
 \examples{
-\dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("sf")) withAutoprint(\{ # examplesIf}
 data <- read_ipums_agg(
   ipums_example("nhgis0972_csv.zip"),
   verbose = FALSE

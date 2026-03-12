@@ -23,6 +23,7 @@ Currently, ipumsr supports extract definitions for the following collections:
 \item IPUMS International (\code{"ipumsi"})
 \item IPUMS Time Use (\code{"atus"}, \code{"ahtus"}, \code{"mtus"})
 \item IPUMS Health Surveys (\code{"nhis"}, \code{"meps"})
+\item IPUMS DHS (\code{"dhs"})
 \item IPUMS NHGIS (\code{"nhgis"})
 \item IPUMS IHGIS (\code{"ihgis"})
 }

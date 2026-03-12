@@ -70,7 +70,7 @@ shapefiles, this function will throw an error. If this is the case, you may
 need to manually unzip the downloaded file before loading it into R.
 }
 \examples{
-\dontshow{if (requireNamespace("sf")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("sf")) withAutoprint(\{ # examplesIf}
 # Example shapefile from NHGIS
 shape_ex1 <- ipums_example("nhgis0972_shape_small.zip")
 data_ex1 <- read_ipums_agg(ipums_example("nhgis0972_csv.zip"), verbose = FALSE)

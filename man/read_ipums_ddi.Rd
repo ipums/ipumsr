@@ -19,8 +19,7 @@ An \link{ipums_ddi} object with metadata information.
 }
 \description{
 Reads the metadata about an IPUMS extract from a
-\href{https://ddialliance.org/introduction-to-ddi}{DDI codebook} into an
-\link{ipums_ddi} object.
+\href{https://ddialliance.org}{DDI codebook} into an \link{ipums_ddi} object.
 
 These metadata contains parsing instructions for the associated fixed-width
 data file, contextual labels for variables and values in the data, and

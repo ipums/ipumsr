@@ -115,6 +115,7 @@ The IPUMS API currently supports the following microdata collections:
 \item \href{https://usa.ipums.org/}{IPUMS USA}
 \item \href{https://cps.ipums.org/}{IPUMS CPS}
 \item \href{https://international.ipums.org/}{IPUMS International}
+\item \href{https://www.idhsdata.org/idhs/}{IPUMS DHS}
 \item IPUMS Time Use (\href{https://www.atusdata.org/atus/}{ATUS}, \href{https://www.ahtusdata.org/ahtus/}{AHTUS}, \href{https://www.mtusdata.org/mtus/}{MTUS})
 \item IPUMS Health Surveys (\href{https://nhis.ipums.org/}{NHIS}, \href{https://meps.ipums.org/}{MEPS})
 }
