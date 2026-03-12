@@ -1,4 +1,4 @@
-# ipumsr (development version)
+# ipumsr 0.10.0
 
 Note: ipumsr now requires R version 4.1.0 or later.
 
