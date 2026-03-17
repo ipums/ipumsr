@@ -7,6 +7,7 @@ IPUMS CPS ("cps")
 IPUMS International ("ipumsi")
 IPUMS Time Use ("atus", "ahtus", "mtus")
 IPUMS Health Surveys ("nhis", "meps")
+IPUMS DHS ("dhs")
 IPUMS NHGIS ("nhgis")
 IPUMS IHGIS ("ihgis")
 
@@ -19,6 +20,7 @@ IPUMS CPS ("cps")
 IPUMS International ("ipumsi")
 IPUMS Time Use ("atus", "ahtus", "mtus")
 IPUMS Health Surveys ("nhis", "meps")
+IPUMS DHS ("dhs")
 IPUMS NHGIS ("nhgis")
 IPUMS IHGIS ("ihgis")
 
@@ -31,7 +33,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 
     <a class="navbar-brand me-2" href="../index.html">ipumsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +71,7 @@ Learn more about the IPUMS API in vignette("ipums-api").'><meta property="og:ima
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>List IPUMS data collections</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/v0.9.0/R/api_helpers.R" class="external-link"><code>R/api_helpers.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipums/ipumsr/blob/main/R/api_helpers.R" class="external-link"><code>R/api_helpers.R</code></a></small>
       <div class="d-none name"><code>ipums_data_collections.Rd</code></div>
     </div>
 
@@ -81,6 +83,7 @@ IPUMS API. Note that some data collections do not yet have API support.</p>
 <li><p>IPUMS International (<code>"ipumsi"</code>)</p></li>
 <li><p>IPUMS Time Use (<code>"atus"</code>, <code>"ahtus"</code>, <code>"mtus"</code>)</p></li>
 <li><p>IPUMS Health Surveys (<code>"nhis"</code>, <code>"meps"</code>)</p></li>
+<li><p>IPUMS DHS (<code>"dhs"</code>)</p></li>
 <li><p>IPUMS NHGIS (<code>"nhgis"</code>)</p></li>
 <li><p>IPUMS IHGIS (<code>"ihgis"</code>)</p></li>
 </ul><p>Learn more about the IPUMS API in <code><a href="../articles/ipums-api.html">vignette("ipums-api")</a></code>.</p>
@@ -113,7 +116,7 @@ status of API support for the collection.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> IPUMS ATUS          microdata       atus         TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> IPUMS AHTUS         microdata       ahtus        TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> IPUMS MTUS          microdata       mtus         TRUE       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> IPUMS DHS           microdata       dhs          FALSE      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> IPUMS DHS           microdata       dhs          TRUE       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> IPUMS PMA           microdata       pma          FALSE      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> IPUMS MICS          microdata       mics         FALSE      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> IPUMS NHIS          microdata       nhis         TRUE       </span>
@@ -130,7 +133,7 @@ status of API support for the collection.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
