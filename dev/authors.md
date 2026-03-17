@@ -24,12 +24,12 @@ Source:
 
 Greg Freedman Ellis, Derek Burk, Finn Roberts (2026). *ipumsr: An R
 Interface for Downloading, Reading, and Handling IPUMS Data*. R package
-version 0.9.0.9000, <https://tech.popdata.org/ipumsr/>.
+version 0.10.0.9000, <https://tech.popdata.org/ipumsr/>.
 
     @Manual{,
       title = {ipumsr: An R Interface for Downloading, Reading, and Handling IPUMS Data},
       author = {{Greg Freedman Ellis} and {Derek Burk} and {Finn Roberts}},
       year = {2026},
-      note = {R package version 0.9.0.9000},
+      note = {R package version 0.10.0.9000},
       url = {https://tech.popdata.org/ipumsr/},
     }

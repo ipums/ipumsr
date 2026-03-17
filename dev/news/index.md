@@ -2,6 +2,10 @@
 
 ## ipumsr (development version)
 
+## ipumsr 0.10.0
+
+CRAN release: 2026-03-13
+
 Note: ipumsr now requires R version 4.1.0 or later.
 
 ### New features
