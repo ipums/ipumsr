@@ -826,7 +826,23 @@ validate_api_request <- function(res, call = caller_env()) {
       error_details <- c("x" = "Rate limit exceeded.")
     }
 
-    abort_bad_request(status, error_details, call = call)
+    # Some endpoints have not (yet) been updated to support the standard
+    # page size limits used elsewhere in the API, and will reject a
+    # `pageSize` that would otherwise be considered valid. Flag these
+    # errors with their own class so that callers can recognize and
+    # recover from them (e.g. by retrying with a smaller page size).
+    is_page_size_error <- grepl(
+      "invalid pagesize",
+      paste(error_details, collapse = " "),
+      ignore.case = TRUE
+    )
+
+    abort_bad_request(
+      status,
+      error_details,
+      call = call,
+      page_size_error = is_page_size_error
+    )
   }
 
   # Download requests do not return JSON by design
@@ -840,9 +856,18 @@ validate_api_request <- function(res, call = caller_env()) {
 }
 
 # Helper to format standard request errors
-abort_bad_request <- function(status, details, call = caller_env()) {
+abort_bad_request <- function(status,
+                              details,
+                              call = caller_env(),
+                              page_size_error = FALSE) {
   error_message <- paste0("API request failed with status ", status, ".")
-  rlang::abort(c(error_message, details), call = call)
+
+  class <- "ipums_api_error"
+  if (page_size_error) {
+    class <- c("ipums_api_page_size_error", class)
+  }
+
+  rlang::abort(c(error_message, details), class = class, call = call)
 }
 
 api_extract_warnings <- function(extract_number, warnings) {
@@ -1157,6 +1182,58 @@ api_page_size_limit <- function(type) {
   }
 
   limit
+}
+
+#' Make an initial paged API request, automatically retrying with smaller
+#' page sizes if the requested size is rejected by the server
+#'
+#' @description
+#' Not all endpoints are necessarily kept in sync with the standard page
+#' size limits used elsewhere in the API (for instance, a newly added
+#' endpoint may not yet support the full page size used by other metadata
+#' endpoints). Rather than failing outright when a request's page size is
+#' rejected, progressively retry with smaller page sizes until the request
+#' succeeds or no smaller sizes remain to try.
+#'
+#' @param build_url A function that takes a single `page_size` argument and
+#'   returns the URL to request from the API using that page size.
+#' @param page_size The preferred (largest) page size to request.
+#' @param min_page_size The smallest page size to attempt before giving up
+#'   and allowing the request error to propagate.
+#' @param max_pages,delay,api_key See `ipums_api_paged_request()`.
+#'
+#' @return A list of `httr::response()` objects, as returned by
+#'   `ipums_api_paged_request()`.
+#'
+#' @noRd
+ipums_api_paged_request_with_fallback <- function(build_url,
+                                                  page_size,
+                                                  max_pages = Inf,
+                                                  delay = 0,
+                                                  api_key = Sys.getenv("IPUMS_API_KEY"),
+                                                  min_page_size = 100) {
+  repeat {
+    result <- tryCatch(
+      ipums_api_paged_request(
+        url = build_url(page_size),
+        max_pages = max_pages,
+        delay = delay,
+        api_key = api_key
+      ),
+      ipums_api_page_size_error = function(cnd) cnd
+    )
+
+    if (!inherits(result, "condition")) {
+      return(result)
+    }
+
+    if (page_size <= min_page_size) {
+      # No smaller page sizes left to try; surface the original error.
+      rlang::cnd_signal(result)
+    }
+
+    page_size <- max(min_page_size, page_size %/% 2)
+  }
 }
 
 #' Get the active API instance to use for API requests

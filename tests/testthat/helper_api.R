@@ -189,6 +189,14 @@ test_nhgis_extract <- function() {
   )
 }
 
+test_nhgis_extract_csv_with_control_files <- function() {
+  add_to_extract(test_nhgis_extract(), data_format = "csv_with_control_files")
+}
+
+test_nhgis_extract_fixed_width <- function() {
+  add_to_extract(test_nhgis_extract(), data_format = "fixed_width")
+}
+
 test_nhgis_extract_shp <- function() {
   define_extract_agg("nhgis", shapefiles = "110_blck_grp_2019_tl2019")
 }

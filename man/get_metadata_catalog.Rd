@@ -70,6 +70,8 @@ get_metadata_catalog("nhgis", "datasets")
 
 get_metadata_catalog("ihgis", "tabulation_geographies")
 
+get_metadata_catalog("ihgis", "topics")
+
 # Filter to identify data sources of interest by their metadata values
 all_tsts <- get_metadata_catalog("nhgis", "time_series_tables")
 

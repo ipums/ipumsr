@@ -79,7 +79,9 @@ extract data file.
 \item \code{"csv_no_header"} (default) includes only a minimal header in the first
 row
 \item \code{"csv_header"} includes a second, more descriptive header row.
-\item \code{"fixed_width"} provides data in a fixed width format
+\item \code{"csv_with_control_files"} includes control files in the extract that
+support reading the data into SAS, SPSS or Stata. These files are not
+used by any ipumsr functions.
 }
 
 Note that by default, \code{\link[=read_ipums_agg]{read_ipums_agg()}} removes the additional header row

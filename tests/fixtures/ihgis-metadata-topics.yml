@@ -1,0 +1,170 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/topics?collection=ihgis&version=2&pageNumber=1&pageSize=2500
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      cache-control: no-cache
+      content-type: application/json; charset=utf-8
+      date: Fri, 20 Nov 2026 17:00:27 GMT
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: ba12f9be-9947-48a1-8734-83d63990237d
+      x-runtime: '0.241504'
+      x-xss-protection: '0'
+      content-length: '98'
+    body:
+      encoding: ''
+      file: no
+      string: '{"type":"Out of Range","status":{"code":404,"name":"Not Found"},"detail":"Invalid
+        pageSize: 2500"}'
+  recorded_at: 2026-11-20 17:00:27 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0
+- request:
+    method: get
+    uri: https://api.ipums.org/metadata/topics?collection=ihgis&version=2&pageNumber=1&pageSize=1250
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+      Authorization: <<<IPUMS_API_KEY>>>
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      cache-control: max-age=0, private, must-revalidate
+      content-type: application/json; charset=utf-8
+      date: Fri, 20 Nov 2026 17:00:27 GMT
+      etag: W/"6b7b6bb7e26896d7d1846430da9896f7"
+      referrer-policy: strict-origin-when-cross-origin
+      server: nginx
+      vary: Origin
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-permitted-cross-domain-policies: none
+      x-ratelimit-limit: '-1'
+      x-ratelimit-remaining: '0'
+      x-ratelimit-reset: '0'
+      x-request-id: c51a6f76-7b6a-49c0-be53-c4f83a56244f
+      x-runtime: '0.158602'
+      x-xss-protection: '0'
+      content-length: '10198'
+    body:
+      encoding: ''
+      file: no
+      string: '{"data":[{"name":"totpop","label":"Total Population","group":"Population","subgroup":"General"},{"name":"pop_growth","label":"Population
+        Growth","group":"Population","subgroup":"General"},{"name":"pop_proj","label":"Population
+        Projections","group":"Population","subgroup":"General"},{"name":"age","label":"Age","group":"Population","subgroup":"Core
+        Demographics"},{"name":"sex","label":"Sex","group":"Population","subgroup":"Core
+        Demographics"},{"name":"marriage","label":"Marriage","group":"Population","subgroup":"Core
+        Demographics"},{"name":"fertility","label":"Births and Fertility","group":"Population","subgroup":"Core
+        Demographics"},{"name":"mortality","label":"Deaths and Mortality","group":"Population","subgroup":"Core
+        Demographics"},{"name":"orphan","label":"Orphanhood","group":"Population","subgroup":"Core
+        Demographics"},{"name":"pres_absence","label":"Presence/Absence at Usual Residence","group":"Population","subgroup":"Core
+        Demographics"},{"name":"cert_reg","label":"Birth/Death Certificates and Registration","group":"Population","subgroup":"Core
+        Demographics"},{"name":"edu_attainment","label":"Educational Attainment","group":"Population","subgroup":"Education"},{"name":"sch_enrollment","label":"School
+        Enrollment","group":"Population","subgroup":"Education"},{"name":"literacy","label":"Literacy","group":"Population","subgroup":"Education"},{"name":"emp_status","label":"Labor
+        Force and Employment Status","group":"Population","subgroup":"Economic Activity"},{"name":"occ_ind","label":"Occupation
+        and Industry","group":"Population","subgroup":"Economic Activity"},{"name":"class_worker","label":"Class
+        of Worker","group":"Population","subgroup":"Economic Activity"},{"name":"civic_engage","label":"Civic
+        and Cultural Engagement","group":"Population","subgroup":"Economic Activity"},{"name":"urb_rural","label":"Urban/Rural","group":"Population","subgroup":"Geography"},{"name":"pop_density","label":"Population
+        Density","group":"Population","subgroup":"Geography"},{"name":"hh","label":"Households","group":"Population","subgroup":"Households,
+        Families, and Group Quarters"},{"name":"families","label":"Families","group":"Population","subgroup":"Households,
+        Families, and Group Quarters"},{"name":"relationship","label":"Relationship
+        to Householder","group":"Population","subgroup":"Households, Families, and
+        Group Quarters"},{"name":"hh_size","label":"Household and Family Size and
+        Structure","group":"Population","subgroup":"Households, Families, and Group
+        Quarters"},{"name":"head_char","label":"Characteristics of Household Heads","group":"Population","subgroup":"Households,
+        Families, and Group Quarters"},{"name":"gq","label":"Group Quarters","group":"Population","subgroup":"Households,
+        Families, and Group Quarters"},{"name":"migration","label":"Migration and
+        Previous Residence","group":"Population","subgroup":"Migration"},{"name":"res_duration","label":"Duration
+        of Residence","group":"Population","subgroup":"Migration"},{"name":"mig_reasons","label":"Reason
+        for Migration","group":"Population","subgroup":"Migration"},{"name":"net_migration","label":"Net
+        Migration","group":"Population","subgroup":"Migration"},{"name":"ethnicity","label":"Ethnicity","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"nativity","label":"Citizenship,
+        Nativity, and Place of Birth","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"language","label":"Language","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"religion","label":"Religion","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"tribe","label":"Tribal Affiliation","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"nomads","label":"Nomads","group":"Population","subgroup":"Ethnicity,
+        Nativity, Language, and Religion"},{"name":"income","label":"Income","group":"Population","subgroup":"Income/Expenditures
+        and Subsistence"},{"name":"poverty","label":"Poverty","group":"Population","subgroup":"Income/Expenditures
+        and Subsistence"},{"name":"no_food","label":"Food Shortage","group":"Population","subgroup":"Income/Expenditures
+        and Subsistence"},{"name":"expend","label":"Expenditures","group":"Population","subgroup":"Income/Expenditures
+        and Subsistence"},{"name":"disability","label":"Disability","group":"Population","subgroup":"Health
+        and Disability"},{"name":"health","label":"Health and Health Insurance","group":"Population","subgroup":"Health
+        and Disability"},{"name":"hu_count","label":"Total Housing Units","group":"Housing","subgroup":"General"},{"name":"occ_vac","label":"Occupancy/Vacancy
+        and Use","group":"Housing","subgroup":"Occupancy and Tenure"},{"name":"tenure","label":"Tenure
+        and Ownership","group":"Housing","subgroup":"Occupancy and Tenure"},{"name":"occ_room","label":"Occupants
+        per Room","group":"Housing","subgroup":"Occupancy and Tenure"},{"name":"unhoused","label":"Unhoused
+        Population","group":"Housing","subgroup":"Occupancy and Tenure"},{"name":"yr_built","label":"Year
+        Structure Built","group":"Housing","subgroup":"Structural Characteristics"},{"name":"rooms","label":"Rooms
+        and Floor Space","group":"Housing","subgroup":"Structural Characteristics"},{"name":"structure_cond","label":"Structure
+        Type and Condition","group":"Housing","subgroup":"Structural Characteristics"},{"name":"house_material","label":"Construction
+        Materials","group":"Housing","subgroup":"Structural Characteristics"},{"name":"water","label":"Water,
+        Plumbing, and Sewage","group":"Housing","subgroup":"Utilities"},{"name":"toilet","label":"Toilet
+        and Bathing Facilities","group":"Housing","subgroup":"Utilities"},{"name":"heat_light","label":"Heating,
+        Lighting, Electricity, and Fuels","group":"Housing","subgroup":"Utilities"},{"name":"waste","label":"Waste
+        Disposal","group":"Housing","subgroup":"Utilities"},{"name":"services_access","label":"Accessibility
+        to Services","group":"Housing","subgroup":"Resources and Amenities"},{"name":"kitchen","label":"Kitchen/Cooking
+        Facilities","group":"Housing","subgroup":"Resources and Amenities"},{"name":"radio_tele","label":"Radios,
+        Telephones, and Televisions","group":"Housing","subgroup":"Resources and Amenities"},{"name":"comp_internet","label":"Computers
+        and Internet","group":"Housing","subgroup":"Resources and Amenities"},{"name":"vehicles","label":"Vehicles","group":"Housing","subgroup":"Resources
+        and Amenities"},{"name":"appliances","label":"Household Applicances and Goods","group":"Housing","subgroup":"Resources
+        and Amenities"},{"name":"house_value","label":"Housing Value or Price","group":"Housing","subgroup":"Housing
+        Value and Costs"},{"name":"rent","label":"Rent and Renter Costs","group":"Housing","subgroup":"Housing
+        Value and Costs"},{"name":"farm_count","label":"Counts of Farms","group":"Agriculture","subgroup":"General"},{"name":"ag_hh_pop","label":"Agricultural
+        Households/Population","group":"Agriculture","subgroup":"General"},{"name":"farm_size","label":"Farm
+        Size and Land Use","group":"Agriculture","subgroup":"General"},{"name":"farm_type","label":"Farm
+        Type","group":"Agriculture","subgroup":"General"},{"name":"farm_workers","label":"Farm
+        Workers","group":"Agriculture","subgroup":"General"},{"name":"farm_char","label":"Farmer
+        Characteristics","group":"Agriculture","subgroup":"General"},{"name":"farm_env","label":"Farm
+        Environmental Conditions","group":"Agriculture","subgroup":"General"},{"name":"crops","label":"Crops
+        and Other Farm Products","group":"Agriculture","subgroup":"Products and Production"},{"name":"animals","label":"Livestock
+        and Other Farm Animals","group":"Agriculture","subgroup":"Products and Production"},{"name":"fishing","label":"Fishing/Aquaculture","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"forestry","label":"Forestry","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"harvest_area","label":"Planted or Harvested Area","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"yield","label":"Farm Yield and Production","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"farm_methods","label":"Farming Methods","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"farm_loss","label":"Farming Losses","group":"Agriculture","subgroup":"Products
+        and Production"},{"name":"farm_machines","label":"Farm Implements, Machinery,
+        and Other Assets","group":"Agriculture","subgroup":"Inputs and Resources"},{"name":"irrigation","label":"Irrigation","group":"Agriculture","subgroup":"Inputs
+        and Resources"},{"name":"farm_chem","label":"Fertilizer, Herbicide, and Pesticide","group":"Agriculture","subgroup":"Inputs
+        and Resources"},{"name":"farm_input","label":"Other Farm Inputs","group":"Agriculture","subgroup":"Inputs
+        and Resources"},{"name":"farm_access","label":"Farm/Market Accessibility","group":"Agriculture","subgroup":"Inputs
+        and Resources"},{"name":"ag_extension","label":"Agricultural Extension and
+        Training","group":"Agriculture","subgroup":"Inputs and Resources"},{"name":"farm_value","label":"Value
+        of Farm and Major Assets","group":"Agriculture","subgroup":"Economic"},{"name":"farm_tenure","label":"Farm
+        Ownership, Tenure, and Management","group":"Agriculture","subgroup":"Economic"},{"name":"farm_sales","label":"Farm
+        Sales and Income","group":"Agriculture","subgroup":"Economic"},{"name":"farm_costs","label":"Farm
+        Costs and Labor","group":"Agriculture","subgroup":"Economic"},{"name":"farm_loans","label":"Loans
+        and Credit","group":"Agriculture","subgroup":"Economic"},{"name":"geog_units","label":"Area
+        or Number of Geographic Units","group":"Other Subjects","subgroup":"Geography"},{"name":"land_value","label":"Aggregate
+        Land Value","group":"Other Subjects","subgroup":"Geography"},{"name":"establishments","label":"Business
+        Establishments","group":"Other Subjects","subgroup":"Business and Industry"},{"name":"inst_org","label":"Institutions
+        and Other Organizations","group":"Other Subjects","subgroup":"Institutions"},{"name":"census_tech","label":"Census
+        Technical","group":"Other Subjects","subgroup":"Technical"}],"pageNumber":1,"pageSize":1250,"totalCount":94,"links":{"previousPage":null,"nextPage":null}}'
+  recorded_at: 2026-11-20 17:00:27 GMT
+  recorded_with: vcr/1.2.2, webmockr/0.9.0

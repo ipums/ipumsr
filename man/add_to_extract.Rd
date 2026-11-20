@@ -127,7 +127,10 @@ add_to_extract(
 )
 
 # Values that can only take a single value are replaced
-add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
+add_to_extract(
+  nhgis_extract,
+  data_format = "csv_with_control_files"
+)$data_format
 }
 \seealso{
 \code{\link[=remove_from_extract]{remove_from_extract()}} to remove values from an extract definition.

@@ -7,6 +7,9 @@ test_that("We can get summary metadata", {
   vcr::use_cassette("ihgis-metadata-summary", {
     ihgis_meta <- get_metadata_catalog("ihgis", "tabulation_geographies")
   })
+  vcr::use_cassette("ihgis-metadata-topics", {
+    ihgis_topics <- get_metadata_catalog("ihgis", "topics")
+  })
   vcr::use_cassette("micro-metadata-summary", {
     cps_meta <- get_sample_info("cps")
   })
@@ -24,6 +27,10 @@ test_that("We can get summary metadata", {
       "mean_area", "sequence", "unit_count"
     )
   )
+
+  expect_true(tibble::is_tibble(ihgis_topics))
+  expect_true(!is_empty(ihgis_topics))
+  expect_equal(colnames(ihgis_topics), c("name", "label", "group", "subgroup"))
 
   expect_true(tibble::is_tibble(cps_meta))
   expect_true(!is_empty(cps_meta))
@@ -210,6 +217,13 @@ test_that("We throw errors on bad metadata specs prior to making request", {
     )
   )
   expect_error(
+    get_metadata_catalog("ihgis", "foobar"),
+    paste0(
+      "`metadata_type` must be one of \"datasets\", \"data_tables\", ",
+      "\"tabulation_geographies\", or \"topics\""
+    )
+  )
+  expect_error(
     get_metadata_catalog("usa", "datasets"),
     "`metadata_type` must be one of \"samples\""
   )
@@ -253,5 +267,20 @@ test_that("get_metadata_nhgis() is deprecated", {
       tibble::is_tibble(single_ds_meta$breakdowns),
       tibble::is_tibble(single_ds_meta$breakdowns$breakdown_values[[1]])
     )
+  )
+})
+
+test_that("catalog_types() returns expected values", {
+  nhgis_types <- catalog_types("nhgis")
+  ihgis_types <- catalog_types("ihgis")
+
+  expect_setequal(
+    nhgis_types,
+    c("datasets", "data_tables", "time_series_tables", "shapefiles")
+  )
+
+  expect_setequal(
+    ihgis_types,
+    c("datasets", "data_tables", "tabulation_geographies", "topics")
   )
 })

@@ -64,6 +64,8 @@
 #'
 #' get_metadata_catalog("ihgis", "tabulation_geographies")
 #'
+#' get_metadata_catalog("ihgis", "topics")
+#'
 #' # Filter to identify data sources of interest by their metadata values
 #' all_tsts <- get_metadata_catalog("nhgis", "time_series_tables")
 #'
@@ -284,7 +286,7 @@ catalog_types <- function(collection) {
 
   endpts <- list(
     "nhgis" = c("datasets", "data_tables", "time_series_tables", "shapefiles"),
-    "ihgis" = c("datasets", "data_tables", "tabulation_geographies"),
+    "ihgis" = c("datasets", "data_tables", "tabulation_geographies", "topics"),
     "usa" = "samples",
     "cps" = "samples",
     "ipumsi" = "samples",
@@ -588,14 +590,19 @@ get_summary_metadata <- function(collection,
                                  metadata_type,
                                  delay = 0,
                                  api_key = Sys.getenv("IPUMS_API_KEY")) {
-  url <- api_request_url(
-    collection = collection,
-    path = metadata_request_path(metadata_type),
-    queries = list(pageNumber = 1, pageSize = api_page_size_limit("metadata"))
-  )
-
-  responses <- ipums_api_paged_request(
-    url = url,
+  # Some metadata endpoints may not yet support the standard page size
+  # used by other metadata endpoints (e.g. a newly added endpoint whose
+  # maximum page size has not yet been updated to match). In that case,
+  # automatically retry with smaller page sizes rather than failing.
+  responses <- ipums_api_paged_request_with_fallback(
+    build_url = function(page_size) {
+      api_request_url(
+        collection = collection,
+        path = metadata_request_path(metadata_type),
+        queries = list(pageNumber = 1, pageSize = page_size)
+      )
+    },
+    page_size = api_page_size_limit("metadata"),
     max_pages = Inf,
     delay = delay,
     api_key = api_key

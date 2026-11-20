@@ -406,7 +406,9 @@ define_extract_micro <- function(collection,
 #'   - `"csv_no_header"` (default) includes only a minimal header in the first
 #'     row
 #'   - `"csv_header"` includes a second, more descriptive header row.
-#'   - `"fixed_width"` provides data in a fixed width format
+#'   - `"csv_with_control_files"` includes control files in the extract that
+#'     support reading the data into SAS, SPSS or Stata. These files are not
+#'     used by any ipumsr functions.
 #'
 #'   Note that by default, [read_ipums_agg()] removes the additional header row
 #'   in `"csv_header"` files.
@@ -567,7 +569,7 @@ define_extract_agg <- function(collection,
     data_format = data_format
   )
 
-  etextract <- validate_ipums_extract(extract)
+  extract <- validate_ipums_extract(extract)
 
   extract
 }
@@ -689,7 +691,9 @@ define_extract_ipumsi <- function(description,
 #'   - `"csv_no_header"` (default) includes only a minimal header in the first
 #'     row
 #'   - `"csv_header"` includes a second, more descriptive header row.
-#'   - `"fixed_width"` provides data in a fixed width format
+#'   - `"csv_with_control_files"` includes control files in the extract that
+#'     support reading the data into SAS, SPSS or Stata. These files are not
+#'     used by any ipumsr functions.
 #'
 #'   Note that by default, [read_ipums_agg()] removes the additional header row
 #'   in `"csv_header"` files.
@@ -1306,7 +1310,10 @@ define_extract_from_json <- function(extract_json) {
 #' )
 #'
 #' # Values that can only take a single value are replaced
-#' add_to_extract(nhgis_extract, data_format = "fixed_width")$data_format
+#' add_to_extract(
+#'   nhgis_extract,
+#'   data_format = "csv_with_control_files"
+#' )$data_format
 add_to_extract <- function(extract, ...) {
   UseMethod("add_to_extract")
 }
@@ -1419,7 +1426,7 @@ add_to_extract <- function(extract, ...) {
 #' )
 #'
 #' # Values that can only take a single value are replaced
-#' add_to_extract(extract, data_format = "fixed_width")$data_format
+#' add_to_extract(extract, data_format = "csv_with_control_files")$data_format
 add_to_extract.agg_extract <- function(extract,
                                        description = NULL,
                                        datasets = NULL,
@@ -2395,7 +2402,9 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
       field = "data_format",
       required = includes_ds || includes_tst,
       allowed = includes_ds || includes_tst,
-      choices = c("csv_header", "csv_no_header", "fixed_width"),
+      choices = c(
+        "csv_header", "csv_no_header", "fixed_width", "csv_with_control_files"
+      ),
       length = 1,
       must_be_missing_msg =
         " when no `datasets` or `time_series_tables` are specified",
@@ -2403,6 +2412,20 @@ validate_ipums_extract.nhgis_extract <- function(x, call = caller_env()) {
         " when any `datasets` or `time_series_tables` are specified"
     )
   )
+
+  # Emit a warning if data_format is "fixed_width"
+  if (!is.null(x$data_format) && any(x$data_format == "fixed_width")) {
+    rlang::warn(
+      c(
+        paste0(
+          "NHGIS no longer supports fixed-width extracts. Requests for ",
+          "`\"fixed_width\"` data will be fulfilled as ",
+          "`\"csv_with_control_files\"`."
+        ),
+        "i" = "Please update your extract definition to suppress this warning."
+      )
+    )
+  }
 
   # Validate based on each argument's validation specifications
   # Collect errors and display together.

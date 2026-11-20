@@ -159,6 +159,21 @@ test_that("Can define an NHGIS extract", {
   expect_null(nhgis_extract_shp$time_series_tables)
 })
 
+test_that(
+  "Can define an NHGIS extract with data_format = 'csv_with_control_files'", {
+    nhgis_extract <- test_nhgis_extract_csv_with_control_files()
+    expect_s3_class(nhgis_extract, c("nhgis_extract", "ipums_extract"))
+    expect_equal(nhgis_extract$data_format, "csv_with_control_files")
+  }
+)
+
+test_that("NHGIS extract with data_format = 'fixed_width' emits a warning", {
+  expect_warning(
+    test_nhgis_extract_fixed_width(),
+    regexp = "no longer supports fixed-width"
+  )
+})
+
 test_that("Can define an ATUS extract with ATUS-specific features", {
   atus_extract <- test_atus_extract()
 
@@ -907,6 +922,15 @@ test_that("Can add full fields to an NHGIS extract", {
   expect_null(revised_shp$time_series_tables)
 })
 
+test_that("Can change NHGIS extract data_format to csv_with_control_files", {
+  nhgis_extract <- test_nhgis_extract()
+  revised <- add_to_extract(
+    nhgis_extract,
+    data_format = "csv_with_control_files"
+  )
+  expect_equal(revised$data_format, "csv_with_control_files")
+})
+
 test_that("Can add subfields to existing `ipums_*` fields", {
   nhgis_extract <- test_nhgis_extract()
   cps_extract <- test_cps_extract()
@@ -1411,6 +1435,17 @@ test_that("Can export to and import from JSON", {
     define_extract_from_json(json_tmpfile_usa)
   )
 })
+
+test_that(
+  "NHGIS data format = csv_with_control_files survives JSON roundtrip", {
+    nhgis_extract <- test_nhgis_extract_csv_with_control_files()
+    json_tmpfile_nhgis <- file.path(tempdir(), "nhgis_extract.json")
+    on.exit(unlink(json_tmpfile_nhgis), add = TRUE, after = FALSE)
+    save_extract_as_json(nhgis_extract, json_tmpfile_nhgis)
+    copy_of_nhgis_extract <- define_extract_from_json(json_tmpfile_nhgis)
+    expect_equal(copy_of_nhgis_extract$data_format, "csv_with_control_files")
+  }
+)
 
 test_that("Throw error when defining from JSON with old API version", {
   json_tmpfile <- file.path(tempdir(), "usa_extract.json")

@@ -1,5 +1,31 @@
 # ipumsr (development version)
 
+## New features
+
+-   `get_metadata_catalog()` now accepts `metadata_type = "topics"` for the 
+    IPUMS IHGIS collection. `get_metadata_catalog("ihgis", "topics")` returns a 
+    tibble of all topics covered by IHGIS data tables, including the topic label
+    and the group and subgroup within which that topic is nested.
+
+## Bug fixes
+
+-   Metadata requests now automatically retry with a smaller page size if the
+    server rejects the standard page size as too large for a given endpoint.
+
+## NHGIS `data_format`: Replaced `"fixed_width"` with `"csv_with_control_files"`
+
+-   IPUMS NHGIS no longer offers fixed-width data files, so users should no 
+    longer pass `"fixed_width"` to the `data_format` argument of 
+    `define_extract_agg()`. Users who want their extract to include syntax files
+    to read their data into SAS, SPSS, or Stata should now request a 
+    `data_format` of `"csv_with_control_files"`. 
+    
+    `define_extract_agg()` still accepts `"fixed_width"` in the `data_format` 
+    argument, but now throws a warning instructing users to update their extract 
+    definition. Similarly, the IPUMS API still accepts extract requests with a 
+    data format of `"fixed_width"`, but these requests will be fulfilled as 
+    `"csv_with_control_files"`.
+
 # ipumsr 0.10.0
 
 Note: ipumsr now requires R version 4.1.0 or later.
